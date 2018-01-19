@@ -1,0 +1,5 @@
+Version 20180119
+- first version posted on github
+- inclus la creation des objets IKEA Bulb et Xiaomi Plug, Temperature Carre/rond, bouton et InfraRouge
+
+

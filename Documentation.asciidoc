@@ -15,7 +15,7 @@ C'est une toute premiere version qui demande encore pas mal de travail.
 - d'avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
 - de définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
 
-Il y a aussi un firmware Abeille pour la ZiGate qui permet de récupérer des messages Xiaomi qui sinon ne remontent pas. Akila travaille sur une autre version mais n'a pas publié les sources pour l'instant. Il est nécessaire de programer la ZiGate comme expliqué sur le site ZiGate: http://zigate.fr/wiki/mise-a-jour-de-la-zigate/ avec le firmware Abeille.
+Il y a aussi un firmware Abeille (dans le répertoire Abeille/resource/firmware) pour la ZiGate qui permet de récupérer des messages Xiaomi qui sinon ne remontent pas. Akila travaille sur une autre version mais n'a pas publié les sources pour l'instant. Il est nécessaire de programer la ZiGate comme expliqué sur le site ZiGate: http://zigate.fr/wiki/mise-a-jour-de-la-zigate/ avec le firmware Abeille.
 
 
 === Ce qu'on peut faire

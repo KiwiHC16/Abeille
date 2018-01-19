@@ -1,0 +1,76 @@
+=== Introduction
+Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
+C'est une toute premiere version qui demande encore pas mal de travail.
+
+.Il permet déjà:
+- de connecter les ampoules IKEA et la série Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
+- de faire les inclusions des equipments zigbee depuis jeedom
+- creation automatique des objets MQTT pour les remontées d’informations (ensuite il faut créer à la main le commande d’action)
+- d'avoir l'état de l ampoule IKEA, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
+- de commander les ampoules une par un une (On/Off, niveau)
+- d'avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
+- d'avoir les temperatures, humidité, pression XIaomi, son nom, tension batterie
+- d'avoir la remontée d'une presence (capteur infrarouge xiaomi)
+- d'avoir la remontée d'ouverture de porte
+- d'avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
+- de définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
+
+Il y a aussi un firmware Abeille pour la ZiGate qui permet de récupérer des messages Xiaomi qui sinon ne remontent pas. Akila travaille sur une autre version mais n'a pas publié les sources pour l'instant. Il est nécessaire de programer la ZiGate comme expliqué sur le site ZiGate: http://zigate.fr/wiki/mise-a-jour-de-la-zigate/ avec le firmware Abeille.
+
+
+=== Ce qu'on peut faire
+
+.Exemples:
+- Si j’appuie sur l’interrupteur Xiaomi, avec un scenario Jeedom, j'allume l’ampoule IKEA.
+- Je controlle chaque équipement depuis Jeedom.
+Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) car je vous confirme que les prises Xiaomi et les ampoules IKEA font le routage des messages ZigBee.
+
+
+
+=== A noter avant d'aller plus avant
+- c'est une version brute de fonderie donc ne prenez pas de risque et faites vos tests sur un systeme qui ne risque rien
+- ce plugin utilise un broker MQTT mosquitto qui est installé lors de l'installation des dépendances
+- je fais tout en root et donne accès à tous les fichiers pour l'instant
+- pour l'instant tous mes tests sont faits sur une VM Debian 9 et Jeedom 3.1.7 
+
+=== Installation
+- La ZiGate est avec le bon firmware et connectée au port USB
+- Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus jolie.
+* barometre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
+* thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
+* hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
+- Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement (Objet Id=1, pour l'instant codé en dur).
+- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers
+* cd /var/www/html/plugins/
+* mkdir Abeille
+* cd Abeille
+* unzip le fichier téléchargé de GitHub dans le répertoire
+* cd ..
+* chmod -R 777 /var/www/html/plugins/Abeille
+* chown -R www-data:www-data /var/www/html/plugins/Abeille
+- Activation du plugin
+* Allez sur l'interface http Jeedom
+* Menu Plugin, Gestion des plugin
+* selectionner Abeille
+* Activer
+* Choisir le niveau de log et Sauvegarder
+* Lancer l'installation des dépendances, bouton Relancer et patienter (vous pouvez suivre l'avancement dans le fichier log: Abeille_dep)
+* Quand le statut Dépendance passe à Ok en vert alors Démarrer les Démons.
+- Creation des objets
+* Allez dans la page de gestion des objets en selectionnant le menu plugins, puis protocole domotique, puis Abeille
+* Vous devriez voir un premier objet "Ruche".
+* Tous les autres objets seront créés automatiquement dès détections.
+- Utilisation de Jeedom
+* Allez sur la page principale et vous devriez voir tous les objets détectés. Probablement que l'objet Ruche si nous démarrez votre réseau ZigBee.
+- Ajout d'équipements (S'ils sont déjà dans le réseau ZigBee)
+* Ampoule IKEA: éteindre et allumer électriquement l'ampoule et elle doit apparaitre dans Jeedom.
+* Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latterale et il doit apparaitre dans Jeedom.
+* Capteur InfraRouge Xiaomi: pas implementé.
+- Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+* Ampoule IKEA: mettre la ZiGate en mode Inclusion (le led bleue doit clignoter), faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps.
+* Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom.
+
+=== Pour les curieux
+- Vue générale de la solution
+
+....

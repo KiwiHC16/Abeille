@@ -1,0 +1,12 @@
+{
+	"id" : "Abeille",
+	"name" : "Abeille",
+	"licence" : "AGPL",
+	"author" : "kiwihc16",
+	"require" : "3.1.7",
+	"category" : "automation protocol",
+    "hasDependency" : 1,
+    "hasOwnDeamon" : 1,
+	"changelog" : "https://github.com/KiwiHC16/Abeille/blob/master/ChangeLog",
+	"documentation" : "https://github.com/KiwiHC16/Abeille/blob/master/Documentation"
+}

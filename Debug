@@ -1,4 +1,5 @@
 ===Debug
 
-Verifier la configuration réseau et en particulier /etc/hostname
+Verifier la configuration réseau et en particulier /hostname, /etc/hosts
+
 

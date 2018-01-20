@@ -67,8 +67,9 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 * Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latterale et il doit apparaitre dans Jeedom.
 * Capteur InfraRouge Xiaomi: pas implementé.
 - Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+* Mettre la gateway en inclusion, puis:
 * Ampoule IKEA: mettre la ZiGate en mode Inclusion (le led bleue doit clignoter), faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps.
-* Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom.
+* Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas deja sur un reseau, si deja sur reseau provoque un "leave" (a faire quand le reseau est fermé sinon juste apres le keave l object refait une association et reste sur le reseau.).
 
 === Pour les curieux
 - Vue générale de la solution

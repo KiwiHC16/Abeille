@@ -436,6 +436,10 @@
         return $tab;
     }
     
+    if (!file_exists(COM))
+    { echo "Fichier ".COM." n existe pas\n";
+        exit(1);
+    }
     
     $fifoIN = new fifo( $in, 'r' );
     

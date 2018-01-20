@@ -109,6 +109,13 @@
         }
         
         public static function deamon_stop() {
+            // Stop other daemon
+          
+            $kill = "kill `ps -eo pid,args --cols=10000 | awk '/AbeilleSerialRead.php/   && $1 != PROCINFO[\"pid\"] { print $1 }'`"; exec($kill);
+            $kill = "kill `ps -eo pid,args --cols=10000 | awk '/AbeilleParser.php/       && $1 != PROCINFO[\"pid\"] { print $1 }'`"; exec($kill);
+            $kill = "kill `ps -eo pid,args --cols=10000 | awk '/AbeilleMQTTCmd.php/      && $1 != PROCINFO[\"pid\"] { print $1 }'`"; exec($kill);
+            
+            // Stop main daemon
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
             if (!is_object($cron)) {
                 throw new Exception(__('Tache cron introuvable', __FILE__));

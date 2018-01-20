@@ -90,7 +90,7 @@
     {
         $tab="";
         $length=strlen($datas);
-        echo "\n--------------\n";
+        echo "\n-------------- ".date("Y-m-d H:i:s")."\n";
         echo "protocolDatas\n";
         
         //Pourquoi 12, je ne sais pas.
@@ -452,6 +452,11 @@
     
     while (true)
     {
+    if (!file_exists(COM))
+    { echo "Fichier ".COM." n existe pas\n";
+        exit(1);
+    }
+    
         //traitement de chaque trame;
         $data= $fifoIN->read();
         echo protocolDatas($data,$mqtt);

@@ -193,7 +193,7 @@
         {
             log::add('Abeille', 'debug', '');
             log::add('Abeille', 'debug', '--- process a new message -----------------------');
-            log::add('Abeille', 'debug', 'Message ' . $message->payload . ' sur ' . $message->topic);
+            log::add('Abeille', 'debug', 'Message ->' . $message->payload . '<- sur ' . $message->topic);
             // Analyse du message recu et definition des variables en fonction de ce que l on trouve dans le message
             if (is_string($message->payload) && is_array(json_decode($message->payload, true)) && (json_last_error() == JSON_ERROR_NONE))
             {
@@ -356,14 +356,14 @@
                 // Definition des cmd pour les objets, devra etre dans un fichier specifique a therme
                 // objetDefinition        nom objet                       cmdList/cmd          cmdValueDefaut
                 $objetCmdDefinition = array(
-                                         "lumi.sensor_magnet.aq" => array(
+                                         "lumi.sensor_magnet.aq2" => array(
                                                                           "0000-0005"       =>array( "name"=>"nom",         "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
                                                                           "0006-0000"       =>array( "name"=>"etat",        "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"door"),
                                                                           "Time-Time"       =>array( "name"=>"Last",        "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
                                                                           "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                           ),
                                             
-                                            "lumi.weathe" => array(
+                                            "lumi.weather" => array(
                                                                     "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
                                                                     "0402-0000"       =>array( "name"=>"Temperature",   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
                                                                     "0405-0000"       =>array( "name"=>"Humidite",      "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
@@ -375,7 +375,7 @@
                                                                     "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>8, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                     ),
                                             
-                                            "lumi.sensor_h" => array(
+                                            "lumi.sensor_ht" => array(
                                                                      "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
                                                                      "0402-0000"       =>array( "name"=>" Temperature",  "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
                                                                      "0405-0000"       =>array( "name"=>" Humidite",     "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
@@ -385,7 +385,7 @@
                                                                      "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>6, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                    ),
                                             
-                                         "lumi.sensor_switch.aq" => array(
+                                         "lumi.sensor_switch.aq2" => array(
                                                                           "0000-0005"       =>array( "name"=>"nom",                    "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string", "invertBinary"=>"0", "template"=>""),
                                                                           "0006-0000"       =>array( "name"=>"etat",                   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary", "invertBinary"=>"0", "template"=>"", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
                                                                           "0006-8000"       =>array( "name"=>"multi",                  "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),

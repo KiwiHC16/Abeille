@@ -45,6 +45,11 @@
     
     while (true)
     {
+    if (!file_exists(COM))
+    { echo "Fichier ".COM." n existe pas\n";
+        exit(1);
+    }
+    
         $car=fread($f,01);
         
         $car=bin2hex($car);
@@ -54,7 +59,7 @@
         }
         else if ($car=="03")
         {
-            echo $trame."\n";
+            echo date("Y-m-d H:i:s")." -> ".$trame."\n";
             $fifoIN->write($trame."\n");
         }else if($car=="02")
         {

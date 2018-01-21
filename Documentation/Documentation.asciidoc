@@ -44,6 +44,7 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 
 <<<<<<< HEAD
 image::images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
+=======
 image::Abeille/Documentation/images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 >>>>>>> 8281383ad0f7f775fe43ed15349b2055e096ce06
 

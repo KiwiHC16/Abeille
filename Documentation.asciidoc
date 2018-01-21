@@ -45,6 +45,11 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 
 - Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement (Objet Id=1, pour l'instant codé en dur).
+
+image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
+
+image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
+
 - Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers
 * cd /var/www/html/plugins/
 * mkdir Abeille

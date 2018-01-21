@@ -42,7 +42,7 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 * thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
+image::Abeille/Documentation/images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 
 - Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
 

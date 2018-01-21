@@ -42,13 +42,13 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 * thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 
 - Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
+image::images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
+image::images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
 
 - Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle et je cherche a mettre le plugin dans le market aussi tôt que possible).
 * ssh sur votre jeedom
@@ -65,34 +65,34 @@ image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
 * Menu Plugin, Gestion des plugin
 * selectionner Abeille
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_53_37.png[]
+image::images/Capture_d_ecran_2018_01_21_a_10_53_37.png[]
 
 * Activer
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
 
 * Choisir le niveau de log et Sauvegarder
 * Lancer l'installation des dépendances, bouton Relancer et patienter (vous pouvez suivre l'avancement dans le fichier log: Abeille_dep)
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
 
 * Quand le statut Dépendance passe à Ok en vert alors Démarrer les Démons.
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 
 * Si vous rafraichissez la page vous devez voir les fichiers de logs.
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_07_38.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_07_38.png[]
 
 - Creation des objets
 * Allez dans la page de gestion des objets en selectionnant le menu plugins, puis protocole domotique, puis Abeille
 * Vous devriez voir un premier objet "Ruche" (et éventuellement les objets abeille).
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_55_44.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_55_44.png[]
 
 * Si vous allez sur le dashboard
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
 * Tous les autres objets seront créés automatiquement dès détections.
 
@@ -107,44 +107,44 @@ image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 - Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
 * Mettre la gateway en inclusion (Bouton Inclusion), la Led bleue de la zigate doit cligonter,
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
 * puis:
 * Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps.
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_13_44.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_13_44.png[]
 
 * Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas deja sur un reseau, si deja sur reseau provoque un "leave" (a faire quand le reseau est fermé sinon juste apres le keave l object refait une association et reste sur le reseau.).
 
 Porte
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_11_38.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_11_38.png[]
 
 Temperature rond
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_12_43.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_12_43.png[]
 
 Temperature Carre
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_12_15.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_12_15.png[]
 
 Bouton
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_11_13_15.png[]
+image::images/Capture_d_ecran_2018_01_21_a_11_13_15.png[]
 
 Etat: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
 
 Capteur Presence InfraRouge
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_12_45_22.png[]
+image::images/Capture_d_ecran_2018_01_21_a_12_45_22.png[]
 
 * Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
+image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
 
 == Pour les curieux
 - Vue générale de la solution
 
-image::Documentation/images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
+image::images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
 
 ....

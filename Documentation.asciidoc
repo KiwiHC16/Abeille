@@ -37,7 +37,7 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 
 == Installation
 - La ZiGate est avec le bon firmware et connectée au port USB (le firmware actuellement testé est la version 3b: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
-- Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus jolie.
+- Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus joli.
 * barometre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
 * thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)

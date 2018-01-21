@@ -145,4 +145,6 @@ image::Documentation/images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
 == Pour les curieux
 - Vue générale de la solution
 
+image::Documentation/images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
+
 ....

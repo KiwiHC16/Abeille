@@ -82,7 +82,7 @@ image::images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
 
-* Quand le statut Dépendance passe à Ok en vert alors Démarrer les Démons.
+* Quand le statut Dépendance passe à Ok en vert, définir l objet IDet le port serie puis Démarrer les Démons.
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 

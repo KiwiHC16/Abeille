@@ -50,7 +50,7 @@ image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
 
 image::Documentation/images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
 
-- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers
+- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle et je cherche a mettre le plugin dans le market aussi tôt que possible).
 * ssh sur votre jeedom
 * cd /var/www/html/plugins/
 * mkdir Abeille

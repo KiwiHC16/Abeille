@@ -47,6 +47,9 @@
         }
         
         public static function deamon_start($_debug = false) {
+            
+            log::add('Abeille', 'debug', 'Test BEN CONFIG: '.config::byKey('abeilleSerialPort', 'Abeille', 'none') );
+            
             self::deamon_stop();
             $deamon_info = self::deamon_info();
             if ($deamon_info['launchable'] != 'ok') {
@@ -84,7 +87,7 @@
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
             $dirDaemon = "/var/www/html/plugins/Abeille/resources/AbeilleDaemon/";
-            $daemon1 = "AbeilleSerialRead.php";
+            $daemon1 = "AbeilleSerialRead.php".' '.config::byKey('abeilleSerialPort', 'Abeille', 'none');
             $daemon2 = "AbeilleParser.php";
             $daemon3 = "AbeilleMQTTCmd.php";
             $log1 = " > /var/www/html/log/".$daemon1.".log";
@@ -240,7 +243,7 @@
                 //id
                 $elogic->setName("Ruche");
                 $elogic->setLogicalId("Ruche");
-                $elogic->setObject_id('1');
+                $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
                 $elogic->setConfiguration('topic', "Ruche"); $elogic->setConfiguration('type', 'topic');
                 $elogic->setIsVisible("1");
@@ -343,7 +346,7 @@
                 //id
                 if ( $objetConnu ) { $elogic->setName($nodeid); } else { $elogic->setName($nodeid."-Type d objet inconnu"); }
                 $elogic->setLogicalId($nodeid);
-                $elogic->setObject_id('1');
+                $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
                 $elogic->setConfiguration('topic', $nodeid); $elogic->setConfiguration('type', $type);
                 $elogic->setIsVisible("1");

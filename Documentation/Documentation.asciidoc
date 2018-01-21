@@ -44,11 +44,17 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 
 image::images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 
-- Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
+- Créez un objet sur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
 
 image::images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
+
+Recuperez sont ID en selectionnant "Vue d'ensemble"
+
+image::images/Capture_d_ecran_2018_01_21_a_17_27_54.png[]
+
+image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 
 - Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle et je cherche a mettre le plugin dans le market aussi tôt que possible).
 * ssh sur votre jeedom
@@ -76,7 +82,7 @@ image::images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
 
-* Quand le statut Dépendance passe à Ok en vert alors Démarrer les Démons.
+* Quand le statut Dépendance passe à Ok en vert, définir l objet IDet le port serie puis Démarrer les Démons.
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 

@@ -26,18 +26,21 @@
         return $retVal;
     }
     
-    if (!file_exists(COM))
-    { echo "Fichier ".COM." n existe pas\n";
+    
+    if (!file_exists($argv[1]))
+    { echo "Error: Fichier ".$argv[1]." n existe pas\n";
         exit(1);
     }
     
+    echo "Serial port used: ".$argv[1]."\n";
     
     $fifoIN = new fifo( $in, 'w+' );
-    _exec("stty -F ".COM." speed 115200 cs8 -parenb -cstopb raw",$out);
     
-    $f = fopen(COM, "r");
+    _exec("stty -F ".$argv[1]." speed 115200 cs8 -parenb -cstopb raw",$out);
     
-    print_r( $f );
+    $f = fopen($argv[0], "r");
+    
+    print_r( $f ); echo "\n";
     
     $transcodage=false;
     $trame="";
@@ -45,8 +48,8 @@
     
     while (true)
     {
-    if (!file_exists(COM))
-    { echo "Fichier ".COM." n existe pas\n";
+    if (!file_exists($argv[1]))
+    { echo "Fichier ".$argv[1]." n existe pas\n";
         exit(1);
     }
     

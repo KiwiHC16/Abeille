@@ -63,7 +63,7 @@ $eqLogics = eqLogic::byType('Abeille');
         } else {
           $path = 'Abeille_icon';
         }
-        echo '<img src="plugins/Abeille/doc/images/' . $path . '.png" height="105" width="95" />';
+        echo '<img src="plugins/Abeille/docs/images/' . $path . '.png" height="105" width="95" />';
         echo "</center>";
         echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
         echo '</div>';
@@ -227,7 +227,7 @@ $eqLogics = eqLogic::byType('Abeille');
 
 <script>
 $( "#sel_icon" ).change(function(){
-  var text = 'plugins/Abeille/doc/images/node_' + $("#sel_icon").val() + '.png';
+  var text = 'plugins/Abeille/docs/images/node_' + $("#sel_icon").val() + '.png';
   //$("#icon_visu").attr('src',text);
   document.icon_visu.src=text;
 });

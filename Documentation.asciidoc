@@ -1,4 +1,6 @@
-=== Introduction
+= Plugin Abeille
+
+== Introduction
 Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
 C'est une toute premiere version qui demande encore pas mal de travail.
 
@@ -27,18 +29,19 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 
 
 
-=== A noter avant d'aller plus avant
+== A noter avant d'aller plus avant
 - c'est une version brute de fonderie donc ne prenez pas de risque et faites vos tests sur un systeme qui ne risque rien
 - ce plugin utilise un broker MQTT mosquitto qui est installé lors de l'installation des dépendances
 - je fais tout en root et donne accès à tous les fichiers pour l'instant
 - pour l'instant tous mes tests sont faits sur une VM Debian 9 et Jeedom 3.1.7 
 
-=== Installation
-- La ZiGate est avec le bon firmware et connectée au port USB
+== Installation
+- La ZiGate est avec le bon firmware et connectée au port USB (le firmware actuellement testé est la version 3b: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
 - Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus jolie.
 * barometre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
 * thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
+image::documentaton/images/Capture d’écran 2018-01-21 à 11.30.42.png[]
 - Créez un objet qur lequel les nouveaux objets seront rattachés automatiquement (Objet Id=1, pour l'instant codé en dur).
 - Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers
 * cd /var/www/html/plugins/
@@ -71,7 +74,7 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 * Ampoule IKEA: mettre la ZiGate en mode Inclusion (le led bleue doit clignoter), faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps.
 * Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas deja sur un reseau, si deja sur reseau provoque un "leave" (a faire quand le reseau est fermé sinon juste apres le keave l object refait une association et reste sur le reseau.).
 
-=== Pour les curieux
+== Pour les curieux
 - Vue générale de la solution
 
 ....

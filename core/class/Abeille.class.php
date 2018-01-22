@@ -87,15 +87,15 @@
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
             $dirDaemon = "/var/www/html/plugins/Abeille/resources/AbeilleDaemon/";
-            $daemon1 = "AbeilleSerialRead.php".' '.config::byKey('abeilleSerialPort', 'Abeille', 'none');
+            $daemon1 = "AbeilleSerialRead.php"; $paramDaemon1 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
             $daemon2 = "AbeilleParser.php";
-            $daemon3 = "AbeilleMQTTCmd.php";
+            $daemon3 = "AbeilleMQTTCmd.php"; $paramDaemon3 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
             $log1 = " > /var/www/html/log/".$daemon1.".log";
             $log2 = " > /var/www/html/log/".$daemon2.".log";
             $log3 = " > /var/www/html/log/".$daemon3.".log";
             $end = " &";
             
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1.$log1.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1.$end;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             
@@ -103,7 +103,7 @@
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3.$log3.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3.$end;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             
@@ -238,14 +238,14 @@
                     return;
                 }
                 // Creation de la ruche
-                log::add('Abeille', 'info', 'objet: '.$value.' creation par defaut');
+                log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
                 $elogic = new Abeille();
                 //id
                 $elogic->setName("Ruche");
-                $elogic->setLogicalId("Ruche");
+                $elogic->setLogicalId("Abeille/Ruche");
                 $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
-                $elogic->setConfiguration('topic', "Ruche"); $elogic->setConfiguration('type', 'topic');
+                $elogic->setConfiguration('topic', "Abeille/Ruche"); $elogic->setConfiguration('type', 'topic');
                 $elogic->setIsVisible("1");
                 // eqReal_id
                 $elogic->setIsEnable("1");
@@ -270,17 +270,16 @@
                                           "Reset"          =>array( "name"=>"Reset",         "order"=>3, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/reset","request"=>"reset") ),
                                           "addGroup"       =>array( "name"=>"Add Group",     "order"=>4, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/addGroup","request"=>"address=#title#&groupAddress=#message#") ),
                                           "removeGroup"    =>array( "name"=>"Remove Group",  "order"=>5, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/removeGroup","request"=>"address=#title#&groupAddress=#message#") ),
-                                          // getEtat  clusterId=0006&attributeId=0000
-                                          // getLevel clusterId=0008&attributeId=0000
-                                          // getManufacturerName  clusterId=0000&attributeId=0004
-                                          // getModelIdentifier   clusterId=0000&attributeId=0005
-                                          // getSWBuild   clusterId=0000&attributeId=4000
+                                          "Time-Time"      =>array( "name"=>"Last",          "order"=>6, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "Time-TimeStamp" =>array( "name"=>"Last Stamps",   "order"=>7, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-Application" =>array( "name"=>"SW",            "order"=>8, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-SDK"         =>array( "name"=>"SDK",           "order"=>9, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
                                           );
                 
                 foreach ( $rucheCommandList as $cmd => $cmdValueDefaut )
                 {
                     $nomObjet = "Ruche";
-                    log::add('Abeille', 'info', 'Creation par defaut de la command: '.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
+                    log::add('Abeille', 'info', 'Creation de la command: '.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
                     $cmdlogic = new AbeilleCmd();
                     // id
                     $cmdlogic->setEqLogic_id($elogic->getId());
@@ -342,7 +341,7 @@
                 }
                 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-                log::add('Abeille', 'info', 'objet: '.$value.' creation par defaut');
+                log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
                 $elogic = new Abeille();
                 //id
                 if ( $objetConnu ) { $elogic->setName($nodeid); } else { $elogic->setName($nodeid."-Type d objet inconnu"); }
@@ -377,40 +376,60 @@
                 // Definition des cmd pour les objets, devra etre dans un fichier specifique a therme
                 // objetDefinition        nom objet                       cmdList/cmd          cmdValueDefaut
                 $objetCmdDefinition = array(
+                                            // Xiaomi Door
                                             "lumi.sensor_magnet.aq2" => array(
-                                                                              "0000-0005"       =>array( "name"=>"nom",         "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                              "0006-0000"       =>array( "name"=>"etat",        "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"door"),
-                                                                              "Time-Time"       =>array( "name"=>"Last",        "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                              "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
+                                                                              "0000-0001"       =>array( "name"=>"SW",          "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                              "0000-0005"       =>array( "name"=>"nom",         "order"=>1, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                              "0006-0000"       =>array( "name"=>"etat",        "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"door"),
+                                                                              "Time-Time"       =>array( "name"=>"Last",        "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
+                                                                              "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                               ),
+                                            // Xiaomi Presence
                                             "lumi.sensor_motion" => array(
-                                                                          "0000-0005"       =>array( "name"=>"nom",         "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                          "0006-0000"       =>array( "name"=>"etat",        "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"presence", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
-                                                                          "Time-Time"       =>array( "name"=>"Last",        "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                          "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
+                                                                          "0000-0005"       =>array( "name"=>"nom",             "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                          "0406-0000"       =>array( "name"=>"etat",            "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"presence", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
+                                                                          "Time-Time"       =>array( "name"=>"Last",            "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
+                                                                          "Time-TimeStamp"  =>array( "name"=>"Last Stamp",      "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                           ),
+                                            // Xiaomi Temperature Carré
                                             "lumi.weather" => array(
                                                                     "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
                                                                     "0402-0000"       =>array( "name"=>"Temperature",   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
                                                                     "0405-0000"       =>array( "name"=>"Humidite",      "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
                                                                     "0403-0000"       =>array( "name"=>"Pression1",     "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge" ),
-                                                                    "0403-0010"       =>array( "name"=>"Pression",      "order"=>4, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"barometre", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
-                                                                    "Batterie-Volt"   =>array( "name"=>"Batterie",      "order"=>5, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter", "configuration"=>array("minValue"=>"0","maxValue"=>"3.3") ),
-                                                                    "0000-ff01"       =>array( "name"=>"Specific",      "order"=>6, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                    "Time-Time"       =>array( "name"=>"Last",          "order"=>7, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                    "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>8, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
+                                                                    "0403-0010"       =>array( "name"=>"Pression",      "order"=>4, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"barometre", "configuration"=>array("calculValueOffset"=>"#value#/10", "historizeRound"=>"1") ),
+                                                                    "0403-0014"       =>array( "name"=>"What is it",    "order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                    "Batterie-Volt"   =>array( "name"=>"Batterie",      "order"=>6, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter", "configuration"=>array("calculValueOffset"=>"#value#/100", "minValue"=>"0","maxValue"=>"3.3") ),
+                                                                    
+                                                                    // Values reported from Xiaomi field decoding look in line with value in attribute report, so merged.
+                                                                    // "Xiaomi-0402-0000"       =>array( "name"=>"Temperature(Reverse Eng)",   "order"=>6, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
+                                                                    // "Xiaomi-0405-0000"       =>array( "name"=>"Humidite(Reverse Eng)",      "order"=>7, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
+                                                                    // "Xiaomi-0403-0000"       =>array( "name"=>"Pression1(Reverse Eng)",     "order"=>8, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge" ),
+                                                                    // "Xiaomi-0403-0010"       =>array( "name"=>"Pression(Reverse Eng)",      "order"=>9, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"barometre", "configuration"=>array("calculValueOffset"=>"#value#/10", "historizeRound"=>"1") ),
+                                                                    
+                                                                    "0000-ff01"       =>array( "name"=>"Specific",      "order"=>7, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                    "Time-Time"       =>array( "name"=>"Last",          "order"=>8, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
+                                                                    "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>9, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                     ),
                                             
+                                            // Xiaomi Temperature Rond
                                             "lumi.sensor_ht" => array(
-                                                                      "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                      "0402-0000"       =>array( "name"=>" Temperature",  "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
-                                                                      "0405-0000"       =>array( "name"=>" Humidite",     "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
-                                                                      "Batterie-Volt"   =>array( "name"=>" Batterie",     "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter", "configuration"=>array("minValue"=>"0","maxValue"=>"3.3") ),
-                                                                      "0000-ff01"       =>array( "name"=>" Specific",     "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                      "0000-0005"       =>array( "name"=>"nom",          "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
+                                                                      "0402-0000"       =>array( "name"=>"Temperature",  "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG",      "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"1") ),
+                                                                      
+                                                                      "0405-0000"       =>array( "name"=>"Humidite",     "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG",    "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"0") ),
+                                                                      "Batterie-Volt"   =>array( "name"=>"Batterie",     "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter",      "configuration"=>array("calculValueOffset"=>"#value#/1000", "minValue"=>"0","maxValue"=>"3.3") ),
+                                                                      
+                                                                      // Values reported from Xiaomi field decoding look in line with value in attribute report, so merged.
+                                                                      // "Xiaomi-0402-0000"=>array( "name"=>"Temperature(Reverse Eng)",  "order"=>4, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG",      "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"1") ),
+                                                                      // "Xiaomi-0405-0000"=>array( "name"=>"Humidite(Reverse Eng)",     "order"=>5, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG",    "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"0") ),
+                                                                      
+                                                                      "0000-ff01"       =>array( "name"=>"Specific",     "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
                                                                       "Time-Time"       =>array( "name"=>"Last",          "order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
                                                                       "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>6, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                       ),
                                             
+                                            // Xiaomi Bouton
                                             "lumi.sensor_switch.aq2" => array(
                                                                               "0000-0005"       =>array( "name"=>"nom",                    "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string", "invertBinary"=>"0", "template"=>""),
                                                                               "0006-0000"       =>array( "name"=>"etat",                   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary", "invertBinary"=>"0", "template"=>"", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
@@ -418,6 +437,7 @@
                                                                               "Time-Time"       =>array( "name"=>"Time-Time",              "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string", "invertBinary"=>"0", "template"=>""),
                                                                               "Time-TimeStamp"  =>array( "name"=>"Time-TimeStamp",         "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                               ),
+                                            // Xiaomi Prise
                                             "lumi.plug" => array(
                                                                  "0000-0005"           =>array( "name"=>"nom",                 "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
                                                                  "0006-0000"           =>array( "name"=>"etat",                "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"prise"),
@@ -433,6 +453,7 @@
                                                                  // getModelIdentifier   clusterId=0000&attributeId=0005
                                                                  ),
                                             
+                                            // IKEA TRADFRI bulb E27 opal 1000lm
                                             "TRADFRI bulb E27 opal 1000lm" => array(
                                                                                     "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
                                                                                     "0000-0004"       =>array( "name"=>"societe",       "order"=>1, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
@@ -460,7 +481,7 @@
                     {
                         foreach ( $cmdList as $cmd => $cmdValueDefaut )
                         {
-                            log::add('Abeille', 'info', 'Creation par defaut de la command:'.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
+                            log::add('Abeille', 'info', 'Creation de la command:'.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
                             $cmdlogic = new AbeilleCmd();
                             // id
                             $cmdlogic->setEqLogic_id($elogic->getId());
@@ -497,7 +518,7 @@
             }
             else
             {
-                // Si equipement et cmd existe alors on met la valeur a jour
+                
                 $elogic = self::byLogicalId($nodeid, 'Abeille');
                 // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
                 if ( !is_object($elogic) )
@@ -528,15 +549,16 @@
                         log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId );
                         if ( config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique" )
                             {
-                            // Crée la commande avec le peu d in fo que l on a
-                            log::add('Abeille', 'info', 'Creation par defaut de la command:'.$nodeid.'/'.$cmd.' sans model');
+                            // Crée la commande avec le peu d info que l on a
+                            log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
                             $cmdlogic = new AbeilleCmd();
                             // id
                             $cmdlogic->setEqLogic_id($elogic->getId());
                             $cmdlogic->setEqType('Abeille');
-                            $cmdlogic->setLogicalId($cmd);
-                            $cmdlogic->setOrder('0');
-                            $cmdlogic->setName( 'Inconnue'.$elogic->getId() );
+                            $cmdlogic->setLogicalId($cmdId);
+                            // $cmdlogic->setOrder('0');
+                            $cmdlogic->setName( 'Cmd de type inconnue - '.$cmdId );
+                            $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId );
                             // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
                             // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
                             // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
@@ -547,8 +569,9 @@
                             // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
                             // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                             // $cmdlogic->setType($cmdValueDefaut["Type"]);
-                            $cmdlogic->setType('Info');
+                            $cmdlogic->setType('info');
                             // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                                $cmdlogic->setSubType("string");
                             // unite
                             // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
                             // isVisible
@@ -561,6 +584,7 @@
                             }
                     }
                     else
+                        // Si equipement et cmd existe alors on met la valeur a jour
                     {
                         $elogic->checkAndUpdateCmd($cmdId,$value);
                     }

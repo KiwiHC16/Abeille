@@ -3,7 +3,7 @@
     
     function getChecksum($msgtype,$length,$datas)
     {
-        if (0)
+        if (1)
         {
             echo "getChecksum()\n";
             echo "msgtype: " . $msgtype . "\n";
@@ -17,10 +17,14 @@
         $temp ^= hexdec($msgtype[2].$msgtype[3]) ;
         $temp ^= hexdec($length[0].$length[1]) ;
         $temp ^= hexdec($length[2].$length[3]);
-        for ($i=0;$i<(strlen($datas));$i+=2)
+        echo "len data: ".strlen($datas)."\n";
+        
+        for ($i=0;$i<=(strlen($datas));$i+=2)
         {
+            echo "i: ".$i."\n";
             $temp ^= hexdec($datas[$i].$datas[$i+1]);
         }
+        
         
         return sprintf("%02X",$temp);
     }
@@ -47,7 +51,7 @@
         return $mess;
     }
     
-    function getParam($address,$clusterId,$attributeId)
+    function getParam($dest,$address,$clusterId,$attributeId)
     {
         /*
          <address mode: uint8_t>
@@ -98,8 +102,8 @@
          */
         // $param = "02B3280101000600000000010000";
         // echo $param;
-        // sendCmd( "0100", "000E", $param );
-        // sendCmd( "0100", "000E", "02B3280101000600000000010000");
+        // sendCmd( $dest, "0100", "000E", $param );
+        // sendCmd( $dest, "0100", "000E", "02B3280101000600000000010000");
         $cmd = "0100";
         $lenth = "000E";
         $addressMode = "02";
@@ -116,16 +120,16 @@
         $attributesList = $attributeId;
         
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        echo "Read Attribute command data: ".$data."\n";
         
-        sendCmd( $cmd, $lenth, $data );
+        sendCmd( $dest, $cmd, $lenth, $data );
     }
     
     
-    function sendCmd($cmd,$len,$datas)
+    function sendCmd( $dest, $cmd,$len,$datas)
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
-        if (0) { $f=fopen("toto","w"); }
-        else { $f=fopen(COM,"w"); }
+        $f=fopen($dest,"w");
         
         fwrite($f,pack("H*","01"));
         fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
@@ -135,13 +139,15 @@
             fwrite($f,pack("H*",getChecksum($cmd,$len,$datas))); //checksum
             fwrite($f,pack("H*",transcode($datas))); //datas
         }else{
-            fwrite($f,pack("H*",getChecksum($cmd,$len,"0"))); //checksum
+            fwrite($f,pack("H*",getChecksum($cmd,$len,"00"))); //checksum
         }
         fwrite($f,pack("H*","03"));
+        
         fclose($f);
     }
     
-    function processCmd( $Command )
+    function processCmd( $dest, $Command )
+    // Dest: destination to send data in normal situation to /dev/ttyUSB0 or toto for debugging for example.
     {
         if (!isset($Command)) return;
         
@@ -157,7 +163,7 @@
                 // 02 10 02 10 : 00 00: Length
                 // 11: crc
                 // 03: Stop
-                sendCmd("0011","0000","");
+                sendCmd($dest,"0011","0000","");
             }
         }
         
@@ -167,7 +173,7 @@
             if ($Command['getVersion']=="Version")
             {
                 echo "Get Version\n";
-                sendCmd("0010","0000","");
+                sendCmd($dest,"0010","0000","");
             }
         }
         
@@ -175,7 +181,7 @@
         {
             if ($Command['startNetwork']=="StartNetwork")
             {
-                sendCmd("0024","0000","");
+                sendCmd($dest,"0024","0000","");
             }
         }
         
@@ -205,7 +211,7 @@
                 // 02 10: <TCsignificance: uint8_t> 00
                 
                 // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                sendCmd("0049","0004","FFFCFE00"); //1E = 30 secondes
+                sendCmd($dest,"0049","0004","FFFCFE00"); //1E = 30 secondes
                 
             }
         }
@@ -214,7 +220,7 @@
         {
             if ($Command['touchLinkFactoryResetTarget']=="DO")
             {
-                sendCmd("00D2","0000","");
+                sendCmd($dest,"00D2","0000","");
             }
         }
         
@@ -239,9 +245,9 @@
             $destinationEndpoint = "01";
             $action = $Command['action'];
             
-            sendCmd( $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
             $attribute = "0000";
-            getParam($address, $Command['clusterId'], $attribute);
+            getParam($dest,$address, $Command['clusterId'], $attribute);
         }
         
         // Group of Objects ON/ OFF
@@ -274,7 +280,7 @@
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $commandID ;
             
-            sendCmd( $cmd, $lenth, $data );
+            sendCmd( $dest, $cmd, $lenth, $data );
             
         }
         
@@ -333,12 +339,12 @@
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
             // echo "data: " . $data . "\n";
             
-            sendCmd( $cmd, $lenth, $data );
+            sendCmd( $dest, $cmd, $lenth, $data );
             
-            // getParam($address, $Command['clusterId'] );
+            // getParam($dest,$address, $Command['clusterId'] );
             sleep(1);
-            getParam($address, $Command['clusterId'], "0000" );
-            getParam($address, $Command['clusterId'], "0000" );
+            getParam($dest,$address, $Command['clusterId'], "0000" );
+            getParam($dest,$address, $Command['clusterId'], "0000" );
             
             
         }
@@ -350,7 +356,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             if ( $Command['ReadAttributeRequest']==1 )
             {
-                getParam( $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
             }
         }
         
@@ -378,7 +384,7 @@
             $groupAddress = $Command['groupAddress'];
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
-            sendCmd( $cmd, $lenth, $data );
+            sendCmd( $dest, $cmd, $lenth, $data );
         }
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
         {
@@ -404,7 +410,7 @@
             $groupAddress = $Command['groupAddress'];
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
-            sendCmd( $cmd, $lenth, $data );
+            sendCmd( $dest, $cmd, $lenth, $data );
         }
         
         

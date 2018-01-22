@@ -25,20 +25,30 @@
         
         return $retVal;
     }
+    /* -------------------------------------------------------------------- */
     
+    $serial = $argv[1];
     
-    if (!file_exists($argv[1]))
-    { echo "Error: Fichier ".$argv[1]." n existe pas\n";
+    if (!file_exists($serial))
+    { echo "Error: Fichier ".$serial." n existe pas\n";
         exit(1);
     }
     
-    echo "Serial port used: ".$argv[1]."\n";
+
+    
+    echo "Serial port used: ".$serial."\n";
     
     $fifoIN = new fifo( $in, 'w+' );
     
-    _exec("stty -F ".$argv[1]." speed 115200 cs8 -parenb -cstopb raw",$out);
+    _exec("stty -F ".$serial." sane",$out);
+    echo "Setup ttyUSB default configuration, resultat: \n";
+    print_r( $out );
     
-    $f = fopen($argv[0], "r");
+    _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb raw",$out);
+    echo "Setup ttyUSB configuration, resultat: \n";
+    print_r( $out );
+    
+    $f = fopen($serial, "r");
     
     print_r( $f ); echo "\n";
     
@@ -48,8 +58,8 @@
     
     while (true)
     {
-    if (!file_exists($argv[1]))
-    { echo "Fichier ".$argv[1]." n existe pas\n";
+    if (!file_exists($serial))
+    { echo "Fichier ".$serial." n existe pas\n";
         exit(1);
     }
     

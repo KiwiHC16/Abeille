@@ -129,13 +129,36 @@
                     case "004d" :
                         echo "\ntype: 004d";
                         echo "(Device announce)(Processed->MQTT)\n";
+                        // < short address: uint16_t>
+                        // < IEEE address: uint64_t>
+                        // < MAC capability: uint8_t> MAC capability
+                        // Bit 0 - Alternate PAN Coordinator    => 1 no
+                        // Bit 1 - Device Type                  => 2 yes
+                        // Bit 2 - Power source                 => 4 yes
+                        // Bit 3 - Receiver On when Idle        => 8 yes
+                        // Bit 4 - Reserved                     => 16 no
+                        // Bit 5 - Reserved                     => 32 no
+                        // Bit 6 - Security capability          => 64 no
+                        // Bit 7 - Allocate Address             => 128 no
+                        $test = 2 + 4 + 8;
+
                         echo "Src Addr : ".substr($payload,0,4)."\n";
-                        echo "IEEE : ".substr($payload,4,8)."\n";
-                        echo "MAC capa : ".substr($payload,12,2)."\n";
-                        echo "Quality : ".$quality;
+                        echo "IEEE : ".substr($payload,4,16)."\n";
+                        echo "MAC capa : ".substr($payload,20,2)."\n";
+                        // echo "Quality : ".$quality;
                         $SrcAddr = substr($payload,0,4);
+                        $IEEE = substr($payload,4,16);
+                        $capability = substr($payload,20,2);
+                        
+                        // Envoie de la IEEE a Jeedom
+                        mqqtPublish( $mqtt, $SrcAddr, "IEEE", "Addr", $IEEE );
+                        
+                        // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
+                        if ( (hexdec($capability) & $test)==14 )
+                        {
                         $data = "Annonce";
                         mqqtPublishAnnounce( $mqtt, $SrcAddr, $data );
+                        }
                         break;
                     
                     case "8000" :
@@ -164,9 +187,20 @@
                         break;
                         
                     case "8010" :
-                        echo "(Version)(Not processed)\n";
+                        echo "(Version)(Processed->MQTT)\n";
                         echo "Application : ".hexdec(substr($payload,0,4))."\n";
                         echo "SDK : ".hexdec(substr($payload,4,4))."\n";
+                        $SrcAddr = "Ruche";
+                        $ClusterId = "SW";
+                        $AttributId = "Application";
+                        $data = hexdec(substr($payload,0,4));
+                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                        
+                        $SrcAddr = "Ruche";
+                        $ClusterId = "SW";
+                        $AttributId = "SDK";
+                        $data = hexdec(substr($payload,4,4));
+                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
                         break;
                         
                     case "8043" :
@@ -331,10 +365,12 @@
                         }
                         if ( $dataType=="42" )
                         {
-                            if ( ($AttributId=="ff01") && ($AttributSize=="001f") )  // Xiaomi capteur temperature rond
+                            
+                            // Xiaomi capteur temperature rond
+                            if ( ($AttributId=="ff01") && ($AttributSize=="001f") )
                             {
                                 echo "Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Rond)\n";
-                                $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2))/1000;
+                                $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2));
                                 $temperature    = hexdec(substr($payload,24+21*2+2,2).substr($payload,24+21*2,2));
                                 $humidity       = hexdec(substr($payload,24+25*2+2,2).substr($payload,24+25*2,2));
                                 
@@ -344,14 +380,20 @@
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
                                 mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage        );
+                                
+                                // Value decoded and value reported look aligned so I merge them.
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",       $temperature    );
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",       $humidity       );
                                 mqqtPublish( $mqtt, $SrcAddr, "0402",          "0000",       $temperature    );
                                 mqqtPublish( $mqtt, $SrcAddr, "0405",          "0000",       $humidity       );
                                 
                             }
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0025") )  // Xiaomi capteur temperature carré
+                            
+                            // Xiaomi capteur temperature carré
+                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0025") )
                             {
                                 echo "Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)\n";
-                                $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2))/1000;
+                                $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2));
                                 $temperature    = hexdec(substr($payload,24+21*2+2,2).substr($payload,24+21*2,2));
                                 $humidity       = hexdec(substr($payload,24+25*2+2,2).substr($payload,24+25*2,2));
                                 $pression       = hexdec(substr($payload,24+29*2+6,2).substr($payload,24+29*2+4,2).substr($payload,24+29*2+2,2).substr($payload,24+29*2,2));
@@ -362,13 +404,26 @@
                                 echo "Pression: "       .$pression."\n";
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
-                                mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage             );
+                                mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage );
+                                // Value decoded and value reported look aligned so I merge them.
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",         $temperature         );
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",         $humidity            );
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0010",         $pression/10        );
+                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0000",         $pression/100         );
+                                
                                 mqqtPublish( $mqtt, $SrcAddr, "0402",          "0000",         $temperature         );
                                 mqqtPublish( $mqtt, $SrcAddr, "0405",          "0000",         $humidity            );
-                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0010",         $pression            );
-                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0000",         intval($pression)    );
+                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0010",         $pression/10        );
+                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0000",         $pression/100         );
                             }
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") )  // Xiaomi Wall Plug
+                            
+                            // Xiaomi Door Sensor
+                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") ) {
+                                echo "Le door sensor envoie un pacquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....";
+                            }
+                        
+                            // Xiaomi Wall Plug
+                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") )
                             {
                                 echo "Champ proprietaire Xiaomi, doit etre decodé (Wall Plug)\n";
                                 $onOff        = hexdec(substr($payload,24+ 2*2,2));
@@ -382,10 +437,18 @@
                                 echo "Consommation: "   .$consoValue     ."\n";
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    "Decoded as OnOff-Puissance-Conso"       );
-                                mqqtPublish( $mqtt, $SrcAddr, "0006",          "0000",         $onOff           );
+                                mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0006-0000",         $onOff           );
                                 mqqtPublish( $mqtt, $SrcAddr, "tbd",          "--puissance--",       $puissanceValue       );
                                 mqqtPublish( $mqtt, $SrcAddr, "tbd",          "--conso--",       $consoValue           );
                             }
+                            
+                            // Xiaomi Presence Infrarouge
+                            elseif ( ($AttributId=="ff02") )
+                            {
+                                // Non decodé a ce stade
+                                echo "Champ 0xFF02 non decode a ce stade\n";
+                            }
+                            
                             else
                             {
                             $data = hex2bin(substr($payload,24,(strlen($payload)-24-2))); // -2 est une difference entre ZiGate et NXP Controlleur.

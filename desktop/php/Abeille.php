@@ -133,7 +133,7 @@ $eqLogics = eqLogic::byType('Abeille');
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">{{Tpoic Abeille}}</label>
+              <label class="col-sm-3 control-label">{{Topic Abeille}}</label>
               <div class="col-sm-3">
                 <span class="eqLogicAttr" data-l1key="configuration" data-l2key="topic"></span>
               </div>

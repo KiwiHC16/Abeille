@@ -385,7 +385,7 @@
                                                                               ),
                                             "lumi.sensor_motion" => array(
                                                                           "0000-0005"       =>array( "name"=>"nom",         "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                          "0006-0000"       =>array( "name"=>"etat",        "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"presence"),
+                                                                          "0006-0000"       =>array( "name"=>"etat",        "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"presence", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
                                                                           "Time-Time"       =>array( "name"=>"Last",        "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
                                                                           "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
                                                                           ),

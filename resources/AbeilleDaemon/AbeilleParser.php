@@ -499,10 +499,14 @@
         return $tab;
     }
     
-    if (!file_exists(COM))
-    { echo "Fichier ".COM." n existe pas\n";
+    $serial = $argv[1];
+    
+    if (!file_exists($serial))
+    { echo "Error: Fichier ".$serial." n existe pas\n";
         exit(1);
     }
+   
+    echo "Serial port used: ".$serial."\n";
     
     $fifoIN = new fifo( $in, 'r' );
     
@@ -515,11 +519,10 @@
     
     while (true)
     {
-    if (!file_exists(COM))
-    { echo "Fichier ".COM." n existe pas\n";
-        exit(1);
-    }
-    
+        if (!file_exists($serial))
+        { echo "Error: Fichier ".$serial." n existe pas\n";
+            exit(1);
+        }
         //traitement de chaque trame;
         $data= $fifoIN->read();
         echo protocolDatas($data,$mqtt);

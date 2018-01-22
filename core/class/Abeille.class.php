@@ -88,7 +88,7 @@
             $php = "/usr/bin/php";
             $dirDaemon = "/var/www/html/plugins/Abeille/resources/AbeilleDaemon/";
             $daemon1 = "AbeilleSerialRead.php"; $paramDaemon1 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
-            $daemon2 = "AbeilleParser.php";
+            $daemon2 = "AbeilleParser.php";   $paramDaemon2 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
             $daemon3 = "AbeilleMQTTCmd.php"; $paramDaemon3 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
             $log1 = " > /var/www/html/log/".$daemon1.".log";
             $log2 = " > /var/www/html/log/".$daemon2.".log";
@@ -99,7 +99,7 @@
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2.$log2.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2.$end;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             

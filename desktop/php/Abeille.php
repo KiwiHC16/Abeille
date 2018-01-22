@@ -51,14 +51,14 @@ $eqLogics = eqLogic::byType('Abeille');
         <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>{{Ajouter}}</center></span>
       </div>
       <?php
-      $dir = dirname(__FILE__) . '/../../doc/images/';
+      $dir = dirname(__FILE__) . '/../../docs/images/';
       $files = scandir($dir);
       foreach ($eqLogics as $eqLogic) {
         $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
         echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
         echo "<center>";
         $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-        if (in_array($test, $files)) {
+        if (in_array($test, $files, 0)) {
           $path = 'node_' . $eqLogic->getConfiguration('icone');
         } else {
           $path = 'Abeille_icon';
@@ -150,7 +150,18 @@ $eqLogics = eqLogic::byType('Abeille');
             <label class="col-sm-3 control-label">{{Icone du topic}}</label>
             <div class="col-sm-3">
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
-                <option value="">{{Aucun}}</option>
+                <option value="Abeille">{{Abeille}}</option>
+                  
+                  <option value="XiaomiBouton">{{Xiaomi Bouton}}</option>
+                  <option value="XiaomiPorte">{{Xiaomi Porte}}</option>
+                  <option value="XiaomiInfraRouge">{{Xiaomi Infra Rouge}}</option>
+                  <option value="XiaomiPrise">{{Xiaomi Prise}}</option>
+                  <option value="XiaomiTemperatureCarre">{{Xiaomi Temperature Carré}}</option>
+                  <option value="XiaomiTemperatureRond">{{Xiaomi Temperature Rond}}</option>
+                  
+                  <option value="IkeaTradfriBulbE27Opal1000lm">{{IKEA TRADFRI bulb E27 opal 1000lm}}</option>
+                  
+                  
                 <option value="433">{{RF433}}</option>
                 <option value="barometre">{{Baromètre}}</option>
                 <option value="boiteauxlettres">{{Boite aux Lettres}}</option>

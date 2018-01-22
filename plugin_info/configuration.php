@@ -96,5 +96,16 @@ if (!isConnect()) {
         </div>
     </div>
 
+    <div class="form-group" id="mqtt_qos">
+        <label class="col-lg-4 control-label">{{Mode de creation des objets}}</label>
+        <div class="col-lg-4">
+            <select style="width : 40pxpx;" class="configKey form-control" data-l1key="creationObjectMode">
+            <option value="0" selected >Automatique</option>
+            <option value="1">Semi Automatique</option>
+            <option value="2">Manuel</option>
+            </select>
+        </div>
+    </div>
+
 	</fieldset>
 </form>

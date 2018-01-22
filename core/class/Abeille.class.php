@@ -317,17 +317,17 @@
             
             // Est ce que cet equipement existe deja ? Sinon creation que si je connais son nom
             $elogic = self::byLogicalId($nodeid, 'Abeille');
-            if (!is_object($elogic) && ($cmdId=="0000-0005") )
+            if (!is_object($elogic) && ($cmdId=="0000-0005") && (config::byKey('creationObjectMode', 'Abeille', 'Automatique')!="Manuel") )
             {
                 $objetConnu = 0;
                 $objetDefinition = array(
-                                         "lumi.sensor_magnet.aq2" => array("security"=>"1"),
-                                         "lumi.sensor_motion" => array("security"=>"1"),
-                                         "lumi.weather"=> array("heating"=>"1"),
-                                         "lumi.sensor_ht"=> array("heating"=>"1"),
-                                         "lumi.sensor_switch.aq2" => array("automatism"=>"1"),
-                                         "lumi.plug" => array("automatism"=>"1"),
-                                         "TRADFRI bulb E27 opal 1000lm" => array("light"=>"1"),
+                                         "lumi.sensor_magnet.aq2" => array("security"=>"1",     "configuration"=>array("icone"=>"XiaomiPorte" ) ),
+                                         "lumi.sensor_motion" => array("security"=>"1",         "configuration"=>array("icone"=>"XiaomiInfraRouge" ) ),
+                                         "lumi.weather"=> array("heating"=>"1",                 "configuration"=>array("icone"=>"XiaomiTemperatureCarre" ) ),
+                                         "lumi.sensor_ht"=> array("heating"=>"1",               "configuration"=>array("icone"=>"XiaomiTemperatureRond" ) ),
+                                         "lumi.sensor_switch.aq2" => array("automatism"=>"1",   "configuration"=>array("icone"=>"XiaomiBouton" ) ),
+                                         "lumi.plug" => array("automatism"=>"1",                "configuration"=>array("icone"=>"XiaomiPrise" ) ),
+                                         "TRADFRI bulb E27 opal 1000lm" => array("light"=>"1",  "configuration"=>array("icone"=>"IkeaTradfriBulbE27Opal1000lm" ) ),
                                          );
                 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
@@ -341,6 +341,7 @@
                     log::add('Abeille', 'info', 'objet: '.$value.' ne peut pas etre cree completement car je ne connais pas ce type d objet.');
                 }
                 
+                /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 log::add('Abeille', 'info', 'objet: '.$value.' creation par defaut');
                 $elogic = new Abeille();
                 //id
@@ -348,7 +349,9 @@
                 $elogic->setLogicalId($nodeid);
                 $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
-                $elogic->setConfiguration('topic', $nodeid); $elogic->setConfiguration('type', $type);
+                $objetDefSpecific = $objetDefinition[$value];
+                $objetConfiguration = $objetDefSpecific["configuration"];
+                $elogic->setConfiguration('topic', $nodeid); $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
                 $elogic->setIsVisible("1");
                 // eqReal_id
                 $elogic->setIsEnable("1");
@@ -370,6 +373,7 @@
                  if (!is_object($cmdlogic)) {
                  */
                 
+                /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 // Definition des cmd pour les objets, devra etre dans un fichier specifique a therme
                 // objetDefinition        nom objet                       cmdList/cmd          cmdValueDefaut
                 $objetCmdDefinition = array(
@@ -495,6 +499,7 @@
             {
                 // Si equipement et cmd existe alors on met la valeur a jour
                 $elogic = self::byLogicalId($nodeid, 'Abeille');
+                // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
                 if ( !is_object($elogic) )
                 {
                     log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid );
@@ -521,6 +526,39 @@
                     if ( !is_object($cmdlogic) )
                     {
                         log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId );
+                        if ( config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique" )
+                            {
+                            // Crée la commande avec le peu d in fo que l on a
+                            log::add('Abeille', 'info', 'Creation par defaut de la command:'.$nodeid.'/'.$cmd.' sans model');
+                            $cmdlogic = new AbeilleCmd();
+                            // id
+                            $cmdlogic->setEqLogic_id($elogic->getId());
+                            $cmdlogic->setEqType('Abeille');
+                            $cmdlogic->setLogicalId($cmd);
+                            $cmdlogic->setOrder('0');
+                            $cmdlogic->setName( 'Inconnue'.$elogic->getId() );
+                            // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                            // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+                            // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
+                            // {
+                            // $cmdlogic->setConfiguration($confKey,$confValue);
+                            //}
+                            // template
+                            // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
+                            // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+                            // $cmdlogic->setType($cmdValueDefaut["Type"]);
+                            $cmdlogic->setType('Info');
+                            // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                            // unite
+                            // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                            // isVisible
+                            // value
+                            // html
+                            // alert
+                            
+                            $cmdlogic->save();
+                            $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
+                            }
                     }
                     else
                     {

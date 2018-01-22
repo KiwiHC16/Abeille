@@ -205,7 +205,7 @@
                 // 02 10: <TCsignificance: uint8_t> 00
                 
                 // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                sendCmd("0049","0004","FFFC1E00"); //1E = 30 secondes
+                sendCmd("0049","0004","FFFCFE00"); //1E = 30 secondes
                 
             }
         }

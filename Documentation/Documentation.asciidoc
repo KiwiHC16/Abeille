@@ -124,6 +124,7 @@ image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
 == Utilisation de Jeedom
 * Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si vous démarrez votre réseau ZigBee de zéro.
+* Le nom de l objet est "Abeille-" suivi de son adresse courte zigbee.
 
 *A noter: rafraichir la page si vous voyez pas de changement après une action, par exemple après l'ajout d'un équipement.*
 

@@ -15,9 +15,13 @@
      * You should have received a copy of the GNU General Public License
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
+    
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     
+
+    
     class Abeille extends eqLogic {
+        
         public static function health() {
             $return = array();
             $socket = socket_create(AF_INET, SOCK_STREAM, 0);
@@ -107,8 +111,6 @@
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             exec($cmd);
             
-            
-            
         }
         
         public static function deamon_stop() {
@@ -192,43 +194,42 @@
             }
         }
         
+        
         public static function message( $message )
         {
+            
+            if ( $GLOBALS['debugBEN'] ) { echo "Function message.\n"; }
+            if ( $GLOBALS['debugBEN'] ) { print_r( $message ); echo "\n"; }
             log::add('Abeille', 'debug', '');
             log::add('Abeille', 'debug', '--- process a new message -----------------------');
             log::add('Abeille', 'debug', 'Message ->' . $message->payload . '<- sur ' . $message->topic);
+            
             // Analyse du message recu et definition des variables en fonction de ce que l on trouve dans le message
-            if (is_string($message->payload) && is_array(json_decode($message->payload, true)) && (json_last_error() == JSON_ERROR_NONE))
-            {
-                //json message
-                $nodeid = $message->topic;
-                $value = $message->payload;
-                // type = json
-                $type = 'json';
-                log::add('Abeille', 'info', 'Message json : ' . $value . ' pour information sur : ' . $nodeid);
-            }
-            else
-            {
-                // pas un json message
-                // $nodeid[/] / $cmdId / $value
-                
-                $topicArray = explode("/", $message->topic);
-                $Filter = $topicArray[0];
-                // cmdId est le dernier champ du topic
-                $cmdId = end($topicArray);
-                $key = count($topicArray) - 1;
-                unset($topicArray[$key]);
-                $addr = end($topicArray);
-                // nodeid est le topic sans le dernier champ
-                $nodeid = implode($topicArray,'/');
-                $value = $message->payload;
-                // type = topic car pas json
-                $type = 'topic';
-                // log::add('Abeille', 'info', 'Message texte : ' . $value . ' pour information : ' . $cmdId . ' sur : ' . $nodeid);
-            }
+            // $nodeid[/] / $cmdId / $value
+            if ( $GLOBALS['debugBEN'] ) { echo "\ntopic: "; print_r( $message->topic ); }
+            $topicArray = explode("/", $message->topic);
+            if ( $GLOBALS['debugBEN'] ) { echo "\ntopicArray: "; print_r( $topicArray ); }
+            $Filter = $topicArray[0];
+            if ( $GLOBALS['debugBEN'] ) { echo "\nFilter: "; print_r( $Filter ); }
+            // cmdId est le dernier champ du topic
+            $cmdId = end($topicArray);
+            $key = count($topicArray) - 1;
+            unset($topicArray[$key]);
+            $addr = end($topicArray);
+            // nodeid est le topic sans le dernier champ
+            $nodeid = implode($topicArray,'/');
+            $value = $message->payload;
+            // type = topic car pas json
+            $type = 'topic';
             
             
-            // La ruche est aussi un abjet Abeille
+            if ( $GLOBALS['debugBEN'] ) { echo "\nAnalyse msg done\n"; }
+            
+            $AbeilleObjetDefinition = json_decode( file_get_contents("/var/www/html/plugins/Abeille/core/class/AbeilleObjetDefintion.json"), true);
+            
+            
+            /*----------------------------------------------------------------------------------------------------------------------------------------------*/
+            // La ruche est aussi un objet Abeille
             if ( $message->topic == "CmdRuche/Ruche/CreateRuche" )
             {
                 $elogic = self::byLogicalId("Ruche", 'Abeille');
@@ -262,19 +263,30 @@
                 $elogic->save();
                 
                 
+                $i=0;
+                
                 $rucheCommandList = array(
-                                          
-                                          "Version"        =>array( "name"=>"Version",       "order"=>0, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/getVersion","request"=>"Version") ),
-                                          "Start Network"  =>array( "name"=>"Start Network", "order"=>1, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/startNetwork","request"=>"StartNetwork") ),
-                                          "Inclusion"      =>array( "name"=>"Inclusion",     "order"=>2, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/SetPermit","request"=>"Inclusion") ),
-                                          "Reset"          =>array( "name"=>"Reset",         "order"=>3, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/reset","request"=>"reset") ),
-                                          "addGroup"       =>array( "name"=>"Add Group",     "order"=>4, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/addGroup","request"=>"address=#title#&groupAddress=#message#") ),
-                                          "removeGroup"    =>array( "name"=>"Remove Group",  "order"=>5, "isHistorized"=>"0", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/removeGroup","request"=>"address=#title#&groupAddress=#message#") ),
-                                          "Time-Time"      =>array( "name"=>"Last",          "order"=>6, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "Time-TimeStamp" =>array( "name"=>"Last Stamps",   "order"=>7, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "SW-Application" =>array( "name"=>"SW",            "order"=>8, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "SW-SDK"         =>array( "name"=>"SDK",           "order"=>9, "isHistorized"=>"0", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "Version"        =>array( "name"=>"Version",              "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/getVersion","request"=>"Version") ),
+                                          "Start Network"  =>array( "name"=>"Start Network",        "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/startNetwork","request"=>"StartNetwork") ),
+                                          "Inclusion"      =>array( "name"=>"Inclusion",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/SetPermit","request"=>"Inclusion") ),
+                                          "Reset"          =>array( "name"=>"Reset",                "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/reset","request"=>"reset") ),
+                                          "addGroup"       =>array( "name"=>"Add Group",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/addGroup","request"=>"address=#title#&groupAddress=#message#") ),
+                                          "removeGroup"    =>array( "name"=>"Remove Group",         "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/removeGroup","request"=>"address=#title#&groupAddress=#message#") ),
+                                          "Time-Time"      =>array( "name"=>"Last",                 "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "Time-TimeStamp" =>array( "name"=>"Last Stamps",          "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-Application" =>array( "name"=>"SW",                   "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-SDK"         =>array( "name"=>"SDK",                  "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
                                           );
+                
+                if ( $GLOBALS['debugBEN'] ) { echo "First list\n"; print_r( $rucheCommandList ); echo "\n"; }
+                
+                // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+                foreach ( $AbeilleObjetDefinition as $objetId => $objetType )
+                {
+                    $rucheCommandList[$objetId] = array( "name"=>$objetId,    "order"=>$i++,    "isVisible"=>"0", "isHistorized"=>"0", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"Abeille/".$objetId."/0000-0005","request"=>$objetId) ) ;
+                }
+                
+                if ( $GLOBALS['debugBEN'] ) { echo "Second list\n"; print_r( $rucheCommandList ); echo "\n"; }
                 
                 foreach ( $rucheCommandList as $cmd => $cmdValueDefaut )
                 {
@@ -300,7 +312,7 @@
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                     // unite
                     $cmdlogic->setDisplay('invertBinary','0');
-                    // isVisible
+                    $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"] );
                     // value
                     // html
                     // alert
@@ -310,30 +322,34 @@
                 }
                 
             }
+            if ( $GLOBALS['debugBEN'] ) echo "Passe l etat ruche\n";
+            
+            if ( $GLOBALS['debugBEN'] ) echo "Filter test pour ".$Filter."\n";
+            
             
             // On ne prend en compte que les messahe Abeille/#/#
             if ( $Filter!="Abeille" )  { return; }
             
+            if ( $GLOBALS['debugBEN'] ) echo "Passe l etat Abeille\n";
+            
+            
             // Est ce que cet equipement existe deja ? Sinon creation que si je connais son nom
             $elogic = self::byLogicalId($nodeid, 'Abeille');
+            
             if (!is_object($elogic) && ($cmdId=="0000-0005") && (config::byKey('creationObjectMode', 'Abeille', 'Automatique')!="Manuel") )
+                
             {
+                
                 $objetConnu = 0;
-                $objetDefinition = array(
-                                         "lumi.sensor_magnet.aq2" => array("security"=>"1",     "configuration"=>array("icone"=>"XiaomiPorte" ) ),
-                                         "lumi.sensor_motion" => array("security"=>"1",         "configuration"=>array("icone"=>"XiaomiInfraRouge" ) ),
-                                         "lumi.weather"=> array("heating"=>"1",                 "configuration"=>array("icone"=>"XiaomiTemperatureCarre" ) ),
-                                         "lumi.sensor_ht"=> array("heating"=>"1",               "configuration"=>array("icone"=>"XiaomiTemperatureRond" ) ),
-                                         "lumi.sensor_switch.aq2" => array("automatism"=>"1",   "configuration"=>array("icone"=>"XiaomiBouton" ) ),
-                                         "lumi.plug" => array("automatism"=>"1",                "configuration"=>array("icone"=>"XiaomiPrise" ) ),
-                                         "TRADFRI bulb E27 opal 1000lm" => array("light"=>"1",  "configuration"=>array("icone"=>"IkeaTradfriBulbE27Opal1000lm" ) ),
-                                         );
+                
+                if ( $GLOBALS['debugBEN'] ) { echo "Value: " .$value."\n"; }
+                // if ( $GLOBALS['debugBEN'] ) print_r( $AbeilleObjetDefinition[$value] );
                 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
-                if ( array_key_exists( $value, $objetDefinition ) )
+                if ( array_key_exists( $value, $AbeilleObjetDefinition ) )
                 {
                     $objetConnu = 1;
-                    log::add('Abeille', 'info', 'objet: '.$value.' peut etre cree car je connais ce type d objet.');
+                    log::add('Abeille', 'info', 'objet: '.$value.' peut etre cree car je connais ce type d objet.' );
                 }
                 else
                 {
@@ -341,22 +357,25 @@
                 }
                 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+                // Creation de l objet
                 log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
                 $elogic = new Abeille();
                 //id
-                if ( $objetConnu ) { $elogic->setName($nodeid); } else { $elogic->setName($nodeid."-Type d objet inconnu"); }
+                if ( $objetConnu ) { $elogic->setName("Abeille-".$addr); } else { $elogic->setName("Abeille-".$addr."-Type d objet inconnu"); }
                 $elogic->setLogicalId($nodeid);
                 $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
-                $objetDefSpecific = $objetDefinition[$value];
+                
+                $objetDefSpecific = $AbeilleObjetDefinition[$value];
                 $objetConfiguration = $objetDefSpecific["configuration"];
                 $elogic->setConfiguration('topic', $nodeid); $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+                
                 $elogic->setIsVisible("1");
                 // eqReal_id
                 $elogic->setIsEnable("1");
                 // status
                 // timeout
-                $elogic->setCategory(array_keys($objetDefinition[$value])[0],$objetDefinition[$value][array_keys($objetDefinition[$value])[0]]);
+                $elogic->setCategory(array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0],$AbeilleObjetDefinition[$value]["Categorie"][  array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0] ] );
                 // display
                 // order
                 // comment
@@ -366,151 +385,40 @@
                 $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
                 $elogic->save();
                 
-                /*
-                 if ($type == 'topic') {
-                 $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(),$cmdId);
-                 if (!is_object($cmdlogic)) {
-                 */
                 
-                /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-                // Definition des cmd pour les objets, devra etre dans un fichier specifique a therme
-                // objetDefinition        nom objet                       cmdList/cmd          cmdValueDefaut
-                $objetCmdDefinition = array(
-                                            // Xiaomi Door
-                                            "lumi.sensor_magnet.aq2" => array(
-                                                                              "0000-0001"       =>array( "name"=>"SW",          "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                              "0000-0005"       =>array( "name"=>"nom",         "order"=>1, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                              "0006-0000"       =>array( "name"=>"etat",        "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"door"),
-                                                                              "Time-Time"       =>array( "name"=>"Last",        "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                              "Time-TimeStamp"  =>array( "name"=>"Last Stamp",  "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                              ),
-                                            // Xiaomi Presence
-                                            "lumi.sensor_motion" => array(
-                                                                          "0000-0005"       =>array( "name"=>"nom",             "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                          "0406-0000"       =>array( "name"=>"etat",            "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"1", "template"=>"presence", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
-                                                                          "Time-Time"       =>array( "name"=>"Last",            "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                          "Time-TimeStamp"  =>array( "name"=>"Last Stamp",      "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                          ),
-                                            // Xiaomi Temperature Carré
-                                            "lumi.weather" => array(
-                                                                    "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                    "0402-0000"       =>array( "name"=>"Temperature",   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
-                                                                    "0405-0000"       =>array( "name"=>"Humidite",      "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
-                                                                    "0403-0000"       =>array( "name"=>"Pression1",     "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge" ),
-                                                                    "0403-0010"       =>array( "name"=>"Pression",      "order"=>4, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"barometre", "configuration"=>array("calculValueOffset"=>"#value#/10", "historizeRound"=>"1") ),
-                                                                    "0403-0014"       =>array( "name"=>"What is it",    "order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                    "Batterie-Volt"   =>array( "name"=>"Batterie",      "order"=>6, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter", "configuration"=>array("calculValueOffset"=>"#value#/1000", "minValue"=>"0","maxValue"=>"3.3") ),
-                                                                    
-                                                                    // Values reported from Xiaomi field decoding look in line with value in attribute report, so merged.
-                                                                    // "Xiaomi-0402-0000"       =>array( "name"=>"Temperature(Reverse Eng)",   "order"=>6, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"1") ),
-                                                                    // "Xiaomi-0405-0000"       =>array( "name"=>"Humidite(Reverse Eng)",      "order"=>7, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG", "configuration"=>array("calculValueOffset"=>"#value#/100", "historizeRound"=>"0") ),
-                                                                    // "Xiaomi-0403-0000"       =>array( "name"=>"Pression1(Reverse Eng)",     "order"=>8, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge" ),
-                                                                    // "Xiaomi-0403-0010"       =>array( "name"=>"Pression(Reverse Eng)",      "order"=>9, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"barometre", "configuration"=>array("calculValueOffset"=>"#value#/10", "historizeRound"=>"1") ),
-                                                                    
-                                                                    "0000-ff01"       =>array( "name"=>"Specific",      "order"=>7, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                    "Time-Time"       =>array( "name"=>"Last",          "order"=>8, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                    "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>9, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                    ),
-                                            
-                                            // Xiaomi Temperature Rond
-                                            "lumi.sensor_ht" => array(
-                                                                      "0000-0005"       =>array( "name"=>"nom",          "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                      "0402-0000"       =>array( "name"=>"Temperature",  "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG",      "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"1") ),
-                                                                      
-                                                                      "0405-0000"       =>array( "name"=>"Humidite",     "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG",    "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"0") ),
-                                                                      "Batterie-Volt"   =>array( "name"=>"Batterie",     "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"vuMeter",      "configuration"=>array("calculValueOffset"=>"#value#/1000", "minValue"=>"0","maxValue"=>"3.3") ),
-                                                                      
-                                                                      // Values reported from Xiaomi field decoding look in line with value in attribute report, so merged.
-                                                                      // "Xiaomi-0402-0000"=>array( "name"=>"Temperature(Reverse Eng)",  "order"=>4, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"tempIMG",      "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"1") ),
-                                                                      // "Xiaomi-0405-0000"=>array( "name"=>"Humidite(Reverse Eng)",     "order"=>5, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"hydro3IMG",    "configuration"=>array("calculValueOffset"=>"#value#/100",  "historizeRound"=>"0") ),
-                                                                      
-                                                                      "0000-ff01"       =>array( "name"=>"Specific",     "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>"" ),
-                                                                      "Time-Time"       =>array( "name"=>"Last",          "order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                      "Time-TimeStamp"  =>array( "name"=>"Last Stamp",    "order"=>6, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                      ),
-                                            
-                                            // Xiaomi Bouton
-                                            "lumi.sensor_switch.aq2" => array(
-                                                                              "0000-0005"       =>array( "name"=>"nom",                    "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string", "invertBinary"=>"0", "template"=>""),
-                                                                              "0006-0000"       =>array( "name"=>"etat",                   "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary", "invertBinary"=>"0", "template"=>"", "configuration"=>array("returnStateValue"=>"0","returnStateTime"=>"1") ),
-                                                                              "0006-8000"       =>array( "name"=>"multi",                  "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                              "Time-Time"       =>array( "name"=>"Time-Time",              "order"=>3, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string", "invertBinary"=>"0", "template"=>""),
-                                                                              "Time-TimeStamp"  =>array( "name"=>"Time-TimeStamp",         "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                              ),
-                                            // Xiaomi Prise
-                                            "lumi.plug" => array(
-                                                                 "0000-0005"           =>array( "name"=>"nom",                 "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                 "0006-0000"           =>array( "name"=>"etat",                "order"=>1, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"prise"),
-                                                                 "tbd---puissance--"   =>array( "name"=>"Puissance",           "order"=>2, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"", "configuration"=>array("minValue"=>"0","maxValue"=>"2500","historizeRound"=>"0") ),
-                                                                 "tbd---conso--"       =>array( "name"=>"Conso",               "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge", "configuration"=>array("historizeRound"=>"3") ),
-                                                                 "Time-Time"           =>array( "name"=>"Time-Time",           "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                 "Time-TimeStamp"      =>array( "name"=>"Time-TimeStamp",      "order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                 "On"                  =>array( "name"=>"On",                  "order"=>6, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"On") ),
-                                                                 "Off"                 =>array( "name"=>"Off",                 "order"=>7, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"Off") ),
-                                                                 "Toggle"              =>array( "name"=>"Toggle",              "order"=>8, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"Toggle") ),
-                                                                 // getEtat  clusterId=0006&attributeId=0000
-                                                                 // getManufacturerName  clusterId=0000&attributeId=0004
-                                                                 // getModelIdentifier   clusterId=0000&attributeId=0005
-                                                                 ),
-                                            
-                                            // IKEA TRADFRI bulb E27 opal 1000lm
-                                            "TRADFRI bulb E27 opal 1000lm" => array(
-                                                                                    "0000-0005"       =>array( "name"=>"nom",           "order"=>0, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                                    "0000-0004"       =>array( "name"=>"societe",       "order"=>1, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                                    "0000-4000"       =>array( "name"=>"SW",            "order"=>2, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                                    "0006-0000"       =>array( "name"=>"etat",          "order"=>3, "isHistorized"=>"1",    "Type"=>"info",     "subType"=>"binary",  "invertBinary"=>"0", "template"=>"light"),
-                                                                                    "Time-Time"       =>array( "name"=>"Time-Time",     "order"=>4, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"string",  "invertBinary"=>"0", "template"=>""),
-                                                                                    "Time-TimeStamp"  =>array( "name"=>"Time-TimeStamp","order"=>5, "isHistorized"=>"0",    "Type"=>"info",     "subType"=>"numeric", "invertBinary"=>"0", "template"=>"badge"),
-                                                                                    "On"              =>array( "name"=>"On",            "order"=>6, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"On") ),
-                                                                                    "Off"             =>array( "name"=>"Off",           "order"=>7, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"Off") ),
-                                                                                    "Toggle"          =>array( "name"=>"Toggle",        "order"=>8, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"other",   "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/OnOff","request"=>"Toggle") ),
-                                                                                    "Toggle"          =>array( "name"=>"Level",         "order"=>9, "isHistorized"=>"0",    "Type"=>"action",   "subType"=>"slider",  "invertBinary"=>"0", "template"=>"", "configuration"=>array("topic"=>"CmdAbeille/".$addr."/setLevel","request"=>"Level=#slider#&duration=01") ),
-                                                                                    // getEtat  clusterId=0006&attributeId=0000
-                                                                                    // getLevel clusterId=0008&attributeId=0000
-                                                                                    // getManufacturerName  clusterId=0000&attributeId=0004
-                                                                                    // getModelIdentifier   clusterId=0000&attributeId=0005
-                                                                                    // getSWBuild   clusterId=0000&attributeId=4000
-                                                                                    ),
-                                            );
                 
-                // On créé toutes les commandes par defaut.
-                foreach ( $objetCmdDefinition as $nomObjet => $cmdList )
+                if ( $GLOBALS['debugBEN'] ) { echo "On va creer les comandes.\n"; print_r( $AbeilleObjetDefinition[$value]['Commandes'] ); }
+                
+                foreach ( $AbeilleObjetDefinition[$value]['Commandes'] as $cmd => $cmdValueDefaut )
                 {
-                    log::add('Abeille', 'info', 'foreach nomObjet: '.$nomObjet);
-                    if ( $nomObjet==$value )
+                    log::add('Abeille', 'info', 'Creation de la command:'.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
+                    $cmdlogic = new AbeilleCmd();
+                    // id
+                    $cmdlogic->setEqLogic_id($elogic->getId());
+                    $cmdlogic->setEqType('Abeille');
+                    $cmdlogic->setLogicalId($cmd);
+                    $cmdlogic->setOrder($cmdValueDefaut["order"]);
+                    $cmdlogic->setName( $cmdValueDefaut["name"] );
+                    if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                    if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+                    foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
                     {
-                        foreach ( $cmdList as $cmd => $cmdValueDefaut )
-                        {
-                            log::add('Abeille', 'info', 'Creation de la command:'.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
-                            $cmdlogic = new AbeilleCmd();
-                            // id
-                            $cmdlogic->setEqLogic_id($elogic->getId());
-                            $cmdlogic->setEqType('Abeille');
-                            $cmdlogic->setLogicalId($cmd);
-                            $cmdlogic->setOrder($cmdValueDefaut["order"]);
-                            $cmdlogic->setName( $cmdValueDefaut["name"] );
-                            if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
-                            if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
-                            foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
-                            {
-                                $cmdlogic->setConfiguration($confKey,$confValue);
-                            }
-                            // template
-                            $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
-                            $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                            $cmdlogic->setType($cmdValueDefaut["Type"]);
-                            $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                            // unite
-                            $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
-                            // isVisible
-                            // value
-                            // html
-                            // alert
-                            
-                            $cmdlogic->save();
-                            $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
-                        }
+                        $cmdlogic->setConfiguration($confKey,$confValue);
                     }
+                    // template
+                    $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
+                    $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+                    $cmdlogic->setType($cmdValueDefaut["Type"]);
+                    $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                    // unite
+                    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                    // isVisible
+                    // value
+                    // html
+                    // alert
+                    
+                    $cmdlogic->save();
+                    $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
                 }
                 
                 // On defini le nom de l objet
@@ -523,24 +431,27 @@
                 // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
                 if ( !is_object($elogic) )
                 {
-                    log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid );
-                    $_id = "BEN"; // JE ne sais pas alors je mets n importe quoi....
-                    $_subject = "CmdAbeille/".$addr."/Annonce";
-                    $_message = "";
-                    $_retain = 0;
-                    log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
-                    $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom') . '_pub_' . $_id);
-                    if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
-                        $publish->setCredentials(config::byKey('AbeilleUser', 'Abeille'), config::byKey('AbeillePass', 'Abeille'));
+                    if (0)
+                    {
+                        log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid );
+                        $_id = "BEN"; // JE ne sais pas alors je mets n importe quoi....
+                        $_subject = "CmdAbeille/".$addr."/Annonce";
+                        $_message = "";
+                        $_retain = 0;
+                        log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
+                        $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom') . '_pub_' . $_id);
+                        if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
+                            $publish->setCredentials(config::byKey('AbeilleUser', 'Abeille'), config::byKey('AbeillePass', 'Abeille'));
+                        }
+                        $publish->connect(config::byKey('AbeilleAdress', 'Abeille', '127.0.0.1'), config::byKey('AbeillePort', 'Abeille', '1883'), 60);
+                        $publish->publish($_subject, $_message, config::byKey('AbeilleQos', 'Abeille', '1'), $_retain);
+                        for ($i = 0; $i < 100; $i++) {
+                            // Loop around to permit the library to do its work
+                            $publish->loop(1);
+                        }
+                        $publish->disconnect();
+                        unset($publish);
                     }
-                    $publish->connect(config::byKey('AbeilleAdress', 'Abeille', '127.0.0.1'), config::byKey('AbeillePort', 'Abeille', '1883'), 60);
-                    $publish->publish($_subject, $_message, config::byKey('AbeilleQos', 'Abeille', '1'), $_retain);
-                    for ($i = 0; $i < 100; $i++) {
-                        // Loop around to permit the library to do its work
-                        $publish->loop(1);
-                    }
-                    $publish->disconnect();
-                    unset($publish);
                 }
                 else {
                     $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(),$cmdId);
@@ -548,7 +459,7 @@
                     {
                         log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId );
                         if ( config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique" )
-                            {
+                        {
                             // Crée la commande avec le peu d info que l on a
                             log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
                             $cmdlogic = new AbeilleCmd();
@@ -571,7 +482,7 @@
                             // $cmdlogic->setType($cmdValueDefaut["Type"]);
                             $cmdlogic->setType('info');
                             // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                                $cmdlogic->setSubType("string");
+                            $cmdlogic->setSubType("string");
                             // unite
                             // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
                             // isVisible
@@ -581,7 +492,7 @@
                             
                             $cmdlogic->save();
                             $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
-                            }
+                        }
                     }
                     else
                         // Si equipement et cmd existe alors on met la valeur a jour
@@ -660,3 +571,28 @@
             return true;
         }
     }
+    
+    // Used for test
+    // en ligne de comande =>
+    // "php Abeille.class.php 1" to run the script to create an object
+    // "php Abeille.class.php" to parse the file and verify syntax issues.
+    /*
+        if ( isset($argv[1]) ) { $debugBEN = $argv[1]; }
+    if ( $debugBEN )
+    {
+        echo "Debut\n";
+        $message = new stdClass();
+        
+        // $message->topic="Abeille/aaaa/0000-0005";
+        // $message->payload="lumi.sensor_magnet.aq2";
+        
+        $message->topic="CmdRuche/Ruche/CreateRuche";
+        $message->payload="";
+        
+        print_r( $message->topic );
+        
+        Abeille::message( $message );
+        echo "Fin\n";
+    }
+    */
+    

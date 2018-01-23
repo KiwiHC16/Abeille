@@ -31,6 +31,10 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 * Verifier la configuration réseau et en particulier /hostname, /etc/hosts
 
+=== Connection avec la Zigate
+
+* Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettrent à jour à chaque fois.
+
 === Mosquitto
 
 * Abeille utilise un broker mosquitto pour echanger des messages entre les modules logicielles.

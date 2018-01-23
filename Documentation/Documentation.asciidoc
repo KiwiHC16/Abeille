@@ -36,13 +36,21 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 - pour l'instant tous mes tests sont faits sur une VM Debian 9 et Jeedom 3.1.7 
 
 == Installation
+
+=== ZiGate
+
 - La ZiGate est avec le bon firmware et connectée au port USB (le firmware actuellement testé est la version 3b: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
+
+=== Widget
+
 - Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus joli.
 * barometre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
 * thermometre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * hunidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
 
 image::images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
+
+=== Objet de référence
 
 - Créez un objet sur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
 
@@ -56,7 +64,11 @@ image::images/Capture_d_ecran_2018_01_21_a_17_27_54.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 
-- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle, le plugin doit être aussi disponible maintenant dans le market.).
+=== Installation du plugin
+
+==== Depuis Github
+
+- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers.
 * ssh sur votre jeedom
 * cd /var/www/html/plugins/
 * mkdir Abeille
@@ -65,6 +77,12 @@ image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 * cd ..
 * chmod -R 777 /var/www/html/plugins/Abeille
 * chown -R www-data:www-data /var/www/html/plugins/Abeille
+
+==== Depuis le market
+
+* Rien de spécifique. Suivre la procédure classique. Pour l'instant il ne doit y avoir qu'une version en beta.
+
+=== Activation
 
 - Activation du plugin
 * Allez sur l'interface http Jeedom
@@ -104,25 +122,24 @@ image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
 * Tous les autres objets seront créés automatiquement dès détection.
 
-- Utilisation de Jeedom
-* Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si nous démarrez votre réseau ZigBee de zéro.
+== Utilisation de Jeedom
+* Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si vous démarrez votre réseau ZigBee de zéro.
 
-- Ajout d'équipements (S'ils sont déjà dans le réseau ZigBee)
-* Ampoule IKEA: éteindre et allumer électriquement l'ampoule et elle doit apparaitre dans Jeedom.
-* Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latterale et il doit apparaitre dans Jeedom.
-* Capteur InfraRouge Xiaomi: pas implementé.
+*A noter: rafraichir la page si vous voyez pas de changement après une action, par exemple après l'ajout d'un équipement.*
 
-- Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+=== Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+
 * Mettre la gateway en inclusion (Bouton Inclusion), la Led bleue de la zigate doit cligonter,
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
-* puis:
-* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps.
+puis:
+
+* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + buton O appuyés suffisament longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer. 
 
 image::images/Capture_d_ecran_2018_01_21_a_11_13_44.png[]
 
-* Capteur de porte, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas deja sur un reseau, si deja sur reseau provoque un "leave" (a faire quand le reseau est fermé sinon juste apres le keave l object refait une association et reste sur le reseau.).
+* Capteur de porte, prise, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas deja sur un reseau, si deja sur reseau provoque un "leave" (a faire quand le reseau est fermé sinon juste apres le keave l object refait une association et reste sur le reseau.).
 
 Porte
 
@@ -149,6 +166,12 @@ image::images/Capture_d_ecran_2018_01_21_a_12_45_22.png[]
 * Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
 
 image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
+
+=== Ajout d'équipements (S'ils sont déjà dans le réseau ZigBee)
+
+* Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l'ampoule et elle doit apparaitre dans Jeedom.
+* Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latterale et il doit apparaitre dans Jeedom.
+* Capteur InfraRouge Xiaomi: pas implementé.
 
 == Pour les curieux
 

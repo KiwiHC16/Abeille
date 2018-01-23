@@ -384,6 +384,7 @@
                                 // Value decoded and value reported look aligned so I merge them.
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",       $temperature    );
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",       $humidity       );
+                                
                                 mqqtPublish( $mqtt, $SrcAddr, "0402",          "0000",       $temperature    );
                                 mqqtPublish( $mqtt, $SrcAddr, "0405",          "0000",       $humidity       );
                                 
@@ -405,6 +406,7 @@
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
                                 mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage );
+                                
                                 // Value decoded and value reported look aligned so I merge them.
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",         $temperature         );
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",         $humidity            );

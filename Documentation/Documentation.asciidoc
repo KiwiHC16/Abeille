@@ -4,7 +4,7 @@
 Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
 C'est une toute premiere version qui demande encore pas mal de travail.
 
-.Il permet déjà:
+Il permet déjà:
 - de connecter les ampoules IKEA et la série Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
 - de faire les inclusions des equipments zigbee depuis jeedom
 - creation automatique des objets MQTT pour les remontées d’informations (ensuite il faut créer à la main le commande d’action)
@@ -56,7 +56,7 @@ image::images/Capture_d_ecran_2018_01_21_a_17_27_54.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 
-- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle et je cherche a mettre le plugin dans le market aussi tôt que possible).
+- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers (Cette etape est pour l instant manuelle, le plugin doit être aussi disponible maintenant dans le market.).
 * ssh sur votre jeedom
 * cd /var/www/html/plugins/
 * mkdir Abeille
@@ -90,6 +90,8 @@ image::images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_38.png[]
 
+A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration
+
 - Creation des objets
 * Allez dans la page de gestion des objets en selectionnant le menu plugins, puis protocole domotique, puis Abeille
 * Vous devriez voir un premier objet "Ruche" (et éventuellement les objets abeille).
@@ -100,7 +102,7 @@ image::images/Capture_d_ecran_2018_01_21_a_11_55_44.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_55.png[]
 
-* Tous les autres objets seront créés automatiquement dès détections.
+* Tous les autres objets seront créés automatiquement dès détection.
 
 - Utilisation de Jeedom
 * Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si nous démarrez votre réseau ZigBee de zéro.
@@ -149,8 +151,13 @@ image::images/Capture_d_ecran_2018_01_21_a_12_45_22.png[]
 image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
 
 == Pour les curieux
-- Vue générale de la solution
+
+=== Vue générale de la solution
 
 image::images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
 
-....
+=== Debug / Problèmes
+
+Si vous rencontrez des problemes aller voir:
+* le page: Debug - https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc
+* le forum: https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille

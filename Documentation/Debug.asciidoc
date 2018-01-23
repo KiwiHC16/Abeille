@@ -1,0 +1,44 @@
+= Debug / Troubleshooting / Investigations
+
+Je vais essayer de consolider ici tous les retour d'expérience et les vérifications à faire pour résoudre un éventuel problème.
+
+== Problèmes / Issues
+
+Si vous trouvez un problème qui demande une correction dans le pluugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
+
+Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en particulier:
+- Votre configuration Jeedom: 
+* Le HW sur lequel vous faite tourner le plugin, 
+* la Version de l'OS, 
+* la version de Jeedom
+- Votre configuration Gateway
+* Zigate et quel firmware
+* ...
+- Les logs
+* aussi nombreux que possibles
+- Description 
+* ce que vous cherchez à faire
+* les résultats
+
+== Evolution
+
+Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "enhancement": https://github.com/KiwiHC16/Abeille/issues
+
+
+== Debug
+
+=== Configuration 
+
+* Verifier la configuration réseau et en particulier /hostname, /etc/hosts
+
+=== Mosquitto
+
+* Abeille utilise un broker mosquitto pour echanger des messages entre les modules logicielles.
+* mosquitto est installé sur la machine par defaut lors de l installation des dependances.
+* vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+* La configuration générale du plugin propose les paramètres :
+    - Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
+    - Port du serveur Mosquitto (1883 par défaut)
+    - Identifiant de Jeedom avec lequel il publiera sur le broker
+    - Il est possible d'ajouter un compte et mot de passe si la connexion le requiert.
+    - QoS à utiliser (par défaut 1).

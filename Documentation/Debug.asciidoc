@@ -91,7 +91,8 @@ apt-get install mosquitto
 === Creation des objets
 
 * Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas defaut et ajouter de nouveaux modèles par exemple.
-* L'apparail Ruche contient une commande cachée par objet type. Il faut regénerer l objet Ruche pour prendre en compte les modifications éventuelles. Pour ce faire supprimer Ruche et relancer le démon. 
+
+* L'appareil Ruche contient une commande cachée par type d'objet (identifié das le fichier JSON). Chaque commande cachée permet la création d'objets fictifs pour vérifier la bonne création de l'objet dans jeedom. Pour avoir les commandes, il faut regénerer l'objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l'objet. 
 
 image::images/Capture_d_ecran_2018_01_23_a_22_31_19.png[]
 
@@ -99,9 +100,9 @@ image::images/Capture_d_ecran_2018_01_23_a_22_31_19.png[]
 
 image::images/Capture_d_ecran-2018_01_23_a_22_31_43.png[]
 
-* En cliquant sur sur l'un de ces boutons vous vérifier que le chemin Jeedom->Mosquitto->Jeedom fonctionne.
+* En cliquant sur l'un de ces boutons vous vérifier vous testez la bonne création des objets mais aussi que le chemin Jeedom->Mosquitto->Jeedom fonctionne.
 
-* Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en aillant mis les bon paramèetre en find de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
+* Pas recommandé: Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en aillant mis les bon paramètres en fin de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
 
 * L'objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:
 

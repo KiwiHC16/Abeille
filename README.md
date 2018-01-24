@@ -1,4 +1,4 @@
-= Abeille
+Abeille
 
 Abeille pour Jeedom (Gateway ZiGate)
 

@@ -1,19 +1,39 @@
 = Debug / Troubleshooting / Investigations
 
-Je vais essayer de consolider ici tous les retour d'expérience et les vérifications à faire pour résoudre un éventuel problème.
+Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.
+
+== Attention - Danger
+
+=== "retain" dans les objets
+
+* Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
+* Le plugin [underline]#n'utilise pas# ce mode de fonctionnement. 
+    - [underline]#Il est fortement conseillé de ne pas choisir "retain"# si vous ne comprenez pas les conséquences. 
+    - L'option reste accessible pour les pros de MQTT. Si jamais vous voulez l'utiliser alors allez voir https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages .
+ - Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
+
+[source,]
+----
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+----
 
 == Problèmes / Issues
 
 Si vous trouvez un problème qui demande une correction dans le pluugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
 
 Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en particulier:
+
 - Votre configuration Jeedom: 
 * Le HW sur lequel vous faite tourner le plugin, 
 * la Version de l'OS, 
 * la version de Jeedom
+
 - Votre configuration Gateway
 * Zigate et quel firmware
 * ...
+
 - Les logs
 * aussi nombreux que possibles
 - Description 
@@ -38,11 +58,52 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 === Mosquitto
 
 * Abeille utilise un broker mosquitto pour echanger des messages entre les modules logicielles.
-* mosquitto est installé sur la machine par defaut lors de l installation des dependances.
-* vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+* mosquitto est installé sur la machine par defaut lors de l installation des dependances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
 * La configuration générale du plugin propose les paramètres :
     - Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
     - Port du serveur Mosquitto (1883 par défaut)
     - Identifiant de Jeedom avec lequel il publiera sur le broker
     - Il est possible d'ajouter un compte et mot de passe si la connexion le requiert.
     - QoS à utiliser (par défaut 1).
+* Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
+    - Faites un 'ps -ef | grep mosquitto' pour voir si le process tourne.
+    - Lancez à la main mosquitto; Juste 'mosquitto' en ligne de commande.
+    - Lancez à la main mosquitto avec votre fichier de configuration en ligne de commande: 'mosquitto -c /etc/mosquitto/mosquitto.conf' (Corrigez les erreurs si il y a).
+    - Experience: après coupure de courant: 
+[source,]
+----
+mosquitto -c /etc/mosquitto/mosquitto.conf 
+1516788158: Error: Success.
+1516788158: Error: Couldn't open database.
+----
+
+la solution a été de supprimer la base de donnée et de réinstaller mosquitto:
+
+[source,]
+----
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+----
+
+
+    
+=== Creation des objets
+
+* Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas defaut et ajouter de nouveaux modèles par exemple.
+* L'apparail Ruche contient une commande cachée par objet type. Il faut regénerer l objet Ruche pour prendre en compte les modifications éventuelles. Pour ce faire supprimer Ruche et relancer le démon. 
+
+image::images/Capture_d_ecran_2018_01_23_a_22_31_19.png[]
+
+* Si vour rendez visible ces commandes cachées cela donne:
+
+image::images/Capture_d_ecran-2018_01_23_a_22_31_43.png[]
+
+* En cliquant sur sur l'un de ces boutons vous vérifier que le chemin Jeedom->Mosquitto->Jeedom fonctionne.
+
+* Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en aillant mis les bon paramèetre en find de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
+
+* L'objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:
+
+image::images/Capture_d_ecran_2018_01_23_a_22_53_24.png[]
+

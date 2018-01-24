@@ -1,12 +1,15 @@
 <?php
     
+    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+
     include("CmdToAbeille.php");  // contient processCmd()
     include("lib/phpMQTT.php");
     
     function procmsg($topic, $msg){
         global $dest;
         
-        echo "Msg Recieved: " . date("r") . " Topic: {$topic} =>\t$msg\n";
+	echo "Msg Recieved: " . date("r") . " Topic: {$topic} =>\t$msg\n";
+	log::add('Abeille', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
         
         // list($type, $address, $action) = split('[/.-]', $topic); split ne fonctionne plus avec php 7
         list($type, $address, $action) = explode('/', $topic);

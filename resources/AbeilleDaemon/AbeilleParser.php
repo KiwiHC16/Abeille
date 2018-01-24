@@ -1,4 +1,6 @@
 <?php
+    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+
     include("includes/config.php");
     include("includes/fifo.php");
     
@@ -12,7 +14,8 @@
             $mqtt->publish( "Abeille/" .$SrcAddr . "/" . "Time"     . "-" . "Time",         date("Y-m-d H:i:s"),    0 );
             $mqtt->close();
         } else {
-            echo "Time out!\n";
+		echo "Time out!\n";
+		log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
         }
     }
     
@@ -23,6 +26,7 @@
             $mqtt->close();
         } else {
             echo "Time out!\n";
+		log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
         }
     }
     
@@ -60,6 +64,7 @@
         $clusterTab["0B05"]= " (Misc: Diagnostics)";
         $clusterTab["1000"]= " (ZLL: Commissioning)";
         
+		log::add('Abeille', 'debug', 'AbeilleParser: Cluster ID: '.$cluster." - ".$clusterTab[$CLUSTER] );
         echo "  Cluster ID: " .$cluster;
         echo $clusterTab[$cluster]."\n";
         
@@ -90,7 +95,9 @@
     {
         $tab="";
         $length=strlen($datas);
+	log::add('Abeille', 'debug', 'AbeilleParser: -----------------------' );
         echo "\n-------------- ".date("Y-m-d H:i:s")."\n";
+	log::add('Abeille', 'debug', 'AbeilleParser: protocolData' );
         echo "protocolDatas\n";
         
         //Pourquoi 12, je ne sais pas.
@@ -127,6 +134,8 @@
                 {
                         
                     case "004d" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 004d' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Device annouce)(Processed->MQTT)' );
                         echo "\ntype: 004d";
                         echo "(Device announce)(Processed->MQTT)\n";
                         // < short address: uint16_t>
@@ -162,6 +171,8 @@
                         break;
                     
                     case "8000" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8000' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Status)(Not Processed)' );
                         echo "\ntype: 8000\n";
                         echo " (Status)(Not processed)\n";
                         echo " Length: ".hexdec($ln)."\n";
@@ -177,6 +188,8 @@
                         break;
                         
                     case "8001" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8001' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Log)(Not Processed)' );
                         echo "\ntype: 8001";
                         echo " (Log)(Not processed*************************************************************)";
                         echo  "\n";
@@ -187,6 +200,8 @@
                         break;
                         
                     case "8010" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8010' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Version)(Processed->MQTT)' );
                         echo "(Version)(Processed->MQTT)\n";
                         echo "Application : ".hexdec(substr($payload,0,4))."\n";
                         echo "SDK : ".hexdec(substr($payload,4,4))."\n";
@@ -204,6 +219,8 @@
                         break;
                         
                     case "8043" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8043' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Simple Descriptor Response)(Not Processed)' );
                         echo "\ntype: 8043";
                         echo "(Simple Descriptor Response)(Not processed)\n";
                         echo "SQN : ".substr($payload,0,2)."\n";
@@ -219,6 +236,8 @@
                         break;
                         
                     case "8045" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8045' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Active Endpoints Response)(Not Processed)' );
                         echo "\ntype: 8045";
                         echo "(Active Endpoints Response)(Not processed)\n";
                         echo "SQN : ".substr($payload,0,2)."\n";
@@ -233,6 +252,8 @@
                         break;
 
                     case "8048":
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8048' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Leave Indication)(Not Processed)' );
                         echo "(Leave Indication)\n";
                         echo "extended addr : ".substr($payload,0,16)."\n";
                         echo "rejoin status : ".substr($payload,16,2)."\n";
@@ -240,6 +261,8 @@
                         
                     case "8100": // "Type: 0x8100 (Read Attrib Response)"
                         // 8100 000D0C0Cb32801000600000010000101
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8100' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (read Attribute)(Processed->MQTT)' );
                         echo "\ntype: 8100\n";
                         echo "Type: 0x8100 (Read Attrib Response)(Processed->MQTT)\n";
                         echo "SQN: : ".substr($payload,0,2)."\n";
@@ -292,6 +315,8 @@
                         break;
                         
                     case "8101" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8101' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Default Response)(Not Processed)' );
                         echo "\ntype: 8101";
                         echo "(Default Response)(Not processed)\n";
                         echo "Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.\n";
@@ -303,6 +328,8 @@
                         break;
                     
                     case "8102" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8102' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Attribut Report)(Processed->MQTT)' );
                         echo "\ntype: 8102\n";
                         echo "[".date("Y-m-d H:i:s")."]\n";
                         echo "(Attribute Report)(Processed->MQTT)\n";
@@ -467,12 +494,16 @@
                         break;
      
                     case "8701" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8701' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (Route Discovery Confirm)(Not Processed)' );
                         echo "(Router Discovery Confirm)(Not processed)\n";
                         echo "Status : ".substr($payload,0,2)."\n";
                         echo "Nwk Status : ".substr($payload,2,2)."\n";
                         break;
                         
                     case "8702" :
+			log::add('Abeille', 'debug', 'AbeilleParser: type: 8701' );
+			log::add('Abeille', 'debug', 'AbeilleParser: (APS Data Confirm Fail)(Not Processed)' );
                         echo "\ntype: 8702";
                         echo "(APS Data Confirm Fail)(Not processed)\n";
                         echo "Status : ".substr($payload,0,2)."\n";
@@ -504,10 +535,13 @@
     $serial = $argv[1];
     
     if (!file_exists($serial))
-    { echo "Error: Fichier ".$serial." n existe pas\n";
+    { 
+	log::add('Abeille', 'debug', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas' );
+	echo "Error: Fichier ".$serial." n existe pas\n";
         exit(1);
     }
    
+    log::add('Abeille', 'debug', 'AbeilleParser: fichier '.$serial.' utilise' );
     echo "Serial port used: ".$serial."\n";
     
     $fifoIN = new fifo( $in, 'r' );
@@ -523,6 +557,7 @@
     {
         if (!file_exists($serial))
         { echo "Error: Fichier ".$serial." n existe pas\n";
+	log::add('Abeille', 'debug', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas' );
             exit(1);
         }
         //traitement de chaque trame;
@@ -532,4 +567,5 @@
         
     }
     
+	log::add('Abeille', 'debug', 'AbeilleParser: FIN ' );
     ?>

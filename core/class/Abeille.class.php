@@ -357,11 +357,12 @@
                 }
                 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-                // Creation de l objet
+                // Creation de l objet Abeille (hors ruche)
                 log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
                 $elogic = new Abeille();
                 //id
-                if ( $objetConnu ) { $elogic->setName("Abeille-".$addr); } else { $elogic->setName("Abeille-".$addr."-Type d objet inconnu"); }
+                if ( $objetConnu ) { $name="Abeille-".$addr; } else { $name="Abeille-".$addr."-Type d objet inconnu"; }
+                $elogic->setName($name);
                 $elogic->setLogicalId($nodeid);
                 $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
@@ -386,32 +387,45 @@
                 $elogic->save();
                 
                 
-                
-                if ( $GLOBALS['debugBEN'] ) { echo "On va creer les comandes.\n"; print_r( $AbeilleObjetDefinition[$value]['Commandes'] ); }
+                // Creation des commandes pour l objet Abeille juste créé.
+                if ( $GLOBALS['debugBEN'] ) { echo "On va creer les commandes.\n"; print_r( $AbeilleObjetDefinition[$value]['Commandes'] ); }
                 
                 foreach ( $AbeilleObjetDefinition[$value]['Commandes'] as $cmd => $cmdValueDefaut )
                 {
-                    log::add('Abeille', 'info', 'Creation de la command:'.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet);
+                    log::add('Abeille', 'info', 'Creation de la commande: '.$nodeid.'/'.$cmd.' suivant model de l objet pour l objet: '.$name );
                     $cmdlogic = new AbeilleCmd();
                     // id
                     $cmdlogic->setEqLogic_id($elogic->getId());
                     $cmdlogic->setEqType('Abeille');
                     $cmdlogic->setLogicalId($cmd);
-                    $cmdlogic->setOrder($cmdValueDefaut["order"]);
+		    echo "Order: ".$cmdValueDefaut["order"]."\n";
+                    $cmdlogic->setOrder( $cmdValueDefaut["order"]);
                     $cmdlogic->setName( $cmdValueDefaut["name"] );
-                    if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
-                    if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+                    
+                    if ( $cmdValueDefaut["Type"]=="info" )  { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                    
+		    // La boucle est pour info et pour action
                     foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
                     {
-                        $cmdlogic->setConfiguration($confKey,$confValue);
+		        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                        $cmdlogic->setConfiguration( $confKey, str_replace('#addr#', $addr, $confValue) );
                     }
+                    if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+                    
                     // template
                     $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
                     $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                     $cmdlogic->setType($cmdValueDefaut["Type"]);
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                     // unite
-                    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+		    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+		    // La boucle est pour info et pour action
+                    foreach ( $cmdValueDefaut["display"] as $confKey => $confValue )
+                    {
+		        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                        $cmdlogic->setDisplay( $confKey, $confValue );
+                    }
+
                     // isVisible
                     // value
                     // html
@@ -576,23 +590,23 @@
     // en ligne de comande =>
     // "php Abeille.class.php 1" to run the script to create an object
     // "php Abeille.class.php" to parse the file and verify syntax issues.
-    /*
-        if ( isset($argv[1]) ) { $debugBEN = $argv[1]; }
+    
+    if ( isset($argv[1]) ) { $debugBEN = $argv[1]; }
     if ( $debugBEN )
     {
         echo "Debut\n";
         $message = new stdClass();
         
-        // $message->topic="Abeille/aaaa/0000-0005";
-        // $message->payload="lumi.sensor_magnet.aq2";
+        // $message->topic="CmdRuche/Ruche/CreateRuche";
+        // $message->payload="";
         
-        $message->topic="CmdRuche/Ruche/CreateRuche";
-        $message->payload="";
+        $message->topic="Abeille/lumi.plug/0000-0005";
+        $message->payload="lumi.plug";
         
-        print_r( $message->topic );
+        // print_r( $message->topic );
         
         Abeille::message( $message );
         echo "Fin\n";
     }
-    */
+    
     

@@ -1,4 +1,6 @@
 <?php
+    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+
     include("includes/config.php");
     include("includes/fifo.php");
     
@@ -28,29 +30,29 @@
     /* -------------------------------------------------------------------- */
     
     $serial = $argv[1];
+    log::add('Abeille', 'debug', 'AbeilleSerial: Demarrage de AbeilleSerial' );
     
     if (!file_exists($serial))
-    { echo "Error: Fichier ".$serial." n existe pas\n";
-        exit(1);
+    { 
+      log::add('Abeille', 'debug', 'AbeilleSerial: Error: Fichier '.$serial.' n existe pas' );
+      exit(1);
     }
     
-
-    
-    echo "Serial port used: ".$serial."\n";
+    log::add('Abeille', 'debug', 'AbeilleSerial: Serial port used: '.$serial );
     
     $fifoIN = new fifo( $in, 'w+' );
     
     _exec("stty -F ".$serial." sane",$out);
-    echo "Setup ttyUSB default configuration, resultat: \n";
-    print_r( $out );
+    // echo "Setup ttyUSB default configuration, resultat: \n";
+    // print_r( $out );
     
     _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb raw",$out);
-    echo "Setup ttyUSB configuration, resultat: \n";
-    print_r( $out );
+    // echo "Setup ttyUSB configuration, resultat: \n";
+    // print_r( $out );
     
     $f = fopen($serial, "r");
     
-    print_r( $f ); echo "\n";
+    // print_r( $f ); echo "\n";
     
     $transcodage=false;
     $trame="";
@@ -59,7 +61,8 @@
     while (true)
     {
     if (!file_exists($serial))
-    { echo "Fichier ".$serial." n existe pas\n";
+    { 
+        log::add('Abeille', 'debug', 'AbeilleSerial: CRITICAL Fichier '.$serial." n existe pas" );
         exit(1);
     }
     
@@ -72,7 +75,8 @@
         }
         else if ($car=="03")
         {
-            echo date("Y-m-d H:i:s")." -> ".$trame."\n";
+            // echo date("Y-m-d H:i:s")." -> ".$trame."\n";
+            log::add('Abeille', 'debug', 'AbeilleSerial: '.date("Y-m-d H:i:s")." -> ".$trame);
             $fifoIN->write($trame."\n");
         }else if($car=="02")
         {
@@ -90,8 +94,10 @@
         }
         
     }
-    
+   
     fclose($f);
     $fifoIN->close();
+
+    log::add('Abeille', 'debug', 'AbeilleSerial: Fin script AbeilleSerial');
     
     ?>

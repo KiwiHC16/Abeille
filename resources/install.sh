@@ -73,6 +73,20 @@ echo
 echo "Avancement: 8% ---------------------------------------------------------------------------------------------------> Ajout repo mosquitto"
 echo
 
+if [ -f mosquitto-repo.gpg.key ]; then
+echo "Efface ancien mosquitto-repo.gpg.key"
+rm mosquitto-repo.gpg.key
+fi
+
+wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+apt-key add mosquitto-repo.gpg.key
+
+if [ -f mosquitto-repo.gpg.key ]; then
+echo "Efface ancien mosquitto-repo.gpg.key"
+rm mosquitto-repo.gpg.key
+fi
+
+# Test sur l archi mais en fait on fait la meme chose, je garde le test si on devait en avoir besoin.
 archi=`lscpu | grep Architecture | awk '{ print $2 }'`
 echo "Architecture: "$archi
 
@@ -81,19 +95,6 @@ if [ "$archi" == "x86_64" ]; then
   if [ `lsb_release -i -s` == "Debian" ]; then
 
     echo "Release trouvée: Debian"
-    if [ -f mosquitto-repo.gpg.key ]; then
-      echo "Efface ancien mosquitto-repo.gpg.key"
-      rm mosquitto-repo.gpg.key
-    fi
-
-    wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
-    apt-key add mosquitto-repo.gpg.key
-
-    echo "Release trouvée: Debian"
-    if [ -f mosquitto-repo.gpg.key ]; then
-      echo "Efface ancien mosquitto-repo.gpg.key"
-      rm mosquitto-repo.gpg.key
-    fi
 
     if [ `lsb_release -c -s` == "jessie" ]; then
       echo "Version trouvée: jessie"
@@ -117,6 +118,39 @@ if [ "$archi" == "x86_64" ]; then
     else
         echo "Erreur critique: je ne connais pas cette version."
         arretSiErreur "Erreur critique: je ne connais pas cette version."
+    fi
+
+  else
+    echo "Erreur critique: je ne connais pas cette distribution."
+    arretSiErreur "Erreur critique: je ne connais pas cette distribution."
+  fi
+
+elif [ "$archi" == "armv7l" ]; then
+
+  if [ `lsb_release -i -s` == "Raspbian" ]; then
+
+    if [ `lsb_release -c -s` == "jessie" ]; then
+      echo "Version trouvée: jessie"
+
+      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
+        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
+        rm /etc/apt/sources.list.d/mosquitto-jessie.list
+      fi
+
+      wget http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
+
+    elif [ `lsb_release -c -s` == "stretch" ]; then
+
+      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
+        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
+        rm /etc/apt/sources.list.d/mosquitto-stretch.list
+      fi
+
+      wget http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
+
+    else
+      echo "Erreur critique: je ne connais pas cette version."
+      arretSiErreur "Erreur critique: je ne connais pas cette version."
     fi
 
   else

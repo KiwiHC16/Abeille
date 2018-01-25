@@ -108,3 +108,15 @@ image::images/Capture_d_ecran-2018_01_23_a_22_31_43.png[]
 
 image::images/Capture_d_ecran_2018_01_23_a_22_53_24.png[]
 
+* Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en reception radio) a été effacé de Jeedom vous pouvez l'interroger depuis la Ruche et cela devrait le recréer. Mettre dans le champ "Titre" de Get Name, l'adresse (ici example 7c54)  et faites Get Name. Rafraichir la page et vous devriez avoir l'objet.
+
+image::images/Capture_d_ecran_2018_01_25_a_14_59_34.png[]
+image::images/Capture_d_ecran_2018_01_25_a_14_59_43.png[]
+
+* Vous avez aussi la possibilité de lire des attribus de certains équipments en mettant l'adresse dans le titre et les parametres de l attribu dans le Message comme dans la capture d'écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l'équipement soit à l'écoute):
+
+image::images/Capture_d_ecran_2018_01_25_a_16_12_32.png[]
+
+
+...
+

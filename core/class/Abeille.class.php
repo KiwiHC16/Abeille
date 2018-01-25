@@ -18,7 +18,7 @@
     
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     
-
+    
     
     class Abeille extends eqLogic {
         
@@ -266,16 +266,19 @@
                 $i=0;
                 
                 $rucheCommandList = array(
-                                          "Version"        =>array( "name"=>"Version",              "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/getVersion","request"=>"Version") ),
-                                          "Start Network"  =>array( "name"=>"Start Network",        "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/startNetwork","request"=>"StartNetwork") ),
-                                          "Inclusion"      =>array( "name"=>"Inclusion",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/SetPermit","request"=>"Inclusion") ),
-                                          "Reset"          =>array( "name"=>"Reset",                "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/reset","request"=>"reset") ),
-                                          "addGroup"       =>array( "name"=>"Add Group",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/addGroup","request"=>"address=#title#&groupAddress=#message#") ),
-                                          "removeGroup"    =>array( "name"=>"Remove Group",         "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/removeGroup","request"=>"address=#title#&groupAddress=#message#") ),
-                                          "Time-Time"      =>array( "name"=>"Last",                 "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "Time-TimeStamp" =>array( "name"=>"Last Stamps",          "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "SW-Application" =>array( "name"=>"SW",                   "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
-                                          "SW-SDK"         =>array( "name"=>"SDK",                  "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "Version"                 =>array( "name"=>"Version",              "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/getVersion","request"=>"Version") ),
+                                          "Start Network"           =>array( "name"=>"Start Network",        "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/startNetwork","request"=>"StartNetwork") ),
+                                          "Inclusion"               =>array( "name"=>"Inclusion",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/SetPermit","request"=>"Inclusion") ),
+                                          "Reset"                   =>array( "name"=>"Reset",                "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/reset","request"=>"reset") ),
+                                          "addGroup"                =>array( "name"=>"Add Group",            "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/addGroup","request"=>"address=#title#&groupAddress=#message#") ),
+                                          "removeGroup"             =>array( "name"=>"Remove Group",         "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/removeGroup","request"=>"address=#title#&groupAddress=#message#") ),
+                                          "getName"                 =>array( "name"=>"Get Name",             "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/getName","request"=>"address=#title#&groupAddress=#message#") ),
+                                          "ReadAttributeRequest"    =>array( "name"=>"Get Attribut",         "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"message",  "configuration"=>array("topic"=>"CmdAbeille/Ruche/ReadAttributeRequest","request"=>"address=#title#&attribut=#message#") ),
+                                          "AbeilleList"             =>array( "name"=>"Liste Equipements",    "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"action",   "subType"=>"other",    "configuration"=>array("topic"=>"CmdAbeille/Ruche/abeilleList","request"=>"abeilleListAll") ),
+                                          "Time-Time"               =>array( "name"=>"Last",                 "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "Time-TimeStamp"          =>array( "name"=>"Last Stamps",          "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-Application"          =>array( "name"=>"SW",                   "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
+                                          "SW-SDK"                  =>array( "name"=>"SDK",                  "order"=>$i++,         "isHistorized"=>"0",     "isVisible"=>"1", "Type"=>"info",     "subType"=>"string",   "invertBinary"=>"0", "template"=>"" ),
                                           );
                 
                 if ( $GLOBALS['debugBEN'] ) { echo "First list\n"; print_r( $rucheCommandList ); echo "\n"; }
@@ -327,17 +330,28 @@
             if ( $GLOBALS['debugBEN'] ) echo "Filter test pour ".$Filter."\n";
             
             
-            // On ne prend en compte que les messahe Abeille/#/#
+            
+            
+            
+            
+            
+            
+            
+            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            // On ne prend en compte que les message Abeille/#/#
             if ( $Filter!="Abeille" )  { return; }
+            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             
             if ( $GLOBALS['debugBEN'] ) echo "Passe l etat Abeille\n";
             
             
-            // Est ce que cet equipement existe deja ? Sinon creation que si je connais son nom
+            // Est ce que cet equipement existe deja ? Sinon creation quand je recois son nom
+            
+            // Cherche l objet
             $elogic = self::byLogicalId($nodeid, 'Abeille');
             
+            // Je viens de revoir son nom donc je créé l objet.
             if (!is_object($elogic) && ($cmdId=="0000-0005") && (config::byKey('creationObjectMode', 'Abeille', 'Automatique')!="Manuel") )
-                
             {
                 
                 $objetConnu = 0;
@@ -361,7 +375,7 @@
                 log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
                 $elogic = new Abeille();
                 //id
-                if ( $objetConnu ) { $name="Abeille-".$addr; } else { $name="Abeille-".$addr."-Type d objet inconnu"; }
+                if ( $objetConnu ) { $name="Abeille-".$addr; } else { $name="Abeille-".$addr."-Type d objet inconnu (!JSON)"; }
                 $elogic->setName($name);
                 $elogic->setLogicalId($nodeid);
                 $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
@@ -398,16 +412,16 @@
                     $cmdlogic->setEqLogic_id($elogic->getId());
                     $cmdlogic->setEqType('Abeille');
                     $cmdlogic->setLogicalId($cmd);
-		    echo "Order: ".$cmdValueDefaut["order"]."\n";
+                    echo "Order: ".$cmdValueDefaut["order"]."\n";
                     $cmdlogic->setOrder( $cmdValueDefaut["order"]);
                     $cmdlogic->setName( $cmdValueDefaut["name"] );
                     
                     if ( $cmdValueDefaut["Type"]=="info" )  { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
                     
-		    // La boucle est pour info et pour action
+                    // La boucle est pour info et pour action
                     foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
                     {
-		        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                         $cmdlogic->setConfiguration( $confKey, str_replace('#addr#', $addr, $confValue) );
                     }
                     if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
@@ -418,14 +432,14 @@
                     $cmdlogic->setType($cmdValueDefaut["Type"]);
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                     // unite
-		    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
-		    // La boucle est pour info et pour action
+                    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                    // La boucle est pour info et pour action
                     foreach ( $cmdValueDefaut["display"] as $confKey => $confValue )
                     {
-		        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                         $cmdlogic->setDisplay( $confKey, $confValue );
                     }
-
+                    
                     // isVisible
                     // value
                     // html
@@ -440,78 +454,113 @@
             }
             else
             {
-                
-                $elogic = self::byLogicalId($nodeid, 'Abeille');
-                // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
-                if ( !is_object($elogic) )
+                // Si je recois une commande IEEE pour un objet qui n'existe pas je vais créer un objet pour visualiser cet inconnu
+                if ( !is_object($elogic) && ($cmdId=="IEEE-Addr") && (config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique") )
                 {
-                    if (0)
-                    {
-                        log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid );
-                        $_id = "BEN"; // JE ne sais pas alors je mets n importe quoi....
-                        $_subject = "CmdAbeille/".$addr."/Annonce";
-                        $_message = "";
-                        $_retain = 0;
-                        log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
-                        $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom') . '_pub_' . $_id);
-                        if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
-                            $publish->setCredentials(config::byKey('AbeilleUser', 'Abeille'), config::byKey('AbeillePass', 'Abeille'));
-                        }
-                        $publish->connect(config::byKey('AbeilleAdress', 'Abeille', '127.0.0.1'), config::byKey('AbeillePort', 'Abeille', '1883'), 60);
-                        $publish->publish($_subject, $_message, config::byKey('AbeilleQos', 'Abeille', '1'), $_retain);
-                        for ($i = 0; $i < 100; $i++) {
-                            // Loop around to permit the library to do its work
-                            $publish->loop(1);
-                        }
-                        $publish->disconnect();
-                        unset($publish);
-                    }
+                    // Creation de l objet Abeille (hors ruche)
+                    log::add('Abeille', 'info', 'objet: '.$value.' creation sans model');
+                    $elogic = new Abeille();
+                    //id
+                    if ( $objetConnu ) { $name="Abeille-".$addr; } else { $name="Abeille-".$addr."-Type d objet inconnu (IEEE)"; }
+                    $elogic->setName($name);
+                    $elogic->setLogicalId($nodeid);
+                    $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
+                    $elogic->setEqType_name('Abeille');
+                    
+                    // $objetDefSpecific = $AbeilleObjetDefinition[$value];
+                    // $objetConfiguration = $objetDefSpecific["configuration"];
+                    $elogic->setConfiguration('topic', $nodeid); // $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+                    
+                    $elogic->setIsVisible("1");
+                    // eqReal_id
+                    $elogic->setIsEnable("1");
+                    // status
+                    // timeout
+                    // $elogic->setCategory(array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0],$AbeilleObjetDefinition[$value]["Categorie"][  array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0] ] );
+                    // display
+                    // order
+                    // comment
+                    
+                    //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
+                    //$elogic->save();
+                    $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+                    $elogic->save();
+                    
                 }
-                else {
-                    $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(),$cmdId);
-                    if ( !is_object($cmdlogic) )
+                else
+                {
+                    // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
+                    if ( !is_object($elogic) )
                     {
-                        log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId );
-                        if ( config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique" )
+                        if (0)
                         {
-                            // Crée la commande avec le peu d info que l on a
-                            log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
-                            $cmdlogic = new AbeilleCmd();
-                            // id
-                            $cmdlogic->setEqLogic_id($elogic->getId());
-                            $cmdlogic->setEqType('Abeille');
-                            $cmdlogic->setLogicalId($cmdId);
-                            // $cmdlogic->setOrder('0');
-                            $cmdlogic->setName( 'Cmd de type inconnue - '.$cmdId );
-                            $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId );
-                            // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
-                            // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
-                            // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
-                            // {
-                            // $cmdlogic->setConfiguration($confKey,$confValue);
-                            //}
-                            // template
-                            // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
-                            // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                            // $cmdlogic->setType($cmdValueDefaut["Type"]);
-                            $cmdlogic->setType('info');
-                            // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                            $cmdlogic->setSubType("string");
-                            // unite
-                            // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
-                            // isVisible
-                            // value
-                            // html
-                            // alert
-                            
-                            $cmdlogic->save();
-                            $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
+                            log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid );
+                            $_id = "BEN"; // JE ne sais pas alors je mets n importe quoi....
+                            $_subject = "CmdAbeille/".$addr."/Annonce";
+                            $_message = "";
+                            $_retain = 0;
+                            log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
+                            $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom') . '_pub_' . $_id);
+                            if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
+                                $publish->setCredentials(config::byKey('AbeilleUser', 'Abeille'), config::byKey('AbeillePass', 'Abeille'));
+                            }
+                            $publish->connect(config::byKey('AbeilleAdress', 'Abeille', '127.0.0.1'), config::byKey('AbeillePort', 'Abeille', '1883'), 60);
+                            $publish->publish($_subject, $_message, config::byKey('AbeilleQos', 'Abeille', '1'), $_retain);
+                            for ($i = 0; $i < 100; $i++) {
+                                // Loop around to permit the library to do its work
+                                $publish->loop(1);
+                            }
+                            $publish->disconnect();
+                            unset($publish);
                         }
                     }
-                    else
-                        // Si equipement et cmd existe alors on met la valeur a jour
-                    {
-                        $elogic->checkAndUpdateCmd($cmdId,$value);
+                    else {
+                        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(),$cmdId);
+                        if ( !is_object($cmdlogic) )
+                        {
+                            // Créons les commandes inconnues sur la base des commandes qu on recoit.
+                            log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId );
+                            if ( config::byKey('creationObjectMode', 'Abeille', 'Automatique')=="Semi Automatique" )
+                            {
+                                // Crée la commande avec le peu d info que l on a
+                                log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
+                                $cmdlogic = new AbeilleCmd();
+                                // id
+                                $cmdlogic->setEqLogic_id($elogic->getId());
+                                $cmdlogic->setEqType('Abeille');
+                                $cmdlogic->setLogicalId($cmdId);
+                                // $cmdlogic->setOrder('0');
+                                $cmdlogic->setName( 'Cmd de type inconnue - '.$cmdId );
+                                $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId );
+                                // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                                // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+                                // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
+                                // {
+                                // $cmdlogic->setConfiguration($confKey,$confValue);
+                                //}
+                                // template
+                                // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
+                                // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+                                // $cmdlogic->setType($cmdValueDefaut["Type"]);
+                                $cmdlogic->setType('info');
+                                // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                                $cmdlogic->setSubType("string");
+                                // unite
+                                // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                                // isVisible
+                                // value
+                                // html
+                                // alert
+                                
+                                $cmdlogic->save();
+                                $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
+                            }
+                        }
+                        else
+                            // Si equipement et cmd existe alors on met la valeur a jour
+                        {
+                            $elogic->checkAndUpdateCmd($cmdId,$value);
+                        }
                     }
                 }
             }

@@ -21,7 +21,7 @@
         
         for ($i=0;$i<=(strlen($datas));$i+=2)
         {
-            echo "i: ".$i."\n";
+            // echo "i: ".$i."\n";
             $temp ^= hexdec($datas[$i].$datas[$i+1]);
         }
         
@@ -177,6 +177,18 @@
             }
         }
         
+        // abeilleList abeilleListAll
+        if ( isset($Command['abeilleList']) )
+        {
+            
+            if ($Command['abeilleList']=="abeilleListAll")
+            {
+                echo "Get Abeilles List\n";
+                sendCmd($dest,"0015","0000","");
+            }
+        }
+        
+      
         if ( isset($Command['startNetwork']) )
         {
             if ($Command['startNetwork']=="StartNetwork")
@@ -354,10 +366,10 @@
         if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
         {
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
-            if ( $Command['ReadAttributeRequest']==1 )
-            {
+            // if ( $Command['ReadAttributeRequest']==1 )
+            //{
                 getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
-            }
+            //}
         }
         
         if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
@@ -413,6 +425,11 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        if ( isset($Command['getName']) && isset($Command['address']) )
+        {
+            echo "Get Name from: ".$Command['address']."\n";
+            getParam( $dest, $Command['address'], "0000", "0005" );
+        }
         
         
         

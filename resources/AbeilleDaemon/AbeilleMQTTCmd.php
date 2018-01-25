@@ -8,15 +8,15 @@
     function procmsg($topic, $msg){
         global $dest;
         
-	echo "Msg Recieved: " . date("r") . " Topic: {$topic} =>\t$msg\n";
-	log::add('Abeille', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
+        echo "Msg Recieved: " . date("r") . " Topic: {$topic} =>\t$msg\n";
+        log::add('Abeille', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
         
         // list($type, $address, $action) = split('[/.-]', $topic); split ne fonctionne plus avec php 7
         list($type, $address, $action) = explode('/', $topic);
         //
-        // echo "Type: ".$type."\n";
-        // echo "Address: ".$address."\n";
-        // echo "Action: ".$action."\n";
+        echo "Type: ".$type."\n";
+        echo "Address: ".$address."\n";
+        echo "Action: ".$action."\n";
         
         if ( $type == "CmdAbeille" )
         {
@@ -28,7 +28,7 @@
                                  "attributeId"=>"0005"
                                  );
             }
-            if ( $action == "OnOff" )
+            elseif ( $action == "OnOff" )
             {
                 if ( $msg=="On" )       { $actionId="01"; }
                 if ( $msg=="Off" )      { $actionId="00"; }
@@ -39,7 +39,7 @@
                                  "clusterId"=>"0006"
                                  );
             }
-            if ( $action == "ReadAttributeRequest" )
+            elseif ( $action == "ReadAttributeRequest" )
             {
                 $keywords = preg_split("/[=&]+/", $msg );
                 $Command = array("ReadAttributeRequest"=>"1",
@@ -48,7 +48,7 @@
                                  "attributeId"=>$keywords[3]
                                  );
             }
-            if ( $action == "setLevel" )
+            elseif ( $action == "setLevel" )
             {
                 $keywords = preg_split("/[=&]+/", $msg );
                 $Command = array("setLevel"=>"1",
@@ -57,6 +57,19 @@
                                  "Level"=>intval($keywords[1]*255/100),
                                  "duration"=>$keywords[3]
                                  );
+            }
+            elseif ( $action == "" )
+            {
+                $Command = array("setLevel"=>"1",
+                                 "address"=>$address,
+                                 "clusterId"=>"0008",
+                                 "Level"=>intval($keywords[1]*255/100),
+                                 "duration"=>$keywords[3]
+                                 );
+            }
+            else
+            {
+                echo "Aie aie aie je ne commais pas (encore) cette commande\n";
             }
             
             
@@ -69,14 +82,24 @@
                 // Si une string simple
                 if ( count($keywords) == 1 )
                 {
-                    $Command = array( $action=>$msg);
+                    $Command = array( $action=>$msg );
                 }
                 // Si une command type get htt
                 else{
+                    if ( count($keywords) == 4 ){
                     $Command = array( $action=>$action,
                                      $keywords[0]=>$keywords[1],
                                      $keywords[2]=>$keywords[3],
                                      );
+                    }
+                    if ( count($keywords) == 6 ){
+                        echo "6 arguments\n";
+                        $Command = array( $action=>$action,
+                                         $keywords[0]=>$keywords[1],
+                                         $keywords[2]=>$keywords[3],
+                                         $keywords[4]=>$keywords[5],
+                                         );
+                    }
                 }
             }
             
@@ -85,6 +108,13 @@
             
             // print_r( $Command );
             processCmd( $dest, $Command );
+        }
+        
+        else
+        
+        {
+            echo "Msg Recieved: " . date("r") . " Topic: {$topic} =>\t$msg\ mais je ne sais pas quoi en faire, no action.\n";
+            log::add('Abeille', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.');
         }
     }
     

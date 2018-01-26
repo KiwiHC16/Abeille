@@ -234,5 +234,7 @@ CmdAbeille/Addr/Action    |     ^       Abeille/#
 === Debug / Problèmes
 
 Si vous rencontrez des problemes aller voir:
+
 * le page: Debug - https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc
+
 * le forum: https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille

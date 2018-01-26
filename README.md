@@ -1,4 +1,5 @@
 Abeille
+(Version master en dev parmanent).
 
 Abeille pour Jeedom (Gateway ZiGate)
 

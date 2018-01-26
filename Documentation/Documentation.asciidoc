@@ -5,6 +5,7 @@ Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerel
 C'est une toute premiere version qui demande encore pas mal de travail.
 
 Il permet déjà:
+
 - de connecter les ampoules IKEA et la série Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
 - de faire les inclusions des equipments zigbee depuis jeedom
 - creation automatique des objets MQTT pour les remontées d’informations (ensuite il faut créer à la main les commande d’action)

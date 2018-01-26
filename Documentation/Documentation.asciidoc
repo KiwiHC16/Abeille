@@ -7,11 +7,11 @@ C'est une toute premiere version qui demande encore pas mal de travail.
 Il permet déjà:
 - de connecter les ampoules IKEA et la série Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
 - de faire les inclusions des equipments zigbee depuis jeedom
-- creation automatique des objets MQTT pour les remontées d’informations (ensuite il faut créer à la main le commande d’action)
+- creation automatique des objets MQTT pour les remontées d’informations (ensuite il faut créer à la main les commande d’action)
 - d'avoir l'état de l ampoule IKEA, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
-- de commander les ampoules une par un une (On/Off, niveau)
+- de commander les ampoules une par une (On/Off, niveau)
 - d'avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
-- d'avoir les temperatures, humidité, pression XIaomi, son nom, tension batterie
+- d'avoir les temperatures, humidité, pression Xiaomi, son nom, tension batterie
 - d'avoir la remontée d'une presence (capteur infrarouge xiaomi)
 - d'avoir la remontée d'ouverture de porte
 - d'avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)

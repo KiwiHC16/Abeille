@@ -47,6 +47,10 @@
             if ($dependancy_info['state'] == 'ok') {
                 $return['launchable'] = 'ok';
             }
+            else {
+                log::add('Abeille', 'debug', 'Daemon is not launchable ;-(' );
+                $return['launchable'] = 'nok';
+            }
             return $return;
         }
         
@@ -136,8 +140,13 @@
             exec($cmd, $output, $return_var);
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
+            
             if ($output[0] != "" && $libphp) {
                 $return['state'] = 'ok';
+            }
+            else
+            {
+                log::add('Abeille', 'debug', 'Impossible de trouver la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-' );
             }
             return $return;
         }
@@ -640,7 +649,7 @@
     // "php Abeille.class.php 1" to run the script to create an object
     // "php Abeille.class.php" to parse the file and verify syntax issues.
     
-    if ( isset($argv[1]) ) { $debugBEN = $argv[1]; }
+    if ( isset($argv[1]) ) { $debugBEN = $argv[1]; } else { $debugBEN = 0; }
     if ( $debugBEN )
     {
         echo "Debut\n";

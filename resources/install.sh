@@ -125,7 +125,7 @@ if [ "$archi" == "x86_64" ]; then
     arretSiErreur "Erreur critique: je ne connais pas cette distribution."
   fi
 
-elif [ "$archi" == "armv7l" ]; then
+elif [ "$archi" == "armv7l" ] || [ "$archi" == "armv6l" ]; then
 
   if [ `lsb_release -i -s` == "Raspbian" ]; then
 

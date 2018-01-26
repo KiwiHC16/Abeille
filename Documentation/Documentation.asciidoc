@@ -197,6 +197,39 @@ image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
 
 image::images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
 
+                        +------------+
+                        | Jeedom     |
+                        +------------+
+                        +------------+
+                        |  Abeille   |
+                        +-+---^-+----+
+CmdAbeille/Addr/Action    |     ^       Abeille/#
+                          |     |       CmdRuche/Ruche/CreateRuche
+                        +-v-----+----+
+                  +-----+ Mosquitto  | <----+
+    cmdAbeille/#  |     +------------+      |   Abeille/Addr/xxxx
+                  v                         |   CmdAbeille/Addr/xxx
+   +------------------+                +----+------------+
+   |AbeilleMQTTCmd.php|                |AbeilleParser.php|
+   |CmdToAbeille.php  |                |                 |
+   +----+-------------+                +----+------------+
+        |                                   ^
+        |             +--------------+      |
+        +---------->  | /deb/ttyUSBX +------+
+                      +--------------+
+                      +-------------+
+                      |   Zigate    |
+                     X+-------------+X
+        +---------+X                   X+---------+
+        | Abeille |                     | Abeille |
+        |---------+X                    X+---------+
+                    X                 X
+                     XXX           XXX
+                        +---------+
+                        | Abeille |
+                        +---------+
+
+
 === Debug / Problèmes
 
 Si vous rencontrez des problemes aller voir:

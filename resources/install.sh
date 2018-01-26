@@ -189,15 +189,14 @@ if [[ -d "/etc/php5/" ]]; then
   if [[ -d "/etc/php5/cli/" && ! `cat /etc/php5/cli/php.ini | grep "mosquitto"` ]]; then
     echo "" | pecl install Mosquitto-alpha
     echo "extension=mosquitto.so" | tee -a /etc/php5/cli/php.ini
+  fi
 
-  elif [[ -d "/etc/php5/fpm/" && ! `cat /etc/php5/fpm/php.ini | grep "mosquitto"` ]]; then
+  if [[ -d "/etc/php5/fpm/" && ! `cat /etc/php5/fpm/php.ini | grep "mosquitto"` ]]; then
     echo "extension=mosquitto.so" | tee -a /etc/php5/fpm/php.ini
+  fi
 
-  elif [[ -d "/etc/php5/apache2/" && ! `cat /etc/php5/apache2/php.ini | grep "mosquitto"` ]]; then
+  if [[ -d "/etc/php5/apache2/" && ! `cat /etc/php5/apache2/php.ini | grep "mosquitto"` ]]; then
     echo "extension=mosquitto.so" | tee -a /etc/php5/apache2/php.ini
-
-  else
-    echo "Je ne fais rien, tout semble deja installe pour cette etape"
   fi
 
 else
@@ -211,17 +210,17 @@ else
   if [[ -d "/etc/php/7.0/cli/" && ! `cat /etc/php/7.0/cli/php.ini | grep "mosquitto"` ]]; then
     echo "" | pecl install Mosquitto-alpha
     echo "extension=mosquitto.so" | tee -a /etc/php/7.0/cli/php.ini
+  fi
 
-  elif [[ -d "/etc/php/7.0/fpm/" && ! `cat /etc/php/7.0/fpm/php.ini | grep "mosquitto"` ]]; then
+  if [[ -d "/etc/php/7.0/fpm/" && ! `cat /etc/php/7.0/fpm/php.ini | grep "mosquitto"` ]]; then
     echo "extension=mosquitto.so" | tee -a /etc/php/7.0/fpm/php.ini
     echo "Le code est bizaare ici car on utilise php7 et fait reference a fpm-php5, probablement une erreur mais je n ai pas de system pour verifier"
-
-  elif [[ -d "/etc/php/7.0/apache2/" && ! `cat /etc/php/7.0/apache2/php.ini | grep "mosquitto"` ]]; then
-    echo "extension=mosquitto.so" | tee -a /etc/php/7.0/apache2/php.ini
-
-  else
-    echo "Je ne fais rien, tout semble deja installe pour cette etape"
   fi
+
+  if [[ -d "/etc/php/7.0/apache2/" && ! `cat /etc/php/7.0/apache2/php.ini | grep "mosquitto"` ]]; then
+    echo "extension=mosquitto.so" | tee -a /etc/php/7.0/apache2/php.ini
+  fi
+
 fi
 
 echo 90 > /tmp/Abeille_dep
@@ -241,8 +240,10 @@ if [[ $(grep -c docker /proc/1/cgroup) -gt 0 ]]; then
   fi
 # Pour tous les autres systemes/
 else
-  /etc/init.d/mosquitto start &
+  /etc/init.d/mosquitto restart &
+  sleep 5
   /etc/init.d/${SERVICE} restart &
+
 fi
 
 echo

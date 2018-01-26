@@ -214,7 +214,6 @@ else
 
   if [[ -d "/etc/php/7.0/fpm/" && ! `cat /etc/php/7.0/fpm/php.ini | grep "mosquitto"` ]]; then
     echo "extension=mosquitto.so" | tee -a /etc/php/7.0/fpm/php.ini
-    echo "Le code est bizaare ici car on utilise php7 et fait reference a fpm-php5, probablement une erreur mais je n ai pas de system pour verifier"
   fi
 
   if [[ -d "/etc/php/7.0/apache2/" && ! `cat /etc/php/7.0/apache2/php.ini | grep "mosquitto"` ]]; then

@@ -32,7 +32,7 @@ if (!isConnect()) {
     <div class="form-group">
             <label class="col-lg-4 control-label">{{IP de Mosquitto : }}</label>
             <div class="col-lg-4">
-				<input id="mosquitto_por" class="configKey form-control" data-l1key="mqttAdress" style="margin-top:5px" placeholder="127.0.0.1"/>
+				<input id="mosquitto_host" class="configKey form-control" data-l1key="mqttAdress" style="margin-top:5px" placeholder="127.0.0.1"/>
             </div>
     </div>
 
@@ -46,28 +46,28 @@ if (!isConnect()) {
     <div class="form-group">
             <label class="col-lg-4 control-label">{{Identifiant de Connexion : }}</label>
             <div class="col-lg-4">
-                <input id="mosquitto_por" class="configKey form-control" data-l1key="mqttId" style="margin-top:5px" placeholder="Jeedom"/>
+                <input id="mosquitto_id" class="configKey form-control" data-l1key="mqttId" style="margin-top:5px" placeholder="Jeedom"/>
             </div>
     </div>
 
     <div class="form-group">
             <label class="col-lg-4 control-label">{{Compte de Connexion (non obligatoire) : }}</label>
             <div class="col-lg-4">
-                <input id="mosquitto_por" class="configKey form-control" data-l1key="mqttUser" style="margin-top:5px" placeholder="Jeedom"/>
+                <input id="mosquitto_user" class="configKey form-control" data-l1key="mqttUser" style="margin-top:5px" placeholder="Jeedom"/>
             </div>
     </div>
 
     <div class="form-group">
             <label class="col-lg-4 control-label">{{Mot de passe de Connexion (non obligatoire) : }}</label>
             <div class="col-lg-4">
-                <input id="mosquitto_por" type="password" class="configKey form-control" data-l1key="mqttPass" style="margin-top:5px" placeholder="Jeedom"/>
+                <input id="mosquitto_pwd" type="password" class="configKey form-control" data-l1key="mqttPass" style="margin-top:5px" placeholder="Jeedom"/>
             </div>
     </div>
 
     <div class="form-group" id="mqtt_topic">
             <label class="col-lg-4 control-label">{{Topic root (defaut: Tous): }}</label>
             <div class="col-lg-4">
-                <input id="mosquitto_por" class="configKey form-control" data-l1key="mqttTopic" style="margin-top:5px" placeholder="#"/>
+                <input id="mosquitto_topic" class="configKey form-control" data-l1key="mqttTopic" style="margin-top:5px" placeholder="#"/>
             </div>
     </div>
 

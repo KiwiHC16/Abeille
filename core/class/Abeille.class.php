@@ -424,7 +424,7 @@
                     echo "Order: ".$cmdValueDefaut["order"]."\n";
                     $cmdlogic->setOrder( $cmdValueDefaut["order"]);
                     $cmdlogic->setName( $cmdValueDefaut["name"] );
-                    
+
                     if ( $cmdValueDefaut["Type"]=="info" )  { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
                     
                     // La boucle est pour info et pour action
@@ -441,16 +441,19 @@
                     $cmdlogic->setType($cmdValueDefaut["Type"]);
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                     // unite
-                    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                    if (isset($cmdValueDefaut["units"])){$cmdlogic->setUnite($cmdValueDefaut["units"]);}
+
+                    if (isset($cmdValueDefaut["invertBinary"])){$cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);}
                     // La boucle est pour info et pour action
                     foreach ( $cmdValueDefaut["display"] as $confKey => $confValue )
                     {
                         // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                         $cmdlogic->setDisplay( $confKey, $confValue );
                     }
-                    
+
                     // isVisible
                     // value
+                    if (isset($cmdValueDefaut["value"])){$cmdlogic->setConfiguration('value',$cmdValueDefaut["value"]);}
                     // html
                     // alert
                     
@@ -541,12 +544,17 @@
                                 // $cmdlogic->setOrder('0');
                                 $cmdlogic->setName( 'Cmd de type inconnue - '.$cmdId );
                                 $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId );
+
+                                if (isset($cmdValueDefaut["instance"])) {$cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);}
+                                if (isset($cmdValueDefaut["class"])) {$cmdlogic->setConfiguration('class', $cmdValueDefaut["class"]);}
+                                if (isset($cmdValueDefaut["index"])) {$cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);}
+
                                 // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
                                 // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
-                                // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
-                                // {
-                                // $cmdlogic->setConfiguration($confKey,$confValue);
-                                //}
+                                 foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
+                                 {
+                                    $cmdlogic->setConfiguration($confKey,$confValue);
+                                 }
                                 // template
                                 // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
                                 // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
@@ -555,11 +563,15 @@
                                 // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                                 $cmdlogic->setSubType("string");
                                 // unite
+                                if (isset($cmdValueDefaut["units"])) {$cmdlogic->setUnite($cmdValueDefaut["units"]);}
                                 // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
                                 // isVisible
                                 // value
                                 // html
                                 // alert
+                                //$cmd->setTemplate('dashboard', 'light');
+                                //$cmd->setTemplate('mobile', 'light');
+                                //$cmd_info->setIsVisible(0);
                                 
                                 $cmdlogic->save();
                                 $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );

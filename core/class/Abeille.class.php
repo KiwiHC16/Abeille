@@ -43,43 +43,52 @@
 
         public static function deamon_start($_debug = false)
         {
-            log::add('Abeille', 'debug', '**Daemon start: IN**');
+            log::add('Abeille', 'debug', 'daemon_start: IN');
             log::add('Abeille', 'debug', 'Test BEN CONFIG: '.config::byKey('abeilleSerialPort', 'Abeille', 'none'));
 
             self::deamon_stop();
-            $deamon_info = self::deamon_info();
+            //no need as it seems to be on cron
+            /*$deamon_info = self::deamon_info();
             if ($deamon_info['launchable'] != 'ok') {
                 throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
             }
+            */
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
             if (!is_object($cron)) {
+                log::add('Abeille', 'error', 'daemon_start: Tache cron introuvable');
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->run();
 
             sleep(3);
 
-            log::add('Abeille', 'debug', 'L objet n existe pas: '.$nodeid);
             $_id = "BEN_Start"; // JE ne sais pas alors je mets n importe quoi....
             $_subject = "CmdRuche/Ruche/CreateRuche";
             $_message = "";
             $_retain = 0;
-            // Send a message to Abeille to ask for Abaille Object creation: inclusion, ...
-            log::add('Abeille', 'debug', 'Envoi du message '.$_message.' vers '.$_subject);
+            // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
+            log::add('Abeille', 'debug', 'daemon_start: Envoi du message '.$_message.' vers '.$_subject);
             $publish = new Mosquitto\Client(config::byKey('AbeilleConId', 'Abeille', 'Jeedom').'_pub_'.$_id);
             if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
                 $publish->setCredentials(config::byKey('mqttUser', 'Abeille'), config::byKey('mqttPass', 'Abeille'));
             }
+
             $publish->connect(
                 config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
                 config::byKey('AbeillePort', 'Abeille', '1883'),
                 60
             );
+
+            log::add('Abeille', 'debug', 'daemon_start: *****Envoi de la creation de ruche par défaut ********');
+            log::add('Abeille', 'debug', 'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.config::byKey('mqttQos', 'Abeille', '1').' retain: '. $_retain);
             $publish->publish($_subject, $_message, config::byKey('mqttQos', 'Abeille', '1'), $_retain);
+
+
             for ($i = 0; $i < 100; $i++) {
                 // Loop around to permit the library to do its work
                 $publish->loop(1);
             }
+
             $publish->disconnect();
             unset($publish);
 
@@ -118,26 +127,27 @@
 
         public static function deamon_stop()
         {
-            log::add('Abeille', 'debug', '**Daemon stop: IN**');
+            log::add('Abeille', 'debug', 'daemon stop: IN');
             // Stop other daemon
             exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
             foreach ($output as $item => $itemValue) {
-                log::add('Abeille', 'debug', 'Killing daemon: '.$item.' '.$itemValue);
+                log::add('Abeille', 'debug', 'daemon stop: Killing daemon: '.$item.' '.$itemValue);
                 exec('kill '.$itemValue.' 2>&1');
             }
 
             // Stop main daemon
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
             if (!is_object($cron)) {
+                log::add('Abeille', 'error', 'daemon stop: Abeille, Tache cron introuvable');
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->halt();
-            log::add('Abeille', 'debug', '**Daemon stop: OUT**');
+            log::add('Abeille', 'debug', 'daemon stop: OUT');
         }
 
         public static function deamon_info()
         {
-            log::add('Abeille', 'debug', '**Daemon info: IN**');
+            //log::add('Abeille', 'debug', '**Daemon info: IN**');
             $return = array();
             $return['log'] = '';
             $return['state'] = 'nok';
@@ -151,21 +161,22 @@
             if ($dependancy_info['state'] == 'ok') {
                 $return['launchable'] = 'ok';
             } else {
-                log::add('Abeille', 'debug', 'Daemon is not launchable ;-(');
+                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
+                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to depencies missing');
                 $return['launchable'] = 'nok';
             }
 
             //check running daemon
             exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
             foreach ($output as $item => $itemValue) {
-                log::add('Abeille', 'debug', 'status daemon: '.$item.' '.$itemValue);
+                //log::add('Abeille', 'debug', 'daemon_info: : '.$item.' '.$itemValue);
             }
 
             if (sizeof($output) < 3) {
                 log::add(
                     'Abeille',
                     'info',
-                    'status daemon: found '.sizeof($output).'/3 running, at least one is missing'
+                    'daemon_info: found '.sizeof($output).'/3 running, at least one is missing'
                 );
                 $return['state'] = 'nok';
             }
@@ -174,18 +185,13 @@
                 log::add(
                     'Abeille',
                     'error',
-                    'status daemon: '.sizeof($output).'/3 running, too many daemon running. Stopping daemons'
+                    'daemon_info: '.sizeof($output).'/3 running, too many daemon running. Stopping daemons'
                 );
                 $return['state'] = 'nok';
                 self::deamon_stop();
             }
             //$return['state'] = 'ok';
-
-
-            log::add('Abeille', 'debug', 'Daemon launchable: '.$return['launchable']);
-            log::add('Abeille', 'debug', 'Daemon state: '.$return['state']);
-            log::add('Abeille', 'debug', '**Daemon info: OUT**');
-
+            //log::add('Abeille', 'debug', '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']);
             return $return;
         }
 
@@ -205,9 +211,10 @@
             $return['id'] = config::byKey('AbeilleConId', 'Abeille');
             $return['user'] = config::byKey('mqttUser', 'Abeille');
             $return['pass'] = config::byKey('mqttPass', 'Abeille');
-
+            $return['topic'] = config::byKey('mqttTopic', 'Abeille');
             $return['serialPort'] = config::byKey('abeilleSerialPort', 'Abeille');
             $return['qos'] = config::byKey('mqttQos', 'Abeille');
+            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille');
 
             if ($return['serialPort'] != 'auto') {
                 $return['serialPort'] = jeedom::getUsbMapping($return['serialPort']);
@@ -218,7 +225,6 @@
                     exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
                 }
             }
-            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille');
 
             foreach ($return as $item => $itemValue) {
                 //log::add('Abeille', 'debug', $item.' ->'.$itemValue.'<-' );
@@ -227,19 +233,25 @@
                     log::add('Abeille', 'debug', $item.' n\' est pas défini. ->'.$itemValue.'<-');
                     $return['launchable_message'] = $item.' n\' est pas défini . ->'.$itemValue.'<-';
 
-                    return $return['state'] = 'nok';
+                    return $return['launchable'] = 'nok';
                 }
             }
 
             if ($output[0] != "" && $libphp) {
-                $return['configuration'] = 'ok';
+                //$return['configuration'] = 'ok';
                 $return['state'] = 'ok';
             } else {
                 log::add(
                     'Abeille',
-                    'debug',
-                    'Impossible de trouver la le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
+                    'warning',
+                    'Impossible de trouver le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
                 );
+                log::add(
+                    'Abeille',
+                    'debug',
+                    'Impossible de trouver le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
+                );
+
             }
 
             return $return;
@@ -262,18 +274,18 @@
         {
             log::add(
                 'Abeille',
-                'info',
-                'Paramètres utilisés, Host : '.config::byKey(
-                    'AbeilleAddress',
-                    'Abeille',
-                    '127.0.0.1'
-                ).', Port : '.config::byKey('AbeillePort', 'Abeille', '1883').', ID : '.config::byKey(
-                    'AbeilleId',
-                    'Abeille',
-                    'Jeedom'
-                )
+                'debug',
+                'Paramètres utilisés, Host : '.config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1').',
+            Port : '.config::byKey('AbeillePort', 'Abeille', '1883').',
+            AbeilleId : '.config::byKey('AbeilleId', 'Abeille', 'Jeedom').',
+            AbeilleConId: '.config::byKey('AbeilleConId', 'Abeille').',
+            mqttUser'.config::byKey('mqttUser', 'Abeille').',
+            pass'.config::byKey('mqttPass', 'Abeille').',
+            serialPort'.config::byKey('abeilleSerialPort', 'Abeille').',
+            qos: '.config::byKey('mqttQos', 'Abeille')
             );
-            $client = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom'));
+
+            $client = new Mosquitto\Client(config::byKey('AbeilleConId', 'Abeille', 'Jeedom'));
             $client->onConnect('Abeille::connect');
             $client->onDisconnect('Abeille::disconnect');
             $client->onSubscribe('Abeille::subscribe');
@@ -282,10 +294,10 @@
             $client->setWill('/jeedom', "Client died :-(", 1, 0);
 
             try {
-                if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
+                if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
                     $client->setCredentials(
-                        config::byKey('AbeilleUser', 'Abeille'),
-                        config::byKey('AbeillePass', 'Abeille')
+                        config::byKey('mqttUser', 'Abeille'),
+                        config::byKey('mqttPass', 'Abeille')
                     );
                 }
                 $client->connect(
@@ -294,14 +306,20 @@
                     60
                 );
                 $client->subscribe(
-                    config::byKey('AbeilleTopic', 'Abeille', '#'),
-                    config::byKey('AbeilleQos', 'Abeille', 1)
+                    config::byKey('mqttTopic', 'Abeille', '#'),
+                    config::byKey('mqttQos', 'Abeille', 1)
+
                 ); // !auto: Subscribe to root topic
-                log::add('Abeille', 'debug', 'Subscribe to topic '.config::byKey('AbeilleTopic', 'Abeille', '#'));
+                log::add('Abeille', 'debug', 'Subscribe to topic '.config::byKey('mqttTopic', 'Abeille', '#'));
                 //$client->loopForever();
                 while (true) {
                     $client->loop();
+                    //usleep(100);
                 }
+
+                $client->disconnect();
+                unset($client);
+
             } catch (Exception $e) {
                 log::add('Abeille', 'error', $e->getMessage());
             }
@@ -346,22 +364,12 @@
             log::add('Abeille', 'debug', '--- process a new message -----------------------');
             log::add('Abeille', 'debug', 'Message ->'.$message->payload.'<- sur '.$message->topic);
 
+            /*----------------------------------------------------------------------------------------------------------------------------------------------*/
             // Analyse du message recu et definition des variables en fonction de ce que l on trouve dans le message
             // $nodeid[/] / $cmdId / $value
-            if ($GLOBALS['debugBEN']) {
-                echo "\ntopic: ";
-                print_r($message->topic);
-            }
+
             $topicArray = explode("/", $message->topic);
-            if ($GLOBALS['debugBEN']) {
-                echo "\ntopicArray: ";
-                print_r($topicArray);
-            }
-            $Filter = $topicArray[0];
-            if ($GLOBALS['debugBEN']) {
-                echo "\nFilter: ";
-                print_r($Filter);
-            }
+
             // cmdId est le dernier champ du topic
             $cmdId = end($topicArray);
             $key = count($topicArray) - 1;
@@ -372,289 +380,46 @@
             $value = $message->payload;
             // type = topic car pas json
             $type = 'topic';
+            $Filter=$topicArray[0];
+            $configDir=dirname(__FILE__) . '/../config/';
+            $confFile=$configDir."AbeilleObjetDefinition.json";
 
-
-            if ($GLOBALS['debugBEN']) {
-                echo "\nAnalyse msg done\n";
+            //file exists ?
+            if (!is_file( $confFile)) {
+                log::add('Abeille','error',$confFile.' not found.' );
+                return;
             }
+            // is valid json
+            $content = file_get_contents($confFile);
+            if (!is_json($content)) {
+                log::add('Abeille','error',$confFile.' is not a valid json.' );
+                return;
+            }
+            $AbeilleObjetDefinition = json_decode($content,true);
 
-            $AbeilleObjetDefinition = json_decode(
-                file_get_contents("/var/www/html/plugins/Abeille/core/class/AbeilleObjetDefintion.json"),
-                true
-            );
+            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
-            /*----------------------------------------------------------------------------------------------------------------------------------------------*/
+            // demande de creation de ruche au cas ou elle n'est pas deja crée....
             // La ruche est aussi un objet Abeille
             if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
-                $elogic = self::byLogicalId("Ruche", 'Abeille');
-                if (is_object($elogic)) {
-                    // La ruche existe deja so return
-                    return;
-                }
-                // Creation de la ruche
-                log::add('Abeille', 'info', 'objet: '.$value.' creation par model');
-                $elogic = new Abeille();
-                //id
-                $elogic->setName("Ruche");
-                $elogic->setLogicalId("Abeille/Ruche");
-                $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
-                $elogic->setEqType_name('Abeille');
-                $elogic->setConfiguration('topic', "Abeille/Ruche");
-                $elogic->setConfiguration('type', 'topic');
-                $elogic->setIsVisible("1");
-                // eqReal_id
-                $elogic->setIsEnable("1");
-                // status
-                // timeout
-                // $elogic->setCategory();
-                // display
-                // order
-                // comment
-
-                //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
-                //$elogic->save();
-                $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-                $elogic->save();
-
-
-                $i = 0;
-
-                $rucheCommandList = array(
-                    "Version" => array(
-                        "name" => "Version",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array("topic" => "CmdAbeille/Ruche/getVersion", "request" => "Version"),
-                    ),
-                    "Start Network" => array(
-                        "name" => "Start Network",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/startNetwork",
-                            "request" => "StartNetwork",
-                        ),
-                    ),
-                    "Inclusion" => array(
-                        "name" => "Inclusion",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array("topic" => "CmdAbeille/Ruche/SetPermit", "request" => "Inclusion"),
-                    ),
-                    "Reset" => array(
-                        "name" => "Reset",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array("topic" => "CmdAbeille/Ruche/reset", "request" => "reset"),
-                    ),
-                    "addGroup" => array(
-                        "name" => "Add Group",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "message",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/addGroup",
-                            "request" => "address=#title#&groupAddress=#message#",
-                        ),
-                    ),
-                    "removeGroup" => array(
-                        "name" => "Remove Group",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "message",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/removeGroup",
-                            "request" => "address=#title#&groupAddress=#message#",
-                        ),
-                    ),
-                    "getName" => array(
-                        "name" => "Get Name",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "message",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/getName",
-                            "request" => "address=#title#&groupAddress=#message#",
-                        ),
-                    ),
-                    "ReadAttributeRequest" => array(
-                        "name" => "Get Attribut",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "message",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/ReadAttributeRequest",
-                            "request" => "address=#title#&attribut=#message#",
-                        ),
-                    ),
-                    "AbeilleList" => array(
-                        "name" => "Liste Equipements",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array(
-                            "topic" => "CmdAbeille/Ruche/abeilleList",
-                            "request" => "abeilleListAll",
-                        ),
-                    ),
-                    "Time-Time" => array(
-                        "name" => "Last",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "info",
-                        "subType" => "string",
-                        "invertBinary" => "0",
-                        "template" => "",
-                    ),
-                    "Time-TimeStamp" => array(
-                        "name" => "Last Stamps",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "info",
-                        "subType" => "string",
-                        "invertBinary" => "0",
-                        "template" => "",
-                    ),
-                    "SW-Application" => array(
-                        "name" => "SW",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "info",
-                        "subType" => "string",
-                        "invertBinary" => "0",
-                        "template" => "",
-                    ),
-                    "SW-SDK" => array(
-                        "name" => "SDK",
-                        "order" => $i++,
-                        "isHistorized" => "0",
-                        "isVisible" => "1",
-                        "Type" => "info",
-                        "subType" => "string",
-                        "invertBinary" => "0",
-                        "template" => "",
-                    ),
-                );
-
-                if ($GLOBALS['debugBEN']) {
-                    echo "First list\n";
-                    print_r($rucheCommandList);
-                    echo "\n";
-                }
-
-                // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-                foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-                    $rucheCommandList[$objetId] = array(
-                        "name" => $objetId,
-                        "order" => $i++,
-                        "isVisible" => "0",
-                        "isHistorized" => "0",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array("topic" => "Abeille/".$objetId."/0000-0005", "request" => $objetId),
-                    );
-                }
-
-                if ($GLOBALS['debugBEN']) {
-                    echo "Second list\n";
-                    print_r($rucheCommandList);
-                    echo "\n";
-                }
-
-                foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
-                    $nomObjet = "Ruche";
-                    log::add(
-                        'Abeille',
-                        'info',
-                        'Creation de la command: '.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet
-                    );
-                    $cmdlogic = new AbeilleCmd();
-                    // id
-                    $cmdlogic->setEqLogic_id($elogic->getId());
-                    $cmdlogic->setEqType('Abeille');
-                    $cmdlogic->setLogicalId($cmd);
-                    $cmdlogic->setOrder($cmdValueDefaut["order"]);
-                    $cmdlogic->setName($cmdValueDefaut["name"]);
-                    if ($cmdValueDefaut["Type"] == "action") {
-                        $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd);
-                    } else {
-                        $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd);
-                    }
-                    if ($cmdValueDefaut["Type"] == "action") {
-                        $cmdlogic->setConfiguration('retain', '0');
-                    }
-                    foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-                        $cmdlogic->setConfiguration($confKey, $confValue);
-                    }
-                    // template
-                    $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-                    $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-                    $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                    $cmdlogic->setType($cmdValueDefaut["Type"]);
-                    $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                    // unite
-                    $cmdlogic->setDisplay('invertBinary', '0');
-                    $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
-                    // value
-                    // html
-                    // alert
-
-                    $cmdlogic->save();
-                    $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
-                }
-
+                self::createRuche($message);
+                return ;
             }
-            if ($GLOBALS['debugBEN']) {
-                echo "Passe l etat ruche\n";
-            }
-
-            if ($GLOBALS['debugBEN']) {
-                echo "Filter test pour ".$Filter."\n";
-            }
-
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille/#/#
             if ($Filter != "Abeille") {
+                log::add('Abeille', 'debug', 'message: this is not a Abeille message: topic: '.$message->topic.' message: '.$message->payload);
                 return;
             }
+
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-            if ($GLOBALS['debugBEN']) {
-                echo "Passe l etat Abeille\n";
-            }
-
 
             // Est ce que cet equipement existe deja ? Sinon creation quand je recois son nom
 
             // Cherche l objet
             $elogic = self::byLogicalId($nodeid, 'Abeille');
+            $objetConnu = 0;
 
             // Je viens de revoir son nom donc je créé l objet.
             if (!is_object($elogic) && ($cmdId == "0000-0005") && (config::byKey(
@@ -662,13 +427,6 @@
                         'Abeille',
                         'Automatique'
                     ) != "Manuel")) {
-
-                $objetConnu = 0;
-
-                if ($GLOBALS['debugBEN']) {
-                    echo "Value: ".$value."\n";
-                }
-                // if ( $GLOBALS['debugBEN'] ) print_r( $AbeilleObjetDefinition[$value] );
 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 if (array_key_exists($value, $AbeilleObjetDefinition)) {
@@ -694,7 +452,7 @@
                 }
                 $elogic->setName($name);
                 $elogic->setLogicalId($nodeid);
-                $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
+                $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
                 $elogic->setEqType_name('Abeille');
 
                 $objetDefSpecific = $AbeilleObjetDefinition[$value];
@@ -810,7 +568,7 @@
                     }
                     $elogic->setName($name);
                     $elogic->setLogicalId($nodeid);
-                    $elogic->setObject_id(config::byKey('idObjetRattachementParDefaut', 'Abeille', '1'));
+                    $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
                     $elogic->setEqType_name('Abeille');
 
                     // $objetDefSpecific = $AbeilleObjetDefinition[$value];
@@ -848,10 +606,10 @@
                             $publish = new Mosquitto\Client(
                                 config::byKey('AbeilleId', 'Abeille', 'Jeedom').'_pub_'.$_id
                             );
-                            if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
+                            if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
                                 $publish->setCredentials(
-                                    config::byKey('AbeilleUser', 'Abeille'),
-                                    config::byKey('AbeillePass', 'Abeille')
+                                    config::byKey('mqttUser', 'Abeille'),
+                                    config::byKey('mqttPass', 'Abeille')
                                 );
                             }
                             $publish->connect(
@@ -961,14 +719,15 @@
              */
         }
 
+
         public static function publishMosquitto($_id, $_subject, $_message, $_retain)
         {
             log::add('Abeille', 'debug', 'Envoi du message '.$_message.' vers '.$_subject);
             $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom').'_pub_'.$_id);
-            if (config::byKey('AbeilleUser', 'Abeille', 'none') != 'none') {
+            if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
                 $publish->setCredentials(
-                    config::byKey('AbeilleUser', 'Abeille'),
-                    config::byKey('AbeillePass', 'Abeille')
+                    config::byKey('mqttUser', 'Abeille'),
+                    config::byKey('mqttPass', 'Abeille')
                 );
             }
             $publish->connect(
@@ -983,6 +742,254 @@
             }
             $publish->disconnect();
             unset($publish);
+        }
+
+
+        public function createRuche($message = null)
+        {
+            $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
+            if (is_object($elogic)) {
+                log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
+
+                // La ruche existe deja so return
+                return;
+            }
+            // Creation de la ruche
+            log::add('Abeille', 'info', 'objet: '.$elogic->getLogicalId().' creation par model');
+            $elogic = new Abeille();
+            //id
+            $elogic->setName("Ruche");
+            $elogic->setLogicalId("Abeille/Ruche");
+            $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
+            $elogic->setEqType_name('Abeille');
+            $elogic->setConfiguration('topic', "Abeille/Ruche");
+            $elogic->setConfiguration('type', 'topic');
+            $elogic->setIsVisible("1");
+            // eqReal_id
+            $elogic->setIsEnable("1");
+            // status
+            // timeout
+            // $elogic->setCategory();
+            // display
+            // order
+            // comment
+
+            //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
+            //$elogic->save();
+            $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+            $elogic->save();
+
+
+            $i = 0;
+
+            $rucheCommandList = array(
+                "Version" => array(
+                    "name" => "Version",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array("topic" => "CmdAbeille/Ruche/getVersion", "request" => "Version"),
+                ),
+                "Start Network" => array(
+                    "name" => "Start Network",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/startNetwork",
+                        "request" => "StartNetwork",
+                    ),
+                ),
+                "Inclusion" => array(
+                    "name" => "Inclusion",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array("topic" => "CmdAbeille/Ruche/SetPermit", "request" => "Inclusion"),
+                ),
+                "Reset" => array(
+                    "name" => "Reset",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array("topic" => "CmdAbeille/Ruche/reset", "request" => "reset"),
+                ),
+                "addGroup" => array(
+                    "name" => "Add Group",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "message",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/addGroup",
+                        "request" => "address=#title#&groupAddress=#message#",
+                    ),
+                ),
+                "removeGroup" => array(
+                    "name" => "Remove Group",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "message",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/removeGroup",
+                        "request" => "address=#title#&groupAddress=#message#",
+                    ),
+                ),
+                "getName" => array(
+                    "name" => "Get Name",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "message",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/getName",
+                        "request" => "address=#title#&groupAddress=#message#",
+                    ),
+                ),
+                "ReadAttributeRequest" => array(
+                    "name" => "Get Attribut",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "message",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/ReadAttributeRequest",
+                        "request" => "address=#title#&attribut=#message#",
+                    ),
+                ),
+                "AbeilleList" => array(
+                    "name" => "Liste Equipements",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array(
+                        "topic" => "CmdAbeille/Ruche/abeilleList",
+                        "request" => "abeilleListAll",
+                    ),
+                ),
+                "Time-Time" => array(
+                    "name" => "Last",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "info",
+                    "subType" => "string",
+                    "invertBinary" => "0",
+                    "template" => "",
+                ),
+                "Time-TimeStamp" => array(
+                    "name" => "Last Stamps",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "info",
+                    "subType" => "string",
+                    "invertBinary" => "0",
+                    "template" => "",
+                ),
+                "SW-Application" => array(
+                    "name" => "SW",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "info",
+                    "subType" => "string",
+                    "invertBinary" => "0",
+                    "template" => "",
+                ),
+                "SW-SDK" => array(
+                    "name" => "SDK",
+                    "order" => $i++,
+                    "isHistorized" => "0",
+                    "isVisible" => "1",
+                    "Type" => "info",
+                    "subType" => "string",
+                    "invertBinary" => "0",
+                    "template" => "",
+                ),
+            );
+
+            if ($GLOBALS['debugBEN']) {
+                echo "First list\n";
+                print_r($rucheCommandList);
+                echo "\n";
+            }
+
+            // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+            foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+                $rucheCommandList[$objetId] = array(
+                    "name" => $objetId,
+                    "order" => $i++,
+                    "isVisible" => "0",
+                    "isHistorized" => "0",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array("topic" => "Abeille/".$objetId."/0000-0005", "request" => $objetId),
+                );
+            }
+
+            if ($GLOBALS['debugBEN']) {
+                echo "Second list\n";
+                print_r($rucheCommandList);
+                echo "\n";
+            }
+
+            foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
+                $nomObjet = "Ruche";
+                log::add(
+                    'Abeille',
+                    'info',
+                    'Creation de la command: '.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet
+                );
+                $cmdlogic = new AbeilleCmd();
+                // id
+                $cmdlogic->setEqLogic_id($elogic->getId());
+                $cmdlogic->setEqType('Abeille');
+                $cmdlogic->setLogicalId($cmd);
+                $cmdlogic->setOrder($cmdValueDefaut["order"]);
+                $cmdlogic->setName($cmdValueDefaut["name"]);
+                if ($cmdValueDefaut["Type"] == "action") {
+                    $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd);
+                } else {
+                    $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd);
+                }
+                if ($cmdValueDefaut["Type"] == "action") {
+                    $cmdlogic->setConfiguration('retain', '0');
+                }
+                foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+                    $cmdlogic->setConfiguration($confKey, $confValue);
+                }
+                // template
+                $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
+                $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+                $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+                $cmdlogic->setType($cmdValueDefaut["Type"]);
+                $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                // unite
+                $cmdlogic->setDisplay('invertBinary', '0');
+                $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+                // value
+                // html
+                // alert
+
+                $cmdlogic->save();
+                $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
+            }
         }
 
     }

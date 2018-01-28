@@ -96,32 +96,45 @@
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
             $dirDaemon = "/var/www/html/plugins/Abeille/resources/AbeilleDaemon/";
+
+
+
+            $address = config::byKey('AbeilleAddress', 'Abeille');
+            $port = config::byKey('AbeillePort', 'Abeille');
+            $id = config::byKey('AbeilleConId', 'Abeille');
+            $user = config::byKey('mqttUser', 'Abeille');
+            $pass = config::byKey('mqttPass', 'Abeille');
+            $qos = config::byKey('mqttQos', 'Abeille');
+            $serialPort = config::byKey('abeilleSerialPort', 'Abeille');
+            if ($serialPort == 'auto') {
+                $serialPort = jeedom::getUsbMapping($serialPort);
+            }
+
             $daemon1 = "AbeilleSerialRead.php";
-            $paramDaemon1 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
+            $paramDaemon1 = $serialPort;
             $daemon2 = "AbeilleParser.php";
-            $paramDaemon2 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
+            $paramDaemon2 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
             $daemon3 = "AbeilleMQTTCmd.php";
-            $paramDaemon3 = config::byKey('abeilleSerialPort', 'Abeille', 'none');
+            $paramDaemon3 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
             $log1 = " > /var/www/html/log/".$daemon1.".log";
             $log2 = " > /var/www/html/log/".$daemon2.".log";
             $log3 = " > /var/www/html/log/".$daemon3.".log";
-            $end = " &";
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1');
+            exec($cmd.' 2>&1 &');
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1');
+            exec($cmd.' 2>&1 &');
 
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3.$end;
+            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3;
             log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
             //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1');
+            exec($cmd.' 2>&1 &');
             log::add('Abeille', 'debug', 'Daemon start: OUT');
         }
 
@@ -381,21 +394,7 @@
             // type = topic car pas json
             $type = 'topic';
             $Filter=$topicArray[0];
-            $configDir=dirname(__FILE__) . '/../config/';
-            $confFile=$configDir."AbeilleObjetDefinition.json";
-
-            //file exists ?
-            if (!is_file( $confFile)) {
-                log::add('Abeille','error',$confFile.' not found.' );
-                return;
-            }
-            // is valid json
-            $content = file_get_contents($confFile);
-            if (!is_json($content)) {
-                log::add('Abeille','error',$confFile.' is not a valid json.' );
-                return;
-            }
-            $AbeilleObjetDefinition = json_decode($content,true);
+            $AbeilleObjetDefinition = self::getJsonConfigFiles();
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -406,10 +405,15 @@
                 return ;
             }
 
+            /*if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
+                self::createRuche($message);
+                return ;
+            }*/
+
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille/#/#
-            if ($Filter != "Abeille") {
-                log::add('Abeille', 'debug', 'message: this is not a Abeille message: topic: '.$message->topic.' message: '.$message->payload);
+            if (!preg_match("(Abeille|Ruche)",$Filter)) {
+                log::add('Abeille', 'debug', 'message: this is not a '.$Filter.' message: topic: '.$message->topic.' message: '.$message->payload);
                 return;
             }
 
@@ -755,7 +759,15 @@
                 return;
             }
             // Creation de la ruche
-            log::add('Abeille', 'info', 'objet: '.$elogic->getLogicalId().' creation par model');
+            //log::add('Abeille', 'info', 'objet: '.$elogic->getLogicalId().' creation par model');
+
+            $cmdId = end($topicArray);
+            $key = count($topicArray) - 1;
+            unset($topicArray[$key]);
+            $addr = end($topicArray);
+            // nodeid est le topic sans le dernier champ
+            $nodeid = implode($topicArray, '/');
+
             $elogic = new Abeille();
             //id
             $elogic->setName("Ruche");
@@ -779,6 +791,7 @@
             $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
             $elogic->save();
 
+            $AbeilleObjetDefinition= self::getJSonConfigFiles();
 
             $i = 0;
 
@@ -924,12 +937,6 @@
                 ),
             );
 
-            if ($GLOBALS['debugBEN']) {
-                echo "First list\n";
-                print_r($rucheCommandList);
-                echo "\n";
-            }
-
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
                 $rucheCommandList[$objetId] = array(
@@ -941,12 +948,6 @@
                     "subType" => "other",
                     "configuration" => array("topic" => "Abeille/".$objetId."/0000-0005", "request" => $objetId),
                 );
-            }
-
-            if ($GLOBALS['debugBEN']) {
-                echo "Second list\n";
-                print_r($rucheCommandList);
-                echo "\n";
             }
 
             foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
@@ -991,6 +992,25 @@
                 $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
             }
         }
+
+        public function getJSonConfigFiles(){
+    $configDir=dirname(__FILE__) . '/../config/';
+    $confFile=$configDir."AbeilleObjetDefinition.json";
+
+        //file exists ?
+    if (!is_file( $confFile)) {
+    log::add('Abeille','error',$confFile.' not found.' );
+    return;
+    }
+    // is valid json
+    $content = file_get_contents($confFile);
+    if (!is_json($content)) {
+        log::add('Abeille','error',$confFile.' is not a valid json.' );
+        return;
+    }
+     return json_decode($content,true);
+        }
+
 
     }
 

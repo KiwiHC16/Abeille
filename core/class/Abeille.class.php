@@ -17,6 +17,7 @@
      */
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once (dirname(__FILE__).'/../../resources/AbeilleDaemon/lib/Tools.php');
 
 
     class Abeille extends eqLogic
@@ -95,7 +96,7 @@
             // Start other daemons
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
-            $dirDaemon = "/var/www/html/plugins/Abeille/resources/AbeilleDaemon/";
+            $dirDaemon = dirname(__FILE__) ."/../../resources/AbeilleDaemon/";
 
 
 
@@ -273,12 +274,10 @@
         public static function dependancy_install()
         {
             log::add('Abeille', 'info', 'Installation des dépéndances');
-            $resource_path = realpath(dirname(__FILE__).'/../../resources');
-            passthru(
-                system::getCmdSudo().' /bin/bash '.$resource_path.'/install.sh '.$resource_path.' > '.log::getPathToLog(
-                    'Abeille_dep'
-                ).' 2>&1 &'
-            );
+            $resource_path = realpath(dirname(__FILE__).'/../../resources/');
+            $cmd=system::getCmdSudo().' /bin/bash '.$resource_path.'/install.sh '.$resource_path.' > '.log::getPathToLog('Abeille_dep').' 2>&1 &';
+            log::add('Abeille','debug','dependancy_install: cmd: '.$cmd);
+            passthru($cmd);
 
             return true;
         }
@@ -373,7 +372,6 @@
                 print_r($message);
                 echo "\n";
             }
-            log::add('Abeille', 'debug', '');
             log::add('Abeille', 'debug', '--- process a new message -----------------------');
             log::add('Abeille', 'debug', 'Message ->'.$message->payload.'<- sur '.$message->topic);
 
@@ -394,7 +392,7 @@
             // type = topic car pas json
             $type = 'topic';
             $Filter=$topicArray[0];
-            $AbeilleObjetDefinition = self::getJsonConfigFiles();
+            $AbeilleObjetDefinition = Tools::getJsonConfigFiles("AbeilleObjetDefinition.json");
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -791,7 +789,7 @@
             $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
             $elogic->save();
 
-            $AbeilleObjetDefinition= self::getJSonConfigFiles();
+            $AbeilleObjetDefinition= Tools::getJSonConfigFiles("AbeilleObjetDefinition.json");
 
             $i = 0;
 
@@ -992,26 +990,6 @@
                 $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
             }
         }
-
-        public function getJSonConfigFiles(){
-    $configDir=dirname(__FILE__) . '/../config/';
-    $confFile=$configDir."AbeilleObjetDefinition.json";
-
-        //file exists ?
-    if (!is_file( $confFile)) {
-    log::add('Abeille','error',$confFile.' not found.' );
-    return;
-    }
-    // is valid json
-    $content = file_get_contents($confFile);
-    if (!is_json($content)) {
-        log::add('Abeille','error',$confFile.' is not a valid json.' );
-        return;
-    }
-     return json_decode($content,true);
-        }
-
-
     }
 
     class AbeilleCmd extends cmd

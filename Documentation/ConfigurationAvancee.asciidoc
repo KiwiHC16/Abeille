@@ -27,7 +27,7 @@ En selectionnant "Configuration Avancée":
 image::images/Screen_Shot_2018_01_29_at_20_47_13.png[]
 
 Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
- 
+
  Attention tous les paramètres ne sont pas encore pris en compte.
 
 Puis si vous selectionnez "Commandes", puis une commande spécifique à l'aide du symbole engrenage:
@@ -39,7 +39,7 @@ Puis si vous selectionnez une commande spécifique comme l'état:
 image::images/Screen_Shot_2018_01_29_at_19_42_44.png[]
 
 Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
- 
+
 Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
 
 Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c'est prévu.

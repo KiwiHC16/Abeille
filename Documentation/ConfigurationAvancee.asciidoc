@@ -1,10 +1,10 @@
-= Fichier JSON de configuration standard des objets
+= Fichier JSON de configuration  des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipemnts possède sa configuration et ses actions. Ces informations sont stockées dans un fichier JSON.
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipemnts possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefintion.json).
 
-Actuellement nous y trouvons les Xiaomi temperature rond et carre, capteur presence, prise et un type de lampe IKEA.
+Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, prise et un type de lampe IKEA.
 
-L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi mode semi automatique: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
+L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des information: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
 
 == Penons un exemple: Capteur de porte Xiaomi.
 
@@ -17,6 +17,11 @@ Si vous selectionnez, l objet vous arrivez dans la page suivante:
 
 image::images/Screen_Shot_2018_01_29_at_19_40_30.png[]
 
+En selectionnant "Configuration Avancée":
+image::images/Screen_Shot_2018_01_29_at_20_47_13
+Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+ 
+
 Puis si vous selectoinnez "Commandes"
 
 image::images/Screen_Shot_2018_01_29_at_19_42_20.png[]
@@ -24,7 +29,7 @@ image::images/Screen_Shot_2018_01_29_at_19_42_20.png[]
 Puis si vous selectionnez une commande spécifique comme l'état:
 
 image::images/Screen_Shot_2018_01_29_at_19_42_44.png[]
- Vouos pouvez voir tous les paramètres associés à une commande et vous en servire d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+ Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
  
  Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
 

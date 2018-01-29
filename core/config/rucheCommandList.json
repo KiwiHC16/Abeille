@@ -1,115 +1,115 @@
 {
   "Version": {
     "name": "Version",
-    "order": 1,
+    "order": "",
     "isHistorized": "0",
-    "isVisible": 1,
+    "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getVersion",
+      "topic": "CmdAbeille\/Ruche\/getVersion",
       "request": "Version"
     }
   },
   "Start Network": {
     "name": "Start Network",
-    "order": 2,
-    "isHistorized": 0,
-    "isVisible": 1,
+    "order": "1",
+    "isHistorized": "0",
+    "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/startNetwork",
+      "topic": "CmdAbeille\/Ruche\/startNetwork",
       "request": "StartNetwork"
     }
   },
   "Inclusion": {
     "name": "Inclusion",
-    "order": 3,
+    "order": "2",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/SetPermit",
+      "topic": "CmdAbeille\/Ruche\/SetPermit",
       "request": "Inclusion"
     }
   },
   "Reset": {
     "name": "Reset",
-    "order": 4,
+    "order": "3",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/reset",
+      "topic": "CmdAbeille\/Ruche\/reset",
       "request": "reset"
     }
   },
   "addGroup": {
     "name": "Add Group",
-    "order": 5,
+    "order": "4",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/addGroup",
+      "topic": "CmdAbeille\/Ruche\/addGroup",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
   "removeGroup": {
     "name": "Remove Group",
-    "order": 6,
+    "order": "5",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/removeGroup",
+      "topic": "CmdAbeille\/Ruche\/removeGroup",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
   "getName": {
     "name": "Get Name",
-    "order": 7,
+    "order": "6",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getName",
+      "topic": "CmdAbeille\/Ruche\/getName",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
   "ReadAttributeRequest": {
     "name": "Get Attribut",
-    "order": 8,
+    "order": "7",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/ReadAttributeRequest",
+      "topic": "CmdAbeille\/Ruche\/ReadAttributeRequest",
       "request": "address=#title#&attribut=#message#"
     }
   },
   "AbeilleList": {
     "name": "Liste Equipements",
-    "order": 9,
+    "order": "8",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/abeilleList",
+      "topic": "CmdAbeille\/Ruche\/abeilleList",
       "request": "abeilleListAll"
     }
   },
   "Time-Time": {
     "name": "Last",
-    "order": 10,
+    "order": "9",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -119,7 +119,7 @@
   },
   "Time-TimeStamp": {
     "name": "Last Stamps",
-    "order": 11,
+    "order": "10",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -129,7 +129,7 @@
   },
   "SW-Application": {
     "name": "SW",
-    "order": 12,
+    "order": "11",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -139,7 +139,7 @@
   },
   "SW-SDK": {
     "name": "SDK",
-    "order": 13,
+    "order": "12",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",

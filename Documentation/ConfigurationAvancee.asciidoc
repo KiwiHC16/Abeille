@@ -1,0 +1,3 @@
+= Fichier JSON de configuration standard des objets
+
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise son nom pour créé un nouvel équipement. Pour cela il a besoin de toutes les informations sur ce type d'équipement. Ces informations sont stocké dasn un fichier JSON.

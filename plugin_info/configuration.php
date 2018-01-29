@@ -91,9 +91,9 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label">{{Abeille Serial Port : }}</label>
                 <div class="col-lg-4">
-                    <select class="configKey form-control col-sm-2" data-l1key="abeilleSerialPort">
-                        <option value="none">{{Aucun}}</option>
-                        <option value="auto">{{Auto}}</option>
+                    <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
+                        <option value="none" selected>{{Aucun}}</option>
+                        <!--option value="auto">{{Auto}}</option-->
                         <?php
                             foreach (jeedom::getUsbMapping('', true) as $name => $value) {
                                 echo '<option value="'.$name.'">'.$name.' ('.$value.')</option>';

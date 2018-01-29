@@ -98,8 +98,6 @@
             $php = "/usr/bin/php";
             $dirDaemon = dirname(__FILE__) ."/../../resources/AbeilleDaemon/";
 
-
-
             $address = config::byKey('AbeilleAddress', 'Abeille');
             $port = config::byKey('AbeillePort', 'Abeille');
             $id = config::byKey('AbeilleConId', 'Abeille');
@@ -107,35 +105,38 @@
             $pass = config::byKey('mqttPass', 'Abeille');
             $qos = config::byKey('mqttQos', 'Abeille');
             $serialPort = config::byKey('abeilleSerialPort', 'Abeille');
+
             if ($serialPort == 'auto') {
                 $serialPort = jeedom::getUsbMapping($serialPort);
+                log::add('Abeille', 'debug', 'Start daemon: auto usb defined to '.$serialPort);
             }
 
             $daemon1 = "AbeilleSerialRead.php";
-            $paramDaemon1 = $serialPort;
+            $paramDaemon1 = $serialPort.' '.time();
             $daemon2 = "AbeilleParser.php";
-            $paramDaemon2 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
+            $paramDaemon2 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos.' '.time();
             $daemon3 = "AbeilleMQTTCmd.php";
-            $paramDaemon3 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
-            $log1 = " > /var/www/html/log/".$daemon1.".log";
-            $log2 = " > /var/www/html/log/".$daemon2.".log";
-            $log3 = " > /var/www/html/log/".$daemon3.".log";
+            $paramDaemon3 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos.' '.time();
+            $log1 = " > /var/www/html/log/".substr($daemon1, 0 , (strrpos($daemon1, ".")));;
+            $log2 = " > /var/www/html/log/".substr($daemon2, 0 , (strrpos($daemon2, ".")));;
+            $log3 = " > /var/www/html/log/".substr($daemon3, 0 , (strrpos($daemon3, ".")));;
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1;
-            log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1 &');
+            log::add('Abeille', 'debug', 'Start daemon SerialRead: '.$cmd);
+            exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            //exec($cmd.' 2>&1 &');
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2;
-            log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1 &');
+            log::add('Abeille', 'debug', 'Start daemon Parser: '.$cmd);
+            exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            //exec($cmd.' 2>&1 &');
 
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3;
-            log::add('Abeille', 'debug', 'Start daemon: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1');
-            exec($cmd.' 2>&1 &');
+            log::add('Abeille', 'debug', 'Start daemon MQTT: '.$cmd);
+            exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            //exec($cmd.' 2>&1 &');
+            $cmd="";
             log::add('Abeille', 'debug', 'Daemon start: OUT');
         }
 
@@ -146,7 +147,7 @@
             exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
             foreach ($output as $item => $itemValue) {
                 log::add('Abeille', 'debug', 'daemon stop: Killing daemon: '.$item.' '.$itemValue);
-                exec('kill '.$itemValue.' 2>&1');
+                exec(system::getCmdSudo().'kill '.$itemValue.' 2>&1');
             }
 
             // Stop main daemon
@@ -161,9 +162,8 @@
 
         public static function deamon_info()
         {
-            //log::add('Abeille', 'debug', '**Daemon info: IN**');
+            log::add('Abeille', 'debug', '**Daemon info: IN**');
             $return = array();
-            $return['log'] = '';
             $return['state'] = 'nok';
             $return['configuration'] = 'nok';
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
@@ -176,36 +176,35 @@
                 $return['launchable'] = 'ok';
             } else {
                 log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
-                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to depencies missing');
+                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to dependancies missing');
                 $return['launchable'] = 'nok';
+                throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
             }
 
-            //check running daemon
-            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
-            foreach ($output as $item => $itemValue) {
-                //log::add('Abeille', 'debug', 'daemon_info: : '.$item.' '.$itemValue);
-            }
+            //check running daemon /!\ if using sudo nbprocess x2
+            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1", $output);
+            log::add('Abeille','debug','daemon_info: implode output '.implode(" xx ",$output));
+            $nbProcess= $output!=''?sizeof($output):"0";
 
-            if (sizeof($output) < 3) {
+            if ($nbProcess < 6 ) {
                 log::add(
                     'Abeille',
                     'info',
-                    'daemon_info: found '.sizeof($output).'/3 running, at least one is missing'
+                    'daemon_info: found '.($nbProcess/3).'/3 running, at least one is missing'
                 );
                 $return['state'] = 'nok';
             }
 
-            if (sizeof($output) > 3) {
+            if ($nbProcess > 6) {
                 log::add(
                     'Abeille',
                     'error',
-                    'daemon_info: '.sizeof($output).'/3 running, too many daemon running. Stopping daemons'
+                    'daemon_info: '.($nbProcess/3).'/3 running, too many daemon running. Stopping daemons'
                 );
                 $return['state'] = 'nok';
                 self::deamon_stop();
             }
-            //$return['state'] = 'ok';
-            //log::add('Abeille', 'debug', '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']);
+            log::add('Abeille', 'debug', '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']);
             return $return;
         }
 
@@ -214,40 +213,41 @@
             $return = array();
             $return['log'] = 'Abeille_dep';
             $return['state'] = 'nok';
+            $return['launchable'] = 'nok';
             $return['configuration'] = 'nok';
             $cmd = "dpkg -l | grep mosquitto";
             exec($cmd, $output, $return_var);
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
 
-            $return['address'] = config::byKey('AbeilleAddress', 'Abeille');
-            $return['port'] = config::byKey('AbeillePort', 'Abeille');
-            $return['id'] = config::byKey('AbeilleConId', 'Abeille');
-            $return['user'] = config::byKey('mqttUser', 'Abeille');
-            $return['pass'] = config::byKey('mqttPass', 'Abeille');
-            $return['topic'] = config::byKey('mqttTopic', 'Abeille');
-            $return['serialPort'] = config::byKey('abeilleSerialPort', 'Abeille');
-            $return['qos'] = config::byKey('mqttQos', 'Abeille');
-            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille');
+            //Commented value for non compulsory fields
+            $return['mosquittoAddress'] = config::byKey('AbeilleAddress', 'Abeille','127.0.0.1');
+            $return['mosquittoPort'] = config::byKey('AbeillePort', 'Abeille','1883');
+            $return['ConnexionId'] = config::byKey('AbeilleConId', 'Abeille','jeedom');
+            //$return['mosquittoUser'] = config::byKey('mqttUser', 'Abeille');
+            //$return['mosquittoPass'] = config::byKey('mqttPass', 'Abeille');
+            $return['mosquittoTopic'] = config::byKey('mqttTopic', 'Abeille','#');
+            //$return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['mosquittoQos'] = config::byKey('mqttQos', 'Abeille','0');
+            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille','1');
+            $serialPort=config::byKey('AbeilleSerialPort', 'Abeille');
 
-            if ($return['serialPort'] != 'auto') {
-                $return['serialPort'] = jeedom::getUsbMapping($return['serialPort']);
-                if (@!file_exists($return['serialPort'])) {
+            log::add('Abeille', 'debug', 'serialPort value: ->'.$serialPort.'<-');
+            if ($serialPort != 'none' ) {
+                $return['serialPort'] = jeedom::getUsbMapping($serialPort);
+                if (@!file_exists($serialPort)) {
                     $return['launchable'] = 'nok';
-                    $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
+                    log::add('Abeille', 'debug', 'serialPort n\'est pas défini. ->'.$return['serialPort'].'<-');
+                    //$return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
+                    throw new Exception(__('Le port n\'est pas configuré: '.$serialPort, __FILE__));
                 } else {
                     exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
                 }
             }
 
             foreach ($return as $item => $itemValue) {
-                //log::add('Abeille', 'debug', $item.' ->'.$itemValue.'<-' );
-                if (!isset($itemValue) || $itemValue == "") {
-                    //throw new Exception(__($item. ' N est pas défini. Veuillez vérifier la configuration', __FILE__));
-                    log::add('Abeille', 'debug', $item.' n\' est pas défini. ->'.$itemValue.'<-');
-                    $return['launchable_message'] = $item.' n\' est pas défini . ->'.$itemValue.'<-';
-
-                    return $return['launchable'] = 'nok';
+                if ( !isset($itemValue) || $itemValue == "") {
+                    throw new Exception(__($item.' n\'est pas défini . ->'.$itemValue.'<-', __FILE__));
                 }
             }
 
@@ -392,6 +392,7 @@
             // type = topic car pas json
             $type = 'topic';
             $Filter=$topicArray[0];
+            //$AbeilleObjetDefinition = Tools::getJsonConfigFiles($AbeilleJsonFileObjetDefinition);
             $AbeilleObjetDefinition = Tools::getJsonConfigFiles("AbeilleObjetDefinition.json");
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -750,9 +751,9 @@
         public function createRuche($message = null)
         {
             $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
+
             if (is_object($elogic)) {
                 log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
-
                 // La ruche existe deja so return
                 return;
             }
@@ -789,151 +790,12 @@
             $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
             $elogic->save();
 
-            $AbeilleObjetDefinition= Tools::getJSonConfigFiles("AbeilleObjetDefinition.json");
+            /*$AbeilleObjetDefinition= Tools::getJSonConfigFiles($AbeilleJsonFileObjetDefinition);
+            $rucheCommandList = Tools::getJSonConfigFiles($rucheJsonFileCommandList);*/
+            $AbeilleObjetDefinition= Tools::getJSonConfigFiles('AbeilleObjetDefinition.json');
+            $rucheCommandList = Tools::getJSonConfigFiles('rucheCommandList.json');
 
             $i = 0;
-
-            $rucheCommandList = array(
-                "Version" => array(
-                    "name" => "Version",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "other",
-                    "configuration" => array("topic" => "CmdAbeille/Ruche/getVersion", "request" => "Version"),
-                ),
-                "Start Network" => array(
-                    "name" => "Start Network",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "other",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/startNetwork",
-                        "request" => "StartNetwork",
-                    ),
-                ),
-                "Inclusion" => array(
-                    "name" => "Inclusion",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "other",
-                    "configuration" => array("topic" => "CmdAbeille/Ruche/SetPermit", "request" => "Inclusion"),
-                ),
-                "Reset" => array(
-                    "name" => "Reset",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "other",
-                    "configuration" => array("topic" => "CmdAbeille/Ruche/reset", "request" => "reset"),
-                ),
-                "addGroup" => array(
-                    "name" => "Add Group",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "message",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/addGroup",
-                        "request" => "address=#title#&groupAddress=#message#",
-                    ),
-                ),
-                "removeGroup" => array(
-                    "name" => "Remove Group",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "message",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/removeGroup",
-                        "request" => "address=#title#&groupAddress=#message#",
-                    ),
-                ),
-                "getName" => array(
-                    "name" => "Get Name",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "message",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/getName",
-                        "request" => "address=#title#&groupAddress=#message#",
-                    ),
-                ),
-                "ReadAttributeRequest" => array(
-                    "name" => "Get Attribut",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "message",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/ReadAttributeRequest",
-                        "request" => "address=#title#&attribut=#message#",
-                    ),
-                ),
-                "AbeilleList" => array(
-                    "name" => "Liste Equipements",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "action",
-                    "subType" => "other",
-                    "configuration" => array(
-                        "topic" => "CmdAbeille/Ruche/abeilleList",
-                        "request" => "abeilleListAll",
-                    ),
-                ),
-                "Time-Time" => array(
-                    "name" => "Last",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "info",
-                    "subType" => "string",
-                    "invertBinary" => "0",
-                    "template" => "",
-                ),
-                "Time-TimeStamp" => array(
-                    "name" => "Last Stamps",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "info",
-                    "subType" => "string",
-                    "invertBinary" => "0",
-                    "template" => "",
-                ),
-                "SW-Application" => array(
-                    "name" => "SW",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "info",
-                    "subType" => "string",
-                    "invertBinary" => "0",
-                    "template" => "",
-                ),
-                "SW-SDK" => array(
-                    "name" => "SDK",
-                    "order" => $i++,
-                    "isHistorized" => "0",
-                    "isVisible" => "1",
-                    "Type" => "info",
-                    "subType" => "string",
-                    "invertBinary" => "0",
-                    "template" => "",
-                ),
-            );
 
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {

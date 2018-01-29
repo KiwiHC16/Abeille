@@ -20,7 +20,7 @@
             $mqtt->publish('Abeille/'.$SrcAddr.'/'.'Time-Time', date("Y-m-d H:i:s"), 0);
             $mqtt->close();
         } else {
-            log::add('Abeille','error','AbeilleParser: mqqtPublish Time out!');
+            log::add('AbeilleParser','error','AbeilleParser: mqqtPublish Time out!');
             log::add('AbeilleParser', 'debug', 'AbeilleParser: Time out!');
         }
     }
@@ -32,7 +32,7 @@
             $mqtt->publish('CmdAbeille'.$SrcAddr.'Annonce', $data, 0);
             $mqtt->close();
         } else {
-            log::add('Abeille','error','AbeilleParser: mqqtPublishAnnounce Time out!');
+            log::add('AbeilleParser','error','AbeilleParser: mqqtPublishAnnounce Time out!');
             log::add('AbeilleParser', 'debug', 'AbeilleParser: mqqtPublishAnnounce Time out!');
         }
     }
@@ -49,7 +49,7 @@
 
     function displayClusterId($cluster)
     {
-        $clusterTab= Tools::getJSonConfigFiles($zigateJsonFileCluster);
+        $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
         /*$clusterTab["0000"] = " (General: Basic)";
         $clusterTab["0001"] = " (General: Power Config)";
@@ -616,12 +616,20 @@
     $qos=$argv[6];
     $mqtt = new phpMQTT($server, $port, $client_id);
     $fifoIN = new fifo($in, 'r');
-    $zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
+    //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
+    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
     log::add('AbeilleParser', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
 
+    if ($serial == 'none') {
+        $serial = $resourcePath.'/COM';
+        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
+    }
+
+
     if (!file_exists($serial)) {
-        log::add('AbeilleParser', 'error', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas');
+        log::add('AbeilleParser', 'error', 'AbeilleParser main: Critical, fichier '.$serial.' n existe pas');
         exit(1);
     }
 

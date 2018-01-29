@@ -4,6 +4,7 @@
 
     include("CmdToAbeille.php");  // contient processCmd()
     include("lib/phpMQTT.php");
+    include (dirname(__FILE__).'/includes/config.php');
 
     function procmsg($topic, $msg)
     {
@@ -115,6 +116,7 @@
         }
     }
 
+    // MAIN
     //                      1          2           3       4          5       6
     //$paramDaemon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
 
@@ -127,6 +129,11 @@
     $qos=$argv[6];
     $mqtt = new phpMQTT($server, $port, $client_id);
 
+    if ($dest=='none'){
+        $dest=$resourcePath.'/COM';
+        log::add('AbeilleMQTTC','debug','AbeilleMQTTC main: debug for com file: '.$dest);
+        exec(system::getCmdSudo().'touch '.$dest.'chmod 777 '.$dest.' > /dev/null 2>&1');
+        }
 
     log::add('AbeilleMQTTCmd', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
 

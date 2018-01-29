@@ -31,7 +31,15 @@
     /* -------------------------------------------------------------------- */
 
     $serial = $argv[1];
+
     log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: Demarrage de AbeilleSerial');
+
+    if ($serial == 'none') {
+        $serial = $resourcePath.'/COM';
+        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
+    }
+
 
     if (!file_exists($serial)) {
         log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Error: Fichier '.$serial.' n existe pas');

@@ -1,41 +1,61 @@
-= Fichier JSON de configuration  des objets
+= Fichier JSON
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipemnts possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefintion.json).
+== Configuration  des objets
+
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefintion.json).
 
 Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, prise et un type de lampe IKEA.
 
 L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des information: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
 
-== Penons un exemple: Capteur de porte Xiaomi.
+== Interface Jeedom
+
+Penons un exemple: Capteur de porte Xiaomi.
 
 Dans Jeedom, il apparaitra sous le widget:
+
 image::images/Screen_Shot_2018_01_29_at_19_39_52.png[]
 
-Son nom est pour l'occasion "lumi.sensor_magnet.aq2". C'est à partir de la que tout le reste à été déduit. par exemple le symbole de porte,...
+Son nom est pour l'occasion "lumi.sensor_magnet.aq2". C'est à partir de la que tout le reste a été déduit, par exemple le symbole de porte,...
 
-Si vous selectionnez, l objet vous arrivez dans la page suivante:
+Si vous selectionnez, l'objet vous arrivez dans la page suivante:
 
 image::images/Screen_Shot_2018_01_29_at_19_40_30.png[]
 
 En selectionnant "Configuration Avancée":
-image::images/Screen_Shot_2018_01_29_at_20_47_13
+
+image::images/Screen_Shot_2018_01_29_at_20_47_13.png[]
+
 Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
  
+ Attention tous les paramètres ne sont pas encore pris en compte.
 
-Puis si vous selectoinnez "Commandes"
+Puis si vous selectionnez "Commandes", puis une commande spécifique à l'aide du symbole engrenage:
 
 image::images/Screen_Shot_2018_01_29_at_19_42_20.png[]
 
 Puis si vous selectionnez une commande spécifique comme l'état:
 
 image::images/Screen_Shot_2018_01_29_at_19_42_44.png[]
- Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+
+Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
  
- Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
+Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
 
 Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c'est prévu.
 
 
+== Editer JSON
 
+Vous avez plusieurs façons pour éditer le fichier JSON.
+* La premiere est d'éditer le fichier sous format texte mais je ne vous le conseille pas car ce n'est pas facile à lire et à modifier (beaucoup de parentheses ouvrantes et fermantes qu'il faut obsoluement resâecter)
+* Utiliser un editeur JSON (il y en a plein sur internet).
 
+Une fois ouvert le fichier peut ressemenler à quelsue chose comme ca:
+
+image:images/Capture_d_ecran_2018_01_29_a_21_15_55.png[]
+
+Vour retrouvez les même informatiosn que celles vues ci dessus. Comparez les differents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l'équipement dans Jeedom et provoquez l'envoie du nom par l'objet.
+
+PS: si vous supprimez un équipement, n'oubliez pas que cela supprime aussi l'historique des valeurs.
 

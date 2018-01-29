@@ -199,36 +199,36 @@ image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png[]
 image::images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
 
                         +------------+
-                        | Jeedom     |
+                        |   Jeedom   |
                         +------------+
                         +------------+
                         |  Abeille   |
-                        +-+---^-+----+
+                        +-+-----+----+
 CmdAbeille/Addr/Action    |     ^       Abeille/#
-                          |     |       CmdRuche/Ruche/CreateRuche
-                        +-v-----+----+
-                  +-----+ Mosquitto  | <----+
+                          v     |       CmdRuche/Ruche/CreateRuche
+                        +-------+----+
+                  +-----+ Mosquitto  + <----+
     cmdAbeille/#  |     +------------+      |   Abeille/Addr/xxxx
                   v                         |   CmdAbeille/Addr/xxx
-   +------------------+                +----+------------+
-   |AbeilleMQTTCmd.php|                |AbeilleParser.php|
-   |CmdToAbeille.php  |                |                 |
-   +----+-------------+                +----+------------+
+   +--------------+---+                +----+----------------+
+   |AbeilleMQTTCmd.php|                |AbeilleParser.php    |
+   |CmdToAbeille.php  |                |AbeilleSerialRead.php|
+   +----+-------------+                +----+----------------+
         |                                   ^
         |             +--------------+      |
-        +---------->  | /deb/ttyUSBX +------+
+        +---------->  + /deb/ttyUSBX +------+
                       +--------------+
                       +-------------+
                       |   Zigate    |
                      X+-------------+X
+                    X                 X
         +---------+X                   X+---------+
         | Abeille |                     | Abeille |
-        |---------+X                    X+---------+
+        |---------+X                   X+---------+
                     X                 X
-                     XXX           XXX
-                        +---------+
-                        | Abeille |
-                        +---------+
+                     X+------------+X
+                      |   Abeille  |
+                      +------------+
 
 
 === Debug / Problèmes

@@ -21,7 +21,7 @@ apt-get install mosquitto
 
 == Problèmes / Issues
 
-Si vous trouvez un problème qui demande une correction dans le pluugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
+Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
 
 Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en particulier:
 
@@ -57,8 +57,8 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 === Mosquitto
 
-* Abeille utilise un broker mosquitto pour echanger des messages entre les modules logicielles.
-* mosquitto est installé sur la machine par defaut lors de l installation des dependances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+* Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.
+* mosquitto est installé sur la machine par défaut lors de l'installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
 * La configuration générale du plugin propose les paramètres :
     - Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
     - Port du serveur Mosquitto (1883 par défaut)

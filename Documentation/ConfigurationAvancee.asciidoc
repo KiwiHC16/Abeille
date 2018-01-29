@@ -1,3 +1,36 @@
 = Fichier JSON de configuration standard des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise son nom pour créé un nouvel équipement. Pour cela il a besoin de toutes les informations sur ce type d'équipement. Ces informations sont stocké dasn un fichier JSON.
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipemnts possède sa configuration et ses actions. Ces informations sont stockées dans un fichier JSON.
+
+Actuellement nous y trouvons les Xiaomi temperature rond et carre, capteur presence, prise et un type de lampe IKEA.
+
+L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi mode semi automatique: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
+
+== Penons un exemple: Capteur de porte Xiaomi.
+
+Dans Jeedom, il apparaitra sous le widget:
+image::images/Screen_Shot_2018_01_29_at_19_39_52.png[]
+
+Son nom est pour l'occasion "lumi.sensor_magnet.aq2". C'est à partir de la que tout le reste à été déduit. par exemple le symbole de porte,...
+
+Si vous selectionnez, l objet vous arrivez dans la page suivante:
+
+image::images/Screen_Shot_2018_01_29_at_19_40_30.png[]
+
+Puis si vous selectoinnez "Commandes"
+
+image::images/Screen_Shot_2018_01_29_at_19_42_20.png[]
+
+Puis si vous selectionnez une commande spécifique comme l'état:
+
+image::images/Screen_Shot_2018_01_29_at_19_42_44.png[]
+ Vouos pouvez voir tous les paramètres associés à une commande et vous en servire d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+ 
+ Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
+
+Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c'est prévu.
+
+
+
+
+

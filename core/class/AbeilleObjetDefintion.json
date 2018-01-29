@@ -1,7 +1,6 @@
 {
   "lumi.sensor_magnet.aq2": {
     "nameJeedom": "Xiaomi Door Sensor",
-    "battery_type": "1xCR2032",
     "Categorie": {
       "security": "1"
     },
@@ -85,7 +84,6 @@
   },
   "lumi.sensor_motion": {
     "nameJeedom": "Xiaomi Presence",
-    "battery_type": "1xCR2032",
     "Categorie": {
       "security": "1"
     },
@@ -173,7 +171,6 @@
   },
   "lumi.weather": {
     "nameJeedom": "Xiaomi Temperature Carre",
-    "battery_type": "1xCR2032",
     "Categorie": {
       "heating": "1"
     },
@@ -219,11 +216,7 @@
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "1"
-        },
-        "display": {
-          "generic_type": "TEMPERATURE"
-        },
-        "units": "°C"
+        }
       },
       "0405-0000": {
         "name": "Humidite",
@@ -235,12 +228,7 @@
         "template": "hydro3IMG",
         "configuration": {
           "calculValueOffset": "#value#/100",
-          "historizeRound": "0",
-          "value": ""
-        },
-        "units": "%",
-        "display": {
-          "generic_type": "HUMIDITY"
+          "historizeRound": "0"
         }
       },
       "0403-0000": {
@@ -251,9 +239,7 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "badge",
-        "units": "hPa",
         "display": {
-          "generic_type": "WEATHER_PRESSURE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -265,11 +251,6 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "barometre",
-        "units": "hPa",
-        "display": {
-          "generic_type": "WEATHER_PRESSURE",
-          "forceReturnLineAfter": "1"
-        },
         "configuration": {
           "calculValueOffset": "#value#/10",
           "historizeRound": "1"
@@ -292,7 +273,6 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "vuMeter",
-        "units": "V",
         "configuration": {
           "calculValueOffset": "#value#/1000",
           "minValue": "0",
@@ -348,7 +328,6 @@
   },
   "lumi.sensor_ht": {
     "nameJeedom": "Xiaomi Temperature Rond",
-    "battery_type": "1xCR2032",
     "Categorie": {
       "heating": "1"
     },
@@ -385,11 +364,7 @@
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "1"
-        },
-        "display": {
-          "generic_type": "TEMPERATURE"
-        },
-        "units": "°C"
+        }
       },
       "0405-0000": {
         "name": "Humidite",
@@ -402,10 +377,6 @@
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "0"
-        },
-        "units": "%",
-        "display": {
-          "generic_type": "HUMIDITY"
         }
       },
       "Batterie-Volt": {
@@ -480,7 +451,6 @@
   },
   "lumi.sensor_switch.aq2": {
     "nameJeedom": "Xiaomi Bouton",
-    "battery_type": "1xCR2032",
     "Categorie": {
       "automatism": "1"
     },

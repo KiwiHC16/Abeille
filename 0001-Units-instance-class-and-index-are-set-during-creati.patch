@@ -1,0 +1,213 @@
+From ac1b837bed0495753a1d4e125b29bcfacca9e68d Mon Sep 17 00:00:00 2001
+From: edgd <edgd1er@hotmail.com>
+Date: Sat, 27 Jan 2018 04:17:50 +0100
+Subject: [PATCH] Units, instance, class and index are set during creation if
+ are in json def. At the moment, only json model for xiaomi round and square
+ captors are modified.
+
+---
+ core/class/Abeille.class.php          | 26 ++++++++++++++++++-------
+ core/class/AbeilleObjetDefintion.json | 36 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 52 insertions(+), 10 deletions(-)
+
+diff --git a/core/class/Abeille.class.php b/core/class/Abeille.class.php
+index 6aaceb5..38f34ae 100644
+--- a/core/class/Abeille.class.php
++++ b/core/class/Abeille.class.php
+@@ -424,7 +424,7 @@
+                     echo "Order: ".$cmdValueDefaut["order"]."\n";
+                     $cmdlogic->setOrder( $cmdValueDefaut["order"]);
+                     $cmdlogic->setName( $cmdValueDefaut["name"] );
+-                    
++
+                     if ( $cmdValueDefaut["Type"]=="info" )  { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                     
+                     // La boucle est pour info et pour action
+@@ -441,16 +441,19 @@
+                     $cmdlogic->setType($cmdValueDefaut["Type"]);
+                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                     // unite
+-                    $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
++                    if (isset($cmdValueDefaut["units"])){$cmdlogic->setUnite($cmdValueDefaut["units"]);}
++
++                    if (isset($cmdValueDefaut["invertBinary"])){$cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);}
+                     // La boucle est pour info et pour action
+                     foreach ( $cmdValueDefaut["display"] as $confKey => $confValue )
+                     {
+                         // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                         $cmdlogic->setDisplay( $confKey, $confValue );
+                     }
+-                    
++
+                     // isVisible
+                     // value
++                    if (isset($cmdValueDefaut["value"])){$cmdlogic->setConfiguration('value',$cmdValueDefaut["value"]);}
+                     // html
+                     // alert
+                     
+@@ -541,12 +544,17 @@
+                                 // $cmdlogic->setOrder('0');
+                                 $cmdlogic->setName( 'Cmd de type inconnue - '.$cmdId );
+                                 $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId );
++
++                                if (isset($cmdValueDefaut["instance"])) {$cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);}
++                                if (isset($cmdValueDefaut["class"])) {$cmdlogic->setConfiguration('class', $cmdValueDefaut["class"]);}
++                                if (isset($cmdValueDefaut["index"])) {$cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);}
++
+                                 // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+                                 // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+-                                // foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
+-                                // {
+-                                // $cmdlogic->setConfiguration($confKey,$confValue);
+-                                //}
++                                 foreach ( $cmdValueDefaut["configuration"] as $confKey => $confValue )
++                                 {
++                                    $cmdlogic->setConfiguration($confKey,$confValue);
++                                 }
+                                 // template
+                                 // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
+                                 // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+@@ -555,11 +563,15 @@
+                                 // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                                 $cmdlogic->setSubType("string");
+                                 // unite
++                                if (isset($cmdValueDefaut["units"])) {$cmdlogic->setUnite($cmdValueDefaut["units"]);}
+                                 // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+                                 // isVisible
+                                 // value
+                                 // html
+                                 // alert
++                                //$cmd->setTemplate('dashboard', 'light');
++                                //$cmd->setTemplate('mobile', 'light');
++                                //$cmd_info->setIsVisible(0);
+                                 
+                                 $cmdlogic->save();
+                                 $elogic->checkAndUpdateCmd($cmdId,$cmdValueDefaut["value"] );
+diff --git a/core/class/AbeilleObjetDefintion.json b/core/class/AbeilleObjetDefintion.json
+index 347e98c..cfa0bc7 100644
+--- a/core/class/AbeilleObjetDefintion.json
++++ b/core/class/AbeilleObjetDefintion.json
+@@ -1,6 +1,7 @@
+ {
+   "lumi.sensor_magnet.aq2": {
+     "nameJeedom": "Xiaomi Door Sensor",
++    "battery_type": "1xCR2032",
+     "Categorie": {
+       "security": "1"
+     },
+@@ -84,6 +85,7 @@
+   },
+   "lumi.sensor_motion": {
+     "nameJeedom": "Xiaomi Presence",
++    "battery_type": "1xCR2032",
+     "Categorie": {
+       "security": "1"
+     },
+@@ -171,6 +173,7 @@
+   },
+   "lumi.weather": {
+     "nameJeedom": "Xiaomi Temperature Carre",
++    "battery_type": "1xCR2032",
+     "Categorie": {
+       "heating": "1"
+     },
+@@ -216,7 +219,11 @@
+         "configuration": {
+           "calculValueOffset": "#value#/100",
+           "historizeRound": "1"
+-        }
++        },
++        "display": {
++          "generic_type": "TEMPERATURE"
++        },
++        "units": "°C"
+       },
+       "0405-0000": {
+         "name": "Humidite",
+@@ -228,7 +235,12 @@
+         "template": "hydro3IMG",
+         "configuration": {
+           "calculValueOffset": "#value#/100",
+-          "historizeRound": "0"
++          "historizeRound": "0",
++          "value": ""
++        },
++        "units": "%",
++        "display": {
++          "generic_type": "HUMIDITY"
+         }
+       },
+       "0403-0000": {
+@@ -239,7 +251,9 @@
+         "subType": "numeric",
+         "invertBinary": "0",
+         "template": "badge",
++        "units": "hPa",
+         "display": {
++          "generic_type": "WEATHER_PRESSURE",
+           "forceReturnLineAfter": "1"
+         }
+       },
+@@ -251,6 +265,11 @@
+         "subType": "numeric",
+         "invertBinary": "0",
+         "template": "barometre",
++        "units": "hPa",
++        "display": {
++          "generic_type": "WEATHER_PRESSURE",
++          "forceReturnLineAfter": "1"
++        },
+         "configuration": {
+           "calculValueOffset": "#value#/10",
+           "historizeRound": "1"
+@@ -273,6 +292,7 @@
+         "subType": "numeric",
+         "invertBinary": "0",
+         "template": "vuMeter",
++        "units": "V",
+         "configuration": {
+           "calculValueOffset": "#value#/1000",
+           "minValue": "0",
+@@ -328,6 +348,7 @@
+   },
+   "lumi.sensor_ht": {
+     "nameJeedom": "Xiaomi Temperature Rond",
++    "battery_type": "1xCR2032",
+     "Categorie": {
+       "heating": "1"
+     },
+@@ -364,7 +385,11 @@
+         "configuration": {
+           "calculValueOffset": "#value#/100",
+           "historizeRound": "1"
+-        }
++        },
++        "display": {
++          "generic_type": "TEMPERATURE"
++        },
++        "units": "°C"
+       },
+       "0405-0000": {
+         "name": "Humidite",
+@@ -377,6 +402,10 @@
+         "configuration": {
+           "calculValueOffset": "#value#/100",
+           "historizeRound": "0"
++        },
++        "units": "%",
++        "display": {
++          "generic_type": "HUMIDITY"
+         }
+       },
+       "Batterie-Volt": {
+@@ -451,6 +480,7 @@
+   },
+   "lumi.sensor_switch.aq2": {
+     "nameJeedom": "Xiaomi Bouton",
++    "battery_type": "1xCR2032",
+     "Categorie": {
+       "automatism": "1"
+     },
+-- 
+2.11.0
+

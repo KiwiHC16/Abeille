@@ -10,6 +10,7 @@ Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Documentation
 
 Pour les developpeurs, j'essaye de comprendre GitHub et je souhaite avoir le fonctionnement suivant:
 
-* branche master : pour tous les developpements en cours
+* branche master : pour tous les developpements en cours a condition que les pushs soient utilisables
 * branche beta: pour figer un developpement et le mettre en test avant de passer en stable
 * branche stable: version stable
+* Dev en cours: autre branche

@@ -17,7 +17,7 @@
      */
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once (dirname(__FILE__).'/../../resources/AbeilleDaemon/lib/Tools.php');
+    include_once(dirname(__FILE__).'/../../resources/AbeilleDaemon/lib/Tools.php');
 
 
     class Abeille extends eqLogic
@@ -42,6 +42,76 @@
             return $return;
         }
 
+        public static function deamon_info()
+        {
+            $return = array();
+            $return['log'] = 'Abeille_update';
+            log::add('Abeille', 'debug', '**Daemon info: IN**');
+            $return = array();
+            $return['state'] = 'nok';
+            $return['configuration'] = 'nok';
+            $cron = cron::byClassAndFunction('Abeille', 'daemon');
+            if (is_object($cron) && $cron->running()) {
+                $return['state'] = 'ok';
+            }
+            //deps ok ?
+            $dependancy_info = self::dependancy_info();
+            if ($dependancy_info['state'] == 'ok') {
+                $return['launchable'] = 'ok';
+            } else {
+                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
+                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to dependancies missing');
+                $return['launchable'] = 'nok';
+                throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
+            }
+
+            //Parameters OK
+            $parameters_info = self::getParameters();
+            if ( $parameters_info['state'] == 'ok'){
+                $return['launchable'] = 'ok';
+            }
+                else {
+                    log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
+                    log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to parameters missing');
+                    $return['launchable'] = 'nok';
+                    throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['serialPort'].', state: '.$parameters_info['state'], __FILE__));
+                }
+
+            //check running daemon /!\ if using sudo nbprocess x2
+            exec(
+                "ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1",
+                $output
+            );
+            log::add('Abeille', 'debug', 'daemon_info: implode output '.implode(" xx ", $output));
+            $nbProcess = $output != '' ? sizeof($output) : "0";
+
+            if ($nbProcess < 6) {
+                log::add(
+                    'Abeille',
+                    'info',
+                    'daemon_info: found '.($nbProcess / 3).'/3 running, at least one is missing'
+                );
+                $return['state'] = 'nok';
+            }
+
+            if ($nbProcess > 6) {
+                log::add(
+                    'Abeille',
+                    'error',
+                    'daemon_info: '.($nbProcess / 3).'/3 running, too many daemon running. Stopping daemons'
+                );
+                $return['state'] = 'nok';
+                self::deamon_stop();
+            }
+            log::add(
+                'Abeille',
+                'debug',
+                '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']
+            );
+
+            return $return;
+        }
+
         public static function deamon_start($_debug = false)
         {
             log::add('Abeille', 'debug', 'daemon_start: IN');
@@ -49,11 +119,11 @@
 
             self::deamon_stop();
             //no need as it seems to be on cron
-            /*$deamon_info = self::deamon_info();
+            $deamon_info = self::deamon_info();
             if ($deamon_info['launchable'] != 'ok') {
                 throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
             }
-            */
+
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
             if (!is_object($cron)) {
                 log::add('Abeille', 'error', 'daemon_start: Tache cron introuvable');
@@ -81,7 +151,15 @@
             );
 
             log::add('Abeille', 'debug', 'daemon_start: *****Envoi de la creation de ruche par défaut ********');
-            log::add('Abeille', 'debug', 'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.config::byKey('mqttQos', 'Abeille', '1').' retain: '. $_retain);
+            log::add(
+                'Abeille',
+                'debug',
+                'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.config::byKey(
+                    'mqttQos',
+                    'Abeille',
+                    '1'
+                ).' retain: '.$_retain
+            );
             $publish->publish($_subject, $_message, config::byKey('mqttQos', 'Abeille', '1'), $_retain);
 
 
@@ -96,30 +174,24 @@
             // Start other daemons
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
-            $dirDaemon = dirname(__FILE__) ."/../../resources/AbeilleDaemon/";
+            $dirDaemon = dirname(__FILE__)."/../../resources/AbeilleDaemon/";
 
-            $address = config::byKey('AbeilleAddress', 'Abeille');
-            $port = config::byKey('AbeillePort', 'Abeille');
-            $id = config::byKey('AbeilleConId', 'Abeille');
-            $user = config::byKey('mqttUser', 'Abeille');
-            $pass = config::byKey('mqttPass', 'Abeille');
-            $qos = config::byKey('mqttQos', 'Abeille');
-            $serialPort = config::byKey('abeilleSerialPort', 'Abeille');
-
-            if ($serialPort == 'auto') {
-                $serialPort = jeedom::getUsbMapping($serialPort);
-                log::add('Abeille', 'debug', 'Start daemon: auto usb defined to '.$serialPort);
-            }
+            /**
+             * getParameters
+             */
+            $parameters_info = self::getParameters();
 
             $daemon1 = "AbeilleSerialRead.php";
-            $paramDaemon1 = $serialPort.' '.time();
+            $paramDaemon1 = $parameters_info['serialPort'].' '.time();
             $daemon2 = "AbeilleParser.php";
-            $paramDaemon2 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos.' '.time();
+            $paramDaemon2 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time();
             $daemon3 = "AbeilleMQTTCmd.php";
-            $paramDaemon3 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos.' '.time();
-            $log1 = " > /var/www/html/log/".substr($daemon1, 0 , (strrpos($daemon1, ".")));;
-            $log2 = " > /var/www/html/log/".substr($daemon2, 0 , (strrpos($daemon2, ".")));;
-            $log3 = " > /var/www/html/log/".substr($daemon3, 0 , (strrpos($daemon3, ".")));;
+            $paramDaemon3 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time();
+            $log1 = " > /var/www/html/log/".substr($daemon1, 0, (strrpos($daemon1, ".")));;
+            $log2 = " > /var/www/html/log/".substr($daemon2, 0, (strrpos($daemon2, ".")));;
+            $log3 = " > /var/www/html/log/".substr($daemon3, 0, (strrpos($daemon3, ".")));;
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1;
             log::add('Abeille', 'debug', 'Start daemon SerialRead: '.$cmd);
@@ -136,7 +208,7 @@
             log::add('Abeille', 'debug', 'Start daemon MQTT: '.$cmd);
             exec(system::getCmdSudo().$cmd.' 2>&1 &');
             //exec($cmd.' 2>&1 &');
-            $cmd="";
+            $cmd = "";
             log::add('Abeille', 'debug', 'Daemon start: OUT');
         }
 
@@ -160,53 +232,6 @@
             log::add('Abeille', 'debug', 'daemon stop: OUT');
         }
 
-        public static function deamon_info()
-        {
-            log::add('Abeille', 'debug', '**Daemon info: IN**');
-            $return = array();
-            $return['state'] = 'nok';
-            $return['configuration'] = 'nok';
-            $cron = cron::byClassAndFunction('Abeille', 'daemon');
-            if (is_object($cron) && $cron->running()) {
-                $return['state'] = 'ok';
-            }
-            //deps ok ?
-            $dependancy_info = self::dependancy_info();
-            if ($dependancy_info['state'] == 'ok') {
-                $return['launchable'] = 'ok';
-            } else {
-                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
-                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to dependancies missing');
-                $return['launchable'] = 'nok';
-                throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
-            }
-
-            //check running daemon /!\ if using sudo nbprocess x2
-            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1", $output);
-            log::add('Abeille','debug','daemon_info: implode output '.implode(" xx ",$output));
-            $nbProcess= $output!=''?sizeof($output):"0";
-
-            if ($nbProcess < 6 ) {
-                log::add(
-                    'Abeille',
-                    'info',
-                    'daemon_info: found '.($nbProcess/3).'/3 running, at least one is missing'
-                );
-                $return['state'] = 'nok';
-            }
-
-            if ($nbProcess > 6) {
-                log::add(
-                    'Abeille',
-                    'error',
-                    'daemon_info: '.($nbProcess/3).'/3 running, too many daemon running. Stopping daemons'
-                );
-                $return['state'] = 'nok';
-                self::deamon_stop();
-            }
-            log::add('Abeille', 'debug', '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']);
-            return $return;
-        }
 
         public static function dependancy_info()
         {
@@ -220,33 +245,10 @@
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
 
-            //Commented value for non compulsory fields
-            $return['mosquittoAddress'] = config::byKey('AbeilleAddress', 'Abeille','127.0.0.1');
-            $return['mosquittoPort'] = config::byKey('AbeillePort', 'Abeille','1883');
-            $return['ConnexionId'] = config::byKey('AbeilleConId', 'Abeille','jeedom');
-            //$return['mosquittoUser'] = config::byKey('mqttUser', 'Abeille');
-            //$return['mosquittoPass'] = config::byKey('mqttPass', 'Abeille');
-            $return['mosquittoTopic'] = config::byKey('mqttTopic', 'Abeille','#');
-            //$return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
-            $return['mosquittoQos'] = config::byKey('mqttQos', 'Abeille','0');
-            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille','1');
-            $serialPort=config::byKey('AbeilleSerialPort', 'Abeille');
-
-            log::add('Abeille', 'debug', 'serialPort value: ->'.$serialPort.'<-');
-            if ($serialPort != 'none' ) {
-                $return['serialPort'] = jeedom::getUsbMapping($serialPort);
-                if (@!file_exists($serialPort)) {
-                    $return['launchable'] = 'nok';
-                    log::add('Abeille', 'debug', 'serialPort n\'est pas défini. ->'.$return['serialPort'].'<-');
-                    //$return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
-                    throw new Exception(__('Le port n\'est pas configuré: '.$serialPort, __FILE__));
-                } else {
-                    exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
-                }
-            }
+          /////get Parameters and check
 
             foreach ($return as $item => $itemValue) {
-                if ( !isset($itemValue) || $itemValue == "") {
+                if (!isset($itemValue) || $itemValue == "") {
                     throw new Exception(__($item.' n\'est pas défini . ->'.$itemValue.'<-', __FILE__));
                 }
             }
@@ -275,8 +277,11 @@
         {
             log::add('Abeille', 'info', 'Installation des dépéndances');
             $resource_path = realpath(dirname(__FILE__).'/../../resources/');
-            $cmd=system::getCmdSudo().' /bin/bash '.$resource_path.'/install.sh '.$resource_path.' > '.log::getPathToLog('Abeille_dep').' 2>&1 &';
-            log::add('Abeille','debug','dependancy_install: cmd: '.$cmd);
+            $cmd = system::getCmdSudo(
+                ).' /bin/bash '.$resource_path.'/install.sh '.$resource_path.' > '.log::getPathToLog(
+                    'Abeille_dep'
+                ).' 2>&1 &';
+            log::add('Abeille', 'debug', 'dependancy_install: cmd: '.$cmd);
             passthru($cmd);
 
             return true;
@@ -337,16 +342,52 @@
             }
         }
 
+
+        public static function getParameters()
+        {
+            $return = array();
+            $return['state']='nok';
+
+            //Commented value for non compulsory fields
+            $return['AbeilleAddress'] = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
+            $return['AbeillePort'] = config::byKey('AbeillePort', 'Abeille', '1883');
+            $return['AbeilleConId'] = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
+            $return['AbeilleUser'] = config::byKey('mqttUser', 'Abeille');
+            $return['AbeillePass'] = config::byKey('mqttPass', 'Abeille');
+            $return['AbeilleTopic'] = config::byKey('mqttTopic', 'Abeille', '#');
+            $return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['AbeilleQos'] = config::byKey('mqttQos', 'Abeille', '0');
+            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille', '1');
+            $serialPort = config::byKey('AbeilleSerialPort', 'Abeille');
+
+            log::add('Abeille', 'debug', 'serialPort value: ->'.$return['serialPort'].'<-');
+            if ($return['serialPort'] != 'none') {
+                $return['serialPort'] = jeedom::getUsbMapping($return['serialPort']);
+                if (@!file_exists($return['serialPort'])) {
+                    log::add('Abeille', 'debug', 'getParameters: serialPort n\'est pas défini. ->'.$return['serialPort'].'<-');
+                    $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
+                    throw new Exception(__('Le port n\'est pas configuré: '.$return['serialPort'], __FILE__));
+                } else {
+                    exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
+                    $return['state']='ok';
+                }
+            } else {
+                //if serialPort= none then nothing to check
+                $return['state']='ok';
+            }
+            return $return;
+        }
+
         public static function connect($r, $message)
         {
             log::add('Abeille', 'info', 'Connexion à Mosquitto avec code '.$r.' '.$message);
-            config::save('status', '1', 'Abeille');
+            config::save('state', '1', 'Abeille');
         }
 
         public static function disconnect($r)
         {
             log::add('Abeille', 'debug', 'Déconnexion de Mosquitto avec code '.$r);
-            config::save('status', '0', 'Abeille');
+            config::save('state', '0', 'Abeille');
         }
 
         public static function subscribe()
@@ -391,7 +432,7 @@
             $value = $message->payload;
             // type = topic car pas json
             $type = 'topic';
-            $Filter=$topicArray[0];
+            $Filter = $topicArray[0];
             //$AbeilleObjetDefinition = Tools::getJsonConfigFiles($AbeilleJsonFileObjetDefinition);
             $AbeilleObjetDefinition = Tools::getJsonConfigFiles("AbeilleObjetDefinition.json");
 
@@ -401,7 +442,8 @@
             // La ruche est aussi un objet Abeille
             if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
                 self::createRuche($message);
-                return ;
+
+                return;
             }
 
             /*if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
@@ -411,8 +453,13 @@
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille/#/#
-            if (!preg_match("(Abeille|Ruche)",$Filter)) {
-                log::add('Abeille', 'debug', 'message: this is not a '.$Filter.' message: topic: '.$message->topic.' message: '.$message->payload);
+            if (!preg_match("(Abeille|Ruche)", $Filter)) {
+                log::add(
+                    'Abeille',
+                    'debug',
+                    'message: this is not a '.$Filter.' message: topic: '.$message->topic.' message: '.$message->payload
+                );
+
                 return;
             }
 
@@ -571,7 +618,7 @@
                     }
                     $elogic->setName($name);
                     $elogic->setLogicalId($nodeid);
-                    $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
+                    $elogic->setObject_id(config::byKey('AbeilleId', 'Abeille', '1'));
                     $elogic->setEqType_name('Abeille');
 
                     // $objetDefSpecific = $AbeilleObjetDefinition[$value];
@@ -754,6 +801,7 @@
 
             if (is_object($elogic)) {
                 log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
+
                 // La ruche existe deja so return
                 return;
             }
@@ -771,7 +819,7 @@
             //id
             $elogic->setName("Ruche");
             $elogic->setLogicalId("Abeille/Ruche");
-            $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
+            $elogic->setObject_id(config::byKey('AbeilleId', 'Abeille', '1'));
             $elogic->setEqType_name('Abeille');
             $elogic->setConfiguration('topic', "Abeille/Ruche");
             $elogic->setConfiguration('type', 'topic');
@@ -792,7 +840,7 @@
 
             /*$AbeilleObjetDefinition= Tools::getJSonConfigFiles($AbeilleJsonFileObjetDefinition);
             $rucheCommandList = Tools::getJSonConfigFiles($rucheJsonFileCommandList);*/
-            $AbeilleObjetDefinition= Tools::getJSonConfigFiles('AbeilleObjetDefinition.json');
+            $AbeilleObjetDefinition = Tools::getJSonConfigFiles('AbeilleObjetDefinition.json');
             $rucheCommandList = Tools::getJSonConfigFiles('rucheCommandList.json');
 
             $i = 0;

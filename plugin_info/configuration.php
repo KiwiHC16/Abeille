@@ -106,7 +106,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label">{{Id de l objet de rattachement par defaut : }}</label>
                 <div class="col-lg-4">
-                    <input class="configKey form-control" data-l1key="abeilleId" style="margin-top:5px"
+                    <input class="configKey form-control" data-l1key="AbeilleId" style="margin-top:5px"
                            placeholder="1"/>
                 </div>
             </div>

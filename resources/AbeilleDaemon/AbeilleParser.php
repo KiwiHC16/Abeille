@@ -206,7 +206,7 @@
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "Application";
-                        $data = hexdec(substr($payload, 0, 4));
+                        $data = substr($payload, 0, 4);
                         log::add('AbeilleParser','debug','AbeilleParser: '.$AttributId.': '.$data);
                         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
 

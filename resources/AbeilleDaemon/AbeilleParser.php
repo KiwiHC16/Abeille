@@ -214,7 +214,7 @@
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "SDK";
-                        $data = hexdec(substr($payload,4,4));
+                        $data = substr($payload,4,4);
                         mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
                         break;
                         

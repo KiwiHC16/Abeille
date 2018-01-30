@@ -348,7 +348,7 @@
             $return = array();
             $return['state']='nok';
 
-            //Commented value for non compulsory fields
+            //Most Fields are defined with default values
             $return['AbeilleAddress'] = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
             $return['AbeillePort'] = config::byKey('AbeillePort', 'Abeille', '1883');
             $return['AbeilleConId'] = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
@@ -359,6 +359,7 @@
             $return['AbeilleQos'] = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille', '1');
             $serialPort = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['creationObjectMode']=config::byKey('AbeilleSerialPort', 'Abeille','Automatique');
 
             log::add('Abeille', 'debug', 'serialPort value: ->'.$return['serialPort'].'<-');
             if ($return['serialPort'] != 'none') {

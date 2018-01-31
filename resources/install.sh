@@ -249,6 +249,18 @@ echo
 echo "Avancement: 99% ---------------------------------------------------------------------------------------------------> ;-) "
 echo
 
+echo "**Ajout du user www-data dans le groupe dialout (accès à la zigate)**"
+if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
+    useradd -g dialout www-data
+    if [ $? -ne 0 ]; then
+            echo "Erreur lors de l'ajout de l utilisateur www-data au groupe dialout"
+        else
+            echo "OK, utilisateur www-data ajouté dans le groupe dialout"
+    fi
+    else
+        echo "OK, utilisateur www-data est déja dans le group dialout"
+ fi
+
 echo "Fin installation des dépendances"
 
 echo

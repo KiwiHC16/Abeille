@@ -78,6 +78,7 @@
                 }
 
             //check running daemon /!\ if using sudo nbprocess x2
+            $nbProcessExpected=3; // no sudo to run daemon
             exec(
                 "ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1",
                 $output
@@ -85,20 +86,20 @@
             log::add('Abeille', 'debug', 'daemon_info: implode output '.implode(" xx ", $output));
             $nbProcess = $output != '' ? sizeof($output) : "0";
 
-            if ($nbProcess < 6) {
+            if ($nbProcess < $nbProcessExpected) {
                 log::add(
                     'Abeille',
                     'info',
-                    'daemon_info: found '.($nbProcess / 3).'/3 running, at least one is missing'
+                    'daemon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running, at least one is missing'
                 );
                 $return['state'] = 'nok';
             }
 
-            if ($nbProcess > 6) {
+            if ($nbProcess > $nbProcessExpected) {
                 log::add(
                     'Abeille',
                     'error',
-                    'daemon_info: '.($nbProcess / 3).'/3 running, too many daemon running. Stopping daemons'
+                    'daemon_info: '.$nbProcess.'/'.$nbProcessExpected.' running, too many daemon running. Stopping daemons'
                 );
                 $return['state'] = 'nok';
                 self::deamon_stop();
@@ -195,19 +196,19 @@
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1;
             log::add('Abeille', 'debug', 'Start daemon SerialRead: '.$cmd);
-            exec(system::getCmdSudo().$cmd.' 2>&1 &');
-            //exec($cmd.' 2>&1 &');
+            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            exec($cmd.' 2>&1 &');
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2;
             log::add('Abeille', 'debug', 'Start daemon Parser: '.$cmd);
-            exec(system::getCmdSudo().$cmd.' 2>&1 &');
-            //exec($cmd.' 2>&1 &');
+            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            exec($cmd.' 2>&1 &');
 
 
             $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3;
             log::add('Abeille', 'debug', 'Start daemon MQTT: '.$cmd);
-            exec(system::getCmdSudo().$cmd.' 2>&1 &');
-            //exec($cmd.' 2>&1 &');
+            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            exec($cmd.' 2>&1 &');
             $cmd = "";
             log::add('Abeille', 'debug', 'Daemon start: OUT');
         }

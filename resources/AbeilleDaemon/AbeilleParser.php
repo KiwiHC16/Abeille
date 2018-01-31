@@ -3,10 +3,12 @@
     
     include("includes/config.php");
     include("includes/fifo.php");
-    
+
     include("lib/phpMQTT.php");
-    
-    function mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data ) {
+    include("lib/Tools.php");
+
+    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data)
+    {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         if ($mqtt->connect(true, NULL, "jeedom", "jeedom")) {
             $mqtt->publish( "Abeille/" .$SrcAddr . "/" . $ClusterId . "-" . $AttributId,    $data,                  0 );
@@ -18,8 +20,9 @@
             log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
         }
     }
-    
-    function mqqtPublishAnnounce( $mqtt, $SrcAddr, $data ) {
+
+    function mqqtPublishAnnounce($mqtt, $SrcAddr, $data)
+    {
         // Abeille / short addr / Annonce -> data
         if ($mqtt->connect(true, NULL, "jeedom", "jeedom")) {
             $mqtt->publish( "CmdAbeille/" .$SrcAddr . "/Annonce",    $data, 0 );
@@ -29,47 +32,51 @@
             log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
         }
     }
-    
-    function hex2str($hex) {
+
+    function hex2str($hex)
+    {
         $str = '';
-        for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
+        for ($i = 0; $i < strlen($hex); $i += 2) {
+            $str .= chr(hexdec(substr($hex, $i, 2)));
+        }
+
         return $str;
     }
-    
+
     function displayClusterId($cluster)
     {
-        $clusterTab["0000"]= " (General: Basic)";
-        $clusterTab["0001"]= " (General: Power Config)";
-        $clusterTab["0002"]= " (General: Temperature Config)";
-        $clusterTab["0003"]= " (General: Identify)";
-        $clusterTab["0004"]= " (General: Groups)";
-        $clusterTab["0005"]= " (General: Scenes)";
-        $clusterTab["0006"]= " (General: On/Off)";
-        $clusterTab["0007"]= " (General: On/Off Config)";
-        $clusterTab["0008"]= " (General: Level Control)";
-        $clusterTab["0009"]= " (General: Alarms)";
-        $clusterTab["000A"]= " (General: Time)";
-        $clusterTab["000F"]= " (General: Binary Input Basic)";
-        $clusterTab["0020"]= " (General: Poll Control)";
-        $clusterTab["0019"]= " (General: OTA)";
-        $clusterTab["0101"]= " (General: Door Lock";
-        $clusterTab["0201"]= " (HVAC: Thermostat)";
-        $clusterTab["0202"]= " (HVAC: Fan Control)";
-        $clusterTab["0300"]= " (Lighting: Color Control)";
-        $clusterTab["0400"]= " (Measurement: Illuminance)";
-        $clusterTab["0402"]= " (Measurement: Temperature)";
-        $clusterTab["0406"]= " (Measurement: Occupancy Sensing)";
-        $clusterTab["0500"]= " (Security & Safety: IAS Zone)";
-        $clusterTab["0702"]= " (Smart Energy: Metering)";
-        $clusterTab["0B05"]= " (Misc: Diagnostics)";
-        $clusterTab["1000"]= " (ZLL: Commissioning)";
-        
-        log::add('Abeille', 'debug', 'AbeilleParser: Cluster ID: '.$cluster." - ".$clusterTab[$CLUSTER] );
-        echo "  Cluster ID: " .$cluster;
-        echo $clusterTab[$cluster]."\n";
-        
+        $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+
+        /*$clusterTab["0000"] = " (General: Basic)";
+        $clusterTab["0001"] = " (General: Power Config)";
+        $clusterTab["0002"] = " (General: Temperature Config)";
+        $clusterTab["0003"] = " (General: Identify)";
+        $clusterTab["0004"] = " (General: Groups)";
+        $clusterTab["0005"] = " (General: Scenes)";
+        $clusterTab["0006"] = " (General: On/Off)";
+        $clusterTab["0007"] = " (General: On/Off Config)";
+        $clusterTab["0008"] = " (General: Level Control)";
+        $clusterTab["0009"] = " (General: Alarms)";
+        $clusterTab["000A"] = " (General: Time)";
+        $clusterTab["000F"] = " (General: Binary Input Basic)";
+        $clusterTab["0020"] = " (General: Poll Control)";
+        $clusterTab["0019"] = " (General: OTA)";
+        $clusterTab["0101"] = " (General: Door Lock";
+        $clusterTab["0201"] = " (HVAC: Thermostat)";
+        $clusterTab["0202"] = " (HVAC: Fan Control)";
+        $clusterTab["0300"] = " (Lighting: Color Control)";
+        $clusterTab["0400"] = " (Measurement: Illuminance)";
+        $clusterTab["0402"] = " (Measurement: Temperature)";
+        $clusterTab["0406"] = " (Measurement: Occupancy Sensing)";
+        $clusterTab["0500"] = " (Security & Safety: IAS Zone)";
+        $clusterTab["0702"] = " (Smart Energy: Metering)";
+        $clusterTab["0B05"] = " (Misc: Diagnostics)";
+        $clusterTab["1000"] = " (ZLL: Commissioning)";
+        */
+        log::add('AbeilleParser', 'debug', 'AbeilleParser: Cluster ID: '.$cluster.'- '.$clusterTab[$cluster]);
+
     }
-    
+
     function displayStatus($status)
     {
         switch ($status)
@@ -83,15 +90,15 @@
             default:   { echo "(ZigBee Error Code)"."\n";       } break;
         }
     }
-    
-    function protocolDatas($datas,$mqtt)
-    // datas: trame complete recue sur le port serie sans le start ni le stop.
-    // 01: 01 Start
-    // 02-03: Msg Type
-    // 04-05: Length
-    // 06: crc
-    // 07-: Data / Payload
-    // xx: 03 Stop
+
+    function protocolDatas($datas, $mqtt)
+        // datas: trame complete recue sur le port serie sans le start ni le stop.
+        // 01: 01 Start
+        // 02-03: Msg Type
+        // 04-05: Length
+        // 06: crc
+        // 07-: Data / Payload
+        // xx: 03 Stop
     {
         $tab="";
         $length=strlen($datas);
@@ -106,38 +113,34 @@
             echo "message > 12 char\n";
             $crctmp = 0;
             //type de message
-            $type=$datas[0].$datas[1].$datas[2].$datas[3];
-            $crctmp= $crctmp ^ hexdec($datas[0].$datas[1]) ^ hexdec($datas[2].$datas[3]);
+            $type = $datas[0].$datas[1].$datas[2].$datas[3];
+            $crctmp = $crctmp ^ hexdec($datas[0].$datas[1]) ^ hexdec($datas[2].$datas[3]);
             //taille message
-            $ln=$datas[4].$datas[5].$datas[6].$datas[7];
-            $crctmp= $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
+            $ln = $datas[4].$datas[5].$datas[6].$datas[7];
+            $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
             //acquisition du CRC
-            $crc=$datas[8].$datas[9];
+            $crc = $datas[8].$datas[9];
             //payload
-            $payload="";
-            for($i=0;$i<hexdec($ln);$i++)
-            {
-                $payload.=$datas[10+($i*2)].$datas[10+(($i*2)+1)];
-                $crctmp= $crctmp ^ hexdec($datas[10+($i*2)].$datas[10+(($i*2)+1)]);
+            $payload = "";
+            for ($i = 0; $i < hexdec($ln); $i++) {
+                $payload .= $datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)];
+                $crctmp = $crctmp ^ hexdec($datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)]);
             }
-            $quality = $datas[10+($i*2)-2].$datas[10+($i*2)-1];
-            
-            $payloadLength = strlen($payload)-2;
-            
+            $quality = $datas[10 + ($i * 2) - 2].$datas[10 + ($i * 2) - 1];
+
+            $payloadLength = strlen($payload) - 2;
+
             //verification du CRC
             //if ($crc == dechex($crctmp))
-            if ( 1)
-            {
+            if (1) {
                 echo "Type: ".$type."\n";
+                log::add('AbeilleParser', 'debug', 'AbeilleParser:Type: '.$type);
                 //Traitement PAYLOAD
-                switch ($type)
-                {
-                        
+                switch ($type) {
+
                     case "004d" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 004d' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Device annouce)(Processed->MQTT)' );
-                        echo "\ntype: 004d";
-                        echo "(Device announce)(Processed->MQTT)\n";
+                        echo "\ntype: 004d (Device announce)(Processed->MQTT)\n";
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 004d (Device annouce)(Processed->MQTT)');
                         // < short address: uint16_t>
                         // < IEEE address: uint64_t>
                         // < MAC capability: uint8_t> MAC capability
@@ -160,36 +163,32 @@
                         $capability = substr($payload,20,2);
                         
                         // Envoie de la IEEE a Jeedom
-                        mqqtPublish( $mqtt, $SrcAddr, "IEEE", "Addr", $IEEE );
-                        
+                        mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE);
+
                         // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
-                        if ( (hexdec($capability) & $test)==14 )
-                        {
+                        if ((hexdec($capability) & $test) == 14) {
                             $data = "Annonce";
-                            mqqtPublishAnnounce( $mqtt, $SrcAddr, $data );
+                            mqqtPublishAnnounce($mqtt, $SrcAddr, $data);
                         }
                         break;
-                        
+
                     case "8000" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8000' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Status)(Not Processed)' );
-                        echo "\ntype: 8000\n";
-                        echo " (Status)(Not processed)\n";
-                        echo " Length: ".hexdec($ln)."\n";
-                        echo " Status: ".substr($payload,0,2)."-"; displayStatus(substr($payload,0,2));
-                        echo " SQN: ".substr($payload,2,2)."\n";
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8000 (Status)(Not Processed)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: Length: '.hexdec($ln));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: Status: '.substr($payload, 0, 2).'-'.
+                        displayStatus(substr($payload, 0, 2)));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: SQN: '.substr($payload, 2, 2));
                         /*
                          if (hexdec(substr($payload,0,2)) > 2)
                          {
-                         echo  "  Message: ";
-                         echo hex2str(substr($payload,8,strlen($payload)-2))."\n";
+                         log::add('AbeilleParser', 'debug', 'AbeilleParser: Message: '.hex2str(substr($payload,8,strlen($payload)-2)));
                          }
                          */
                         break;
-                        
+
                     case "8001" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8001' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Log)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8001' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: (Log)(Not Processed)' );
                         echo "\ntype: 8001";
                         echo " (Log)(Not processed*************************************************************)";
                         echo  "\n";
@@ -198,26 +197,27 @@
                         echo  "  Message: ";
                         echo hex2str(substr($payload,2,strlen($payload)-2))."\n";
                         break;
-                        
+
                     case "8010" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8010' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Version)(Processed->MQTT)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8010 (Version)(Processed->MQTT)');
                         echo "(Version)(Processed->MQTT)\n";
                         echo "Application : ".hexdec(substr($payload,0,4))."\n";
                         echo "SDK : ".hexdec(substr($payload,4,4))."\n";
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "Application";
-                        $data = hexdec(substr($payload,0,4));
-                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
-                        
+                        $data = substr($payload, 0, 4);
+                        log::add('AbeilleParser','debug','AbeilleParser: '.$AttributId.': '.$data);
+                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
+
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "SDK";
-                        $data = substr($payload,4,4);
-                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                        $data = substr($payload, 4, 4);
+                        log::add('AbeilleParser','debug','AbeilleParser: '.$AttributId.': '.$data);
+                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
                         break;
-                        
+
                     case "8015" :
                         // <device list – data each entry is 13 bytes>
                         // <ID: uint8_t>
@@ -225,7 +225,7 @@
                         // <IEEE address: uint64_t>
                         // <Power source: bool_t> 0 – battery 1- AC power
                         // <LinkQuality : uint8_t> 1-255
-                        
+
                         // Id Short IEEE             Power  LQ
                         // 00 ffe1  00158d0001d5c421 00     a6
                         // 01 c4bf  00158d0001215781 00     aa
@@ -240,16 +240,21 @@
                         // 00 -> Pourquoi 00 ?
                         
                         
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8015' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Abeille List)(Processed->MQTT)' );
-                        echo "(Abeille List)(Processed->MQTT)\n";
-                        echo "Payload: ".$payload."\n";
+                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8015 (Abeille List)(Processed->MQTT)' );
+                        echo "(Abeille List)(Processed->MQTT) Payload: ".$payload."\n";
                         
                         $nb = (strlen( $payload )-2)/26;
                         echo "Nombre d'abeilles: ".$nb."\n";
                         
                         for ($i=0;$i<$nb;$i++)
                         {
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Abeille i: '.$i);
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:ID : '.substr($payload, $i * 26 + 0, 2));
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Addr : '.substr($payload, $i * 26 + 2, 4));
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:IEEE Addr: '.substr($payload, $i * 26 + 6, 16));
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Power Source (0:battery - 1:AC): '.substr($payload, $i * 26 + 22, 2));
+                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Link Quality: '.hexdec(substr($payload, $i * 26 + 24, 2)));
+
                             echo "Abeille i: ".$i."\n";
                             echo "ID : "                            .substr($payload,$i*26+ 0, 2)."\n";
                             echo "Short Addr : "                    .substr($payload,$i*26+ 2, 4)."\n";
@@ -280,12 +285,15 @@
                             
                             
                         }
-                        
+
                         break;
-                        
+
                     case "8043" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8043' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Simple Descriptor Response)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8043 (Simple Descriptor Response)(Not Processed)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 2, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Address : '.substr($payload, 4, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Length : '.substr($payload, 8, 2));
                         echo "\ntype: 8043";
                         echo "(Simple Descriptor Response)(Not processed)\n";
                         echo "SQN : ".substr($payload,0,2)."\n";
@@ -299,10 +307,14 @@
                             //PAS FINI
                         }
                         break;
-                        
+
                     case "8045" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8045' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Active Endpoints Response)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8045 (Active Endpoints Response)(Not Processed)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 2, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Address : '.substr($payload, 4, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Endpoint Count : '.substr($payload, 8, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Endpoint List :');
                         echo "\ntype: 8045";
                         echo "(Active Endpoints Response)(Not processed)\n";
                         echo "SQN : ".substr($payload,0,2)."\n";
@@ -315,19 +327,26 @@
                             echo "Endpoint : ".substr($payload,(8+$i),2)."\n";
                         }
                         break;
-                        
+
                     case "8048":
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8048' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Leave Indication)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8048 (Leave Indication)(Not Processed)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:extended addr : '.substr($payload, 0, 16));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:rejoin status : '.substr($payload, 16, 2));
                         echo "(Leave Indication)\n";
                         echo "extended addr : ".substr($payload,0,16)."\n";
                         echo "rejoin status : ".substr($payload,16,2)."\n";
                         break;
-                        
+
                     case "8100": // "Type: 0x8100 (Read Attrib Response)"
                         // 8100 000D0C0Cb32801000600000010000101
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8100' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (read Attribute)(Processed->MQTT)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN: : '.substr($payload, 0, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Src Addr: : '.substr($payload, 2, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:EnPt: '.substr($payload, 6, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Cluster Id: '.substr($payload, 8, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribut Id: '.substr($payload, 12, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribute Status: '.substr($payload, 16, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribute data type: '.substr($payload, 18, 2));
                         echo "\ntype: 8100\n";
                         echo "Type: 0x8100 (Read Attrib Response)(Processed->MQTT)\n";
                         echo "SQN: : ".substr($payload,0,2)."\n";
@@ -340,14 +359,16 @@
                         $dataType = substr($payload,18,2);
                         // IKEA OnOff state reply data type: 10
                         // IKEA Manufecturer name data type: 42
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Syze of Attribute: '.substr($payload, 20, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
                         echo "Syze of Attribute: ".substr($payload,20,4)."\n";
                         echo "Data byte list (one octet pour l instant): ".substr($payload,24,2)."\n";
                         
                         // short addr / Cluster ID / Attr ID -> data
-                        $SrcAddr = substr($payload,2,4);
-                        $ClusterId = substr($payload,8,4);
-                        $AttributId = substr($payload,12,4);
-                        
+                        $SrcAddr = substr($payload, 2, 4);
+                        $ClusterId = substr($payload, 8, 4);
+                        $AttributId = substr($payload, 12, 4);
+
                         // valeur hexadécimale	- type -> function
                         // 0x00	Null
                         // 0x10	boolean                 -> hexdec
@@ -361,27 +382,30 @@
                         // 0x2a	int32
                         // 0x30	Enumeration : 8bit
                         // 0x42	string                  -> hex2bin
-                        if ( $dataType=="10" )
-                        {
-                            $data = hexdec(substr($payload,24,2));
+                        if ($dataType == "10") {
+                            $data = hexdec(substr($payload, 24, 2));
                         }
-                        if ( $dataType=="20" )
-                        {
-                            $data = hexdec(substr($payload,24,2));
+                        if ($dataType == "20") {
+                            $data = hexdec(substr($payload, 24, 2));
                         }
-                        if ( $dataType=="42" )
-                        {
-                            $data = hex2bin(substr($payload,24,(strlen($payload)-24)));
+                        if ($dataType == "42") {
+                            $data = hex2bin(substr($payload, 24, (strlen($payload) - 24)));
                         }
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Data byte: '.$data);
                         echo "Data byte: ".$data."\n";
                         
                         mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
                         
                         break;
-                        
+
                     case "8101" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8101' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Default Response)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8101 (Default Response)(Not Processed)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:EndPoint : '.substr($payload, 2, 2));
+                        displayClusterId(substr($payload, 4, 4));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Command : '.substr($payload, 8, 2));
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 10, 2));
                         echo "\ntype: 8101";
                         echo "(Default Response)(Not processed)\n";
                         echo "Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.\n";
@@ -391,10 +415,10 @@
                         echo "Command : ".substr($payload,8,2)."\n";
                         echo "Status : ".substr($payload,10,2)."\n";
                         break;
-                        
+
                     case "8102" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8102' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Attribut Report)(Processed->MQTT)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8102 (Attribut Report)(Processed->MQTT)');
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser:['.date('Y-m-d H:i:s').']');
                         echo "\ntype: 8102\n";
                         echo "[".date("Y-m-d H:i:s")."]\n";
                         echo "(Attribute Report)(Processed->MQTT)\n";
@@ -431,33 +455,26 @@
                         // 0x2a	int32
                         // 0x30	Enumeration : 8bit
                         // 0x42	string                  -> hex2bin
-                        if ( $dataType=="10" )
-                        {
-                            $data = hexdec(substr($payload,24,2));
+                        if ($dataType == "10") {
+                            $data = hexdec(substr($payload, 24, 2));
                         }
-                        if ( $dataType=="18" )
-                        {
-                            $data = substr($payload,24,2);
+                        if ($dataType == "18") {
+                            $data = substr($payload, 24, 2);
                         }
-                        if ( $dataType=="20" )
-                        {
-                            $data = hexdec(substr($payload,24,2));
+                        if ($dataType == "20") {
+                            $data = hexdec(substr($payload, 24, 2));
                         }
-                        if ( $dataType=="21" )
-                        {
-                            $data = hexdec(substr($payload,24,4));
+                        if ($dataType == "21") {
+                            $data = hexdec(substr($payload, 24, 4));
                         }
-                        if ( $dataType=="28" )
-                        {
-                            $data = hexdec(substr($payload,24,2));
+                        if ($dataType == "28") {
+                            $data = hexdec(substr($payload, 24, 2));
                         }
-                        if ( $dataType=="29" )
-                        {
-                            $data = hexdec(substr($payload,24,4));
+                        if ($dataType == "29") {
+                            $data = hexdec(substr($payload, 24, 4));
                         }
-                        if ( $dataType=="42" )
-                        {
-                            
+                        if ($dataType == "42") {
+
                             // Xiaomi capteur temperature rond
                             if ( ($AttributId=="ff01") && ($AttributSize=="001f") )
                             {
@@ -555,17 +572,16 @@
                             mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    $data );
                             
                         }
-                        
+
                         break;
-                        
+
                     case "8701" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8701' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (Route Discovery Confirm)(Not Processed)' );
+                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8701 (Route Discovery Confirm)(Not Processed)');
                         echo "(Router Discovery Confirm)(Not processed)\n";
                         echo "Status : ".substr($payload,0,2)."\n";
                         echo "Nwk Status : ".substr($payload,2,2)."\n";
                         break;
-                        
+
                     case "8702" :
                         log::add('Abeille', 'debug', 'AbeilleParser: type: 8701' );
                         log::add('Abeille', 'debug', 'AbeilleParser: (APS Data Confirm Fail)(Not Processed)' );
@@ -578,59 +594,68 @@
                         echo "Destination Address : ".substr($payload,8,4)."\n";
                         echo "SQN: : ".substr($payload,12,2)."\n";
                         break;
-                        
+
                     default:
-                        
+
                         break;
-                        
+
                 }
-                
-            }else{
-                $tab=-2;
+
+            } else {
+                $tab = -2;
             }
-            
-            
-        }else{
-            $tab=-1;
+
+
+        } else {
+            $tab = -1;
         }
-        
+
         return $tab;
     }
-    
+
+    //                      1          2           3       4          5       6
+    //$paramDaemon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
+
+
     $serial = $argv[1];
-    
-    if (!file_exists($serial))
-    {
-        log::add('Abeille', 'debug', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas' );
-        echo "Error: Fichier ".$serial." n existe pas\n";
+    $server = $argv[2];     // change if necessary
+    $port = $argv[3];                     // change if necessary
+    $username = $argv[4];                   // set your username
+    $password =  $argv[5];                   // set your password
+    $client_id = "AbeilleParser"; // make sure this is unique for connecting to sever - you could use uniqid()
+    $qos=$argv[6];
+    $mqtt = new phpMQTT($server, $port, $client_id);
+    $fifoIN = new fifo($in, 'r');
+    //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
+    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+
+    log::add('AbeilleParser', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
+
+    if ($serial == 'none') {
+        $serial = $resourcePath.'/COM';
+        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
+    }
+
+
+    if (!file_exists($serial)) {
+        log::add('AbeilleParser', 'error', 'AbeilleParser main: Critical, fichier '.$serial.' n existe pas');
         exit(1);
     }
-    
-    log::add('Abeille', 'debug', 'AbeilleParser: fichier '.$serial.' utilise' );
-    echo "Serial port used: ".$serial."\n";
-    
-    $fifoIN = new fifo( $in, 'r' );
-    
-    $server = "127.0.0.1";     // change if necessary
-    $port = 1883;                     // change if necessary
-    $username = "jeedom";                   // set your username
-    $password = "jeedom";                   // set your password
-    $client_id = "zigate"; // make sure this is unique for connecting to sever - you could use uniqid()
-    $mqtt = new phpMQTT($server, $port, $client_id);
-    
-    while (true)
-    {
-        if (!file_exists($serial))
-        { echo "Error: Fichier ".$serial." n existe pas\n";
-            log::add('Abeille', 'debug', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas' );
+
+    log::add('AbeilleParser', 'info', 'AbeilleParser: fichier '.$serial.' utilise');
+
+    while (true) {
+        if (!file_exists($serial)) {
+            log::add('AbeilleParser', 'error', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas');
             exit(1);
         }
         //traitement de chaque trame;
-        $data= $fifoIN->read();
-        echo protocolDatas($data,$mqtt);
+        $data = $fifoIN->read();
+        echo protocolDatas($data, $mqtt);
         usleep(1);
-        
+
     }
-    
-    log::add('Abeille', 'debug', 'AbeilleParser: FIN ' );
-    ?>
+
+    log::add('AbeilleParser', 'error', 'AbeilleParser: exited without reason ');
+?>

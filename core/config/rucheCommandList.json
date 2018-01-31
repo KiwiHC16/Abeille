@@ -1,0 +1,150 @@
+{
+  "Version": {
+    "name": "Version",
+    "order": "",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/getVersion",
+      "request": "Version"
+    }
+  },
+  "Start Network": {
+    "name": "Start Network",
+    "order": "1",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/startNetwork",
+      "request": "StartNetwork"
+    }
+  },
+  "Inclusion": {
+    "name": "Inclusion",
+    "order": "2",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/SetPermit",
+      "request": "Inclusion"
+    }
+  },
+  "Reset": {
+    "name": "Reset",
+    "order": "3",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/reset",
+      "request": "reset"
+    }
+  },
+  "addGroup": {
+    "name": "Add Group",
+    "order": "4",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/addGroup",
+      "request": "address=#title#&groupAddress=#message#"
+    }
+  },
+  "removeGroup": {
+    "name": "Remove Group",
+    "order": "5",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/removeGroup",
+      "request": "address=#title#&groupAddress=#message#"
+    }
+  },
+  "getName": {
+    "name": "Get Name",
+    "order": "6",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/getName",
+      "request": "address=#title#&groupAddress=#message#"
+    }
+  },
+  "ReadAttributeRequest": {
+    "name": "Get Attribut",
+    "order": "7",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/ReadAttributeRequest",
+      "request": "address=#title#&attribut=#message#"
+    }
+  },
+  "AbeilleList": {
+    "name": "Liste Equipements",
+    "order": "8",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille\/Ruche\/abeilleList",
+      "request": "abeilleListAll"
+    }
+  },
+  "Time-Time": {
+    "name": "Last",
+    "order": "9",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Time-TimeStamp": {
+    "name": "Last Stamps",
+    "order": "10",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "SW-Application": {
+    "name": "SW",
+    "order": "11",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "SW-SDK": {
+    "name": "SDK",
+    "order": "12",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  }
+}

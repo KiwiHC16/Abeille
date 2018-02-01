@@ -614,7 +614,7 @@
     }
 
     //                      1          2           3       4          5       6
-    //$paramDaemon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
+    //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
 
 
     $serial = $argv[1];

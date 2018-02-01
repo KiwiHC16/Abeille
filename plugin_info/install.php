@@ -19,11 +19,11 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function Abeille_install() {
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (!is_object($cron)) {
         $cron = new cron();
         $cron->setClass('Abeille');
-        $cron->setFunction('daemon');
+        $cron->setFunction('deamon');
         $cron->setEnable(1);
         $cron->setDeamon(1);
         $cron->setSchedule('* * * * *');
@@ -34,11 +34,11 @@ function Abeille_install() {
 
 function Abeille_update() {
     message::add('Abeille', 'Mise à jour en cours...', null, null);
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (!is_object($cron)) {
         $cron = new cron();
         $cron->setClass('Abeille');
-        $cron->setFunction('daemon');
+        $cron->setFunction('deamon');
         $cron->setEnable(1);
         $cron->setDeamon(1);
         $cron->setSchedule('* * * * *');
@@ -50,7 +50,7 @@ function Abeille_update() {
 }
 
 function Abeille_remove() {
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (is_object($cron)) {
         $cron->stop();
         $cron->remove();

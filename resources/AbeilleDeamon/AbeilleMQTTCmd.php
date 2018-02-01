@@ -118,7 +118,7 @@
 
     // MAIN
     //                      1          2           3       4          5       6
-    //$paramDaemon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
+    //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
 
     $dest = $argv[1];
     $server = $argv[2];     // change if necessary

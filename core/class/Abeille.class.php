@@ -17,7 +17,7 @@
      */
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once(dirname(__FILE__).'/../../resources/AbeilleDaemon/lib/Tools.php');
+    include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
 
 
     class Abeille extends eqLogic
@@ -42,56 +42,54 @@
             return $return;
         }
 
-        public static function daemon_info()
+        public static function deamon_info()
         {
+            log::add('Abeille', 'debug', '**deamon info: IN**');
             $return = array();
-            $return['state'] = 'ok';
-            $return['launchable'] = 'ok';
-            return $return;
-            //$return['log'] = 'Abeille';
-            log::add('Abeille', 'debug', '**Daemon info: IN**');
-            //$return['state'] = 'nok';
-            $return['launchable'] = 'nok';
-
-            /*$cron = cron::byClassAndFunction('Abeille', 'daemon');
-            if (!is_object($cron) || !$cron->running()) {
-                return $return;
-            }*/
-
+            $return['log'] = 'Abeille_update';
+            $return['state'] = 'nok';
+            $return['configuration'] = 'nok';
+            $cron = cron::byClassAndFunction('Abeille', 'deamon');
+            if (is_object($cron) && $cron->running()) {
+                $return['state'] = 'ok';
+            }
             //deps ok ?
             $dependancy_info = self::dependancy_info();
             if ($dependancy_info['state'] == 'ok') {
                 $return['launchable'] = 'ok';
             } else {
-                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
-                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to dependancies missing');
+                log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
+                log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
+                $return['launchable'] = 'nok';
                 throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
             }
 
             //Parameters OK
             $parameters_info = self::getParameters();
-            if ($parameters_info['state'] == 'ok') {
+            if ( $parameters_info['state'] == 'ok'){
                 $return['launchable'] = 'ok';
-            } else {
-                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
-                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to parameters missing');
-                //throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['serialPort'].', state: '.$parameters_info['state'],                        __FILE__));
+            }
+            else {
+                log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
+                log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to parameters missing');
+                $return['launchable'] = 'nok';
+                throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['AbeilleSerialPort'].', state: '.$parameters_info['state'], __FILE__));
             }
 
-            //check running daemon /!\ if using sudo nbprocess x2
-            $nbProcessExpected = 3; // no sudo to run daemon
+            //check running deamon /!\ if using sudo nbprocess x2
+            $nbProcessExpected=3; // no sudo to run deamon
             exec(
                 "ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1",
                 $output
             );
-            log::add('Abeille', 'debug', 'daemon_info: implode output '.implode(" xx ", $output));
+            log::add('Abeille', 'debug', 'deamon_info: implode output '.implode(" xx ", $output));
             $nbProcess = $output != '' ? sizeof($output) : "0";
 
             if ($nbProcess < $nbProcessExpected) {
                 log::add(
                     'Abeille',
                     'info',
-                    'daemon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running, at least one is missing'
+                    'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running, at least one is missing'
                 );
                 $return['state'] = 'nok';
             }
@@ -100,7 +98,7 @@
                 log::add(
                     'Abeille',
                     'error',
-                    'daemon_info: '.$nbProcess.'/'.$nbProcessExpected.' running, too many daemon running. Stopping daemons'
+                    'deamon_info: '.$nbProcess.'/'.$nbProcessExpected.' running, too many deamon running. Stopping deamons'
                 );
                 $return['state'] = 'nok';
                 self::deamon_stop();
@@ -108,30 +106,31 @@
             log::add(
                 'Abeille',
                 'debug',
-                '**Daemon info: OUT**  Daemon launchable: '.$return['launchable'].' Daemon state: '.$return['state']
+                '**deamon info: OUT**  deamon launchable: '.$return['launchable'].' deamon state: '.$return['state']
             );
 
             return $return;
         }
 
-        public static function daemon_start($_debug = false)
+        public static function deamon_start($_debug = false)
         {
-            log::add('Abeille', 'debug', 'daemon_start: IN');
+            log::add('Abeille', 'debug', 'deamon_start: IN');
 
-            //self::deamon_stop();
+            self::deamon_stop();
             $parameters_info = self::getParameters();
 
             //no need as it seems to be on cron
-            /*$daemon_info = self::daemon_info();
-            if ($daemon_info['launchable'] != 'ok') {
+            $deamon_info = self::deamon_info();
+            if ($deamon_info['launchable'] != 'ok') {
                 message::add("Abeille","Vérifier la configuration, un parametre manque");
-                //throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
-            }*/
-/*
-            $cron = cron::byClassAndFunction('Abeille', 'daemon');
+                throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+            }
+
+            $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (!is_object($cron)) {
-                log::add('Abeille', 'error', 'daemon_start: Tache cron introuvable');
-                //throw new Exception(__('Tache cron introuvable', __FILE__));
+                log::add('Abeille', 'error', 'deamon_start: Tache cron introuvable');
+                message::add("Abeille","deamon_start: Tache cron introuvable");
+                throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->run();
 
@@ -142,7 +141,7 @@
             $_message = "";
             $_retain = 0;
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-            log::add('Abeille', 'debug', 'daemon_start: Envoi du message '.$_message.' vers '.$_subject);
+            log::add('Abeille', 'debug', 'deamon_start: Envoi du message '.$_message.' vers '.$_subject);
             $publish = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_'.$_id);
             $publish->setCredentials(
                 $parameters_info['AbeilleUser'],
@@ -155,11 +154,11 @@
                 60
             );
 
-            log::add('Abeille', 'debug', 'daemon_start: *****Envoi de la creation de ruche par défaut ********');
+            log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
             log::add(
                 'Abeille',
                 'debug',
-                'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.$parameters_info['AbeilleQos'].' retain: '.$_retain
+                'deamon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.$parameters_info['AbeilleQos'].' retain: '.$_retain
             );
 
             $publish->publish($_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
@@ -172,71 +171,67 @@
             $publish->disconnect();
             unset($publish);
 
-            // Start other daemons
+            // Start other deamons
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
-            $dirDaemon = dirname(__FILE__)."/../../resources/AbeilleDaemon/";
+            $dirdeamon = dirname(__FILE__)."/../../resources/AbeilleDeamon/";
 
             $parameters_info = self::getParameters();
 
-            $daemon1 = "AbeilleSerialRead.php";
-            $paramDaemon1 = $parameters_info['serialPort'].' '.time();
-            $daemon2 = "AbeilleParser.php";
-            $paramDaemon2 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
+            $deamon1 = "AbeilleSerialRead.php";
+            $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.time();
+            $deamon2 = "AbeilleParser.php";
+            $paramdeamon2 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                 ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
                 );
-            $daemon3 = "AbeilleMQTTCmd.php";
-            $paramDaemon3 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
+            $deamon3 = "AbeilleMQTTCmd.php";
+            $paramdeamon3 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                 ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
                 );
-            $log1 = " > /var/www/html/log/".substr($daemon1, 0, (strrpos($daemon1, ".")));;
-            $log2 = " > /var/www/html/log/".substr($daemon2, 0, (strrpos($daemon2, ".")));;
-            $log3 = " > /var/www/html/log/".substr($daemon3, 0, (strrpos($daemon3, ".")));;
+            $log1 = " > /var/www/html/log/".substr($deamon1, 0, (strrpos($deamon1, ".")));;
+            $log2 = " > /var/www/html/log/".substr($deamon2, 0, (strrpos($deamon2, ".")));;
+            $log3 = " > /var/www/html/log/".substr($deamon3, 0, (strrpos($deamon3, ".")));;
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon1." ".$paramDaemon1.$log1;
-            log::add('Abeille', 'debug', 'Start daemon SerialRead: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            $cmd = $nohup." ".$php." ".$dirdeamon.$deamon1." ".$paramdeamon1.$log1;
+            log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
             exec($cmd.' 2>&1 &');
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon2." ".$paramDaemon2.$log2;
-            log::add('Abeille', 'debug', 'Start daemon Parser: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            $cmd = $nohup." ".$php." ".$dirdeamon.$deamon2." ".$paramdeamon2.$log2;
+            log::add('Abeille', 'debug', 'Start deamon Parser: '.$cmd);
             exec($cmd.' 2>&1 &');
 
 
-            $cmd = $nohup." ".$php." ".$dirDaemon.$daemon3." ".$paramDaemon3.$log3;
-            log::add('Abeille', 'debug', 'Start daemon MQTT: '.$cmd);
-            //exec(system::getCmdSudo().$cmd.' 2>&1 &');
+            $cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
+            log::add('Abeille', 'debug', 'Start deamon MQTT: '.$cmd);
             exec($cmd.' 2>&1 &');
             $cmd = "";
-            log::add('Abeille', 'debug', 'Daemon start: OUT');
-            //message::removeAll('Abeille', 'unableStartDeamon');
-            */
+            log::add('Abeille', 'debug', 'deamon start: OUT');
+            message::removeAll('Abeille', 'unableStartDeamon');
+
             return true;
         }
 
         public
-        static function daemon_stop()
+        static function deamon_stop()
         {
-            log::add('Abeille', 'debug', 'daemon stop: IN');
-            /*
-            // Stop other daemon
-            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
+            log::add('Abeille', 'debug', 'deamon stop: IN');
+            // Stop other deamon
+            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' ' -f1", $output);
             foreach ($output as $item => $itemValue) {
-                log::add('Abeille', 'debug', 'daemon stop: Killing daemon: '.$item.' '.$itemValue);
+                log::add('Abeille', 'debug', 'deamon stop: Killing deamon: '.$item.'/'.$itemValue);
                 //exec(system::getCmdSudo().'kill '.$itemValue.' 2>&1');
-                system::kill($itemValue);
+                system::kill($itemValue,true);
             }
 
-            // Stop main daemon
-            $cron = cron::byClassAndFunction('Abeille', 'daemon');
+            // Stop main deamon
+            $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (!is_object($cron)) {
-                log::add('Abeille', 'error', 'daemon stop: Abeille, Tache cron introuvable');
+                log::add('Abeille', 'error', 'deamon stop: Abeille, Tache cron introuvable');
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->halt();
-            */
-            log::add('Abeille', 'debug', 'daemon stop: OUT');
+
+            log::add('Abeille', 'debug', 'deamon stop: OUT');
             message::removeAll('Abeille', 'stopDeamon');
         }
 
@@ -245,10 +240,6 @@
         static function dependancy_info()
         {
             $return = array();
-            $return['state'] = 'ok';
-            $return['launchable'] = 'ok';
-            return $return;
-
             $return['state'] = 'nok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille') . '/dependance';
             $cmd = "dpkg -l | grep mosquitto";
@@ -277,9 +268,8 @@
             return array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
         }
 
-        public static function daemon()
+        public static function deamon()
         {
-        /*
             //use verified parameters
             $parameters_info = self::getParameters();
 
@@ -292,7 +282,7 @@
             AbeilleConId: '.$parameters_info['AbeilleConId'].',
             AbeilleUser: '.$parameters_info['AbeilleUser'].',
             Abeillepass: '.$parameters_info['AbeillePass'].',
-            serialPort'.$parameters_info['AbeilleSerialPort'].',
+            AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].',
             qos: '.$parameters_info['AbeilleQos']
             );
 
@@ -333,9 +323,7 @@
             } catch (Exception $e) {
                 log::add('Abeille', 'error', $e->getMessage());
             }
-        */
         }
-
 
         public
         static function getParameters()
@@ -350,25 +338,25 @@
             $return['AbeilleUser'] = config::byKey('mqttUser', 'Abeille','jeedom');
             $return['AbeillePass'] = config::byKey('mqttPass', 'Abeille','jeedom');
             $return['AbeilleTopic'] = config::byKey('mqttTopic', 'Abeille', '#');
-            $return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['AbeilleQos'] = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1');
-            $return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
 
-            log::add('Abeille', 'debug', 'serialPort value: ->'.$return['serialPort'].'<-');
-            if ($return['serialPort'] != 'none') {
-                $return['serialPort'] = jeedom::getUsbMapping($return['serialPort']);
-                if (@!file_exists($return['serialPort'])) {
+            log::add('Abeille', 'debug', 'serialPort value: ->'.$return['AbeilleSerialPort'].'<-');
+            if ($return['AbeilleSerialPort'] != 'none') {
+                $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
+                if (@!file_exists($return['AbeilleSerialPort'])) {
                     log::add(
                         'Abeille',
                         'debug',
-                        'getParameters: serialPort n\'est pas défini. ->'.$return['serialPort'].'<-'
+                        'getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-'
                     );
                     $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
-                    throw new Exception(__('Le port n\'est pas configuré: '.$return['serialPort'], __FILE__));
+                    throw new Exception(__('Le port n\'est pas configuré: '.$return['AbeilleSerialPort'], __FILE__));
                 } else {
-                    exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
+                    exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
                     $return['state'] = 'ok';
                 }
             } else {
@@ -380,12 +368,12 @@
         }
 
         public function postSave() {
-            log::add('Abeille', 'debug', 'daemon_postSave: IN');
-            $cron = cron::byClassAndFunction('Abeille', 'daemon');
+            log::add('Abeille', 'debug', 'deamon_postSave: IN');
+            $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (is_object($cron) && !$cron->running()){
             $cron->run();
             }
-            log::add('Abeille', 'debug', 'daemon_postSave: OUT');
+            log::add('Abeille', 'debug', 'deamon_postSave: OUT');
 
         }
 
@@ -457,14 +445,8 @@
             // La ruche est aussi un objet Abeille
             if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
                 self::createRuche($message);
-
                 return;
             }
-
-            /*if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
-                self::createRuche($message);
-                return ;
-            }*/
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille/#/#
@@ -841,11 +823,12 @@
             //id
             $elogic->setName("Ruche");
             $elogic->setLogicalId("Abeille/Ruche");
-            $elogic->setObject_id($parameters_info['AbeilleId']);
+            $elogic->setObject_id($parameters_info['AbeilleParentId']);
             $elogic->setEqType_name('Abeille');
             $elogic->setConfiguration('topic', "Abeille/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setIsVisible("1");
+            $elogic->setConfiguration('icone',"Abeille");
             // eqReal_id
             $elogic->setIsEnable("1");
             // status

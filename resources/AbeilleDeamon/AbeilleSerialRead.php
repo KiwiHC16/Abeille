@@ -32,21 +32,25 @@
 
     $serial = $argv[1];
 
-    log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: Demarrage de AbeilleSerial');
+    //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: Demarrage de AbeilleSerial');
+    echo 'AbeilleSerialRead: Demarrage de AbeilleSerial\n';
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
-        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        echo 'AbeilleSerialRead main: debug for com file: '.$serial."\n";
         exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
 
     if (!file_exists($serial)) {
-        log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Error: Fichier '.$serial.' n existe pas');
+        //log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Error: Fichier '.$serial.' n existe pas');
+        echo 'AbeilleSerialRead: Error: Fichier '.$serial.' n existe pas\n';
         exit(1);
     }
 
-    log::add('AbeilleSerialRead', 'info', 'AbeilleSerial: Serial port used: '.$serial);
+    //log::add('AbeilleSerialRead', 'info', 'AbeilleSerial: Serial port used: '.$serial);
+    echo 'AbeilleSerialRead', 'info', 'AbeilleSerial: Serial port used: '.$serial."\n";
 
     $fifoIN = new fifo($in, 'w+');
 
@@ -68,7 +72,8 @@
 
     while (true) {
         if (!file_exists($serial)) {
-            log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: CRITICAL Fichier '.$serial." n existe pas");
+            //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: CRITICAL Fichier '.$serial." n existe pas");
+            echo 'AbeilleSerialRead: CRITICAL Fichier '.$serial." n existe pas\n";
             exit(1);
         }
 
@@ -80,7 +85,8 @@
         } else {
             if ($car == "03") {
                 // echo date("Y-m-d H:i:s")." -> ".$trame."\n";
-                log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: '.date("Y-m-d H:i:s")." -> ".$trame);
+                //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: '.date("Y-m-d H:i:s")." -> ".$trame);
+                echo 'AbeilleSerialRead: '.date("Y-m-d H:i:s")." -> ".$trame."\n";
                 $fifoIN->write($trame."\n");
             } else {
                 if ($car == "02") {
@@ -103,6 +109,7 @@
     fclose($f);
     $fifoIN->close();
 
-    log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Fin script AbeilleSerial');
+    //log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Fin script AbeilleSerial');
+    echo 'AbeilleSerial: Fin script AbeilleSerial\n';
 
 ?>

@@ -82,7 +82,7 @@
                 <div class="col-lg-4">
                     <select class="configKey form-control" data-l1key="mqttQos">
                         <option value="0">0</option>
-                        <option value="1" selected>1</option>
+                        <option value="1" >1</option>
                         <option value="2">2</option>
                     </select>
                 </div>
@@ -92,7 +92,7 @@
                 <label class="col-lg-4 control-label">{{Abeille Serial Port : }}</label>
                 <div class="col-lg-4">
                     <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
-                        <option value="none" selected>{{Aucun}}</option>
+                        <option value="none" >{{Aucun}}</option>
                         <!--option value="auto">{{Auto}}</option-->
                         <?php
                             foreach (jeedom::getUsbMapping('', true) as $name => $value) {
@@ -106,7 +106,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label">{{Id de l objet de rattachement par defaut : }}</label>
                 <div class="col-lg-4">
-                    <input class="configKey form-control" data-l1key="AbeilleId" style="margin-top:5px"
+                    <input class="configKey form-control" data-l1key="AbeilleParentId" style="margin-top:5px"
                            placeholder="1"/>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                 <label class="col-lg-4 control-label">{{Mode de creation des objets}}</label>
                 <div class="col-lg-4">
                     <select style="width:auto" class="configKey form-control" data-l1key="creationObjectMode">
-                        <option value="Automatique" selected>Automatique</option>
+                        <option value="Automatique">Automatique</option>
                         <option value="Semi Automatique">Semi Automatique</option>
                         <option value="Manuel">Manuel</option>
                     </select>

@@ -10,12 +10,14 @@
     {
         global $dest;
 
-        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
+        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
+        echo 'AbeilleMQTTC, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n';
 
         // list($type, $address, $action) = split('[/.-]', $topic); split ne fonctionne plus avec php 7
         list($type, $address, $action) = explode('/', $topic);
         //
-        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Type: '.$type.'Address: '.$address.'Action: '.$action);
+        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Type: '.$type.'Address: '.$address.'Action: '.$action);
+        echo 'AbeilleMQTTC, Type: '.$type.'Address: '.$address.'Action: '.$action;
 
         if ($type == "CmdAbeille") {
             if ($action == "Annonce") {
@@ -68,7 +70,8 @@
                     "duration" => $keywords[3],
                 );
             } else {
-                log::add('AbeilleMQTTC', 'warning', 'AbeilleMQTT, command unknown: '.$action);
+                //log::add('AbeilleMQTTC', 'warning', 'AbeilleMQTT, command unknown: '.$action);
+                echo 'AbeilleMQTT, command unknown: '.$action;
             }
 
 
@@ -83,7 +86,8 @@
                 } // Si une command type get htt
                 else {
                     if (count($keywords) == 4) {
-                        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,4 arguments command');
+                        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,4 arguments command');
+                        echo 'AbeilleMQTTC, 4 arguments command';
                         $Command = array(
                             $action => $action,
                             $keywords[0] => $keywords[1],
@@ -91,7 +95,8 @@
                         );
                     }
                     if (count($keywords) == 6) {
-                        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,6 arguments command');
+                        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,6 arguments command');
+                        echo 'AbeilleMQTTC, 6 arguments command';
                         $Command = array(
                             $action => $action,
                             $keywords[0] => $keywords[1],
@@ -108,17 +113,14 @@
             // print_r( $Command );
             processCmd($dest, $Command);
         } else {
-            log::add(
-                'Abeille',
-                'warning',
-                'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.'
-            );
+            //log::add('Abeille','warning','AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.');
+            echo 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.';
         }
     }
 
     // MAIN
     //                      1          2           3       4          5       6
-    //$paramDaemon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
+    //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
 
     $dest = $argv[1];
     $server = $argv[2];     // change if necessary
@@ -131,11 +133,13 @@
 
     if ($dest=='none'){
         $dest=$resourcePath.'/COM';
-        log::add('AbeilleMQTTC','debug','AbeilleMQTTC main: debug for com file: '.$dest);
+        //log::add('AbeilleMQTTC','debug','AbeilleMQTTC main: debug for com file: '.$dest);
+        echo 'AbeilleMQTTCmd main: debug for com file: '.$dest;
         exec(system::getCmdSudo().'touch '.$dest.'chmod 777 '.$dest.' > /dev/null 2>&1');
         }
 
-    log::add('AbeilleMQTTCmd', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
+    //log::add('AbeilleMQTTCmd', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
+    echo 'AbeilleMQTTCmd main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos;
 
     if (!$mqtt->connect(true, null, $username, $password)) {
         exit(1);

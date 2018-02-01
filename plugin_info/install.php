@@ -19,11 +19,11 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function Abeille_install() {
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (!is_object($cron)) {
         $cron = new cron();
         $cron->setClass('Abeille');
-        $cron->setFunction('daemon');
+        $cron->setFunction('deamon');
         $cron->setEnable(1);
         $cron->setDeamon(1);
         $cron->setSchedule('* * * * *');
@@ -33,29 +33,33 @@ function Abeille_install() {
 }
 
 function Abeille_update() {
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    message::add('Abeille', 'Mise à jour en cours...', null, null);
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (!is_object($cron)) {
         $cron = new cron();
         $cron->setClass('Abeille');
-        $cron->setFunction('daemon');
+        $cron->setFunction('deamon');
         $cron->setEnable(1);
         $cron->setDeamon(1);
         $cron->setSchedule('* * * * *');
         $cron->setTimeout('1440');
         $cron->save();
     }
+    message::removeAll('Abeille');
+    message::add('Abeille', 'Mise à jour terminée', null, null);
 }
 
 function Abeille_remove() {
-    $cron = cron::byClassAndFunction('Abeille', 'daemon');
+    $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (is_object($cron)) {
         $cron->stop();
         $cron->remove();
     }
     log::add('Abeille','info','Suppression extension');
     $resource_path = realpath(dirname(__FILE__) . '/../resources');
-    passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
-    return true;
+    //passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
+    message::removeAll("Abeille");
+    message::add("Abeille","plugin desinstallé");
 }
 
 ?>

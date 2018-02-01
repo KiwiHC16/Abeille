@@ -614,11 +614,7 @@
         "Type" : "info",
         "subType" : "binary",
         "invertBinary" : "0",
-        "template" : "",
-        "configuration" : {
-          "returnStateValue" : "0",
-          "returnStateTime" : "1"
-        }
+        "template" : ""
       },
       "0006-8000" : {
         "name" : "multi",

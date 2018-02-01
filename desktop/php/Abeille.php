@@ -153,6 +153,8 @@ $eqLogics = eqLogic::byType('Abeille');
                 <option value="Abeille">{{Abeille}}</option>
                   
                   <option value="XiaomiBouton">{{Xiaomi Bouton}}</option>
+                  <option value="XiaomiBouton1">{{Xiaomi Bouton 1}}</option>
+                  
                   <option value="XiaomiPorte">{{Xiaomi Porte}}</option>
                   <option value="XiaomiInfraRouge">{{Xiaomi Infra Rouge}}</option>
                   <option value="XiaomiPrise">{{Xiaomi Prise}}</option>

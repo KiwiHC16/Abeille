@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 function arret
 {
   echo
@@ -12,8 +12,9 @@ function arret
   echo "Avancement: 100% ---------------------------------------------------------------------------------------------------> FIN"
   echo
 
-  echo 100 > /tmp/Abeille_dep
-  rm /tmp/Abeille_dep
+  echo 100 > ${PROGRESS_FILE}
+  sleep 3
+  rm ${PROGRESS_FILE}
 
 }
 
@@ -31,9 +32,14 @@ function arretSiErreur
 
 echo "Début d'installation des dépendances"
 
-touch /tmp/Abeille_dep
+PROGRESS=/tmp/jeedom/Abeille/dependancy_abeille_in_progress
 
-echo 0 > /tmp/Abeille_dep
+if [ ! -z $1 ]; then
+	PROGRESS_FILE=$1
+fi
+touch ${PROGRESS_FILE}
+
+echo 0 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 0% ---------------------------------------------------------------------------------------------------> Environnement "
 echo
@@ -63,12 +69,14 @@ else
   arretSiErreur "Erreur critique, je ne reconnais pas le system (apache, php,...)"
 fi
 
+echo 5 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 5% ---------------------------------------------------------------------------------------------------> Install lsb-release php-pear"
 echo
 
 apt-get -y install lsb-release php-pear
 
+echo 8 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 8% ---------------------------------------------------------------------------------------------------> Ajout repo mosquitto"
 echo
@@ -163,14 +171,14 @@ else
   arretSiErreur "Erreur critique: Je ne connais pas ce type de HW."
 fi
 
-echo 10 > /tmp/Abeille_dep
+echo 10 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 10% ---------------------------------------------------------------------------------------------------> Update list package"
 echo
 
 apt-get update
 
-echo 30 > /tmp/Abeille_dep
+echo 30 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 30% ---------------------------------------------------------------------------------------------------> install mosquiito packages"
 echo
@@ -179,7 +187,7 @@ apt-get -y install mosquitto mosquitto-clients libmosquitto-dev
 
 
 if [[ -d "/etc/php5/" ]]; then
-  echo 70 > /tmp/Abeille_dep
+  echo 70 > ${PROGRESS_FILE}
   echo
   echo "Avancement: 70% ---------------------------------------------------------------------------------------------------> php5 deja present on installe php-dev et les librairies mosquitto"
   echo
@@ -200,7 +208,7 @@ if [[ -d "/etc/php5/" ]]; then
   fi
 
 else
-  echo 70 > /tmp/Abeille_dep
+  echo 70 > ${PROGRESS_FILE}
   echo
   echo "Avancement: 70% ---------------------------------------------------------------------------------------------------> php5 pas present on installe php7-dev et les librairies mosquitto"
   echo
@@ -222,32 +230,11 @@ else
 
 fi
 
-echo 90 > /tmp/Abeille_dep
+echo 90 > ${PROGRESS_FILE}
 echo
-echo "Avancement: 90% ---------------------------------------------------------------------------------------------------> Demmarrage des services."
+echo "Avancement: 90% ---------------------------------------------------------------------------------------------------> Demarrage des services."
 echo
 
-# Docker detection, may be useful to add RPI detection here.
-if [[ $(grep -c docker /proc/1/cgroup) -gt 0 ]]; then
-  echo "I'm running on docker".
-  /etc/init.d/mosquitto start
-
-  if [[ "apache2" == ${SERVICE} ]]; then
-    apache2ctl restart
-  else
-    /etc/init.d/${SERVICE} restart
-  fi
-# Pour tous les autres systemes/
-else
-  /etc/init.d/mosquitto restart &
-  sleep 5
-  /etc/init.d/${SERVICE} restart &
-
-fi
-
-echo
-echo "Avancement: 99% ---------------------------------------------------------------------------------------------------> ;-) "
-echo
 
 echo "**Ajout du user www-data dans le groupe dialout (accès à la zigate)**"
 if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
@@ -261,12 +248,36 @@ if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
         echo "OK, utilisateur www-data est déja dans le group dialout"
  fi
 
+echo 100 > ${PROGRESS_FILE}
+echo
+echo "Avancement: 99% ---------------------------------------------------------------------------------------------------> ;-) "
+echo
 echo "Fin installation des dépendances"
-
 echo
 echo "Avancement: 100% ---------------------------------------------------------------------------------------------------> FIN"
 echo
 
-echo 100 > /tmp/Abeille_dep
+rm ${PROGRESS_FILE}
 
-rm /tmp/Abeille_dep
+
+# Docker detection, may be useful to add RPI detection here.
+if [[ $(grep -c docker /proc/1/cgroup) -gt 0 ]]; then
+  echo "I'm running on docker".
+  /etc/init.d/mosquitto start
+
+  if [[ "apache2" == ${SERVICE} ]]; then
+    apache2ctl restart &
+  else
+    /etc/init.d/${SERVICE} restart
+  fi
+# Pour tous les autres systemes/
+else
+  /etc/init.d/mosquitto restart &
+  sleep 5
+  /etc/init.d/${SERVICE} restart &
+
+fi
+
+
+
+

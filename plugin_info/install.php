@@ -33,6 +33,7 @@ function Abeille_install() {
 }
 
 function Abeille_update() {
+    message::add('Abeille', 'Mise à jour en cours...', null, null);
     $cron = cron::byClassAndFunction('Abeille', 'daemon');
     if (!is_object($cron)) {
         $cron = new cron();
@@ -44,6 +45,8 @@ function Abeille_update() {
         $cron->setTimeout('1440');
         $cron->save();
     }
+    message::removeAll('Abeille');
+    message::add('Abeille', 'Mise à jour terminée', null, null);
 }
 
 function Abeille_remove() {
@@ -54,8 +57,9 @@ function Abeille_remove() {
     }
     log::add('Abeille','info','Suppression extension');
     $resource_path = realpath(dirname(__FILE__) . '/../resources');
-    passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
-    return true;
+    //passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
+    message::removeAll("Abeille");
+    message::add("Abeille","plugin desinstallé");
 }
 
 ?>

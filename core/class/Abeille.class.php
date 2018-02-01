@@ -42,18 +42,22 @@
             return $return;
         }
 
-        public static function deamon_info()
+        public static function daemon_info()
         {
             $return = array();
-            $return['log'] = 'Abeille_update';
+            $return['state'] = 'ok';
+            $return['launchable'] = 'ok';
+            return $return;
+            //$return['log'] = 'Abeille';
             log::add('Abeille', 'debug', '**Daemon info: IN**');
-            $return = array();
-            $return['state'] = 'nok';
-            $return['configuration'] = 'nok';
-            $cron = cron::byClassAndFunction('Abeille', 'daemon');
-            if (is_object($cron) && $cron->running()) {
-                $return['state'] = 'ok';
-            }
+            //$return['state'] = 'nok';
+            $return['launchable'] = 'nok';
+
+            /*$cron = cron::byClassAndFunction('Abeille', 'daemon');
+            if (!is_object($cron) || !$cron->running()) {
+                return $return;
+            }*/
+
             //deps ok ?
             $dependancy_info = self::dependancy_info();
             if ($dependancy_info['state'] == 'ok') {
@@ -61,24 +65,21 @@
             } else {
                 log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
                 log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to dependancies missing');
-                $return['launchable'] = 'nok';
                 throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
             }
 
             //Parameters OK
             $parameters_info = self::getParameters();
-            if ( $parameters_info['state'] == 'ok'){
+            if ($parameters_info['state'] == 'ok') {
                 $return['launchable'] = 'ok';
+            } else {
+                log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
+                log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to parameters missing');
+                //throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['serialPort'].', state: '.$parameters_info['state'],                        __FILE__));
             }
-                else {
-                    log::add('Abeille', 'debug', 'daemon_info: Daemon is not launchable ;-(');
-                    log::add('Abeille', 'warning', 'daemon_info: Daemon is not launchable due to parameters missing');
-                    $return['launchable'] = 'nok';
-                    throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['serialPort'].', state: '.$parameters_info['state'], __FILE__));
-                }
 
             //check running daemon /!\ if using sudo nbprocess x2
-            $nbProcessExpected=3; // no sudo to run daemon
+            $nbProcessExpected = 3; // no sudo to run daemon
             exec(
                 "ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1",
                 $output
@@ -113,22 +114,24 @@
             return $return;
         }
 
-        public static function deamon_start($_debug = false)
+        public static function daemon_start($_debug = false)
         {
             log::add('Abeille', 'debug', 'daemon_start: IN');
-            log::add('Abeille', 'debug', 'Test BEN CONFIG: '.config::byKey('abeilleSerialPort', 'Abeille', 'none'));
 
-            self::deamon_stop();
+            //self::deamon_stop();
+            $parameters_info = self::getParameters();
+
             //no need as it seems to be on cron
-            $deamon_info = self::deamon_info();
-            if ($deamon_info['launchable'] != 'ok') {
-                throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
-            }
-
+            /*$daemon_info = self::daemon_info();
+            if ($daemon_info['launchable'] != 'ok') {
+                message::add("Abeille","Vérifier la configuration, un parametre manque");
+                //throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+            }*/
+/*
             $cron = cron::byClassAndFunction('Abeille', 'daemon');
             if (!is_object($cron)) {
                 log::add('Abeille', 'error', 'daemon_start: Tache cron introuvable');
-                throw new Exception(__('Tache cron introuvable', __FILE__));
+                //throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->run();
 
@@ -140,14 +143,15 @@
             $_retain = 0;
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'daemon_start: Envoi du message '.$_message.' vers '.$_subject);
-            $publish = new Mosquitto\Client(config::byKey('AbeilleConId', 'Abeille', 'Jeedom').'_pub_'.$_id);
-            if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
-                $publish->setCredentials(config::byKey('mqttUser', 'Abeille'), config::byKey('mqttPass', 'Abeille'));
-            }
+            $publish = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_'.$_id);
+            $publish->setCredentials(
+                $parameters_info['AbeilleUser'],
+                $parameters_info['AbeillePass']
+            );
 
             $publish->connect(
-                config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
-                config::byKey('AbeillePort', 'Abeille', '1883'),
+                $parameters_info['AbeilleAddress'],
+                $parameters_info['AbeillePort'],
                 60
             );
 
@@ -155,14 +159,10 @@
             log::add(
                 'Abeille',
                 'debug',
-                'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.config::byKey(
-                    'mqttQos',
-                    'Abeille',
-                    '1'
-                ).' retain: '.$_retain
+                'daemon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.$parameters_info['AbeilleQos'].' retain: '.$_retain
             );
-            $publish->publish($_subject, $_message, config::byKey('mqttQos', 'Abeille', '1'), $_retain);
 
+            $publish->publish($_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
 
             for ($i = 0; $i < 100; $i++) {
                 // Loop around to permit the library to do its work
@@ -177,19 +177,18 @@
             $php = "/usr/bin/php";
             $dirDaemon = dirname(__FILE__)."/../../resources/AbeilleDaemon/";
 
-            /**
-             * getParameters
-             */
             $parameters_info = self::getParameters();
 
             $daemon1 = "AbeilleSerialRead.php";
             $paramDaemon1 = $parameters_info['serialPort'].' '.time();
             $daemon2 = "AbeilleParser.php";
             $paramDaemon2 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
-                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time();
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
+                );
             $daemon3 = "AbeilleMQTTCmd.php";
             $paramDaemon3 = $parameters_info['serialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
-                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time();
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
+                );
             $log1 = " > /var/www/html/log/".substr($daemon1, 0, (strrpos($daemon1, ".")));;
             $log2 = " > /var/www/html/log/".substr($daemon2, 0, (strrpos($daemon2, ".")));;
             $log3 = " > /var/www/html/log/".substr($daemon3, 0, (strrpos($daemon3, ".")));;
@@ -211,16 +210,22 @@
             exec($cmd.' 2>&1 &');
             $cmd = "";
             log::add('Abeille', 'debug', 'Daemon start: OUT');
+            //message::removeAll('Abeille', 'unableStartDeamon');
+            */
+            return true;
         }
 
-        public static function deamon_stop()
+        public
+        static function daemon_stop()
         {
             log::add('Abeille', 'debug', 'daemon stop: IN');
+            /*
             // Stop other daemon
             exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /'", $output);
             foreach ($output as $item => $itemValue) {
                 log::add('Abeille', 'debug', 'daemon stop: Killing daemon: '.$item.' '.$itemValue);
-                exec(system::getCmdSudo().'kill '.$itemValue.' 2>&1');
+                //exec(system::getCmdSudo().'kill '.$itemValue.' 2>&1');
+                system::kill($itemValue);
             }
 
             // Stop main daemon
@@ -230,29 +235,26 @@
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
             $cron->halt();
+            */
             log::add('Abeille', 'debug', 'daemon stop: OUT');
+            message::removeAll('Abeille', 'stopDeamon');
         }
 
 
-        public static function dependancy_info()
+        public
+        static function dependancy_info()
         {
             $return = array();
-            $return['log'] = 'Abeille_dep';
+            $return['state'] = 'ok';
+            $return['launchable'] = 'ok';
+            return $return;
+
             $return['state'] = 'nok';
-            $return['launchable'] = 'nok';
-            $return['configuration'] = 'nok';
+            $return['progress_file'] = jeedom::getTmpFolder('Abeille') . '/dependance';
             $cmd = "dpkg -l | grep mosquitto";
             exec($cmd, $output, $return_var);
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
-
-          /////get Parameters and check
-
-            foreach ($return as $item => $itemValue) {
-                if (!isset($itemValue) || $itemValue == "") {
-                    throw new Exception(__($item.' n\'est pas défini . ->'.$itemValue.'<-', __FILE__));
-                }
-            }
 
             if ($output[0] != "" && $libphp) {
                 //$return['configuration'] = 'ok';
@@ -263,47 +265,38 @@
                     'warning',
                     'Impossible de trouver le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
                 );
-                log::add(
-                    'Abeille',
-                    'debug',
-                    'Impossible de trouver le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
-                );
 
             }
-
             return $return;
         }
 
         public static function dependancy_install()
         {
             log::add('Abeille', 'info', 'Installation des dépéndances');
-            $resource_path = realpath(dirname(__FILE__).'/../../resources/');
-            $cmd = system::getCmdSudo(
-                ).' /bin/bash '.$resource_path.'/install.sh '.$resource_path.' > '.log::getPathToLog(
-                    'Abeille_dep'
-                ).' 2>&1 &';
-            log::add('Abeille', 'debug', 'dependancy_install: cmd: '.$cmd);
-            passthru($cmd);
-
-            return true;
+            log::remove(__CLASS__ . '_update');
+            return array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
         }
 
         public static function daemon()
         {
+        /*
+            //use verified parameters
+            $parameters_info = self::getParameters();
+
             log::add(
                 'Abeille',
                 'debug',
-                'Paramètres utilisés, Host : '.config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1').',
-            Port : '.config::byKey('AbeillePort', 'Abeille', '1883').',
-            AbeilleId : '.config::byKey('AbeilleId', 'Abeille', 'Jeedom').',
-            AbeilleConId: '.config::byKey('AbeilleConId', 'Abeille').',
-            mqttUser'.config::byKey('mqttUser', 'Abeille').',
-            pass'.config::byKey('mqttPass', 'Abeille').',
-            serialPort'.config::byKey('abeilleSerialPort', 'Abeille').',
-            qos: '.config::byKey('mqttQos', 'Abeille')
+                'Parametres utilises, Host : '.$parameters_info['AbeilleAddress'].',
+            Port : '.$parameters_info['AbeillePort'].',
+            AbeilleParentId : '.$parameters_info['AbeilleParentId'].',
+            AbeilleConId: '.$parameters_info['AbeilleConId'].',
+            AbeilleUser: '.$parameters_info['AbeilleUser'].',
+            Abeillepass: '.$parameters_info['AbeillePass'].',
+            serialPort'.$parameters_info['AbeilleSerialPort'].',
+            qos: '.$parameters_info['AbeilleQos']
             );
 
-            $client = new Mosquitto\Client(config::byKey('AbeilleConId', 'Abeille', 'Jeedom'));
+            $client = new Mosquitto\Client($parameters_info['AbeilleConId']);
             $client->onConnect('Abeille::connect');
             $client->onDisconnect('Abeille::disconnect');
             $client->onSubscribe('Abeille::subscribe');
@@ -312,23 +305,22 @@
             $client->setWill('/jeedom', "Client died :-(", 1, 0);
 
             try {
-                if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
-                    $client->setCredentials(
-                        config::byKey('mqttUser', 'Abeille'),
-                        config::byKey('mqttPass', 'Abeille')
-                    );
-                }
+                $client->setCredentials(
+                    $parameters_info['AbeilleUser'],
+                    $parameters_info['AbeillePass']
+                );
+
                 $client->connect(
-                    config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
-                    config::byKey('AbeillePort', 'Abeille', '1883'),
+                    $parameters_info['AbeilleAddress'],
+                    $parameters_info['AbeillePort'],
                     60
                 );
                 $client->subscribe(
-                    config::byKey('mqttTopic', 'Abeille', '#'),
-                    config::byKey('mqttQos', 'Abeille', 1)
-
+                    $parameters_info['AbeilleTopic'],
+                    $parameters_info['AbeilleQos']
                 ); // !auto: Subscribe to root topic
-                log::add('Abeille', 'debug', 'Subscribe to topic '.config::byKey('mqttTopic', 'Abeille', '#'));
+
+                log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
                 //$client->loopForever();
                 while (true) {
                     $client->loop();
@@ -341,43 +333,60 @@
             } catch (Exception $e) {
                 log::add('Abeille', 'error', $e->getMessage());
             }
+        */
         }
 
 
-        public static function getParameters()
+        public
+        static function getParameters()
         {
             $return = array();
-            $return['state']='nok';
+            $return['state'] = 'nok';
 
             //Most Fields are defined with default values
             $return['AbeilleAddress'] = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
             $return['AbeillePort'] = config::byKey('AbeillePort', 'Abeille', '1883');
             $return['AbeilleConId'] = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
-            $return['AbeilleUser'] = config::byKey('mqttUser', 'Abeille');
-            $return['AbeillePass'] = config::byKey('mqttPass', 'Abeille');
+            $return['AbeilleUser'] = config::byKey('mqttUser', 'Abeille','jeedom');
+            $return['AbeillePass'] = config::byKey('mqttPass', 'Abeille','jeedom');
             $return['AbeilleTopic'] = config::byKey('mqttTopic', 'Abeille', '#');
             $return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['AbeilleQos'] = config::byKey('mqttQos', 'Abeille', '0');
-            $return['AbeilleId'] = config::byKey('AbeilleId', 'Abeille', '1');
-            $serialPort = config::byKey('AbeilleSerialPort', 'Abeille');
-            $return['creationObjectMode']=config::byKey('AbeilleSerialPort', 'Abeille','Automatique');
+            $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1');
+            $return['serialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
 
             log::add('Abeille', 'debug', 'serialPort value: ->'.$return['serialPort'].'<-');
             if ($return['serialPort'] != 'none') {
                 $return['serialPort'] = jeedom::getUsbMapping($return['serialPort']);
                 if (@!file_exists($return['serialPort'])) {
-                    log::add('Abeille', 'debug', 'getParameters: serialPort n\'est pas défini. ->'.$return['serialPort'].'<-');
+                    log::add(
+                        'Abeille',
+                        'debug',
+                        'getParameters: serialPort n\'est pas défini. ->'.$return['serialPort'].'<-'
+                    );
                     $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
                     throw new Exception(__('Le port n\'est pas configuré: '.$return['serialPort'], __FILE__));
                 } else {
                     exec(system::getCmdSudo().'chmod 777 '.$return['serialPort'].' > /dev/null 2>&1');
-                    $return['state']='ok';
+                    $return['state'] = 'ok';
                 }
             } else {
                 //if serialPort= none then nothing to check
-                $return['state']='ok';
+                $return['state'] = 'ok';
             }
+            $return['state'] = 'ok';
             return $return;
+        }
+
+        public function postSave() {
+            log::add('Abeille', 'debug', 'daemon_postSave: IN');
+            $cron = cron::byClassAndFunction('Abeille', 'daemon');
+            if (is_object($cron) && !$cron->running()){
+            $cron->run();
+            }
+            log::add('Abeille', 'debug', 'daemon_postSave: OUT');
+
         }
 
         public static function connect($r, $message)
@@ -392,21 +401,25 @@
             config::save('state', '0', 'Abeille');
         }
 
-        public static function subscribe()
+        public
+        static function subscribe()
         {
             log::add('Abeille', 'debug', 'Subscribe to topics');
         }
 
-        public static function logmq($code, $str)
-        {
+        public
+        static function logmq(
+            $code,
+            $str
+        ) {
             if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
                 log::add('Abeille', 'debug', $code.' : '.$str);
             }
         }
 
 
-        public static function message($message)
-        {
+        public
+        static function message($message) {
 
             if ($GLOBALS['debugBEN']) {
                 echo "Function message.\n";
@@ -417,7 +430,7 @@
             }
             log::add('Abeille', 'debug', '--- process a new message -----------------------');
             log::add('Abeille', 'debug', 'Message ->'.$message->payload.'<- sur '.$message->topic);
-
+            $parameters_info = self::getParameters();
             /*----------------------------------------------------------------------------------------------------------------------------------------------*/
             // Analyse du message recu et definition des variables en fonction de ce que l on trouve dans le message
             // $nodeid[/] / $cmdId / $value
@@ -504,7 +517,7 @@
                 }
                 $elogic->setName($name);
                 $elogic->setLogicalId($nodeid);
-                $elogic->setObject_id(config::byKey('abeilleId', 'Abeille', '1'));
+                $elogic->setObject_id($parameters_info['AbeilleParentId']);
                 $elogic->setEqType_name('Abeille');
 
                 $objetDefSpecific = $AbeilleObjetDefinition[$value];
@@ -604,11 +617,9 @@
                 $elogic->checkAndUpdateCmd($cmdId, $value);
             } else {
                 // Si je recois une commande IEEE pour un objet qui n'existe pas je vais créer un objet pour visualiser cet inconnu
-                if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && (config::byKey(
-                            'creationObjectMode',
-                            'Abeille',
-                            'Automatique'
-                        ) == "Semi Automatique")) {
+                if (!is_object(
+                        $elogic
+                    ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
                     // Creation de l objet Abeille (hors ruche)
                     log::add('Abeille', 'info', 'objet: '.$value.' creation sans model');
                     $elogic = new Abeille();
@@ -620,7 +631,7 @@
                     }
                     $elogic->setName($name);
                     $elogic->setLogicalId($nodeid);
-                    $elogic->setObject_id(config::byKey('AbeilleId', 'Abeille', '1'));
+                    $elogic->setObject_id($parameters_info['AbeilleParentId']);
                     $elogic->setEqType_name('Abeille');
 
                     // $objetDefSpecific = $AbeilleObjetDefinition[$value];
@@ -656,23 +667,23 @@
                             $_retain = 0;
                             log::add('Abeille', 'debug', 'Envoi du message '.$_message.' vers '.$_subject);
                             $publish = new Mosquitto\Client(
-                                config::byKey('AbeilleId', 'Abeille', 'Jeedom').'_pub_'.$_id
+                                $parameters_info['AbeilleConId'].'_pub_'.$_id
                             );
-                            if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
-                                $publish->setCredentials(
-                                    config::byKey('mqttUser', 'Abeille'),
-                                    config::byKey('mqttPass', 'Abeille')
-                                );
-                            }
+
+                            $publish->setCredentials(
+                                $parameters_info['AbeilleUser'],
+                                $parameters_info['AbeillePass']
+                            );
+
                             $publish->connect(
-                                config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
-                                config::byKey('AbeillePort', 'Abeille', '1883'),
+                                $parameters_info['AbeilleAddress'],
+                                $parameters_info['AbeillePort'],
                                 60
                             );
                             $publish->publish(
                                 $_subject,
                                 $_message,
-                                config::byKey('AbeilleQos', 'Abeille', '1'),
+                                $parameters_info['AbeilleQos'],
                                 $_retain
                             );
                             for ($i = 0; $i < 100; $i++) {
@@ -685,10 +696,10 @@
                     } else {
                         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
                         if (!is_object($cmdlogic)) {
-                            // Créons les commandes inconnues sur la base des commandes qu on recoit.
+                            // CrÃ©ons les commandes inconnues sur la base des commandes qu on recoit.
                             log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId);
-                            if (config::byKey('creationObjectMode', 'Abeille', 'Automatique') == "Semi Automatique") {
-                                // Crée la commande avec le peu d info que l on a
+                            if ($parameters_info['creationObjectMode'] == "Semi Automatique") {
+                                // CrÃ©e la commande avec le peu d info que l on a
                                 log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
                                 $cmdlogic = new AbeilleCmd();
                                 // id
@@ -772,22 +783,28 @@
         }
 
 
-        public static function publishMosquitto($_id, $_subject, $_message, $_retain)
-        {
+        public
+        static function publishMosquitto(
+            $_id,
+            $_subject,
+            $_message,
+            $_retain
+        ) {
+            $parameters_info = self::getParameters();
             log::add('Abeille', 'debug', 'Envoi du message '.$_message.' vers '.$_subject);
-            $publish = new Mosquitto\Client(config::byKey('AbeilleId', 'Abeille', 'Jeedom').'_pub_'.$_id);
-            if (config::byKey('mqttUser', 'Abeille', 'none') != 'none') {
-                $publish->setCredentials(
-                    config::byKey('mqttUser', 'Abeille'),
-                    config::byKey('mqttPass', 'Abeille')
-                );
-            }
+            $publish = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_'.$_id);
+
+            $publish->setCredentials(
+                $parameters_info['AbeilleUser'],
+                $parameters_info['AbeillePass']
+            );
+
             $publish->connect(
-                config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
-                config::byKey('AbeillePort', 'Abeille', '1883'),
+                $parameters_info['AbeilleAddress'],
+                $parameters_info['AbeillePort'],
                 60
             );
-            $publish->publish($_subject, $_message, config::byKey('AbeilleQos', 'Abeille', '1'), $_retain);
+            $publish->publish($_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
             for ($i = 0; $i < 100; $i++) {
                 // Loop around to permit the library to do its work
                 $publish->loop(1);
@@ -797,9 +814,12 @@
         }
 
 
-        public function createRuche($message = null)
-        {
+        public
+        function createRuche(
+            $message = null
+        ) {
             $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
+            $parameters_info = self::getParameters();
 
             if (is_object($elogic)) {
                 log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
@@ -821,7 +841,7 @@
             //id
             $elogic->setName("Ruche");
             $elogic->setLogicalId("Abeille/Ruche");
-            $elogic->setObject_id(config::byKey('AbeilleId', 'Abeille', '1'));
+            $elogic->setObject_id($parameters_info['AbeilleId']);
             $elogic->setEqType_name('Abeille');
             $elogic->setConfiguration('topic', "Abeille/Ruche");
             $elogic->setConfiguration('type', 'topic');
@@ -933,10 +953,10 @@
         }
     }
 
-    // Used for test
-    // en ligne de comande =>
-    // "php Abeille.class.php 1" to run the script to create an object
-    // "php Abeille.class.php" to parse the file and verify syntax issues.
+// Used for test
+// en ligne de comande =>
+// "php Abeille.class.php 1" to run the script to create an object
+// "php Abeille.class.php" to parse the file and verify syntax issues.
 
     if (isset($argv[1])) {
         $debugBEN = $argv[1];

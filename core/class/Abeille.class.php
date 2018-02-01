@@ -51,7 +51,7 @@
             $return['configuration'] = 'nok';
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (is_object($cron) && $cron->running()) {
-                $return['state'] = 'ok';
+                //$return['state'] = 'ok';
             }
             //deps ok ?
             $dependancy_info = self::dependancy_info();
@@ -61,7 +61,9 @@
                 log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
                 log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
                 $return['launchable'] = 'nok';
-                throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
+                //throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
+                $return['launchable_message']='Dépendances non installées, relancer l\'installation';
+                return $return;
             }
 
             //Parameters OK
@@ -117,6 +119,7 @@
             log::add('Abeille', 'debug', 'deamon_start: IN');
 
             self::deamon_stop();
+            sleep(5);
             $parameters_info = self::getParameters();
 
             //no need as it seems to be on cron
@@ -219,8 +222,8 @@
             exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' ' -f1", $output);
             foreach ($output as $item => $itemValue) {
                 log::add('Abeille', 'debug', 'deamon stop: Killing deamon: '.$item.'/'.$itemValue);
-                //exec(system::getCmdSudo().'kill '.$itemValue.' 2>&1');
                 system::kill($itemValue,true);
+                exec(system::getCmdSudo().'kill -9 '.$itemValue.' 2>&1');
             }
 
             // Stop main deamon
@@ -265,7 +268,9 @@
         {
             log::add('Abeille', 'info', 'Installation des dépéndances');
             log::remove(__CLASS__ . '_update');
-            return array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+            $result= array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+            if ($result['state']=='ok'){$result['launchable']='ok';}
+            return $result;
         }
 
         public static function deamon()

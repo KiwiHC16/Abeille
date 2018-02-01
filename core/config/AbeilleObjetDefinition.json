@@ -526,7 +526,11 @@
         "Type" : "info",
         "subType" : "numeric",
         "invertBinary" : "0",
-        "template" : "badge"
+        "template" : "badge",
+        "configuration" : {
+          "returnStateValue" : "0",
+          "returnStateTime" : "1"
+        }
       },
       "Time-Time" : {
         "name" : "Time-Time",
@@ -623,7 +627,11 @@
         "Type" : "info",
         "subType" : "numeric",
         "invertBinary" : "0",
-        "template" : "badge"
+        "template" : "badge",
+        "configuration" : {
+          "returnStateValue" : "0",
+          "returnStateTime" : "1"
+        }
       },
       "Time-Time" : {
         "name" : "Time-Time",

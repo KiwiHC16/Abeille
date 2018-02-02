@@ -44,18 +44,22 @@
 
         public static function deamon_info()
         {
+            log::add('Abeille', 'debug', '-');
             log::add('Abeille', 'debug', '**deamon info: IN**');
             $return = array();
             $return['log'] = 'Abeille_update';
             $return['state'] = 'nok';
             $return['configuration'] = 'nok';
+            
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (is_object($cron) && $cron->running()) {
                 //$return['state'] = 'ok';
+                log::add('Abeille', 'debug', 'deamon_info: J ai trouve le cron');
             }
             //deps ok ?
             $dependancy_info = self::dependancy_info();
             if ($dependancy_info['state'] == 'ok') {
+                log::add('Abeille', 'debug', 'deamon_info: les dependances sont Ok');
                 $return['launchable'] = 'ok';
             } else {
                 log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
@@ -69,6 +73,7 @@
             //Parameters OK
             $parameters_info = self::getParameters();
             if ( $parameters_info['state'] == 'ok'){
+                log::add('Abeille', 'debug', 'deamon_info: J ai les parametres');
                 $return['launchable'] = 'ok';
             }
             else {
@@ -81,11 +86,12 @@
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected=3; // no sudo to run deamon
             exec(
-                "ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' '  -f1",
+                "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d ';'  -f 1 | wc -l",
                 $output
             );
-            log::add('Abeille', 'debug', 'deamon_info: implode output '.implode(" xx ", $output));
-            $nbProcess = $output != '' ? sizeof($output) : "0";
+            
+            log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output[0] );
+            $nbProcess = $output[0];
 
             if ($nbProcess < $nbProcessExpected) {
                 log::add(
@@ -105,6 +111,17 @@
                 $return['state'] = 'nok';
                 self::deamon_stop();
             }
+            
+            if ($nbProcess == $nbProcessExpected) {
+                log::add(
+                         'Abeille',
+                         'Info',
+                         'deamon_info: '.$nbProcess.'/'.$nbProcessExpected.' running, c est ce qu on veut.'
+                         );
+                $return['state'] = 'ok';
+            }
+
+            
             log::add(
                 'Abeille',
                 'debug',
@@ -219,7 +236,7 @@
         {
             log::add('Abeille', 'debug', 'deamon stop: IN');
             // Stop other deamon
-            exec("ps -eo pid,args --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d' ' -f1", $output);
+            exec("ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d ';'  -f 1", $output);
             foreach ($output as $item => $itemValue) {
                 log::add('Abeille', 'debug', 'deamon stop: Killing deamon: '.$item.'/'.$itemValue);
                 system::kill($itemValue,true);

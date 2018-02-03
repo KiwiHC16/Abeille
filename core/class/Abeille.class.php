@@ -199,15 +199,13 @@
             $parameters_info = self::getParameters();
 
             $deamon1 = "AbeilleSerialRead.php";
-            $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.time();
+            $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
             $deamon2 = "AbeilleParser.php";
             $paramdeamon2 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
-                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
-                );
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
             $deamon3 = "AbeilleMQTTCmd.php";
             $paramdeamon3 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
-                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.time(
-                );
+                ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
             $log1 = " > /var/www/html/log/".substr($deamon1, 0, (strrpos($deamon1, ".")));;
             $log2 = " > /var/www/html/log/".substr($deamon2, 0, (strrpos($deamon2, ".")));;
             $log3 = " > /var/www/html/log/".substr($deamon3, 0, (strrpos($deamon3, ".")));;
@@ -278,15 +276,17 @@
                 );
 
             }
+            log::add('Abeille', 'debug', 'dependancy_info: '.$return['state']);
             return $return;
         }
 
         public static function dependancy_install()
         {
-            log::add('Abeille', 'info', 'Installation des dépéndances');
+            log::add('Abeille', 'debug', 'Installation des dépendances: IN');
             log::remove(__CLASS__ . '_update');
             $result= array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
             if ($result['state']=='ok'){$result['launchable']='ok';}
+            log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result,' X '));
             return $result;
         }
 

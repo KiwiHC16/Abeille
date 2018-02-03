@@ -3,6 +3,29 @@
 
     include("includes/config.php");
     include("includes/fifo.php");
+    include("lib/Tools.php");
+
+
+  function getNumberFromLeve($loglevel){
+        if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
+        if (strcasecmp($loglevel,"ERROR")==0){$iloglevel=1;}
+        if (strcasecmp($loglevel,"WARNING")==0){$iloglevel=2;}
+        if (strcasecmp($loglevel,"INFO")==0){$iloglevel=3;}
+        if (strcasecmp($loglevel,"DEBUG")==0){$iloglevel=4;}
+        return $iloglevel;
+    }
+
+    /***
+     * if loglevel is lower/equal than the app requested level then message is written
+     *
+     * @param string $loglevel
+     * @param string $message
+     */
+    function deamonlog($loglevel='NONE',$message =''){
+        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
+            fwrite(STDOUT, 'AbeilleSerialRead: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+        }
+    }
 
     function _exec($cmd, &$out = null)
     {
@@ -30,27 +53,26 @@
 
     /* -------------------------------------------------------------------- */
 
-    $serial = $argv[1];
 
-    //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: Demarrage de AbeilleSerial');
-    echo 'AbeilleSerialRead: Demarrage de AbeilleSerial\n';
+    $serial = $argv[1];
+    $requestedlevel=$argv[2];
+    $requestedlevel=''?'none':$argv[2];
+    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+
+    deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
-        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
-        echo 'AbeilleSerialRead main: debug for com file: '.$serial."\n";
+        deamonlog('info', 'Main: debug for com file: '.$serial);
         exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
 
     if (!file_exists($serial)) {
-        //log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Error: Fichier '.$serial.' n existe pas');
-        echo 'AbeilleSerialRead: Error: Fichier '.$serial.' n existe pas\n';
+        deamonlog('error','AbeilleSerialRead: Error: Fichier '.$serial.' n existe pas');
         exit(1);
     }
 
-    //log::add('AbeilleSerialRead', 'info', 'AbeilleSerial: Serial port used: '.$serial);
-    echo 'AbeilleSerialRead', 'info', 'AbeilleSerial: Serial port used: '.$serial."\n";
 
     $fifoIN = new fifo($in, 'w+');
 
@@ -72,8 +94,7 @@
 
     while (true) {
         if (!file_exists($serial)) {
-            //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: CRITICAL Fichier '.$serial." n existe pas");
-            echo 'AbeilleSerialRead: CRITICAL Fichier '.$serial." n existe pas\n";
+            deamonlog('error','CRITICAL Fichier '.$serial.' n existe pas');
             exit(1);
         }
 
@@ -84,9 +105,7 @@
             $trame = "";
         } else {
             if ($car == "03") {
-                // echo date("Y-m-d H:i:s")." -> ".$trame."\n";
-                //log::add('AbeilleSerialRead', 'debug', 'AbeilleSerial: '.date("Y-m-d H:i:s")." -> ".$trame);
-                echo 'AbeilleSerialRead: '.date("Y-m-d H:i:s")." -> ".$trame."\n";
+                deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
                 $fifoIN->write($trame."\n");
             } else {
                 if ($car == "02") {
@@ -109,7 +128,6 @@
     fclose($f);
     $fifoIN->close();
 
-    //log::add('AbeilleSerialRead', 'error', 'AbeilleSerial: Fin script AbeilleSerial');
-    echo 'AbeilleSerial: Fin script AbeilleSerial\n';
+    deamonlog('error','Fin script AbeilleSerial');
 
 ?>

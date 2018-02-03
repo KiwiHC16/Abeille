@@ -6,18 +6,37 @@
     include("lib/phpMQTT.php");
     include (dirname(__FILE__).'/includes/config.php');
 
+    function getNumberFromLeve($loglevel){
+        if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
+        if (strcasecmp($loglevel,"ERROR")==0){$iloglevel=1;}
+        if (strcasecmp($loglevel,"WARNING")==0){$iloglevel=2;}
+        if (strcasecmp($loglevel,"INFO")==0){$iloglevel=3;}
+        if (strcasecmp($loglevel,"DEBUG")==0){$iloglevel=4;}
+        return $iloglevel;
+    }
+
+    /***
+     * if loglevel is lower/equal than the app requested level then message is written
+     *
+     * @param string $loglevel
+     * @param string $message
+     */
+    function deamonlog($loglevel='NONE',$message =''){
+        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
+            fwrite(STDOUT, 'AbeilleMQTTC: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+        }
+    }
+
+
     function procmsg($topic, $msg)
     {
         global $dest;
 
-        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
-        echo 'AbeilleMQTTC, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n';
+        deamonlog('info','Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
 
-        // list($type, $address, $action) = split('[/.-]', $topic); split ne fonctionne plus avec php 7
         list($type, $address, $action) = explode('/', $topic);
-        //
-        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT, Type: '.$type.'Address: '.$address.'Action: '.$action);
-        echo 'AbeilleMQTTC, Type: '.$type.'Address: '.$address.'Action: '.$action;
+
+        deamonlog('debug', 'Type: '.$type.'Address: '.$address.'Action: '.$action);
 
         if ($type == "CmdAbeille") {
             if ($action == "Annonce") {
@@ -70,14 +89,12 @@
                     "duration" => $keywords[3],
                 );
             } else {
-                //log::add('AbeilleMQTTC', 'warning', 'AbeilleMQTT, command unknown: '.$action);
-                echo 'AbeilleMQTT, command unknown: '.$action;
+                deamonlog('warning','AbeilleMQTT, command unknown: '.$action);
             }
 
 
             /*---------------------------------------------------------*/
             if ($address == "Ruche") {
-                // msg est une string simple ou  msg de la forme des parametre d un get http parma1=xxx&param2=yyy&param3=zzzz
                 $keywords = preg_split("/[=&]+/", $msg);
 
                 // Si une string simple
@@ -86,8 +103,7 @@
                 } // Si une command type get htt
                 else {
                     if (count($keywords) == 4) {
-                        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,4 arguments command');
-                        echo 'AbeilleMQTTC, 4 arguments command';
+                        deamonlog('debug', 'AbeilleMQTTC, 4 arguments command');
                         $Command = array(
                             $action => $action,
                             $keywords[0] => $keywords[1],
@@ -95,8 +111,7 @@
                         );
                     }
                     if (count($keywords) == 6) {
-                        //log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTT,6 arguments command');
-                        echo 'AbeilleMQTTC, 6 arguments command';
+                        deamonlog('debug', 'AbeilleMQTTC, 6 arguments command');
                         $Command = array(
                             $action => $action,
                             $keywords[0] => $keywords[1],
@@ -113,8 +128,7 @@
             // print_r( $Command );
             processCmd($dest, $Command);
         } else {
-            //log::add('Abeille','warning','AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.');
-            echo 'AbeilleMQTT, Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.';
+            deamonlog('warning', 'Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.');
         }
     }
 
@@ -130,16 +144,16 @@
     $client_id = "AbeilleMQTTCmd"; // make sure this is unique for connecting to sever - you could use uniqid()
     $qos=$argv[6];
     $mqtt = new phpMQTT($server, $port, $client_id);
+    $requestedlevel=$argv[7];
+    $requestedlevel=''?'none':$argv[7];
 
     if ($dest=='none'){
         $dest=$resourcePath.'/COM';
-        //log::add('AbeilleMQTTC','debug','AbeilleMQTTC main: debug for com file: '.$dest);
-        echo 'AbeilleMQTTCmd main: debug for com file: '.$dest;
+        deamonlog('info', 'AbeilleMQTTCmd main: debug for com file: '.$dest);
         exec(system::getCmdSudo().'touch '.$dest.'chmod 777 '.$dest.' > /dev/null 2>&1');
         }
 
-    //log::add('AbeilleMQTTCmd', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
-    echo 'AbeilleMQTTCmd main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos;
+    deamonlog('info', 'Main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
 
     if (!$mqtt->connect(true, null, $username, $password)) {
         exit(1);
@@ -154,6 +168,8 @@
     }
 
     $mqtt->close();
+
+    deamonlog('info','Fin du script');
 
 
 ?>

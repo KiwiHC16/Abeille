@@ -1,11 +1,34 @@
 <?php
+
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     
     include("includes/config.php");
     include("includes/fifo.php");
-
     include("lib/phpMQTT.php");
     include("lib/Tools.php");
+
+    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+
+    function getNumberFromLeve($loglevel){
+        if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
+        if (strcasecmp($loglevel,"ERROR")==0){$iloglevel=1;}
+        if (strcasecmp($loglevel,"WARNING")==0){$iloglevel=2;}
+        if (strcasecmp($loglevel,"INFO")==0){$iloglevel=3;}
+        if (strcasecmp($loglevel,"DEBUG")==0){$iloglevel=4;}
+        return $iloglevel;
+    }
+
+    /***
+     * if loglevel is lower/equal than the app requested level then message is written
+     *
+     * @param string $loglevel
+     * @param string $message
+     */
+    function deamonlog($loglevel='NONE',$message =''){
+        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
+            fwrite(STDOUT, 'AbeilleParser: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+        }
+    }
 
     function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data)
     {
@@ -16,8 +39,7 @@
             $mqtt->publish( "Abeille/" .$SrcAddr . "/" . "Time"     . "-" . "Time",         date("Y-m-d H:i:s"),    0 );
             $mqtt->close();
         } else {
-            echo "Time out!\n";
-            log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
+            deamonlog('WARNING','Time out!');
         }
     }
 
@@ -28,8 +50,7 @@
             $mqtt->publish( "CmdAbeille/" .$SrcAddr . "/Annonce",    $data, 0 );
             $mqtt->close();
         } else {
-            echo "Time out!\n";
-            log::add('Abeille', 'debug', 'AbeilleParser: Time out!' );
+            deamonlog('Time out!');
         }
     }
 
@@ -39,55 +60,25 @@
         for ($i = 0; $i < strlen($hex); $i += 2) {
             $str .= chr(hexdec(substr($hex, $i, 2)));
         }
-
         return $str;
     }
 
     function displayClusterId($cluster)
     {
-        $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
-
-        /*$clusterTab["0000"] = " (General: Basic)";
-        $clusterTab["0001"] = " (General: Power Config)";
-        $clusterTab["0002"] = " (General: Temperature Config)";
-        $clusterTab["0003"] = " (General: Identify)";
-        $clusterTab["0004"] = " (General: Groups)";
-        $clusterTab["0005"] = " (General: Scenes)";
-        $clusterTab["0006"] = " (General: On/Off)";
-        $clusterTab["0007"] = " (General: On/Off Config)";
-        $clusterTab["0008"] = " (General: Level Control)";
-        $clusterTab["0009"] = " (General: Alarms)";
-        $clusterTab["000A"] = " (General: Time)";
-        $clusterTab["000F"] = " (General: Binary Input Basic)";
-        $clusterTab["0020"] = " (General: Poll Control)";
-        $clusterTab["0019"] = " (General: OTA)";
-        $clusterTab["0101"] = " (General: Door Lock";
-        $clusterTab["0201"] = " (HVAC: Thermostat)";
-        $clusterTab["0202"] = " (HVAC: Fan Control)";
-        $clusterTab["0300"] = " (Lighting: Color Control)";
-        $clusterTab["0400"] = " (Measurement: Illuminance)";
-        $clusterTab["0402"] = " (Measurement: Temperature)";
-        $clusterTab["0406"] = " (Measurement: Occupancy Sensing)";
-        $clusterTab["0500"] = " (Security & Safety: IAS Zone)";
-        $clusterTab["0702"] = " (Smart Energy: Metering)";
-        $clusterTab["0B05"] = " (Misc: Diagnostics)";
-        $clusterTab["1000"] = " (ZLL: Commissioning)";
-        */
-        log::add('AbeilleParser', 'debug', 'AbeilleParser: Cluster ID: '.$cluster.'- '.$clusterTab[$cluster]);
-
+        deamonlog('debug','Cluster ID: '.$cluster.'- '.$GLOBALS['clusterTab'][$cluster]);
     }
 
     function displayStatus($status)
     {
         switch ($status)
         {
-            case "00": { echo "(Success)"."\n";                 } break;
-            case "01": { echo "(Incorrect Parameters)"."\n";    } break;
-            case "02": { echo "(Unhandled Command)"."\n";       } break;
-            case "03": { echo "(Command Failed)"."\n";          } break;
-            case "04": { echo "(Busy)"."\n";                    } break;
-            case "05": { echo "(Stack Already Started)"."\n";   } break;
-            default:   { echo "(ZigBee Error Code)"."\n";       } break;
+            case "00": { deamonlog('debug','00-(Success)');                 } break;
+            case "01": { deamonlog('debug','01-(Incorrect Parameters)');    } break;
+            case "02": { deamonlog('debug','02-(Unhandled Command)');       } break;
+            case "03": { deamonlog('debug','03-(Command Failed)');          } break;
+            case "04": { deamonlog('debug','04-(Busy)');                    } break;
+            case "05": { deamonlog('debug','05-(Stack Already Started)');   } break;
+            default:   { deamonlog('debug','(ZigBee Error Code)');       } break;
         }
     }
 
@@ -102,15 +93,12 @@
     {
         $tab="";
         $length=strlen($datas);
-        log::add('Abeille', 'debug', 'AbeilleParser: -----------------------' );
-        echo "\n-------------- ".date("Y-m-d H:i:s")."\n";
-        log::add('Abeille', 'debug', 'AbeilleParser: protocolData' );
-        echo "protocolDatas\n";
-        
+        deamonlog('info','-------------- '.date("Y-m-d H:i:s").': protocolData' );
+
         //Pourquoi 12, je ne sais pas.
         if ($length>=12)
         {
-            echo "message > 12 char\n";
+            deamonlog('debug','message > 12 char');
             $crctmp = 0;
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
@@ -133,14 +121,12 @@
             //verification du CRC
             //if ($crc == dechex($crctmp))
             if (1) {
-                echo "Type: ".$type."\n";
-                log::add('AbeilleParser', 'debug', 'AbeilleParser:Type: '.$type);
+                deamonlog('debug','Type: '.$type.' quality: '.$quality);
                 //Traitement PAYLOAD
                 switch ($type) {
 
                     case "004d" :
-                        echo "\ntype: 004d (Device announce)(Processed->MQTT)\n";
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 004d (Device annouce)(Processed->MQTT)');
+                        deamonlog('debug','type: 004d (Device announce)(Processed->MQTT)');
                         // < short address: uint16_t>
                         // < IEEE address: uint64_t>
                         // < MAC capability: uint8_t> MAC capability
@@ -154,10 +140,10 @@
                         // Bit 7 - Allocate Address             => 128 no
                         $test = 2 + 4 + 8;
                         
-                        echo "Src Addr : ".substr($payload,0,4)."\n";
-                        echo "IEEE : ".substr($payload,4,16)."\n";
-                        echo "MAC capa : ".substr($payload,20,2)."\n";
-                        // echo "Quality : ".$quality;
+                        deamonlog('debug','Src Addr : '.substr($payload,0,4));
+                        deamonlog('debug','IEEE : '.substr($payload,4,16));
+                        deamonlog('debug','MAC capa : '.substr($payload,20,2));
+                        deamonlog('debug','Quality : '.$quality);
                         $SrcAddr = substr($payload,0,4);
                         $IEEE = substr($payload,4,16);
                         $capability = substr($payload,20,2);
@@ -167,54 +153,44 @@
 
                         // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
                         if ((hexdec($capability) & $test) == 14) {
-                            $data = "Annonce";
+                            $data = 'Annonce';
                             mqqtPublishAnnounce($mqtt, $SrcAddr, $data);
                         }
                         break;
 
                     case "8000" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8000 (Status)(Not Processed)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: Length: '.hexdec($ln));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: Status: '.substr($payload, 0, 2).'-'.
+                        deamonlog('debug','type: 8000 (Status)(Not Processed)');
+                        deamonlog('debug','Length: '.hexdec($ln));
+                        deamonlog('debug','Status: '.substr($payload, 0, 2).'-'.
                         displayStatus(substr($payload, 0, 2)));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: SQN: '.substr($payload, 2, 2));
-                        /*
-                         if (hexdec(substr($payload,0,2)) > 2)
-                         {
-                         log::add('AbeilleParser', 'debug', 'AbeilleParser: Message: '.hex2str(substr($payload,8,strlen($payload)-2)));
-                         }
-                         */
+                        deamonlog('debug','SQN: '.substr($payload, 2, 2));
+
                         break;
 
                     case "8001" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8001' );
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: (Log)(Not Processed)' );
-                        echo "\ntype: 8001";
-                        echo " (Log)(Not processed*************************************************************)";
-                        echo  "\n";
-                        echo "  Level: 0x".substr($payload,0,2);
-                        echo "\n"	;
-                        echo  "  Message: ";
-                        echo hex2str(substr($payload,2,strlen($payload)-2))."\n";
+                        deamonlog('debug','type: 8001: (Log)(Not Processed)' );
+                        deamonlog('debug',' (Not processed*************************************************************)');
+                        deamonlog('debug','  Level: 0x'.substr($payload,0,2));
+                        deamonlog('debug','Message: ');
+                        deamonlog(hex2str(substr($payload,2,strlen($payload)-2)));
                         break;
 
                     case "8010" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8010 (Version)(Processed->MQTT)');
-                        echo "(Version)(Processed->MQTT)\n";
-                        echo "Application : ".hexdec(substr($payload,0,4))."\n";
-                        echo "SDK : ".hexdec(substr($payload,4,4))."\n";
+                        deamonlog('debug','type: 8010 (Version)(Processed->MQTT)');
+                        deamonlog('debug','Application : ".hexdec(substr($payload,0,4))');
+                        deamonlog('debug','SDK : ".hexdec(substr($payload,4,4))');
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "Application";
                         $data = substr($payload, 0, 4);
-                        log::add('AbeilleParser','debug','AbeilleParser: '.$AttributId.': '.$data);
+                        deamonlog('debug',$AttributId.': '.$data);
                         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
 
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "SDK";
                         $data = substr($payload, 4, 4);
-                        log::add('AbeilleParser','debug','AbeilleParser: '.$AttributId.': '.$data);
+                        deamonlog('debug',$AttributId.': '.$data);
                         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
                         break;
 
@@ -239,30 +215,20 @@
                         // 32 553c  000B57fffe3025ad 01     9f
                         // 00 -> Pourquoi 00 ?
                         
-                        
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8015 (Abeille List)(Processed->MQTT)' );
-                        echo "(Abeille List)(Processed->MQTT) Payload: ".$payload."\n";
+                        deamonlog('debug','type: 8015 (Abeille List)(Processed->MQTT) Payload: ".$payload');
                         
                         $nb = (strlen( $payload )-2)/26;
-                        echo "Nombre d'abeilles: ".$nb."\n";
+                        deamonlog('debug','Nombre d\'abeilles: ".$nb');
                         
                         for ($i=0;$i<$nb;$i++)
                         {
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Abeille i: '.$i);
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:ID : '.substr($payload, $i * 26 + 0, 2));
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Addr : '.substr($payload, $i * 26 + 2, 4));
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:IEEE Addr: '.substr($payload, $i * 26 + 6, 16));
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Power Source (0:battery - 1:AC): '.substr($payload, $i * 26 + 22, 2));
-                            log::add('AbeilleParser', 'debug', 'AbeilleParser:Link Quality: '.hexdec(substr($payload, $i * 26 + 24, 2)));
+                            deamonlog('debug','Abeille i: '.$i);
+                            deamonlog('debug','ID : '                            .substr($payload,$i*26+ 0, 2));
+                            deamonlog('debug','Short Addr : '                    .substr($payload,$i*26+ 2, 4));
+                            deamonlog('debug','IEEE Addr: '                      .substr($payload,$i*26+ 6,16));
+                            deamonlog('debug','Power Source (0:battery - 1:AC): '.substr($payload,$i*26+22, 2));
+                            deamonlog('debug','Link Quality: '                   .hexdec(substr($payload,$i*26+24, 2)));
 
-                            echo "Abeille i: ".$i."\n";
-                            echo "ID : "                            .substr($payload,$i*26+ 0, 2)."\n";
-                            echo "Short Addr : "                    .substr($payload,$i*26+ 2, 4)."\n";
-                            echo "IEEE Addr: "                      .substr($payload,$i*26+ 6,16)."\n";
-                            echo "Power Source (0:battery - 1:AC): ".substr($payload,$i*26+22, 2)."\n";
-                            echo "Link Quality: "                   .hexdec(substr($payload,$i*26+24, 2))."\n";
-                            echo "\n";
-                            
                             $SrcAddr = substr($payload,$i*26+ 2, 4);
                             
                             // Envoie IEEE
@@ -283,86 +249,77 @@
                             $data = hexdec(substr($payload,$i*26+24, 2));
                             mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
                             
-                            
                         }
 
                         break;
 
                     case "8043" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8043 (Simple Descriptor Response)(Not Processed)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 2, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Address : '.substr($payload, 4, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Length : '.substr($payload, 8, 2));
-                        echo "\ntype: 8043";
-                        echo "(Simple Descriptor Response)(Not processed)\n";
-                        echo "SQN : ".substr($payload,0,2)."\n";
-                        echo "Status : ".substr($payload,2,2)."\n";
-                        echo "Short Address : ".substr($payload,4,4)."\n";
-                        echo "Length : ".substr($payload,8,2)."\n";
+
+                        deamonlog('debug','type: 8043 (Simple Descriptor Response)(Not Processed)');
+                        deamonlog('debug','SQN : '.substr($payload, 0, 2));
+                        deamonlog('debug','Status : '.substr($payload, 2, 2));
+                        deamonlog('debug','Short Address : '.substr($payload, 4, 4));
+                        deamonlog('debug','Length : '.substr($payload, 8, 2));
                         if (intval(substr($payload,8,2))>0)
                         {
-                            echo "Endpoint : ".substr($payload,10,2)."\n";
+                            deamonlog('debug','Endpoint : ".substr($payload,10,2)');
                             
                             //PAS FINI
                         }
                         break;
 
                     case "8045" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8045 (Active Endpoints Response)(Not Processed)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 2, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Short Address : '.substr($payload, 4, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Endpoint Count : '.substr($payload, 8, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Endpoint List :');
-                        echo "\ntype: 8045";
-                        echo "(Active Endpoints Response)(Not processed)\n";
-                        echo "SQN : ".substr($payload,0,2)."\n";
-                        echo "Status : ".substr($payload,2,2)."\n";
-                        echo "Short Address : ".substr($payload,4,4)."\n";
-                        echo "Endpoint Count : ".substr($payload,8,2)."\n";
-                        echo "Endpoint List :" ."\n";
+                        
+                        deamonlog('debug','type: 8045 (Active Endpoints Response)(Not Processed)');
+                        deamonlog('debug','SQN : '.substr($payload, 0, 2));
+                        deamonlog('debug','Status : '.substr($payload, 2, 2));
+                        deamonlog('debug','Short Address : '.substr($payload, 4, 4));
+                        deamonlog('debug','Endpoint Count : '.substr($payload, 8, 2));
+                        deamonlog('debug','Endpoint List :');
                         for ($i = 0; $i < (intval(substr($payload,8,2)) *2); $i+=2)
                         {
-                            echo "Endpoint : ".substr($payload,(8+$i),2)."\n";
+                            deamonlog('debug','Endpoint : ".substr($payload,(8+$i),2)');
                         }
                         break;
 
                     case "8048":
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8048 (Leave Indication)(Not Processed)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:extended addr : '.substr($payload, 0, 16));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:rejoin status : '.substr($payload, 16, 2));
-                        echo "(Leave Indication)\n";
-                        echo "extended addr : ".substr($payload,0,16)."\n";
-                        echo "rejoin status : ".substr($payload,16,2)."\n";
+                        
+                        deamonlog('debug',' type: 8048 (Leave Indication)(Not Processed)');
+                        deamonlog('debug','extended addr : '.substr($payload, 0, 16));
+                        deamonlog('debug','rejoin status : '.substr($payload, 16, 2));
+                        
                         break;
 
                     case "8100": // "Type: 0x8100 (Read Attrib Response)"
                         // 8100 000D0C0Cb32801000600000010000101
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN: : '.substr($payload, 0, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Src Addr: : '.substr($payload, 2, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:EnPt: '.substr($payload, 6, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Cluster Id: '.substr($payload, 8, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribut Id: '.substr($payload, 12, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribute Status: '.substr($payload, 16, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Attribute data type: '.substr($payload, 18, 2));
-                        echo "\ntype: 8100\n";
-                        echo "Type: 0x8100 (Read Attrib Response)(Processed->MQTT)\n";
-                        echo "SQN: : ".substr($payload,0,2)."\n";
-                        echo "Src Addr: : ".substr($payload,2,4)."\n";
-                        echo "EnPt: ".substr($payload,6,2)."\n";
-                        echo "Cluster Id: ".substr($payload,8,4)."\n";
-                        echo "Attribut Id: ".substr($payload,12,4)."\n";
-                        echo "Attribute Status: ".substr($payload,16,2)."\n";
-                        echo "Attribute data type: ".substr($payload,18,2)."\n";
+                        /*
+                        deamonlog('Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
+                        deamonlog('SQN: : '.substr($payload, 0, 2));
+                        deamonlog('Src Addr: : '.substr($payload, 2, 4));
+                        deamonlog('EnPt: '.substr($payload, 6, 2));
+                        deamonlog('Cluster Id: '.substr($payload, 8, 4));
+                        deamonlog('Attribut Id: '.substr($payload, 12, 4));
+                        deamonlog('Attribute Status: '.substr($payload, 16, 2));
+                        deamonlog('Attribute data type: '.substr($payload, 18, 2));
+                        */
+                        deamonlog('debug','type: 8100');
+                        deamonlog('debug','Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
+                        deamonlog('debug','SQN: : ".substr($payload,0,2)');
+                        deamonlog('debug','Src Addr: : ".substr($payload,2,4)');
+                        deamonlog('debug','EnPt: ".substr($payload,6,2)');
+                        deamonlog('debug','Cluster Id: ".substr($payload,8,4)');
+                        deamonlog('debug','Attribut Id: ".substr($payload,12,4)');
+                        deamonlog('debug','Attribute Status: ".substr($payload,16,2)');
+                        deamonlog('debug','Attribute data type: ".substr($payload,18,2)');
                         $dataType = substr($payload,18,2);
                         // IKEA OnOff state reply data type: 10
                         // IKEA Manufecturer name data type: 42
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Syze of Attribute: '.substr($payload, 20, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
-                        echo "Syze of Attribute: ".substr($payload,20,4)."\n";
-                        echo "Data byte list (one octet pour l instant): ".substr($payload,24,2)."\n";
+                        /*
+                        deamonlog('Syze of Attribute: '.substr($payload, 20, 4));
+                        deamonlog('Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
+                        */
+                        deamonlog('debug','Syze of Attribute: ".substr($payload,20,4)');
+                        deamonlog('debug','Data byte list (one octet pour l instant): ".substr($payload,24,2)');
                         
                         // short addr / Cluster ID / Attr ID -> data
                         $SrcAddr = substr($payload, 2, 4);
@@ -391,38 +348,29 @@
                         if ($dataType == "42") {
                             $data = hex2bin(substr($payload, 24, (strlen($payload) - 24)));
                         }
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Data byte: '.$data);
-                        echo "Data byte: ".$data."\n";
+                        //deamonlog('Data byte: '.$data);
+                        deamonlog('Data byte: ".$data');
                         
                         mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
                         
                         break;
 
                     case "8101" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8101 (Default Response)(Not Processed)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:SQN : '.substr($payload, 0, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:EndPoint : '.substr($payload, 2, 2));
+
+                        deamonlog('debug',' type: 8101 (Default Response)(Not Processed)');
+                        deamonlog('debug','Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.');
+                        deamonlog('debug','SQN : '.substr($payload, 0, 2));
+                        deamonlog('debug','EndPoint : '.substr($payload, 2, 2));
                         displayClusterId(substr($payload, 4, 4));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Command : '.substr($payload, 8, 2));
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:Status : '.substr($payload, 10, 2));
-                        echo "\ntype: 8101";
-                        echo "(Default Response)(Not processed)\n";
-                        echo "Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.\n";
-                        echo "SQN : ".substr($payload,0,2)."\n";
-                        echo "EndPoint : ".substr($payload,2,2)."\n";
-                        displayClusterId(substr($payload,4,4));
-                        echo "Command : ".substr($payload,8,2)."\n";
-                        echo "Status : ".substr($payload,10,2)."\n";
+                        deamonlog('debug','Command : '.substr($payload, 8, 2));
+                        deamonlog('debug','Status : '.substr($payload, 10, 2));
                         break;
 
                     case "8102" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8102 (Attribut Report)(Processed->MQTT)');
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser:['.date('Y-m-d H:i:s').']');
-                        echo "\ntype: 8102\n";
-                        echo "[".date("Y-m-d H:i:s")."]\n";
-                        echo "(Attribute Report)(Processed->MQTT)\n";
-                        
+
+                        deamonlog('debug',' type: 8102 (Attribut Report)(Processed->MQTT)');
+                        deamonlog('debug','['.date('Y-m-d H:i:s').']');
+
                         //<Sequence number: uint8_t>
                         //<Src address : uint16_t>
                         //<Endpoint: uint8_t>
@@ -432,15 +380,23 @@
                         //<Attribute data type: uint8_t>
                         //<Size Of the attributes in bytes: uint16_t>
                         //<Data byte list : stream of uint8_t>
-                        echo "SQN: "            .substr($payload,0,2)."\n";
-                        echo "Src Addr : "      .substr($payload,2,4)."\n";     $SrcAddr = substr($payload,2,4);
-                        echo "End Point : "     .substr($payload,6,2)."\n";
-                        echo "Cluster ID : "    .substr($payload,8,4)."\n";     $ClusterId = substr($payload,8,4);
-                        echo "Attr ID : "       .substr($payload,12,4)."\n";    $AttributId = substr($payload,12,4);
-                        echo "Attr Status : "   .substr($payload,16,2)."\n";
-                        echo "Attr Data Type : ".substr($payload,18,2)."\n";    $dataType = substr($payload,18,2);
-                        echo "Attr Size : "     .substr($payload,20,4)."\n";    $AttributSize = substr($payload,20,4);
-                        echo "Data byte list : ".substr($payload,24,(strlen($payload)-24-2))."\n";
+                        $SQN=substr($payload,0,2);
+                        $SrcAddr = substr($payload,2,4);
+                        deamonlog('debug','SQN: '            .$SQN);
+                        deamonlog('debug','Src Addr : '      .$SrcAddr);
+                        $ClusterId = substr($payload,8,4);
+                        $EPoint=substr($payload,6,2);
+                        $AttributId = substr($payload,12,4);
+                        $AttributStatus=substr($payload,16,2);
+                        $dataType = substr($payload,18,2);
+                        $AttributSize = substr($payload,20,4);
+                        deamonlog('debug','End Point : '     .$EPoint);
+                        deamonlog('debug','Cluster ID : '.$ClusterId);
+                        deamonlog('debug','Attr ID : '       .$AttributId);
+                        deamonlog('debug','Attr Status : '   .$AttributStatus);
+                        deamonlog('debug','Attr Data Type : '.$dataType);
+                        deamonlog('debug','Attr Size : '     .$AttributSize);
+                        deamonlog('debug','Data byte list : '.substr($payload,24,(strlen($payload)-24-2)));
                         
                         // valeur hexadécimale	- type -> function
                         // 0x00	Null
@@ -478,14 +434,14 @@
                             // Xiaomi capteur temperature rond
                             if ( ($AttributId=="ff01") && ($AttributSize=="001f") )
                             {
-                                echo "Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Rond)\n";
+                                deamonlog('debug','Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Rond)');
                                 $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2));
                                 $temperature    = hexdec(substr($payload,24+21*2+2,2).substr($payload,24+21*2,2));
                                 $humidity       = hexdec(substr($payload,24+25*2+2,2).substr($payload,24+25*2,2));
                                 
-                                echo "Voltage: "        .$voltage."\n";
-                                echo "Temperature: "    .$temperature."\n";
-                                echo "Humidity: "       .$humidity."\n";
+                                deamonlog('debug','Voltage: "        .$voltage');
+                                deamonlog('debug','Temperature: "    .$temperature');
+                                deamonlog('debug','Humidity: "       .$humidity');
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
                                 mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage        );
@@ -502,16 +458,16 @@
                             // Xiaomi capteur temperature carré
                             elseif ( ($AttributId=="ff01") && ($AttributSize=="0025") )
                             {
-                                echo "Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)\n";
+                                deamonlog('debug','Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)');
                                 $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2));
                                 $temperature    = hexdec(substr($payload,24+21*2+2,2).substr($payload,24+21*2,2));
                                 $humidity       = hexdec(substr($payload,24+25*2+2,2).substr($payload,24+25*2,2));
                                 $pression       = hexdec(substr($payload,24+29*2+6,2).substr($payload,24+29*2+4,2).substr($payload,24+29*2+2,2).substr($payload,24+29*2,2));
                                 
-                                echo "Voltage: "        .$voltage."\n";
-                                echo "Temperature: "    .$temperature."\n";
-                                echo "Humidity: "       .$humidity."\n";
-                                echo "Pression: "       .$pression."\n";
+                                deamonlog('debug','Voltage: '        .$voltage);
+                                deamonlog('debug','Temperature: '    .$temperature);
+                                deamonlog('debug','Humidity: '       .$humidity);
+                                deamonlog('debug','Pression: '       .$pression);
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
                                 mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage );
@@ -530,22 +486,22 @@
                             
                             // Xiaomi Door Sensor
                             elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") ) {
-                                echo "Le door sensor envoie un pacquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....";
+                                deamonlog('debug','Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....');
                             }
                             
                             // Xiaomi Wall Plug
                             elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") )
                             {
-                                echo "Champ proprietaire Xiaomi, doit etre decodé (Wall Plug)\n";
+                                deamonlog('debug','Champ proprietaire Xiaomi, doit etre decodé (Wall Plug)');
                                 $onOff        = hexdec(substr($payload,24+ 2*2,2));
-                                echo "Puissance: ".    substr($payload,24+ 8*2,8)."\n";
+                                deamonlog('debug','Puissance: '.    substr($payload,24+ 8*2,8));
                                 $puissance    = unpack("f",pack('H*',substr($payload,24+ 8*2,8))); $puissanceValue = $puissance[1];
-                                echo "Conso: ".        substr($payload,24+14*2,8)."\n";
+                                deamonlog('debug','Conso: '.        substr($payload,24+14*2,8));
                                 $conso        = unpack("f",pack('H*',substr($payload,24+14*2,8))); $consoValue = $conso[1];
                                 
-                                echo "OnOff: "          .$onOff     ."\n";
-                                echo "Puissance: "      .$puissanceValue ."\n";
-                                echo "Consommation: "   .$consoValue     ."\n";
+                                deamonlog('debug','OnOff: '          .$onOff);
+                                deamonlog('debug','Puissance: '      .$puissanceValue);
+                                deamonlog('debug','Consommation: '   .$consoValue);
                                 
                                 mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    "Decoded as OnOff-Puissance-Conso"       );
                                 mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0006-0000",         $onOff           );
@@ -557,7 +513,7 @@
                             elseif ( ($AttributId=="ff02") )
                             {
                                 // Non decodé a ce stade
-                                echo "Champ 0xFF02 non decode a ce stade\n";
+                                deamonlog('debug','Champ 0xFF02 non decode a ce stade');
                             }
                             
                             else
@@ -568,7 +524,7 @@
                         
                         if ( isset($data) )
                         {
-                            echo "Data byte: ".$data."\n";
+                            deamonlog('debug','Data byte: ".$data');
                             mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    $data );
                             
                         }
@@ -576,23 +532,19 @@
                         break;
 
                     case "8701" :
-                        log::add('AbeilleParser', 'debug', 'AbeilleParser: type: 8701 (Route Discovery Confirm)(Not Processed)');
-                        echo "(Router Discovery Confirm)(Not processed)\n";
-                        echo "Status : ".substr($payload,0,2)."\n";
-                        echo "Nwk Status : ".substr($payload,2,2)."\n";
+                        deamonlog('debug',' type: 8701 (Route Discovery Confirm)(Not Processed)');
+                        deamonlog('debug','Status : '.substr($payload,0,2));
+                        deamonlog('debug','Nwk Status : '.substr($payload,2,2));
                         break;
 
                     case "8702" :
-                        log::add('Abeille', 'debug', 'AbeilleParser: type: 8701' );
-                        log::add('Abeille', 'debug', 'AbeilleParser: (APS Data Confirm Fail)(Not Processed)' );
-                        echo "\ntype: 8702";
-                        echo "(APS Data Confirm Fail)(Not processed)\n";
-                        echo "Status : ".substr($payload,0,2)."\n";
-                        echo "Source Endpoint : ".substr($payload,2,2)."\n";
-                        echo "Destination Endpoint : ".substr($payload,4,2)."\n";
-                        echo "Destination Mode : ".substr($payload,6,2)."\n";
-                        echo "Destination Address : ".substr($payload,8,4)."\n";
-                        echo "SQN: : ".substr($payload,12,2)."\n";
+                        deamonlog('debug','type: 8701: (APS Data Confirm Fail)(Not Processed)' );
+                        deamonlog('debug','Status : '.substr($payload,0,2));
+                        deamonlog('debug','Source Endpoint : '.substr($payload,2,2));
+                        deamonlog('debug','Destination Endpoint : '.substr($payload,4,2));
+                        deamonlog('debug','Destination Mode : '.substr($payload,6,2));
+                        deamonlog('debug','Destination Address : '.substr($payload,8,4));
+                        deamonlog('debug','SQN: : '.substr($payload,12,2));
                         break;
 
                     default:
@@ -624,38 +576,39 @@
     $password =  $argv[5];                   // set your password
     $client_id = "AbeilleParser"; // make sure this is unique for connecting to sever - you could use uniqid()
     $qos=$argv[6];
+    $requestedlevel=$argv[7];
+    $requestedlevel=''?'none':$argv[7];
     $mqtt = new phpMQTT($server, $port, $client_id);
     $fifoIN = new fifo($in, 'r');
     //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
-    log::add('AbeilleParser', 'debug', 'main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
+    deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel.' on server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
-        log::add('AbeilleMQTTC', 'debug', 'AbeilleMQTTC main: debug for com file: '.$serial);
+        deamonlog('debug','main: debug for com file: '.$serial);
         exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
 
     if (!file_exists($serial)) {
-        log::add('AbeilleParser', 'error', 'AbeilleParser main: Critical, fichier '.$serial.' n existe pas');
+        deamonlog('error','ERROR, fichier '.$serial.' n existe pas');
         exit(1);
     }
 
-    log::add('AbeilleParser', 'info', 'AbeilleParser: fichier '.$serial.' utilise');
-
     while (true) {
         if (!file_exists($serial)) {
-            log::add('AbeilleParser', 'error', 'AbeilleParser: Critical, fichier '.$serial.' n existe pas');
+            deamonlog('error','Erreur, fichier '.$serial.' n existe pas');
             exit(1);
         }
         //traitement de chaque trame;
         $data = $fifoIN->read();
-        echo protocolDatas($data, $mqtt);
+        protocolDatas($data, $mqtt);
         usleep(1);
 
     }
 
-    log::add('AbeilleParser', 'error', 'AbeilleParser: exited without reason ');
+    deamonlog('warning','sortie du loop');
+
 ?>

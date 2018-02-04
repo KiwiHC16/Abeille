@@ -45,7 +45,7 @@
 
         list($type, $address, $action) = explode('/', $topic);
 
-        deamonlog('debug', ' Type: '.$type.' Address: '.$address.' Action: '.$action);
+        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
         if ($type == "CmdAbeille") {
             if ($action == "Annonce") {
@@ -88,7 +88,17 @@
                     "Level" => intval($keywords[1] * 255 / 100),
                     "duration" => $keywords[3],
                 );
-            } elseif ($action == "") {
+            }
+            elseif ($action == "identifySend") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "identifySend" => "1",
+                                 "address" => $address,
+                                 "duration"=> "0010" // $keywords[1]
+                                 
+                                 );
+            }
+            /* elseif ($action == "") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                     "setLevel" => "1",
@@ -97,9 +107,12 @@
                     "Level" => intval($keywords[1] * 255 / 100),
                     "duration" => $keywords[3],
                 );
-            } else {
+                */
+
+            else {
                 deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' might be a ruche one');
-            }
+
+            } 
 
 
             /*---------------------------------------------------------*/

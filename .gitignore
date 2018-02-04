@@ -35,3 +35,4 @@ atlassian-ide-plugin.xml
 ._*
 **/._*
 
+resources/AbeilleDeamon/AbeilleParser.php

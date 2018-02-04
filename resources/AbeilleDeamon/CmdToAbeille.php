@@ -175,6 +175,7 @@
      */
     function processCmd( $dest, $Command,$_requestedlevel )
     // Dest: destination to send data in normal situation to /dev/ttyUSB0 or toto for debugging for example.
+    // please keep command definition order by command Id, easier to match with documentation 1216
     {
 
         $GLOBALS['requestedlevel']=$_requestedlevel;
@@ -182,6 +183,16 @@
         if (!isset($Command)) return;
         
         // print_r( $Command );
+        
+        if ( isset($Command['getVersion']) )
+        {
+            
+            if ($Command['getVersion']=="Version")
+            {
+                deamonlog('debug',"Get Version");
+                sendCmd($dest,"0010","0000","");
+            }
+        }
         
         if ( isset($Command['reset']) )
         {
@@ -196,18 +207,7 @@
                 sendCmd($dest,"0011","0000","");
             }
         }
-        
-        if ( isset($Command['getVersion']) )
-        {
-            
-            if ($Command['getVersion']=="Version")
-            {
-                deamonlog('debug',"Get Version");
-                //echo "Get Version\n";
-                sendCmd($dest,"0010","0000","");
-            }
-        }
-        
+
         // abeilleList abeilleListAll
         if ( isset($Command['abeilleList']) )
         {
@@ -260,74 +260,44 @@
             }
         }
         
-        if ( isset($Command['touchLinkFactoryResetTarget']) )
+        if ( isset($Command['identifySend']) )
+        {
+            if ($Command['identifySend']=="********")
+            {
+                $cmd = "0070";
+                // Msg Type = 0x0070
+                // Identify Send
+                
+                // <address mode: uint8_t>
+                // <target short address: uint16_t>
+                // <source endpoint: uint8_t>
+                // <destination endpoint: uint8_t>
+                // <time: uint16_t> Time: Seconds
+                $addressMode = "02"; // Short Address -> 2
+                $address = $Command['address']; // -> 4
+                $sourceEndpoint = "01"; // -> 2
+                $destinationEndpoint = "01"; // -> 2
+                $time = "0010"; // -> 4
+                //  2 + 4 + 2 + 2 + 4 = 14 => 10/A 11/B 12/C 13/D 14/E
+                $lenth = "000E";
+                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
+                
+                sendCmd( $dest, $cmd, $lenth, $data );
+                
+            }
+        }
+
+        
+        /*
+         // Don't know how to make it works
+         if ( isset($Command['touchLinkFactoryResetTarget']) )
         {
             if ($Command['touchLinkFactoryResetTarget']=="DO")
             {
                 sendCmd($dest,"00D2","0000","");
             }
         }
-        
-        // ON / OFF one object
-        if ( isset($Command['onoff']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
-        {
-            // <address mode: uint8_t>
-            // <target short address: uint16_t>
-            // <source endpoint: uint8_t>
-            // <destination endpoint: uint8_t>
-            // <command ID: uint8_t>
-            // Command Id
-            // 0 - Off
-            // 1 - On
-            // 2 - Toggle
-            
-            $cmd = "0092";
-            $lenth = "0006";
-            $addressMode = "02";
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
-            $action = $Command['action'];
-            
-            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
-            $attribute = "0000";
-            getParam($dest,$address, $Command['clusterId'], $attribute);
-        }
-        
-        // Group of Objects ON/ OFF
-        if ( isset($Command['groupOnOff']) && isset($Command['addressOnOff']) && isset($Command['action']) )
-        {
-            // 17:42:13.758 -> 01 02 10 92 02 10 02 16 CD 02 11 C2 98 02 11 02 11 02 12 03
-            //                 01 02 10 92 02 10 02 16 cc 02 11 c2 98 02 11 02
-            // 01: start
-            // 02 10 92: 00 92 -> On/Off with no effect
-            // 02 10 02 16: length
-            // CD: crc
-            // 02 11: <address mode: uint8_t>: 01 (Group et 02=Short)
-            // C2 98: <target short address: uint16_t>: C2 98
-            // 02 11: <source endpoint: uint8_t> 1
-            // 02 11: <destination endpoint: uint8_t> 1
-            // 02 12: <command ID: uint8_t>: 2 toggle
-            // Command Id
-            // 0 - Off
-            // 1 - On
-            // 2 - Toggle
-            
-            $cmd = "0092";
-            $lenth = "0006";
-            
-            $addressMode = "01";
-            $address = $Command['addressOnOff'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
-            $commandID = $Command['action'];
-            
-            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $commandID ;
-            
-            sendCmd( $dest, $cmd, $lenth, $data );
-            
-        }
-        
+        */
         
         // setLevel on one object
         if ( isset($Command['setLevel']) && isset($Command['address']) && isset($Command['clusterId']) && isset($Command['Level']) && isset($Command['duration']) )
@@ -431,6 +401,7 @@
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
             sendCmd( $dest, $cmd, $lenth, $data );
         }
+        
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
         {
             deamonlog('debug',"Remove a group to an IKEA bulb");
@@ -458,6 +429,67 @@
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
             sendCmd( $dest, $cmd, $lenth, $data );
         }
+        
+        // ON / OFF one object
+        if ( isset($Command['onoff']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
+        {
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <command ID: uint8_t>
+            // Command Id
+            // 0 - Off
+            // 1 - On
+            // 2 - Toggle
+            
+            $cmd = "0092";
+            $lenth = "0006";
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "01";
+            $action = $Command['action'];
+            
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
+            $attribute = "0000";
+            getParam($dest,$address, $Command['clusterId'], $attribute);
+        }
+        
+        // Group of Objects ON/ OFF
+        if ( isset($Command['groupOnOff']) && isset($Command['addressOnOff']) && isset($Command['action']) )
+        {
+            // 17:42:13.758 -> 01 02 10 92 02 10 02 16 CD 02 11 C2 98 02 11 02 11 02 12 03
+            //                 01 02 10 92 02 10 02 16 cc 02 11 c2 98 02 11 02
+            // 01: start
+            // 02 10 92: 00 92 -> On/Off with no effect
+            // 02 10 02 16: length
+            // CD: crc
+            // 02 11: <address mode: uint8_t>: 01 (Group et 02=Short)
+            // C2 98: <target short address: uint16_t>: C2 98
+            // 02 11: <source endpoint: uint8_t> 1
+            // 02 11: <destination endpoint: uint8_t> 1
+            // 02 12: <command ID: uint8_t>: 2 toggle
+            // Command Id
+            // 0 - Off
+            // 1 - On
+            // 2 - Toggle
+            
+            $cmd = "0092";
+            $lenth = "0006";
+            
+            $addressMode = "01";
+            $address = $Command['addressOnOff'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "01";
+            $commandID = $Command['action'];
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $commandID ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
+        
         
         if ( isset($Command['getName']) && isset($Command['address']) )
         {

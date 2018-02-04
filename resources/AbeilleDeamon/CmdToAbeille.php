@@ -232,7 +232,7 @@
         
         if ( isset($Command['identifySend']) )
         {
-            if ($Command['identifySend']=="********")
+            if (isset($Command['duration']))
             {
                 $cmd = "0070";
                 // Msg Type = 0x0070
@@ -243,14 +243,26 @@
                 // <source endpoint: uint8_t>
                 // <destination endpoint: uint8_t>
                 // <time: uint16_t> Time: Seconds
+                
+                //                 Start  Type         Length           Short       Addr
+                // 17:29:31.398 -> 01     02 10 70     02 10 02 17      10 02    12 6E    1B 02 11 02 11 02 10 10 03
+                // 01: Start
+                // 02 10 70: 00 70 - Msg Type Identify Send
+                // 02 10 02 17 => Length -> 7
+                // 10 02 => Mode 2 -> Short
+                //
+                
+                // 17:29:31.461 <- 01 80 00 00 05 FE 00 0B 00 70 00 03
+                // 17:29:31.523 <- 01 81 01 00 07 F5 0B 01 00 03 00 00 7B 03
+                
                 $addressMode = "02"; // Short Address -> 2
                 $address = $Command['address']; // -> 4
                 $sourceEndpoint = "01"; // -> 2
                 $destinationEndpoint = "01"; // -> 2
-                $time = "0010"; // -> 4
-                //  2 + 4 + 2 + 2 + 4 = 14 => 10/A 11/B 12/C 13/D 14/E
-                $lenth = "000E";
-                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
+                $time = $Command['duration']; // -> 4
+                //  2 + 4 + 2 + 2 + 4 = 14/2 => 7
+                $lenth = "0007";
+                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $time ;
                 
                 sendCmd( $dest, $cmd, $lenth, $data );
                 

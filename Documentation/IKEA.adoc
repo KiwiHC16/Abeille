@@ -1,0 +1,8 @@
+= IKEA
+
+== Ampoule
+
+=== Bouton Identify
+
+Ce bouton doit être créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
+

@@ -485,19 +485,11 @@
                             }
                             
                             // Xiaomi Door Sensor
-<<<<<<< HEAD
-<<<<<<< HEAD
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="XXXX") ) {
+                            elseif ( ($AttributId=="ff01") && ($AttributSize=="XXXX") )
+                            {
                                 echo "Le door sensor envoie un pacquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....";
-=======
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") ) {
-                                deamonlog('debug','Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....');
->>>>>>> c6f0e5f76cb0d3fa4ba1da174e13ffe1e0ec92d9
-=======
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") ) {
-                                deamonlog('debug','Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....');
->>>>>>> c6f0e5f76cb0d3fa4ba1da174e13ffe1e0ec92d9
                             }
+
                             
                             // Xiaomi Wall Plug
                             elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") )

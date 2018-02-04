@@ -57,7 +57,7 @@ function Abeille_remove() {
     }
     log::add('Abeille','info','Suppression extension');
     $resource_path = realpath(dirname(__FILE__) . '/../resources');
-    //passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
+    passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_dep') . ' 2>&1 &');
     message::removeAll("Abeille");
     message::add("Abeille","plugin desinstallé");
 }

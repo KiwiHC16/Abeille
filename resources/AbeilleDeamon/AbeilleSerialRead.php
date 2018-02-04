@@ -1,4 +1,15 @@
 <?php
+
+
+    /***
+     * AbeilleSerialRead
+     *
+     * Get information from selected port (/dev/ttyUSB0), transcode data from binary to hex.
+     * and write it to FIFO file.
+     *
+     */
+
+
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 
     include("includes/config.php");
@@ -23,7 +34,7 @@
      */
     function deamonlog($loglevel='NONE',$message =''){
         if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
-            fwrite(STDOUT, 'AbeilleSerialRead: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+            fwrite(STDOUT, 'AbeilleSerialRead: '.date("Y-m-d H:i:s").'['.strtoupper($GLOBALS["requestedlevel"]).']'.$message . PHP_EOL); ;
         }
     }
 
@@ -59,17 +70,17 @@
     $requestedlevel=''?'none':$argv[2];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
-    deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
+    deamonlog('info','Starting reading port '.$serial.' and transcoding to '.$in.' with log level '.$requestedlevel);
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
-        deamonlog('info', 'Main: debug for com file: '.$serial);
+        deamonlog('info', 'Main: com file (experiment): '.$serial);
         exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
 
     if (!file_exists($serial)) {
-        deamonlog('error','AbeilleSerialRead: Error: Fichier '.$serial.' n existe pas');
+        deamonlog('error','Error: Fichier '.$serial.' n existe pas');
         exit(1);
     }
 

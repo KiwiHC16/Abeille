@@ -1,5 +1,14 @@
 <?php
 
+
+    /***
+     * AbeilleMQTTCCmd subscribe to Abeille topic and receive message sent by AbeilleParser.
+     *
+     *
+     *
+     */
+
+
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 
     include("CmdToAbeille.php");  // contient processCmd()
@@ -22,8 +31,8 @@
      * @param string $message
      */
     function deamonlog($loglevel='NONE',$message =''){
-        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
-            fwrite(STDOUT, 'AbeilleMQTTC: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve(strtoupper($GLOBALS["requestedlevel"])) ) {
+            fwrite(STDOUT, 'AbeilleMQTTC: '.date("Y-m-d H:i:s").'['.$GLOBALS["requestedlevel"].']'.$message . PHP_EOL); ;
         }
     }
 
@@ -32,11 +41,11 @@
     {
         global $dest;
 
-        deamonlog('info','Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'\n');
+        deamonlog('info','Msg Received: Topic: {'.$topic.'} =>'.$msg);
 
         list($type, $address, $action) = explode('/', $topic);
 
-        deamonlog('debug', 'Type: '.$type.'Address: '.$address.' avec Action: '.$action);
+        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
         if ($type == "CmdAbeille") {
             if ($action == "Annonce") {
@@ -98,11 +107,12 @@
                     "Level" => intval($keywords[1] * 255 / 100),
                     "duration" => $keywords[3],
                 );
+                */
+
+            else {
+                deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' might be a ruche one');
+
             } 
-            */
-             else {
-                deamonlog('warning','AbeilleMQTT, command unknown: '.$action);
-            }
 
 
             /*---------------------------------------------------------*/
@@ -138,9 +148,9 @@
             /*---------------------------------------------------------*/
 
             // print_r( $Command );
-            processCmd($dest, $Command);
+            processCmd($dest, $Command,$GLOBALS['requestedlevel']);
         } else {
-            deamonlog('warning', 'Msg Received: Topic: {'.$topic.'} =>\t'.$msg.'mais je ne sais pas quoi en faire, no action.');
+            deamonlog('warning', 'Msg Received: Topic: {'.$topic.'} =>'.$msg.'mais je ne sais pas quoi en faire, no action.');
         }
     }
 
@@ -151,8 +161,8 @@
     $dest = $argv[1];
     $server = $argv[2];     // change if necessary
     $port = $argv[3];                     // change if necessary
-    $username = $argv[5];                   // set your username
-    $password =  $argv[6];                   // set your password
+    $username = $argv[4];                   // set your username
+    $password =  $argv[5];                   // set your password
     $client_id = "AbeilleMQTTCmd"; // make sure this is unique for connecting to sever - you could use uniqid()
     $qos=$argv[6];
     $mqtt = new phpMQTT($server, $port, $client_id);
@@ -165,18 +175,18 @@
         exec(system::getCmdSudo().'touch '.$dest.'chmod 777 '.$dest.' > /dev/null 2>&1');
         }
 
-    deamonlog('info', 'Main: usb='.$dest.' server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
+    deamonlog('info','Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel);
+
 
     if (!$mqtt->connect(true, null, $username, $password)) {
         exit(1);
     }
 
-    $topics['CmdAbeille/#'] = array("qos" => 0, "function" => "procmsg");
+    $topics['CmdAbeille/#'] = array("qos" => $qos, "function" => "procmsg");
 
     $mqtt->subscribe($topics, $qos);
 
     while ($mqtt->proc()) {
-
     }
 
     $mqtt->close();

@@ -1,14 +1,31 @@
 <?php
     include("includes/config.php");
-    
+
+
+    /****
+     * cmdToAbeille called by AbeilleMQTTc to process message command
+     * transform hex to binary and write to serial port.
+     */
+
+     /**
+     * @param $msgtype
+     * @param $length
+     * @param $datas
+     * @return string
+     */
     function getChecksum($msgtype,$length,$datas)
     {
         if (1)
         {
-            echo "getChecksum()\n";
+            deamonlog('debug',"getChecksum()");
+            deamonlog('debug', "msgtype: " . $msgtype );
+            deamonlog('debug', "length: " . $length  );
+            deamonlog('debug', "datas: " . $datas );
+            /*echo "getChecksum()\n";
             echo "msgtype: " . $msgtype . "\n";
             echo "length: " . $length . "\n";
             echo "datas: " . $datas ."\n";
+            */
         }
         
         $temp = 0;
@@ -17,7 +34,8 @@
         $temp ^= hexdec($msgtype[2].$msgtype[3]) ;
         $temp ^= hexdec($length[0].$length[1]) ;
         $temp ^= hexdec($length[2].$length[3]);
-        echo "len data: ".strlen($datas)."\n";
+        deamonlog('debug','len data: '.strlen($datas));
+        //echo "len data: ".strlen($datas)."\n";
         
         for ($i=0;$i<=(strlen($datas));$i+=2)
         {
@@ -120,7 +138,8 @@
         $attributesList = $attributeId;
         
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
-        echo "Read Attribute command data: ".$data."\n";
+        deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
         
         sendCmd( $dest, $cmd, $lenth, $data );
     }
@@ -145,11 +164,22 @@
         
         fclose($f);
     }
-    
-    function processCmd( $dest, $Command )
+
+
+    /**
+     * Main function called by AbeilleMQTTCmd to process command and send it in binzry to /dev/ttyUSB0
+     *
+     * @param $dest destination for binary command
+     * @param $Command command to send
+     * @param $loglevel write info to log
+     */
+    function processCmd( $dest, $Command,$_requestedlevel )
     // Dest: destination to send data in normal situation to /dev/ttyUSB0 or toto for debugging for example.
     // please keep command definition order by command Id, easier to match with documentation 1216
     {
+
+        $GLOBALS['requestedlevel']=$_requestedlevel;
+
         if (!isset($Command)) return;
         
         // print_r( $Command );
@@ -159,7 +189,7 @@
             
             if ($Command['getVersion']=="Version")
             {
-                echo "Get Version\n";
+                deamonlog('debug',"Get Version");
                 sendCmd($dest,"0010","0000","");
             }
         }
@@ -178,20 +208,20 @@
             }
         }
 
-        
         // abeilleList abeilleListAll
         if ( isset($Command['abeilleList']) )
         {
             
             if ($Command['abeilleList']=="abeilleListAll")
             {
-                echo "Get Abeilles List\n";
+                deamonlog('debug',"Get Abeilles List");
+                //echo "Get Abeilles List\n";
                 sendCmd($dest,"0015","0000","");
             }
         }
         
       
-        if ( isset($Command['startNetwork']) )
+        if ( isset($Command["startNetwork"]) )
         {
             if ($Command['startNetwork']=="StartNetwork")
             {
@@ -358,7 +388,8 @@
         
         if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
         {
-            echo "Add a group to an IKEA bulb\n";
+            deamonlog('debug',"Add a group to an IKEA bulb");
+            //echo "Add a group to an IKEA bulb\n";
             
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
             // 15:24:36.087 <- 01 80 00 00 04 54 00 B0 00 60 03
@@ -385,7 +416,8 @@
         
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
         {
-            echo "Remove a group to an IKEA bulb\n";
+            deamonlog('debug',"Remove a group to an IKEA bulb");
+            //echo "Remove a group to an IKEA bulb\n";
             
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
             // 15:24:36.087 <- 01 80 00 00 04 54 00 B0 00 60 03
@@ -473,12 +505,10 @@
         
         if ( isset($Command['getName']) && isset($Command['address']) )
         {
-            echo "Get Name from: ".$Command['address']."\n";
+            deamonlog('debug','Get Name from: '.$Command['address']);
+            //echo "Get Name from: ".$Command['address']."\n";
             getParam( $dest, $Command['address'], "0000", "0005" );
         }
-        
-        
-        
     }
     
     ?>

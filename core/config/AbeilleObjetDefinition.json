@@ -918,7 +918,14 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
       },
       "Time-Time": {
         "name": "Time-Time",
@@ -1152,7 +1159,14 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
       },
       "Time-Time": {
         "name": "Time-Time",
@@ -1386,7 +1400,14 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
       },
       "Time-Time": {
         "name": "Time-Time",
@@ -1620,7 +1641,14 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
       },
       "Time-Time": {
         "name": "Time-Time",

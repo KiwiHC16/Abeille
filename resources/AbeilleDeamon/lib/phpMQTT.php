@@ -39,7 +39,7 @@ class phpMQTT {
 
 	private $socket; 			/* holds the socket	*/
 	private $msgid = 1;			/* counter for message id */
-	public $keepalive = 10;		/* default keepalive timmer */
+	public $keepalive = 10;		/* default keepalive timer */
 	public $timesinceping;		/* host unix time, used to detect disconects */
 	public $topics = array(); 	/* used to store currently subscribed topics */
 	public $debug = false;		/* should output debug messages */
@@ -274,7 +274,7 @@ class phpMQTT {
 
 	}
 
-	/* message: processes a recieved topic */
+	/* message: processes a received topic */
 	function message($msg){
 		 	$tlen = (ord($msg{0})<<8) + ord($msg{1});
 			$topic = substr($msg,2,$tlen);
@@ -324,7 +324,7 @@ class phpMQTT {
 			}else{ 
 			
 				$cmd = (int)(ord($byte)/16);
-				if($this->debug) echo "Recevid: $cmd\n";
+				if($this->debug) echo "Received: $cmd\n";
 
 				$multiplier = 1; 
 				$value = 0;

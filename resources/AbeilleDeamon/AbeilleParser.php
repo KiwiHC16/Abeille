@@ -1,13 +1,22 @@
 <?php
 
-    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+    /***
+     * AbeilleParser
+     *
+     * pop data from FIFO file and translate them into a understandable message,
+     * then publish them to mosquitto
+     *
+     */
+
+
+    require_once dirname(__FILE__) . "/../../../../core/php/core.inc.php";
     
     include("includes/config.php");
     include("includes/fifo.php");
     include("lib/phpMQTT.php");
     include("lib/Tools.php");
 
-    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+    $clusterTab= Tools::getJSonConfigFiles("zigateClusters.json");
 
     function getNumberFromLeve($loglevel){
         if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
@@ -26,28 +35,30 @@
      */
     function deamonlog($loglevel='NONE',$message =''){
         if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
-            fwrite(STDOUT, 'AbeilleParser: '.date("Y-m-d H:i:s").' '.$message . PHP_EOL); ;
+            fwrite(STDOUT, "AbeilleParser: ".date("Y-m-d H:i:s")."[".strtoupper($GLOBALS["requestedlevel"])."]".$message . PHP_EOL); ;
         }
     }
 
-    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data)
+    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data,$qos=0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
+        deamonlog("debug","mqttPublish with Qos: ".$qos);
         if ($mqtt->connect(true, NULL, "jeedom", "jeedom")) {
-            $mqtt->publish( "Abeille/" .$SrcAddr . "/" . $ClusterId . "-" . $AttributId,    $data,                  0 );
-            $mqtt->publish( "Abeille/" .$SrcAddr . "/" . "Time"     . "-" . "TimeStamp",    time(),                 0 );
-            $mqtt->publish( "Abeille/" .$SrcAddr . "/" . "Time"     . "-" . "Time",         date("Y-m-d H:i:s"),    0 );
+            $mqtt->publish( "Abeille/" .$SrcAddr . "/" . $ClusterId . "-" . $AttributId,    $data,                  $qos );
+            $mqtt->publish( "Abeille/" .$SrcAddr . "/Time-TimeStamp",    time(),                 $qos );
+            $mqtt->publish( "Abeille/" .$SrcAddr . "/Time-Time",         date("Y-m-d H:i:s"),    $qos );
             $mqtt->close();
         } else {
             deamonlog('WARNING','Time out!');
         }
     }
 
-    function mqqtPublishAnnounce($mqtt, $SrcAddr, $data)
+    function mqqtPublishAnnounce($mqtt, $SrcAddr, $data,$qos=0)
     {
         // Abeille / short addr / Annonce -> data
+        deamonlog("debug","mqttPublishAnnonce : Qos: ".$qos);
         if ($mqtt->connect(true, NULL, "jeedom", "jeedom")) {
-            $mqtt->publish( "CmdAbeille/" .$SrcAddr . "/Annonce",    $data, 0 );
+            $mqtt->publish( "CmdAbeille/" .$SrcAddr . "/Annonce",    $data, $qos );
             $mqtt->close();
         } else {
             deamonlog('Time out!');
@@ -65,24 +76,24 @@
 
     function displayClusterId($cluster)
     {
-        deamonlog('debug','Cluster ID: '.$cluster.'- '.$GLOBALS['clusterTab'][$cluster]);
+        deamonlog('debug','Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab'][$cluster]);
     }
 
     function displayStatus($status)
     {
         switch ($status)
         {
-            case "00": { deamonlog('debug','00-(Success)');                 } break;
-            case "01": { deamonlog('debug','01-(Incorrect Parameters)');    } break;
-            case "02": { deamonlog('debug','02-(Unhandled Command)');       } break;
-            case "03": { deamonlog('debug','03-(Command Failed)');          } break;
-            case "04": { deamonlog('debug','04-(Busy)');                    } break;
-            case "05": { deamonlog('debug','05-(Stack Already Started)');   } break;
-            default:   { deamonlog('debug','(ZigBee Error Code)');       } break;
+            case "00": { echo "00-(Success)";                 } break;
+            case "01": { echo "01-(Incorrect Parameters)";    } break;
+            case "02": { echo "02-(Unhandled Command)";       } break;
+            case "03": { echo "03-(Command Failed)";          } break;
+            case "04": { echo "04-(Busy)";                    } break;
+            case "05": { echo "05-(Stack Already Started)";   } break;
+            default:   { echo "(ZigBee Error Code)";       } break;
         }
     }
 
-    function protocolDatas($datas, $mqtt)
+    function protocolDatas($datas, $mqtt,$qos)
         // datas: trame complete recue sur le port serie sans le start ni le stop.
         // 01: 01 Start
         // 02-03: Msg Type
@@ -149,7 +160,7 @@
                         $capability = substr($payload,20,2);
                         
                         // Envoie de la IEEE a Jeedom
-                        mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE);
+                        mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE,$qos);
 
                         // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
                         if ((hexdec($capability) & $test) == 14) {
@@ -159,12 +170,12 @@
                         break;
 
                     case "8000" :
+                        $status=substr($payload, 0, 2);
+                        $SQN=substr($payload, 2, 2);
                         deamonlog('debug','type: 8000 (Status)(Not Processed)');
                         deamonlog('debug','Length: '.hexdec($ln));
-                        deamonlog('debug','Status: '.substr($payload, 0, 2).'-'.
-                        displayStatus(substr($payload, 0, 2)));
-                        deamonlog('debug','SQN: '.substr($payload, 2, 2));
-
+                        deamonlog('debug','Status: '.displayStatus($status));
+                        deamonlog('debug','SQN: '.$SQN);
                         break;
 
                     case "8001" :
@@ -177,21 +188,21 @@
 
                     case "8010" :
                         deamonlog('debug','type: 8010 (Version)(Processed->MQTT)');
-                        deamonlog('debug','Application : ".hexdec(substr($payload,0,4))');
-                        deamonlog('debug','SDK : ".hexdec(substr($payload,4,4))');
+                        deamonlog('debug','Application : '.hexdec(substr($payload,0,4)));
+                        deamonlog('debug','SDK : '.hexdec(substr($payload,4,4)));
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "Application";
                         $data = substr($payload, 0, 4);
-                        deamonlog('debug',$AttributId.': '.$data);
-                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
+                        deamonlog("debug",$AttributId.": ".$data." qos:".$qos);
+                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data,$qos);
 
                         $SrcAddr = "Ruche";
                         $ClusterId = "SW";
                         $AttributId = "SDK";
                         $data = substr($payload, 4, 4);
-                        deamonlog('debug',$AttributId.': '.$data);
-                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data);
+                        deamonlog('debug',$AttributId.': '.$data.' qos:'.$qos);
+                        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data,$qos);
                         break;
 
                     case "8015" :
@@ -215,10 +226,10 @@
                         // 32 553c  000B57fffe3025ad 01     9f
                         // 00 -> Pourquoi 00 ?
                         
-                        deamonlog('debug','type: 8015 (Abeille List)(Processed->MQTT) Payload: ".$payload');
+                        deamonlog('debug','type: 8015 (Abeille List)(Processed->MQTT) Payload: '.$payload);
                         
                         $nb = (strlen( $payload )-2)/26;
-                        deamonlog('debug','Nombre d\'abeilles: ".$nb');
+                        deamonlog('debug','Nombre d\'abeilles: '.$nb);
                         
                         for ($i=0;$i<$nb;$i++)
                         {
@@ -235,19 +246,19 @@
                             $ClusterId = "IEEE";
                             $AttributId="Addr";
                             $data =substr($payload,$i*26+ 6,16);
-                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
                             
                             // Envoie Power Source
                             $ClusterId = "Power";
                             $AttributId="Source";
                             $data =substr($payload,$i*26+22, 2);
-                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
                             
                             // Envoie Link Quaity
                             $ClusterId = "Link";
                             $AttributId="Quality";
                             $data = hexdec(substr($payload,$i*26+24, 2));
-                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
                             
                         }
 
@@ -262,7 +273,7 @@
                         deamonlog('debug','Length : '.substr($payload, 8, 2));
                         if (intval(substr($payload,8,2))>0)
                         {
-                            deamonlog('debug','Endpoint : ".substr($payload,10,2)');
+                            deamonlog("debug","Endpoint : ".substr($payload,10,2));
                             
                             //PAS FINI
                         }
@@ -278,7 +289,7 @@
                         deamonlog('debug','Endpoint List :');
                         for ($i = 0; $i < (intval(substr($payload,8,2)) *2); $i+=2)
                         {
-                            deamonlog('debug','Endpoint : ".substr($payload,(8+$i),2)');
+                            deamonlog('debug','Endpoint : '.substr($payload,(8+$i),2));
                         }
                         break;
 
@@ -292,25 +303,14 @@
 
                     case "8100": // "Type: 0x8100 (Read Attrib Response)"
                         // 8100 000D0C0Cb32801000600000010000101
-                        /*
-                        deamonlog('Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
-                        deamonlog('SQN: : '.substr($payload, 0, 2));
-                        deamonlog('Src Addr: : '.substr($payload, 2, 4));
-                        deamonlog('EnPt: '.substr($payload, 6, 2));
-                        deamonlog('Cluster Id: '.substr($payload, 8, 4));
-                        deamonlog('Attribut Id: '.substr($payload, 12, 4));
-                        deamonlog('Attribute Status: '.substr($payload, 16, 2));
-                        deamonlog('Attribute data type: '.substr($payload, 18, 2));
-                        */
-                        deamonlog('debug','type: 8100');
                         deamonlog('debug','Type: 0x8100 (Read Attrib Response)(Processed->MQTT)');
-                        deamonlog('debug','SQN: : ".substr($payload,0,2)');
-                        deamonlog('debug','Src Addr: : ".substr($payload,2,4)');
-                        deamonlog('debug','EnPt: ".substr($payload,6,2)');
-                        deamonlog('debug','Cluster Id: ".substr($payload,8,4)');
-                        deamonlog('debug','Attribut Id: ".substr($payload,12,4)');
-                        deamonlog('debug','Attribute Status: ".substr($payload,16,2)');
-                        deamonlog('debug','Attribute data type: ".substr($payload,18,2)');
+                        deamonlog('debug','SQN: '.substr($payload,0,2));
+                        deamonlog('debug','Src Addr: '.substr($payload,2,4));
+                        deamonlog('debug','EnPt: '.substr($payload,6,2));
+                        deamonlog('debug','Cluster Id: '.substr($payload,8,4));
+                        deamonlog('debug','Attribut Id: '.substr($payload,12,4));
+                        deamonlog('debug','Attribute Status: '.substr($payload,16,2));
+                        deamonlog('debug','Attribute data type: '.substr($payload,18,2));
                         $dataType = substr($payload,18,2);
                         // IKEA OnOff state reply data type: 10
                         // IKEA Manufecturer name data type: 42
@@ -318,8 +318,8 @@
                         deamonlog('Syze of Attribute: '.substr($payload, 20, 4));
                         deamonlog('Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
                         */
-                        deamonlog('debug','Syze of Attribute: ".substr($payload,20,4)');
-                        deamonlog('debug','Data byte list (one octet pour l instant): ".substr($payload,24,2)');
+                        deamonlog('debug','Syze of Attribute: '.substr($payload,20,4));
+                        deamonlog('debug','Data byte list (one octet pour l instant): '.substr($payload,24,2));
                         
                         // short addr / Cluster ID / Attr ID -> data
                         $SrcAddr = substr($payload, 2, 4);
@@ -349,9 +349,9 @@
                             $data = hex2bin(substr($payload, 24, (strlen($payload) - 24)));
                         }
                         //deamonlog('Data byte: '.$data);
-                        deamonlog('Data byte: ".$data');
+                        deamonlog('Data byte: '.$data);
                         
-                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data );
+                        mqqtPublish( $mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
                         
                         break;
 
@@ -439,24 +439,24 @@
                                 $temperature    = hexdec(substr($payload,24+21*2+2,2).substr($payload,24+21*2,2));
                                 $humidity       = hexdec(substr($payload,24+25*2+2,2).substr($payload,24+25*2,2));
                                 
-                                deamonlog('debug','Voltage: "        .$voltage');
-                                deamonlog('debug','Temperature: "    .$temperature');
-                                deamonlog('debug','Humidity: "       .$humidity');
+                                deamonlog('debug','Voltage: '        .$voltage);
+                                deamonlog('debug','Temperature: '    .$temperature);
+                                deamonlog('debug','Humidity: '       .$humidity);
                                 
-                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
-                                mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage        );
+                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    'Decoded as Volt-Temperature-Humidity');
+                                mqqtPublish( $mqtt, $SrcAddr, 'Batterie',      'Volt',         $voltage        );
                                 
                                 // Value decoded and value reported look aligned so I merge them.
-                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",       $temperature    );
-                                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",       $humidity       );
+                                // mqqtPublish( $mqtt, $SrcAddr, 'Xiaomi',          '0402-0000',       $temperature    );
+                                // mqqtPublish( $mqtt, $SrcAddr, 'Xiaomi',          '0405-0000',       $humidity       );
                                 
-                                mqqtPublish( $mqtt, $SrcAddr, "0402",          "0000",       $temperature    );
-                                mqqtPublish( $mqtt, $SrcAddr, "0405",          "0000",       $humidity       );
+                                mqqtPublish( $mqtt, $SrcAddr, '0402',          '0000',       $temperature    );
+                                mqqtPublish( $mqtt, $SrcAddr, '0405',          '0000',       $humidity       );
                                 
                             }
                             
                             // Xiaomi capteur temperature carré
-                            elseif ( ($AttributId=="ff01") && ($AttributSize=="0025") )
+                            elseif ( ($AttributId=='ff01') && ($AttributSize=='0025') )
                             {
                                 deamonlog('debug','Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)');
                                 $voltage        = hexdec(substr($payload,24+ 2*2+2,2).substr($payload,24+ 2*2,2));
@@ -469,8 +469,8 @@
                                 deamonlog('debug','Humidity: '       .$humidity);
                                 deamonlog('debug','Pression: '       .$pression);
                                 
-                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    "Decoded as Volt-Temperature-Humidity"       );
-                                mqqtPublish( $mqtt, $SrcAddr, "Batterie",      "Volt",         $voltage );
+                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,      $AttributId,    'Decoded as Volt-Temperature-Humidity'       );
+                                mqqtPublish( $mqtt, $SrcAddr, 'Batterie',      'Volt',         $voltage );
                                 
                                 // Value decoded and value reported look aligned so I merge them.
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",         $temperature         );
@@ -478,15 +478,15 @@
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0010",         $pression/10        );
                                 // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0000",         $pression/100         );
                                 
-                                mqqtPublish( $mqtt, $SrcAddr, "0402",          "0000",         $temperature         );
-                                mqqtPublish( $mqtt, $SrcAddr, "0405",          "0000",         $humidity            );
-                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0010",         $pression/10        );
-                                mqqtPublish( $mqtt, $SrcAddr, "0403",          "0000",         $pression/100         );
+                                mqqtPublish( $mqtt, $SrcAddr, '0402',          '0000',         $temperature         );
+                                mqqtPublish( $mqtt, $SrcAddr, '0405',          '0000',         $humidity            );
+                                mqqtPublish( $mqtt, $SrcAddr, '0403',          '0010',         $pression/10        );
+                                mqqtPublish( $mqtt, $SrcAddr, '0403',          '0000',         $pression/100         );
                             }
                             
                             // Xiaomi Door Sensor
                             elseif ( ($AttributId=="ff01") && ($AttributSize=="0031") ) {
-                                deamonlog('debug','Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....');
+                                deamonlog("debug","Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester....");
                             }
                             
                             // Xiaomi Wall Plug
@@ -495,25 +495,25 @@
                                 deamonlog('debug','Champ proprietaire Xiaomi, doit etre decodé (Wall Plug)');
                                 $onOff        = hexdec(substr($payload,24+ 2*2,2));
                                 deamonlog('debug','Puissance: '.    substr($payload,24+ 8*2,8));
-                                $puissance    = unpack("f",pack('H*',substr($payload,24+ 8*2,8))); $puissanceValue = $puissance[1];
+                                $puissance    = unpack('f',pack('H*',substr($payload,24+ 8*2,8))); $puissanceValue = $puissance[1];
                                 deamonlog('debug','Conso: '.        substr($payload,24+14*2,8));
-                                $conso        = unpack("f",pack('H*',substr($payload,24+14*2,8))); $consoValue = $conso[1];
+                                $conso        = unpack('f',pack('H*',substr($payload,24+14*2,8))); $consoValue = $conso[1];
                                 
                                 deamonlog('debug','OnOff: '          .$onOff);
                                 deamonlog('debug','Puissance: '      .$puissanceValue);
                                 deamonlog('debug','Consommation: '   .$consoValue);
                                 
-                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    "Decoded as OnOff-Puissance-Conso"       );
-                                mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0006-0000",         $onOff           );
-                                mqqtPublish( $mqtt, $SrcAddr, "tbd",          "--puissance--",       $puissanceValue       );
-                                mqqtPublish( $mqtt, $SrcAddr, "tbd",          "--conso--",       $consoValue           );
+                                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    'Decoded as OnOff-Puissance-Conso'       );
+                                mqqtPublish( $mqtt, $SrcAddr, 'Xiaomi',          '0006-0000',         $onOff           );
+                                mqqtPublish( $mqtt, $SrcAddr, 'tbd',          '--puissance--',       $puissanceValue       );
+                                mqqtPublish( $mqtt, $SrcAddr, 'tbd',          '--conso--',       $consoValue           );
                             }
                             
                             // Xiaomi Presence Infrarouge
                             elseif ( ($AttributId=="ff02") )
                             {
                                 // Non decodé a ce stade
-                                deamonlog('debug','Champ 0xFF02 non decode a ce stade');
+                                deamonlog("debug","Champ 0xFF02 non decode a ce stade");
                             }
                             
                             else
@@ -524,8 +524,8 @@
                         
                         if ( isset($data) )
                         {
-                            deamonlog('debug','Data byte: ".$data');
-                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,    $data );
+                            deamonlog('debug','Data byte: '.$data);
+                            mqqtPublish( $mqtt, $SrcAddr, $ClusterId,          $AttributId,$data, $qos);
                             
                         }
 
@@ -574,32 +574,26 @@
     $port = $argv[3];                     // change if necessary
     $username = $argv[4];                   // set your username
     $password =  $argv[5];                   // set your password
-    $client_id = "AbeilleParser"; // make sure this is unique for connecting to sever - you could use uniqid()
+    $client_id = 'AbeilleParser'; // make sure this is unique for connecting to sever - you could use uniqid()
     $qos=$argv[6];
     $requestedlevel=$argv[7];
     $requestedlevel=''?'none':$argv[7];
     $mqtt = new phpMQTT($server, $port, $client_id);
     $fifoIN = new fifo($in, 'r');
     //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
-    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
-
-    deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel.' on server='.$server.':'.$port.' username='.$username.' pass='.$password.' qos='.$qos);
-
-    if ($serial == 'none') {
-        $serial = $resourcePath.'/COM';
-        deamonlog('debug','main: debug for com file: '.$serial);
-        exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
-    }
+    $clusterTab= Tools::getJSonConfigFiles("zigateClusters.json");
 
 
-    if (!file_exists($serial)) {
-        deamonlog('error','ERROR, fichier '.$serial.' n existe pas');
+    deamonlog('info','Starting parsing from '.$in.' to mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos);
+
+    if (!file_exists($in)) {
+        deamonlog('error','ERROR, fichier '.$in.' n existe pas');
         exit(1);
     }
 
     while (true) {
-        if (!file_exists($serial)) {
-            deamonlog('error','Erreur, fichier '.$serial.' n existe pas');
+        if (!file_exists($in)) {
+            deamonlog('error','Erreur, fichier '.$in.' n existe pas');
             exit(1);
         }
         //traitement de chaque trame;

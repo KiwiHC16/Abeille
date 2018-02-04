@@ -314,7 +314,7 @@
             $client->onSubscribe('Abeille::subscribe');
             $client->onMessage('Abeille::message');
             $client->onLog('Abeille::logmq');
-            $client->setWill('/jeedom', "Client died :-(", 1, 0);
+            $client->setWill('/jeedom', "Client died :-(", $parameters_info['AbeilleQos'], 0);
 
             try {
                 $client->setCredentials(

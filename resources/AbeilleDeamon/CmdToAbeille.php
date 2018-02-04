@@ -244,10 +244,10 @@
                 // <destination endpoint: uint8_t>
                 // <time: uint16_t> Time: Seconds
                 $addressMode = "02"; // Short Address -> 2
-                $address = $Command['address']; -> 4
-                $sourceEndpoint = "01"; -> 2
-                $destinationEndpoint = "01"; -> 2
-                $time = "0010"; -> 4
+                $address = $Command['address']; // -> 4
+                $sourceEndpoint = "01"; // -> 2
+                $destinationEndpoint = "01"; // -> 2
+                $time = "0010"; // -> 4
                 //  2 + 4 + 2 + 2 + 4 = 14 => 10/A 11/B 12/C 13/D 14/E
                 $lenth = "000E";
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;

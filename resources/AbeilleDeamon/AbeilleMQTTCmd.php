@@ -98,7 +98,7 @@
                     "duration" => $keywords[3],
                 );
             } else {
-                deamonlog('warning','AbeilleMQTT, command unknown: '.$action);
+                deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' might be a ruche one');
             }
 
 

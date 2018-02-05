@@ -682,16 +682,38 @@
 
     function decode8043($mqtt, $payload, $ln, $qos)
     {
+        // <Sequence number: uint8_t>   -> 2
+        // <status: uint8_t>            -> 2
+        // <nwkAddress: uint16_t>       -> 4
+        // <length: uint8_t>            -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <profile: uint16_t>          -> 4
+        // <device id: uint16_t>        -> 4
+        // <bit fields: uint8_t >       -> 2
+        // <InClusterCount: uint8_t >   -> 2
+        // <In cluster list: data each entry is uint16_t> -> 4
+        // <OutClusterCount: uint8_t>   -> 2
+        // <Out cluster list: data each entry is uint16_t> -> 4
+        // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
+        
         deamonlog('debug', 'Type: 8043 (Simple Descriptor Response)(Not Processed)');
-        deamonlog('debug', 'SQN : '.substr($payload, 0, 2));
-        deamonlog('debug', 'Status : '.substr($payload, 2, 2));
-        deamonlog('debug', 'Short Address : '.substr($payload, 4, 4));
-        deamonlog('debug', 'Length : '.substr($payload, 8, 2));
-        if (intval(substr($payload, 8, 2)) > 0) {
-            deamonlog("debug", "Endpoint : ".substr($payload, 10, 2));
-
-            //PAS FINI
+        deamonlog('debug', 'SQN : '             .substr($payload, 0, 2));
+        deamonlog('debug', 'Status : '          .substr($payload, 2, 2));
+        deamonlog('debug', 'Short Address : '   .substr($payload, 4, 4));
+        deamonlog('debug', 'Length : '          .substr($payload, 8, 2));
+        deamonlog('debug', 'endpoint : '        .substr($payload,10, 2));
+        deamonlog('debug', 'profile : '         .substr($payload,12, 4));
+        deamonlog('debug', 'deviceId : '        .substr($payload,16, 4));
+        deamonlog('debug', 'bitField : '        .substr($payload,20, 2));
+        deamonlog('debug', 'InClusterCount : '  .substr($payload,22, 2));
+        for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
+            deamonlog('debug', 'In cluster: '    .substr($payload, (24 + $i), 4));
         }
+        deamonlog('debug', 'OutClusterCount : '  .substr($payload,24+$i, 2));
+        for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
+                deamonlog('debug', 'Out cluster: '    .substr($payload, (24 + $i +2 +$j), 4));
+        }
+
     }
 
     function decode8044($mqtt, $payload, $ln, $qos)
@@ -706,13 +728,13 @@
     function decode8045($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'type: 8045 (Active Endpoints Response)(Not Processed)');
-        deamonlog('debug', 'SQN : '.substr($payload, 0, 2));
-        deamonlog('debug', 'Status : '.substr($payload, 2, 2));
-        deamonlog('debug', 'Short Address : '.substr($payload, 4, 4));
-        deamonlog('debug', 'Endpoint Count : '.substr($payload, 8, 2));
+        deamonlog('debug', 'SQN : '             .substr($payload, 0, 2));
+        deamonlog('debug', 'Status : '          .substr($payload, 2, 2));
+        deamonlog('debug', 'Short Address : '   .substr($payload, 4, 4));
+        deamonlog('debug', 'Endpoint Count : '  .substr($payload, 8, 2));
         deamonlog('debug', 'Endpoint List :');
         for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
-            deamonlog('debug', 'Endpoint : '.substr($payload, (8 + $i), 2));
+            deamonlog('debug', 'Endpoint : '    .substr($payload, (10 + $i), 2));
         }
     }
 

@@ -286,6 +286,40 @@
                 sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        if ( isset($Command['ActiveEndPoint']) )
+        {
+            $cmd = "0045";
+            
+            // <target short address: uint16_t>
+            
+            $address = $Command['address']; // -> 4
+            
+            //  4 = 4/2 => 2
+            $lenth = "0002";
+            
+            $data = $address;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        if ( isset($Command['SimpleDescriptorRequest']) )
+        {
+            $cmd = "0043";
+            
+            // <target short address: uint16_t>
+            // <endpoint: uint8_t>
+            
+            $address = $Command['address']; // -> 4
+            $endpoint = $Command['endPoint']; // -> 2
+            
+            //  4 + 2 = 6/2 => 3
+            $lenth = "0003";
+            
+            $data = $address . $endpoint ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
         if ( isset($Command['identifySend']) )
         {
             if (isset($Command['duration']))

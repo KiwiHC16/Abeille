@@ -95,7 +95,12 @@
                                  "identifySend" => "1",
                                  "address" => $address,
                                  "duration"=> "0010" // $keywords[1]
-                                 
+                                 );
+            }
+            elseif ($action == "getGroupMembership") {
+                $Command = array(
+                                 "getGroupMembership" => "1",
+                                 "address" => $address
                                  );
             }
             /* elseif ($action == "") {

@@ -17,6 +17,8 @@
     include("lib/Tools.php");
 
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
+    
+    // print_r( $clusterTab );
 
     function getNumberFromLeve($loglevel)
     {
@@ -140,7 +142,7 @@
         return $return;
     }
 
-    function protocolDatas($datas, $mqtt, $qos)
+    function protocolDatas($datas, $mqtt, $qos, $clusterTab)
     {
         // datas: trame complete recue sur le port serie sans le start ni le stop.
         // 01: 01 Start
@@ -281,7 +283,7 @@
                         break;
 
                     case "8043" :
-                        decode8043($mqtt, $payload, $ln, $qos);
+                        decode8043($mqtt, $payload, $ln, $qos, $clusterTab);
                         break;
 
                     case "8044" :
@@ -680,7 +682,7 @@
         deamonlog(hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
 
-    function decode8043($mqtt, $payload, $ln, $qos)
+    function decode8043($mqtt, $payload, $ln, $qos, $clusterTab)
     {
         // <Sequence number: uint8_t>   -> 2
         // <status: uint8_t>            -> 2
@@ -707,11 +709,11 @@
         deamonlog('debug', 'bitField : '        .substr($payload,20, 2));
         deamonlog('debug', 'InClusterCount : '  .substr($payload,22, 2));
         for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-            deamonlog('debug', 'In cluster: '    .substr($payload, (24 + $i), 4));
+            deamonlog('debug', 'In cluster: '    .substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
         }
         deamonlog('debug', 'OutClusterCount : '  .substr($payload,24+$i, 2));
         for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                deamonlog('debug', 'Out cluster: '    .substr($payload, (24 + $i +2 +$j), 4));
+                deamonlog('debug', 'Out cluster: '    .substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
         }
 
     }
@@ -1211,7 +1213,7 @@
         }
         //traitement de chaque trame;
         $data = $fifoIN->read();
-        protocolDatas($data, $mqtt,$qos);
+        protocolDatas( $data, $mqtt, $qos, $clusterTab);
         usleep(1);
 
     }

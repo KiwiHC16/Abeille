@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 function arret
 {
   echo
@@ -14,6 +14,7 @@ function arret
 
   echo 100 > ${PROGRESS_FILE}
   sleep 3
+  #suppression du decompte d'installation
   rm ${PROGRESS_FILE}
 
 }
@@ -25,7 +26,6 @@ function arretSiErreur
   echo $1
   echo "***************"
   echo
-
   arret
   exit 1
 }
@@ -33,6 +33,8 @@ function arretSiErreur
 echo "Début d'installation des dépendances"
 
 PROGRESS=/tmp/jeedom/Abeille/dependancy_abeille_in_progress
+#Nombre d'essai pour dl les paquets
+tries=3
 
 if [ ! -z $1 ]; then
 	PROGRESS_FILE=$1
@@ -75,6 +77,7 @@ echo "Avancement: 5% -----------------------------------------------------------
 echo
 
 apt-get -y install lsb-release php-pear
+[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de pear et lsb-release. Pb réseau ?"
 
 echo 8 > ${PROGRESS_FILE}
 echo
@@ -82,16 +85,17 @@ echo "Avancement: 8% -----------------------------------------------------------
 echo
 
 if [ -f mosquitto-repo.gpg.key ]; then
-echo "Efface ancien mosquitto-repo.gpg.key"
-rm mosquitto-repo.gpg.key
+    echo "Efface ancien mosquitto-repo.gpg.key"
+    rm mosquitto-repo.gpg.key
 fi
 
-wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la récupération de la clé du dépot moquitto. Pb réseau ?"
 apt-key add mosquitto-repo.gpg.key
 
 if [ -f mosquitto-repo.gpg.key ]; then
-echo "Efface ancien mosquitto-repo.gpg.key"
-rm mosquitto-repo.gpg.key
+    echo "Efface la clé importée"
+    rm mosquitto-repo.gpg.key
 fi
 
 # Test sur l archi mais en fait on fait la meme chose, je garde le test si on devait en avoir besoin.
@@ -112,8 +116,8 @@ if [ "$archi" == "x86_64" ]; then
         rm /etc/apt/sources.list.d/mosquitto-jessie.list
       fi
 
-      wget http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
-
+      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
+      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
     elif [ `lsb_release -c -s` == "stretch" ]; then
 
       if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
@@ -121,7 +125,8 @@ if [ "$archi" == "x86_64" ]; then
         rm /etc/apt/sources.list.d/mosquitto-stretch.list
       fi
 
-      wget http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
+      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
+      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
 
     else
         echo "Erreur critique: je ne connais pas cette version."
@@ -145,7 +150,8 @@ elif [ "$archi" == "armv7l" ] || [ "$archi" == "armv6l" ]; then
         rm /etc/apt/sources.list.d/mosquitto-jessie.list
       fi
 
-      wget http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
+      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
+      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
 
     elif [ `lsb_release -c -s` == "stretch" ]; then
 
@@ -154,7 +160,8 @@ elif [ "$archi" == "armv7l" ] || [ "$archi" == "armv6l" ]; then
         rm /etc/apt/sources.list.d/mosquitto-stretch.list
       fi
 
-      wget http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
+      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
+      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
 
     else
       echo "Erreur critique: je ne connais pas cette version."
@@ -177,6 +184,7 @@ echo "Avancement: 10% ----------------------------------------------------------
 echo
 
 apt-get update
+[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots via apt-get update. Pb réseau ?"
 
 echo 30 > ${PROGRESS_FILE}
 echo
@@ -184,6 +192,7 @@ echo "Avancement: 30% ----------------------------------------------------------
 echo
 
 apt-get -y install mosquitto mosquitto-clients libmosquitto-dev
+[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de mosquitto. Pb réseau ?"
 
 
 if [[ -d "/etc/php5/" ]]; then
@@ -214,6 +223,7 @@ else
   echo
 
   apt-get -y install php7.0-dev
+  [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de php7-dev. Pb réseau ?"
 
   if [[ -d "/etc/php/7.0/cli/" && ! `cat /etc/php/7.0/cli/php.ini | grep "mosquitto"` ]]; then
     echo "" | pecl install Mosquitto-alpha
@@ -277,7 +287,3 @@ else
   /etc/init.d/${SERVICE} restart &
 
 fi
-
-
-
-

@@ -112,7 +112,7 @@ function addCmdToTable(_cmd) {
 		tr +='</select></span>';
 		tr += '</td><td>';//6
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br> ';
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="retain" checked/>{{Retain flag}}</label></span><br> ';
+		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="retain" />{{Retain flag}}</label></span><br> ';
 		tr += '</td>';
 		tr += '<td>';//7
 		if (is_numeric(_cmd.id)) {

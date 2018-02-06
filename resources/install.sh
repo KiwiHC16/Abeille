@@ -98,7 +98,7 @@ fi
 archi=`lscpu | grep Architecture | awk '{ print $2 }'`
 echo "Architecture: "$archi
 
-if [ "$archi" == "x86_64" ]; then
+if [ "$archi" == "x86_64" ] || [ "$archi" == "i686" ]; then
 
   if [ `lsb_release -i -s` == "Debian" ]; then
 

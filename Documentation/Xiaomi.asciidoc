@@ -1,0 +1,9 @@
+= Xiaomi
+
+== Temperature Carré, Temperature Rond, Bouton Carré, Sensor Door, Presence IR
+
+=== Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.

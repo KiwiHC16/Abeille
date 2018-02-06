@@ -95,7 +95,12 @@
                                  "identifySend" => "1",
                                  "address" => $address,
                                  "duration"=> "0010" // $keywords[1]
-                                 
+                                 );
+            }
+            elseif ($action == "getGroupMembership") {
+                $Command = array(
+                                 "getGroupMembership" => "1",
+                                 "address" => $address
                                  );
             }
             /* elseif ($action == "") {
@@ -124,6 +129,13 @@
                     $Command = array($action => $msg);
                 } // Si une command type get htt
                 else {
+                    if (count($keywords) == 2) {
+                        deamonlog('debug', 'AbeilleMQTTC, 2 arguments command');
+                        $Command = array(
+                                         $action => $action,
+                                         $keywords[0] => $keywords[1]
+                                         );
+                    }
                     if (count($keywords) == 4) {
                         deamonlog('debug', 'AbeilleMQTTC, 4 arguments command');
                         $Command = array(

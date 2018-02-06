@@ -7,7 +7,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/getVersion",
+      "topic": "CmdAbeille/Ruche/getVersion",
       "request": "Version"
     }
   },
@@ -19,7 +19,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/startNetwork",
+      "topic": "CmdAbeille/Ruche/startNetwork",
       "request": "StartNetwork"
     }
   },
@@ -31,7 +31,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/SetPermit",
+      "topic": "CmdAbeille/Ruche/SetPermit",
       "request": "Inclusion"
     }
   },
@@ -43,7 +43,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/reset",
+      "topic": "CmdAbeille/Ruche/reset",
       "request": "reset"
     }
   },
@@ -55,7 +55,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/addGroup",
+      "topic": "CmdAbeille/Ruche/addGroup",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
@@ -67,7 +67,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/removeGroup",
+      "topic": "CmdAbeille/Ruche/removeGroup",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
@@ -79,7 +79,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/getName",
+      "topic": "CmdAbeille/Ruche/getName",
       "request": "address=#title#&groupAddress=#message#"
     }
   },
@@ -91,7 +91,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/ReadAttributeRequest",
+      "topic": "CmdAbeille/Ruche/ReadAttributeRequest",
       "request": "address=#title#&attribut=#message#"
     }
   },
@@ -103,7 +103,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille\/Ruche\/abeilleList",
+      "topic": "CmdAbeille/Ruche/abeilleList",
       "request": "abeilleListAll"
     }
   },
@@ -146,5 +146,31 @@
     "subType": "string",
     "invertBinary": "0",
     "template": ""
+  },
+  "ActiveEndPoint": {
+    "name": "ActiveEndPoint",
+    "order": "13",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/ActiveEndPoint",
+      "request": "address=#title#",
+      "retain": "0"
+    }
+  },
+  "SimpleDescriptorRequest": {
+    "name": "SimpleDescriptorRequest",
+    "order": "14",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/SimpleDescriptorRequest",
+      "request": "address=#title#&endPoint=#message#",
+      "retain": "0"
+    }
   }
 }

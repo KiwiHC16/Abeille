@@ -234,7 +234,8 @@
             if ($Command['SetPermit']=="Inclusion")
             {
                 
-                
+                $cmd = "0049";
+                $lenth = "0004";
                 // <target short address: uint16_t>
                 // <interval: uint8_t>
                 // <TCsignificance: uint8_t>
@@ -255,9 +256,68 @@
                 // 02 10: <TCsignificance: uint8_t> 00
                 
                 // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                sendCmd($dest,"0049","0004","FFFCFE00"); //1E = 30 secondes
+                sendCmd($dest,$cmd,$lenth,"FFFCFE00"); //1E = 30 secondes
                 
             }
+        }
+        
+        if ( isset($Command['getGroupMembership']) )
+        {
+                $cmd = "0062";
+            
+                // <address mode: uint8_t>
+                // <target short address: uint16_t>
+                // <source endpoint: uint8_t>
+                // <destination endpoint: uint8_t>
+                // <group count: uint8_t>
+                // <group list:data>
+
+                $addressMode = "02"; // Short Address -> 2
+                $address = $Command['address']; // -> 4
+                $sourceEndpoint = "01"; // -> 2
+                $destinationEndpoint = "01"; // -> 2
+                $groupCount = "00"; // -> 2
+                $groupList = ""; // ? Not mentionned in the ZWGUI -> 0
+                //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
+                $lenth = "0006";
+            
+                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupCount . $groupList ;
+                
+                sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        if ( isset($Command['ActiveEndPoint']) )
+        {
+            $cmd = "0045";
+            
+            // <target short address: uint16_t>
+            
+            $address = $Command['address']; // -> 4
+            
+            //  4 = 4/2 => 2
+            $lenth = "0002";
+            
+            $data = $address;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        if ( isset($Command['SimpleDescriptorRequest']) )
+        {
+            $cmd = "0043";
+            
+            // <target short address: uint16_t>
+            // <endpoint: uint8_t>
+            
+            $address = $Command['address']; // -> 4
+            $endpoint = $Command['endPoint']; // -> 2
+            
+            //  4 + 2 = 6/2 => 3
+            $lenth = "0003";
+            
+            $data = $address . $endpoint ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
         }
         
         if ( isset($Command['identifySend']) )

@@ -17,6 +17,8 @@
     include("lib/Tools.php");
 
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
+    
+    // print_r( $clusterTab );
 
     function getNumberFromLeve($loglevel)
     {
@@ -140,7 +142,7 @@
         return $return;
     }
 
-    function protocolDatas($datas, $mqtt, $qos)
+    function protocolDatas($datas, $mqtt, $qos, $clusterTab)
     {
         // datas: trame complete recue sur le port serie sans le start ni le stop.
         // 01: 01 Start
@@ -281,7 +283,7 @@
                         break;
 
                     case "8043" :
-                        decode8043($mqtt, $payload, $ln, $qos);
+                        decode8043($mqtt, $payload, $ln, $qos, $clusterTab);
                         break;
 
                     case "8044" :
@@ -317,7 +319,18 @@
                         break;
                     ##Reponse groupe
                     ##8060-8063
-
+                    case "8060" :
+                        decode8060($mqtt, $payload, $ln, $qos);
+                        break;
+                        
+                    case "8062" :
+                        decode8062($mqtt, $payload, $ln, $qos);
+                        break;
+                        
+                    case "8063" :
+                        decode8063($mqtt, $payload, $ln, $qos);
+                        break;
+                    
                     #reponse scene
                     #80a0-80a6
 
@@ -669,18 +682,40 @@
         deamonlog(hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
 
-    function decode8043($mqtt, $payload, $ln, $qos)
+    function decode8043($mqtt, $payload, $ln, $qos, $clusterTab)
     {
+        // <Sequence number: uint8_t>   -> 2
+        // <status: uint8_t>            -> 2
+        // <nwkAddress: uint16_t>       -> 4
+        // <length: uint8_t>            -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <profile: uint16_t>          -> 4
+        // <device id: uint16_t>        -> 4
+        // <bit fields: uint8_t >       -> 2
+        // <InClusterCount: uint8_t >   -> 2
+        // <In cluster list: data each entry is uint16_t> -> 4
+        // <OutClusterCount: uint8_t>   -> 2
+        // <Out cluster list: data each entry is uint16_t> -> 4
+        // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
+        
         deamonlog('debug', 'Type: 8043 (Simple Descriptor Response)(Not Processed)');
-        deamonlog('debug', 'SQN : '.substr($payload, 0, 2));
-        deamonlog('debug', 'Status : '.substr($payload, 2, 2));
-        deamonlog('debug', 'Short Address : '.substr($payload, 4, 4));
-        deamonlog('debug', 'Length : '.substr($payload, 8, 2));
-        if (intval(substr($payload, 8, 2)) > 0) {
-            deamonlog("debug", "Endpoint : ".substr($payload, 10, 2));
-
-            //PAS FINI
+        deamonlog('debug', 'SQN : '             .substr($payload, 0, 2));
+        deamonlog('debug', 'Status : '          .substr($payload, 2, 2));
+        deamonlog('debug', 'Short Address : '   .substr($payload, 4, 4));
+        deamonlog('debug', 'Length : '          .substr($payload, 8, 2));
+        deamonlog('debug', 'endpoint : '        .substr($payload,10, 2));
+        deamonlog('debug', 'profile : '         .substr($payload,12, 4));
+        deamonlog('debug', 'deviceId : '        .substr($payload,16, 4));
+        deamonlog('debug', 'bitField : '        .substr($payload,20, 2));
+        deamonlog('debug', 'InClusterCount : '  .substr($payload,22, 2));
+        for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
+            deamonlog('debug', 'In cluster: '    .substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
         }
+        deamonlog('debug', 'OutClusterCount : '  .substr($payload,24+$i, 2));
+        for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
+                deamonlog('debug', 'Out cluster: '    .substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+        }
+
     }
 
     function decode8044($mqtt, $payload, $ln, $qos)
@@ -695,13 +730,13 @@
     function decode8045($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'type: 8045 (Active Endpoints Response)(Not Processed)');
-        deamonlog('debug', 'SQN : '.substr($payload, 0, 2));
-        deamonlog('debug', 'Status : '.substr($payload, 2, 2));
-        deamonlog('debug', 'Short Address : '.substr($payload, 4, 4));
-        deamonlog('debug', 'Endpoint Count : '.substr($payload, 8, 2));
+        deamonlog('debug', 'SQN : '             .substr($payload, 0, 2));
+        deamonlog('debug', 'Status : '          .substr($payload, 2, 2));
+        deamonlog('debug', 'Short Address : '   .substr($payload, 4, 4));
+        deamonlog('debug', 'Endpoint Count : '  .substr($payload, 8, 2));
         deamonlog('debug', 'Endpoint List :');
         for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
-            deamonlog('debug', 'Endpoint : '.substr($payload, (8 + $i), 2));
+            deamonlog('debug', 'Endpoint : '    .substr($payload, (10 + $i), 2));
         }
     }
 
@@ -762,6 +797,65 @@
     ##TODO
     ##Reponse groupe
     ##8060-8063
+    function decode8060($mqtt, $payload, $ln, $qos)
+    {
+        deamonlog('debug', 'Type: 8060: (Add a group response)(Decoded but Not Processed)');
+        // <Sequence number: uint8_t>
+        // <endpoint: uint8_t>
+        // <Cluster id: uint16_t>
+        deamonlog('debug', 'SQN: '          .substr($payload, 0, 2));
+        deamonlog('debug', 'endPoint: '     .substr($payload, 2, 2));
+        deamonlog('debug', 'clusterId: '    .substr($payload, 4, 4));
+    }
+    
+    
+    
+    function decode8062($mqtt, $payload, $ln, $qos)
+    {
+        deamonlog('debug', 'Type: 8062: (Group Memebership)(Processed->Draft-MQTT)');
+        // <Sequence number: uint8_t>   -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <Cluster id: uint16_t>       -> 4
+        // <capacity: uint8_t>          -> 2
+        // <Group count: uint8_t>       -> 2
+        // <List of Group id: list each data item uint16_t>
+        deamonlog('debug', 'payload length: '          .strlen($payload) );
+        $groupSize = strlen($payload)-12-2; // 2 last are RSSI
+        deamonlog('debug', 'group part of the payload length: '          .$groupSize );
+        
+        
+        deamonlog('debug', 'SQN: '          .substr($payload, 0, 2));
+        deamonlog('debug', 'endPoint: '     .substr($payload, 2, 2));
+        deamonlog('debug', 'clusterId: '    .substr($payload, 4, 4));
+        deamonlog('debug', 'capacity: '     .substr($payload, 8, 2));
+        deamonlog('debug', 'group count: '  .substr($payload,10, 2));
+        $groupCount = hexdec( substr($payload,10, 2) );
+        for ($i=0;$i<$groupCount;$i++)
+        {
+            deamonlog('debug', 'group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
+        }
+        
+        deamonlog('debug', '  Level: 0x'.substr($payload, strlen($payload)-2, 2));
+
+    }
+
+    function decode8063($mqtt, $payload, $ln, $qos)
+    {
+        deamonlog('debug', 'Type: 8063: (Remove a group response)(Decoded but Not Processed)');
+        // <Sequence number: uin8_t>    -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <Cluster id: uint16_t>       -> 4
+        // <status: uint8_t>            -> 2
+        // <Group id: uint16_t>         -> 4
+        
+        deamonlog('debug', 'SQN: '          .substr($payload, 0, 2));
+        deamonlog('debug', 'endPoint: '     .substr($payload, 2, 2));
+        deamonlog('debug', 'clusterId: '    .substr($payload, 4, 4));
+        deamonlog('debug', 'statusId: '     .substr($payload, 8, 2));
+        deamonlog('debug', 'groupId: '      .substr($payload,10, 4));
+    }
+    
+
 
     ##TODO
     #reponse scene
@@ -1119,7 +1213,7 @@
         }
         //traitement de chaque trame;
         $data = $fifoIN->read();
-        protocolDatas($data, $mqtt,$qos);
+        protocolDatas( $data, $mqtt, $qos, $clusterTab);
         usleep(1);
 
     }

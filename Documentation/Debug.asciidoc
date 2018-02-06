@@ -126,6 +126,71 @@ image::images/Capture_d_ecran_2018_01_26_a_10_46_13.png[]
 
 image::images/Capture_d_ecran_2018_01_26_a_10_52_58.png[]
 
+=== Investigate Equipements
+
+La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.
+
+image::images/Capture_d_ecran_2018_02_06_a_17_33_19.png[]
+
+Dans ActiveEndPoint mettre l'adresse de l'équipement dans le titre puis clic sur le bouton ActiveEndPoint.
+
+Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:
+[source,]
+----
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]SQN : da
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
+----
+
+Il y a donc une seul EndPoint à l'adresse "01" (Donné par les lignes suivant "Endpoint List".
+
+Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.
+
+[source,]
+----
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length: 5
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status: 00-(Success)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN: db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 quality: 93
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 (Simple Descriptor Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN : db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length : 20
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]endpoint : 01
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]profile : c05e
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]deviceId : 0100
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]bitField : 02
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]InClusterCount : 08
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0005 - General: Scenes
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0006 - General: On/Off
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0008 - General: Level Control
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0B05 - Misc: Diagnostics
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 1000 - ZLL: Commissioning
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
+----
+
+Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
 ...
 

@@ -88,6 +88,19 @@ image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 * git clone https://github.com/KiwiHC16/Abeille.git Abeille
 ----
 
+Et pour le developpeurs, voici une info que je n'ai pas testée mais peut être très utile:
+[source,]
+----
+Pour une mise à jour à partir de github :
+cd ../../var/www/html/plugins/Abeille
+sudo git pull https://github.com/KiwiHC16/Abeille
+
+Et si il y a eu des bidouilles en local pour écraser avec dernière mise à jour :
+cd /var/www/html/plugins/Abeille
+sudo git reset --hard HEAD
+sudo git pull https://github.com/KiwiHC16/Abeille
+----
+
 - Et pour finir
 [source,]
 ----

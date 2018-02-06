@@ -974,8 +974,8 @@
         // 0x22	uint32
         // 0x25	uint48
         // 0x28	int8                    -> hexdec(2)
-        // 0x29	int16                   -> hexdec
-        // 0x2a	int32
+        // 0x29	int16                   -> unpack("s", pack("s", hexdec(
+        // 0x2a	int32                   -> unpack("l", pack("l", hexdec(
         // 0x30	Enumeration : 8bit
         // 0x42	string                  -> hex2bin
         if ($dataType == "10") {
@@ -990,11 +990,19 @@
         if ($dataType == "21") {
             $data = hexdec(substr($payload, 24, 4));
         }
+        // Utilisé pour remonter la pression par capteur Xiaomi Carré.
         if ($dataType == "28") {
+            deamonlog(
+                      'debug',
+                      'Warning, dataType 28, decodage avec hexdec mais ne fonctionne pas sur des nombres negatifs, si voyez cette ligne avec des nombres negatifs, il faut un correctif, pas le temps de le faire maintenant'
+                      );
             $data = hexdec(substr($payload, 24, 2));
         }
+        // Example Temperature d un Xiaomi Carre
+        // Sniffer dit Signed 16bit integer
         if ($dataType == "29") {
-            $data = hexdec(substr($payload, 24, 4));
+            // $data = hexdec(substr($payload, 24, 4));
+            $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
         }
         if ($dataType == "42") {
 
@@ -1005,9 +1013,8 @@
                     'Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Rond)'
                 );
                 $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                $temperature = hexdec(
-                    substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2)
-                );
+                // $temperature = hexdec(substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2));
+                $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                 $humidity = hexdec(
                     substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2)
                 );
@@ -1039,9 +1046,9 @@
                     'Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)'
                 );
                 $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                $temperature = hexdec(
-                    substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2)
-                );
+                // $temperature = hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) );
+                $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                
                 $humidity = hexdec(
                     substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2)
                 );

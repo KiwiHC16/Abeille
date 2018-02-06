@@ -71,6 +71,22 @@
                     "action" => $actionId,
                     "clusterId" => "0006",
                 );
+            } elseif ($action == "OnOffHue") {
+                if ($msg == "On") {
+                    $actionId = "01";
+                }
+                if ($msg == "Off") {
+                    $actionId = "00";
+                }
+                if ($msg == "Toggle") {
+                    $actionId = "02";
+                }
+                $Command = array(
+                     "onoffHue" => "1",
+                     "address" => $address,
+                     "action" => $actionId,
+                     "clusterId" => "0006",
+                );
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

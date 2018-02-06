@@ -148,7 +148,9 @@
     function sendCmd( $dest, $cmd,$len,$datas)
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
-        $f=fopen($dest,"w");
+        // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
+        if (0) { $f=fopen("/var/www/html/log/toto","w"); }
+        else { $f=fopen($dest,"w"); }
         
         fwrite($f,pack("H*","01"));
         fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
@@ -505,6 +507,7 @@
         // ON / OFF one object
         if ( isset($Command['onoff']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
         {
+            deamonlog('debug','OnOff for: '.$Command['address']);
             // <address mode: uint8_t>
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>
@@ -524,8 +527,35 @@
             $action = $Command['action'];
             
             sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
+            
+            // Get the state of the equipement as IKEA Bulb don't send back their state.
             $attribute = "0000";
             getParam($dest,$address, $Command['clusterId'], $attribute);
+        }
+        
+        // ON / OFF one object Hue
+        if ( isset($Command['onoffHue']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
+        {
+            deamonlog('debug','OnOffHue for: '.$Command['address']);
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <command ID: uint8_t>
+            // Command Id
+            // 0 - Off
+            // 1 - On
+            // 2 - Toggle
+            
+            $cmd = "0092";
+            $lenth = "0006";
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "0B";
+            $action = $Command['action'];
+            
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
         }
         
         // Group of Objects ON/ OFF

@@ -45,6 +45,9 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/reset",
       "request": "reset"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   },
   "addGroup": {
@@ -69,6 +72,9 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/removeGroup",
       "request": "address=#title#&groupAddress=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   },
   "getName": {

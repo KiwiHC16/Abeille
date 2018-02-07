@@ -918,6 +918,11 @@
                 $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                 // unite
                 $cmdlogic->setDisplay('invertBinary', '0');
+                // La boucle est pour info et pour action
+                foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                    // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                    $cmdlogic->setDisplay($confKey, $confValue);
+                }
                 $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
                 // value
                 // html

@@ -95,6 +95,14 @@
                     "clusterId" => $keywords[1],
                     "attributeId" => $keywords[3],
                 );
+            } elseif ($action == "ReadAttributeRequestHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "ReadAttributeRequestHue" => "1",
+                                 "address" => $address,
+                                 "clusterId" => $keywords[1],
+                                 "attributeId" => $keywords[3],
+                                 );
             } elseif ($action == "setLevel") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

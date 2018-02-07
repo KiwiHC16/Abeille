@@ -15,7 +15,7 @@
      */
     function getChecksum($msgtype,$length,$datas)
     {
-        if (1)
+        if (0)
         {
             deamonlog('debug',"getChecksum()");
             deamonlog('debug', "msgtype: " . $msgtype );
@@ -144,12 +144,38 @@
         sendCmd( $dest, $cmd, $lenth, $data );
     }
     
+    // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
+    function getParamHue($dest,$address,$clusterId,$attributeId)
+    {
+        deamonlog('debug','getParamHue');
+        
+        $cmd = "0100";
+        $lenth = "000E";
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        $destinationEndpoint = "0B";
+        //$ClusterId = "0006";
+        $ClusterId = $clusterId;
+        $Direction = "00";
+        $manufacturerSpecific = "00";
+        $manufacturerId = "0000";
+        $numberOfAttributes = "01";
+        // $attributesList = "0000";
+        $attributesList = $attributeId;
+        
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
+        
+        sendCmd( $dest, $cmd, $lenth, $data );
+    }
     
     function sendCmd( $dest, $cmd,$len,$datas)
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
         // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
-        if (0) { $f=fopen("/var/www/html/log/toto","w"); }
+        if (1) { $f=fopen("/var/www/html/log/toto","w"); }
         else { $f=fopen($dest,"w"); }
         
         fwrite($f,pack("H*","01"));
@@ -511,6 +537,17 @@
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
                 getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+            //}
+        }
+        
+        // ReadAttributeRequest ------------------------------------------------------------------------------------
+        // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
+        if ( (isset($Command['ReadAttributeRequestHue'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
+        {
+            // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
+            // if ( $Command['ReadAttributeRequest']==1 )
+            //{
+            getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
             //}
         }
         

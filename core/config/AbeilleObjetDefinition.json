@@ -1,88 +1,4 @@
 {
-  "lumi.sensor_magnet.aq2": {
-    "nameJeedom": "Xiaomi Door Sensor",
-    "battery_type": "1xCR2032",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "icone": "XiaomiPorte"
-    },
-    "Commandes": {
-      "0000-0001": {
-        "name": "SW",
-        "order": 0,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-      },
-      "0000-0005": {
-        "name": "nom",
-        "order": 1,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-      },
-      "0006-0000": {
-        "name": "etat",
-        "order": 2,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "1",
-        "template": "door"
-      },
-      "Time-Time": {
-        "name": "Last",
-        "order": 3,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-      },
-      "Time-TimeStamp": {
-        "name": "Last Stamp",
-        "order": 4,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "numeric",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "IEEE-Addr": {
-        "name": "IEEE-Addr",
-        "order": 5,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Link-Quality": {
-        "name": "Link Quality",
-        "order": 6,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Power-Source": {
-        "name": "Power Source",
-        "order": 7,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      }
-    }
-  },
   "lumi.sensor_motion": {
     "nameJeedom": "Xiaomi Presence",
     "battery_type": "1xCR2032",
@@ -163,6 +79,187 @@
       "Power-Source": {
         "name": "Power Source",
         "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      }
+    }
+  },
+  "lumi.sensor_motion.aq2": {
+    "nameJeedom": "Xiaomi Presence Aqara",
+    "battery_type": "1xCR2032",
+    "Categorie": {
+      "security": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiInfraRouge"
+    },
+    "Commandes": {
+      "IEEE-Addr": {
+        "name": "IEEE-Addr",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "0000-0001": {
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0406-0000": {
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "1",
+        "template": "presence",
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "1"
+        }
+      },
+      "0400-0000": {
+        "name": "Luminosite",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-Time": {
+        "name": "Last",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "name": "Last Stamp",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "name": "Link Quality",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "name": "Power Source",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      }
+    }
+  },
+  "lumi.sensor_magnet.aq2": {
+    "nameJeedom": "Xiaomi Door Sensor",
+    "battery_type": "1xCR2032",
+    "Categorie": {
+      "security": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiPorte"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-0000": {
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "1",
+        "template": "door"
+      },
+      "Time-Time": {
+        "name": "Last",
+        "order": 3,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "name": "Last Stamp",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "IEEE-Addr": {
+        "name": "IEEE-Addr",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "name": "Link Quality",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "name": "Power Source",
+        "order": 7,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",

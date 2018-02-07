@@ -999,12 +999,17 @@
             $data = hexdec(substr($payload, 24, 4));
         }
         // Utilisé pour remonter la pression par capteur Xiaomi Carré.
+        // Octet 8 bits man pack ne prend pas le 8 bits, il prend à partir de 16 bits.
+        
         if ($dataType == "28") {
-            deamonlog(
-                      'debug',
-                      'Warning, dataType 28, decodage avec hexdec mais ne fonctionne pas sur des nombres negatifs, si voyez cette ligne avec des nombres negatifs, il faut un correctif, pas le temps de le faire maintenant'
-                      );
+            
             $data = hexdec(substr($payload, 24, 2));
+            if ( $data>127 ) {
+                deamonlog(
+                          'debug',
+                          'Warning, dataType 28, decodage avec hexdec mais ne fonctionne pas sur des nombres negatifs, si voyez cette ligne avec des nombres negatifs, il faut un correctif, pas le temps de le faire maintenant'
+                          );
+            }
         }
         // Example Temperature d un Xiaomi Carre
         // Sniffer dit Signed 16bit integer

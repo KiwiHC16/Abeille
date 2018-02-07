@@ -175,7 +175,7 @@
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
         // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
-        if (1) { $f=fopen("/var/www/html/log/toto","w"); }
+        if (0) { $f=fopen("/var/www/html/log/toto","w"); }
         else { $f=fopen($dest,"w"); }
         
         fwrite($f,pack("H*","01"));

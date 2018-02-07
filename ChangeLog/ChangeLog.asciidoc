@@ -3,3 +3,6 @@
 Version Beta en cours de development.
 
 
+Toutes les informations sur la page:
+https://github.com/KiwiHC16/Abeille/commits/beta
+

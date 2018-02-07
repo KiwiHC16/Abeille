@@ -437,6 +437,72 @@
             
         }
         
+        // setLevel on one object Hue
+        if ( isset($Command['setLevelHue']) && isset($Command['address']) && isset($Command['clusterId']) && isset($Command['Level']) && isset($Command['duration']) )
+        {
+            deamonlog('debug',"set Level for Hue");
+            $cmd = "0081";
+            // 11:53:06.479 -> 01 02 10 81 02 10 02 19 C6 02 12 83 DF 02 11 02 11 02 11 AA 02 10 BB 03
+            //                 01 02 10 81 02 10 02 19 d7 02 12 83 df 02 11 02 11 02 11 02 11 02 11 03
+            //
+            // 02 83 DF 01 01 01 ff 00 BB
+            //
+            // 01: Start
+            // 02 10 81: Msg Type: 00 81 -> Move To Level
+            // 02 10 02 19: Lenght
+            // C6: CRC
+            // 02 12: <address mode: uint8_t> : 02
+            // 83 DF: <target short address: uint16_t> 83 DF (Lampe Z Ikea)
+            // 02 11: <source endpoint: uint8_t>: 01
+            // 02 11: <destination endpoint: uint8_t>: 01
+            // 02 11: <onoff : uint8_t>: 01
+            // AA: <Level: uint8_t > AA Value I put to identify easely: Level to reach
+            // 02 10 BB: <Transition Time: uint16_t>: 00BB Value I put to identify easely: Transition duration
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "0B";
+            $onoff = "01";
+            if ( $Command['Level']<16 )
+            {
+                $level = "0".dechex($Command['Level']); // echo "setLevel: ".$Command['Level']."-".$level."-\n";
+            }
+            else
+            {
+                $level = dechex($Command['Level']); // echo "setLevel: ".$Command['Level']."-".$level."-\n";
+            }
+            
+            // $duration = "00" . $Command['duration'];
+            if ( $Command['duration']<16 )
+            {
+                $duration = "0".dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
+            }
+            else
+            {
+                $duration = dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
+            }
+            $duration = "00" . $duration;
+            
+            // 11:53:06.543 <- 01 80 00 00 04 53 00 56 00 81 03
+            // 11:53:06.645 <- 01 81 01 00 06 DD 56 01 00 08 04 00 03
+            // 8 16 8 8 8 8 16
+            // 2  4 2 2 2 2  4 = 18/2d => 9d => 0x09
+            $lenth = "0009";
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
+            // echo "data: " . $data . "\n";
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+            // Je ne sais pas si ca marche pour Hue
+            // getParam($dest,$address, $Command['clusterId'] );
+            // sleep(1);
+            // getParam($dest,$address, $Command['clusterId'], "0000" );
+            // getParam($dest,$address, $Command['clusterId'], "0000" );
+            
+            
+        }
+        
         // ReadAttributeRequest ------------------------------------------------------------------------------------
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
         if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )

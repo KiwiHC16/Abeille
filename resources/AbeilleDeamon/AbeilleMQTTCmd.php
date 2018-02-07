@@ -104,6 +104,15 @@
                     "Level" => intval($keywords[1] * 255 / 100),
                     "duration" => $keywords[3],
                 );
+            } elseif ($action == "setLevelHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setLevelHue" => "1",
+                                 "address" => $address,
+                                 "clusterId" => "0008",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
             }
             elseif ($action == "identifySend") {
                 $keywords = preg_split("/[=&]+/", $msg);

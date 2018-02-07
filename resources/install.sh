@@ -69,11 +69,16 @@ function addMosquittoRepo
     echo "distrib: $archi Release trouvée: ${distrib} Version trouvée: ${version}"
 
     [[  "x86_64i686armv7larmv6l" != *${archi}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette archi: ${archi}"
-    [[  "UbuntuDebianRaspbian" !=  *${distrib}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette distribution: ${distrib}"
-    [[  "jessiestrech" != *${version}* ]] && arretSiErreur "Erreur critique: les versions connues sont jessie et stretch.ici, on a ${version}"
 
     #Nothing to do for Ubuntu
     [[ "Ubuntu" == ${distrib} ]] && return 1
+
+    #Debian Raspbian same file location
+    [[  "DebianRaspbian" !=  *${distrib}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette distribution: ${distrib}, les connues sont Ubuntu, Debian et Raspbian"
+
+    #the old stable jessie and the newest stable stretch
+    [[  "jessiestretch" != *${version}* ]] && arretSiErreur "Erreur critique: les versions connues sont Jessie et Stretch.ici, on a ${version}"
+
 
     addMosquittoRepoKey
 

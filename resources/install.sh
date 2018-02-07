@@ -1,5 +1,14 @@
 #!/bin/bash
-#set -x
+set -x
+
+# Variables
+PROGRESS_FILE=/tmp/jeedom/Abeille/dependancy_abeille_in_progress
+#Nombre d'essai pour dl les paquets
+tries=3
+
+
+# Functions
+
 function arret
 {
   echo
@@ -30,12 +39,58 @@ function arretSiErreur
   exit 1
 }
 
+function addMosquittoRepoKey
+{
+if [ -f mosquitto-repo.gpg.key ]; then
+    echo "Efface ancien mosquitto-repo.gpg.key"
+    rm mosquitto-repo.gpg.key
+fi
+
+wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la récupération de la clé du dépot moquitto. Pb réseau ?"
+apt-key add mosquitto-repo.gpg.key
+
+if [ -f mosquitto-repo.gpg.key ]; then
+    echo "Efface la clé importée"
+    rm mosquitto-repo.gpg.key
+fi
+
+}
+
+function addMosquittoRepo
+{
+
+    [[ $# != 3 ]] && arretSiErreur "Appel a la fonction addMosquittoRepo avec parametres incorrects var1=$1 var2=$2 var3=$3"
+
+    archi=$1
+    distrib=$2
+    version=$3
+
+    echo "distrib: $archi Release trouvée: ${distrib} Version trouvée: ${version}"
+
+    [[  "x86_64i686armv7larmv6l" != *${archi}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette archi: ${archi}"
+    [[  "UbuntuDebianRaspbian" !=  *${distrib}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette distribution: ${distrib}"
+    [[  "jessiestrech" != *${version}* ]] && arretSiErreur "Erreur critique: les versions connues sont jessie et stretch.ici, on a ${version}"
+
+    #Nothing to do for Ubuntu
+    [[ "Ubuntu" == ${distrib} ]] && return 1
+
+    addMosquittoRepoKey
+
+    if [ -f /etc/apt/sources.list.d/mosquitto-${version}.list ]; then
+      echo "Efface ancien /etc/apt/sources.list.d/mosquitto-${version}.list"
+      rm /etc/apt/sources.list.d/mosquitto-${version}.list
+    fi
+
+    wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-${version}.list -O /etc/apt/sources.list.d/mosquitto-${version}.list
+    [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto pour la ${distrib}-${version}. Pb réseau ?"
+}
+
+
+# MAIN
 echo "Début d'installation des dépendances"
 
-PROGRESS=/tmp/jeedom/Abeille/dependancy_abeille_in_progress
-#Nombre d'essai pour dl les paquets
-tries=3
-
+### INIT
 if [ ! -z $1 ]; then
 	PROGRESS_FILE=$1
 fi
@@ -84,99 +139,8 @@ echo
 echo "Avancement: 8% ---------------------------------------------------------------------------------------------------> Ajout repo mosquitto"
 echo
 
-if [ -f mosquitto-repo.gpg.key ]; then
-    echo "Efface ancien mosquitto-repo.gpg.key"
-    rm mosquitto-repo.gpg.key
-fi
-
-wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
-[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la récupération de la clé du dépot moquitto. Pb réseau ?"
-apt-key add mosquitto-repo.gpg.key
-
-if [ -f mosquitto-repo.gpg.key ]; then
-    echo "Efface la clé importée"
-    rm mosquitto-repo.gpg.key
-fi
-
 # Test sur l archi mais en fait on fait la meme chose, je garde le test si on devait en avoir besoin.
-archi=`lscpu | grep Architecture | awk '{ print $2 }'`
-echo "Architecture: "$archi
-
-if [ "$archi" == "x86_64" ] || [ "$archi" == "i686" ]; then
-
-  if [ `lsb_release -i -s` == "Debian" ]; then
-
-    echo "Release trouvée: Debian"
-
-    if [ `lsb_release -c -s` == "jessie" ]; then
-      echo "Version trouvée: jessie"
-
-      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
-        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
-        rm /etc/apt/sources.list.d/mosquitto-jessie.list
-      fi
-
-      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
-      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
-    elif [ `lsb_release -c -s` == "stretch" ]; then
-
-      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
-        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
-        rm /etc/apt/sources.list.d/mosquitto-stretch.list
-      fi
-
-      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
-      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
-
-    else
-        echo "Erreur critique: je ne connais pas cette version."
-        arretSiErreur "Erreur critique: je ne connais pas cette version."
-    fi
-
-  else
-    echo "Erreur critique: je ne connais pas cette distribution."
-    arretSiErreur "Erreur critique: je ne connais pas cette distribution."
-  fi
-
-elif [ "$archi" == "armv7l" ] || [ "$archi" == "armv6l" ]; then
-
-  if [ `lsb_release -i -s` == "Raspbian" ]; then
-
-    if [ `lsb_release -c -s` == "jessie" ]; then
-      echo "Version trouvée: jessie"
-
-      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
-        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
-        rm /etc/apt/sources.list.d/mosquitto-jessie.list
-      fi
-
-      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-jessie.list -O /etc/apt/sources.list.d/mosquitto-jessie.list
-      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
-
-    elif [ `lsb_release -c -s` == "stretch" ]; then
-
-      if [ -f /etc/apt/sources.list.d/mosquitto-jessie.list ]; then
-        echo "Efface ancien /etc/apt/sources.list.d/mosquitto-jessie.list"
-        rm /etc/apt/sources.list.d/mosquitto-stretch.list
-      fi
-
-      wget --tries=${tries} http://repo.mosquitto.org/debian/mosquitto-stretch.list -O /etc/apt/sources.list.d/mosquitto-stretch.list
-      [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots mosquitto. Pb réseau ?"
-
-    else
-      echo "Erreur critique: je ne connais pas cette version."
-      arretSiErreur "Erreur critique: je ne connais pas cette version."
-    fi
-
-  else
-    echo "Erreur critique: je ne connais pas cette distribution."
-    arretSiErreur "Erreur critique: je ne connais pas cette distribution."
-  fi
-
-else
-  echo "Erreur critique: Je ne connais pas ce type de HW."
-  arretSiErreur "Erreur critique: Je ne connais pas ce type de HW."
-fi
+addMosquittoRepo `lscpu | grep Architecture | awk '{ print $2 }'` `lsb_release -i -s` `lsb_release -c -s`
 
 echo 10 > ${PROGRESS_FILE}
 echo

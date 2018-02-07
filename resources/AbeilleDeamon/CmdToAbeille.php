@@ -661,6 +661,31 @@
             sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
         }
         
+        // ON / OFF one object OSRAM plug
+        if ( isset($Command['onoffOSRAM']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
+        {
+            deamonlog('debug','OnOffOSRAM for: '.$Command['address']);
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <command ID: uint8_t>
+            // Command Id
+            // 0 - Off
+            // 1 - On
+            // 2 - Toggle
+            
+            $cmd = "0092";
+            $lenth = "0006";
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "03";
+            $action = $Command['action'];
+            
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
+        }
+        
         // Group of Objects ON/ OFF
         if ( isset($Command['groupOnOff']) && isset($Command['addressOnOff']) && isset($Command['action']) )
         {

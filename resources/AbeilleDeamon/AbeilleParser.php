@@ -760,9 +760,17 @@
 
     function decode8048($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', ' type: 8048 (Leave Indication)(Not Processed)');
+        deamonlog('debug', ' type: 8048 (Leave Indication)(Processed->Draft-MQTT)');
         deamonlog('debug', 'extended addr : '.substr($payload, 0, 16));
         deamonlog('debug', 'rejoin status : '.substr($payload, 16, 2));
+        
+        $SrcAddr = "Ruche";
+        $ClusterId = "joinLeave";
+        $AttributId = "IEEE";
+        $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
+        
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
     }
 
     function decode804A($mqtt, $payload, $ln, $qos)
@@ -812,7 +820,7 @@
     
     function decode8062($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8062: (Group Memebership)(Processed->Draft-MQTT)');
+        deamonlog('debug', 'Type: 8062: (Group Memebership)(Decoded but Not Processed)');
         // <Sequence number: uint8_t>   -> 2
         // <endpoint: uint8_t>          -> 2
         // <Cluster id: uint16_t>       -> 4

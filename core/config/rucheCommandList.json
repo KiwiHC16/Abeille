@@ -153,9 +153,19 @@
     "invertBinary": "0",
     "template": ""
   },
+  "joinLeave-IEEE": {
+    "name": "joinLeave",
+    "order": "13",
+    "isHistorized": "1",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
   "ActiveEndPoint": {
     "name": "ActiveEndPoint",
-    "order": "13",
+    "order": "14",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -168,7 +178,7 @@
   },
   "SimpleDescriptorRequest": {
     "name": "SimpleDescriptorRequest",
-    "order": "14",
+    "order": "15",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

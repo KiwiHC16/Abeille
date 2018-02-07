@@ -126,6 +126,27 @@ image::images/Capture_d_ecran_2018_01_26_a_10_46_13.png[]
 
 image::images/Capture_d_ecran_2018_01_26_a_10_52_58.png[]
 
+* Avec la liste des equipements vous avez la liste connue par zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
+
+image::images/Capture_d_ecran_2018_02_07_a_12_54_55.png[]
+
+Nous pouvons voir que l objet ayant pour adresse complete IEEE: 00158d00016d8d4f s'est déconnecté (Leave) avec l'information 00 (Pas décodé pour l'instant).
+
+Si vous souhaitez avoir l'historique alors allez dans le menu:
+
+image::images/Capture_d_ecran_2018_02_07_a_12_49_42.png[]
+
+Puis choisissez Ruche-joinLeave:
+
+image::images/Capture_d_ecran_2018_02_07_a_12_49_56.png[]
+
+et là vous devez avoir toutes les informations:
+
+image::images/Capture_d_ecran_2018_02_07_a_12_50_09.png[]
+
+
+
+
 === Investigate Equipements
 
 La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.

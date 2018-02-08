@@ -1,7 +1,7 @@
 {
   "Version": {
     "name": "Version",
-    "order": "",
+    "order": "0",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -74,12 +74,57 @@
       "request": "address=#title#&groupAddress=#message#"
     },
     "display": {
+      "forceReturnLineAfter": "0"
+    }
+  },
+  "getGroupMemberShip": {
+    "name": "getGroupMemberShip",
+    "order": "6",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/getGroupMembership",
+      "request": "address=#title#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "Bind": {
+    "name": "Bind",
+    "order": "7",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/bind",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0"
+    }
+  },
+  "SetReport": {
+    "name": "setReport",
+    "order": "8",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/setReport",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
       "forceReturnLineAfter": "1"
     }
   },
   "getName": {
     "name": "Get Name",
-    "order": "6",
+    "order": "9",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -91,7 +136,7 @@
   },
   "ReadAttributeRequest": {
     "name": "Get Attribut",
-    "order": "7",
+    "order": "10",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -103,7 +148,7 @@
   },
   "AbeilleList": {
     "name": "Liste Equipements",
-    "order": "8",
+    "order": "11",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -115,7 +160,7 @@
   },
   "Time-Time": {
     "name": "Last",
-    "order": "9",
+    "order": "12",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -125,7 +170,7 @@
   },
   "Time-TimeStamp": {
     "name": "Last Stamps",
-    "order": "10",
+    "order": "13",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -135,7 +180,7 @@
   },
   "SW-Application": {
     "name": "SW",
-    "order": "11",
+    "order": "14",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -145,7 +190,7 @@
   },
   "SW-SDK": {
     "name": "SDK",
-    "order": "12",
+    "order": "15",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -155,7 +200,7 @@
   },
   "joinLeave-IEEE": {
     "name": "joinLeave",
-    "order": "13",
+    "order": "16",
     "isHistorized": "1",
     "isVisible": "1",
     "Type": "info",
@@ -165,7 +210,7 @@
   },
   "ActiveEndPoint": {
     "name": "ActiveEndPoint",
-    "order": "14",
+    "order": "17",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -178,7 +223,7 @@
   },
   "SimpleDescriptorRequest": {
     "name": "SimpleDescriptorRequest",
-    "order": "15",
+    "order": "18",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

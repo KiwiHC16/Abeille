@@ -152,6 +152,8 @@ $eqLogics = eqLogic::byType('Abeille');
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
                 <option value="Abeille">{{Abeille}}</option>
                   
+                  <option value="Ruche">{{Ruche}}</option>
+                  
                   <option value="XiaomiBouton">{{Xiaomi Bouton}}</option>
                   <option value="XiaomiBouton1">{{Xiaomi Bouton 1}}</option>
                   

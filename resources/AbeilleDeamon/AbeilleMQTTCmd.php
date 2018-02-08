@@ -154,12 +154,16 @@
                                  "duration"=> "0010" // $keywords[1]
                                  );
             }
+            
+            /* at ruche level pour l instant
             elseif ($action == "getGroupMembership") {
                 $Command = array(
                                  "getGroupMembership" => "1",
                                  "address" => $address
                                  );
             }
+            */
+             
             /* elseif ($action == "") {
              $keywords = preg_split("/[=&]+/", $msg);
              $Command = array(
@@ -172,8 +176,9 @@
              */
             
             else {
-                deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' might be a ruche one');
-                
+                if ( $address != "Ruche"){
+                    deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' not even for ruche');
+                }
             }
             
             

@@ -850,7 +850,7 @@
             $elogic->setConfiguration('topic', "Abeille/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setIsVisible("1");
-            $elogic->setConfiguration('icone',"Abeille");
+            $elogic->setConfiguration('icone',"Ruche");
             // eqReal_id
             $elogic->setIsEnable("1");
             // status

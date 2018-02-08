@@ -165,6 +165,8 @@ $eqLogics = eqLogic::byType('Abeille');
                   
                   <option value="HueGo">{{Philips Hue Go}}</option>
                   
+                  <option value="Plug 01">{{OSRAM Prise}}</option>
+                  
                   
                 <option value="433">{{RF433}}</option>
                 <option value="barometre">{{Baromètre}}</option>

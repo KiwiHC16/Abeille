@@ -629,11 +629,13 @@
 
     function decode8030($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8030: (	Bind response)(Not Processed)');
-        deamonlog('debug', ' (Not processed*************************************************************)');
-        deamonlog('debug', '  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug', 'Message: ');
-        deamonlog(hex2str(substr($payload, 2, strlen($payload) - 2)));
+        // <Sequence number: uint8_t>
+        // <status: uint8_t>
+        
+        deamonlog('debug', 'Type: 8030: (	Bind response)(Decoded but Not Processed)');
+        deamonlog('debug', 'SQN: 0x'.substr($payload, 0, 2));
+        deamonlog('debug', 'Status: 0x'.substr($payload, 2, 2));
+        
     }
 
     function decode8031($mqtt, $payload, $ln, $qos)
@@ -843,7 +845,7 @@
             deamonlog('debug', 'group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
         }
         
-        deamonlog('debug', '  Level: 0x'.substr($payload, strlen($payload)-2, 2));
+        deamonlog('debug', 'Level: 0x'.substr($payload, strlen($payload)-2, 2));
 
     }
 
@@ -1157,11 +1159,19 @@
 
     function decode8120($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8120: (Configure Reporting response)(Not Processed)');
-        deamonlog('debug', ' (Not processed*************************************************************)');
-        deamonlog('debug', '  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug', 'Message: ');
-        deamonlog(hex2str(substr($payload, 2, strlen($payload) - 2)));
+        deamonlog('debug', 'Type: 8120: (Configure Reporting response)(Decoded but not Processed)');
+        
+        // <Sequence number: uint8_t>
+        // <Src address : uint16_t>
+        // <Endpoint: uint8_t>
+        // <Cluster id: uint16_t>
+        // <Status: uint8_t>
+        deamonlog('debug', 'SQN: '              .substr($payload, 0, 2));
+        deamonlog('debug', 'Source address: '   .substr($payload, 2, 4));
+        deamonlog('debug', 'EndPoint: '         .substr($payload, 6, 2));
+        deamonlog('debug', 'Cluster Id: '       .substr($payload, 8, 4));
+        deamonlog('debug', 'Status: '           .substr($payload,12, 2));
+    
     }
 
     function decode8140($mqtt, $payload, $ln, $qos)

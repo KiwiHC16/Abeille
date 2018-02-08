@@ -232,7 +232,8 @@
     // Dest: destination to send data in normal situation to /dev/ttyUSB0 or toto for debugging for example.
     // please keep command definition order by command Id, easier to match with documentation 1216
     {
-
+        deamonlog('debug',"begin processCmd function");
+        
         $GLOBALS['requestedlevel']=$_requestedlevel;
 
         if (!isset($Command)) return;
@@ -314,6 +315,99 @@
                 sendCmd($dest,$cmd,$lenth,"FFFCFE00"); //1E = 30 secondes
                 
             }
+        }
+        
+        // Bind
+        // Title => 000B57fffe3025ad (IEEE de l ampoule)
+        // message => reportToAddress=00158D0001B22E24&ClusterId=0006
+        if ( isset($Command['bind']) )
+        {
+            deamonlog('debug',"command bind");
+            // Msg Type = 0x0030
+            $cmd = "0030";
+            
+            // <target extended address: uint64_t>                                  -> 16
+            // <target endpoint: uint8_t>                                           -> 2
+            // <cluster ID: uint16_t>                                               -> 4
+            // <destination address mode: uint8_t>                                  -> 2
+            // <destination address:uint16_t or uint64_t>                           -> 4 / 16 => 0000 for Zigate
+            // <destination endpoint (value ignored for group address): uint8_t>    -> 2
+            
+            // $targetExtendedAddress  = "000B57fffe3025ad";
+            $targetExtendedAddress  = $Command['address'];
+            $targetEndpoint         = "01";
+            // $clusterID              = "0006";
+            $clusterID              = $Command['ClusterId'];
+            // $destinationAddressMode = "02";
+            $destinationAddressMode = "03";
+            
+            // $destinationAddress     = "0000";
+            // $destinationAddress     = "00158D0001B22E24";
+            $destinationAddress     = $Command['reportToAddress'];
+            
+            $destinationEndpoint    = "01";
+            //  16 + 2 + 4 + 2 + 4 + 2 = 30/2 => 15 => F
+            // $lenth = "000F";
+            //  16 + 2 + 4 + 2 + 16 + 2 = 42/2 => 21 => 15
+            $lenth = "0015";
+            
+            $data =  $targetExtendedAddress . $targetEndpoint . $clusterID . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        // setReport
+        // Title =>
+        // message =>
+        if ( isset($Command['setReport']) )
+        {
+            deamonlog('debug',"command setReport");
+            // Configure Reporting request
+            // Msg Type = 0x0120
+
+            $cmd = "0120";
+            
+            // <address mode: uint8_t>              -> 2
+            // <target short address: uint16_t>     -> 4
+            // <source endpoint: uint8_t>           -> 2
+            // <destination endpoint: uint8_t>      -> 2
+            // <Cluster id: uint16_t>               -> 4
+            // <direction: uint8_t>                 -> 2
+            // <manufacturer specific: uint8_t>     -> 2
+            // <manufacturer id: uint16_t>          -> 4
+            // <number of attributes: uint8_t>      -> 2
+            // <attributes list: data list of uint16_t  each>
+            //      Attribute direction : uint8_t   -> 2
+            //      Attribute type : uint8_t        -> 2
+            //      Attribute id : uint16_t         -> 4
+            //      Min interval : uint16_t         -> 4
+            //      Max interval : uint16_t         -> 4
+            //      Timeout : uint16_t              -> 4
+            //      Change : uint8_t                -> 2
+            
+            $addressMode            = "02";                     // 01 = short
+            $targetShortAddress     = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $ClusterId              = $Command['ClusterId'];
+            $direction              = "00";                     // To Server / To Client
+            $manufacturerSpecific   = "00";                     // Tx Server / Rx Client
+            $manufacturerId         = "0000";                   // ?
+            $numberOfAttributes     = "01";                     // One element at a time
+            $AttributeDirection     = "00";                     // ?
+            $AttributeType          = "10"; // $Command['AttributeType']; // Type 10 for initial test
+            $AttributeId            = $Command['AttributeId'];    // "0000";
+            $MinInterval            = "0000";
+            $MaxInterval            = "0000";
+            $Timeout                = "0000";
+            $Change                 = "00";
+            
+            //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
+            $lenth = "0015";
+            
+            $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change . $gapOf1Octet;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
         }
         
         if ( isset($Command['getGroupMembership']) )

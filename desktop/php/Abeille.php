@@ -163,6 +163,8 @@ $eqLogics = eqLogic::byType('Abeille');
                   
                   <option value="IkeaTradfriBulbE27Opal1000lm">{{IKEA TRADFRI bulb E27 opal 1000lm}}</option>
                   
+                  <option value="HueGo">{{Philips Hue Go}}</option>
+                  
                   
                 <option value="433">{{RF433}}</option>
                 <option value="barometre">{{Baromètre}}</option>

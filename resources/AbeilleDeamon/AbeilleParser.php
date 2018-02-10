@@ -1221,7 +1221,7 @@
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
     $mqtt = new phpMQTT($server, $port, $client_id);
-    $fifoIN = new fifo($in, 'r');
+    $fifoIN = new fifo($in, '0777');
     //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 

@@ -85,7 +85,7 @@
     }
 
 
-    $fifoIN = new fifo($in, 'w+');
+    $fifoIN = new fifo($in, '0777');
 
     _exec("stty -F ".$serial." sane", $out);
     // echo "Setup ttyUSB default configuration, resultat: \n";

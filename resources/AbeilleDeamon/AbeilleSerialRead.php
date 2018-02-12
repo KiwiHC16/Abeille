@@ -16,26 +16,8 @@
     include("includes/fifo.php");
     include("lib/Tools.php");
 
-
-  function getNumberFromLeve($loglevel){
-        if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
-        if (strcasecmp($loglevel,"ERROR")==0){$iloglevel=1;}
-        if (strcasecmp($loglevel,"WARNING")==0){$iloglevel=2;}
-        if (strcasecmp($loglevel,"INFO")==0){$iloglevel=3;}
-        if (strcasecmp($loglevel,"DEBUG")==0){$iloglevel=4;}
-        return $iloglevel;
-    }
-
-    /***
-     * if loglevel is lower/equal than the app requested level then message is written
-     *
-     * @param string $loglevel
-     * @param string $message
-     */
-    function deamonlog($loglevel='NONE',$message =''){
-        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve($GLOBALS["requestedlevel"]) ) {
-            fwrite(STDOUT, 'AbeilleSerialRead: '.date("Y-m-d H:i:s").'['.strtoupper($GLOBALS["requestedlevel"]).']'.$message . PHP_EOL); ;
-        }
+    function deamonlog($loglevel='NONE',$message=""){
+        Tools::deamonlog($loglevel,'AbeilleSerialRead',$message);
     }
 
     function _exec($cmd, &$out = null)

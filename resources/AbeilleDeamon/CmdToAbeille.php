@@ -1,7 +1,6 @@
 <?php
     include("includes/config.php");
 
-
     /****
      * cmdToAbeille called by AbeilleMQTTc to process message command
      * transform hex to binary and write to serial port.
@@ -18,9 +17,9 @@
         if (0)
         {
             deamonlog('debug',"getChecksum()");
-            deamonlog('debug', "msgtype: " . $msgtype );
-            deamonlog('debug', "length: " . $length  );
-            deamonlog('debug', "datas: " . $datas );
+            deamonlog('debug',"msgtype: " . $msgtype );
+            deamonlog('debug',"length: " . $length  );
+            deamonlog('debug',"datas: " . $datas );
             /*echo "getChecksum()\n";
             echo "msgtype: " . $msgtype . "\n";
             echo "length: " . $length . "\n";
@@ -42,7 +41,7 @@
             // echo "i: ".$i."\n";
             $temp ^= hexdec($datas[$i].$datas[$i+1]);
         }
-        
+        deamonlog('debug','checksum computed: '.$temp);
         
         return sprintf("%02X",$temp);
     }

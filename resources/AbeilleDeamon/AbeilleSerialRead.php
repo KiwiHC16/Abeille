@@ -85,7 +85,8 @@
     }
 
 
-    $fifoIN = new fifo($in, '0777');
+    $fifoIN = new fifo($in, 0777, "w" );
+    deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
 
     _exec("stty -F ".$serial." sane", $out);
     // echo "Setup ttyUSB default configuration, resultat: \n";

@@ -592,11 +592,51 @@
 
     function decode8024($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8024: (	Network joined / formed )(Not Processed)');
-        deamonlog('debug', ' (Not processed*************************************************************)');
-        deamonlog('debug', '  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug', 'Message: ');
-        deamonlog(hex2str(substr($payload, 2, strlen($payload) - 2)));
+        // Formed Msg Type = 0x8024
+        // Node->Host  Network Joined / Formed
+        
+        // <status: uint8_t>
+        // <short address: uint16_t>
+        // <extended address:uint64_t>
+        // <channel: uint8_t>
+
+        // Status:
+        // 0 = Joined existing network
+        // 1 = Formed new network
+        // 128 – 244 = Failed (ZigBee event codes)
+        
+        deamonlog('debug', 'Type: 8024: (	Network joined / formed )(Processed->MQTT)');
+
+        deamonlog('debug', 'Satus : '               .substr($payload, 0, 2));
+        deamonlog('debug', 'short addr : '          .substr($payload, 2, 4));
+        deamonlog('debug', 'extended address : '    .substr($payload, 6,16));
+        deamonlog('debug', 'Channel : '             .substr($payload,22, 2));
+
+        // Envoie Status
+        $ClusterId = "Network";
+        $AttributId = "Status";
+        if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
+        if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
+        if( substr($payload, 0, 2) > "01" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+        // Envoie Short Address
+        $ClusterId = "Short";
+        $AttributId = "Addr";
+        $data = substr($payload, 2, 4);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+        // Envoie IEEE Address
+        $ClusterId = "IEEE";
+        $AttributId = "Addr";
+        $data = substr($payload, 6,16);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+        // Envoie channel
+        $ClusterId = "Network";
+        $AttributId = "Channel";
+        $data = substr($payload,22, 2);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
 
     function decode8028($mqtt, $payload, $ln, $qos)
@@ -1221,7 +1261,7 @@
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
     $mqtt = new phpMQTT($server, $port, $client_id);
-    $fifoIN = new fifo($in, '0777');
+    $fifoIN = new fifo( $in, 0777, "r" );
     //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 

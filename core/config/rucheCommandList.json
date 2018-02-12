@@ -198,9 +198,61 @@
     "invertBinary": "0",
     "template": ""
   },
+  "Network-Status": {
+    "name": "Network Status",
+    "order": "16",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Short-Addr": {
+    "name": "Short Addr",
+    "order": "17",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "IEEE-Addr": {
+    "name": "IEEE Addr",
+    "order": "18",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network-Channel": {
+    "name": "Network Channel",
+    "order": "19",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network Status Request": {
+    "name": "Network Status Request",
+    "order": "20",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/networkStatus",
+      "request": "Request"
+    }
+  },
   "joinLeave-IEEE": {
     "name": "joinLeave",
-    "order": "16",
+    "order": "21",
     "isHistorized": "1",
     "isVisible": "1",
     "Type": "info",
@@ -210,7 +262,7 @@
   },
   "ActiveEndPoint": {
     "name": "ActiveEndPoint",
-    "order": "17",
+    "order": "22",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -223,7 +275,7 @@
   },
   "SimpleDescriptorRequest": {
     "name": "SimpleDescriptorRequest",
-    "order": "18",
+    "order": "23",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

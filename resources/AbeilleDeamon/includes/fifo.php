@@ -11,19 +11,19 @@ class fifo {
      * @param $file
      * @param $mode /!\ the permissions of the created file are (mode & ~umask).
      */
-	function fifo( $file, $mode ) 
+	function fifo( $file, $mode, $readWrite )
 	{
 		if( !file_exists( $file ) ) 
 		{
-			//print "creating pipe on fs\n";
-			if( !posix_mkfifo( $file, $mode ) )
+			//print "creating fifo $file for $mode\n";
+			if( !posix_mkfifo( $file, $mode, $readWrite ) )
 			{
 				die( "could not create named pipe $file\n" );
 			}
 			chown($file, "www-data");
 		}
-		//print "opening fifo $file for $mode\n";
-		$this->fp = fopen( $file, $mode );
+		//print "opening fifo $file for $readWrite\n";
+		$this->fp = fopen( $file, $readWrite );
 	}
 
 	function read() {

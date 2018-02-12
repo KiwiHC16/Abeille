@@ -10,32 +10,15 @@
     
     
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    
+
+    require_once("lib/Tools.php");
     include("CmdToAbeille.php");  // contient processCmd()
     include("lib/phpMQTT.php");
     include (dirname(__FILE__).'/includes/config.php');
-    
-    function getNumberFromLeve($loglevel){
-        if (strcasecmp($loglevel, "NONE")==0){$iloglevel=0;}
-        if (strcasecmp($loglevel,"ERROR")==0){$iloglevel=1;}
-        if (strcasecmp($loglevel,"WARNING")==0){$iloglevel=2;}
-        if (strcasecmp($loglevel,"INFO")==0){$iloglevel=3;}
-        if (strcasecmp($loglevel,"DEBUG")==0){$iloglevel=4;}
-        return $iloglevel;
-    }
-    
-    /***
-     * if loglevel is lower/equal than the app requested level then message is written
-     *
-     * @param string $loglevel
-     * @param string $message
-     */
-    function deamonlog($loglevel='NONE',$message =''){
-        if (strlen($message)>=1  &&  getNumberFromLeve($loglevel) <= getNumberFromLeve(strtoupper($GLOBALS["requestedlevel"])) ) {
-            fwrite(STDOUT, 'AbeilleMQTTC: '.date("Y-m-d H:i:s").'['.$GLOBALS["requestedlevel"].']'.$message . PHP_EOL); ;
-        }
-    }
-    
+
+function deamonlog($loglevel='NONE',$message=""){
+    Tools::deamonlog($loglevel,'AbeilleMQTTCCmd',$message);
+}
     
     function procmsg($topic, $msg)
     {
@@ -45,7 +28,7 @@
         
         list($type, $address, $action) = explode('/', $topic);
         
-        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+        deamonlog('debug','Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         
         if ($type == "CmdAbeille") {
             if ($action == "Annonce") {
@@ -177,7 +160,7 @@
             
             else {
                 if ( $address != "Ruche"){
-                    deamonlog('warning','AbeilleMQTT, AbeilleCommand unknown: '.$action.' not even for ruche');
+                    deamonlog('warning','AbeilleCommand unknown: '.$action.' not even for ruche');
                 }
             }
             
@@ -192,14 +175,14 @@
                 } // Si une command type get htt
                 else {
                     if (count($keywords) == 2) {
-                        deamonlog('debug', 'AbeilleMQTTC, 2 arguments command');
+                        deamonlog('debug','2 arguments command');
                         $Command = array(
                                          $action => $action,
                                          $keywords[0] => $keywords[1]
                                          );
                     }
                     if (count($keywords) == 4) {
-                        deamonlog('debug', 'AbeilleMQTTC, 4 arguments command');
+                        deamonlog('debug','4 arguments command');
                         $Command = array(
                                          $action => $action,
                                          $keywords[0] => $keywords[1],
@@ -207,7 +190,7 @@
                                          );
                     }
                     if (count($keywords) == 6) {
-                        deamonlog('debug', 'AbeilleMQTTC, 6 arguments command');
+                        deamonlog('debug','6 arguments command');
                         $Command = array(
                                          $action => $action,
                                          $keywords[0] => $keywords[1],
@@ -245,7 +228,7 @@
     
     if ($dest=='none'){
         $dest=$resourcePath.'/COM';
-        deamonlog('info', 'AbeilleMQTTCmd main: debug for com file: '.$dest);
+        deamonlog('info', 'main: debug for com file: '.$dest);
         exec(system::getCmdSudo().'touch '.$dest.'chmod 777 '.$dest.' > /dev/null 2>&1');
     }
     

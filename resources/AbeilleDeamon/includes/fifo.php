@@ -5,12 +5,18 @@ class fifo {
 	var $fp;
 	var $to;
 
+    /**
+     * Create a first In first Out file according to given parameters
+     * fifo constructor.
+     * @param $file
+     * @param $mode /!\ the permissions of the created file are (mode & ~umask).
+     */
 	function fifo( $file, $mode ) 
 	{
 		if( !file_exists( $file ) ) 
 		{
 			//print "creating pipe on fs\n";
-			if( !posix_mkfifo( $file, 0777 ) ) 
+			if( !posix_mkfifo( $file, $mode ) )
 			{
 				die( "could not create named pipe $file\n" );
 			}
@@ -42,7 +48,5 @@ class fifo {
 	}
 
 }
-
-
 
 ?>

@@ -1,7 +1,14 @@
 <?php
+
+include("../lib/Tools.php");
+require_once dirname(__FILE__).'/../../../../../core/php/core.inc.php';
+
+
 ob_implicit_flush();
 
 class fifo {
+
+
 	var $fp;
 	var $to;
 
@@ -15,8 +22,8 @@ class fifo {
 	{
 		if( !file_exists( $file ) ) 
 		{
-			//print "creating fifo $file for $mode\n";
-			if( !posix_mkfifo( $file, $mode, $readWrite ) )
+			print "creating fifo $file for $mode\n";
+			if( !posix_mkfifo( $file, $mode ) )
 			{
 				die( "could not create named pipe $file\n" );
 			}
@@ -24,6 +31,8 @@ class fifo {
 		}
 		//print "opening fifo $file for $readWrite\n";
 		$this->fp = fopen( $file, $readWrite );
+        // prevent fread / fwrite blocking
+        stream_set_blocking($this->fp, false);
 	}
 
 	function read() {

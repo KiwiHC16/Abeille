@@ -22,7 +22,6 @@
 
     class Abeille extends eqLogic
     {
-
         public static function health()
         {
             $return = array();
@@ -41,6 +40,8 @@
 
             return $return;
         }
+
+
 
         public static function deamon_info()
         {
@@ -82,6 +83,15 @@
                 $return['launchable'] = 'nok';
                 throw new Exception(__('Problème de parametres, vérifier le port USB : '.$parameters_info['AbeilleSerialPort'].', state: '.$parameters_info['state'], __FILE__));
             }
+
+
+            //Check for running mosquitto service
+            $deamon_info=self::serviceMosquittoStart();
+            if ($deamon_info['launchable'] != 'ok') {
+                message::add("Abeille","Le service mosquitto n'a pas pu être démarré");
+                throw new Exception(__('Vérifier l\'installation de mosquitto, le service ne démarre pas', __FILE__));
+            }
+
 
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected=3; // no sudo to run deamon
@@ -265,6 +275,9 @@
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
 
+            //Log debug only info
+            self::serviceMosquittoStatus();
+
             if ($output[0] != "" && $libphp) {
                 //$return['configuration'] = 'ok';
                 $return['state'] = 'ok';
@@ -347,8 +360,48 @@
             }
         }
 
-        public
-        static function getParameters()
+
+        public function serviceMosquittoStatus()
+        {
+
+            $outputSvc = array();
+            $outputStl = array();
+            $return = array();
+            $return['launchable'] = 'nok';
+            $return['launchable_message'] = 'Service not running yet.';
+
+            $cmdSvc = "service --status-all 2>&1 | egrep -c '.*\+.*mosquitto'";
+            $cmdStl = "systemctl is-active mosquitto 2>&1 | grep -c active ";
+            exec($cmdSvc, $outputSvc);
+            exec($cmdStl, $outputStl);
+            log::add('Abeille', 'debug', 'Status du service mosquitto (service): ' . implode($outputSvc, '!'));
+            log::add('Abeille', 'debug', 'Status du service mosquitto: (systemctl): ' . implode($outputStl, '!'));
+            log::add('Abeille', 'debug', 'Status du service mosquitto: (global): ' . ($outputSvc[0]==1 ^ $outputStl[0]==1));
+            if ($outputSvc[0]==1 ^ $outputStl[0]==1){
+                $return['launchable'] = 'ok';
+                $return['launchable_message'] = 'Service mosquitto is running.';
+            }
+            unset($outputStl);
+            unset($outputSvc);
+            return $return;
+        }
+
+            public static function serviceMosquittoStart(){
+            $outputSvc=array();
+            $return=self::serviceMosquittoStatus();
+            //try to start mosquitto service if not already started.
+            if ($return['launchable']!='ok'){
+                unset($outputSvc);
+                $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
+                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+                log::add('Abeille', 'debug', 'Status du service mosquitto (service): ' . implode($outputSvc, '!'));
+                sleep(3);
+                $return=self::serviceMosquittoStatus();
+            }
+            return $return;
+        }
+
+        public static function getParameters()
         {
             $return = array();
             $return['state'] = 'nok';

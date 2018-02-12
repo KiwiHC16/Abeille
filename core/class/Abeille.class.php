@@ -392,6 +392,10 @@
             //try to start mosquitto service if not already started.
             if ($return['launchable']!='ok'){
                 unset($outputSvc);
+                $cmdSvc = "kill `ps -C mosquitto | tail -1 | cut -c1-6` 2>&1";
+                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+                unset($outputSvc);
+
                 $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
                 exec(system::getCmdSudo().$cmdSvc, $outputSvc);
                 log::add('Abeille', 'debug', 'Status du service mosquitto (service): ' . implode($outputSvc, '!'));

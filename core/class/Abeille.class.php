@@ -66,8 +66,8 @@
                 log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
                 log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
                 $return['launchable'] = 'nok';
-                //throw new Exception(__('Dépendances non installées, relancer l\'installation : ', __FILE__));
-                $return['launchable_message']='Dépendances non installées, relancer l\'installation';
+                //throw new Exception(__('Dépendances non installées, (re)lancer l\'installation : ', __FILE__));
+                $return['launchable_message']='Dépendances non installées, (re)lancer l\'installation';
                 return $return;
             }
 
@@ -936,7 +936,7 @@
             $AbeilleObjetDefinition = Tools::getJSonConfigFiles('AbeilleObjetDefinition.json');
             $rucheCommandList = Tools::getJSonConfigFiles('rucheCommandList.json');
 
-            $i = 0;
+            $i = 100;
 
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {

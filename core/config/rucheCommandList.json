@@ -45,6 +45,9 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/permitJoin",
       "request": "Status"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   },
   "addGroup": {

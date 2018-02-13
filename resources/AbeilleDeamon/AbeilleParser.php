@@ -574,33 +574,36 @@
         
 
         // Envoi Status
+        $SrcAddr = "Ruche";
         $ClusterId = "Network";
         $AttributId = "Status";
-        $SrcAddr = substr($payload,  26 + 2, 4);
         if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
         if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
         if( substr($payload, 0, 2) > "01" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
         
         // Envoie Short Address
+        $SrcAddr = "Ruche";
         $ClusterId = "Short";
         $AttributId = "Addr";
         $dataShort = substr($payload, 2, 4);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $dataShort, $qos);
         
         // Envoie IEEE Address
+        $SrcAddr = "Ruche";
         $ClusterId = "IEEE";
         $AttributId = "Addr";
         $dataIEEE = substr($payload, 6,16);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $dataIEEE, $qos);
         
         // Envoie channel
+        $SrcAddr = "Ruche";
         $ClusterId = "Network";
         $AttributId = "Channel";
-        $dataNetwork = substr($payload,22, 2);
+        $dataNetwork = hexdec( substr($payload,22, 2) );
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $dataNetwork, $qos);
 
-        deamonlog('debug','Type: 8024: (	Network joined / formed )(Processed->MQTT)');
+        deamonlog('debug','Type: 8024: ( Network joined / formed )(Processed->MQTT)');
         deamonlog('debug','Satus : '               .$data);
         deamonlog('debug','short addr : '          .$dataShort);
         deamonlog('debug','extended address : '    .$dataIEEE);

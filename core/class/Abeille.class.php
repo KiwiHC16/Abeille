@@ -271,23 +271,32 @@
             $return['state'] = 'nok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille') . '/dependance';
             $cmd = "dpkg -l | grep mosquitto";
-            exec($cmd, $output, $return_var);
+            exec($cmd, $output_dpkg, $return_var);
             //lib PHP exist
             $libphp = extension_loaded('mosquitto');
 
             //Log debug only info
             self::serviceMosquittoStatus();
 
-            if ($output[0] != "" && $libphp) {
+            if ($output_dpkg[0] != "" && $libphp) {
                 //$return['configuration'] = 'ok';
                 $return['state'] = 'ok';
             } else {
-                log::add(
-                    'Abeille',
-                    'warning',
-                    'Impossible de trouver le package mosquitto et/ou la lib php pour mosquitto. Probleme d installation ? libphp ->'.$libphp.'<-'
-                );
-
+                if ( $output_dpkg[0] == "" ) {
+                    log::add(
+                             'Abeille',
+                             'warning',
+                             'Impossible de trouver le package mosquitto . Probleme d installation ?'
+                             );
+                }
+                if ( !$libphp ){
+                    log::add(
+                             'Abeille',
+                             'warning',
+                             'Impossible de trouver la lib php pour mosquitto.'
+                             );
+                }
+                
             }
             log::add('Abeille', 'debug', 'dependancy_info: '.$return['state']);
             return $return;
@@ -372,12 +381,12 @@
 
             $cmdSvc = "service --status-all 2>&1 | egrep -c '.*\+.*mosquitto'";
             $cmdStl = "systemctl is-active mosquitto 2>&1 | grep -c active ";
-            exec($cmdSvc, $outputSvc);
-            exec($cmdStl, $outputStl);
-            log::add('Abeille', 'debug', 'Status du service mosquitto (service): ' . implode($outputSvc, '!'));
-            log::add('Abeille', 'debug', 'Status du service mosquitto: (systemctl): ' . implode($outputStl, '!'));
-            log::add('Abeille', 'debug', 'Status du service mosquitto: (global): ' . ($outputSvc[0]==1 ^ $outputStl[0]==1));
-            if ($outputSvc[0]==1 ^ $outputStl[0]==1){
+            exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+            exec(system::getCmdSudo().$cmdStl, $outputStl);
+            log::add('Abeille', 'debug', 'Status du service mosquitto (géré par service): ' . implode($outputSvc, '!'));
+            log::add('Abeille', 'debug', 'Status du service mosquitto: (géré par systemctl): ' . implode($outputStl, '!'));
+            log::add('Abeille', 'debug', 'Status du service mosquitto: (global = consolidation resultat service et systemctl): ' . ($outputSvc[0]==1 ^ $outputStl[0]==1));
+            if ($outputSvc[0]==1 | $outputStl[0]==1){
                 $return['launchable'] = 'ok';
                 $return['launchable_message'] = 'Service mosquitto is running.';
             }
@@ -386,7 +395,7 @@
             return $return;
         }
 
-            public static function serviceMosquittoStart(){
+        public static function serviceMosquittoStart(){
             $outputSvc=array();
             $return=self::serviceMosquittoStatus();
             //try to start mosquitto service if not already started.

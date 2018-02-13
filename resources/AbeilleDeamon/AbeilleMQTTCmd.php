@@ -172,7 +172,7 @@ function deamonlog($loglevel='NONE',$message=""){
                 // Si une string simple
                 if (count($keywords) == 1) {
                     $Command = array($action => $msg);
-                } // Si une command type get htt
+                } // Si une command type get http param1=value1&param2=value2
                 else {
                     if (count($keywords) == 2) {
                         deamonlog('debug','2 arguments command');

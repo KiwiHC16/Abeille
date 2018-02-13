@@ -62,7 +62,7 @@
     
     function displayClusterId($cluster)
     {
-        deamonlog('debug','Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab'][$cluster]);
+        deamonlog('debug','Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab']["0x".$cluster]);
     }
     
     function displayStatus($status)

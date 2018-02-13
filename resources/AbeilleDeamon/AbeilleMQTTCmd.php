@@ -128,6 +128,15 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
+            } elseif ($action == "setColourHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                             "setColour" => "1",
+                             "address" => $address,
+                             "X" => $keywords[1],
+                             "Y" => $keywords[3],
+                             "destinationEndPoint" => "0B",
+                             );
             }
             elseif ($action == "identifySend") {
                 $keywords = preg_split("/[=&]+/", $msg);

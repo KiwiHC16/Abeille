@@ -170,7 +170,7 @@
         sendCmd( $dest, $cmd, $lenth, $data );
     }
     
-    // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
+    // getParamOSRAM: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
     function getParamOSRAM($dest,$address,$clusterId,$attributeId)
     {
         deamonlog('debug','getParamOSRAM');
@@ -863,6 +863,35 @@
             $commandID = $Command['action'];
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $commandID ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
+        
+        // Move to Colour
+        if ( isset($Command['setColour']) && isset($Command['address']) && isset($Command['X']) && isset($Command['Y'])  && isset($Command['destinationEndPoint']) )
+        {
+            // <address mode: uint8_t>              2
+            // <target short address: uint16_t>     4
+            // <source endpoint: uint8_t>           2
+            // <destination endpoint: uint8_t>      2
+            // <colour X: uint16_t>                 4
+            // <colour Y: uint16_t>                 4
+            // <transition time: uint16_t >         4
+
+            $cmd = "00B7";
+            // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
+            $lenth = "000B";
+            
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = $Command['destinationEndPoint'];
+            $colourX = $Command['X'];
+            $colourY = $Command['Y'];
+            $duration = "0001";
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
             
             sendCmd( $dest, $cmd, $lenth, $data );
             

@@ -151,26 +151,27 @@ $eqLogics = eqLogic::byType('Abeille');
             <div class="col-sm-3">
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
                 <option value="Abeille">{{Abeille}}</option>
-                  
+
                   <option value="Ruche">{{Ruche}}</option>
-                  
+
                   <option value="XiaomiBouton">{{Xiaomi Bouton}}</option>
                   <option value="XiaomiBouton1">{{Xiaomi Bouton 1}}</option>
-                  
+                  <option value="XiaomiButtonSW86">{{Xiaomi Bouton Carre 1 switch}}</option>
+
                   <option value="XiaomiPorte">{{Xiaomi Porte}}</option>
                   <option value="XiaomiInfraRouge">{{Xiaomi Infra Rouge}}</option>
                   <option value="XiaomiPrise">{{Xiaomi Prise}}</option>
                   <option value="XiaomiTemperatureCarre">{{Xiaomi Temperature Carré}}</option>
                   <option value="XiaomiTemperatureRond">{{Xiaomi Temperature Rond}}</option>
-                  
+
                   <option value="IkeaTradfriBulbE27Opal1000lm">{{IKEA TRADFRI bulb E27 opal 1000lm}}</option>
-                  
+
                   <option value="HueGo">{{Philips Hue Go}}</option>
                   <option value="HueWhite">{{Philips Hue White}}</option>
-                  
+
                   <option value="Plug 01">{{OSRAM Prise}}</option>
-                  
-                  
+
+
                 <option value="433">{{RF433}}</option>
                 <option value="barometre">{{Baromètre}}</option>
                 <option value="boiteauxlettres">{{Boite aux Lettres}}</option>

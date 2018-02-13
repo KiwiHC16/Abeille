@@ -441,8 +441,8 @@
                         'debug',
                         'getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-'
                     );
-                    $return['launchable_message'] = __('Le port n\'est pas configuré', __FILE__);
-                    throw new Exception(__('Le port n\'est pas configuré: '.$return['AbeilleSerialPort'], __FILE__));
+                    $return['launchable_message'] = __('Le port n\'est pas configuré ou zigate déconnectée', __FILE__);
+                    throw new Exception(__('Le port n\'est pas configuré ou zigate déconnectée : '.$return['AbeilleSerialPort'], __FILE__));
                 } else {
                     exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
                     $return['state'] = 'ok';

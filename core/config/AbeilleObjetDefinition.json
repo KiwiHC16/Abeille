@@ -2448,6 +2448,18 @@
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
         }
+      },
+      "Colour": {
+        "name": "Colour",
+        "order": 20,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "message",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourHue",
+          "request": "X=#title#&Y=#message#"
+        }
       }
     }
   },

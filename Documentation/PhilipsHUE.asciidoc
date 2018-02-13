@@ -1,0 +1,15 @@
+= Philips Hue
+
+== Colour Control
+
+Sur un objet ampoulr vous pourrez trouver la commande Colour:
+
+image::images/Capture_d_ecran_2018_02_13_a_23_07_50.png[]
+
+Dans le premier champ indiquez la valeur X et dans le deuxième champ la valeur Y.
+
+Par exemple:
+
+* 0000-0000 -> Bleu
+* FFFF-0000 -> Rouge
+* 0000-FFFF -> Vert

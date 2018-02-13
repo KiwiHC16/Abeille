@@ -291,6 +291,7 @@
                 
                 $cmd = "0049";
                 $lenth = "0004";
+                $data = "FFFCFE00";
                 // <target short address: uint16_t>
                 // <interval: uint8_t>
                 // <TCsignificance: uint8_t>
@@ -311,7 +312,23 @@
                 // 02 10: <TCsignificance: uint8_t> 00
                 
                 // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                sendCmd($dest,$cmd,$lenth,"FFFCFE00"); //1E = 30 secondes
+                sendCmd($dest,$cmd,$lenth,$data); //1E = 30 secondes
+                
+            }
+        }
+        
+        if ( isset($Command['permitJoin']) )
+        {
+            if ($Command['permitJoin']=="Status")
+            {
+                // “Permit join” status on the target
+                // Msg Type =  0x0014
+
+                $cmd = "0014";
+                $lenth = "0000";
+                $data = "";
+
+                sendCmd($dest,$cmd,$lenth,$data); //1E = 30 secondes
                 
             }
         }

@@ -35,19 +35,16 @@
       "request": "Inclusion"
     }
   },
-  "Reset": {
-    "name": "Reset",
+  "Inclusion Status": {
+    "name": "Inclusion Status",
     "order": "3",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/reset",
-      "request": "reset"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+      "topic": "CmdAbeille/Ruche/permitJoin",
+      "request": "Status"
     }
   },
   "addGroup": {
@@ -239,7 +236,7 @@
     "template": ""
   },
   "Network Status Request": {
-    "name": "Network Status Request",
+    "name": "Network Status Request (Not implemented)",
     "order": "20",
     "isHistorized": "0",
     "isVisible": "1",
@@ -285,5 +282,30 @@
       "request": "address=#title#&endPoint=#message#",
       "retain": "0"
     }
+  },
+  "Reset": {
+    "name": "Reset",
+    "order": "24",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/reset",
+      "request": "reset"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "permitJoin-Status": {
+    "name": "Permit Join Status",
+    "order": "25",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
   }
 }

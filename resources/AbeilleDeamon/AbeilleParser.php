@@ -492,11 +492,24 @@
 
     function decode8014($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug','type: 8014: (	“Permit join” status response)(Not Processed)');
-        deamonlog('debug',' (Not processed*************************************************************)');
-        deamonlog('debug','  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug','Message: ');
-        deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
+        deamonlog('debug','type: 8014: ( “Permit join” status response)(Processed->MQTT)');
+        deamonlog('debug','Permit Join Status: '.substr($payload, 0, 2));
+
+        // “Permit join” status
+        // response Msg Type=0x8014
+
+        // 0 - Off 1 - On
+        //<Status: bool_t>
+        // Envoi Status
+        
+        $SrcAddr = "Ruche";
+        $ClusterId = "permitJoin";
+        $AttributId = "Status";
+        
+        $data = substr($payload, 0, 2);
+        
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
     }
 
     function decode8015($mqtt, $payload, $ln, $qos)

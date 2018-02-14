@@ -1,0 +1,39 @@
+= Integration d'un nouvel objet
+
+== Ikea
+
+=== Ampoule
+
+==== Nouvelle
+
+Faire un reset (6s On/Off-On ou reset avec telecommande Philips) de l'ampoule alors que la zigate est en mode inclusion. L'ampoule doit s'associer. Elle n'envoie pas son nom automatiquement et jeedom ne peut pas créer l'objet associé. Pour créer l'objet suivre le paragraphe "Déjà" associée. 
+
+==== Deja associé
+
+Eteindre l'ampoule 15s puis la ralumer (Zigate en fonctionnement normale).
+
+=== Telecommande 5 boutons
+
+==== Nouvelle
+
+Plugin en mode semi-automatique, appui 4 fois sur bouton arriere telecommande et un objet "Type inconnu" est créé. 
+
+==== Déjà associée
+
+Plugin en mode semi auto et "Liste Equipement" sur Ruche.
+
+== Philips Hue
+
+=== Hue Go
+
+==== Nouvelle
+
+==== Deja associée
+
+
+== Xiaomi
+
+== Nouvel Equipement
+
+== Déjà associé
+

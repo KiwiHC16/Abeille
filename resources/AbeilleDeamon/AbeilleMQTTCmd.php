@@ -143,7 +143,17 @@ function deamonlog($loglevel='NONE',$message=""){
                 $Command = array(
                                  "identifySend" => "1",
                                  "address" => $address,
-                                 "duration"=> "0010" // $keywords[1]
+                                 "duration"=> "0010", // $keywords[1]
+                                 "DestinationEndPoint" => "01",
+                                 );
+            }
+            elseif ($action == "identifySendHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "identifySend" => "1",
+                                 "address" => $address,
+                                 "duration"=> "0010", // $keywords[1]
+                                 "DestinationEndPoint" => "0B",
                                  );
             }
             

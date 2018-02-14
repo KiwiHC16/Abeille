@@ -426,7 +426,7 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
-        if ( isset($Command['getGroupMembership']) )
+        if ( isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
         {
                 $cmd = "0062";
             
@@ -440,7 +440,7 @@
                 $addressMode = "02"; // Short Address -> 2
                 $address = $Command['address']; // -> 4
                 $sourceEndpoint = "01"; // -> 2
-                $destinationEndpoint = "01"; // -> 2
+                $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
                 $groupCount = "00"; // -> 2
                 $groupList = ""; // ? Not mentionned in the ZWGUI -> 0
                 //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
@@ -485,10 +485,8 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
-        if ( isset($Command['identifySend']) )
+        if ( isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']) )
         {
-            if (isset($Command['duration']))
-            {
                 $cmd = "0070";
                 // Msg Type = 0x0070
                 // Identify Send
@@ -513,15 +511,14 @@
                 $addressMode = "02"; // Short Address -> 2
                 $address = $Command['address']; // -> 4
                 $sourceEndpoint = "01"; // -> 2
-                $destinationEndpoint = "01"; // -> 2
+                $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
                 $time = $Command['duration']; // -> 4
                 //  2 + 4 + 2 + 2 + 4 = 14/2 => 7
                 $lenth = "0007";
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $time ;
                 
                 sendCmd( $dest, $cmd, $lenth, $data );
-                
-            }
+            
         }
 
         
@@ -699,7 +696,7 @@
             //}
         }
         
-        if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
+        if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
             deamonlog('debug',"Add a group to an IKEA bulb");
             //echo "Add a group to an IKEA bulb\n";
@@ -720,14 +717,14 @@
             $addressMode = "02";
             $address = $Command['address'];
             $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
+            $destinationEndpoint = $Command['DestinationEndPoint'];
             $groupAddress = $Command['groupAddress'];
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
-        if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['groupAddress']) )
+        if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
             deamonlog('debug',"Remove a group to an IKEA bulb");
             //echo "Remove a group to an IKEA bulb\n";
@@ -748,7 +745,7 @@
             $addressMode = "02";
             $address = $Command['address'];
             $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
+            $destinationEndpoint = $Command['DestinationEndPoint'] ;
             $groupAddress = $Command['groupAddress'];
             
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;

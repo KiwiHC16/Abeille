@@ -590,7 +590,7 @@
       }
     }
   },
-  "lumi.sensor_86sw1":{
+  "lumi.sensor_86sw1": {
     "nameJeedom": "Xiaomi Bouton Carré",
     "battery_type": "1xCR2032",
     "Categorie": {
@@ -885,7 +885,6 @@
       }
     }
   },
-
   "lumi.plug": {
     "nameJeedom": "Xiaomi Prise",
     "Categorie": {
@@ -2442,7 +2441,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
           "request": "clusterId=0006&attributeId=0000"
         }
       },
@@ -2455,7 +2454,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
           "request": "clusterId=0008&attributeId=0000"
         }
       },
@@ -2537,7 +2536,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/identifySend",
+          "topic": "CmdAbeille/#addr#/identifySendHue",
           "request": "duration=0010"
         }
       },

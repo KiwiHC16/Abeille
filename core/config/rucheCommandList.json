@@ -59,7 +59,7 @@
     "subType": "message",
     "configuration": {
       "topic": "CmdAbeille/Ruche/addGroup",
-      "request": "address=#title#&groupAddress=#message#"
+      "request": "address=#title#&#message#"
     }
   },
   "removeGroup": {
@@ -71,7 +71,7 @@
     "subType": "message",
     "configuration": {
       "topic": "CmdAbeille/Ruche/removeGroup",
-      "request": "address=#title#&groupAddress=#message#"
+      "request": "address=#title#&#message#"
     },
     "display": {
       "forceReturnLineAfter": "0"
@@ -86,7 +86,7 @@
     "subType": "message",
     "configuration": {
       "topic": "CmdAbeille/Ruche/getGroupMembership",
-      "request": "address=#title#"
+      "request": "address=#title#&#message#"
     },
     "display": {
       "forceReturnLineAfter": "1"

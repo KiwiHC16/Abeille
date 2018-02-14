@@ -2,7 +2,7 @@
 
 == Colour Control
 
-Sur un objet ampoulr vous pourrez trouver la commande Colour:
+Sur un objet ampoule vous pourrez trouver la commande Colour:
 
 image::images/Capture_d_ecran_2018_02_13_a_23_07_50.png[]
 
@@ -13,3 +13,10 @@ Par exemple:
 * 0000-0000 -> Bleu
 * FFFF-0000 -> Rouge
 * 0000-FFFF -> Vert
+
+== Group Control
+
+image::images/Capture-d_ecran_2018_02_14_a_11_15_18.png[]
+
+Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ...
+

@@ -1,3 +1,5 @@
+:toc:
+
 = Xiaomi
 
 == Temperature Carré, Temperature Rond, Bouton Carré, Sensor Door, Presence IR

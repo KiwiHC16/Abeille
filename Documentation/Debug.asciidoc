@@ -1,3 +1,5 @@
+:toc:
+
 = Debug / Troubleshooting / Investigations
 
 Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.

@@ -35,5 +35,8 @@ Plugin en mode semi auto et "Liste Equipement" sur Ruche.
 
 == Nouvel Equipement
 
+Zigate en mode inclusion, Plugin en automatique, appui long de 7s su rle bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaitre dans le dashboard.
+
 == Déjà associé
 
+Zigate en mode normal, plugin en mode automatiaue, un appui court sur le bouton du flanc de l'équipement et l'objet abeille doit être créé.

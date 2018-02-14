@@ -565,13 +565,13 @@ class Abeille extends eqLogic
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($trimmedValue, 'Abeille');
 
             //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
-            if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists($trimmedValue, $AbeilleObjetDefinition) ) {
+            if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists($trimmedValue, $AbeilleObjetDefinition)) {
                 $objetConnu = 1;
-                $jsonName = array_key_exists($value, $AbeilleObjetDefinition)? $value: $trimmedValue;
+                $jsonName = array_key_exists($value, $AbeilleObjetDefinition) ? $value : $trimmedValue;
                 log::add('Abeille', 'info', 'objet: ' . $value . ' recherché comme ' . $trimmedValue . ' peut etre cree car je connais ce type d objet.');
             } else {
                 log::add('Abeille', 'info', 'objet: ' . $value . ' recherché comme ' . $trimmedValue . ' ne peut pas etre cree completement car je ne connais pas ce type d objet.');
-                log::add('Abeille', 'info', 'objet: '.json_encode($AbeilleObjetDefinition));
+                log::add('Abeille', 'info', 'objet: ' . json_encode($AbeilleObjetDefinition));
             }
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -600,7 +600,7 @@ class Abeille extends eqLogic
             // status
             // timeout
             $elogic->setCategory(
-                array_keys($objetDefSpecific["Categorie"])[0],$objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
+                array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
             );
             // display
             // order
@@ -926,10 +926,31 @@ class Abeille extends eqLogic
         $elogic->save();
 
         $rucheCommandList = Tools::getJSonConfigFilebyDevices('ruche', 'Abeille');
-        log::add('Abeille', 'debug', 'XXXXXXX2X' . implode('!', $rucheCommandList));
-        print_r($rucheCommandList);
+        //log::add('Abeille', 'debug', 'XXXXXXX2X' . implode('!', $rucheCommandList));
+        //print_r($rucheCommandList);
         $i = 100;
 
+        //Load all commandes from defined objects, and create them hidden in Ruche to allow debug and research.
+        $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "ruche", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
+            "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
+            "TRADFRI bulb GU10 W 400lm");
+        foreach ($items as $item) {
+            $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($item, 'Abeille');
+            // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+            foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+                $rucheCommandList[$objetId] = array(
+                    "name" => $objetId,
+                    "order" => $i++,
+                    "isVisible" => "0",
+                    "isHistorized" => "0",
+                    "Type" => "action",
+                    "subType" => "other",
+                    "configuration" => array("topic" => "Abeille/" . $objetId . "/0000-0005", "request" => $objetId),
+                );
+            }
+        }
+
+        //Create ruche object and commands
         foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
             $nomObjet = "Ruche";
             log::add(
@@ -1029,7 +1050,7 @@ if ($debugBEN) {
         "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
         "TRADFRI bulb GU10 W 400lm");
     //problem icon creation
-    $items = array("lumi.sensor_motion","lumi.sensor_motion.aq2");
+    $items = array("lumi.sensor_motion", "lumi.sensor_motion.aq2");
     foreach ($items as $item) {
         $name = str_replace(' ', '.', $item);
         $message->topic = "Abeille/$name/0000-0005";

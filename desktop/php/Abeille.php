@@ -150,55 +150,12 @@ $eqLogics = eqLogic::byType('Abeille');
             <label class="col-sm-3 control-label">{{Icone du topic}}</label>
             <div class="col-sm-3">
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
-                <option value="Abeille">{{Abeille}}</option>
-
-                  <option value="Ruche">{{Ruche}}</option>
-
-                  <option value="XiaomiBouton">{{Xiaomi Bouton}}</option>
-                  <option value="XiaomiBouton1">{{Xiaomi Bouton 1}}</option>
-                  <option value="XiaomiButtonSW86">{{Xiaomi Bouton Carre 1 switch}}</option>
-
-                  <option value="XiaomiPorte">{{Xiaomi Porte}}</option>
-                  <option value="XiaomiInfraRouge">{{Xiaomi Infra Rouge}}</option>
-                  <option value="XiaomiPrise">{{Xiaomi Prise}}</option>
-                  <option value="XiaomiTemperatureCarre">{{Xiaomi Temperature Carré}}</option>
-                  <option value="XiaomiTemperatureRond">{{Xiaomi Temperature Rond}}</option>
-
-                  <option value="IkeaTradfriBulbE27Opal1000lm">{{IKEA TRADFRI bulb E27 opal 1000lm}}</option>
-
-                  <option value="HueGo">{{Philips Hue Go}}</option>
-                  <option value="HueWhite">{{Philips Hue White}}</option>
-
-                  <option value="Plug 01">{{OSRAM Prise}}</option>
-
-
-                <option value="433">{{RF433}}</option>
-                <option value="barometre">{{Baromètre}}</option>
-                <option value="boiteauxlettres">{{Boite aux Lettres}}</option>
-                <option value="chauffage">{{Chauffage}}</option>
-                <option value="compteur">{{Compteur}}</option>
-                <option value="contact">{{Contact}}</option>
-                <option value="feuille">{{Culture}}</option>
-                <option value="custom">{{Custom}}</option>
-                <option value="dimmer">{{Dimmer}}</option>
-                <option value="energie">{{Energie}}</option>
-                <option value="garage">{{Garage}}</option>
-                <option value="humidity">{{Humidité}}</option>
-                <option value="humiditytemp">{{Humidité et Température}}</option>
-                <option value="hydro">{{Hydrométrie}}</option>
-                <option value="ir2">{{Infra Rouge}}</option>
-                <option value="jauge">{{Jauge}}</option>
-                <option value="light">{{Luminosité}}</option>
-                <option value="meteo">{{Météo}}</option>
-                <option value="motion">{{Mouvement}}</option>
-                <option value="multisensor">{{Multisensor}}</option>
-                <option value="prise">{{Prise}}</option>
-                <option value="relay">{{Relais}}</option>
-                <option value="rfid">{{RFID}}</option>
-                <option value="teleinfo">{{Téléinfo}}</option>
-                <option value="temp">{{Température}}</option>
-                <option value="thermostat">{{Thermostat}}</option>
-                <option value="volet">{{Volet}}</option>
+                  <?php
+                  $knownDevices=Tools::getJSonConfigFiles("knownDevices.json");
+                  foreach($knownDevices as $key => $value){
+                      echo "                     <option value=\"".$key."\">{{".$value."}}</option>";
+                  }
+                  ?>
               </select>
             </div>
           </div>
@@ -247,7 +204,8 @@ $eqLogics = eqLogic::byType('Abeille');
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
-$( "#sel_icon" ).change(function(){
+
+    $( "#sel_icon" ).change(function(){
   var text = 'plugins/Abeille/docs/images/node_' + $("#sel_icon").val() + '.png';
   //$("#icon_visu").attr('src',text);
   document.icon_visu.src=text;

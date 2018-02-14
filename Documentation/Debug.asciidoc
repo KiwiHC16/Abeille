@@ -55,7 +55,7 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 === Connection avec la Zigate
 
-* Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettrent à jour à chaque fois.
+* Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
 
 === Mosquitto
 
@@ -92,7 +92,7 @@ apt-get install mosquitto
     
 === Creation des objets
 
-* Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas defaut et ajouter de nouveaux modèles par exemple.
+* Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas défaut et ajouter de nouveaux modèles par exemple.
 
 * L'appareil Ruche contient une commande cachée par type d'objet (identifié das le fichier JSON). Chaque commande cachée permet la création d'objets fictifs pour vérifier la bonne création de l'objet dans jeedom. Pour avoir les commandes, il faut regénerer l'objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l'objet. 
 
@@ -104,18 +104,18 @@ image::images/Capture_d_ecran_2018_01_23_a_22_31_43.png[]
 
 * En cliquant sur l'un de ces boutons vous vérifier vous testez la bonne création des objets mais aussi que le chemin Jeedom->Mosquitto->Jeedom fonctionne.
 
-* Pas recommandé: Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en aillant mis les bon paramètres en fin de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
+* Pas recommandé: Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en ayant mis les bon paramètres en fin de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
 
 * L'objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:
 
 image::images/Capture_d_ecran_2018_01_23_a_22_53_24.png[]
 
-* Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en reception radio) a été effacé de Jeedom vous pouvez l'interroger depuis la Ruche et cela devrait le recréer. Mettre dans le champ "Titre" de Get Name, l'adresse (ici example 7c54)  et faites Get Name. Rafraichir la page et vous devriez avoir l'objet.
+* Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en reception radio) a été effacé de Jeedom vous pouvez l'interroger depuis la Ruche et cela devrait le recréer. Mettre dans le champ "Titre" de Get Name, l'adresse (ici example 7c54)  et faites Get Name. Rafraîchir la page et vous devriez avoir l'objet.
 
 image::images/Capture_d_ecran_2018_01_25_a_14_59_34.png[]
 image::images/Capture_d_ecran_2018_01_25_a_14_59_43.png[]
 
-* Vous avez aussi la possibilité de lire des attribus de certains équipments en mettant l'adresse dans le titre et les parametres de l attribu dans le Message comme dans la capture d'écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l'équipement soit à l'écoute):
+* Vous avez aussi la possibilité de lire des attributs de certains équipements en mettant l'adresse dans le titre et les paramètres de l attribut dans le Message comme dans la capture d'écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l'équipement soit à l'écoute):
 
 image::images/Capture_d_ecran_2018_01_25_a_16_12_32.png[]
 
@@ -128,7 +128,7 @@ image::images/Capture_d_ecran_2018_01_26_a_10_46_13.png[]
 
 image::images/Capture_d_ecran_2018_01_26_a_10_52_58.png[]
 
-* Avec la liste des equipements vous avez la liste connue par zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
+* Avec la liste des équipements vous avez la liste connue par zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
 
 image::images/Capture_d_ecran_2018_02_07_a_12_54_55.png[]
 

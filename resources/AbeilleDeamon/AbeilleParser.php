@@ -17,18 +17,28 @@
     
     
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-    
+
     // print_r( $clusterTab );
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
     }
-    
+
+/**
+ * Send a mosquitto message to jeedom
+ *
+ * @param $mqtt
+ * @param $SrcAddr
+ * @param $ClusterId
+ * @param $AttributId
+ * @param $data
+ * @param int $qos
+ */
     function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ($mqtt->connect(true, null, "jeedom", "jeedom")) {
+        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
             $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
@@ -37,12 +47,20 @@
             deamonlog('WARNING', 'Time out!');
         }
     }
-    
+
+/**
+ * send an announce to a device
+ *
+ * @param $mqtt
+ * @param $SrcAddr
+ * @param $data
+ * @param int $qos
+ */
     function mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos = 0)
     {
         // Abeille / short addr / Annonce -> data
         deamonlog("debug", "mqttPublishAnnonce : Qos: ".$qos);
-        if ($mqtt->connect(true, null, "jeedom", "jeedom")) {
+        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
             $mqtt->close();
         } else {

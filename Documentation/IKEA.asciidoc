@@ -1,0 +1,44 @@
+:toc:
+
+= IKEA
+
+== Ampoule
+
+=== Bouton Identify
+
+Ce bouton est créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
+
+== Creation objet
+
+Si l'ampoule n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
+
+Si l'ampoule est déjà associée à la zigate, avec Abeille en mode Automatique, l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence et la création par Abeille de l'objet associé.
+
+== Telecommnande Ronde 5 boutons
+
+=== Télécommande réelle
+
+(La zigate recoit les demandent dess boutons pour trigger des scenarios, je ne sais pas encore faire, pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom).
+
+=== Télécommande Virtuelle
+
+La télécommande virtuelle est un objet Jeedom qui envoies les commandes ZigBee comme si c'était une vrai télécommande IKEA.
+
+La première chose à faire est d'ouvrir l'objet ruche et d'aller dans les commandes et de rendre visible la commande "Ikea Tradfri 5 btn Rond".
+
+image::images/Capture_d_ecran_2018_02_15_a_17_45_25.png[]
+
+De retour sur le dashboard, vous devriez voir le bouton "Ikea Tradfri 5 btn Rond" sur l objet Ruche.
+
+image:images/Capture_d_ecran_2018_02_15_a_17_45_37.png[]
+
+Un clic sur ce bouton suivi du rafraichissement de l'écran doit vous donner un nouvel objet "Abeille-Ikea Tradfri 5 Btn Rond".
+
+image::images/Capture_d_ecran_2018_02_15_a_17_45_56.png[]
+
+Ouvrez l'objet dans la partie commandes et changer le texte "\#PleaseSetAddress#" de toutes les commandes par l'adresse du groupe que vous voulez piloter.
+
+image::images/Capture_d_ecran_2018_02_15_a_17_46_16.png[]
+
+A noter que pour l'instant cette méthode ne permet pas de créer plus d'une télécommande.
+

@@ -520,7 +520,6 @@
                 sendCmd( $dest, $cmd, $lenth, $data );
             
         }
-
         
         /*
          // Don't know how to make it works
@@ -753,7 +752,7 @@
         }
         
         // ON / OFF one object
-        if ( isset($Command['onoff']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
+        if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
             deamonlog('debug','OnOff for: '.$Command['address']);
             // <address mode: uint8_t>
@@ -768,10 +767,10 @@
             
             $cmd = "0092";
             $lenth = "0006";
-            $addressMode = "02";
+            $addressMode = $Command['addressMode'];
             $address = $Command['address'];
             $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
+            $destinationEndpoint = $Command['destinationEndpoint'];
             $action = $Command['action'];
             
             sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
@@ -779,90 +778,6 @@
             // Get the state of the equipement as IKEA Bulb don't send back their state.
             // $attribute = "0000";
             // getParam($dest,$address, $Command['clusterId'], $attribute);
-        }
-        
-        // ON / OFF one object Hue
-        if ( isset($Command['onoffHue']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
-        {
-            deamonlog('debug','OnOffHue for: '.$Command['address']);
-            // <address mode: uint8_t>
-            // <target short address: uint16_t>
-            // <source endpoint: uint8_t>
-            // <destination endpoint: uint8_t>
-            // <command ID: uint8_t>
-            // Command Id
-            // 0 - Off
-            // 1 - On
-            // 2 - Toggle
-            
-            $cmd = "0092";
-            $lenth = "0006";
-            $addressMode = "02";
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "0B";
-            $action = $Command['action'];
-            
-            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
-        }
-        
-        // ON / OFF one object OSRAM plug
-        if ( isset($Command['onoffOSRAM']) && isset($Command['address']) && isset($Command['action']) && isset($Command['clusterId']) )
-        {
-            deamonlog('debug','OnOffOSRAM for: '.$Command['address']);
-            // <address mode: uint8_t>
-            // <target short address: uint16_t>
-            // <source endpoint: uint8_t>
-            // <destination endpoint: uint8_t>
-            // <command ID: uint8_t>
-            // Command Id
-            // 0 - Off
-            // 1 - On
-            // 2 - Toggle
-            
-            $cmd = "0092";
-            $lenth = "0006";
-            $addressMode = "02";
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "03";
-            $action = $Command['action'];
-            
-            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
-        }
-        
-        // Group of Objects ON/ OFF
-        if ( isset($Command['groupOnOff']) && isset($Command['addressOnOff']) && isset($Command['action']) )
-        {
-            // 17:42:13.758 -> 01 02 10 92 02 10 02 16 CD 02 11 C2 98 02 11 02 11 02 12 03
-            //                 01 02 10 92 02 10 02 16 cc 02 11 c2 98 02 11 02
-            // 01: start
-            // 02 10 92: 00 92 -> On/Off with no effect
-            // 02 10 02 16: length
-            // CD: crc
-            // 02 11: <address mode: uint8_t>: 01 (Group et 02=Short)
-            // C2 98: <target short address: uint16_t>: C2 98
-            // 02 11: <source endpoint: uint8_t> 1
-            // 02 11: <destination endpoint: uint8_t> 1
-            // 02 12: <command ID: uint8_t>: 2 toggle
-            // Command Id
-            // 0 - Off
-            // 1 - On
-            // 2 - Toggle
-            
-            $cmd = "0092";
-            $lenth = "0006";
-            
-            $addressMode = "01";
-            $address = $Command['addressOnOff'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
-            $commandID = $Command['action'];
-            
-            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $commandID ;
-            
-            sendCmd( $dest, $cmd, $lenth, $data );
-            
         }
         
         // Move to Colour

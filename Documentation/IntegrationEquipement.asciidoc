@@ -8,17 +8,17 @@
 
 ==== Nouvelle
 
-Faire un reset (6s On/Off-On ou reset avec telecommande Philips) de l'ampoule alors que la zigate est en mode inclusion. L'ampoule doit s'associer. Elle n'envoie pas son nom automatiquement et jeedom ne peut pas créer l'objet associé. Pour créer l'objet suivre le paragraphe "Déjà" associée. 
+Faire un reset (6s On/Off-On ou reset avec télécommande Philips) de l'ampoule alors que la zigate est en mode inclusion. L'ampoule doit s'associer. Elle n'envoie pas son nom automatiquement et jeedom ne peut pas créer l'objet associé. Pour créer l'objet suivre le paragraphe "Déjà" associée.
 
 ==== Deja associé
 
-Eteindre l'ampoule 15s puis la ralumer (Zigate en fonctionnement normale).
+Eteindre l'ampoule 15s puis la rallumer (Zigate en fonctionnement normale).
 
 === Telecommande 5 boutons
 
 ==== Nouvelle
 
-Plugin en mode semi-automatique, appui 4 fois sur bouton arriere telecommande et un objet "Type inconnu" est créé. 
+Plugin en mode semi-automatique, appui 4 fois sur bouton arrière télécommande et un objet "Type inconnu" est créé.
 
 ==== Déjà associée
 
@@ -32,7 +32,7 @@ Plugin en mode semi auto et "Liste Equipement" sur Ruche.
 
 a
 
-==== Deja associée
+==== Déjà associée
 
 a
 
@@ -40,8 +40,8 @@ a
 
 === Nouvel Equipement
 
-Zigate en mode inclusion, Plugin en automatique, appui long de 7s su rle bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaitre dans le dashboard.
+Zigate en mode inclusion, Plugin en automatique, appui long de 7s sur le bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
 
 === Déjà associé
 
-Zigate en mode normal, plugin en mode automatiaue, un appui court sur le bouton du flanc de l'équipement et l'objet abeille doit être créé.
+Zigate en mode normal, plugin en mode automatique, un appui court sur le bouton du flanc de l'équipement et l'objet abeille doit être créé.

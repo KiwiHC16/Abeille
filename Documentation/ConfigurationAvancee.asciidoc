@@ -4,9 +4,9 @@
 
 == Configuration  des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefintion.json).
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefinition.json).
 
-Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, prise et un type de lampe IKEA.
+Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA.
 
 L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des information: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
 
@@ -14,35 +14,35 @@ L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus 
 
 Penons un exemple: Capteur de porte Xiaomi.
 
-Dans Jeedom, il apparaitra sous le widget:
+Dans Jeedom, il apparaîtra sous le widget:
 
 image::images/Screen_Shot_2018_01_29_at_19_39_52.png[]
 
 Son nom est pour l'occasion "lumi.sensor_magnet.aq2". C'est à partir de la que tout le reste a été déduit, par exemple le symbole de porte,...
 
-Si vous selectionnez, l'objet vous arrivez dans la page suivante:
+Si vous sélectionnez, l'objet vous arrivez dans la page suivante:
 
 image::images/Screen_Shot_2018_01_29_at_19_40_30.png[]
 
-En selectionnant "Configuration Avancée":
+En sélectionnant "Configuration Avancée":
 
 image::images/Screen_Shot_2018_01_29_at_20_47_13.png[]
 
-Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d'exemple pour définir les paramètres de configuration à mettre dans le fichier JSON.
 
  Attention tous les paramètres ne sont pas encore pris en compte.
 
-Puis si vous selectionnez "Commandes", puis une commande spécifique à l'aide du symbole engrenage:
+Puis si vous sélectionnez "Commandes", puis une commande spécifique à l'aide du symbole engrenage:
 
 image::images/Screen_Shot_2018_01_29_at_19_42_20.png[]
 
-Puis si vous selectionnez une commande spécifique comme l'état:
+Puis si vous sélectionnez une commande spécifique comme l'état:
 
 image::images/Screen_Shot_2018_01_29_at_19_42_44.png[]
 
-Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuraiton à mettre dans le fichier JSON.
+Vous pouvez voir tous les paramètres associés à une commande et vous en servir d'exemple pour définir les paramatres de configuration à mettre dans le fichier JSON.
 
-Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce quil faut mettre dans le fichier de conf.
+Si vous modifiez à l'aide de Jeedom la présentation de la commande cela vous permet de savoir ce qu'il faut mettre dans le fichier de conf.
 
 Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c'est prévu.
 
@@ -50,22 +50,36 @@ Mais attention car il y a un mais, tous les paramètres ne sont pas encore gér�
 == Editer JSON
 
 Vous avez plusieurs façons pour éditer le fichier JSON.
-* La premiere est d'éditer le fichier sous format texte mais je ne vous le conseille pas car ce n'est pas facile à lire et à modifier (beaucoup de parentheses ouvrantes et fermantes qu'il faut obsoluement resâecter)
-* Utiliser un editeur JSON (il y en a plein sur internet).
+* La premiere est d'éditer le fichier sous format texte mais je ne vous le conseille pas car ce n'est pas facile à lire et à modifier (beaucoup de parentheses ouvrantes et fermantes qu'il faut absolument respecter)
+* Utiliser un éditeur JSON (il y en a plein sur internet).
 
-Une fois ouvert le fichier peut ressemenler à quelsue chose comme ca:
+Une fois ouvert le fichier peut ressembler à quelque chose comme ca:
 
 image:images/Capture_d_ecran_2018_01_29_a_21_15_55.png[]
 
-Vour retrouvez les même informatiosn que celles vues ci dessus. Comparez les differents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l'équipement dans Jeedom et provoquez l'envoie du nom par l'objet.
+Vous retrouvez les même informations que celles vues ci dessus. Comparez les différents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l'équipement dans Jeedom et provoquez l'envoie du nom par l'objet.
 
 PS: si vous supprimez un équipement, n'oubliez pas que cela supprime aussi l'historique des valeurs.
+
+== Ajout des icônes pour les objets crées
+
+Lorsqu'un objet est crée, une icône lui est associée. Lorsqu'un nouvel objet est ajouté dans le fichier JSON _plugins/Abeille/core/class/AbeilleObjetDefinition.json_, il est possible de lui attribuer une icône personnalisée.
+Dans le fichier Json _plugins/Abeille/core/class/knownDevices.json_ ajouter une ligne
+
+       "XiaomiButtonSW86": "Xiaomi Bouton Carre 1 switch",
+
+Le premier terme correspond au nom de l'appareil tel qu'il est défini dans le fichier _AbeilleObjetDefinition.json_, le second sera le texte affiché.
+
+Le fichier image au format png est a déposer dans le répertoire _plugins/Abeille/docs/images_
+
+image:images/Device_icone01.png[]
+
 
 = Widget
 
 == Power Source
 
-Si vous souhaitez avoir un icon en lieu et place de 00 ou 01 pour le parametre Power Sourse sur les widgets, vous pouvez faire les opérations suivantes.
+Si vous souhaitez avoir un icon en lieu et place de 00 ou 01 pour le paramètre Power Source sur les widgets, vous pouvez faire les opérations suivantes.
 
 Ajoutez le plugin "Widget" depuis l market:
 
@@ -79,23 +93,23 @@ Choisissez "Mode Creation Facile":
 
 image::images/Capture_d_ecran_2018_02_14_a_08_32_48.png[]
 
-Puis widget simple etat:
+Puis widget simple état:
 
 image::images/Capture_d_ecran_2018_02_14_a_08_32_49.png[]
 
-Choisissez vos icones, par exemple une prise pour symboliser les équipements sur le secteur et une baterie pour les équipements sur pile.
+Choisissez vos icônes, par exemple une prise pour symboliser les équipements sur le secteur et une batterie pour les équipements sur pile.
 
 Le résultat devrait ressembler à quelque chose comme cela:
 
 image::images/Capture_d_ecran_2018_02_14_a_08_32_50.png[]
 
-Une fois cela finalisé, vous devez voir votre nouveau widget dans la page principale des widgets avec le nombre d'allocation.
+Une fois cela terminé, vous devez voir votre nouveau widget dans la page principale des widgets avec le nombre d'allocation.
 
 image::images/Capture_d_ecran_2018_02_14_a_08_32_51.png[]
 
-Dans cette capture vous pouvez voir AbeillePower avec 2 instances car j'ai deux objets actuellement. De même, il y a AbeillePower2 qui etait un test et qui n'est pas intancié. 
+Dans cette capture vous pouvez voir AbeillePower avec 2 instances car j'ai deux objets actuellement. De même, il y a AbeillePower2 qui était un test et qui n'est pas utilisé.
 
-* Vérifiez bien l'hortographe "AbeillePower" car c'est celui utilisé par defaut par Abeille lors de la creation des objets.
+* Vérifiez bien l'orthographe "AbeillePower" car c'est celui utilisé par défaut par Abeille lors de la creation des objets.
  
 Sur votre dashboard, vos objets doivent se mettre à jour automatiquement. Cela donne par exemple pour une ampoule et pour un capteur de temperature:
 

@@ -143,8 +143,9 @@ function deamonlog($loglevel='NONE',$message=""){
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                  "setLevel" => "1",
+                                 "addressMode" => "02",
                                  "address" => $address,
-                                 "clusterId" => "0008",
+                                 "destinationEndpoint"=>"01",
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
@@ -152,12 +153,25 @@ function deamonlog($loglevel='NONE',$message=""){
             } elseif ($action == "setLevelHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                 "setLevelHue" => "1",
+                                 "setLevel" => "1",
+                                 "addressMode" => "02",
                                  "address" => $address,
-                                 "clusterId" => "0008",
+                                 "destinationEndpoint"=>"0B",
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
+            } elseif ($action == "setLevelGroup") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setLevel" => "1",
+                                 "addressMode" => "01",
+                                 "address" => $address,
+                                 "destinationEndpoint"=>"01",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
+                
             //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
                 $keywords = preg_split("/[=&]+/", $msg);

@@ -24,13 +24,14 @@ function deamonlog($loglevel='NONE',$message=""){
     {
         global $dest;
         
-        deamonlog('info','Msg Received: Topic: {'.$topic.'} =>'.$msg);
+        deamonlog('info','Msg Received: Topic: {'.$topic.'} => '.$msg);
         
         list($type, $address, $action) = explode('/', $topic);
         
         deamonlog('debug','Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         
         if ($type == "CmdAbeille") {
+            //----------------------------------------------------------------------------
             if ($action == "Annonce") {
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
@@ -38,6 +39,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "clusterId" => "0000",
                                  "attributeId" => "0005",
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "OnOff") {
                 if ($msg == "On") {
                     $actionId = "01";
@@ -50,10 +52,12 @@ function deamonlog($loglevel='NONE',$message=""){
                 }
                 $Command = array(
                                  "onoff" => "1",
+                                 "addressMode" => "02",
                                  "address" => $address,
+                                 "destinationEndpoint"=>"01",
                                  "action" => $actionId,
-                                 "clusterId" => "0006",
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "OnOffHue") {
                 if ($msg == "On") {
                     $actionId = "01";
@@ -65,11 +69,13 @@ function deamonlog($loglevel='NONE',$message=""){
                     $actionId = "02";
                 }
                 $Command = array(
-                                 "onoffHue" => "1",
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
                                  "address" => $address,
+                                 "destinationEndpoint"=>"0B",
                                  "action" => $actionId,
-                                 "clusterId" => "0006",
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "OnOffOSRAM") {
                 if ($msg == "On") {
                     $actionId = "01";
@@ -81,11 +87,31 @@ function deamonlog($loglevel='NONE',$message=""){
                     $actionId = "02";
                 }
                 $Command = array(
-                                 "onoffOSRAM" => "1",
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
                                  "address" => $address,
+                                 "destinationEndpoint"=>"03",
                                  "action" => $actionId,
-                                 "clusterId" => "0006",
                                  );
+            //----------------------------------------------------------------------------
+            } elseif ($action == "OnOffGroup") {
+                if ($msg == "On") {
+                    $actionId = "01";
+                }
+                if ($msg == "Off") {
+                    $actionId = "00";
+                }
+                if ($msg == "Toggle") {
+                    $actionId = "02";
+                }
+                    $Command = array(
+                                     "onoff" => "1",
+                                     "addressMode" => "01",
+                                     "address" => $address,
+                                     "destinationEndpoint"=>"01", // Set but not send on radio
+                                     "action"=>$actionId,
+                                     );
+            //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -94,6 +120,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "clusterId" => $keywords[1],
                                  "attributeId" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -102,6 +129,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "clusterId" => $keywords[1],
                                  "attributeId" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestOSRAM") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -110,6 +138,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "clusterId" => $keywords[1],
                                  "attributeId" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "setLevel") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -119,6 +148,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "setLevelHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -128,6 +158,7 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
+            //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -137,7 +168,10 @@ function deamonlog($loglevel='NONE',$message=""){
                              "Y" => $keywords[3],
                              "destinationEndPoint" => "0B",
                              );
+            //----------------------------------------------------------------------------
             }
+            
+            
             elseif ($action == "identifySend") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -156,6 +190,10 @@ function deamonlog($loglevel='NONE',$message=""){
                                  "DestinationEndPoint" => "0B",
                                  );
             }
+            
+            
+            
+
             
             /* at ruche level pour l instant
             elseif ($action == "getGroupMembership") {

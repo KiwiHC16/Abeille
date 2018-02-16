@@ -150,7 +150,10 @@
         
         //verification du CRC
         //if ($crc == dechex($crctmp))
-        // if ($crc != dechex($crctmp)) { return -2; }
+        if ($crc != dechex($crctmp)) {
+            log::add('Abeille','error','CRC corrupted: expected '.$crc.' / computed: '.dechex($crctmp).' This message should be discarded.');
+            
+        }
         
         deamonlog('debug','Type: '.$type.' quality: '.$quality);
         

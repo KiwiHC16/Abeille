@@ -173,6 +173,16 @@ function deamonlog($loglevel='NONE',$message=""){
                                  );
                 
             //----------------------------------------------------------------------------
+            } elseif ($action == "setColour") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setColour" => "1",
+                                 "address" => $address,
+                                 "X" => $keywords[1],
+                                 "Y" => $keywords[3],
+                                 "destinationEndPoint" => "01",
+                                 );
+            //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

@@ -131,7 +131,7 @@
     "subType": "message",
     "configuration": {
       "topic": "CmdAbeille/Ruche/getName",
-      "request": "address=#title#&groupAddress=#message#"
+      "request": "address=#title#&destinationEndPoint=#message#"
     }
   },
   "ReadAttributeRequest": {

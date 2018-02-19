@@ -28,13 +28,15 @@ Plugin en mode semi auto et "Liste Equipement" sur Ruche.
 
 === Hue Go
 
+Impossible de faire émettre le moindre message ZigBee par le Hue Go en utilisant le bouton à l'arrière. Seulement ce qui ressemble à un reset en appuyant très longtemps (>30s).
+
 ==== Nouvelle
 
 a
 
 ==== Déjà associée
 
-a
+Utiliser la fonction "Get Name" de la Ruche. Mettre en Titre l'adresse de la Hue Go et en Message le EndPoint qui est "0B". Clic Get Name et la apres un refresh dashboard, l ampoule doit apparaitre.
 
 == Xiaomi
 

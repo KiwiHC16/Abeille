@@ -68,7 +68,7 @@
         return $mess;
     }
     
-    function getParam($dest,$address,$clusterId,$attributeId)
+    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint)
     {
         /*
          <address mode: uint8_t>
@@ -126,7 +126,7 @@
         $addressMode = "02";
         // $address = $Command['address'];
         $sourceEndpoint = "01";
-        $destinationEndpoint = "01";
+        // $destinationEndpoint = "01";
         //$ClusterId = "0006";
         $ClusterId = $clusterId;
         $Direction = "00";
@@ -136,7 +136,8 @@
         // $attributesList = "0000";
         $attributesList = $attributeId;
         
-        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        deamonlog('debug','data: '.$data);
         deamonlog('debug','len data: '.strlen($data));
         //echo "Read Attribute command data: ".$data."\n";
         
@@ -604,7 +605,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
             //}
         }
         
@@ -615,7 +616,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-            getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+            getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
             //}
         }
         
@@ -626,7 +627,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-            getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+            getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
             //}
         }
         
@@ -745,11 +746,12 @@
         }
         
         
-        if ( isset($Command['getName']) && isset($Command['address']) )
+        if ( isset($Command['getName']) && isset($Command['address']) && isset($Command['destinationEndPoint']) )
         {
             deamonlog('debug','Get Name from: '.$Command['address']);
             //echo "Get Name from: ".$Command['address']."\n";
-            getParam( $dest, $Command['address'], "0000", "0005" );
+            if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            getParam( $dest, $Command['address'], "0000", "0005",$Command['destinationEndPoint'] );
         }
     }
     

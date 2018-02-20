@@ -605,7 +605,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
             //}
         }
         
@@ -616,7 +616,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-            getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+            getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
             //}
         }
         
@@ -627,7 +627,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-            getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'] );
+            getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
             //}
         }
         

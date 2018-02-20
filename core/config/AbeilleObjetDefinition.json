@@ -2416,7 +2416,7 @@
         "template": ""
       },
       "0000-4000": {
-        "name": "SW",
+        "name": "SW (Ne fonctionne pas)",
         "order": 2,
         "isHistorized": "0",
         "Type": "info",
@@ -2575,7 +2575,7 @@
         }
       },
       "getSWBuild": {
-        "name": "getSWBuild",
+        "name": "getSWBuild (ne fonctionne pas)",
         "order": 15,
         "isHistorized": "0",
         "Type": "action",

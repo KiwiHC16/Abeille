@@ -2416,7 +2416,7 @@
         "template": ""
       },
       "0000-4000": {
-        "name": "SW (Ne fonctionne pas)",
+        "name": "SW",
         "order": 2,
         "isHistorized": "0",
         "Type": "info",
@@ -2575,7 +2575,7 @@
         }
       },
       "getSWBuild": {
-        "name": "getSWBuild (ne fonctionne pas)",
+        "name": "getSWBuild",
         "order": 15,
         "isHistorized": "0",
         "Type": "action",
@@ -2583,7 +2583,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
           "request": "clusterId=0000&attributeId=4000"
         }
       },

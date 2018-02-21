@@ -256,3 +256,7 @@ else
   /etc/init.d/${SERVICE} restart &
 
 fi
+
+# Set service start at boot.
+update-rc.d mosquitto enable
+

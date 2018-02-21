@@ -8,11 +8,60 @@
 
 Ce bouton est créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
 
-== Creation objet
+=== Creation objet
 
 Si l'ampoule n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
 Si l'ampoule est déjà associée à la zigate, avec Abeille en mode Automatique, l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence et la création par Abeille de l'objet associé.
+
+=== Retour d'état
+
+Pour que l'ampoule puisse remonter automatiquement son état à Jeedom, il faut mettre en place un "bind" et un "set report".
+
+Pour se faire, il faut utiliser les commandes bind et setReport sur l'objet Ruche.
+
+==== Bind:
+
+Identifiez l'ampoule que vous voulez parametrer:
+
+image::images/Capture_d_ecran_2018-02_21_a_23_26_56.png[]
+
+Récuperer son adresse IEEE, son adress courte (ici 6766).
+
+De même, dans l'objet Ruche récupérez l'adresse IEEE (Si l'info n'est pas dispo, un reset de la zigate depuis l objet ruche doit faire remonter l'information).
+
+Mettre dans le champ:
+
+- Titre, l'adresse IEEE de l'ampoule que vous voulez parametrer
+- Message, le cluster qui doit être rapporté, et l adresse IEEE de la zigate.
+
+image::images/Capture_d_ecran_2018_02_21_a_23_26_49.png[]
+
+Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
+
+image::images/Capture_d_ecran_2018_02_21_a_23_27_29.png[]
+
+qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
+
+Ensuite parametrer l'envoie de rapport:
+
+- Titre, l adresse courte de l'ampoule
+- Message, le culster et la parametre dans le cluster
+
+image::images/Capture_d_ecran_2018_02_21_a_23_29_11.png[]
+
+
+De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
+
+image::images/Capture_d_ecran_2018_02_21_a_23_29_49.png[]
+
+qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
+
+Après sur un changement d'état l'ampoule doit remonter l'info vers Abeille, avec des messages comme:
+
+image::images/Capture_d_ecran_2018_02_21_a_23_31_11.png[]
+
+pour un retour Off de l'ampoule.
 
 == Telecommnande Ronde 5 boutons
 

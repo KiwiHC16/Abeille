@@ -194,7 +194,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
           "request": "clusterId=0000&attributeId=4000"
         }
       },

@@ -1,0 +1,180 @@
+{
+  "lumi.weather": {
+    "nameJeedom": "Xiaomi Temperature Carre",
+    "battery_type": "1xCR2032",
+    "Categorie": {
+      "heating": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiTemperatureCarre"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0402-0000": {
+        "name": "Temperature",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "tempIMG",
+        "configuration": {
+          "calculValueOffset": "#value#/100",
+          "historizeRound": "1"
+        },
+        "display": {
+          "generic_type": "TEMPERATURE"
+        },
+        "units": "°C"
+      },
+      "0405-0000": {
+        "name": "Humidite",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "hydro3IMG",
+        "configuration": {
+          "calculValueOffset": "#value#/100",
+          "historizeRound": "0",
+          "value": ""
+        },
+        "units": "%",
+        "display": {
+          "generic_type": "HUMIDITY"
+        }
+      },
+      "0403-0000": {
+        "name": "Pression1",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "units": "hPa",
+        "display": {
+          "generic_type": "WEATHER_PRESSURE",
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "0403-0010": {
+        "name": "Pression",
+        "order": 5,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "barometre",
+        "units": "hPa",
+        "display": {
+          "generic_type": "WEATHER_PRESSURE",
+          "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+          "calculValueOffset": "#value#/10",
+          "historizeRound": "1"
+        }
+      },
+      "0403-0014": {
+        "name": "What is it",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Batterie-Volt": {
+        "name": "Batterie",
+        "order": 7,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "units": "V",
+        "configuration": {
+          "calculValueOffset": "#value#/1000",
+          "minValue": "0",
+          "maxValue": "3.3"
+        }
+      },
+      "0000-ff01": {
+        "name": "Specific",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-Time": {
+        "name": "Last",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "name": "Last Stamp",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "IEEE-Addr": {
+        "name": "IEEE-Addr",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "name": "Link Quality",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      }
+    }
+  }
+}

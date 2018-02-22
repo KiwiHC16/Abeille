@@ -17,13 +17,13 @@
     
     
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-    
+
     // print_r( $clusterTab );
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
     }
-    
+
     /*
      + * Send a mosquitto message to jeedom
      + *
@@ -47,7 +47,15 @@
             deamonlog('WARNING', 'Time out!');
         }
     }
-    
+
+/**
+ * send an announce to a device
+ *
+ * @param $mqtt
+ * @param $SrcAddr
+ * @param $data
+ * @param int $qos
+ */
     function mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos = 0)
     {
         // Abeille / short addr / Annonce -> data

@@ -4,7 +4,7 @@
 
 == Configuration  des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créé un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un fichier JSON (plugins/Abeille/core/class/AbeilleObjetDefinition.json).
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).
 
 Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA.
 
@@ -63,21 +63,20 @@ PS: si vous supprimez un équipement, n'oubliez pas que cela supprime aussi l'hi
 
 == Ajout des icônes pour les objets crées
 
-Lorsqu'un objet est crée, une icône lui est associée. Lorsqu'un nouvel objet est ajouté dans le fichier JSON _plugins/Abeille/core/class/AbeilleObjetDefinition.json_, il est possible de lui attribuer une icône personnalisée.
+Lorsqu'un objet est crée, une icône lui est associée. Lorsqu'un nouvel objet est ajouté dans le fichier JSON _plugins/Abeille/core/class/devices/objet.json_, il est possible de lui attribuer une icône personnalisée.
 Dans le fichier Json _plugins/Abeille/core/class/knownDevices.json_ ajouter une ligne
 
        "XiaomiButtonSW86": "Xiaomi Bouton Carre 1 switch",
 
-Le premier terme correspond au nom de l'appareil tel qu'il est défini dans le fichier _AbeilleObjetDefinition.json_, le second sera le texte affiché.
+Le premier terme correspond au nom de l'appareil tel qu'il est défini dans le fichier objet.json_, le second sera le texte affiché.
 
-Le fichier image au format png est a déposer dans le répertoire _plugins/Abeille/docs/images_
+Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire _plugins/Abeille/docs/images/_ (500x500 px semble correct)
 
 image:images/Device_icone01.png[]
 
+== Widget
 
-= Widget
-
-== Power Source
+=== Power Source
 
 Si vous souhaitez avoir un icon en lieu et place de 00 ou 01 pour le paramètre Power Source sur les widgets, vous pouvez faire les opérations suivantes.
 

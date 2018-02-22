@@ -2,6 +2,14 @@
 
 = Philips Hue
 
+== Creation objet da ns Abeille
+
+=== Association
+
+=== Si deja associé
+
+Utiliser la commande getName dans la ruche, mettre l'adresse courte dans le titre et 03 (destinationndPoint) dans le message. Puis rafraichir le dashboard et la l'ampoule doit être présente.
+
 == Colour Control
 
 Sur un objet ampoule vous pourrez trouver la commande Colour:

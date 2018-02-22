@@ -12,7 +12,7 @@ Ce bouton est créé au moment de la création de l'objet. Celui ci permet de de
 
 Si l'ampoule n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
-Si l'ampoule est déjà associée à la zigate, avec Abeille en mode Automatique, l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence et la création par Abeille de l'objet associé.
+Si l'ampoule est déjà associée à la zigate, avec Abeille en mode Automatique, l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence et la création par Abeille de l'objet associé. Vous pouvez aussi Utiliser la commande getName dans la ruche, mettre l’adresse courte dans le titre et rien dans le message. Puis rafraichir le dashboard et la l’ampoule doit être présente.
 
 === Retour d'état
 

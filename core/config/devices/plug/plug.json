@@ -1,0 +1,195 @@
+{
+  "lumi.plug": {
+    "nameJeedom": "Xiaomi Prise",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiPrise"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "SW",
+        "order": 0,
+        "subType": "string",
+        "template": ""
+      },
+      "0000-0005": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "nom",
+        "order": 1,
+        "subType": "string",
+        "template": ""
+      },
+      "0006-0000": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "etat",
+        "order": 2,
+        "subType": "binary",
+        "template": "prise"
+      },
+      "IEEE-Addr": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "IEEE-Addr",
+        "order": 13,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Link Quality",
+        "order": 14,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Off": {
+        "Type": "action",
+        "configuration": {
+          "request": "Off",
+          "topic": "CmdAbeille/#addr#/OnOff"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Off",
+        "order": 8,
+        "subType": "other",
+        "template": ""
+      },
+      "On": {
+        "Type": "action",
+        "configuration": {
+          "request": "On",
+          "topic": "CmdAbeille/#addr#/OnOff"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "On",
+        "order": 7,
+        "subType": "other",
+        "template": ""
+      },
+      "Power-Source": {
+        "Type": "info",
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Power Source",
+        "order": 15,
+        "subType": "binary",
+        "template": "AbeillePower"
+      },
+      "Time-Time": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-Time",
+        "order": 5,
+        "subType": "string",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "subType": "numeric",
+        "template": "badge"
+      },
+      "Toggle": {
+        "Type": "action",
+        "configuration": {
+          "request": "Toggle",
+          "topic": "CmdAbeille/#addr#/OnOff"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Toggle",
+        "order": 9,
+        "subType": "other",
+        "template": ""
+      },
+      "getEtat": {
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0006&attributeId=0000",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getEtat",
+        "order": 10,
+        "subType": "other",
+        "template": ""
+      },
+      "getManufacturerName": {
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0000&attributeId=0004",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getManufacturerName",
+        "order": 11,
+        "subType": "other",
+        "template": ""
+      },
+      "getModelIdentifier": {
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0000&attributeId=0005",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getModelIdentifier",
+        "order": 12,
+        "subType": "other",
+        "template": ""
+      },
+      "tbd---conso--": {
+        "Type": "info",
+        "configuration": {
+          "historizeRound": "3"
+        },
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Conso",
+        "order": 4,
+        "subType": "numeric",
+        "template": "badge"
+      },
+      "tbd---puissance--": {
+        "Type": "info",
+        "configuration": {
+          "historizeRound": "0",
+          "maxValue": "2500",
+          "minValue": "0"
+        },
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Puissance",
+        "order": 3,
+        "subType": "numeric",
+        "template": ""
+      }
+    }
+  }
+}

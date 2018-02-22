@@ -41,7 +41,7 @@ $eqLogics = eqLogic::byType('Abeille');
     </div>
 
 
-    <legend><i class="fa fa-table"></i>  {{Mes Abeille}}
+    <legend><i class="fa fa-table"></i>  {{Mes Abeilles}}
     </legend>
     <div class="eqLogicThumbnailContainer">
       <div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
@@ -151,6 +151,8 @@ $eqLogics = eqLogic::byType('Abeille');
             <div class="col-sm-3">
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
                   <?php
+                  require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+
                   $knownDevices=Tools::getJSonConfigFiles("knownDevices.json");
                   foreach($knownDevices as $key => $value){
                       echo "                     <option value=\"".$key."\">{{".$value."}}</option>";

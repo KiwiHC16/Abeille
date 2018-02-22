@@ -68,7 +68,7 @@ function addMosquittoRepo
 
     echo "distrib: $archi Release trouvée: ${distrib} Version trouvée: ${version}"
 
-    [[  "x86_64i686armv7larmv6l" != *${archi}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette archi: ${archi}"
+    [[  "x86_64i686armv7larmv6laarch64" != *${archi}* ]] && arretSiErreur "Erreur critique: je ne connais pas cette archi: ${archi}"
 
     #Nothing to do for Ubuntu
     [[ "Ubuntu" == ${distrib} ]] && return 1
@@ -256,7 +256,5 @@ else
   /etc/init.d/${SERVICE} restart &
 
 fi
-
 # Set service start at boot.
 update-rc.d mosquitto enable
-

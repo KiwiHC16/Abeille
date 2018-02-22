@@ -1,0 +1,106 @@
+{
+ "lumi.sensor_switch.aq2": {
+    "nameJeedom": "Xiaomi Bouton",
+    "battery_type": "1xCR2032",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiBouton"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-0000": {
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "1"
+        }
+      },
+      "0006-8000": {
+        "name": "multi",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "1"
+        }
+      },
+      "Time-Time": {
+        "name": "Time-Time",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "name": "Time-TimeStamp",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "IEEE-Addr": {
+        "name": "IEEE-Addr",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "name": "Link Quality",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      }
+    }
+  }
+}

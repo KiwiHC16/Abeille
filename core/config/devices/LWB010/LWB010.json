@@ -1,0 +1,246 @@
+{
+  "LWB010": {
+    "nameJeedom": "Hue white",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "icone": "HueWhite"
+    },
+    "Commandes": {
+      "0000-0005": {
+        "name": "nom",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0004": {
+        "name": "societe",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-4000": {
+        "name": "SW",
+        "order": 2,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-0000": {
+        "name": "etat",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "light"
+      },
+      "0008-0000": {
+        "name": "Level",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
+      },
+      "Time-Time": {
+        "name": "Time-Time",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "On": {
+        "name": "On",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "request": "On"
+        }
+      },
+      "Off": {
+        "name": "Off",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "request": "Off"
+        }
+      },
+      "Toggle": {
+        "name": "Toggle",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "request": "Toggle"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Level": {
+        "name": "setLevel",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setLevelHue",
+          "request": "Level=#slider#&duration=01"
+        }
+      },
+      "getEtat": {
+        "name": "getEtat",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0006&attributeId=0000"
+        }
+      },
+      "getLevel": {
+        "name": "getLevel",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0008&attributeId=0000"
+        }
+      },
+      "getManufacturerName": {
+        "name": "getManufacturerName",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "request": "clusterId=0000&attributeId=0004"
+        }
+      },
+      "getModelIdentifier": {
+        "name": "getModelIdentifier",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "request": "clusterId=0000&attributeId=0005"
+        }
+      },
+      "getSWBuild": {
+        "name": "getSWBuild",
+        "order": 15,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "request": "clusterId=0000&attributeId=4000"
+        }
+      },
+      "IEEE-Addr": {
+        "name": "IEEE-Addr",
+        "order": 16,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "name": "Link Quality",
+        "order": 17,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 18,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      },
+      "Identify": {
+        "name": "Identify",
+        "order": 19,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/identifySend",
+          "request": "duration=0010"
+        }
+      }
+    }
+  }
+}

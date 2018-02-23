@@ -571,7 +571,7 @@ class Abeille extends eqLogic
                 log::add('Abeille', 'info', 'objet: ' . $value . ' recherché comme ' . $trimmedValue . ' peut etre cree car je connais ce type d objet.');
             } else {
                 log::add('Abeille', 'info', 'objet: ' . $value . ' recherché comme ' . $trimmedValue . ' ne peut pas etre cree completement car je ne connais pas ce type d objet.');
-                log::add('Abeille', 'info', 'objet: ' . json_encode($AbeilleObjetDefinition));
+                log::add('Abeille', 'debug', 'objet: ' . json_encode($AbeilleObjetDefinition));
             }
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -761,10 +761,10 @@ class Abeille extends eqLogic
                 } else {
                     $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
                     if (!is_object($cmdlogic)) {
-                        // CrÃ©ons les commandes inconnues sur la base des commandes qu on recoit.
+                        // Creons les commandes inconnues sur la base des commandes qu on recoit.
                         log::add('Abeille', 'debug', 'L objet: ' . $nodeid . ' existe mais pas la commande: ' . $cmdId);
                         if ($parameters_info['creationObjectMode'] == "Semi Automatique") {
-                            // CrÃ©e la commande avec le peu d info que l on a
+                            // Cree la commande avec le peu d info que l on a
                             log::add('Abeille', 'info', 'Creation par defaut de la commande: ' . $nodeid . '/' . $cmdId);
                             $cmdlogic = new AbeilleCmd();
                             // id
@@ -930,13 +930,14 @@ class Abeille extends eqLogic
         //print_r($rucheCommandList);
         $i = 100;
 
-        //Load all commandes from defined objects, and create them hidden in Ruche to allow debug and research.
-        $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "ruche", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
+        //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
+        $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
             "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
             "TRADFRI bulb GU10 W 400lm");
         foreach ($items as $item) {
-            $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($item, 'Abeille');
+            $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+            log::add('Abeille', 'debug', 'XXXXXXX2X creating ' .$item); // implode('!', $rucheCommandList));
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
                 $rucheCommandList[$objetId] = array(
                     "name" => $objetId,
@@ -949,6 +950,7 @@ class Abeille extends eqLogic
                 );
             }
         }
+        print_r($rucheCommandList);
 
         //Create ruche object and commands
         foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
@@ -1031,7 +1033,8 @@ class AbeilleCmd extends cmd
 
 // Used for test
 // en ligne de comande =>
-// "php Abeille.class.php 1" to run the script to create an object
+// "php Abeille.class.php 1" to run the script to create any of the item listed in array L1057
+// "php Abeille.class.php 2" to run the script to create a ruche object
 // "php Abeille.class.php" to parse the file and verify syntax issues.
 
 if (isset($argv[1])) {
@@ -1039,24 +1042,33 @@ if (isset($argv[1])) {
 } else {
     $debugBEN = 0;
 }
-if ($debugBEN) {
+if ($debugBEN != 0) {
     echo "Debut\n";
     $message = new stdClass();
 
-    //$message->topic = "CmdRuche/Ruche/CreateRuche";
-    //$message->payload = "";
 
-    $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "ruche", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
-        "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
-        "TRADFRI bulb GU10 W 400lm");
-    //problem icon creation
-    $items = array("lumi.sensor_motion", "lumi.sensor_motion.aq2");
-    foreach ($items as $item) {
-        $name = str_replace(' ', '.', $item);
-        $message->topic = "Abeille/$name/0000-0005";
-        $message->payload = $item;
-        Abeille::message($message);
-        sleep(15);
+    switch ($debugBEN) {
+
+        case "2":
+            $message->topic = "CmdRuche/Ruche/CreateRuche";
+            $message->payload = "";
+            Abeille::message($message);
+            break;
+
+        case "1":
+            $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "ruche", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
+                "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
+                "TRADFRI bulb GU10 W 400lm");
+            //problem icon creation
+            foreach ($items as $item) {
+                $name = str_replace(' ', '.', $item);
+                $message->topic = "Abeille/$name/0000-0005";
+                $message->payload = $item;
+                Abeille::message($message);
+                sleep(15);
+            }
+            break;
+
     }
 
     echo "Fin\n";

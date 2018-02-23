@@ -97,15 +97,28 @@ class Tools
         $content = file_get_contents($deviceFilename);
 
         $deviceJson = json_decode($content, true);
-        if (json_last_error()!=JSON_ERROR_NONE){
+        if (json_last_error() != JSON_ERROR_NONE) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return;
         }
 
-        log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: json found Tools: nb line ' . strlen($content));
+        log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: '.$device.' json found Tools: nb line ' . strlen($content));
         return $deviceJson;
     }
 
+    /**
+     * Return filename ready to be search in devices directories
+     *
+     * @param string $filename
+     * @return mixed|string*
+     */
+    public function getTrimmedValueForJsonFiles($filename = "")
+    {
+        //remove lumi. from name as all xiaomi devices have a lumi. name
+        //remove all space in names for easier filename handling
+        $trimmed = strlen($filename) > 1 ? str_replace(' ', '', str_replace('lumi.', '', $filename)) : "";
+        return $trimmed;
+    }
 }
 
 ?>

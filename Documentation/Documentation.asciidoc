@@ -117,6 +117,17 @@ sudo git pull https://github.com/KiwiHC16/Abeille
 
 * Rien de spécifique. Suivre la procédure classique. Pour l'instant il ne doit y avoir qu'une version en beta.
 
+==== Alternative : Installation du github depuis le market
+
+- Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github cocher activer . On enregistre.
+- Aller sur l'onglet plugin clic et gestion des plugin. Une fenetre s'ouvre que vous connaissez mais sur la gauche il y a une petite fleche pointant vers la droite (clic dessus)
+- Faire ajouter à partir d'une autre source et sélectionner GITHUB
+- Rentrer la paramètres suivants dans l'ordre :
+* ID logique du plugin: Abeille
+* Utilisateur ou organisateur: KiwiHC16
+* Nom du dépôt: Abeille
+* Branche: master
+
 === Activation
 
 - Activation du plugin

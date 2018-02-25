@@ -932,25 +932,32 @@ class Abeille extends eqLogic
 
         //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
         $items = array(
-                       "Ikea Tradfri 5 Btn Rond",
+                       "IkeaTradfri5BtnRond",
                        "LLC020",
                        "LWB006",
-                       "lumi.plug",
+                       "LWB010",
+                       "plug",
                        "Plug01",
-                       "lumi.sensor_86sw1",
-                       "lumi.sensor_ht",
-                       "lumi.sensor_magnet.aq2",
-                       "lumi.sensor_motion",
-                       "lumi.sensor_motion.aq2",
-                       "lumi.sensor_switch",
-                       "lumi.sensor_switch.aq2",
-                       "TRADFRI bulb E14 WS opal 400lm",
-                       "TRADFRI bulb E27 CWS opal 600lm",
-                       "TRADFRI bulb E27 opal 1000lm",
-                       "TRADFRI bulb E27 W opal 1000lm 2",
-                       "TRADFRI bulb GU10 W 400lm",
-                       "ProFaluxVolet"
+                       "ProFaluxVolet",
+                       // "ruche",
+                       "sensor_86sw1",
+                       "sensor_ht",
+                       "sensor_magnet",
+                       "sensor_magnet.aq2",
+                       "sensor_motion",
+                       "sensor_motion.aq2",
+                       "sensor_switch",
+                       "sensor_switch.aq2",
+                       "sensor_wleak.aq1",
+                       "TRADFRIbulbE14WSopal400lm",
+                       "TRADFRIbulbE27CWSopal600lm",
+                       "TRADFRIbulbE27opal1000lm",
+                       "TRADFRIbulbE27Wopal1000lm",
+                       "TRADFRIbulbE27Wopal1000lm2",
+                       "TRADFRIbulbGU10W400lm",
+                       "weather"
                        );
+        
         foreach ($items as $item) {
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).

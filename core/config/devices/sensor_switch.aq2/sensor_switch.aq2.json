@@ -1,5 +1,5 @@
 {
- "lumi.sensor_switch.aq2": {
+  "lumi.sensor_switch.aq2": {
     "nameJeedom": "Xiaomi Bouton",
     "battery_type": "1xCR2032",
     "Categorie": {
@@ -50,7 +50,8 @@
         "template": "badge",
         "configuration": {
           "returnStateValue": "0",
-          "returnStateTime": "1"
+          "returnStateTime": "1",
+          "repeatEventManagement": "always"
         }
       },
       "Time-Time": {

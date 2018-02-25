@@ -33,7 +33,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
-        "invertBinary": "0",
+        "invertBinary": "1",
         "template": ""
       },
       "0006-8000": {
@@ -46,7 +46,8 @@
         "template": "badge",
         "configuration": {
           "returnStateValue": "0",
-          "returnStateTime": "1"
+          "returnStateTime": "1",
+          "repeatEventManagement": "always"
         }
       },
       "Time-Time": {

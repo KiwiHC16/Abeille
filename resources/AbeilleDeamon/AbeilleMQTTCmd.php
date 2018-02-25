@@ -55,6 +55,19 @@ function procmsg($topic, $msg)
                                  );
             }
             //----------------------------------------------------------------------------
+        } elseif ($action == "AnnonceProfalux") {
+            if ( $msg == "Default" )
+            {
+                deamonlog('info', 'Preparation de la commande annonce pour default');
+                $Command = array(
+                                 "ReadAttributeRequest" => "1",
+                                 "address" => $address,
+                                 "clusterId" => "0000",
+                                 "attributeId" => "0010"
+                                 );
+            }
+            
+            //----------------------------------------------------------------------------
         } elseif ($action == "OnOff") {
             if ($msg == "On") {
                 $actionId = "01";

@@ -554,7 +554,7 @@ class Abeille extends eqLogic
 
 
         // Je viens de revoir son nom donc je créé l objet.
-        if (!is_object($elogic) && ($cmdId == "0000-0005") && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
+        if (!is_object($elogic) && (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
 
             log::add('Abeille', 'info', 'Recherche objet: ' . $value . ' dans les objets connus');
             //remove lumi. from name as all xiaomi devices have a lumi. name

@@ -68,6 +68,18 @@
         }
     }
     
+    function mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos = 0)
+    {
+        // Abeille / short addr / Annonce -> data
+        deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
+        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+            $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
+            $mqtt->close();
+        } else {
+            deamonlog('error','Time out!');
+        }
+    }
+    
     function hex2str($hex)
     {
         $str = '';
@@ -401,7 +413,7 @@
         // Envoie de la IEEE a Jeedom
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
         
-        // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
+        // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
         if ((hexdec($capability) & $test) == 14) {
             deamonlog('debug','Je demande a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
             
@@ -414,6 +426,12 @@
             deamonlog('debug','Je demande a l equipement de type Hue');
             $data = 'Hue'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
+            
+            // Pour les volets ProFalux
+            deamonlog('debug','Je demande a l equipement de type ProFalux');
+            $data = 'Default'; // destinationEndPoint
+            mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos);
+            
         }
         else{
             deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');

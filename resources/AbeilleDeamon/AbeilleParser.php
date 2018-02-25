@@ -59,7 +59,7 @@
     function mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos = 0)
     {
         // Abeille / short addr / Annonce -> data
-        deamonlog("debug", "mqttPublishAnnonce : Qos: ".$qos);
+        deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
         if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
             $mqtt->close();
@@ -403,8 +403,20 @@
         
         // Si routeur alors demande son nom (permet de declancher la creation des objets pour ampoules IKEA
         if ((hexdec($capability) & $test) == 14) {
-            $data = 'Annonce';
-            mqqtPublishAnnounce($mqtt, $SrcAddr, $data,$qos);
+            deamonlog('debug','Je demande a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
+            
+            // Pour les ampoules IKEA
+            deamonlog('debug','Je demande a l equipement de type generique');
+            $data = 'Default'; // destinationEndPoint
+            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
+            
+            // Pour les ampoules Hue
+            deamonlog('debug','Je demande a l equipement de type Hue');
+            $data = 'Hue'; // destinationEndPoint
+            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
+        }
+        else{
+            deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
         }
     }
     

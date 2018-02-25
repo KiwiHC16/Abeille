@@ -34,12 +34,26 @@ function procmsg($topic, $msg)
     if ($type == "CmdAbeille") {
         //----------------------------------------------------------------------------
         if ($action == "Annonce") {
-            $Command = array(
-                "ReadAttributeRequest" => "1",
-                "address" => $address,
-                "clusterId" => "0000",
-                "attributeId" => "0005",
-            );
+            if ( $msg == "Default" )
+            {
+                deamonlog('info', 'Preparation de la commande annonce pour default');
+                $Command = array(
+                                 "ReadAttributeRequest" => "1",
+                                 "address" => $address,
+                                 "clusterId" => "0000",
+                                 "attributeId" => "0005"
+                                 );
+            }
+            if ( $msg == "Hue" )
+            {
+                deamonlog('info', 'Preparation de la commande annonce pour Hue');
+                $Command = array(
+                                 "ReadAttributeRequestHue" => "1",
+                                 "address" => $address,
+                                 "clusterId" => "0000",
+                                 "attributeId" => "0005"
+                                 );
+            }
             //----------------------------------------------------------------------------
         } elseif ($action == "OnOff") {
             if ($msg == "On") {

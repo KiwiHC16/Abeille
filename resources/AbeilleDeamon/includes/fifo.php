@@ -35,6 +35,7 @@ class fifo {
         stream_set_blocking($this->fp, false);
 	}
 
+    /* Cette version de la fonction read utilise 30% du CPU RPI3 donc on la remplace par la suivante ci dessous.
 	function read() {
 	// reads a line from a fifo file
 		$line = '';
@@ -45,6 +46,21 @@ class fifo {
 		} while( ($c != '') and ($c != "\n") and !feof( $this->fp ) );
 		return $line;
 	}
+    */
+    
+    function read() {
+        // reads a line from a fifo file
+        $readers = array($this->fp);
+        if (stream_select($readers, $writers = null, $except = null, 0, 1500) == 1) {
+            $line = '';
+            do
+            {
+                $c = fgetc( $this->fp );
+                if( ($c != '') and ($c != "\n") and !feof( $this->fp ) ) $line .= $c;
+            } while( ($c != '') and ($c != "\n") and !feof( $this->fp ) );
+            return $line;
+        }
+    }
 
 	function write( $data ) {
 		fputs( $this->fp, $data );

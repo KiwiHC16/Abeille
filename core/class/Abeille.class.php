@@ -925,43 +925,19 @@ class Abeille extends eqLogic
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
-        $rucheCommandList = Tools::getJSonConfigFilebyDevices('ruche', 'Abeille');
+        $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
         //log::add('Abeille', 'debug', 'XXXXXXX2X' . implode('!', $rucheCommandList));
         //print_r($rucheCommandList);
         $i = 100;
 
         //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-        $items = array(
-                       "IkeaTradfri5BtnRond",
-                       "LLC020",
-                       "LWB006",
-                       "LWB010",
-                       "plug",
-                       "Plug01",
-                       "ProFaluxVolet",
-                       // "ruche",
-                       "sensor_86sw1",
-                       "sensor_ht",
-                       "sensor_magnet",
-                       "sensor_magnet.aq2",
-                       "sensor_motion",
-                       "sensor_motion.aq2",
-                       "sensor_switch",
-                       "sensor_switch.aq2",
-                       "sensor_wleak.aq1",
-                       "TRADFRIbulbE14WSopal400lm",
-                       "TRADFRIbulbE27CWSopal600lm",
-                       "TRADFRIbulbE27opal1000lm",
-                       "TRADFRIbulbE27Wopal1000lm",
-                       "TRADFRIbulbE27Wopal1000lm2",
-                       "TRADFRIbulbGU10W400lm",
-                       "weather"
-                       );
-        
+        $items = Tools::getDeviceNameFromJson('Abeille');
+        //echo "getDeviceNameFromJson";
+        //print_r($items);
+
         foreach ($items as $item) {
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-            log::add('Abeille', 'debug', 'XXXXXXX2X creating ' .$item); // implode('!', $rucheCommandList));
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
                 $rucheCommandList[$objetId] = array(
                     "name" => $objetId,
@@ -1080,16 +1056,14 @@ if ($debugBEN != 0) {
             break;
 
         case "1":
-            $items = array("Ikea Tradfri 5 Btn Rond", "LLC020", "LWB006", "lumi.plug", "Plug01", "ruche", "lumi.sensor_86sw1", "lumi.sensor_ht", "lumi.sensor_magnet.aq2", "lumi.sensor_motion", "lumi.sensor_motion.aq2",
-                "lumi.sensor_switch", "lumi.sensor_switch.aq2", "TRADFRI bulb E14 WS opal 400lm", "TRADFRI bulb E27 CWS opal 600lm", "TRADFRI bulb E27 opal 1000lm", "TRADFRI bulb E27 W opal 1000lm 2",
-                "TRADFRI bulb GU10 W 400lm");
+            $items = Tools::getDeviceNameFromJson('Abeille');
             //problem icon creation
             foreach ($items as $item) {
                 $name = str_replace(' ', '.', $item);
                 $message->topic = "Abeille/$name/0000-0005";
                 $message->payload = $item;
                 Abeille::message($message);
-                sleep(15);
+                sleep(2);
             }
             break;
 

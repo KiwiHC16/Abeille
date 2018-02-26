@@ -102,7 +102,7 @@ class Tools
             return;
         }
 
-        log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: '.$device.' json found Tools: nb line ' . strlen($content));
+        log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: ' . $device . ' json found Tools: nb line ' . strlen($content));
         return $deviceJson;
     }
 
@@ -119,6 +119,48 @@ class Tools
         $trimmed = strlen($filename) > 1 ? str_replace(' ', '', str_replace('lumi.', '', $filename)) : "";
         return $trimmed;
     }
+
+
+    /**
+     * Scan config/devices directory to load devices name
+     *
+     * @param string $logger
+     * @return array of json devices name
+     */
+    public function getDeviceNameFromJson($logger = 'Abeille')
+    {
+        $return = array();
+        $deviceDir = dirname(__FILE__) . '/../../../core/config/devices/';
+        echo 'ddir: ' . $deviceDir;
+        if ($dh = opendir($deviceDir)) {
+            while (($file = readdir($dh)) !== false) {
+
+                try {
+                    $content = file_get_contents($deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json');
+                    //echo("nomCourt : $file : type : " . filetype($deviceDir . $file) . " \n");
+                    //echo("fullName: " . $deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json' . " \n");
+                    $temp = explode(":", $content);
+                    $atemp = explode('"', str_replace(array("\r", "\n"), '', $temp[0]));
+                    $found = $atemp[1];
+                    echo 'nom: ' . $found . " \n";
+                    if ($found != "") {
+                        array_push($return, $found);
+                    }
+
+                } catch (Exception $e) {
+                    log::add($logger, 'error', 'Cannot read content of file ' . $file);
+                }
+            }
+        }
+        return $return;
+    }
 }
 
+/*
+$items = Tools::getDeviceNameFromJson('test');
+log::add($logger, 'debug', 'test');
+log::add($logger, 'debug', 'items:' . implode('!', $items));
+echo 'items:';
+print_r($items);
+*/
 ?>

@@ -1,8 +1,8 @@
 :toc:
 
-= Philips Hue
+= Philips Hue White
 
-== Creation objet da ns Abeille
+== Creation objet dans Abeille
 
 === Association
 
@@ -11,7 +11,19 @@
 
 === Si deja associé
 
-Utiliser la commande getName dans la ruche, mettre l'adresse courte dans le titre et 03 (destinationndPoint) dans le message. Puis rafraichir le dashboard et la l'ampoule doit être présente.
+- Si l’ampoule est déjà associée à la zigate, avec Abeille en mode Automatique,
+
+* l’extinction électrique pendant 15s puis allumage électrique doit provoquer l’envoie par l’ampoule de sa présence et la création par Abeille de l’objet associé.
+
+* Utiliser la commande getName dans la ruche, mettre l'adresse courte dans le titre et 03 (destinationndPoint) dans le message. Puis rafraichir le dashboard et la l'ampoule doit être présente.
+
+= Philips Hue Go
+
+=== Association
+
+=== Si deja associé
+
+* tres long appui sur le bouton arriere de l ampoule plus de 40s probablement avec la zigate qui n'est pas en mode inclusion. La lampe se met a flasher. Elle s'est deconnectée du réseau. Mettre la zigate en Inclusion et la lampe envoie des messages "annonce" et elle doit se créer dans Abeille.
 
 == Colour Control
 

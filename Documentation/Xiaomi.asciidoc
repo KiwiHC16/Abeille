@@ -8,4 +8,18 @@
 
 Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
+
+=== Si deja associé
+
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
+
+== Prise
+
+=== Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une Inclusion doit provoquer la création de l'obet dans Abeille
+
+
+=== Si deja associé
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.

@@ -334,7 +334,7 @@ $requestedlevel = '' ? 'none' : $argv[7];
 if ($dest == 'none') {
     $dest = $resourcePath . '/COM';
     deamonlog('info', 'main: debug for com file: ' . $dest);
-    exec(system::getCmdSudo() . 'touch ' . $dest . 'chmod 777 ' . $dest . ' > /dev/null 2>&1');
+    exec(system::getCmdSudo() . 'touch ' . $dest . '; chmod 777 ' . $dest . ' > /dev/null 2>&1');
 }
 
 deamonlog('info', 'Processing MQTT message from ' . $username . ':' . $password . '@' . $server . ':' . $port . ' qos=' . $qos . ' with log level ' . $requestedlevel);

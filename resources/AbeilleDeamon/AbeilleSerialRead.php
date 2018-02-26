@@ -57,7 +57,7 @@
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
         deamonlog('info', 'Main: com file (experiment): '.$serial);
-        exec(system::getCmdSudo().'touch '.$serial.'chmod 777 '.$serial.' > /dev/null 2>&1');
+        exec(system::getCmdSudo().'touch '.$serial.'; chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
 

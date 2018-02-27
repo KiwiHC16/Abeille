@@ -303,6 +303,16 @@ function procmsg($topic, $msg)
                         $keywords[4] => $keywords[5],
                     );
                 }
+                if (count($keywords) == 8) {
+                    deamonlog('debug', '6 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     $keywords[4] => $keywords[5],
+                                     $keywords[6] => $keywords[7],
+                                     );
+                }
             }
         }
 

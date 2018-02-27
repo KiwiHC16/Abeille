@@ -352,7 +352,14 @@
             
             // $targetExtendedAddress  = "000B57fffe3025ad";
             $targetExtendedAddress  = $Command['address'];
-            $targetEndpoint         = "01";
+            //
+            if ( isset($Command['targetEndpoint']) ) {
+                $targetEndpoint         = $Command['targetEndpoint'];
+            }
+            else {
+                $targetEndpoint         = "01";
+            }
+            
             // $clusterID              = "0006";
             $clusterID              = $Command['ClusterId'];
             // $destinationAddressMode = "02";
@@ -372,6 +379,8 @@
             
             sendCmd( $dest, $cmd, $lenth, $data );
         }
+        
+        
         
         // setReport
         // Title =>
@@ -404,8 +413,14 @@
             
             $addressMode            = "02";                     // 01 = short
             $targetShortAddress     = $Command['address'];
-            $sourceEndpoint         = "01";
-            $destinationEndpoint    = "01";
+            $sourceEndpoint         = "03";
+            // $destinationEndpoint    = "01";
+            if ( isset($Command['targetEndpoint']) ) {
+                $targetEndpoint         = $Command['targetEndpoint'];
+            }
+            else {
+                $targetEndpoint         = "01";
+            }
             $ClusterId              = $Command['ClusterId'];
             $direction              = "00";                     // To Server / To Client
             $manufacturerSpecific   = "00";                     // Tx Server / Rx Client
@@ -422,7 +437,7 @@
             //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
             $lenth = "0015";
             
-            $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change . $gapOf1Octet;
+            $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
             
             sendCmd( $dest, $cmd, $lenth, $data );
         }

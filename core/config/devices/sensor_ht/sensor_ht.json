@@ -10,6 +10,7 @@
     },
     "Commandes": {
       "0000-0001": {
+        "isVisible": 0,
         "name": "SW",
         "order": 0,
         "isHistorized": "0",
@@ -19,6 +20,7 @@
         "template": ""
       },
       "0000-0005": {
+        "isVisible": 0,
         "name": "nom",
         "order": 1,
         "isHistorized": "0",
@@ -28,6 +30,7 @@
         "template": ""
       },
       "0402-0000": {
+        "isVisible": 1,
         "name": "Temperature",
         "order": 2,
         "isHistorized": "1",
@@ -45,6 +48,7 @@
         "units": "°C"
       },
       "0405-0000": {
+        "isVisible": 1,
         "name": "Humidite",
         "order": 3,
         "isHistorized": "1",
@@ -62,6 +66,7 @@
         }
       },
       "Batterie-Volt": {
+        "isVisible": 1,
         "name": "Batterie",
         "order": 4,
         "isHistorized": "1",
@@ -76,6 +81,7 @@
         }
       },
       "0000-ff01": {
+        "isVisible": 0,
         "name": "Specific",
         "order": 5,
         "isHistorized": "0",
@@ -85,6 +91,7 @@
         "template": ""
       },
       "Time-Time": {
+        "isVisible": 0,
         "name": "Last",
         "order": 6,
         "isHistorized": "0",
@@ -94,6 +101,7 @@
         "template": ""
       },
       "Time-TimeStamp": {
+        "isVisible": 0,
         "name": "Last Stamp",
         "order": 7,
         "isHistorized": "0",
@@ -103,6 +111,7 @@
         "template": "badge"
       },
       "IEEE-Addr": {
+        "isVisible": 0,
         "name": "IEEE-Addr",
         "order": 8,
         "isHistorized": "0",
@@ -112,6 +121,7 @@
         "template": "badge"
       },
       "Link-Quality": {
+        "isVisible": 0,
         "name": "Link Quality",
         "order": 9,
         "isHistorized": "0",
@@ -121,6 +131,7 @@
         "template": "badge"
       },
       "Power-Source": {
+        "isVisible": 0,
         "display": {
           "showNameOndashboard": "0"
         },

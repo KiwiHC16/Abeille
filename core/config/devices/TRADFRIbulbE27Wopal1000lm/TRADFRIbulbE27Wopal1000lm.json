@@ -9,6 +9,7 @@
     },
     "Commandes": {
       "0000-0004": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -18,6 +19,7 @@
         "template": ""
       },
       "0000-0005": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -27,6 +29,7 @@
         "template": ""
       },
       "0000-4000": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -36,6 +39,7 @@
         "template": ""
       },
       "0006-0000": {
+        "isVisible": 1,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "1",
@@ -45,6 +49,7 @@
         "template": "light"
       },
       "0008-0000": {
+        "isVisible": 1,
         "Type": "info",
         "configuration": {
           "calculValueOffset": "#value#/255*100",
@@ -61,6 +66,7 @@
         "units": "%"
       },
       "IEEE-Addr": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -70,6 +76,7 @@
         "template": "badge"
       },
       "Identify": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "duration=0010",
@@ -83,6 +90,7 @@
         "template": ""
       },
       "Level": {
+        "isVisible": 1,
         "Type": "action",
         "configuration": {
           "request": "Level=#slider#&duration=01",
@@ -96,6 +104,7 @@
         "template": ""
       },
       "Link-Quality": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -105,6 +114,7 @@
         "template": "badge"
       },
       "Off": {
+        "isVisible": 1,
         "Type": "action",
         "configuration": {
           "request": "Off",
@@ -118,6 +128,7 @@
         "template": ""
       },
       "On": {
+        "isVisible": 1,
         "Type": "action",
         "configuration": {
           "request": "On",
@@ -131,6 +142,7 @@
         "template": ""
       },
       "Power-Source": {
+        "isVisible": 0,
         "display": {
           "showNameOndashboard": "0"
         },
@@ -143,6 +155,7 @@
         "template": "AbeillePower"
       },
       "Time-Time": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -152,6 +165,7 @@
         "template": ""
       },
       "Time-TimeStamp": {
+        "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
@@ -161,6 +175,7 @@
         "template": "badge"
       },
       "Toggle": {
+        "isVisible": 1,
         "Type": "action",
         "configuration": {
           "request": "Toggle",
@@ -177,6 +192,7 @@
         "template": ""
       },
       "getEtat": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "clusterId=0006&attributeId=0000",
@@ -190,6 +206,7 @@
         "template": ""
       },
       "getLevel": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "clusterId=0008&attributeId=0000",
@@ -203,6 +220,7 @@
         "template": ""
       },
       "getManufacturerName": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "clusterId=0000&attributeId=0004",
@@ -216,6 +234,7 @@
         "template": ""
       },
       "getModelIdentifier": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "clusterId=0000&attributeId=0005",
@@ -229,6 +248,7 @@
         "template": ""
       },
       "getSWBuild": {
+        "isVisible": 0,
         "Type": "action",
         "configuration": {
           "request": "clusterId=0000&attributeId=4000",

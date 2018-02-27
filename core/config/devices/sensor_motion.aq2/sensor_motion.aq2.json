@@ -5,11 +5,12 @@
     "Categorie": {
       "security": "1"
     },
-     "configuration": {
-          "icone": "XiaomiInfraRouge2"
-        },
+    "configuration": {
+      "icone": "XiaomiInfraRouge2"
+    },
     "Commandes": {
       "0000-0001": {
+        "isVisible": 0,
         "name": "SW",
         "order": 0,
         "isHistorized": "0",
@@ -19,6 +20,7 @@
         "template": ""
       },
       "0000-0005": {
+        "isVisible": 0,
         "name": "nom",
         "order": 1,
         "isHistorized": "0",
@@ -28,6 +30,7 @@
         "template": ""
       },
       "0406-0000": {
+        "isVisible": 1,
         "name": "etat",
         "order": 2,
         "isHistorized": "1",
@@ -41,6 +44,7 @@
         }
       },
       "0400-0000": {
+        "isVisible": 1,
         "name": "Luminosite",
         "order": 3,
         "isHistorized": "1",
@@ -50,6 +54,7 @@
         "template": ""
       },
       "Time-Time": {
+        "isVisible": 0,
         "name": "Last",
         "order": 4,
         "isHistorized": "0",
@@ -59,6 +64,7 @@
         "template": ""
       },
       "Time-TimeStamp": {
+        "isVisible": 0,
         "name": "Last Stamp",
         "order": 5,
         "isHistorized": "0",
@@ -68,6 +74,7 @@
         "template": "badge"
       },
       "IEEE-Addr": {
+        "isVisible": 0,
         "name": "IEEE-Addr",
         "order": 6,
         "isHistorized": "0",
@@ -77,6 +84,7 @@
         "template": "badge"
       },
       "Link-Quality": {
+        "isVisible": 0,
         "name": "Link Quality",
         "order": 7,
         "isHistorized": "0",
@@ -86,6 +94,7 @@
         "template": "badge"
       },
       "Power-Source": {
+        "isVisible": 0,
         "display": {
           "showNameOndashboard": "0"
         },

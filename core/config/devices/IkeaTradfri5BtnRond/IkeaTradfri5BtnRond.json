@@ -11,6 +11,7 @@
       "On": {
         "name": "On",
         "order": 0,
+        "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -24,6 +25,7 @@
       "Off": {
         "name": "Off",
         "order": 1,
+        "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -37,6 +39,7 @@
       "Toggle": {
         "name": "Toggle",
         "order": 2,
+        "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -53,6 +56,7 @@
       "Level": {
         "name": "setLevel",
         "order": 3,
+        "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
         "subType": "slider",

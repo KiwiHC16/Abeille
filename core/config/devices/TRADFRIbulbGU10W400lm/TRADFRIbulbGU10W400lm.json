@@ -9,6 +9,7 @@
     },
     "Commandes": {
       "0000-0005": {
+        "isVisible": 0,
         "name": "nom",
         "order": 0,
         "isHistorized": "0",
@@ -18,6 +19,7 @@
         "template": ""
       },
       "0000-0004": {
+        "isVisible": 0,
         "name": "societe",
         "order": 1,
         "isHistorized": "0",
@@ -27,6 +29,7 @@
         "template": ""
       },
       "0000-4000": {
+        "isVisible": 0,
         "name": "SW",
         "order": 2,
         "isHistorized": "0",
@@ -36,6 +39,7 @@
         "template": ""
       },
       "0006-0000": {
+        "isVisible": 1,
         "name": "etat",
         "order": 3,
         "isHistorized": "1",
@@ -45,6 +49,7 @@
         "template": "light"
       },
       "0008-0000": {
+        "isVisible": 1,
         "name": "Level",
         "order": 4,
         "isHistorized": "1",
@@ -61,6 +66,7 @@
         }
       },
       "Time-Time": {
+        "isVisible": 0,
         "name": "Time-Time",
         "order": 5,
         "isHistorized": "0",
@@ -70,6 +76,7 @@
         "template": ""
       },
       "Time-TimeStamp": {
+        "isVisible": 0,
         "name": "Time-TimeStamp",
         "order": 6,
         "isHistorized": "0",
@@ -79,6 +86,7 @@
         "template": "badge"
       },
       "On": {
+        "isVisible": 1,
         "name": "On",
         "order": 7,
         "isHistorized": "0",
@@ -92,6 +100,7 @@
         }
       },
       "Off": {
+        "isVisible": 1,
         "name": "Off",
         "order": 8,
         "isHistorized": "0",
@@ -105,6 +114,7 @@
         }
       },
       "Toggle": {
+        "isVisible": 1,
         "name": "Toggle",
         "order": 9,
         "isHistorized": "0",
@@ -121,6 +131,7 @@
         }
       },
       "Level": {
+        "isVisible": 1,
         "name": "setLevel",
         "order": 10,
         "isHistorized": "0",
@@ -134,6 +145,7 @@
         }
       },
       "getEtat": {
+        "isVisible": 0,
         "name": "getEtat",
         "order": 11,
         "isHistorized": "0",
@@ -147,6 +159,7 @@
         }
       },
       "getLevel": {
+        "isVisible": 0,
         "name": "getLevel",
         "order": 12,
         "isHistorized": "0",
@@ -160,6 +173,7 @@
         }
       },
       "getManufacturerName": {
+        "isVisible": 0,
         "name": "getManufacturerName",
         "order": 13,
         "isHistorized": "0",
@@ -173,6 +187,7 @@
         }
       },
       "getModelIdentifier": {
+        "isVisible": 0,
         "name": "getModelIdentifier",
         "order": 14,
         "isHistorized": "0",
@@ -199,6 +214,7 @@
         }
       },
       "IEEE-Addr": {
+        "isVisible": 0,
         "name": "IEEE-Addr",
         "order": 16,
         "isHistorized": "0",
@@ -208,6 +224,7 @@
         "template": "badge"
       },
       "Link-Quality": {
+        "isVisible": 0,
         "name": "Link Quality",
         "order": 17,
         "isHistorized": "0",
@@ -217,6 +234,7 @@
         "template": "badge"
       },
       "Power-Source": {
+        "isVisible": 0,
         "display": {
           "showNameOndashboard": "0"
         },
@@ -229,6 +247,7 @@
         "template": "AbeillePower"
       },
       "Identify": {
+        "isVisible": 0,
         "name": "Identify",
         "order": 19,
         "isHistorized": "0",

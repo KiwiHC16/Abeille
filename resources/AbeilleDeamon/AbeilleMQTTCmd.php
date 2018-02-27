@@ -243,14 +243,14 @@ function procmsg($topic, $msg)
 
 
 
-        /* at ruche level pour l instant
+        /* at ruche level pour l instant */
         elseif ($action == "getGroupMembership") {
             $Command = array(
                              "getGroupMembership" => "1",
                              "address" => $address
                              );
         }
-        */
+        
 
         /* elseif ($action == "") {
          $keywords = preg_split("/[=&]+/", $msg);

@@ -260,6 +260,16 @@
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
         }
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 20,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
       }
     }
   }

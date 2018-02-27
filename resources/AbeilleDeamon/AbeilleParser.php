@@ -895,13 +895,14 @@
     
     function decode8062($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8062: (Group Memebership)(Decoded but Not Processed)');
-        // <Sequence number: uint8_t>   -> 2
-        // <endpoint: uint8_t>          -> 2
-        // <Cluster id: uint16_t>       -> 4
-        // <capacity: uint8_t>          -> 2
-        // <Group count: uint8_t>       -> 2
-        // <List of Group id: list each data item uint16_t>
+        deamonlog('debug', 'Type: 8062: (Group Memebership)(Processed->MQTT)');
+        // <Sequence number: uint8_t>                               -> 2
+        // <endpoint: uint8_t>                                      -> 2
+        // <Cluster id: uint16_t>                                   -> 4
+        // <Src Addr: uint16_t> (added only from 3.0d version)      -> 4
+        // <capacity: uint8_t>                                      -> 2
+        // <Group count: uint8_t>                                   -> 2
+        // <List of Group id: list each data item uint16_t>         -> 4x
         deamonlog('debug', 'payload length: '          .strlen($payload) );
         $groupSize = strlen($payload)-12-2; // 2 last are RSSI
         deamonlog('debug', 'group part of the payload length: '          .$groupSize );
@@ -910,16 +911,26 @@
         deamonlog('debug', 'SQN: '          .substr($payload, 0, 2));
         deamonlog('debug', 'endPoint: '     .substr($payload, 2, 2));
         deamonlog('debug', 'clusterId: '    .substr($payload, 4, 4));
-        deamonlog('debug', 'capacity: '     .substr($payload, 8, 2));
-        deamonlog('debug', 'group count: '  .substr($payload,10, 2));
-        $groupCount = hexdec( substr($payload,10, 2) );
+        deamonlog('debug', 'Address: '      .substr($payload, 8, 4));
+        deamonlog('debug', 'capacity: '     .substr($payload,12, 2));
+        deamonlog('debug', 'group count: '  .substr($payload,14, 2));
+        $groupCount = hexdec( substr($payload,14, 2) );
         for ($i=0;$i<$groupCount;$i++)
         {
-            deamonlog('debug', 'group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
+            deamonlog('debug', 'group '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,16+$i*4, 4));
+            $groupsId = $groupsId . '-' . substr($payload,16+$i*4, 4);
         }
+        deamonlog('debug', 'Groups: '.$groupsId);
         
         deamonlog('debug', 'Level: 0x'.substr($payload, strlen($payload)-2, 2));
         
+        // Envoie Group-Membership
+        $SrcAddr = substr($payload, 8, 4);
+        $ClusterId = "Group";
+        $AttributId = "Membership";
+        $data = $groupsId;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+
     }
     
     function decode8063($mqtt, $payload, $ln, $qos)

@@ -580,8 +580,9 @@ class Abeille extends eqLogic
             //id
             if ($objetConnu) {
                 $name = "Abeille-" . $addr;
+                // $name = "Abeille-" . $addr . '-' . $jsonName;
             } else {
-                $name = "Abeille-" . $addr . "-Type d objet inconnu (!JSON)";
+                $name = "Abeille-" . $addr . '-' . $jsonName . "-Type d objet inconnu (!JSON)";
             }
             $elogic->setName($name);
             $elogic->setLogicalId($nodeid);
@@ -593,8 +594,8 @@ class Abeille extends eqLogic
             $elogic->setConfiguration('topic', $nodeid);
             $elogic->setConfiguration('type', $type);
             $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
-
             $elogic->setIsVisible("1");
+                
             // eqReal_id
             $elogic->setIsEnable("1");
             // status
@@ -666,7 +667,11 @@ class Abeille extends eqLogic
                     $cmdlogic->setDisplay($confKey, $confValue);
                 }
 
-                // isVisible
+                // isVisible                
+                // Uncomment / comment next lines to force isVisble for debug reason for exmaple
+                //    $cmdlogic->setIsVisible("1");
+                $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+
                 // value
                 if (isset($cmdValueDefaut["value"])) {
                     $cmdlogic->setConfiguration('value', $cmdValueDefaut["value"]);

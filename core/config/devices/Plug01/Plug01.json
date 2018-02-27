@@ -141,7 +141,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0006&attributeId=0000"
         }
       },

@@ -181,8 +181,10 @@
         //verification du CRC
         //if ($crc == dechex($crctmp))
         // if ($crc != dechex($crctmp)) { return -2; }
-        if ($crc != dechex($crctmp)) {
-            deamonlog('error','CRC is not as expected ('.dechex($crctmp).') is '.$crc.' ');
+        
+        if ( $crctmp<16 ) { $crctmp2 = "0".dechex($crctmp); } else { $crctmp2 = dechex($crctmp); }
+        if ($crc != $crctmp2) {
+            deamonlog('error','CRC is not as expected ('.$crctmp2.') is '.$crc.' ');
         }
         
         deamonlog('debug','Type: '.$type.' quality: '.$quality);

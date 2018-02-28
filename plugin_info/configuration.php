@@ -30,7 +30,7 @@
         <fieldset>
             <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
             <div class="form-group">
-                <label class="col-lg-4 control-label">{{IP de Mosquitto : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Mosquitto passe les messages entre les différents éléments du plugin, le plugin installera mosquitto sur jeedom si besoin.">{{IP de Mosquitto : }}</label>
                 <div class="col-sm-4">
                     <input class="configKey form-control" data-l1key="AbeilleAddress" style="margin-top:5px"
                            placeholder="127.0.0.1"/>
@@ -69,7 +69,7 @@
                 </div>
             </div>
 
-            <div class="form-group" id="mqtt_topic">
+            <div class="form-group">
                 <label class="col-lg-4 control-label">{{Topic root (defaut: Tous): }}</label>
                 <div class="col-lg-4">
                     <input class="configKey form-control" data-l1key="mqttTopic" style="margin-top:5px"
@@ -77,8 +77,8 @@
                 </div>
             </div>
 
-            <div class="form-group" id="mqtt_qos">
-                <label class="col-lg-4 control-label">{{Qos}}</label>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le mode 0 est conseillé. Le mode 1 rencontre des problèmes du à un bug dans mosquitto dans certaines distributions.">{{Qos}}</label>
                 <div class="col-lg-4">
                     <select class="configKey form-control" data-l1key="mqttQos">
                         <option value="0">0</option>
@@ -104,20 +104,30 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">{{Id de l objet de rattachement par defaut : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Toutes les objets crées seront des enfants de l'id.">{{Id de l objet de rattachement par defaut : }}</label>
                 <div class="col-lg-4">
                     <input class="configKey form-control" data-l1key="AbeilleParentId" style="margin-top:5px"
                            placeholder="1"/>
                 </div>
             </div>
 
-            <div class="form-group" id="mqtt_creationObjectMode">
-                <label class="col-lg-4 control-label">{{Mode de creation des objets}}</label>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Automatique: si l'objet zigbee est connu et reconnu, il est crée dans jeedom. Semi-auto:l'objet est crée a partir des infos communiquées par l'objet zigbee, manuel: il faut créer l'objet doit même.">{{Mode de creation des objets}}</label>
                 <div class="col-lg-4">
                     <select style="width:auto" class="configKey form-control" data-l1key="creationObjectMode">
-                        <option value="Automatique">Automatique</option>
-                        <option value="Semi Automatique">Semi Automatique</option>
-                        <option value="Manuel">Manuel</option>
+                        <option value="Automatique">{{Automatique}}</option>
+                        <option value="Semi Automatique">{{Semi-Automatique}}</option>
+                        <option value="Manuel">{{Manuel}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Ce mode active l'affichage de toutes les commandes et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire.">{{Affichage mode dévelopeur}}</label>
+                <div class="col-lg-4">
+                    <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N">{{Non}}</option>
                     </select>
                 </div>
             </div>

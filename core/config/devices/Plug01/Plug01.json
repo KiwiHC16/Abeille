@@ -1,6 +1,6 @@
 {
   "Plug01": {
-    "nameJeedom": "OSRAM Prise Lightify Beta",
+    "nameJeedom": "OSRAM Prise Lightify",
     "Categorie": {
       "automatism": "1"
     },
@@ -37,34 +37,6 @@
         "subType": "binary",
         "invertBinary": "0",
         "template": "prise"
-      },
-      "tbd---puissance--": {
-        "isVisible": 1,
-        "name": "Puissance",
-        "order": 3,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "minValue": "0",
-          "maxValue": "2500",
-          "historizeRound": "0"
-        }
-      },
-      "tbd---conso--": {
-        "isVisible": 1,
-        "name": "Conso",
-        "order": 4,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "historizeRound": "3"
-        }
       },
       "Time-Time": {
         "isVisible": 0,

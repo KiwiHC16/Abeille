@@ -424,10 +424,14 @@
             $data = 'Default'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
             
+            sleep(2);
+            
             // Pour les ampoules Hue
             deamonlog('debug','Je demande a l equipement de type Hue');
             $data = 'Hue'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
+            
+            sleep(2);
             
             // Pour les volets ProFalux
             deamonlog('debug','Je demande a l equipement de type ProFalux');

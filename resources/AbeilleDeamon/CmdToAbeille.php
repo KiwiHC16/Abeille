@@ -453,12 +453,12 @@
                 // <group count: uint8_t>
                 // <group list:data>
 
-                $addressMode = "02"; // Short Address -> 2
-                $address = $Command['address']; // -> 4
-                $sourceEndpoint = "01"; // -> 2
+                $addressMode = "02";                                    // Short Address -> 2
+                $address = $Command['address'];                         // -> 4
+                $sourceEndpoint = "01";                                 // -> 2
                 $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
-                $groupCount = "00"; // -> 2
-                $groupList = ""; // ? Not mentionned in the ZWGUI -> 0
+                $groupCount = "00";                                     // -> 2
+                $groupList = "";                                        // ? Not mentionned in the ZWGUI -> 0
                 //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
                 $lenth = "0006";
             

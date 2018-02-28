@@ -69,7 +69,31 @@ pour un retour Off de l'ampoule.
 
 === Télécommande réelle
 
-(La zigate recoit les demandent dess boutons pour trigger des scenarios, je ne sais pas encore faire, pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom).
+(Pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom, sur un appui bouton telecommande, la ZiGate ne transmet rien au plugin Abeille).
+
+Pour créer l'objet Abeille Automatiquement, pour l'instant il faut connaitre l'adresse de la telecommande (voir mode semi automatique). 
+
+Puis dans la ruche demander son nom. Par exemple pour la telecommande à l'adress ec15
+
+image::images/Capture_d_ecran_2018_02_28_a_13_59_31.png[]
+
+et immédiatement apres appuyez sur un des boutons de la télécommande pour la réveiller.
+
+Et apres un rafraichissement de l'écran vous devez avoir un objet
+
+image::images/Capture_d_ecran_2018_02_28_a_14_00_58.png[]
+
+Il faut ensuite editer les commandes en remplacant l'adresse de la télécommande par le groupe que l on veut controler
+
+La configuration
+
+image::images/Capture_d_ecran_2018_02_28_a_14_03_26.png[]
+
+va devenir 
+
+image::images/Capture_d_ecran_2018_02_28_a_14_03_47.png[]
+
+pour le groupe 5FBD.
 
 === Télécommande Virtuelle
 

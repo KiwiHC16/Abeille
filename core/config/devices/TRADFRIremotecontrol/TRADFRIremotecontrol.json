@@ -1,0 +1,72 @@
+{
+  "TRADFRI remote control": {
+    "nameJeedom": "IKEA TRADFRI Rond 5 Boutons Remote Control",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "icone": "IkeaTradfri5BtnRond"
+    },
+    "Commandes": {
+      "On": {
+        "name": "On",
+        "order": 0,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "request": "On"
+        }
+      },
+      "Off": {
+        "name": "Off",
+        "order": 1,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "request": "Off"
+        }
+      },
+      "Toggle": {
+        "name": "Toggle",
+        "order": 2,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "request": "Toggle"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Level": {
+        "name": "setLevel",
+        "order": 3,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setLevelGroup",
+          "request": "Level=#slider#&duration=01"
+        }
+      }
+    }
+  }
+}

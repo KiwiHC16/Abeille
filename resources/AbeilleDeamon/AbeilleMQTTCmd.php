@@ -54,6 +54,16 @@ function procmsg($topic, $msg)
                                  "attributeId" => "0005"
                                  );
             }
+            if ( $msg == "OSRAM" )
+            {
+                deamonlog('info', 'Preparation de la commande annonce pour Hue');
+                $Command = array(
+                                 "ReadAttributeRequestOSRAM" => "1",
+                                 "address" => $address,
+                                 "clusterId" => "0000",
+                                 "attributeId" => "0005"
+                                 );
+            }
             //----------------------------------------------------------------------------
         } elseif ($action == "AnnonceProfalux") {
             if ( $msg == "Default" )
@@ -220,6 +230,14 @@ function procmsg($topic, $msg)
                 "Y" => $keywords[3],
                 "destinationEndPoint" => "0B",
             );
+            //----------------------------------------------------------------------------
+        } elseif ($action == "Management_LQI_request") {
+            $keywords = preg_split("/[=&]+/", $msg);
+            $Command = array(
+                             "Management_LQI_request" => "1",
+                             "address" => $keywords[1],
+                             "StartIndex" => $keywords[3],
+                             );
             //----------------------------------------------------------------------------
         } elseif ($action == "identifySend") {
             $keywords = preg_split("/[=&]+/", $msg);

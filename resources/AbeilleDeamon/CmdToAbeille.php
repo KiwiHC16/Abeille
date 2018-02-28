@@ -501,6 +501,24 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        if ( isset($Command['Management_LQI_request']) )
+        {
+            $cmd = "004E";
+            
+            // <target short address: uint16_t>
+            // <Start Index: uint8_t>
+            
+            $address = $Command['address'];     // -> 4
+            $startIndex = $Command['StartIndex']; // -> 2
+            
+            //  4 + 2 = 6/2 => 3
+            $lenth = "0003";
+            
+            $data = $address . $startIndex ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
         if ( isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']) )
         {
                 $cmd = "0070";
@@ -642,7 +660,8 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-            getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
+            // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
+            getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03" );
             //}
         }
         

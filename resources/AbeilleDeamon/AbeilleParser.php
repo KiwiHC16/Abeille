@@ -139,7 +139,7 @@
         return $return;
     }
     
-    function protocolDatas($datas, $mqtt, $qos, $clusterTab)
+    function protocolDatas($datas, $mqtt, $qos, $clusterTab, &$LQI)
     {
         // datas: trame complete recue sur le port serie sans le start ni le stop.
         // 01: 01 Start
@@ -321,8 +321,8 @@
                 decode804B($mqtt, $payload, $ln, $qos);
                 break;
                 
-            case "804E" :
-                decode804E($mqtt, $payload, $ln, $qos);
+            case "804e" :
+                decode804E($mqtt, $payload, $ln, $qos, $LQI);
                 break;
                 ##Reponse groupe
                 ##8060-8063
@@ -429,6 +429,13 @@
             // Pour les ampoules Hue
             deamonlog('debug','Je demande a l equipement de type Hue');
             $data = 'Hue'; // destinationEndPoint
+            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
+            
+            sleep(2);
+            
+            // Pour les ampoules OSRAM
+            deamonlog('debug','Je demande a l equipement de type OSRAM');
+            $data = 'OSRAM'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
             
             sleep(2);
@@ -872,13 +879,54 @@
     }
     
     
-    function decode804E($mqtt, $payload, $ln, $qos)
+    function decode804E($mqtt, $payload, $ln, $qos, &$LQI)
     {
-        deamonlog('debug', 'Type: 804E: (Management LQI response)(Not Processed)');
-        deamonlog('debug', ' (Not processed*************************************************************)');
-        deamonlog('debug', '  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug', 'Message: ');
-        deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
+        deamonlog('debug', 'Type: 804E: (Management LQI response)(Decoded but Not Processed)');
+        // <Sequence number: uint8_t>
+        // <status: uint8_t>
+        // <Neighbour Table Entries : uint8_t>
+        // <Neighbour Table List Count : uint8_t>
+        // <Start Index : uint8_t>
+        // <List of Entries elements described below :>
+        // Note: If Neighbour Table list count is 0, there are no elements in the list.
+        //  NWK Address : uint16_t
+        //  Extended PAN ID : uint64_t
+        //  IEEE Address : uint64_t
+        //  Depth : uint_t
+        //  Link Quality : uint8_t
+        //  Bit map of attributes Described below: uint8_t
+        //  bit 0-1 Device Type
+        //  (0-Coordinator 1-Router 2-End Device)
+        //  bit 2-3 Permit Join status
+        //  (1- On 0-Off)
+        //  bit 4-5 Relationship
+        //  (0-Parent 1-Child 2-Sibling)
+        //  bit 6-7 Rx On When Idle status
+        //  (1-On 0-Off)
+        deamonlog('debug', 'SQN: '                          .substr($payload, 0, 2));
+        deamonlog('debug', 'status: '                       .substr($payload, 2, 2));
+        deamonlog('debug', 'Neighbour Table Entries: '      .substr($payload, 4, 2));
+        deamonlog('debug', 'Neighbour Table List Count: '   .substr($payload, 6, 2));
+        deamonlog('debug', 'Start Index: '                  .substr($payload, 8, 2));
+        
+        // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
+        deamonlog('debug', 'NWK Address: '                  .substr($payload, 10, 4));
+        deamonlog('debug', 'Extended PAN ID: '              .substr($payload, 14,16));
+        deamonlog('debug', 'IEEE Address: '                 .substr($payload, 30,16));
+        deamonlog('debug', 'Depth: '                 .hexdec(substr($payload, 46, 2)));
+        deamonlog('debug', 'Link Quality: '          .hexdec(substr($payload, 48, 2)));
+        deamonlog('debug', 'Bit map of attributes: '        .substr($payload, 50, 2));
+        
+        $srcAddress         = 'Not Available Yet Due To ZiGate';
+        $Neighbour          = substr($payload, 10, 4);
+        $lqi                = hexdec(substr($payload, 48, 2));
+        $Depth              = hexdec(substr($payload, 46, 2));
+        $bitMapOfAttributes = substr($payload, 50, 2); // to be decoded
+        $LQI[$srcAddress]=array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
+        
+        // deamonlog('debug', 'Level: 0x'.substr($payload, 0, 2));
+        // deamonlog('debug', 'Message: ');
+        // deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
     
     ##TODO
@@ -1313,6 +1361,7 @@
     //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
+    $LQI = array();
     
     deamonlog(
               'info',
@@ -1331,7 +1380,7 @@
         }
         //traitement de chaque trame;
         $data = $fifoIN->read();
-        protocolDatas( $data, $mqtt, $qos, $clusterTab);
+        protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
         usleep(1);
         
     }

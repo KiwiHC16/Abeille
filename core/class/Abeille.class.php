@@ -576,6 +576,7 @@ class Abeille extends eqLogic
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Creation de l objet Abeille (hors ruche)
+            message::add("Abeille", "Création d un nouvel objet Abeille en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
             $elogic = new Abeille();
             //id
             if ($objetConnu) {
@@ -692,6 +693,7 @@ class Abeille extends eqLogic
                 ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
                 // Creation de l objet Abeille (hors ruche)
                 log::add('Abeille', 'info', 'objet: ' . $value . ' creation sans model');
+                message::add("Abeille", "Création d un nouvel objet INCONNU Abeille en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
                 $elogic = new Abeille();
                 //id
                 if ($objetConnu) {
@@ -906,6 +908,7 @@ class Abeille extends eqLogic
         // nodeid est le topic sans le dernier champ
         $nodeid = implode($topicArray, '/');
 
+        message::add("Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
         $elogic = new Abeille();
         //id
         $elogic->setName("Ruche");

@@ -331,7 +331,9 @@ class Abeille extends eqLogic
             AbeilleUser: ' . $parameters_info['AbeilleUser'] . ',
             Abeillepass: ' . $parameters_info['AbeillePass'] . ',
             AbeilleSerialPort: ' . $parameters_info['AbeilleSerialPort'] . ',
-            qos: ' . $parameters_info['AbeilleQos']
+            qos: ' . $parameters_info['AbeilleQos'] . ',
+            showAllCommands: '.$parameters_info['showAllCommands'] . ',
+            ModeCreation: '.$parameters_info['creationObjectMode']
         );
 
         $client = new Mosquitto\Client($parameters_info['AbeilleConId']);
@@ -436,6 +438,7 @@ class Abeille extends eqLogic
         $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1');
         $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
+        $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
 
         log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
         if ($return['AbeilleSerialPort'] != 'none') {
@@ -663,15 +666,16 @@ class Abeille extends eqLogic
                     $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
                 }
                 // La boucle est pour info et pour action
+                // isVisible
+                $parameters_info = self::getParameters();
+                $isVisible = $parameters_info['showAllCommands']=='Y'?"1":$cmdValueDefaut["isVisible"];
+
                 foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                     $cmdlogic->setDisplay($confKey, $confValue);
                 }
 
-                // isVisible                
-                // Uncomment / comment next lines to force isVisble for debug reason for exmaple
-                //    $cmdlogic->setIsVisible("1");
-                $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+                $cmdlogic->setIsVisible($isVisible);
 
                 // value
                 if (isset($cmdValueDefaut["value"])) {

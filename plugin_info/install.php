@@ -59,7 +59,7 @@ function Abeille_remove() {
     $resource_path = realpath(dirname(__FILE__) . '/../resources');
     passthru('sudo /bin/bash ' . $resource_path . '/remove.sh ' . $resource_path . ' > ' . log::getPathToLog('Abeille_removal') . ' 2>&1 &');
     message::removeAll("Abeille");
-    message::add("Abeille","plugin desinstallé");
+    message::add("Abeille","plugin désinstallé");
 }
 
 ?>

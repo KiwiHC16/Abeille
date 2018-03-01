@@ -264,6 +264,16 @@
             }
         }
 
+        
+        if ( isset($Command['ErasePersistentData']) )
+        {
+            if ($Command['ErasePersistentData']=="ErasePersistentData")
+            {
+                sendCmd($dest,"0012","0000","");
+            }
+        }
+        
+        
         // abeilleList abeilleListAll
         if ( isset($Command['abeilleList']) )
         {

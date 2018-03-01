@@ -354,5 +354,17 @@
       "topic": "CmdAbeille/Ruche/ErasePersistentData",
       "request": "ErasePersistentData"
     }
+  },
+  "replaceEquipement": {
+    "name": "Replace Equipement",
+    "order": "27",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/replaceEquipement",
+      "request": "old=#title#&new=#message#"
+    }
   }
 }

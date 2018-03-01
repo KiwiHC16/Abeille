@@ -739,6 +739,31 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        // Replace Equipement
+        if ( isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']) )
+        {
+            deamonlog('debug',"Replace an Equipment");
+            
+            $old = $Command['old'];
+            $new = $Command['new'];
+            
+            deamonlog('debug',"Update eqLogic table for new object");
+            $sql =          "update `eqLogic` SET ";
+            $sql = $sql .   "name = 'Abeille-".$new."-New' , logicalId = 'Abeille/".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
+            $sql = $sql .   "where  eqType_name = 'Abeille' and logicalId = 'Abeille/".$old."' and configuration like '%".$old."%'";
+            deamonlog('debug',"sql: ".$sql);
+            DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+            
+            deamonlog('debug',"Update cmd table for new object");
+            $sql =          "update `cmd` SET ";
+            $sql = $sql .   "configuration = replace(configuration, '".$old."', '".$new."' ) ";
+            $sql = $sql .   "where  eqType = 'Abeille' and configuration like '%".$old."%' ";
+            deamonlog('debug',"sql: ".$sql);
+            DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+            
+        }
+        
+        
         // ON / OFF one object
         if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {

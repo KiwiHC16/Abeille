@@ -285,6 +285,14 @@
             }
         }
         
+        if ( isset($Command["getNetworkStatus"]) )
+        {
+            if ($Command['getNetworkStatus']=="getNetworkStatus")
+            {
+                sendCmd($dest,"0009","0000","");
+            }
+        }
+        
         if ( isset($Command['SetPermit']) )
         {
             if ($Command['SetPermit']=="Inclusion")

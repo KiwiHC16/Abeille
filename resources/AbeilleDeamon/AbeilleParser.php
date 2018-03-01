@@ -523,11 +523,63 @@
     
     function decode8009($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug','type: 8009: (Data indication)(Not Processed)');
-        deamonlog('debug',' (Not processed*************************************************************)');
-        deamonlog('debug','  Level: 0x'.substr($payload, 0, 2));
-        deamonlog('debug','Message: ');
-        deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
+   
+        deamonlog('debug','type: 8009: (Network State response (Firm v3.0d))(Processed->MQTT)');
+        
+        // <Short Address: uint16_t>
+        // <Extended Address: uint64_t>
+        // <PAN ID: uint16_t>
+        // <Ext PAN ID: uint64_t>
+        // <Channel: u int8_t>
+        $ShortAddress       = substr($payload, 0, 4);
+        $ExtendedAddress    = substr($payload, 4,16);
+        $PAN_ID             = substr($payload,20, 4);
+        $Ext_PAN_ID         = substr($payload,24,16);
+        $Channel            = hexdec(substr($payload,40, 2));
+        
+        // Envoie Short Address
+        $SrcAddr = "Ruche";
+        $ClusterId = "Short";
+        $AttributId = "Addr";
+        $data = $ShortAddress;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        deamonlog('debug','ZiGate Short Address: '.$ShortAddress);
+        
+        // Envoie Extended Address
+        $SrcAddr = "Ruche";
+        $ClusterId = "IEEE";
+        $AttributId = "Addr";
+        $data = $ExtendedAddress;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        deamonlog('debug','IEEE Address: '.$ExtendedAddress);
+        
+        // Envoie PAN ID
+        $SrcAddr = "Ruche";
+        $ClusterId = "PAN";
+        $AttributId = "ID";
+        $data = $PAN_ID;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        deamonlog('debug','PAN ID: '.$PAN_ID);
+        
+        // Envoie Ext PAN ID
+        $SrcAddr = "Ruche";
+        $ClusterId = "Ext_PAN";
+        $AttributId = "ID";
+        $data = $Ext_PAN_ID;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        deamonlog('debug','Ext_PAN_ID: '.$Ext_PAN_ID);
+        
+        // Envoie Channel
+        $SrcAddr = "Ruche";
+        $ClusterId = "Network";
+        $AttributId = "Channel";
+        $data = $Channel;
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        deamonlog('debug','Channel: '.$Channel);
+        
+        deamonlog('debug','Level: 0x'.substr($payload, 0, 2));
+        // deamonlog('debug','Message: ');
+        // deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
     
     function decode8010($mqtt, $payload, $ln, $qos)

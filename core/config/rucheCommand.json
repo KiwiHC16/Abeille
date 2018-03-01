@@ -23,6 +23,18 @@
       "request": "StartNetwork"
     }
   },
+  "get Network Status": {
+    "name": "get Network Status",
+    "order": "1",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/getNetworkStatus",
+      "request": "getNetworkStatus"
+    }
+  },
   "Inclusion": {
     "name": "Inclusion",
     "order": "2",
@@ -211,6 +223,26 @@
   "Short-Addr": {
     "name": "Short Addr",
     "order": "17",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "PAN-ID": {
+    "name": "PAN ID",
+    "order": "26",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Ext_PAN-ID": {
+    "name": "Ext PAN ID",
+    "order": "27",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",

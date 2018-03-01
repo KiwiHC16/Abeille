@@ -43,6 +43,31 @@
           "returnStateTime": "1"
         }
       },
+      "Batterie-Volt": {
+        "isVisible": 1,
+        "name": "Batterie",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "configuration": {
+          "calculValueOffset": "#value#/1000",
+          "minValue": "0",
+          "maxValue": "3.3"
+        }
+      },
+      "0000-ff01": {
+        "isVisible": 0,
+        "name": "Specific",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
       "Time-Time": {
         "isVisible": 0,
         "name": "Last",

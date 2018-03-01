@@ -1093,23 +1093,24 @@
         //<Attribute data type: uint8_t>
         //<Size Of the attributes in bytes: uint16_t>
         //<Data byte list : stream of uint8_t>
-        $SQN = substr($payload, 0, 2);
-        $SrcAddr = substr($payload, 2, 4);
-        deamonlog('debug', 'SQN: '.$SQN);
-        deamonlog('debug', 'Src Addr : '.$SrcAddr);
-        $ClusterId = substr($payload, 8, 4);
-        $EPoint = substr($payload, 6, 2);
-        $AttributId = substr($payload, 12, 4);
-        $AttributStatus = substr($payload, 16, 2);
-        $dataType = substr($payload, 18, 2);
-        $AttributSize = substr($payload, 20, 4);
-        deamonlog('debug', 'End Point : '.$EPoint);
-        deamonlog('debug', 'Cluster ID : '.$ClusterId);
-        deamonlog('debug', 'Attr ID : '.$AttributId);
-        deamonlog('debug', 'Attr Status : '.$AttributStatus);
-        deamonlog('debug', 'Attr Data Type : '.$dataType);
-        deamonlog('debug', 'Attr Size : '.$AttributSize);
-        deamonlog('debug', 'Data byte list : '.substr($payload, 24, (strlen($payload) - 24 - 2)));
+        $SQN                = substr($payload, 0, 2);
+        $SrcAddr            = substr($payload, 2, 4);
+        $ClusterId          = substr($payload, 8, 4);
+        $EPoint             = substr($payload, 6, 2);
+        $AttributId         = substr($payload,12, 4);
+        $AttributStatus     = substr($payload,16, 2);
+        $dataType           = substr($payload,18, 2);
+        $AttributSize       = substr($payload,20, 4);
+        
+        deamonlog('debug', 'SQN: '              .$SQN);
+        deamonlog('debug', 'Src Addr : '        .$SrcAddr);
+        deamonlog('debug', 'End Point : '       .$EPoint);
+        deamonlog('debug', 'Cluster ID : '      .$ClusterId);
+        deamonlog('debug', 'Attr ID : '         .$AttributId);
+        deamonlog('debug', 'Attr Status : '     .$AttributStatus);
+        deamonlog('debug', 'Attr Data Type : '  .$dataType);
+        deamonlog('debug', 'Attr Size : '       .$AttributSize);
+        deamonlog('debug', 'Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2)));
         
         // valeur hexadécimale	- type -> function
         // 0x00	Null
@@ -1124,15 +1125,19 @@
         // 0x2a	int32                   -> unpack("l", pack("l", hexdec(
         // 0x30	Enumeration : 8bit
         // 0x42	string                  -> hex2bin
+        
         if ($dataType == "10") {
             $data = hexdec(substr($payload, 24, 2));
         }
+        
         if ($dataType == "18") {
             $data = substr($payload, 24, 2);
         }
+        
         if ($dataType == "20") {
             $data = hexdec(substr($payload, 24, 2));
         }
+        
         if ($dataType == "21") {
             $data = hexdec(substr($payload, 24, 4));
         }
@@ -1149,101 +1154,79 @@
                           );
             }
         }
+        
         // Example Temperature d un Xiaomi Carre
         // Sniffer dit Signed 16bit integer
         if ($dataType == "29") {
             // $data = hexdec(substr($payload, 24, 4));
             $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
         }
+        
         if ($dataType == "42") {
             
             // Xiaomi capteur temperature rond
             if (($AttributId == "ff01") && ($AttributSize == "001f")) {
-                deamonlog(
-                          'debug',
-                          'Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Rond)'
-                          );
+                deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond)');
+                
                 $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                // $temperature = hexdec(substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2));
                 $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                $humidity = hexdec(
-                                   substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2)
-                                   );
+                $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
                 
-                deamonlog('debug', 'Voltage: '.$voltage);
-                deamonlog('debug', 'Temperature: '.$temperature);
-                deamonlog('debug', 'Humidity: '.$humidity);
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                deamonlog('debug', 'Temperature: '  .$temperature);
+                deamonlog('debug', 'Humidity: '     .$humidity);
                 
-                mqqtPublish(
-                            $mqtt,
-                            $SrcAddr,
-                            $ClusterId,
-                            $AttributId,
-                            'Decoded as Volt-Temperature-Humidity',$qos
-                            );
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                
-                // Value decoded and value reported look aligned so I merge them.
-                // mqqtPublish( $mqtt, $SrcAddr, 'Xiaomi',          '0402-0000',       $temperature    );
-                // mqqtPublish( $mqtt, $SrcAddr, 'Xiaomi',          '0405-0000',       $humidity       );
+                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,$AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
+                mqqtPublish( $mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 
                 mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
                 mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
                 
-            } // Xiaomi capteur temperature carré
+            }
+            
+            // Xiaomi capteur temperature carré
             elseif (($AttributId == 'ff01') && ($AttributSize == '0025')) {
-                deamonlog(
-                          'debug',
-                          'Champ proprietaire Xiaomi, doit etre decodé (Capteur Temperature Carré)'
-                          );
-                $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                // $temperature = hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) );
-                $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');
                 
-                $humidity = hexdec(
-                                   substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2)
-                                   );
-                $pression = hexdec(
-                                   substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr(
-                                                                                                                    $payload,
-                                                                                                                    24 + 29 * 2 + 2,
-                                                                                                                    2
-                                                                                                                    ).substr($payload, 24 + 29 * 2, 2)
-                                   );
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                 
-                deamonlog('debug', 'Voltage: '.$voltage);
-                deamonlog('debug', 'Temperature: '.$temperature);
-                deamonlog('debug', 'Humidity: '.$humidity);
-                deamonlog('debug', 'Pression: '.$pression);
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                deamonlog('debug', 'Temperature: '  .$temperature);
+                deamonlog('debug', 'Humidity: '     .$humidity);
+                deamonlog('debug', 'Pression: '     .$pression);
                 
-                mqqtPublish(
-                            $mqtt,
-                            $SrcAddr,
-                            $ClusterId,
-                            $AttributId,
-                            'Decoded as Volt-Temperature-Humidity',$qos
-                            );
+                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 
-                // Value decoded and value reported look aligned so I merge them.
-                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0402-0000",         $temperature         );
-                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0405-0000",         $humidity            );
-                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0010",         $pression/10        );
-                // mqqtPublish( $mqtt, $SrcAddr, "Xiaomi",          "0403-0000",         $pression/100         );
+                mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
                 
-                mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
-                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
-                mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,$qos);
-                mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,$qos);
-            } // Xiaomi Door Sensor
+            }
+            
+            // Xiaomi Door Sensor
+            elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
+                deamonlog("debug","Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester...." );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+            }
+            
+            // Xiaomi Bouton Carré
             elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
-                deamonlog(
-                          "debug",
-                          "Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester...."
-                          );
-            } // Xiaomi Wall Plug
+                deamonlog("debug","Le Bouton Carre envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester...." );
+            }
+            
+            // Xiaomi Wall Plug
             elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
-                deamonlog('debug', 'Champ proprietaire Xiaomi, doit etre decodé (Wall Plug)');
+                deamonlog('debug', 'Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
                 $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
                 deamonlog('debug', 'Puissance: '.substr($payload, 24 + 8 * 2, 8));
                 $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
@@ -1263,17 +1246,17 @@
                             $AttributId,
                             'Decoded as OnOff-Puissance-Conso',$qos
                             );
-                mqqtPublish($mqtt, $SrcAddr, 'Xiaomi', '0006-0000', $onOff,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'tbd', '--puissance--', $puissanceValue,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'tbd', '--conso--', $consoValue,$qos);
-            } // Xiaomi Presence Infrarouge
+                mqqtPublish($mqtt, $SrcAddr, 'Xiaomi',  '0006-0000',        $onOff,             $qos);
+                mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+                mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
+            }
+            
+            // Xiaomi Presence Infrarouge
             elseif (($AttributId == "ff02")) {
                 // Non decodé a ce stade
                 deamonlog("debug", "Champ 0xFF02 non decode a ce stade");
             } else {
-                $data = hex2bin(
-                                substr($payload, 24, (strlen($payload) - 24 - 2))
-                                ); // -2 est une difference entre ZiGate et NXP Controlleur.
+                $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur.
             }
         }
         

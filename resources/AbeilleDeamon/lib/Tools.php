@@ -142,8 +142,8 @@ class Tools
                     $temp = explode(":", $content);
                     $atemp = explode('"', str_replace(array("\r", "\n"), '', $temp[0]));
                     $found = $atemp[1];
-                    echo 'nom: ' . $found . " \n";
-                    if ($found != "") {
+                    if ($found != "" and  strlen($found)>1) {
+                        //echo 'file:' .$file.' / nom: ' . $found . " \n";
                         array_push($return, $found);
                     }
 
@@ -152,7 +152,8 @@ class Tools
                 }
             }
         }
-        return $return;
+        //filter out empty value
+        return array_filter($return,function($value){return strlen($value)>1;});
     }
 }
 

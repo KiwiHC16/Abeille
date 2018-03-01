@@ -1,6 +1,6 @@
 {
   "lumi.sensor_switch.aq2": {
-    "nameJeedom": "Xiaomi Bouton",
+    "nameJeedom": "Xiaomi Bouton Aqara 2",
     "battery_type": "1xCR2032",
     "Categorie": {
       "automatism": "1"

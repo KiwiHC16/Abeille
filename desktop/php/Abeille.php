@@ -148,14 +148,28 @@ $eqLogics = eqLogic::byType('Abeille');
 
           <div class="form-group">
             <label class="col-sm-3 control-label">{{Icone du topic}}</label>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
               <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
+                  <option value="Abeille">{{Abeille}}</option>
+                  <option value="Ruche">{{Ruche}}</option>
                   <?php
                   require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
-                  $knownDevices=Tools::getJSonConfigFiles("knownDevices.json");
-                  foreach($knownDevices as $key => $value){
-                      echo "                     <option value=\"".$key."\">{{".$value."}}</option>";
+                  //$knownDevices=Tools::getJSonConfigFiles("knownDevices.json");
+                  $items = Tools::getDeviceNameFromJson('Abeille');
+                  $selectBox=array();
+                  foreach ($items as $item) {
+                      $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
+                        $name=$AbeilleObjetDefinition[$item]['nameJeedom'];
+                        $icone=$AbeilleObjetDefinition[$item]['configuration']['icone'];
+                        echo 'name: '.$name.' // value: '.$icone.' !! \n';
+                        $selectBox[ucwords($name)]=$icone;
+                        }
+                        print_r($selectBox);
+                        ksort($selectBox);
+                  print_r($selectBox);
+                  foreach($selectBox as $key=>$value){
+                        echo "                     <option value=\"".$value."\">{{".$key."}}</option>";
                   }
                   ?>
               </select>

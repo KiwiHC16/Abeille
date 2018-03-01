@@ -1,6 +1,6 @@
 {
   "lumi.sensor_switch": {
-    "nameJeedom": "Xiaomi Bouton 1",
+    "nameJeedom": "Xiaomi Interrupteur simple",
     "battery_type": "1xCR2032",
     "Categorie": {
       "automatism": "1"

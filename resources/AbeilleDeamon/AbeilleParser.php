@@ -1231,6 +1231,20 @@
             
             }
             
+            // Xiaomi Capteur Presence
+            // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
+            // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
+            elseif (($AttributId == "ff01") && ($AttributSize == "00XX")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
+            }
+            
             // Xiaomi Wall Plug
             elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
                 deamonlog('debug', 'Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');

@@ -1210,7 +1210,7 @@
             
             // Xiaomi Door Sensor
             elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
-                deamonlog("debug","Le door sensor envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester...." );
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
                 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                 
@@ -1220,8 +1220,15 @@
             }
             
             // Xiaomi Bouton Carré
-            elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
-                deamonlog("debug","Le Bouton Carre envoie un paquet proprietaire 0x115F qu il va fallair traiter, ne suis pa sure de la longueur car je ne peux pas tester...." );
+            elseif (($AttributId == "ff01") && ($AttributSize == "001a")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+            
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+            
             }
             
             // Xiaomi Wall Plug

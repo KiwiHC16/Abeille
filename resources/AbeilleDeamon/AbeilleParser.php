@@ -1198,13 +1198,11 @@
         
         if ($dataType == "28") {
             
-            $data = hexdec(substr($payload, 24, 2));
-            if ( $data>127 ) {
-                deamonlog(
-                          'debug',
-                          'Warning, dataType 28, decodage avec hexdec mais ne fonctionne pas sur des nombres negatifs, si voyez cette ligne avec des nombres negatifs, il faut un correctif, pas le temps de le faire maintenant'
-                          );
-            }
+            // $data = hexdec(substr($payload, 24, 2));
+            $in = substr($payload, 24, 2);
+            if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
+            
+            $data = unpack("s", pack("s", hexdec($raw)))[1];
         }
         
         // Example Temperature d un Xiaomi Carre

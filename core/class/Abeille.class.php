@@ -938,14 +938,10 @@ class Abeille extends eqLogic
         $elogic->save();
 
         $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
-        //log::add('Abeille', 'debug', 'XXXXXXX2X' . implode('!', $rucheCommandList));
-        //print_r($rucheCommandList);
         $i = 100;
 
         //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
         $items = Tools::getDeviceNameFromJson('Abeille');
-        //echo "getDeviceNameFromJson";
-        //print_r($items);
 
         foreach ($items as $item) {
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');

@@ -71,7 +71,13 @@ pour un retour Off de l'ampoule.
 
 (Pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom, sur un appui bouton telecommande, la ZiGate ne transmet rien au plugin Abeille).
 
-Pour créer l'objet Abeille Automatiquement, pour l'instant il faut connaitre l'adresse de la telecommande (voir mode semi automatique). 
+Pour créer l'objet Abeille Automatiquement, 
+
+- Premiere solution: faire une inclusion de la télécommande et un objet doit être créé.
+Ensuite paramétrer l'adresse du groupe comme indiqué ci dessous (voir deuxieme solution).
+
+
+- Deuxieme solution, il faut connaitre l'adresse de la telecommande (voir mode semi automatique pour récupérer l'adresse). 
 
 Puis dans la ruche demander son nom. Par exemple pour la telecommande à l'adress ec15
 
@@ -99,21 +105,22 @@ pour le groupe 5FBD.
 
 La télécommande virtuelle est un objet Jeedom qui envoies les commandes ZigBee comme si c'était une vrai télécommande IKEA.
 
-La première chose à faire est d'ouvrir l'objet ruche et d'aller dans les commandes et de rendre visible la commande "Ikea Tradfri 5 btn Rond".
+Utiliser les commandes cachées dans la ruche:
 
-image::images/Capture_d_ecran_2018_02_15_a_17_45_25.png[]
+* Ouvrir la page commande de la ruche et trouver la commande "TRADFRI remote control".
 
-De retour sur le dashboard, vous devriez voir le bouton "Ikea Tradfri 5 btn Rond" sur l objet Ruche.
+image::images/Capture_d_ecran_2018_03_02_a_10_34_40.png[]
 
-image:images/Capture_d_ecran_2018_02_15_a_17_45_37.png[]
+Remplacez "/TRADFRI remote control/" l'adresse du groupe que vous voulez controler. Par exemple AAAA.
 
-Un clic sur ce bouton suivi du rafraichissement de l'écran doit vous donner un nouvel objet "Abeille-Ikea Tradfri 5 Btn Rond".
+image::images/Capture_d_ecran_2018_03_02_a_10_35_08.png[]
 
-image::images/Capture_d_ecran_2018_02_15_a_17_45_56.png[]
+Sauvegardez et faites "Tester".
 
-Ouvrez l'objet dans la partie commandes et changer le texte "\#PleaseSetAddress#" de toutes les commandes par l'adresse du groupe que vous voulez piloter.
+Vous avez maintenant une télécommande pour controler le groupe AAAA.
 
-image::images/Capture_d_ecran_2018_02_15_a_17_46_16.png[]
+image::images/Capture_d_ecran_2018_03_02_a_10_35_28.png[]
 
-A noter que pour l'instant cette méthode ne permet pas de créer plus d'une télécommande.
+
+
 

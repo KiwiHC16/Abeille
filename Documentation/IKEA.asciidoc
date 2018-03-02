@@ -39,6 +39,8 @@ Mettre dans le champ:
 
 image::images/Capture_d_ecran_2018_02_21_a_23_26_49.png[]
 
+"ClusterId=0006&reportToAddress=00158d0001b22e24"
+
 Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
 
 image::images/Capture_d_ecran_2018_02_21_a_23_27_29.png[]

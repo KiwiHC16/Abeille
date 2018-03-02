@@ -59,6 +59,8 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 * Tester la ZiGate en ligne de commande
 
+** Jeedom vers ZiGate
+
 On envoie 
 [source,]
 ----
@@ -80,6 +82,31 @@ AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
 ----
 
 PS: la configuration du port peu varier d'un système à l'autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.
+
+** ZiGate vers Jeedom
+
+Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):
+
+[source,]
+----
+cat /dev/ttyUSB0 | hexdump -vC
+----
+
+Dans un second terminal envoiyez la commande
+[source,]
+----
+stty -F/dev/ttyUSB0 115200
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
+----
+
+Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:
+[source,]
+----
+www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
+00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |........w.....I.|
+00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|
+----
+
 
 
 === Mosquitto

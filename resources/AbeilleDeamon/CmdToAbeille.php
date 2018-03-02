@@ -431,7 +431,7 @@
             
             $addressMode            = "02";                     // 01 = short
             $targetShortAddress     = $Command['address'];
-            $sourceEndpoint         = "03";
+            $sourceEndpoint         = "01";
             // $destinationEndpoint    = "01";
             if ( isset($Command['targetEndpoint']) ) {
                 $targetEndpoint         = $Command['targetEndpoint'];
@@ -445,17 +445,24 @@
             $manufacturerId         = "0000";                   // ?
             $numberOfAttributes     = "01";                     // One element at a time
             $AttributeDirection     = "00";                     // ?
-            $AttributeType          = "10"; // $Command['AttributeType']; // Type 10 for initial test
-            $AttributeId            = $Command['AttributeId'];    // "0000";
+            
+            // E_ZCL_BOOL            = 0x10,                                    -> Etat Ampoule Ikea
+            // E_ZCL_UINT8           = 0x20,              // Unsigned 8 bit     -> Level Ampoule Ikea
+            // cf chap 7.1.3 of JN-UG-3113 v1.2
+            $AttributeType          = $Command['AttributeType'];
+            
+            $AttributeId            = $Command['AttributId'];    // "0000";
             $MinInterval            = "0000";
             $MaxInterval            = "0000";
             $Timeout                = "0000";
             $Change                 = "00";
             
             //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
-            $lenth = "0015";
+            $lenth = "0017";
             
             $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
+            
+            deamonlog('debug',"Data: ".$data);
             
             sendCmd( $dest, $cmd, $lenth, $data );
         }

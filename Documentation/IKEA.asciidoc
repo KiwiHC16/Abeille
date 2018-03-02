@@ -39,7 +39,7 @@ Mettre dans le champ:
 
 image::images/Capture_d_ecran_2018_02_21_a_23_26_49.png[]
 
-"ClusterId=0006&reportToAddress=00158d0001b22e24"
+"ClusterId=0006&reportToAddress=xxxxxxxxxxxxxxxx"
 
 Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
 
@@ -53,7 +53,13 @@ Ensuite parametrer l'envoie de rapport:
 - Message, le cluster et le parametre dans le cluster
 
 image::images/Capture_d_ecran_2018_02_21_a_23_29_11.png[]
-ClusterId=0006&AttributeId=0000
+[source,]
+----
+ClusterId=0006&AttributeId=0000&AttributeType=10 pour retour d'état ampoule Ikea
+
+ClusterId=0008&AttributeId=0000&AttributeType=20 pour retour de niveau ampoule Ikea
+----
+
 
 De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
 

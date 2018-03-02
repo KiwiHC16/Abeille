@@ -459,6 +459,7 @@
         deamonlog('debug','Length: '.hexdec($ln));
         deamonlog('debug','Status: '.displayStatus($status));
         deamonlog('debug','SQN: '.$SQN);
+        if ( $SQN==0 ) { deamonlog('debug','SQN: 0 for messages which are not transmitted over the air.');
     }
     
     function decode8001($mqtt, $payload, $ln, $qos)

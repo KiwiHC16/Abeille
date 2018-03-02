@@ -167,6 +167,23 @@ image::images/Capture_d_ecran_2018_01_23_a_22_53_24.png[]
 image::images/Capture_d_ecran_2018_01_25_a_14_59_34.png[]
 image::images/Capture_d_ecran_2018_01_25_a_14_59_43.png[]
 
+* Pour un objet qui n'est pas un routeur, exemple Xiaomi IR Presence, qui donc s'endort 99% du temps, il n'est pas possible de l'interroger pour qu'il provoque la création de l objet dans Jeedom. Mais vous pouvez créer l objet en allant dans les commandes de la ruche.
+
+* Ouvrir la page commande de la ruche et trouver la commande "lumi.sensor_motion".
+
+image::images/Capture_d_ecran_2018_03_02_a_11_09_04.png[]
+
+Remplacez "/lumi.sensor_motion/" l'adresse du groupe que vous voulez controler. Par exemple AAAA.
+
+image::images/Capture_d_ecran_2018_03_02_a_11_09_47.png[]
+
+Sauvegardez et faites "Tester".
+
+Vous avez maintenant une capteur.
+
+image::images/Capture_d_ecran_2018_03_02_a_11_11_02.png[]
+
+
 * Vous avez aussi la possibilité de lire des attributs de certains équipements en mettant l'adresse dans le titre et les paramètres de l attribut dans le Message comme dans la capture d'écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l'équipement soit à l'écoute):
 
 image::images/Capture_d_ecran_2018_01_25_a_16_12_32.png[]

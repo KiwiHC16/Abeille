@@ -50,10 +50,10 @@ qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
 Ensuite parametrer l'envoie de rapport:
 
 - Titre, l adresse courte de l'ampoule
-- Message, le culster et la parametre dans le cluster
+- Message, le cluster et le parametre dans le cluster
 
 image::images/Capture_d_ecran_2018_02_21_a_23_29_11.png[]
-
+ClusterId=0006&AttributId=0000
 
 De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
 

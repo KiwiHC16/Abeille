@@ -57,6 +57,31 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 * Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
 
+* Tester la ZiGate en ligne de commande
+
+On envoie 
+[source,]
+----
+stty -F/dev/ttyUSB0 115200
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
+----
+(Cela peut être fait alors que le plugin est ZiGate fonctionnent).
+
+Cette commande demande à la ZiGate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:
+
+[source,]
+----
+AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message > 12 char
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00
+AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
+----
+
+PS: la configuration du port peu varier d'un système à l'autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.
+
+
 === Mosquitto
 
 * Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.

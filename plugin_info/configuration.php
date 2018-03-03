@@ -104,10 +104,16 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Toutes les objets crées seront des enfants de l'id.">{{Id de l objet de rattachement par defaut : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Toutes les objets crées seront des enfants de l'id.">{{Objet Praent}}</label>
                 <div class="col-lg-4">
-                    <input class="configKey form-control" data-l1key="AbeilleParentId" style="margin-top:5px"
-                           placeholder="1"/>
+                    <select class="form-control eqLogicAttr" data-l1key="AbeilleParentId">
+                        <option value="">{{Aucun}}</option>
+                            <?php
+                                foreach (object::all() as $object) {
+                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                }
+                            ?>
+                    </select>
                 </div>
             </div>
 

@@ -1,12 +1,12 @@
 {
   "lumi.sensor_86sw1": {
     "nameJeedom": "Xiaomi Interrupteur Carré simple",
-    "battery_type": "1x3V CR2032",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-      "icone": "XiaomiButtonSW861"
+      "icone": "XiaomiButtonSW861",
+      "battery_type": "1x3V CR2032"
     },
     "Commandes": {
       "0000-0001": {

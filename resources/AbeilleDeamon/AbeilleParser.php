@@ -11,14 +11,9 @@
     
     require_once dirname(__FILE__)."/../../../../core/php/core.inc.php";
     require_once("lib/Tools.php");
-    include("includes/config.php");
-    include("includes/fifo.php");
-    include("lib/phpMQTT.php");
-    
-    
-    $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-
-    // print_r( $clusterTab );
+    require_once("includes/config.php");
+    require_once("includes/fifo.php");
+    require_once("lib/phpMQTT.php");
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
@@ -167,7 +162,7 @@
         $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
         
         //acquisition du CRC
-        $crc = $datas[8].$datas[9];
+        $crc = strtolower($datas[8].$datas[9]);
         //payload
         $payload = "";
         for ($i = 0; $i < hexdec($ln); $i++) {
@@ -179,12 +174,8 @@
         $payloadLength = strlen($payload) - 2;
         
         //verification du CRC
-        //if ($crc == dechex($crctmp))
-        // if ($crc != dechex($crctmp)) { return -2; }
-        
-        if ( $crctmp<16 ) { $crctmp2 = "0".dechex($crctmp); } else { $crctmp2 = dechex($crctmp); }
-        if ($crc != $crctmp2) {
-            deamonlog('error','CRC is not as expected ('.$crctmp2.') is '.$crc.' ');
+        if (hexdec($crc) != $crctmp) {
+            deamonlog('error','CRC is not as expected ('.$crctmp.') is '.$crc.' ');
         }
         
         deamonlog('debug','Type: '.$type.' quality: '.$quality);
@@ -1020,10 +1011,11 @@
         deamonlog('debug', 'capacity: '     .substr($payload,12, 2));
         deamonlog('debug', 'group count: '  .substr($payload,14, 2));
         $groupCount = hexdec( substr($payload,14, 2) );
+        $groupsId="";
         for ($i=0;$i<$groupCount;$i++)
         {
             deamonlog('debug', 'group '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,16+$i*4, 4));
-            $groupsId = $groupsId . '-' . substr($payload,16+$i*4, 4);
+            $groupsId .= '-' . substr($payload,16+$i*4, 4);
         }
         deamonlog('debug', 'Groups: '.$groupsId);
         
@@ -1413,7 +1405,6 @@
     $requestedlevel = '' ? 'none' : $argv[7];
     $mqtt = new phpMQTT($server, $port, $client_id);
     $fifoIN = new fifo( $in, 0777, "r" );
-    //$zigateCluster= Tools::getJSonConfigFiles($GLOBALS['zigateJsonFileCluster']);
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
     $LQI = array();

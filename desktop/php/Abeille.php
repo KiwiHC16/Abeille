@@ -171,7 +171,7 @@ $eqLogics = eqLogic::byType('Abeille');
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Icone du topic}}</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration"
                                         data-l2key="icone">
                                     <option value="Abeille">{{Abeille}}</option>

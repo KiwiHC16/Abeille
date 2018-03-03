@@ -6,7 +6,7 @@
      * transform hex to binary and write to serial port.
      */
 
-     /**
+    /**
      * @param $msgtype
      * @param $length
      * @param $datas
@@ -20,11 +20,6 @@
             deamonlog('debug',"msgtype: " . $msgtype );
             deamonlog('debug',"length: " . $length  );
             deamonlog('debug',"datas: " . $datas );
-            /*echo "getChecksum()\n";
-            echo "msgtype: " . $msgtype . "\n";
-            echo "length: " . $length . "\n";
-            echo "datas: " . $datas ."\n";
-            */
         }
         
         $temp = 0;

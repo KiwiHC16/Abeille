@@ -1,12 +1,12 @@
 {
   "lumi.sensor_motion.aq2": {
     "nameJeedom": "Xiaomi Presence Aqara 2",
-    "battery_type": "1x3V CR2032",
     "Categorie": {
       "security": "1"
     },
     "configuration": {
-      "icone": "XiaomiInfraRouge2"
+      "icone": "XiaomiInfraRouge2",
+      "battery_type": "1x3V CR2032"
     },
     "Commandes": {
       "0000-0001": {

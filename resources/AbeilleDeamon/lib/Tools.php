@@ -39,8 +39,8 @@ class Tools
      */
     public static function deamonlog($loglevel = 'NONE', $loggerName = 'Tools', $message = '')
     {
-        if (strlen($message) >= 1 && Tools::getNumberFromLevel($loglevel) <= Tools::getNumberFromLevel($GLOBALS["requestedlevel"])) {
-            fwrite(STDOUT, $loggerName . ' ' . date("Y-m-d H:i:s") . '[' . strtoupper($GLOBALS["requestedlevel"]) . ']' . $message . PHP_EOL);;
+        if (strlen($message) >= 1 && Tools::getNumberFromLevel($loglevel) <= Tools::getNumberFromLevel($GLOBALS['requestedlevel'])) {
+            fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . strtoupper($GLOBALS['requestedlevel']) . ']' . $message . PHP_EOL);
         }
     }
 

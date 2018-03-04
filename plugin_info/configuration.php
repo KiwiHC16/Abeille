@@ -104,9 +104,9 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Toutes les objets crées seront des enfants de l'id.">{{Objet Praent}}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Toutes les objets crées seront des enfants de l'id.">{{Objet Parent}}</label>
                 <div class="col-lg-4">
-                    <select class="form-control eqLogicAttr" data-l1key="AbeilleParentId">
+                    <select class="configKey form-control" data-l1key="AbeilleParentId">
                         <option value="">{{Aucun}}</option>
                             <?php
                                 foreach (object::all() as $object) {
@@ -137,6 +137,5 @@
                     </select>
                 </div>
             </div>
-
-        </fieldset>
+         </fieldset>
 </form>

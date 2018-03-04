@@ -580,7 +580,7 @@ class Abeille extends eqLogic
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Creation de l objet Abeille (hors ruche)
-            message::add("Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
+            message::add("Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.");
             $elogic = new Abeille();
             //id
             if ($objetConnu) {
@@ -600,6 +600,11 @@ class Abeille extends eqLogic
             $elogic->setConfiguration('type', $type);
             $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
             $elogic->setIsVisible("1");
+            $elogic->setConfiguration('type', $type);
+            if (isset($objetConfiguration['battery_type'])){
+                log::add('Abeille','debug','define battery: '.$objetConfiguration['battery_type']);
+                $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
+            }
                 
             // eqReal_id
             $elogic->setIsEnable("1");
@@ -635,7 +640,6 @@ class Abeille extends eqLogic
                 $cmdlogic->setEqLogic_id($elogic->getId());
                 $cmdlogic->setEqType('Abeille');
                 $cmdlogic->setLogicalId($cmd);
-                echo "Order: " . $cmdValueDefaut["order"] . "\n";
                 $cmdlogic->setOrder($cmdValueDefaut["order"]);
                 $cmdlogic->setName($cmdValueDefaut["name"]);
 

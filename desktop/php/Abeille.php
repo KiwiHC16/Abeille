@@ -112,7 +112,7 @@ $eqLogics = eqLogic::byType('Abeille');
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Objet parent}}</label>
                             <div class="col-sm-3">
-                                <select class="form-control eqLogicAttr" data-l1key="object_id">
+                                <select class="eqLogicAttr form-control" data-l1key="object_id">
                                     <option value="">{{Aucun}}</option>
                                     <?php
                                     foreach (object::all() as $object) {

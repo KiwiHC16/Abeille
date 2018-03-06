@@ -58,7 +58,7 @@ image::images/plug01_new.PNG[]
 
 === Déjà associé
 
-a
+non disponible actuellement - nouvelle inclusion à faire
 
 === Ajout dans un groupe (avec Ampoules Hue ou Ikea par exemple)
 Utiliser la Fonction Add Group de la Ruche

@@ -173,7 +173,7 @@ if [[ -d "/etc/php5/" ]]; then
   apt-get -y install php5-dev
 
   if [[ -d "/etc/php5/cli/" && ! `cat /etc/php5/cli/php.ini | grep "mosquitto"` ]]; then
-    echo "" | pecl install Mosquitto-alpha
+    echo "" | pecl install Mosquitto-beta
     echo "extension=mosquitto.so" | tee -a /etc/php5/cli/php.ini
   fi
 

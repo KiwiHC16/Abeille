@@ -73,6 +73,30 @@ image::images/Capture_d_ecran_2018_02_21_a_23_31_11.png[]
 
 pour un retour Off de l'ampoule.
 
+=== Gestion des groupes
+
+Vous pouvez adresser un groupes d'ampoules (ou d'équipements) pour qu'ils agissent en même temps.
+
+Pour se faire sur l'objet ruche vous avez 3 commandes:
+
+image::images/Capture_d_ecran_2018_03_07_a_11_32_21.png[]
+
+* Add Group: permet d'ajouter un groupe à l'ampoule. Celle ci peut avoir plusieurs groupes et réagira si elle recoit un message sur l'un de ces groupes.
+
+image::images/Capture_d_ecran_2018_03_07_a_11_38_19.png[]
+
+Le DestinatioEndPoint pour une ampoule Ikea est 01. Pour le groupe vous pouvez choisir. Il faut 4 caractères hexa (0-9 et a-f).
+
+* Remove Group: permet d'enlever l'ampoule d'un groupe pour qu'elle ne réagisse plus à ces commandes.
+
+image::images/Capture_d_ecran_2018_03_07_a_11_44_50.png[]
+
+*getGroupMembership: permet d'avoir la liste des groupes pour lesquels l'ampoule réagira. Cette liste s'affiche au niveau de l'ampoule, exemple avec cette ampoule qui va repondre au groupe aaaa et au groupe bbbb.
+
+image::images/Capture_d_ecran_2018_03_07_a_11_43_14.png[]
+image::images/Capture_d_ecran_2018_03_07_a_11_41_21.png[]
+
+
 == Telecommnande Ronde 5 boutons
 
 === Télécommande réelle

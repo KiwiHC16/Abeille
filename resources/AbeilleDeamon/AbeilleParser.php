@@ -1126,8 +1126,7 @@
     
     function decode8102($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', ' Type: 8102 (Attribut Report)(Processed->MQTT)');
-        deamonlog('debug', '['.date('Y-m-d H:i:s').']');
+        
         
         //<Sequence number: uint8_t>
         //<Src address : uint16_t>
@@ -1147,15 +1146,16 @@
         $dataType           = substr($payload,18, 2);
         $AttributSize       = substr($payload,20, 4);
         
-        deamonlog('debug', 'SQN: '              .$SQN);
-        deamonlog('debug', 'Src Addr : '        .$SrcAddr);
-        deamonlog('debug', 'End Point : '       .$EPoint);
-        deamonlog('debug', 'Cluster ID : '      .$ClusterId);
-        deamonlog('debug', 'Attr ID : '         .$AttributId);
-        deamonlog('debug', 'Attr Status : '     .$AttributStatus);
-        deamonlog('debug', 'Attr Data Type : '  .$dataType);
-        deamonlog('debug', 'Attr Size : '       .$AttributSize);
-        deamonlog('debug', 'Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2)));
+        deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
+        . '; SQN: '              .$SQN
+        . '; Src Addr : '        .$SrcAddr
+        . '; End Point : '       .$EPoint
+        . '; Cluster ID : '      .$ClusterId
+        . '; Attr ID : '         .$AttributId
+        . '; Attr Status : '     .$AttributStatus
+        . '; Attr Data Type : '  .$dataType
+        . '; Attr Size : '       .$AttributSize
+        . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2)));
         
         // valeur hexadécimale	- type -> function
         // 0x00	Null

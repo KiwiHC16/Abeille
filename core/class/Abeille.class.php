@@ -1029,8 +1029,8 @@ class AbeilleCmd extends cmd
                 $request = $this->getConfiguration('request', '1');
                 
 /* ------------------------------ */
-/* En cours de dev by KiwiHC16*/
-                
+/* En cours de dev by KiwiHC16 pour bind */
+                if (0) {
                 $ruche = new Abeille();
                 $commandIEEE = new AbeilleCmd();
                 
@@ -1056,7 +1056,7 @@ class AbeilleCmd extends cmd
                 
                 $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
                 $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
-                
+        }
 /* ------------------------------ */
                 $topic = $this->getConfiguration('topic');
                 

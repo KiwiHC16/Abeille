@@ -651,6 +651,11 @@ class Abeille extends eqLogic
                 foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                     $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue));
+                    
+                    // Ne pas effacer, en cours de dev.
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
+                    
                 }
                 if ($cmdValueDefaut["Type"] == "action") {
                     $cmdlogic->setConfiguration('retain', '0');
@@ -1022,7 +1027,39 @@ class AbeilleCmd extends cmd
         switch ($this->getType()) {
             case 'action' :
                 $request = $this->getConfiguration('request', '1');
+                
+/* ------------------------------ */
+/* En cours de dev by KiwiHC16*/
+                
+                $ruche = new Abeille();
+                $commandIEEE = new AbeilleCmd();
+                
+                // Recupere IEEE de la Ruche/ZiGate
+                $rucheId = $ruche->byLogicalId( 'Abeille/Ruche', 'Abeille' )->getId();
+                log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
+                
+                $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $rucheId , 'IEEE-Addr' )->execCmd();
+                log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
+                
+                $currentCommandId = $this->getId();
+                $currentObjectId = $this->getEqLogic_id();
+                log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
+                
+                $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $currentObjectId , 'IEEE-Addr' )->execCmd();
+                // print_r( $command->execCmd() );
+                log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE );
+                
+                // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+                // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+                // echo "\n";
+                // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+                
+                $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
+                $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
+                
+/* ------------------------------ */
                 $topic = $this->getConfiguration('topic');
+                
                 switch ($this->getSubType()) {
                     case 'slider':
                         $request = str_replace('#slider#', $_options['slider'], $request);
@@ -1078,6 +1115,36 @@ if ($debugBEN != 0) {
                 Abeille::message($message);
                 sleep(2);
             }
+            break;
+            
+        case "3":
+            $ruche = new Abeille();
+            $commandIEEE = new AbeilleCmd();
+            
+            // Recupere IEEE de la Ruche/ZiGate
+            $rucheId = $ruche->byLogicalId( 'Abeille/Ruche', 'Abeille' )->getId();
+            echo 'Id pour abeille Ruche: '.$rucheId."\n";
+            
+            $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $rucheId , 'IEEE-Addr' )->execCmd();
+            echo 'IEEE pour  Ruche: '.$rucheIEEE ."\n";
+            
+            // $currentCommandId = $this->getId();
+            // $currentObjectId = $this->getEqLogic_id();
+            $currentObjectId = 284;
+            echo 'Id pour current abeille: '.$currentObjectId ."\n";
+            
+            $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $currentObjectId , 'IEEE-Addr' )->execCmd();
+            // print_r( $command->execCmd() );
+            echo 'IEEE pour current abeille: '.$commandIEEE ."\n";
+            
+            // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+            // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+            // echo "\n";
+            // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+            
+            $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
+            $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
+            
             break;
 
     }

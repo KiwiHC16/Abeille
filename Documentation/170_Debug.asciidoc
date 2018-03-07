@@ -4,6 +4,10 @@
 
 Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.
 
+=== Forum
+
+* le forum: https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
+
 == Attention - Danger
 
 === "retain" dans les objets

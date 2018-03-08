@@ -21,6 +21,7 @@ Jeedom fonctionne sur le systeme linux debian, de ce fait ce plugin est dévelop
 * raspberry pi 3 (KiwiHC16 en prod)
 * Machine virtuelle sous debian 9 en x86 (KiwiHC16 en dev)
 * docker debian en x86 (edgd1er en dev)
+
 Les autres envirroenements ne sont pas testés par défaut mais nous vous aiderons dans la mesure du possible.
 En retour d'experience sur le forum:
 - Windows ne fonctionne pas, car pas Linux

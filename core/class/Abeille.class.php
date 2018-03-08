@@ -1030,33 +1030,35 @@ class AbeilleCmd extends cmd
                 
 /* ------------------------------ */
 /* En cours de dev by KiwiHC16 pour bind */
-                if (0) {
-                $ruche = new Abeille();
-                $commandIEEE = new AbeilleCmd();
-                
-                // Recupere IEEE de la Ruche/ZiGate
-                $rucheId = $ruche->byLogicalId( 'Abeille/Ruche', 'Abeille' )->getId();
-                log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
-                
-                $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $rucheId , 'IEEE-Addr' )->execCmd();
-                log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
-                
-                $currentCommandId = $this->getId();
-                $currentObjectId = $this->getEqLogic_id();
-                log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
-                
-                $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $currentObjectId , 'IEEE-Addr' )->execCmd();
-                // print_r( $command->execCmd() );
-                log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE );
-                
-                // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
-                // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
-                // echo "\n";
-                // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
-                
-                $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
-                $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
-        }
+                if ( strpos($request,'#addrIEEE#') > 0 ) {
+                    $ruche = new Abeille();
+                    $commandIEEE = new AbeilleCmd();
+                    
+                    // Recupere IEEE de la Ruche/ZiGate
+                    $rucheId = $ruche->byLogicalId( 'Abeille/Ruche', 'Abeille' )->getId();
+                    log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
+                    
+                    $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $rucheId , 'IEEE-Addr' )->execCmd();
+                    log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
+                    
+                    $currentCommandId = $this->getId();
+                    $currentObjectId = $this->getEqLogic_id();
+                    log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
+                    
+                    // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
+                    $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId( $currentObjectId , 'IEEE-Addr' )->execCmd();
+                    
+                    // print_r( $command->execCmd() );
+                    log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE );
+                    
+                    // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+                    // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+                    // echo "\n";
+                    // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+                    
+                    $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
+                    $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
+                }
 /* ------------------------------ */
                 $topic = $this->getConfiguration('topic');
                 

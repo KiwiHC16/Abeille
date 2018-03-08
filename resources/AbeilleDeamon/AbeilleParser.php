@@ -848,15 +848,19 @@
     
     function decode8045($mqtt, $payload, $ln, $qos)
     {
+        $endPointList = "";
+        for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
+            // deamonlog('debug','Endpoint : '    .substr($payload, (10 + $i), 2));
+            $endPointList = $endPointList . '; Endpoint : '.substr($payload, (10 + $i), 2) ;
+        }
+        
         deamonlog('debug',';type: 8045 (Active Endpoints Response)(Not Processed)'
         . '; SQN : '             .substr($payload, 0, 2)
         . '; Status : '          .substr($payload, 2, 2)
         . '; Short Address : '   .substr($payload, 4, 4)
         . '; Endpoint Count : '  .substr($payload, 8, 2)
-        . '; Endpoint List :'  );
-        for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
-            deamonlog('debug','Endpoint : '    .substr($payload, (10 + $i), 2));
-        }
+        . '; Endpoint List :'    .$endPointList             );
+        
     }
     
     function decode8046($mqtt, $payload, $ln, $qos)

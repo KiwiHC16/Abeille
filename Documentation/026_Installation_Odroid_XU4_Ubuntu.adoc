@@ -1,0 +1,64 @@
+= Installation sur une machine Odroid XU4 avec Ubuntu
+
+== Installation de l'OS
+
+Fichier img: ubuntu-14.04lts-server-odroid-xu3-20150725.img
+que l on trouve sur le server odroid: https://odroid.in/ubuntu_14.04lts/
+
+Installation classique odroid de l'OS : https://wiki.odroid.com/odroid-xu4/odroid-xu4 
+
+== Preparation de l'OS
+
+login: (root/odroid).
+
+[source,]
+----
+apt-get update
+apt-get upgrade
+apt-get autoremove
+----
+
+== Installation de la base mysql
+
+installation à la main de mysql (car l instanllation par jeedom ne fonctionne pas)
+
+[source,]
+----
+apt-get install mysql-server
+apt-get install mysql-client
+----
+
+== Installation de Jeedom
+
+[source,]
+----
+wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+chmod +x install.sh
+----
+
+Enlever le php7.0-ssh2 du fichier install.sh
+
+[source,]
+----
+./install.sh -m motDePasse
+----
+
+A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.
+
+== Installation du Plugin Abeille
+
+[source,]
+----
+./install.sh -m motDePasse
+
+cd /var/www/html/plugins/
+
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
+
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille
+----
+
+== Utilisation de Jeedom
+
+Il ne vous reste plus qu'à vous connecter à Jeedom...

@@ -25,5 +25,7 @@ Jeedom fonctionne sur le systeme linux debian, de ce fait ce plugin est dévelop
 Les autres envirroenements ne sont pas testés par défaut mais nous vous aiderons dans la mesure du possible.
 En retour d'experience sur le forum:
 - Windows ne fonctionne pas, car pas Linux
-- Ubuntu fonctionne mais demande de mettre les mains dans le cambouit, l'installation même de Jeedom n'est pas immédiate
+- Ubuntu fonctionne mais demande de mettre les mains dans le cambouit, l'installation même de Jeedom n'est pas immédiate (https://github.com/KiwiHC16/Abeille/blob/master/Documentation/024_Installation_VM_Ubuntu.adoc @KiwiHC16)
 - Odroid/HardKernel devrait fonctionner
+-- U3 sous debian: install classique (@KiwiHC16)
+-- XU4 sous ubuntu: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/026_Installation_Odroid_XU4_Ubuntu.adoc (@KiwiHC16)

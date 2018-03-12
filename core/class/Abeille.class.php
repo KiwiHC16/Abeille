@@ -441,7 +441,7 @@ class Abeille extends eqLogic
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
         $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
 
-        log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
+        // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
         if ($return['AbeilleSerialPort'] != 'none') {
             $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
             if (@!file_exists($return['AbeilleSerialPort'])) {
@@ -517,8 +517,10 @@ class Abeille extends eqLogic
         $parameters_info = self::getParameters();
         /*----------------------------------------------------------------------------------------------------------------------------------------------*/
         // Analyse du message recu et definition des variables en fonction de ce que l on trouve dans le message
-        // $nodeid[/] / $cmdId / $value
-
+        // [CmdAbeille:Abeille] / Address / Cluster-Parameter
+        // [CmdAbeille:Abeille] / $addr / $cmdId => $value
+        // $nodeId = [CmdAbeille:Abeille] / $addr
+        
         $topicArray = explode("/", $message->topic);
 
         // cmdId est le dernier champ du topic
@@ -837,6 +839,15 @@ class Abeille extends eqLogic
                     } else // Si equipement et cmd existe alors on met la valeur a jour
                     {
                         $elogic->checkAndUpdateCmd($cmdId, $value);
+                        $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+
+                        /* Traitement particulier pour les batteries */
+                        if ( $cmdId == "Batterie-Volt" )
+                        {
+                            /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
+                            $elogic->setStatus('battery', ($value/1000-2.7)/(3.1-2.7)*100 );
+                            $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+                        }
                     }
                 }
             }

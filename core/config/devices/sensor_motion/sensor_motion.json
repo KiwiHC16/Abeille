@@ -40,7 +40,8 @@
         "template": "presence",
         "configuration": {
           "returnStateValue": "0",
-          "returnStateTime": "1"
+          "returnStateTime": "1",
+          "repeatEventManagement": "always"
         }
       },
       "Batterie-Volt": {

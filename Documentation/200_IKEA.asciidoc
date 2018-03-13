@@ -105,8 +105,8 @@ image::images/Capture_d_ecran_2018_03_07_a_11_41_21.png[]
 
 Pour créer l'objet Abeille Automatiquement, 
 
-- Premiere solution: faire une inclusion de la télécommande et un objet doit être créé.
-Ensuite paramétrer l'adresse du groupe comme indiqué ci dessous (voir deuxieme solution).
+[line-through]#- Premiere solution: faire une inclusion de la télécommande et un objet doit être créé.
+Ensuite paramétrer l'adresse du groupe comme indiqué ci dessous (voir deuxieme solution).#
 
 
 - Deuxieme solution, il faut connaitre l'adresse de la telecommande (voir mode semi automatique pour récupérer l'adresse). 
@@ -115,7 +115,7 @@ Puis dans la ruche demander son nom. Par exemple pour la telecommande à l'adres
 
 image::images/Capture_d_ecran_2018_02_28_a_13_59_31.png[]
 
-et immédiatement apres appuyez sur un des boutons de la télécommande pour la réveiller.
+et immédiatement apres appuyez sur un des boutons de la télécommande pour la réveiller (pas sur le bouton arriere).
 
 Et apres un rafraichissement de l'écran vous devez avoir un objet
 
@@ -132,6 +132,12 @@ va devenir
 image::images/Capture_d_ecran_2018_02_28_a_14_03_47.png[]
 
 pour le groupe 5FBD.
+
+==== 4x sur bouton arriere provoque association
+
+Association
+Device annonce
+Mais rien d'autre ne remonte, il faut interroger le nom pour créer l objet.
 
 === Télécommande Virtuelle
 

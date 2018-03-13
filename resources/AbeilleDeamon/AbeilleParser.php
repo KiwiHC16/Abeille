@@ -1222,6 +1222,54 @@
                 
             }
             
+            // Xiaomi capteur Presence V2
+            elseif (($AttributId == 'ff01') && ($AttributSize == '0021')) {
+                deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)');
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                // deamonlog('debug', 'Temperature: '  .$temperature);
+                // deamonlog('debug', 'Humidity: '     .$humidity);
+                // deamonlog('debug', 'Pression: '     .$pression);
+                
+                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
+                // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                
+            }
+            
+            // Xiaomi capteur Inondation
+            elseif (($AttributId == 'ff01') && ($AttributSize == '0022')) {
+                deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Inondation)');
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                // deamonlog('debug', 'Temperature: '  .$temperature);
+                // deamonlog('debug', 'Humidity: '     .$humidity);
+                // deamonlog('debug', 'Pression: '     .$pression);
+                
+                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
+                // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                // mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                
+            }
+            
             // Xiaomi capteur temperature carré
             elseif (($AttributId == 'ff01') && ($AttributSize == '0025')) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');

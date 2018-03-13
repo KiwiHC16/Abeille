@@ -40,7 +40,8 @@
         "template": "presence",
         "configuration": {
           "returnStateValue": "0",
-          "returnStateTime": "1"
+          "returnStateTime": "1",
+          "repeatEventManagement": "always"
         }
       },
       "0400-0000": {
@@ -51,7 +52,8 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "unite": "Lux"
       },
       "Batterie-Volt": {
         "isVisible": 0,

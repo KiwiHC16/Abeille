@@ -8,7 +8,7 @@
 
 Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
-
+lumi.sensor_switch.aq2
 === Si deja associé
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
@@ -23,3 +23,94 @@ Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automati
 === Si deja associé
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
+
+
+== Bouton Carre (lumi.sensor_switch.aq2)
+
+=== Appui court (<1s) sur bouton lateral
+
+Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
+
+== Bouton Rond (lumi.sensor_switch)
+
+=== Appui court (<1s) sur bouton arriere avec trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis son nom lumi.sensor_switch
+
+
+== Capteur Inondation (lumi.sensor_wleak.aq1)
+
+=== Appui court (<1s) sur le dessus
+
+Remonte son nom et attribut ff01 (longueur 34)
+
+== Capteur de Porte Ovale (lumi.sensor_magnet)
+
+=== Appui court (<1s) avec un trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis on son nom lumi.sensor_magnet
+
+== Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
+
+=== Appui court (<1s) sur bouton lateral
+
+Remonte son nom et ff01 (len 29)
+
+=== Appui Long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et Application Version
+Remonte ff01 (len 29)
+
+
+== Capteur Presence V1 (lumi.sensor_motion)
+
+=== Appui court (<1s) avec trombone
+
+=== Appui long (7s) avec trombone
+
+Appairage
+Remonte son nom
+Remonet Appli Version
+Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+
+
+== Capteur de Presence V2
+
+=== Appui court (<1s) sur bouton lateral
+
+Remonte son nom et FF01 de temps en temps.
+
+=== Appui long (7s) sur bouton lateral
+
+Leave message
+Appairage
+Remonte son nom et SW version
+Remonte FF01 (len 33)
+
+== Capteur Temperature Rond (lumi.sensor_ht)
+
+=== Appui court (<1s) sur bouton lateral
+
+Remonte son nom
+
+=== Appui long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 31)
+
+
+== Capteur Temperature Carré (lumi.weather)
+
+=== Appui court (<1s) sur bouton lateral
+
+Remonte son nom
+
+=== Appui long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)

@@ -53,7 +53,7 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",
-        "unite": "Lux"
+        "units": "Lux"
       },
       "Batterie-Volt": {
         "isVisible": 0,

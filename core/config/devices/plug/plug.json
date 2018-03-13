@@ -212,7 +212,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Puissance",
-        "unite": "W",
+        "units": "W",
         "order": 3,
         "subType": "numeric",
         "template": "badge"

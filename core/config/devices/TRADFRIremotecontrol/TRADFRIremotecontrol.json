@@ -76,7 +76,7 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",
-        "unite": "%",
+        "units": "%",
         "configuration": {
           "minValue": "0",
           "maxValue": "100"

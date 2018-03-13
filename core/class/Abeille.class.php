@@ -697,11 +697,16 @@ class Abeille extends eqLogic
                 // alert
 
                 $cmdlogic->save();
-                $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
+                
+                // $elogic->checkAndUpdateCmd( $cmdlogic, $cmdValueDefaut["value"] );
+                
+                if ( $cmdlogic->getName() == "Short-Addr" ) { $elogic->checkAndUpdateCmd( $cmdlogic, $addr ); }
+                
             }
 
             // On defini le nom de l objet
             $elogic->checkAndUpdateCmd($cmdId, $value);
+            
         } else {
             // Si je recois une commande IEEE pour un objet qui n'existe pas je vais créer un objet pour visualiser cet inconnu
             if (!is_object(
@@ -838,7 +843,8 @@ class Abeille extends eqLogic
                         }
                     } else // Si equipement et cmd existe alors on met la valeur a jour
                     {
-                        $elogic->checkAndUpdateCmd($cmdId, $value);
+                        // $elogic->checkAndUpdateCmd($cmdId, $value);
+                        $elogic->checkAndUpdateCmd( $cmdlogic, $value );
                         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
 
                         /* Traitement particulier pour les batteries */

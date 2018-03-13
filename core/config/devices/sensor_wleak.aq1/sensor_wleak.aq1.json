@@ -38,11 +38,7 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "1",
-        "template": "alert",
-        "configuration": {
-          "returnStateValue": "0",
-          "returnStateTime": "1"
-        }
+        "template": "alert"
       },
       "Batterie-Volt": {
         "isVisible": 0,

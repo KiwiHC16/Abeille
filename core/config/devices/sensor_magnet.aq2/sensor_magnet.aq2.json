@@ -40,7 +40,7 @@
         "template": "door"
       },
       "Batterie-Volt": {
-        "isVisible": 1,
+        "isVisible": 0,
         "name": "Batterie",
         "order": 4,
         "isHistorized": "1",

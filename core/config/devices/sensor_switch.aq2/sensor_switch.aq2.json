@@ -115,6 +115,26 @@
         "invertBinary": "0",
         "template": "badge"
       },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",

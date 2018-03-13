@@ -48,6 +48,16 @@
         "subType": "string",
         "template": "badge"
       },
+      "Short-Addr": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Short-Addr",
+        "order": 13,
+        "subType": "string",
+        "template": "badge"
+      },
       "Link-Quality": {
         "isVisible": 0,
         "Type": "info",

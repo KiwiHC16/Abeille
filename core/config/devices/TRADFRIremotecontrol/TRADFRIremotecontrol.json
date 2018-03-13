@@ -81,6 +81,26 @@
           "minValue": "0",
           "maxValue": "100"
         }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
       }
     }
   }

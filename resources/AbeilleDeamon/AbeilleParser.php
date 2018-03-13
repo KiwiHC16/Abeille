@@ -357,6 +357,11 @@
             case "8140" :
                 decode8140($mqtt, $payload, $ln, $qos);
                 break;
+            
+            # IAS Zone Status Change notification
+            case "8401" :
+                decode8401($mqtt, $payload, $ln, $qos);
+                break;
                 
                 #Route discover
             case "8701" :
@@ -1406,6 +1411,41 @@
                   . '; Level: 0x'.substr($payload, 0, 2)
                   . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
+    
+    // Codé sur la base des messages Xiaomi Inondation
+    function decode8401($mqtt, $payload, $ln, $qos)
+    {
+        // <sequence number: uint8_t>
+        // <endpoint : uint8_t>
+        // <cluster id: uint16_t>
+        // <src address mode: uint8_t>
+        // <src address: uint64_t  or uint16_t based on address mode>
+        // <zone status: uint16_t>
+        // <extended status: uint8_t>
+        // <zone id : uint8_t>
+        // <delay: data each element uint16_t>
+        
+        deamonlog('debug', ';Type: 8401: (IAS Zone status change notification )(Decoded but not Processed)'
+                  . '; SQN: '               .substr($payload, 0, 2)
+                  . '; endpoint: '          .substr($payload, 2, 2)
+                  . '; cluster id: '        .substr($payload, 4, 4)
+                  . '; src address mode: '  .substr($payload, 8, 2)
+                  . '; src address: '       .substr($payload,10, 4)
+                  . '; zone status: '       .substr($payload,14, 4)
+                  . '; extended status: '   .substr($payload,18, 2)
+                  . '; zone id: '           .substr($payload,20, 2)
+                  . '; delay: '             .substr($payload,22, 4)  );
+        
+        $SrcAddr    = substr($payload,10, 4);
+        $ClusterId  = substr($payload, 4, 4);
+        $AttributId = "0000";
+        $data       = substr($payload,14, 4);
+        
+        // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+    }
+    
     
     function decode8701($mqtt, $payload, $ln, $qos)
     {

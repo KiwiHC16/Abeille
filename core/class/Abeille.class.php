@@ -1073,8 +1073,8 @@ class AbeilleCmd extends cmd
                     // echo "\n";
                     // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
                     
-                    $request = str_replace('#addrIEEE#',     "'".$commandIEEE."'",   $request);
-                    $request = str_replace('#ZiGateIEEE#',   "'".$rucheIEEE."'",     $request);
+                    $request = str_replace('#addrIEEE#',     $commandIEEE,   $request);
+                    $request = str_replace('#ZiGateIEEE#',   $rucheIEEE,     $request);
                 }
 /* ------------------------------ */
                 $topic = $this->getConfiguration('topic');

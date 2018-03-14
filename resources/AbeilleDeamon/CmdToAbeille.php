@@ -765,6 +765,68 @@
             
         }
         
+        //
+        if ( isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']) )
+        {
+            deamonlog('debug','UpOnOffGroup for: '.$Command['address']);
+        // <address mode: uint8_t>          -> 2
+        // <target short address: uint16_t> -> 4
+        // <source endpoint: uint8_t>       -> 2
+        // <destination endpoint: uint8_t>  -> 2
+        // <onoff: uint8_t>                 -> 2
+        // <step mode: uint8_t >            -> 2
+        // <step size: uint8_t>             -> 2
+        // <Transition Time: uint16_t>      -> 4
+            // -> 20/2 =10 => 0A
+           
+            $cmd = "0082";
+            $lenth = "000A";
+            if ( isset ( $Command['addressMode'] ) ) { $addressMode = $Command['addressMode']; } else { $addressMode = "02"; }
+            
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            if ( isset ( $Command['destinationEndpoint'] ) ) { $destinationEndpoint = $Command['destinationEndpoint'];} else { $destinationEndpoint = "01"; };
+            $onoff = "00";
+            $stepMode = "00"; // 00 : Up, 01 : Down
+            $stepSize = $Command['step'];
+            $TransitionTime = "0005"; // 1/10s of a s
+            
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime );
+
+            
+            
+        }
+        
+        if ( isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']) )
+        {
+            deamonlog('debug','UpOnOffGroup for: '.$Command['address']);
+            // <address mode: uint8_t>          -> 2
+            // <target short address: uint16_t> -> 4
+            // <source endpoint: uint8_t>       -> 2
+            // <destination endpoint: uint8_t>  -> 2
+            // <onoff: uint8_t>                 -> 2
+            // <step mode: uint8_t >            -> 2
+            // <step size: uint8_t>             -> 2
+            // <Transition Time: uint16_t>      -> 4
+            // -> 20/2 =10 => 0A
+            
+            $cmd = "0082";
+            $lenth = "000A";
+            if ( isset ( $Command['addressMode'] ) ) { $addressMode = $Command['addressMode']; } else { $addressMode = "02"; }
+            
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            if ( isset ( $Command['destinationEndpoint'] ) ) { $destinationEndpoint = $Command['destinationEndpoint'];} else { $destinationEndpoint = "01"; };
+            $onoff = "00";
+            $stepMode = "01"; // 00 : Up, 01 : Down
+            $stepSize = $Command['step'];
+            $TransitionTime = "0005"; // 1/10s of a s
+            
+            sendCmd( $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime );
+            
+            
+            
+        }
         
         // ON / OFF one object
         if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )

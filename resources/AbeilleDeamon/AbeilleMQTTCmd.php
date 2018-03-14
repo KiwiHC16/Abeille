@@ -126,8 +126,26 @@
                     "addressMode" => "02",
                     "address" => $address,
                     "destinationEndpoint" => "03",
-                    "action" => $actionId,
+                    "step" => $msg,
                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "UpGroup") {
+                $Command = array(
+                    "UpGroup" => "1",
+                    "addressMode" => "01",
+                    "address" => $address,
+                    "destinationEndpoint" => "01", // Set but not send on radio
+                    "step" => $msg,
+                );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "DownGroup") {
+                $Command = array(
+                                 "DownGroup" => "1",
+                                 "addressMode" => "01",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01", // Set but not send on radio
+                                 "step" => $msg,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOffGroup") {
                 if ($msg == "On") {
@@ -140,12 +158,12 @@
                     $actionId = "02";
                 }
                 $Command = array(
-                    "onoff" => "1",
-                    "addressMode" => "01",
-                    "address" => $address,
-                    "destinationEndpoint" => "01", // Set but not send on radio
-                    "action" => $actionId,
-                );
+                                 "onoff" => "1",
+                                 "addressMode" => "01",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01", // Set but not send on radio
+                                 "action" => $actionId,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);

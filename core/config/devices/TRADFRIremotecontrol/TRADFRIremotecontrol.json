@@ -18,8 +18,11 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
           "request": "On"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom-lumiere-on\"></i>"
         }
       },
       "Off": {
@@ -32,8 +35,11 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
           "request": "Off"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom-lumiere-off\"></i>"
         }
       },
       "Toggle": {
@@ -46,16 +52,52 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffGroup",
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
           "request": "Toggle"
         },
         "display": {
+          "icon": "<i class=\"fa fa-power-off\"></i>",
           "forceReturnLineAfter": "1"
+        }
+      },
+      "UpGroup": {
+        "name": "Up",
+        "order": 3,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/UpGroup",
+          "request": "2B"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom2-bright4\"></i>"
+        }
+      },
+      "DownGroup": {
+        "name": "Down",
+        "order": 4,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/DownGroup",
+          "request": "2B"
+        },
+        "display": {
+          "forceReturnLineAfter": "1",
+          "icon": "<i class=\"icon jeedom2-idea13\"></i>"
         }
       },
       "Level": {
         "name": "setLevel",
-        "order": 3,
+        "order": 5,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -63,14 +105,17 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelGroup",
+          "topic": "CmdAbeille/#addrGroup#/setLevelGroup",
           "request": "Level=#slider#&duration=01"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "0001-0021": {
         "isVisible": 0,
         "name": "Batterie",
-        "order": 4,
+        "order": 6,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -82,10 +127,27 @@
           "maxValue": "100"
         }
       },
+      "getBattery": {
+        "isVisible": 0,
+        "name": "get Battery",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0001&attributeId=0021"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 11,
+        "order": 8,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -95,7 +157,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 11,
+        "order": 9,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",

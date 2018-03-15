@@ -1207,6 +1207,29 @@
         
         if ($dataType == "42") {
             
+            // Xiaomi Bouton Carré
+            elseif (($AttributId == "ff01") && ($AttributSize == "001a")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
+            }
+            
+            // Xiaomi Door Sensor
+            elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+            }
+            
             // Xiaomi capteur temperature rond
             if (($AttributId == "ff01") && ($AttributSize == "001f")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond)');
@@ -1228,7 +1251,7 @@
             }
             
             // Xiaomi capteur Presence V2
-            elseif (($AttributId == 'ff01') && ($AttributSize == '0021')) {
+            elseif (($AttributId == 'ff01') && ($AttributSize == "0021")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)');
                 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -1252,7 +1275,7 @@
             }
             
             // Xiaomi capteur Inondation
-            elseif (($AttributId == 'ff01') && ($AttributSize == '0022')) {
+            elseif (($AttributId == 'ff01') && ($AttributSize == "0022")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Inondation)');
                 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -1276,7 +1299,7 @@
             }
             
             // Xiaomi capteur temperature carré
-            elseif (($AttributId == 'ff01') && ($AttributSize == '0025')) {
+            elseif (($AttributId == 'ff01') && ($AttributSize == "0025")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');
                 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -1296,43 +1319,6 @@
                 mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
                 mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
                 mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
-                
-            }
-            
-            // Xiaomi Door Sensor
-            elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
-                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
-                
-                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                
-                deamonlog('debug', 'Voltage: '      .$voltage);
-                
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-            }
-            
-            // Xiaomi Bouton Carré
-            elseif (($AttributId == "ff01") && ($AttributSize == "001a")) {
-                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
-            
-                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                
-                deamonlog('debug', 'Voltage: '      .$voltage);
-                
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-            
-            }
-            
-            // Xiaomi Capteur Presence
-            // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
-            // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
-            elseif (($AttributId == "ff01") && ($AttributSize == "00XX")) {
-                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
-                
-                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                
-                deamonlog('debug', 'Voltage: '      .$voltage);
-                
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 
             }
             
@@ -1361,6 +1347,21 @@
                 mqqtPublish($mqtt, $SrcAddr, 'Xiaomi',  '0006-0000',        $onOff,             $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
+            }
+            
+
+            // Xiaomi Capteur Presence
+            // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
+            // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
+            elseif (($AttributId == "ff01") && ($AttributSize == "00XX")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
             }
             
             // Xiaomi Presence Infrarouge

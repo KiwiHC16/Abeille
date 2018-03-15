@@ -45,7 +45,7 @@
       },
       "On": {
         "name": "On",
-        "order": 1,
+        "order": 2,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -75,7 +75,7 @@
           "request": "2B"
         },
         "display": {
-          "forceReturnLineAfter": "1",
+          "forceReturnLineAfter": "0",
           "icon": "<i class=\"icon jeedom2-idea13\"></i>"
         }
       },

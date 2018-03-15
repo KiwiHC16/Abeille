@@ -72,6 +72,10 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/addGroup",
       "request": "address=#title#&#message#"
+    },
+    "display": {
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
     }
   },
   "removeGroup": {
@@ -86,7 +90,9 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "0"
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
     }
   },
   "getGroupMemberShip": {
@@ -101,7 +107,9 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "1"
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX"
     }
   },
   "Bind": {
@@ -116,7 +124,9 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "0"
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse IEEE de l equipement",
+      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&reportToAddress=IEEE_ZZZZ"
     }
   },
   "SetReport": {
@@ -131,7 +141,9 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "1"
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&AttributeType=ZZ&AttributId=xx"
     }
   },
   "getName": {
@@ -144,6 +156,11 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/getName",
       "request": "address=#title#&destinationEndPoint=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[targetEndpoint(XX)]"
     }
   },
   "ReadAttributeRequest": {
@@ -156,6 +173,11 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/ReadAttributeRequest",
       "request": "address=#title#&attribut=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "clusterId=XXXX&attributeId=YYYY"
     }
   },
   "AbeilleList": {
@@ -303,6 +325,11 @@
       "topic": "CmdAbeille/Ruche/ActiveEndPoint",
       "request": "address=#title#",
       "retain": "0"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Laisser vide"
     }
   },
   "SimpleDescriptorRequest": {
@@ -316,6 +343,11 @@
       "topic": "CmdAbeille/Ruche/SimpleDescriptorRequest",
       "request": "address=#title#&endPoint=#message#",
       "retain": "0"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[endPoint(XX)]"
     }
   },
   "Reset": {
@@ -365,6 +397,31 @@
     "configuration": {
       "topic": "CmdAbeille/Ruche/replaceEquipement",
       "request": "old=#title#&new=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l ancien equipement",
+      "message_placeholder": "Adresse courte du nouvel equipement"
     }
+  },
+  "Network-Bind": {
+    "name": "Last Bind",
+    "order": "28",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network-Report": {
+    "name": "Last Report",
+    "order": "29",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
   }
 }

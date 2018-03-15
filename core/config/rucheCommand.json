@@ -423,5 +423,22 @@
     "subType": "string",
     "invertBinary": "0",
     "template": ""
+  },
+  "IEEE_Address_request": {
+    "name": "IEEE Address Request",
+    "order": "30",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/IEEE_Address_request",
+      "request": "address=#title#&endPoint=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
+    }
   }
 }

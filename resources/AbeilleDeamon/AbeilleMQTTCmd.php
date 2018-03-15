@@ -254,6 +254,16 @@
                     "StartIndex" => $keywords[3],
                 );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "IEEE_Address_request") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "IEEE_Address_request" => "1",
+                                 "address" => $address,
+                                 "shortAddress" => $keywords[1],
+                                 // "requestType" => $keywords[3],
+                                 // "startIndex" => $keywords[5],
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "identifySend") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

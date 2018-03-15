@@ -521,6 +521,35 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        //----------------------------------------------------------------------------
+        if ( isset($Command['IEEE_Address_request']) )
+        {
+            $cmd = "0041";
+            
+            
+            // <target short address: uint16_t>
+            // <short address: uint16_t>
+            // <request type: uint8_t>
+            // <start index: uint8_t>
+            // Request Type: 0 = Single 1 = Extended
+            
+            $address = $Command['address'];
+            $shortAddress = $Command['shortAddress'];
+            $requestType = "01";
+            $startIndex = "00";
+            
+            
+            $data = $address . $shortAddress . $requestType . $startIndex ;
+            // $lenth = strlen($data)/2;
+            $lenth = "0006";
+            
+            deamonlog('debug','IEEE_Address_request: '.$data . ' - ' . $lenth  );
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+
+        
         if ( isset($Command['Management_LQI_request']) )
         {
             $cmd = "004E";

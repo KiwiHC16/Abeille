@@ -8,26 +8,9 @@
       "icone": "IkeaTradfri5BtnRond"
     },
     "Commandes": {
-      "On": {
-        "name": "On",
-        "order": 0,
-        "isVisible": 1,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
-          "request": "On"
-        },
-        "display": {
-          "icon": "<i class=\"icon jeedom-lumiere-on\"></i>"
-        }
-      },
       "Off": {
         "name": "Off",
-        "order": 1,
+        "order": 0,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -44,7 +27,7 @@
       },
       "Toggle": {
         "name": "Toggle",
-        "order": 2,
+        "order": 1,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -57,12 +40,12 @@
         },
         "display": {
           "icon": "<i class=\"fa fa-power-off\"></i>",
-          "forceReturnLineAfter": "1"
+          "forceReturnLineAfter": "0"
         }
       },
-      "UpGroup": {
-        "name": "Up",
-        "order": 3,
+      "On": {
+        "name": "On",
+        "order": 1,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -70,16 +53,17 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addrGroup#/UpGroup",
-          "request": "2B"
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
+          "request": "On"
         },
         "display": {
-          "icon": "<i class=\"icon jeedom2-bright4\"></i>"
+          "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
+          "forceReturnLineAfter": "1"
         }
       },
       "DownGroup": {
         "name": "Down",
-        "order": 4,
+        "order": 3,
         "isVisible": 1,
         "isHistorized": "0",
         "Type": "action",
@@ -93,6 +77,24 @@
         "display": {
           "forceReturnLineAfter": "1",
           "icon": "<i class=\"icon jeedom2-idea13\"></i>"
+        }
+      },
+      "UpGroup": {
+        "name": "Up",
+        "order": 4,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/UpGroup",
+          "request": "2B"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom2-bright4\"></i>",
+          "forceReturnLineAfter": "1"
         }
       },
       "Level": {

@@ -759,9 +759,16 @@
         // <Sequence number: uint8_t>
         // <status: uint8_t>
         
-        deamonlog('debug',';type: 8030: (	Bind response)(Decoded but Not Processed)'
+        deamonlog('debug',';type: 8030: (Bind response)(Decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
         . '; SQN: 0x'.substr($payload, 0, 2)
         . '; Status: 0x'.substr($payload, 2, 2)  );
+        
+        // Envoie channel
+        $SrcAddr = "Ruche";
+        $ClusterId = "Network";
+        $AttributId = "Bind";
+        $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
         
     }
     
@@ -1208,7 +1215,7 @@
         if ($dataType == "42") {
             
             // Xiaomi Bouton Carré
-            elseif (($AttributId == "ff01") && ($AttributSize == "001a")) {
+            if (($AttributId == "ff01") && ($AttributSize == "001a")) {
                 deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
                 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -1231,7 +1238,7 @@
             }
             
             // Xiaomi capteur temperature rond
-            if (($AttributId == "ff01") && ($AttributSize == "001f")) {
+            elseif (($AttributId == "ff01") && ($AttributSize == "001f")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond)');
                 
                 $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -1428,6 +1435,12 @@
         . '; Cluster Id: '       .substr($payload, 8, 4)
         . '; Status: '           .substr($payload,12, 2)  );
         
+        // Envoie channel
+        $SrcAddr = "Ruche";
+        $ClusterId = "Network";
+        $AttributId = "Report";
+        $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload,12, 2);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
     
     function decode8140($mqtt, $payload, $ln, $qos)

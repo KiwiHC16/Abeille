@@ -128,18 +128,6 @@
         },
         "display": {
           "forceReturnLineAfter": "1"
-        },
-        "Colour": {
-          "name": "Colour",
-          "order": 20,
-          "isHistorized": "0",
-          "isVisible": "1",
-          "Type": "action",
-          "subType": "message",
-          "configuration": {
-            "topic": "CmdAbeille/#addr#/setColourHue",
-            "request": "X=#title#&Y=#message#"
-          }
         }
       },
       "Level": {
@@ -154,143 +142,6 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/setLevel",
           "request": "Level=#slider#&duration=01"
-        }
-      },
-      "getEtat": {
-        "isVisible": 0,
-        "name": "getEtat",
-        "order": 11,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
-          "request": "clusterId=0006&attributeId=0000"
-        }
-      },
-      "getLevel": {
-        "isVisible": 0,
-        "name": "getLevel",
-        "order": 12,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
-          "request": "clusterId=0008&attributeId=0000"
-        }
-      },
-      "getManufacturerName": {
-        "isVisible": 0,
-        "name": "getManufacturerName",
-        "order": 13,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
-          "request": "clusterId=0000&attributeId=0004"
-        }
-      },
-      "getModelIdentifier": {
-        "isVisible": 0,
-        "name": "getModelIdentifier",
-        "order": 14,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
-          "request": "clusterId=0000&attributeId=0005"
-        }
-      },
-      "getSWBuild": {
-        "isVisible": 0,
-        "name": "getSWBuild",
-        "order": 15,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
-          "request": "clusterId=0000&attributeId=4000"
-        }
-      },
-      "IEEE-Addr": {
-        "isVisible": 0,
-        "name": "IEEE-Addr",
-        "order": 16,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Short-Addr": {
-        "isVisible": 0,
-        "name": "Short-Addr",
-        "order": 16,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Short-Addr": {
-        "isVisible": 0,
-        "name": "Short-Addr",
-        "order": 16,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Link-Quality": {
-        "isVisible": 0,
-        "name": "Link Quality",
-        "order": 17,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge"
-      },
-      "Power-Source": {
-        "isVisible": 0,
-        "display": {
-          "showNameOndashboard": "0"
-        },
-        "name": "Power Source",
-        "order": 18,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "AbeillePower"
-      },
-      "Identify": {
-        "isVisible": 0,
-        "name": "Identify",
-        "order": 19,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/identifySend",
-          "request": "duration=0010"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -312,6 +163,146 @@
           "forceReturnLineAfter": "0",
           "title_placeholder": "XXXX",
           "message_placeholder": "YYYY"
+        }
+      },
+      "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "order": 40,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0006&attributeId=0000"
+        }
+      },
+      "getLevel": {
+        "isVisible": 0,
+        "name": "getLevel",
+        "order": 41,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0008&attributeId=0000"
+        }
+      },
+      "getManufacturerName": {
+        "isVisible": 0,
+        "name": "getManufacturerName",
+        "order": 42,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=0004"
+        }
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "order": 43,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=0005"
+        }
+      },
+      "getSWBuild": {
+        "isVisible": 0,
+        "name": "getSWBuild",
+        "order": 50,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=4000"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 51,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 52,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 53,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 54,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 55,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      },
+      "Identify": {
+        "isVisible": 0,
+        "name": "Identify",
+        "order": 56,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/identifySend",
+          "request": "duration=0010"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "Group-Membership": {
@@ -378,6 +369,9 @@
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
           "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       }
     }

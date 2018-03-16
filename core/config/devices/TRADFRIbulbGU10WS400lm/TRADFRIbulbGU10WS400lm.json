@@ -1,6 +1,6 @@
 {
   "TRADFRIbulbGU10WS400lm": {
-    "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 WS 400 lm",
+    "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 White Spectre 400 lm",
     "Categorie": {
       "light": "1"
     },
@@ -128,18 +128,6 @@
         },
         "display": {
           "forceReturnLineAfter": "1"
-        },
-        "Colour": {
-          "name": "Colour",
-          "order": 20,
-          "isHistorized": "0",
-          "isVisible": "1",
-          "Type": "action",
-          "subType": "message",
-          "configuration": {
-            "topic": "CmdAbeille/#addr#/setColourHue",
-            "request": "X=#title#&Y=#message#"
-          }
         }
       },
       "Level": {
@@ -154,6 +142,71 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/setLevel",
           "request": "Level=#slider#&duration=01"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "2200K": {
+        "isVisible": 1,
+        "name": "2200K",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "2200"
+        }
+      },
+      "2700K": {
+        "isVisible": 1,
+        "name": "2700K",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "2700"
+        }
+      },
+      "4000K": {
+        "isVisible": 1,
+        "name": "4000K",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "4000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Temperature": {
+        "isVisible": 1,
+        "name": "Temperature",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperatureSlider",
+          "request": "#slider#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "getEtat": {
@@ -281,19 +334,6 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
-        }
-      },
-      "Colour": {
-        "isVisible 2": 1,
-        "name": "Colour",
-        "order": 20,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-          "topic": "CmdAbeille/#addr#/setColour",
-          "request": "X=#title#&Y=#message#"
         }
       },
       "Group-Membership": {

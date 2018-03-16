@@ -1,6 +1,6 @@
 {
   "TRADFRIbulbE14WSopal400lm": {
-    "nameJeedom": "TRADFRI bulb E14 WS opal 400lm",
+    "nameJeedom": "TRADFRI bulb E14 White Spectre opal 400lm",
     "Categorie": {
       "light": "1"
     },
@@ -144,10 +144,72 @@
           "request": "Level=#slider#&duration=01"
         }
       },
+      "2200K": {
+        "isVisible": 1,
+        "name": "2200K",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "2200"
+        }
+      },
+      "2700K": {
+        "isVisible": 1,
+        "name": "2700K",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "2700"
+        }
+      },
+      "4000K": {
+        "isVisible": 1,
+        "name": "4000K",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperature",
+          "request": "4000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Temperature": {
+        "isVisible": 1,
+        "name": "Temperature",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setTemperatureSlider",
+          "request": "#slider#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 11,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -161,7 +223,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 12,
+        "order": 21,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -170,12 +232,15 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
           "request": "clusterId=0008&attributeId=0000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 13,
+        "order": 22,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -189,7 +254,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 14,
+        "order": 23,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -203,7 +268,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 15,
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -217,7 +282,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 16,
+        "order": 25,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -227,7 +292,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 16,
+        "order": 26,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -237,7 +302,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 17,
+        "order": 27,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -250,7 +315,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 18,
+        "order": 28,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -260,7 +325,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 19,
+        "order": 29,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -269,6 +334,72 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
+        }
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 30,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "BindToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindToZigateEtat",
+        "order": 40,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "BindToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindToZigateLevel",
+        "order": 41,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 42,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        }
+      },
+      "setReportLevel": {
+        "isVisible": 1,
+        "name": "setReportLevel",
+        "order": 43,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
         }
       }
     }

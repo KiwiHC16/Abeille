@@ -246,6 +246,54 @@
                     "destinationEndPoint" => "0B",
                 );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setTemperature") {
+                // T°K   Hex sent  Dec eq
+                // 2200	 01C6	   454
+                // 2700	 0172	   370
+                // 4000	 00FA	   250
+                // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
+                
+                $temperatureConsigne = $msg;
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $temperatureConsigne = intval(-0.113333333 * $temperatureConsigne + 703.3333333);
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $temperatureConsigne = dechex( $temperatureConsigne );
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $Command = array(
+                                 "setTemperature" => "1",
+                                 "address" => $address,
+                                 "temperature" => $temperatureConsigne,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "setTemperatureSlider") {
+                
+                // T°K   Hex sent  Dec eq
+                // 2200	 01C6	   454
+                // 2700	 0172	   370
+                // 4000	 00FA	   250
+                // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
+                // Et slider va de 0 a 100 : disons 0 pour 2200K et 100 pour 4000K
+                // Ce qui nous donne une equation T = (4000-2200)/100* $msg + 2200
+                
+                $temperatureConsigne = (4000-2200)/100 * $msg + 2200;
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                // Ensuite on calcule comme pour la fonction setTemperature
+                $temperatureConsigne = intval(-0.113333333 * $temperatureConsigne + 703.3333333);
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $temperatureConsigne = dechex( $temperatureConsigne );
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
+                deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                $Command = array(
+                                 "setTemperature" => "1",
+                                 "address" => $address,
+                                 "temperature" => $temperatureConsigne,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "Management_LQI_request") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

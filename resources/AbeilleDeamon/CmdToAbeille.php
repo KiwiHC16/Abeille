@@ -915,6 +915,32 @@
             
         }
         
+        // Move to Colour Temperature
+        if ( isset($Command['setTemperature']) && isset($Command['address']) && isset($Command['temperature']) && isset($Command['destinationEndPoint']) )
+        {
+            // <address mode: uint8_t>              2
+            // <target short address: uint16_t>     4
+            // <source endpoint: uint8_t>           2
+            // <destination endpoint: uint8_t>      2
+            // <colour temperature: uint16_t>       4
+            // <transition time: uint16_t>          4
+            
+            $cmd = "00C0";
+            // 2+4+2+2+4+4 = 18 /2 = 9 => 0x09
+            $lenth = "0009";
+            
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = $Command['destinationEndPoint'];
+            $temperature = $Command['temperature'];
+            $duration = "0001";
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $temperature . $duration ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
         
         if ( isset($Command['getName']) && isset($Command['address']) && isset($Command['destinationEndPoint']) )
         {

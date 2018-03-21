@@ -100,9 +100,9 @@ class Abeille extends eqLogic
 
 
         //check running deamon /!\ if using sudo nbprocess x2
-        $nbProcessExpected = 3; // no sudo to run deamon
+        $nbProcessExpected = 4; // no sudo to run deamon
         exec(
-            "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d ';'  -f 1 | wc -l",
+            "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | cut -d ';'  -f 1 | wc -l",
             $output
         );
 
@@ -212,15 +212,23 @@ class Abeille extends eqLogic
 
         $deamon1 = "AbeilleSerialRead.php";
         $paramdeamon1 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+        
         $deamon2 = "AbeilleParser.php";
         $paramdeamon2 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
             ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+        
         $deamon3 = "AbeilleMQTTCmd.php";
         $paramdeamon3 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
             ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
-        $log1 = " > /var/www/html/log/" . substr($deamon1, 0, (strrpos($deamon1, ".")));;
-        $log2 = " > /var/www/html/log/" . substr($deamon2, 0, (strrpos($deamon2, ".")));;
-        $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));;
+        
+        $deamon4 = "AbeilleMQTTCmdTimer.php";
+        $paramdeamon4 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
+        ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+        
+        $log1 = " > /var/www/html/log/" . substr($deamon1, 0, (strrpos($deamon1, ".")));
+        $log2 = " > /var/www/html/log/" . substr($deamon2, 0, (strrpos($deamon2, ".")));
+        $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
+        $log4 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
 
         $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
         log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);
@@ -234,6 +242,12 @@ class Abeille extends eqLogic
         $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon3 . " " . $paramdeamon3 . $log3;
         log::add('Abeille', 'debug', 'Start deamon MQTT: ' . $cmd);
         exec($cmd . ' 2>&1 &');
+        
+        $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon4 . " " . $paramdeamon4 . $log4;
+        log::add('Abeille', 'debug', 'Start deamon Timer: ' . $cmd);
+        exec($cmd . ' 2>&1 &');
+        
+        
         $cmd = "";
         log::add('Abeille', 'debug', 'deamon start: OUT');
         message::removeAll('Abeille', 'unableStartDeamon');

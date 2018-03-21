@@ -942,7 +942,7 @@
             
         }
         
-        if ( isset($Command['getName']) && isset($Command['address']) && isset($Command['destinationEndPoint']) )
+        if ( isset($Command['getName']) && isset($Command['address']) )
         {
             deamonlog('debug','Get Name from: '.$Command['address']);
             //echo "Get Name from: ".$Command['address']."\n";

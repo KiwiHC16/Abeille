@@ -1,0 +1,115 @@
+{
+  "Timer": {
+    "nameJeedom": "Timer",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "Timer"
+    },
+    "Commandes": {
+      "0000-0005": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "nom",
+        "order": 1,
+        "subType": "string",
+        "template": ""
+      },
+      "0006-0000": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "etat",
+        "order": 2,
+        "subType": "binary",
+        "template": "prise"
+      },
+      "Var-Duration": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Duration",
+        "order": 13,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Var-ExpiryTime": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "ExpiryTime",
+        "order": 14,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Start": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "actionStart=#put_the_cmd_here#&durationSeconde=300",
+          "topic": "CmdTimer/#addr#/TimerStart"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Start",
+        "order": 7,
+        "subType": "other",
+        "template": ""
+      },
+      "Stop": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "actionStop=#put_the_cmd_here#",
+          "topic": "CmdTimer/#addr#/TimerStop"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Stop",
+        "order": 8,
+        "subType": "other",
+        "template": ""
+      },
+      "Cancel": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "actionCancel=#put_the_cmd_here#",
+          "topic": "CmdTimer/#addr#/TimerCancel"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Cancel",
+        "order": 8,
+        "subType": "other",
+        "template": ""
+      },
+      "Time-Time": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-Time",
+        "order": 5,
+        "subType": "string",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "subType": "numeric",
+        "template": "badge"
+      }
+    }
+  }
+}

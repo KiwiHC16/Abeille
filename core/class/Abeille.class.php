@@ -582,6 +582,12 @@ class Abeille extends eqLogic
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Creation de l objet Abeille (hors ruche)
+            if ( $addr == "Timer" ) {
+                $index  = rand(1000,9999);
+                $addr   = $addr . "-" . $index;
+                $nodeid = $nodeid . "-" . $index;
+            }
+            
             message::add("Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.");
             $elogic = new Abeille();
             //id

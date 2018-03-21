@@ -1,0 +1,68 @@
+= Timers
+
+Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.
+Après plusieurs versions avec des scripts, des variables, des retours d'état automatique,... je me suis rendu compte que je pouvais sans trop de difficulté créer ses timers au seins d'Abeille.
+
+== Fonctionnement
+
+image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]
+
+=== Trois commandes "Start", "Cancel" et "Stop".
+
+* Start: permet d'executer une commande et de démarrer le Timer.
+* Cancel: permet d'executer une commande et d'annuler le Timer.
+* Stop: permet d'executer une commande, d'annuler le Timer et cette commande qui est executée lors de l'expiration du Timer.
+
+=== Retour d'information
+
+* Time-Time: Date de la derniere action sur le Timer
+* Time-TimeStamp: Heure systeme de la derniere action
+* Duration: Temps restant avant expiration du Timer en secondes
+* ExpiryTime: Heure d'expiration du Timer
+
+Elles ne sont pas forcement toutes visibles, a vous de choisir.
+
+== Creation d un Timers
+
+Pour créer un objet Timer, clic sur le bouton "Timer" sur l objet Ruche.
+
+Un message doit apparaitre pour annoncer la creation du Timer avec un Id Abeille-NombreAléatoire.
+
+image::images/Capture_d_ecran_2018_03_21_a_13_14_36.png[]
+
+Apres avoir rafraichi l'écran vous devriez avoir l objet:
+
+image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]
+
+== Configuration du Timer
+
+Comme pour tous les objets, dans l onglet Equipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
+
+Dans l'onglet Commandes, nous allons paramétrer les actions du Timer.
+
+image::images/Capture_d_ecran_2018_03_21_a_13_33_37.png[]
+
+=== Start 
+
+actionStart=\#put_the_cmd_here#&durationSeconde=300
+
+Pour la commande il y a deux parametres.
+
+* durationSeconde: par exemple ici 300s soit 5min.
+
+* actionStart doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][On]#.
+
+=== Cancel
+
+actionCancel=\#put_the_cmd_here#
+
+* actionCancel doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
+
+=== Stop
+
+actionStop=\#put_the_cmd_here#
+
+* actionStop doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
+
+
+

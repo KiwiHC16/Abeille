@@ -111,6 +111,7 @@
         "name": "setLevel",
         "order": 10,
         "subType": "slider",
+        "value": "Level",
         "template": ""
       },
       "Link-Quality": {

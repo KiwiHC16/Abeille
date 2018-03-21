@@ -137,6 +137,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "slider",
+        "value": "Level",
         "invertBinary": "0",
         "template": "",
         "configuration": {

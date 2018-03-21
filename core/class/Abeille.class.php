@@ -260,7 +260,7 @@ class Abeille extends eqLogic
     {
         log::add('Abeille', 'debug', 'deamon stop: IN');
         // Stop other deamon
-        exec("ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd).php /' | cut -d ';'  -f 1", $output);
+        exec("ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | cut -d ';'  -f 1", $output);
         foreach ($output as $item => $itemValue) {
             log::add('Abeille', 'debug', 'deamon stop: Killing deamon: ' . $item . '/' . $itemValue);
             system::kill($itemValue, true);
@@ -596,7 +596,8 @@ class Abeille extends eqLogic
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Creation de l objet Abeille (hors ruche)
-            if ( $addr == "Timer" ) {
+            // Exemple pour les objets créés par les commandes Ruche, e.g. Timer
+            if ( strlen($addr) != 4 ) {
                 $index  = rand(1000,9999);
                 $addr   = $addr . "-" . $index;
                 $nodeid = $nodeid . "-" . $index;
@@ -679,9 +680,6 @@ class Abeille extends eqLogic
                     // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
                     
                 }
-                if ($cmdValueDefaut["Type"] == "action") {
-                    $cmdlogic->setConfiguration('retain', '0');
-                }
 
                 // template
                 $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
@@ -708,11 +706,33 @@ class Abeille extends eqLogic
                 }
 
                 $cmdlogic->setIsVisible($isVisible);
-
+                
+                $cmdlogic->save();
+                
                 // value
-                if (isset($cmdValueDefaut["value"])) {
-                    $cmdlogic->setConfiguration('value', $cmdValueDefaut["value"]);
+                if ( $cmdValueDefaut["Type"] == "action" ) {
+                    $cmdlogic->setConfiguration('retain', '0');
+                    
+                    if ( isset($cmdValueDefaut["value"]) ) {
+                        // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
+                        log::add('Abeille','debug','Define cmd info pour cmd action: '.$elogic->getName()." - ".$cmdValueDefaut["value"]);
+
+                        $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName( "Abeille", $elogic->getName(), $cmdValueDefaut["value"] );
+                        $cmdlogic->setValue($cmdPointeur_Value->getId());
+                        
+                        }
+                
                 }
+                elseif ( $cmdValueDefaut["Type"] == "info" ) {
+                    if ( isset($cmdValueDefaut["value"]) ) {
+                        // Commanted as not sure what to do with this parameter in info cmd case.
+                        //        $cmdlogic->setConfiguration('value', $cmdValueDefaut["value"]);
+                    }
+                }
+                else {
+                log::add('Abeille','debug','Define cmd de type inconnu');
+                }
+                
                 // html
                 // alert
 

@@ -321,6 +321,7 @@ class Abeille extends eqLogic
     public static function dependancy_install()
     {
         log::add('Abeille', 'debug', 'Installation des dépendances: IN');
+        message::add("Abeille", "L installation des dependances est en cours, n oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation");
         log::remove(__CLASS__ . '_update');
         $result = array('script' => dirname(__FILE__) . '/../../resources/install.sh ' . jeedom::getTmpFolder('Abeille') . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
         if ($result['state'] == 'ok') {

@@ -79,16 +79,16 @@
                     
                 }
                 else {
-                    echo $address . " running \n";
+                    // echo $address . " running \n";
                     if ( (time()-$lastUpdate) > $refreshRate ){
                         mqqtPublish($mqtt, $address, "Var", "Duration", $Timer-time(), $qos);
-                        $lastUpdate = time();
                     }
                 }
             }
-            // else { echo $key . " = -1\n"; }
         }
         
+        if ( (time()-$lastUpdate) > $refreshRate ){ $lastUpdate = time(); }
+
     }
     
 

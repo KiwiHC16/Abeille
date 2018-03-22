@@ -1349,6 +1349,19 @@
                 
             }
             
+            // Xiaomi Smoke Sensor
+            elseif (($AttributId == 'ff01') && ($AttributSize == "0028")) {
+                deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Sensor Smoke)');
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+
+                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt',$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                
+            }
+            
             // Xiaomi Cube
             // Xiaomi capteur Inondation
             elseif (($AttributId == 'ff01') && ($AttributSize == "002a")) {
@@ -1484,7 +1497,7 @@
         // <zone id : uint8_t>
         // <delay: data each element uint16_t>
         
-        deamonlog('debug', ';Type: 8401: (IAS Zone status change notification )(Decoded but not Processed)'
+        deamonlog('debug', ';Type: 8401: (IAS Zone status change notification )(Processed)'
                   . '; SQN: '               .substr($payload, 0, 2)
                   . '; endpoint: '          .substr($payload, 2, 2)
                   . '; cluster id: '        .substr($payload, 4, 4)

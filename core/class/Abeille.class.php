@@ -228,7 +228,7 @@ class Abeille extends eqLogic
         $log1 = " > /var/www/html/log/" . substr($deamon1, 0, (strrpos($deamon1, ".")));
         $log2 = " > /var/www/html/log/" . substr($deamon2, 0, (strrpos($deamon2, ".")));
         $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
-        $log4 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
+        $log4 = " > /var/www/html/log/" . substr($deamon4, 0, (strrpos($deamon4, ".")));
 
         $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
         log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);

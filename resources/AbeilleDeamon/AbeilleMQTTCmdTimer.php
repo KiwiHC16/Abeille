@@ -48,11 +48,11 @@
         }
     }
   
-    function execCommandeTimer( $commande ) {
+    function execCommandeTimer( $commande, $options ) {
         echo "Commande: " . $commande . "\n";
         try { // on fait cmd::byString pour trouver une commande mais si elle n'est pas trouvée ca genere une exception et le execCmd n'est pas executé.
             $cmd = cmd::byString( $commande );
-            $cmd->execCmd();
+            $cmd->execCmd( $options );
         } catch (Exception $e) {
             if ($debug) echo 'Exception reçue car la commande n est pas trouvee: ',  $e->getMessage(), "\n";
         }
@@ -122,7 +122,7 @@
                             execCommandeTimer( $keywords[1] );
 
                             }
-                        else { echo "commande not set for TimerStart"; }
+                        else { deamonlog('debug', "commande not set for TimerStart"); }
                     }
                 }
                 
@@ -139,7 +139,7 @@
                         execCommandeTimer( $keywords[1] );
                         
                     }
-                    else { echo "commande not set for TimerCancel"; }
+                    else { deamonlog('debug', "commande not set for TimerCancel"); }
                 }
                 
                 //----------------------------------------------------------------------------
@@ -154,11 +154,16 @@
                 
                 $Timers[$address] = -1;
                 print_r($Timers);
+                
+                if ( $keywords[2] == "message" ) {
+                    $options['message'] = $keywords[3];
+                }
+                
                 if ( $keywords[0] == "actionStop" ) {
                     if ( $keywords[1] != "#put_the_cmd_here#" ) {
-                        execCommandeTimer( $keywords[1] );
+                        execCommandeTimer( $keywords[1], $options );
                     }
-                    else { echo "commande not set for TimerStop"; }
+                    else { deamonlog('debug',"commande not set for TimerStop"); }
                 }
                 
                 //----------------------------------------------------------------------------

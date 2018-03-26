@@ -290,3 +290,9 @@ Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
 ...
 
+
+== Monitorer les messages 
+
+mosquitto_sub -t "#" -v
+
+

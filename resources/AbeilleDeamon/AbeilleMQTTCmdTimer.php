@@ -116,7 +116,7 @@
                     $Timers[$address] = time()+$keywords[3];
                     mqqtPublish($mqtt, $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $Timers[$address]), $qos);
                     mqqtPublish($mqtt, $address, "Var", "Duration", $Timers[$address]-time(), $qos);
-                    print_r($Timers);
+                    // print_r($Timers);
                     if ( $keywords[0] == "actionStart" ) {
                         if ( $keywords[1] != "#put_the_cmd_here#" ) {
                             execCommandeTimer( $keywords[1] );
@@ -132,8 +132,10 @@
                 deamonlog('debug', 'TimerCancel');
                 $keywords = preg_split("/[=&]+/", $msg);
                 mqqtPublish($mqtt, $address, "0006", "0000", "0", $qos);
+                mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
+                mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
                 $Timers[$address] = -1;
-                print_r($Timers);
+                // print_r($Timers);
                 if ( $keywords[0] == "actionCancel" ) {
                     if ( $keywords[1] != "#put_the_cmd_here#" ) {
                         execCommandeTimer( $keywords[1] );
@@ -153,7 +155,7 @@
                 mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
                 
                 $Timers[$address] = -1;
-                print_r($Timers);
+                // print_r($Timers);
                 
                 if ( $keywords[2] == "message" ) {
                     $options['message'] = $keywords[3];

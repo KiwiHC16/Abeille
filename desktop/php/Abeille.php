@@ -221,7 +221,7 @@ $eqLogics = eqLogic::byType('Abeille');
                         <th style="width: 150px;">{{Nom}}</th>
                         <th style="width: 120px;">{{Sous-Type}}</th>
                         <th style="width: 400px;">{{Topic}}</th>
-                        <th style="width: 300px;">{{Payload}}</th>
+                        <th style="width: 600px;">{{Payload}}</th>
                         <th style="width: 150px;">{{Paramètres}}</th>
                         <th style="width: 80px;"></th>
                     </tr>

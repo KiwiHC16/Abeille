@@ -58,6 +58,16 @@
         }
     }
     
+    function execScenarioTimer( $scenarioId, $options ) {
+        echo "Scenario: " . $scenarioId . "\n";
+        try { // on fait cmd::byString pour trouver une commande mais si elle n'est pas trouvée ca genere une exception et le execCmd n'est pas executé.
+            $scenario = scenario::byId( $scenarioId );
+            $scenario->execute();  // execute( $_trigger = '', $_message = '' )
+        } catch (Exception $e) {
+            if ($debug) echo 'Exception reçue car le scenario n est pas trouve: ',  $e->getMessage(), "\n";
+        }
+    }
+    
     function checkExparies () {
         global $Timers;
         global $mqtt;
@@ -120,10 +130,13 @@
                     if ( $keywords[0] == "actionStart" ) {
                         if ( $keywords[1] != "#put_the_cmd_here#" ) {
                             execCommandeTimer( $keywords[1] );
-
                             }
                         else { deamonlog('debug', "commande not set for TimerStart"); }
                     }
+                    elseif ( $keywords[0] == "scenarioStart" ) {
+                            execScenarioTimer( $keywords[1] );
+                    }
+                    else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
                 }
                 
                 //----------------------------------------------------------------------------
@@ -136,6 +149,7 @@
                 mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
                 $Timers[$address] = -1;
                 // print_r($Timers);
+                
                 if ( $keywords[0] == "actionCancel" ) {
                     if ( $keywords[1] != "#put_the_cmd_here#" ) {
                         execCommandeTimer( $keywords[1] );
@@ -143,6 +157,10 @@
                     }
                     else { deamonlog('debug', "commande not set for TimerCancel"); }
                 }
+                elseif ( $keywords[0] == "scenarioCancel" ) {
+                    execScenarioTimer( $keywords[1] );
+                }
+                else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
                 
                 //----------------------------------------------------------------------------
                 // actionStop=#put_the_cmd_here#
@@ -157,6 +175,7 @@
                 $Timers[$address] = -1;
                 // print_r($Timers);
                 
+                // Necessaire par exemple pour la commande qui envoie un sms
                 if ( $keywords[2] == "message" ) {
                     $options['message'] = $keywords[3];
                 }
@@ -167,6 +186,11 @@
                     }
                     else { deamonlog('debug',"commande not set for TimerStop"); }
                 }
+                elseif ( $keywords[0] == "scenarioStop" ) {
+                        execScenarioTimer( $keywords[1] );
+                    }
+                else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
+                
                 
                 //----------------------------------------------------------------------------
             } else {

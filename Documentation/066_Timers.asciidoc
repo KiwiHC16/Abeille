@@ -66,3 +66,22 @@ actionStop=\#put_the_cmd_here#
 
 
 
+== Commande ou Scenario
+
+Par defaut l'objet Timer est créé avec des commande Start, Stop, Cancel qui font reférence à l'execution d'une commande: actionStart=\#put_the_cmd_here#, actionCancel=\#put_the_cmd_here#, actionStop=\#put_the_cmd_here#. 
+
+Mais vous avez la possibilité d'appeler un scenario à la place d'une commande.
+
+Cela vous permet beaucoup plus de flexibilité comme le lancement d'une série de commandes.
+
+La syntaxe: scenarioStart=Id,scenarioCancel=Id, scenarioStop=Id, en remplacant Id pour l'identifiant du scenario que vous trouvez dqns la definition du scenario.
+
+image::images/Capture_d_ecran_2018_03_27_a_12_52_53.png[]
+
+Un exemple avec les commandes et les scenarii.
+
+image::images/Capture_d_ecran_2018_03_27_a_12_55_27.png[]
+
+Et ici vous pouvez voir l'ID 3 du scenario utilisé.
+
+

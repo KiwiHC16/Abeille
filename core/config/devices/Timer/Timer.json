@@ -48,11 +48,21 @@
         "subType": "string",
         "template": "badge"
       },
+      "Var-RampUpDown": {
+        "isVisible": 1,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "RampUpDown",
+        "order": 14,
+        "subType": "string",
+        "template": "badge"
+      },
       "Start": {
         "isVisible": 1,
         "Type": "action",
         "configuration": {
-          "request": "actionStart=#put_the_cmd_here#&durationSeconde=300",
+          "request": "actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=60&RampDown=60&actionRamp=#put_the_cmd_here#",
           "topic": "CmdTimer/#addr#/TimerStart"
         },
         "invertBinary": "0",

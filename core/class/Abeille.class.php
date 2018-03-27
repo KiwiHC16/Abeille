@@ -1084,6 +1084,7 @@ class AbeilleCmd extends cmd
     {
         switch ($this->getType()) {
             case 'action' :
+                // request c'est le payload dans la page de configuration
                 $request = $this->getConfiguration('request', '1');
                 
 /* ------------------------------ */
@@ -1118,6 +1119,7 @@ class AbeilleCmd extends cmd
                     $request = str_replace('#ZiGateIEEE#',   $rucheIEEE,     $request);
                 }
 /* ------------------------------ */
+                // Topic est l arborescence MQTT
                 $topic = $this->getConfiguration('topic');
                 
                 switch ($this->getSubType()) {

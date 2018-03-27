@@ -11,7 +11,7 @@
      */
     
     // Parametres
-    $debug = 0;
+    $debug = 1;
     $minBattery = 50; // Taux d'usage de la batterie pour générer une alarme.
     $maxTime    = 24 * 60 * 60; // temps en seconde, temps max depuis la derniere remontée d'info de cet équipement
     
@@ -19,9 +19,15 @@
     // Liste des équipements à ignorer
     $excludeEq = array(
                        "[Ruche][Ruche]" => 1,
-                       "[Ruche][CheckEquipementsWithBatteries]" => 1,  // L objet du script lui-meme
                        "[Ruche][Abeille-c576]" => 1,
                        );
+    
+    // Liste des plugin à ignorer
+    $excludePlugin = array(
+                       "script" => 1, // Couvre l objet du script lui-meme
+
+                       );
+    
     
     // Variables
     $Alarme = 0; // Passe a un si au moins une batterie est sous le seuil.
@@ -55,9 +61,18 @@
         
         if ($debug) echo "\n";
         
+        if ($debug) echo "-- Equipement " . $eqLogic->getHumanName() . " Type: " . $eqLogic->getEqType_name() . "\n";
+        
         // -- Si l'équipement se trouve dans la liste des équipements à ignorer : on passe au suivant
         if ($excludeEq[$eqLogic->getHumanName()] == 1){
-            if ($debug) echo "-- Equipement " . $eqLogic->getHumanName() . " ignoré (car dans la liste)" . "\n";
+            if ($debug) echo "-- Equipement " . $eqLogic->getHumanName() . " ignoré (car dans la liste des équipements à ignorer)" . "\n";
+            continue;
+        }
+        
+        // -- Si l'équipement Type/Plugin se trouve dans la liste des plugin à ignorer : on passe au suivant
+        
+        if ($excludePlugin[$eqLogic->getEqType_name()] == 1){
+            if ($debug) echo "-- Equipement " . $eqLogic->getHumanName() . " ignoré (car dans la liste des plugin à ignorer): " . $eqLogic->getEqType_name() . "\n";
             continue;
         }
         

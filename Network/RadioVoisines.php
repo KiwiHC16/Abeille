@@ -1,6 +1,7 @@
 <?php
     
-    
+    // Analyse faite sur les messages Link Status: filtre Wireshark: (zbee_nwk.cmd.id == 0x08)
+    include 'NetworkDefinition.php';
     
     class Voisines
     {
@@ -54,35 +55,8 @@
     
     $listOfNE = array();
     $voisinesMap = array();
-    $knownNE = array(
-                     "0000" => "_ZiGate",       // 00:15:8d:00:01:b2:2e:24
-                     "0cd5" => "_Salon Milieu",
-                     "174f" => "_T3",           // 00:0b:57:ff:fe:49:10:ea
-                     "1b7b" => "_T5",
-                     "41c0" => "_PriseX",       // 00:15:8d:00:01:83:af:7b
-                     "46d9" => "_Salon Droite", // 00:0b:57:ff:fe:95:2a:69
-                     "498d" => "_HueGo",        // 00:17:88:01:02:14:ff:6b
-                     "6766" => "_T4",
-                     "7714" => "_Bois",         // 00:0b:57:ff:fe:4b:ab:6a
-                     "8662" => "_T2",
-                     "8ffe" => "_T6",
-                     "a0da" => "_Salon Gauche",
-                     "a728" => "?Piano",        // 00:0b:57:ff:fe:3a:0e:7c
-                     "ccab" => "ChParent",
-                     "db83" => "_PriseX",       // 00:15:8d:00:01:83:af:eb
-                     "dc15" => "_T1",
-                     
-                     "744e" => "IR",
-                     "f984" => "Porte Cuisine",
-                     "b774" => "Porte Bureau",
-                     "8682" => "Temperature Bureau",
-                     "d922" => "Porte Entrée",
-                     "28f2" => "Fentre SdB",
-                     "2172" => "?Piano",
-                     "345f" => "Salon Porte Droite",
-                     "2349" => "Salon Porte Gauche",
-                     );
-
+    
+    
     
     
     
@@ -140,47 +114,51 @@
         }
     }
     
-    // print_r( $voisinesMap );
-    // print_r( $listOfNE );
-    $listOfNE = array_unique( $listOfNE );
-    sort( $listOfNE );
-    // print_r( $listOfNE );
-    
-    echo "\n";
-    
-    echo "In   ";
-    foreach ( $listOfNE as $NE_Trg )
-    {
-        echo $NE_Trg." ";
-    }
-    echo "\n";
-    foreach ( $listOfNE as $NE_Src )
-    {
-        echo $NE_Src."";
+    if (0) {
+        // print_r( $voisinesMap );
+        // print_r( $listOfNE );
+        $listOfNE = array_unique( $listOfNE );
+        sort( $listOfNE );
+        // print_r( $listOfNE );
+        
+        echo "\n";
+        
+        echo "In   ";
         foreach ( $listOfNE as $NE_Trg )
         {
-            if ( isset($voisinesMap[$NE_Src][$NE_Trg]['In']) ) { echo "    ".$voisinesMap[$NE_Src][$NE_Trg]['In']; } else { echo "     "; }
+            echo $NE_Trg." ";
         }
-        echo " ".$knownNE[$NE_Src]."\n";
-    }
-    
-    echo "\n";
-    
-    
-    echo "Out  ";
-    foreach ( $listOfNE as $NE_Trg )
-    {
-        echo $NE_Trg." ";
-    }
-    echo "\n";
-    foreach ( $listOfNE as $NE_Src )
-    {
-        echo $NE_Src."";
+        echo "\n";
+        foreach ( $listOfNE as $NE_Src )
+        {
+            echo $NE_Src."";
+            foreach ( $listOfNE as $NE_Trg )
+            {
+                if ( isset($voisinesMap[$NE_Src][$NE_Trg]['In']) ) { echo "    ".$voisinesMap[$NE_Src][$NE_Trg]['In']; } else { echo "     "; }
+            }
+            echo " ".$knownNE[$NE_Src]."\n";
+        }
+        
+        echo "\n";
+        
+        
+        echo "Out  ";
         foreach ( $listOfNE as $NE_Trg )
         {
-            if ( isset($voisinesMap[$NE_Src][$NE_Trg]['Out']) ) { echo "    ".$voisinesMap[$NE_Src][$NE_Trg]['Out']; } else { echo "     "; }
+            echo $NE_Trg." ";
         }
-        echo " ".$knownNE[$NE_Src]."\n";
+        echo "\n";
+        foreach ( $listOfNE as $NE_Src )
+        {
+            echo $NE_Src."";
+            foreach ( $listOfNE as $NE_Trg )
+            {
+                if ( isset($voisinesMap[$NE_Src][$NE_Trg]['Out']) ) { echo "    ".$voisinesMap[$NE_Src][$NE_Trg]['Out']; } else { echo "     "; }
+            }
+            echo " ".$knownNE[$NE_Src]."\n";
+        }
+        
+        print_r( $voisinesMap ); echo "\n";
     }
     ?>
 

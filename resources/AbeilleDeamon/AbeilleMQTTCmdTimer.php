@@ -202,6 +202,22 @@
                         $options['message'] = $parameters["messageStart"];
                     }
                     
+                    // On verifie les temps
+                    if ( isset($parameters['RampUp']) ) {
+                        if ( $parameters['RampUp'] < 1 ) { $parameters['RampUp'] = 1; }
+                    }
+                    else { $parameters['RampUp'] = 1; }
+                    
+                    if ( isset($parameters['durationSeconde']) ) {
+                        if ( $parameters['durationSeconde'] < 1 ) { $parameters['durationSeconde'] = 1; }
+                    }
+                    else { $parameters['durationSeconde'] = 1; }
+                    
+                    if ( isset($parameters['RampDown']) ) {
+                        if ( $parameters['RampDown'] < 1 ) { $parameters['RampDown'] = 1; }
+                    }
+                    else { $parameters['RampDown'] = 1; }
+                    
                     // On crée un Timer avec ses parametres
                     $Timers[$address] = $parameters;
                     
@@ -238,6 +254,7 @@
                 mqqtPublish($mqtt, $address, "0006", "0000", "0", $qos);
                 mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
                 mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
+                // mqqtPublish($mqtt, $address, "Var", "RampUpDown", "0", $qos); // Cancel, je laisse en l etat, stop je mets a 0
                 $Timers[$address] = -1;
                 // print_r($Timers);
                 

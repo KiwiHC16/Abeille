@@ -65,6 +65,10 @@ actionStop=\#put_the_cmd_here#
 
 * actionStop doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
 
+Exemple plus spécifique: Envoie d'un SMS
+
+actionStop=\#[operation][SMS_Home][Telephone]#&message=Mettre votre message sms ici
+
 
 
 == Commande ou Scenario
@@ -85,9 +89,9 @@ image::images/Capture_d_ecran_2018_03_27_a_12_55_27.png[]
 
 Et ici vous pouvez voir l'ID 3 du scenario utilisé.
 
-== Commande Start complete
+== Commande Start Complete
 
-actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=#put_the_cmd_here#
+actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
 Le timer possede 4 phases:
 
@@ -100,4 +104,15 @@ Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulie
 
 Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
 
+== A prendre en compte
 
+[quote,]
+____
+Il est important de noter que chaque phase fait au minimum 1s.
+____
+
+
+[quote,]
+____
+La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.
+____

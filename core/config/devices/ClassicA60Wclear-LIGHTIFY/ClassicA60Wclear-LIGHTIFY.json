@@ -29,6 +29,9 @@
         "template": ""
       },
       "0006-0000": {
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        },
         "isVisible": 1,
         "name": "etat",
         "order": 2,
@@ -67,6 +70,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "On"
@@ -81,6 +87,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "Off"
@@ -100,7 +109,8 @@
           "request": "Toggle"
         },
         "display": {
-          "forceReturnLineAfter": "1"
+          "forceReturnLineAfter": "1",
+          "generic_type": "LIGHT_TOGGLE"
         }
       },
       "getEtat": {

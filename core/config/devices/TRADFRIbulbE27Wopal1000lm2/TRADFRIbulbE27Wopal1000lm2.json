@@ -39,6 +39,9 @@
         "template": ""
       },
       "0006-0000": {
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        },
         "isVisible": 1,
         "Type": "info",
         "invertBinary": "0",
@@ -100,6 +103,10 @@
         "template": ""
       },
       "Level": {
+        "display": {
+          "forceReturnLineAfter": "1",
+          "generic_type": "LIGHT_SLIDER"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -125,6 +132,9 @@
         "template": "badge"
       },
       "Off": {
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -139,6 +149,9 @@
         "template": ""
       },
       "On": {
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -193,6 +206,7 @@
           "topic": "CmdAbeille/#addr#/OnOff"
         },
         "display": {
+          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         },
         "invertBinary": "0",

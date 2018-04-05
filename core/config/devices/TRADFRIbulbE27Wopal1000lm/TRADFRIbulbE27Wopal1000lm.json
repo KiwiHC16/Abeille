@@ -46,7 +46,10 @@
         "name": "etat",
         "order": 3,
         "subType": "binary",
-        "template": "light"
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
       },
       "0008-0000": {
         "isVisible": 1,
@@ -100,6 +103,10 @@
         "template": ""
       },
       "Level": {
+        "display": {
+          "forceReturnLineAfter": "0",
+          "generic_type": "LIGHT_SLIDER"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -125,6 +132,9 @@
         "template": "badge"
       },
       "Off": {
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -139,6 +149,9 @@
         "template": ""
       },
       "On": {
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -193,6 +206,7 @@
           "topic": "CmdAbeille/#addr#/OnOff"
         },
         "display": {
+          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         },
         "invertBinary": "0",

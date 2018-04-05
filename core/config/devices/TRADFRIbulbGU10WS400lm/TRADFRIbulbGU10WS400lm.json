@@ -46,7 +46,10 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
-        "template": "light"
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
       },
       "0008-0000": {
         "isVisible": 1,
@@ -94,6 +97,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOff",
           "request": "On"
@@ -108,6 +114,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOff",
           "request": "Off"
@@ -127,6 +136,7 @@
           "request": "Toggle"
         },
         "display": {
+          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -145,7 +155,8 @@
           "request": "Level=#slider#&duration=01"
         },
         "display": {
-          "forceReturnLineAfter": "1"
+          "forceReturnLineAfter": "1",
+          "generic_type": "LIGHT_SLIDER"
         }
       },
       "2200K": {

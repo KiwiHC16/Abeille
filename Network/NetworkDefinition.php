@@ -2,11 +2,11 @@
     
 
     $knownNE = array(
-                     "0000" => "Ruche",       // 00:15:8d:00:01:b2:2e:24
+                     "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24
                      
                      "dc15" => "T1",
                      "8662" => "T2",
-                     "174f" => "T3",           // 00:0b:57:ff:fe:49:10:ea
+                     "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
                      "6766" => "T4",
                      "1b7b" => "T5",
                      "8ffe" => "T6",
@@ -14,9 +14,8 @@
                      "a0da" => "Gauche",
                      // "0cd5" => "Milieu",
                      "60fb" => "Milieu",
-                     "46d9" => "Droite", // 00:0b:57:ff:fe:95:2a:69
-                     "2172" => "Piano",
-                     "a728" => "Piano",        // 00:0b:57:ff:fe:3a:0e:7c
+                     "46d9" => "Droite",        // 00:0b:57:ff:fe:95:2a:69
+                     "a728" => "Piano",         // 00:0b:57:ff:fe:3a:0e:7c
                      
                      "345f" => "P-D",
                      "2349" => "P-G",
@@ -28,16 +27,20 @@
                      "41c0" => "PriseX1",       // 00:15:8d:00:01:83:af:7b
                      "db83" => "PriseX2",       // 00:15:8d:00:01:83:af:eb
                      
-                     "498d" => "HueGo",        // 00:17:88:01:02:14:ff:6b
+                     "498d" => "HueGo",         // 00:17:88:01:02:14:ff:6b
                      
-                     "7714" => "Bois",         // 00:0b:57:ff:fe:4b:ab:6a
+                     "7714" => "Bois",          // 00:0b:57:ff:fe:4b:ab:6a
                      
-                     "744e" => "IR",
+                     "873a" => "IR",
                      
                      "b774" => "Porte Bureau",
-                     "8682" => "Temperature Bureau",
+                     "1be0" => "Temperature Bureau",
                    
                      "28f2" => "Fenetre SdB",
+                     
+                     "5571" => "Grad-Bureau",
+                     
+                     "9573" => "Inconnu",
                      
                      
                      );
@@ -78,6 +81,10 @@
                       'Temperature Bureau' => array('position' => array( 'x'=>710, 'y'=>480), 'color'=>'grey',),
                       
                       'Fenetre SdB' => array('position' => array( 'x'=>800, 'y'=>480), 'color'=>'grey',),
+                      
+                      'Grad-Bureau' => array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),
+                      
+                      'Inconnu' => array('position' => array( 'x'=>720, 'y'=>500), 'color'=>'yellow',),
                       
                       );
     

@@ -5,7 +5,7 @@
 
 <?php
     
-    include 'RadioVoisines.php';
+    include 'RadioTraffic.php';
     
 
 
@@ -55,7 +55,7 @@ else {
 </select>
 <select name="InOut">
 <?php
-    $InOutList = array( 'In', 'Out' );
+    $InOutList = array( 'MAC', 'NWK' );
     foreach ($InOutList as $item) {
         if ( $InOut==$item ) { $selected = " selected "; } else { $selected = " "; }
         echo '<option value="'.$item.'"'.$selected.'>'.$item.'</option>'."\n";
@@ -112,21 +112,23 @@ L pour Line to
     
     // $voisinesMap
     
-    foreach ( $voisinesMap as $sourceId => $voisine ) {
+    foreach ( $listOfMACTraffic as $SrcDst ) {
         
-        foreach ( $voisine as $targetId => $link ) {
-            $sourceIdName = $knownNE[$sourceId];
-            $targetIdName = $knownNE[$targetId];
-            echo $sourceIdName . ' - ' . $targetIdName; echo "\n";
+        // print_r( $SrcDst );
+        
+        foreach ( $SrcDst as $Src => $Dst ) {
+            $sourceIdName = $knownNE[$Src];
+            $targetIdName = $knownNE[$Dst];
+            // echo $sourceIdName . ' - ' . $targetIdName; echo "\n";
             if ($sourceIdName!=$targetIdName){
                 if ( ($sourceIdName==$NE) || ("All"==$NE) || ($sourceIdName==$NE2) ) {
                     echo '<path d="M'.$Abeilles[$sourceIdName]['position']['x'].','.$Abeilles[$sourceIdName]['position']['y'].' L'.$Abeilles[$targetIdName]['position']['x'].','.$Abeilles[$targetIdName]['position']['y'].'" style="stroke: #6666ff; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
                     $midX = ( $Abeilles[$sourceIdName]['position']['x'] + $Abeilles[$targetIdName]['position']['x'] ) / 2;
                     $midY = ( $Abeilles[$sourceIdName]['position']['y'] + $Abeilles[$targetIdName]['position']['y'] ) / 2;
-                    echo '<text x="'.$midX.'" y="'.$midY.'" fill="red" style="font-size: 8px;">'.$link[$InOut].'</text>'."\n";
+                    // echo '<text x="'.$midX.'" y="'.$midY.'" fill="red" style="font-size: 8px;">'.$link[$InOut].'</text>'."\n";
                     
-                    print_r( $InOut );
-                    print_r( $link );
+                    // print_r( $InOut );
+                    // print_r( $link );
                 }
             }
         }

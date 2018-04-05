@@ -36,7 +36,10 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
-        "template": "prise"
+        "template": "prise",
+        "display": {
+          "generic_type": "ENERGY_STATE"
+        }
       },
       "Time-Time": {
         "isVisible": 0,
@@ -67,6 +70,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "ENERGY_ON"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "On"
@@ -81,6 +87,9 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "display": {
+          "generic_type": "ENERGY_OFF"
+        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "Off"

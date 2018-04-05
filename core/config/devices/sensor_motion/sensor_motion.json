@@ -38,6 +38,9 @@
         "subType": "binary",
         "invertBinary": "1",
         "template": "presence",
+        "display": {
+          "generic_type": "PRESENCE"
+        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "1",

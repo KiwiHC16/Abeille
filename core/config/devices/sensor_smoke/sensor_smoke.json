@@ -30,6 +30,9 @@
         "template": ""
       },
       "0500-0000": {
+        "display": {
+          "generic_type": "SMOKE"
+        },
         "isVisible": 1,
         "name": "Etat",
         "order": 2,

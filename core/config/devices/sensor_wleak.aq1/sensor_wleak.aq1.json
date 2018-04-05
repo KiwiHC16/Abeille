@@ -38,7 +38,10 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "1",
-        "template": "alert"
+        "template": "alert",
+        "display": {
+          "generic_type": "FLOOD"
+        }
       },
       "Batterie-Volt": {
         "isVisible": 0,

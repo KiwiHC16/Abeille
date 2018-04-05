@@ -37,7 +37,10 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "1",
-        "template": "door"
+        "template": "door",
+        "display": {
+          "generic_type": "OPENING"
+        }
       },
       "Batterie-Volt": {
         "isVisible": 0,

@@ -38,6 +38,9 @@
         "subType": "binary",
         "invertBinary": "1",
         "template": "presence",
+        "display": {
+          "generic_type": "PRESENCE"
+        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "1",
@@ -53,7 +56,10 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",
-        "units": "Lux"
+        "units": "Lux",
+        "display": {
+          "generic_type": "BRIGHTNESS"
+        }
       },
       "Batterie-Volt": {
         "isVisible": 0,

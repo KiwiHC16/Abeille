@@ -350,14 +350,30 @@ class Abeille extends eqLogic
             showAllCommands: '.$parameters_info['showAllCommands'] . ',
             ModeCreation: '.$parameters_info['creationObjectMode']
         );
-
+        
+        // https://github.com/mgdm/Mosquitto-PHP
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html
         $client = new Mosquitto\Client($parameters_info['AbeilleConId']);
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
         $client->onConnect('Abeille::connect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
         $client->onDisconnect('Abeille::disconnect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
         $client->onSubscribe('Abeille::subscribe');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
         $client->onMessage('Abeille::message');
+        
         $client->onLog('Abeille::logmq');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
         $client->setWill('/jeedom', "Client died :-(", $parameters_info['AbeilleQos'], 0);
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+        $client->setReconnectDelay(1, 120, 1);
 
         try {
             $client->setCredentials(
@@ -376,12 +392,20 @@ class Abeille extends eqLogic
             ); // !auto: Subscribe to root topic
 
             log::add('Abeille', 'debug', 'Subscribe to topic ' . $parameters_info['AbeilleTopic']);
-            //$client->loopForever();
-            while (true) {
-                $client->loop();
-                //usleep(100);
+            
+            // 1 to use loopForever et 0 to use while loop
+            if ( 1 ) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+                $client->loopForever();
             }
-
+            else {
+                while (true) {
+                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                    $client->loop();
+                    //usleep(100);
+                }
+            }
+                
             $client->disconnect();
             unset($client);
 

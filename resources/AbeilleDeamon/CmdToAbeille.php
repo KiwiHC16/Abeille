@@ -200,6 +200,8 @@
         if (0) { $f=fopen("/var/www/html/log/toto","w"); }
         else { $f=fopen($dest,"w"); }
         
+        deamonlog('debug','Dest:'.$dest.'cmd: '.$cmd.'len: '.$len.'datas:'.$datas);
+        
         fwrite($f,pack("H*","01"));
         fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
         fwrite($f,pack("H*",transcode($len))); //LENGTH
@@ -860,7 +862,7 @@
         // ON / OFF one object
         if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
-            deamonlog('debug','OnOff for: '.$Command['address']);
+            deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']);
             // <address mode: uint8_t>
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>

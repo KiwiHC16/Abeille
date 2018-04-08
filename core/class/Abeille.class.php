@@ -41,10 +41,17 @@ class Abeille extends eqLogic
         return $return;
     }
 
-    public static function cron5()
+    /**
+     * Look every 15 minutes if the kernel driver is not in error
+     */
+    public static function cron15()
     {
-        $deamon_info = self::deamon_info();
-        if ($deamon_info['state'] != 'ok') {
+        $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
+        $output=array();
+        exec(system::getCmdSudo() . $cmd,$output);
+        $usbZigateStatus  = !is_null($output)?(is_numeric($output[0])?$output[0]:'-1'):'-1';
+        if ($usbZigateStatus != '0') {
+            message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate. Il faut débrancher/rebrancher la zigate et relancer le demon.");
             return;
         }
     }

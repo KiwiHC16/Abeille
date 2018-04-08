@@ -219,7 +219,7 @@
 
 
     /**
-     * Main function called by AbeilleMQTTCmd to process command and send it in binzry to /dev/ttyUSB0
+     * Main function called by AbeilleMQTTCmd to process command and send it in binary to /dev/ttyUSB0
      *
      * @param $dest destination for binary command
      * @param $Command command to send

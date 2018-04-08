@@ -12,10 +12,10 @@ Jeedom fonctionne sur le systeme linux debian, de ce fait ce plugin est dévelop
 
 == Les autres envirronements
 
-Les autres envirronements ne sont pas testés par défaut mais nous vous aiderons dans la mesure du possible.
+Les autres environnements ne sont pas testés par défaut mais nous vous aiderons dans la mesure du possible.
 
 === En retour d'experience sur le forum:
 
-- Windows ne fonctionne pas, car pas Linux
-- Ubuntu fonctionne mais demande de mettre les mains dans le cambouit, l'installation même de Jeedom n'est pas immédiate
+- Windows ne fonctionne pas, car pas Linux (Pas de support Jeedom)
+- Ubuntu fonctionne mais demande de mettre les mains dans le cambouis, l'installation même de Jeedom n'est pas immédiate
 - Odroid/HardKernel devrait fonctionner

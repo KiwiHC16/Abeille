@@ -19,7 +19,7 @@
     // require_once("../resources/AbeilleDeamon/lib/phpMQTT.php");
     
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlog($loglevel,'AbeilleLQI',$message);
+        // Tools::deamonlog($loglevel,'AbeilleLQI',$message);
         // echo $message . "\n";
     }
     
@@ -55,13 +55,18 @@
     // ---------------------------------------------------------------------------------------------------------------------------
     function message($message)
     {
-
+        $NE_All_local = &$GLOBALS['NE_All'];
+        // print_r( $NE_All_local );
+        
         // deamonlog('debug', '--- process a new message -----------------------');
         deamonlog('debug', $message->topic . ' => ' . $message->payload );
-
         
         // Crée les variables dans la chaine et associe la valeur.
         $parameters = proper_parse_str( $message->payload );
+        if ( $parameters['BitmapOfAttributes'] == "" ) {
+            $GLOBALS['NE_continue']=0;
+            return;
+        }
         
         $parameters['NE'] = $GLOBALS['NE'];
         
@@ -74,11 +79,12 @@
         // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
         // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
         // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00 ) { $parameters['Type'] = "Coordinator"; }
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";      }
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02 ) { $parameters['Type'] = "End Device";  }
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03 ) { $parameters['Type'] = "Unknown";     }
-
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00 ) { $parameters['Type'] = "Coordinator";                                                                            }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";       $NE_All_local[ $parameters['Voisine'] ] = array( "LQI_Done" => 0 );  }
+        
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02 ) { $parameters['Type'] = "End Device";                                                                             }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03 ) { $parameters['Type'] = "Unknown";                                                                                }
+        
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x00 ) { $parameters['Relationship'] = "Parent";  }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x10 ) { $parameters['Relationship'] = "Child";   }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x20 ) { $parameters['Relationship'] = "Sibling"; }
@@ -129,6 +135,32 @@
         return 'Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab']["0x".$cluster] ;
     }
     
+    function collectInformation( $client, $NE ) {
+        $indexTable = 0;
+
+        while ($GLOBALS['NE_continue']) {
+            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+            
+            // mqqtPublishLQI($client, "d45e", "0".$indexTable, $qos = 0);
+                deamonlog('debug', 'Publish: '.$NE.' - '.sprintf("%'.02x", $indexTable));
+                mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
+
+            $indexTable++;
+            // usleep(100);
+            $client->loop(5000);
+            sleep(1);
+            
+            // if ( $indexTable > $tableSize+5 ) { $continue = 0; }
+        }
+        // On vide les derniers messages qui trainnet
+        sleep(1);
+        $client->loop(5000);
+        sleep(1);
+        $client->loop(5000);
+        sleep(1);
+        $client->loop(5000);
+        
+    }
     
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
@@ -237,48 +269,51 @@
     // $client->loop();
     
     
-    
-    $continue = 1;
-    $indexTable = 0;
-    $tableSize = 0x09;
+    // Let's start with the Coordinator
+
     $NE = "0000";
+    $NE_All[$NE] = array( "LQI_Done" => 0 );
+    $NE_continue = 1;
+    collectInformation( $client, $NE );
+    $NE_All[$NE]['LQI_Done']=1;
     
-    // 1 to use loopForever et 0 to use while loop
-    if ( 1 ) {
-        
-        if ( 0 ) {
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
-            $client->loopForever();
+    // echo "\nRouteurs now\n\n";
+    
+    // Let's continue with Routers found
+    foreach( $NE_All as $neAddress => $Status ) {
+        // echo "NE: ".$neAddress."\n";
+        if ( $Status['LQI_Done'] == 0 ) {
+            // echo "Let s do\n";
+            $NE = $neAddress;
+            $NE_continue = 1;
+            collectInformation( $client, $NE );
+            $NE_All[$NE]['LQI_Done'] = 1;
         }
         else {
-            while ($continue) {
-                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                $client->loop();
-                // mqqtPublishLQI($client, "d45e", "0".$indexTable, $qos = 0);
-                if ( $indexTable < $tableSize ) {
-                    deamonlog('debug', 'Publish: 0000 - '.sprintf("%'.02x", $indexTable));
-                    mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
-                }
-                $indexTable++;
-                // usleep(100);
-                sleep(2);
-                if ( $indexTable > $tableSize+5 ) { $continue = 0; }
-            }
+            // echo "Already done\n";
         }
     }
+
+    
     
     $client->disconnect();
     unset($client);
     
     
-    echo "LQI: \n";
+    // echo "LQI: \n";
     // print_r( $LQI );
     
     // Nice presentation
+    echo "<table>\n";
+    echo "<tr><td>NE</td><td>Voisine</td><td>Relation</td><td>Profondeur</td><td>LQI</td></tr>\n";
     foreach ( $LQI as $key => $voisine ) {
-        echo $voisine['NE']."->".$voisine['Voisine']." ".$voisine['Relationship']." ".$voisine['LinkQualityDec']."\n";
+        echo "<tr>";
+        echo "<td>".$voisine['NE']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
+        echo "</tr>\n";
     }
+    echo "</table>\n";
     
+    // print_r( $NE_All );
     
     // deamonlog('debug', 'sortie du loop');
     

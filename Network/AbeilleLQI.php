@@ -91,7 +91,7 @@
         
         $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
         
-        print_r( $parameters );
+        // print_r( $parameters );
         
         $GLOBALS['LQI'][] = $parameters;
         
@@ -272,11 +272,14 @@
     
     
     echo "LQI: \n";
-    print_r( $LQI );
+    // print_r( $LQI );
+    
+    // Nice presentation
+    foreach ( $LQI as $key => $voisine ) {
+        echo $voisine['NE']."->".$voisine['Voisine']." ".$voisine['Relationship']." ".$voisine['LinkQualityDec']."\n";
+    }
     
     
-    
-    
-    deamonlog('debug', 'sortie du loop');
+    // deamonlog('debug', 'sortie du loop');
     
     ?>

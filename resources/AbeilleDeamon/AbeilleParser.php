@@ -1011,7 +1011,7 @@
         
         $data =
          "NeighbourTableEntries="       .substr($payload, 4, 2)
-        ."&Index"                       .substr($payload, 8, 2)
+        ."&Index="                      .substr($payload, 8, 2)
         ."&ExtendedPanId="              .substr($payload,14,16)
         ."&IEEE_Address="               .substr($payload,30,16)
         ."&Depth="                      .substr($payload,46, 2)

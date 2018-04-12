@@ -15,6 +15,7 @@
     require_once("../resources/AbeilleDeamon/lib/Tools.php");
     require_once("../resources/AbeilleDeamon/includes/config.php");
     require_once("../resources/AbeilleDeamon/includes/fifo.php");
+    require_once("../resources/AbeilleDeamon/includes/function.php");
     // require_once("../resources/AbeilleDeamon/lib/phpMQTT.php");
     
     function deamonlog($loglevel='NONE',$message=""){
@@ -44,20 +45,55 @@
     function logmq($code, $str)
     {
         if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-            deamonlog('debug', $code . ' : ' . $str);
+            // Example of messages in log if deamonlog uncommented
+            // AbeilleLQI 2018-04-12 12:39:15[DEBUG]16 : Client LQI_Connection sending PUBLISH (d0, q0, r0, m3, 'CmdAbeille/Ruche/Management_LQI_request', ... (26 bytes))
+            // AbeilleLQI 2018-04-12 12:39:17[DEBUG]16 : Client LQI_Connection received PUBLISH (d0, q0, r0, m0, 'LQI/df33/00', ... (139 bytes))
+            // deamonlog('debug', $code . ' : ' . $str);
         }
     }
     
+    // ---------------------------------------------------------------------------------------------------------------------------
     function message($message)
     {
-        if ($GLOBALS['debugBEN']) {
-            print_r($message);
-            echo "\n";
-        }
+
         // deamonlog('debug', '--- process a new message -----------------------');
         deamonlog('debug', $message->topic . ' => ' . $message->payload );
+
         
-        // $topicArray = explode("/", $message->topic);
+        // Crée les variables dans la chaine et associe la valeur.
+        $parameters = proper_parse_str( $message->payload );
+        
+        $parameters['NE'] = $GLOBALS['NE'];
+        
+        $topicArray = explode("/", $message->topic);
+        $parameters['Voisine'] = $topicArray[1];
+        
+        // Decode Bitmap Attribut
+        // Bit map of attributes Described below: uint8_t
+        // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
+        // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
+        // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
+        // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00 ) { $parameters['Type'] = "Coordinator"; }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";      }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02 ) { $parameters['Type'] = "End Device";  }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03 ) { $parameters['Type'] = "Unknown";     }
+
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x00 ) { $parameters['Relationship'] = "Parent";  }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x10 ) { $parameters['Relationship'] = "Child";   }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x20 ) { $parameters['Relationship'] = "Sibling"; }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x30 ) { $parameters['Relationship'] = "Unknown"; }
+        
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x00 ) { $parameters['Rx'] = "Rx-Off";      }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x40 ) { $parameters['Rx'] = "Rx-On";       }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x80 ) { $parameters['Rx'] = "Rx-Unknown";  }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0xC0 ) { $parameters['Rx'] = "Rx-Unknown";  }
+        
+        $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
+        
+        print_r( $parameters );
+        
+        $GLOBALS['LQI'][] = $parameters;
         
     }
     
@@ -205,6 +241,7 @@
     $continue = 1;
     $indexTable = 0;
     $tableSize = 0x09;
+    $NE = "0000";
     
     // 1 to use loopForever et 0 to use while loop
     if ( 1 ) {
@@ -220,7 +257,7 @@
                 // mqqtPublishLQI($client, "d45e", "0".$indexTable, $qos = 0);
                 if ( $indexTable < $tableSize ) {
                     deamonlog('debug', 'Publish: 0000 - '.sprintf("%'.02x", $indexTable));
-                mqqtPublishLQI($client, "0000", sprintf("%'.02x", $indexTable), $qos = 0);
+                    mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
                 }
                 $indexTable++;
                 // usleep(100);
@@ -234,8 +271,8 @@
     unset($client);
     
     
-    
-    
+    echo "LQI: \n";
+    print_r( $LQI );
     
     
     

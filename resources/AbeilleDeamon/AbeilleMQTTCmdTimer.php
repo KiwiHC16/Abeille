@@ -16,6 +16,7 @@
     // include("CmdToAbeille.php");  // contient processCmd()
     include("lib/phpMQTT.php");
     include(dirname(__FILE__).'/includes/config.php');
+    include(dirname(__FILE__).'/includes/function.php');
     
     // Function
     function deamonlog($loglevel = 'NONE', $message = "")
@@ -47,41 +48,7 @@
             echo "\n\nWARNING', Time out!\n\n";
         }
     }
-  
-    // function found at https://secure.php.net/manual/fr/function.parse-str.php
-    // which translate a X=x&Y=y&Z=z en array X=>x Y=>y Z=>z
-    function proper_parse_str($str) {
-        # result array
-        $arr = array();
-        
-        # split on outer delimiter
-        $pairs = explode('&', $str);
-        
-        # loop through each pair
-        foreach ($pairs as $i) {
-            # split into name and value
-            list($name,$value) = explode('=', $i, 2);
-            
-            # if name already exists
-            if( isset($arr[$name]) ) {
-                # stick multiple values into an array
-                if( is_array($arr[$name]) ) {
-                    $arr[$name][] = $value;
-                }
-                else {
-                    $arr[$name] = array($arr[$name], $value);
-                }
-            }
-            # otherwise, simply stick it in a scalar
-            else {
-                $arr[$name] = $value;
-            }
-        }
-        
-        # return result array
-        return $arr;
-    }
-    
+     
     function execCommandeTimer( $commande, $options ) {
         echo "Commande: " . $commande . "\n";
         try { // on fait cmd::byString pour trouver une commande mais si elle n'est pas trouvée ca genere une exception et le execCmd n'est pas executé.

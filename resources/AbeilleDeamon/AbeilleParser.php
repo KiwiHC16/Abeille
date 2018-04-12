@@ -18,7 +18,7 @@
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
     }
-
+    
     /*
      + * Send a mosquitto message to jeedom
      + *
@@ -42,15 +42,32 @@
             deamonlog('WARNING', 'Time out!');
         }
     }
-
-/**
- * send an announce to a device
- *
- * @param $mqtt
- * @param $SrcAddr
- * @param $data
- * @param int $qos
- */
+    
+    function mqqtPublishLQI($mqtt, $Addr, $Index, $data, $qos = 0)
+    {
+        // Abeille / short addr / Cluster ID - Attr ID -> data
+        // deamonlog("debug","mqttPublish with Qos: ".$qos);
+        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+            // $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
+            // $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
+            // $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
+            
+            $mqtt->publish("LQI/".$Addr."/".$Index, $data, $qos);
+            
+            $mqtt->close();
+        } else {
+            deamonlog('WARNING', 'Time out!');
+        }
+    }
+    
+    /**
+     * send an announce to a device
+     *
+     * @param $mqtt
+     * @param $SrcAddr
+     * @param $data
+     * @param int $qos
+     */
     function mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos = 0)
     {
         // Abeille / short addr / Annonce -> data
@@ -126,7 +143,7 @@
                 break;
             default:
             {
-                $return = "(ZigBee Error Code)";
+                $return = "(ZigBee Error Code unknown): ".$status;
             }
                 break;
         }
@@ -146,7 +163,7 @@
         
         $tab = "";
         $crctmp = 0;
-
+        
         $length = strlen($datas);
         // Message trop court pour etre un vrai message
         if ($length < 12) { return -1; }
@@ -357,8 +374,8 @@
             case "8140" :
                 decode8140($mqtt, $payload, $ln, $qos);
                 break;
-            
-            # IAS Zone Status Change notification
+                
+                # IAS Zone Status Change notification
             case "8401" :
                 decode8401($mqtt, $payload, $ln, $qos);
                 break;
@@ -377,8 +394,8 @@
                 break;
                 
         }
-
-    return $tab;
+        
+        return $tab;
     }
     
     /*--------------------------------------------------------------------------------------------------*/
@@ -402,9 +419,9 @@
         $test = 2 + 4 + 8;
         
         deamonlog('debug',';type: 004d (Device announce)(Processed->MQTT)'
-        . '; Src Addr : '.substr($payload, 0, 4)
-        . '; IEEE : '.substr($payload, 4, 16)
-        . '; MAC capa : '.substr($payload, 20, 2)   );
+                  . '; Src Addr : '.substr($payload, 0, 4)
+                  . '; IEEE : '.substr($payload, 4, 16)
+                  . '; MAC capa : '.substr($payload, 20, 2)   );
         
         $SrcAddr = substr($payload, 0, 4);
         $IEEE = substr($payload, 4, 16);
@@ -455,9 +472,9 @@
         $SQN = substr($payload, 2, 2);
         
         deamonlog('debug',';type: 8000 (Status)(Not Processed)'
-        . '; Length: '.hexdec($ln)
-        . '; Status: '.displayStatus($status)
-        . '; SQN: '.$SQN );
+                  . '; Length: '.hexdec($ln)
+                  . '; Status: '.displayStatus($status)
+                  . '; SQN: '.$SQN );
         
         if ( $SQN==0 ) { deamonlog('debug','SQN: 0 for messages which are not transmitted over the air.'); }
     }
@@ -465,59 +482,59 @@
     function decode8001($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8001: (Log)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8002($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8002: (Data indication)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8003($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8003: (Liste des clusters de l’objet)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8004($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8004: (Liste des attributs de l’objet)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     function decode8005($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     function decode8006($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8006: (Non “Factory new” Restart)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     function decode8007($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8008: (“Factory New” Restart)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8009($mqtt, $payload, $ln, $qos)
     {
-   
+        
         deamonlog('debug',';type: 8009: (Network State response (Firm v3.0d))(Processed->MQTT)');
         
         // <Short Address: uint16_t>
@@ -579,8 +596,8 @@
     function decode8010($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8010 (Version)(Processed->MQTT)'
-        . '; Application : '.hexdec(substr($payload, 0, 4))
-        . '; SDK : '.hexdec(substr($payload, 4, 4)));
+                  . '; Application : '.hexdec(substr($payload, 0, 4))
+                  . '; SDK : '.hexdec(substr($payload, 4, 4)));
         $SrcAddr = "Ruche";
         $ClusterId = "SW";
         $AttributId = "Application";
@@ -599,7 +616,7 @@
     function decode8014($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8014: ( “Permit join” status response)(Processed->MQTT)'
-        . '; Permit Join Status: '.substr($payload, 0, 2));
+                  . '; Permit Join Status: '.substr($payload, 0, 2));
         
         // “Permit join” status
         // response Msg Type=0x8014
@@ -668,11 +685,11 @@
             mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $dataLink, $qos);
             
             deamonlog('debug','Abeille i: '.$i
-            . '; ID : '.substr($payload, $i * 26 + 0, 2)
-            . '; Short Addr : '.$SrcAddr
-            . '; IEEE Addr: '.$dataAddr
-            . '; Power Source (0:battery - 1:AC): '.$dataPower
-            . '; Link Quality: '.$dataLink   );
+                      . '; ID : '.substr($payload, $i * 26 + 0, 2)
+                      . '; Short Addr : '.$SrcAddr
+                      . '; IEEE Addr: '.$dataAddr
+                      . '; Power Source (0:battery - 1:AC): '.$dataPower
+                      . '; Link Quality: '.$dataLink   );
         }
     }
     
@@ -733,25 +750,25 @@
     function decode8028($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8028: (Authenticate response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode802B($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 802B: (	User Descriptor Notify)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode802C($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 802C: (User Descriptor Response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8030($mqtt, $payload, $ln, $qos)
@@ -760,8 +777,8 @@
         // <status: uint8_t>
         
         deamonlog('debug',';type: 8030: (Bind response)(Decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
-        . '; SQN: 0x'.substr($payload, 0, 2)
-        . '; Status: 0x'.substr($payload, 2, 2)  );
+                  . '; SQN: 0x'.substr($payload, 0, 2)
+                  . '; Status: 0x'.substr($payload, 2, 2)  );
         
         // Envoie channel
         $SrcAddr = "Ruche";
@@ -775,26 +792,26 @@
     function decode8031($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8031: (unBind response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8034($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8034: (Complex Descriptor response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     
     function decode8040($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8040: (Network Address response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8041($mqtt, $payload, $ln, $qos)
@@ -813,13 +830,13 @@
                   . '; Message: '.substr($payload, 2, strlen($payload) - 2)   );
         
         deamonlog('debug',';type: 8041: (IEEE Address response)(Not Processed)'
-        . '; SQN : '                                    .substr($payload, 0, 2)
-        . '; Status : '                                 .substr($payload, 2, 2)
-        . '; IEEE address : '                           .substr($payload, 4,16)
-        . '; short address : '                          .substr($payload,20, 4)
-        . '; number of associated devices : '           .substr($payload,24, 2)
-        . '; start index : '                            .substr($payload,26, 2)
-        );
+                  . '; SQN : '                                    .substr($payload, 0, 2)
+                  . '; Status : '                                 .substr($payload, 2, 2)
+                  . '; IEEE address : '                           .substr($payload, 4,16)
+                  . '; short address : '                          .substr($payload,20, 4)
+                  . '; number of associated devices : '           .substr($payload,24, 2)
+                  . '; start index : '                            .substr($payload,26, 2)
+                  );
         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
             deamonlog('debug','associated devices: '    .substr($payload, (28 + $i), 4) );
         }
@@ -828,9 +845,9 @@
     function decode8042($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8042: (Node Descriptor response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8043($mqtt, $payload, $ln, $qos, $clusterTab)
@@ -850,15 +867,15 @@
         // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
         
         deamonlog('debug',';type: 8043 (Simple Descriptor Response)(Not Processed)'
-        . '; SQN : '             .substr($payload, 0, 2)
-        . '; Status : '          .substr($payload, 2, 2)
-        . '; Short Address : '   .substr($payload, 4, 4)
-        . '; Length : '          .substr($payload, 8, 2)
-        . '; endpoint : '        .substr($payload,10, 2)
-        . '; profile : '         .substr($payload,12, 4)
-        . '; deviceId : '        .substr($payload,16, 4)
-        . '; bitField : '        .substr($payload,20, 2)
-        . '; InClusterCount : '  .substr($payload,22, 2)   );
+                  . '; SQN : '             .substr($payload, 0, 2)
+                  . '; Status : '          .substr($payload, 2, 2)
+                  . '; Short Address : '   .substr($payload, 4, 4)
+                  . '; Length : '          .substr($payload, 8, 2)
+                  . '; endpoint : '        .substr($payload,10, 2)
+                  . '; profile : '         .substr($payload,12, 4)
+                  . '; deviceId : '        .substr($payload,16, 4)
+                  . '; bitField : '        .substr($payload,20, 2)
+                  . '; InClusterCount : '  .substr($payload,22, 2)   );
         
         for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
             deamonlog('debug','In cluster: '    .substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
@@ -873,9 +890,9 @@
     function decode8044($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug',';type: 8044: (N	Power Descriptor response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8045($mqtt, $payload, $ln, $qos)
@@ -887,35 +904,35 @@
         }
         
         deamonlog('debug',';type: 8045 (Active Endpoints Response)(Not Processed)'
-        . '; SQN : '             .substr($payload, 0, 2)
-        . '; Status : '          .substr($payload, 2, 2)
-        . '; Short Address : '   .substr($payload, 4, 4)
-        . '; Endpoint Count : '  .substr($payload, 8, 2)
-        . '; Endpoint List :'    .$endPointList             );
+                  . '; SQN : '             .substr($payload, 0, 2)
+                  . '; Status : '          .substr($payload, 2, 2)
+                  . '; Short Address : '   .substr($payload, 4, 4)
+                  . '; Endpoint Count : '  .substr($payload, 8, 2)
+                  . '; Endpoint List :'    .$endPointList             );
         
     }
     
     function decode8046($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'Type: 8046: (Match Descriptor response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
     
     function decode8047($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'Type: 8047: (Management Leave response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
     
     function decode8048($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', ' type: 8048 (Leave Indication)(Processed->Draft-MQTT)'
-        . '; extended addr : '.substr($payload, 0, 16)
-        . '; rejoin status : '.substr($payload, 16, 2)    );
+                  . '; extended addr : '.substr($payload, 0, 16)
+                  . '; rejoin status : '.substr($payload, 16, 2)    );
         
         $SrcAddr = "Ruche";
         $ClusterId = "joinLeave";
@@ -929,18 +946,18 @@
     function decode804A($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'Type: 804A: (Management Network Update response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
     }
     
     
     function decode804B($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'Type: 804B: (	System Server Discovery response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
     }
     
     
@@ -972,28 +989,41 @@
         // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
         
         deamonlog('debug', 'Type: 804E: (Management LQI response)(Decoded but Not Processed)'
-        . '; SQN: '                          .substr($payload, 0, 2)
-        . '; status: '                       .substr($payload, 2, 2)
-        . '; Neighbour Table Entries: '      .substr($payload, 4, 2)
-        . '; Neighbour Table List Count: '   .substr($payload, 6, 2)
-        . '; Start Index: '                  .substr($payload, 8, 2)
-        . '; NWK Address: '                  .substr($payload, 10, 4)
-        . '; Extended PAN ID: '              .substr($payload, 14,16)
-        . '; IEEE Address: '                 .substr($payload, 30,16)
-        . '; Depth: '                 .hexdec(substr($payload, 46, 2))
-        . '; Link Quality: '          .hexdec(substr($payload, 48, 2))
-        . '; Bit map of attributes: '        .substr($payload, 50, 2)   );
+                  . '; SQN: '                          .substr($payload, 0, 2)
+                  . '; status: '                       .substr($payload, 2, 2)
+                  . '; Neighbour Table Entries: '      .substr($payload, 4, 2)
+                  . '; Neighbour Table List Count: '   .substr($payload, 6, 2)
+                  . '; Start Index: '                  .substr($payload, 8, 2)
+                  . '; NWK Address: '                  .substr($payload, 10, 4)
+                  . '; Extended PAN ID: '              .substr($payload, 14,16)
+                  . '; IEEE Address: '                 .substr($payload, 30,16)
+                  . '; Depth: '                 .hexdec(substr($payload, 46, 2))
+                  . '; Link Quality: '          .hexdec(substr($payload, 48, 2))
+                  . '; Bit map of attributes: '        .substr($payload, 50, 2)   );
         
         $srcAddress         = 'Not Available Yet Due To ZiGate';
-        $Neighbour          = substr($payload, 10, 4);
+        $index              = substr($payload, 8, 2);
+        $NeighbourAddr      = substr($payload, 10, 4);
         $lqi                = hexdec(substr($payload, 48, 2));
         $Depth              = hexdec(substr($payload, 46, 2));
         $bitMapOfAttributes = substr($payload, 50, 2); // to be decoded
         $LQI[$srcAddress]=array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
         
+        $data =
+         "NeighbourTableEntries="       .substr($payload, 4, 2)
+        ."&Index"                       .substr($payload, 8, 2)
+        ."&ExtendedPanId="              .substr($payload,14,16)
+        ."&IEEE_Address="               .substr($payload,30,16)
+        ."&Depth="                      .substr($payload,46, 2)
+        ."&LinkQuality="                .substr($payload,48, 2)
+        ."&BitmapOfAttributes="         .substr($payload,50, 2);
+        
         // deamonlog('debug', 'Level: 0x'.substr($payload, 0, 2));
         // deamonlog('debug', 'Message: ');
         // deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
+        
+        //function mqqtPublishLQI($mqtt, $Addr, $Index, $data, $qos = 0)
+        mqqtPublishLQI($mqtt, $NeighbourAddr, $index, $data, $qos);
     }
     
     ##TODO
@@ -1007,9 +1037,9 @@
         // <Cluster id: uint16_t>
         
         deamonlog('debug', 'Type: 8060: (Add a group response)(Decoded but Not Processed)'
-        . '; SQN: '          .substr($payload, 0, 2)
-        . '; endPoint: '     .substr($payload, 2, 2)
-        . '; clusterId: '    .substr($payload, 4, 4) );
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4) );
     }
     
     
@@ -1031,12 +1061,12 @@
         $groupSize = strlen($payload)-12-2; // 2 last are RSSI
         
         deamonlog('debug', 'Type: 8062: (Group Memebership)(Processed->MQTT)'
-        . '; SQN: '          .substr($payload, 0, 2)
-        . '; endPoint: '     .substr($payload, 2, 2)
-        . '; clusterId: '    .substr($payload, 4, 4)
-        . '; Address: '      .substr($payload, 8, 4)
-        . '; capacity: '     .substr($payload,12, 2)
-        . '; group count: '  .substr($payload,14, 2)  );
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; Address: '      .substr($payload, 8, 4)
+                  . '; capacity: '     .substr($payload,12, 2)
+                  . '; group count: '  .substr($payload,14, 2)  );
         
         $groupCount = hexdec( substr($payload,14, 2) );
         $groupsId="";
@@ -1055,7 +1085,7 @@
         $AttributId = "Membership";
         $data = $groupsId;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-
+        
     }
     
     function decode8063($mqtt, $payload, $ln, $qos)
@@ -1068,11 +1098,11 @@
         // <Group id: uint16_t>         -> 4
         
         deamonlog('debug', 'Type: 8063: (Remove a group response)(Decoded but Not Processed)'
-        . '; SQN: '          .substr($payload, 0, 2)
-        . '; endPoint: '     .substr($payload, 2, 2)
-        . '; clusterId: '    .substr($payload, 4, 4)
-        . '; statusId: '     .substr($payload, 8, 2)
-        . '; groupId: '      .substr($payload,10, 4) );
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; statusId: '     .substr($payload, 8, 2)
+                  . '; groupId: '      .substr($payload,10, 4) );
     }
     
     
@@ -1089,13 +1119,13 @@
         // "Type: 0x8100 (Read Attrib Response)"
         // 8100 000D0C0Cb32801000600000010000101
         deamonlog('debug', 'Type: 0x8100 (Read Attrib Response)(Processed->MQTT)'
-        . '; SQN: '.substr($payload, 0, 2)
-        . '; Src Addr: '.substr($payload, 2, 4)
-        . '; EnPt: '.substr($payload, 6, 2)
-        . '; Cluster Id: '.substr($payload, 8, 4)
-        . '; Attribut Id: '.substr($payload, 12, 4)
-        . '; Attribute Status: '.substr($payload, 16, 2)
-        . '; Attribute data type: '.substr($payload, 18, 2) );
+                  . '; SQN: '.substr($payload, 0, 2)
+                  . '; Src Addr: '.substr($payload, 2, 4)
+                  . '; EnPt: '.substr($payload, 6, 2)
+                  . '; Cluster Id: '.substr($payload, 8, 4)
+                  . '; Attribut Id: '.substr($payload, 12, 4)
+                  . '; Attribute Status: '.substr($payload, 16, 2)
+                  . '; Attribute data type: '.substr($payload, 18, 2) );
         
         $dataType = substr($payload, 18, 2);
         // IKEA OnOff state reply data type: 10
@@ -1143,12 +1173,12 @@
     function decode8101($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', ';Type: 8101 (Default Response)(Not Processed)'
-        . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
-        . '; SQN : '.substr($payload, 0, 2)
-        . '; EndPoint : '.substr($payload, 2, 2)
-        . '; '. displayClusterId(substr($payload, 4, 4))
-        . '; Command : '.substr($payload, 8, 2)
-        . '; Status : '.substr($payload, 10, 2)  );
+                  . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
+                  . '; SQN : '.substr($payload, 0, 2)
+                  . '; EndPoint : '.substr($payload, 2, 2)
+                  . '; '. displayClusterId(substr($payload, 4, 4))
+                  . '; Command : '.substr($payload, 8, 2)
+                  . '; Status : '.substr($payload, 10, 2)  );
     }
     
     function decode8102($mqtt, $payload, $ln, $qos)
@@ -1174,15 +1204,15 @@
         $AttributSize       = substr($payload,20, 4);
         
         deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
-        . '; SQN: '              .$SQN
-        . '; Src Addr : '        .$SrcAddr
-        . '; End Point : '       .$EPoint
-        . '; Cluster ID : '      .$ClusterId
-        . '; Attr ID : '         .$AttributId
-        . '; Attr Status : '     .$AttributStatus
-        . '; Attr Data Type : '  .$dataType
-        . '; Attr Size : '       .$AttributSize
-        . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2))  );
+                  . '; SQN: '              .$SQN
+                  . '; Src Addr : '        .$SrcAddr
+                  . '; End Point : '       .$EPoint
+                  . '; Cluster ID : '      .$ClusterId
+                  . '; Attr ID : '         .$AttributId
+                  . '; Attr Status : '     .$AttributStatus
+                  . '; Attr Data Type : '  .$dataType
+                  . '; Attr Size : '       .$AttributSize
+                  . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2))  );
         
         // valeur hexadécimale	- type -> function
         // 0x00	Null
@@ -1356,7 +1386,7 @@
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                 
                 deamonlog('debug', 'Voltage: '      .$voltage);
-
+                
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 
@@ -1414,7 +1444,7 @@
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
             }
             
-
+            
             // Xiaomi Capteur Presence
             // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
             // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
@@ -1448,9 +1478,9 @@
     function decode8110($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'Type: 8110: (	Write Attribute Response)(Not Processed)'
-        . '; (Not processed*************************************************************)'
-        . '; Level: 0x'.substr($payload, 0, 2)
-        . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
     function decode8120($mqtt, $payload, $ln, $qos)
@@ -1462,11 +1492,11 @@
         // <Status: uint8_t>
         
         deamonlog('debug', 'Type: 8120: (Configure Reporting response)(Decoded but not Processed)'
-        . '; SQN: '              .substr($payload, 0, 2)
-        . '; Source address: '   .substr($payload, 2, 4)
-        . '; EndPoint: '         .substr($payload, 6, 2)
-        . '; Cluster Id: '       .substr($payload, 8, 4)
-        . '; Status: '           .substr($payload,12, 2)  );
+                  . '; SQN: '              .substr($payload, 0, 2)
+                  . '; Source address: '   .substr($payload, 2, 4)
+                  . '; EndPoint: '         .substr($payload, 6, 2)
+                  . '; Cluster Id: '       .substr($payload, 8, 4)
+                  . '; Status: '           .substr($payload,12, 2)  );
         
         // Envoie channel
         $SrcAddr = "Ruche";
@@ -1522,19 +1552,19 @@
     function decode8701($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', ' type: 8701 (Route Discovery Confirm)(Not Processed)'
-        . '; Status : '.substr($payload, 0, 2)
-        . '; Nwk Status : '.substr($payload, 2, 2)  );
+                  . '; Status : '.substr($payload, 0, 2)
+                  . '; Nwk Status : '.substr($payload, 2, 2)  );
     }
     
     function decode8702($mqtt, $payload, $ln, $qos)
     {
         deamonlog('debug', 'type: 8701: (APS Data Confirm Fail)(Not Processed)'
-        . '; Status : '.substr($payload, 0, 2)
-        . '; Source Endpoint : '.substr($payload, 2, 2)
-        . '; Destination Endpoint : '.substr($payload, 4, 2)
-        . '; Destination Mode : '.substr($payload, 6, 2)
-        . '; Destination Address : '.substr($payload, 8, 4)
-        . '; SQN: : '.substr($payload, 12, 2)   );
+                  . '; Status : '.substr($payload, 0, 2)
+                  . '; Source Endpoint : '.substr($payload, 2, 2)
+                  . '; Destination Endpoint : '.substr($payload, 4, 2)
+                  . '; Destination Mode : '.substr($payload, 6, 2)
+                  . '; Destination Address : '.substr($payload, 8, 4)
+                  . '; SQN: : '.substr($payload, 12, 2)   );
     }
     
     

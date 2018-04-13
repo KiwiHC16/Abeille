@@ -126,7 +126,7 @@
                     "addressMode" => "02",
                     "address" => $address,
                     "destinationEndpoint" => "03",
-                    "step" => $msg,
+                    "action" => $msg,
                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "UpGroup") {

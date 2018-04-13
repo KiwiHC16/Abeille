@@ -57,5 +57,124 @@ On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un 
 
 On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (ZiGate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
 
-== Sur mon système de prod, après xxs, cela donne:
+== Sur mon système de prod
+
+Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).
+
+Petites interrogations/Observation:
+- des "Relation" sont "Unknown" : bug ou valeur remontée inconnue.
+- des "Profondeur" ont des valeurs "0F" qu'il faut que je comprenne.
+- Aucun des routeurs ne possède de "Child".
+
+
+Après 4 minutes, cela donne:
+
+.LQI Systeme de production
+[width="100%",options="header,footer"]
+|====================
+|NE|Voisine|Relation|Profondeur|LQI
+|0000|1be0|Child|01|189
+|0000|5571|Child|01|212
+|0000|b774|Child|01|146
+|0000|873a|Child|01|197
+|0000|4260|Child|01|48
+|0000|d43e|Child|01|151
+|0000|6c0B|Child|01|51
+|0000|0F7e|Child|01|194
+|0000|f984|Child|01|59
+|0000|2349|Child|01|81
+|0000|345f|Child|01|94
+|0000|28f2|Child|01|137
+|0000|a728|Sibling|00|81
+|0000|41c0|Sibling|00|167
+|0000|174f|Sibling|00|51
+|0000|46d9|Sibling|00|105
+|0000|60fb|Sibling|00|80
+|0000|a0da|Sibling|00|85
+|0000|498d|Sibling|00|135
+|0000|e4c0|Sibling|00|84
+|a728|0000|Sibling|00|145
+|a728|174f|Sibling|0F|27
+|a728|41c0|Sibling|0F|76
+|a728|46d9|Sibling|0F|90
+|a728|498d|Sibling|0F|47
+|a728|60fb|Sibling|0F|87
+|a728|a0da|Sibling|0F|86
+|a728|db83|Sibling|0F|63
+|41c0|0000|Parent|00|171
+|41c0|e4c0|Sibling|01|59
+|41c0|db83|Sibling|01|169
+|41c0|7714|Sibling|01|110
+|41c0|498d|Sibling|01|146
+|174f|0000|Sibling|00|97
+|174f|1b7b|Sibling|0F|34
+|174f|46d9|Sibling|0F|29
+|174f|498d|Sibling|0F|21
+|174f|60fb|Sibling|0F|29
+|174f|6766|Sibling|0F|26
+|174f|7714|Sibling|0F|45
+|174f|8ffe|Sibling|0F|45
+|174f|a728|Sibling|0F|29
+|174f|db83|Sibling|0F|45
+|174f|e4c0|Sibling|0F|20
+|46d9|0000|Sibling|00|179
+|46d9|174f|Sibling|0F|33
+|46d9|41c0|Sibling|0F|61
+|46d9|498d|Sibling|0F|119
+|46d9|498d|Sibling|0F|119
+|46d9|7714|Sibling|0F|83
+|46d9|a0da|Sibling|0F|111
+|46d9|a728|Sibling|0F|97
+|46d9|c551|Sibling|0F|22
+|46d9|db83|Sibling|0F|145
+|46d9|e4c0|Sibling|0F|68
+|60fb|0000|Parent|00|145
+|60fb|174f|Sibling|0F|32
+|60fb|41c0|Sibling|0F|63
+|60fb|46d9|Sibling|0F|129
+|60fb|498d|Sibling|0F|91
+|60fb|6766|Sibling|0F|16
+|60fb|7714|Sibling|0F|31
+|60fb|8ffe|Sibling|0F|16
+|60fb|a0da|Sibling|0F|85
+|60fb|a728|Sibling|0F|93
+|60fb|db83|Sibling|0F|112
+|60fb|e4c0|Sibling|0F|30
+|a0da|0000|Sibling|00|152
+|a0da|41c0|Sibling|0F|70
+|a0da|46d9|Sibling|0F|106
+|a0da|498d|Sibling|0F|41
+|a0da|60fb|Sibling|0F|81
+|a0da|6766|Sibling|0F|17
+|a0da|7714|Sibling|0F|46
+|a0da|a728|Sibling|0F|91
+|a0da|db83|Sibling|0F|63
+|a0da|e4c0|Sibling|0F|50
+|498d|db83|Parent|01|247
+|498d|0000|Unknown|00|252
+|498d|41c0|Unknown|02|252
+|498d|7714|Unknown|02|247
+|498d|46d9|Unknown|02|247
+|498d|a728|Unknown|02|247
+|498d|c551|Unknown|02|252
+|498d|174f|Unknown|02|252
+|498d|a0da|Unknown|02|252
+|498d|60fb|Unknown|02|247
+|498d|6766|Unknown|02|238
+|498d|e4c0|Unknown|02|247
+|498d|1b7b|Unknown|02|0
+|498d|dc15|Unknown|02|0
+|498d|8ffe|Unknown|02|0
+|498d|8ffe|Unknown|02|0
+|e4c0|0000|Sibling|00|152
+|e4c0|41c0|Sibling|0F|106
+|e4c0|174f|Sibling|0F|23
+|e4c0|46d9|Sibling|0F|69
+|e4c0|498d|Sibling|0F|80
+|e4c0|60fb|Sibling|0F|31
+|e4c0|7714|Sibling|0F|42
+|e4c0|a0da|Sibling|0F|51
+|e4c0|c551|Sibling|0F|20
+|e4c0|db83|Sibling|0F|59
+|====================
 

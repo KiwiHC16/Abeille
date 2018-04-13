@@ -17,6 +17,8 @@
     require_once("../resources/AbeilleDeamon/includes/fifo.php");
     require_once("../resources/AbeilleDeamon/includes/function.php");
     // require_once("../resources/AbeilleDeamon/lib/phpMQTT.php");
+    require_once("NetworkDefinition.php");
+    
     
     function deamonlog($loglevel='NONE',$message=""){
         // Tools::deamonlog($loglevel,'AbeilleLQI',$message);
@@ -56,22 +58,28 @@
     function message($message)
     {
         $NE_All_local = &$GLOBALS['NE_All'];
+        $knownNE_local = &$GLOBALS['knownNE'];
+        
         // print_r( $NE_All_local );
+        // print_r( $knownNE_local );
         
         // deamonlog('debug', '--- process a new message -----------------------');
         deamonlog('debug', $message->topic . ' => ' . $message->payload );
         
         // Crée les variables dans la chaine et associe la valeur.
         $parameters = proper_parse_str( $message->payload );
+        
         if ( $parameters['BitmapOfAttributes'] == "" ) {
             $GLOBALS['NE_continue']=0;
             return;
         }
         
         $parameters['NE'] = $GLOBALS['NE'];
+        $parameters['NE_Name'] = $knownNE_local[$parameters['NE']];
         
         $topicArray = explode("/", $message->topic);
         $parameters['Voisine'] = $topicArray[1];
+        $parameters['Voisine_Name'] = $knownNE_local[$parameters['Voisine']];
         
         // Decode Bitmap Attribut
         // Bit map of attributes Described below: uint8_t
@@ -80,8 +88,7 @@
         // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
         // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00 ) { $parameters['Type'] = "Coordinator";                                                                            }
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";       $NE_All_local[ $parameters['Voisine'] ] = array( "LQI_Done" => 0 );  }
-        
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";       $NE_All_local[ $parameters['Voisine'] ] = array( "LQI_Done" => 0 );       }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02 ) { $parameters['Type'] = "End Device";                                                                             }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03 ) { $parameters['Type'] = "Unknown";                                                                                }
         
@@ -305,14 +312,41 @@
     // print_r( $LQI );
     
     // Nice presentation
+?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+    width: 100%;
+    }
+    
+    td, th {
+    border: 1px solid #dddddd;
+        text-align: left;
+    padding: 8px;
+    }
+    
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+    </style>
+    </head>
+    <body>
+<?php
+
     echo "<table>\n";
-    echo "<tr><td>NE</td><td>Voisine</td><td>Relation</td><td>Profondeur</td><td>LQI</td></tr>\n";
+    echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
     foreach ( $LQI as $key => $voisine ) {
         echo "<tr>";
-        echo "<td>".$voisine['NE']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
+        echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
         echo "</tr>\n";
     }
     echo "</table>\n";
+    echo "</body>\n";
+    echo "</html>\n";
     
     // Formating pour la doc asciidoc
     if (0) {
@@ -324,7 +358,7 @@
             // echo "<tr>";
             // echo "<td>".$voisine['NE']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
             
-            echo "|".$voisine['NE']."|".$voisine['Voisine']."|".$voisine['Relationship']."|".$voisine['Depth']."|".$voisine['LinkQualityDec']."\n";
+            echo "|".$voisine['NE']."|".$voisine['NE_Name']."|".$voisine['Voisine']."|"."|".$voisine['Voisine_Name']."|".$voisine['Relationship']."|".$voisine['Depth']."|".$voisine['LinkQualityDec']."\n";
             
             // echo "</tr>\n";
         }

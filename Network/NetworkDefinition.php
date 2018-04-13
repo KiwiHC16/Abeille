@@ -3,7 +3,7 @@
 
     $knownNE = array(
                      "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24
-                     
+ // Abeille Prod JeedomZwave
                      "dc15" => "T1",
                      "8662" => "T2",
                      "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
@@ -41,7 +41,18 @@
                      "5571" => "Grad-Bureau",
                      
                      "9573" => "Inconnu",
-                     
+  // Abeille Test abeille
+                     "df33" => "Test: Temperature Rond Bureau",
+                     "a008" => "Test: Door V1 Bureau",
+                     "7bd5" => "Test: Inondation Bureau",
+                     "dcd9" => "Test: Bouton Carre V2 Bureau",
+                     "3950" => "Test: Door V0 Bureau",
+                     "5dea" => "Test: IR Pied Bureau",
+                     "4ebd" => "Test: Interrupteur Rond",
+                     "633e" => "Test: xxxxxx",
+                     "c7c0" => "Test: RI V0",
+                     "d45e" => "Test: Ampoule Bois Bureau",
+                     "2389" => "Test: Detecteur Smoke",
                      
                      );
 
@@ -49,7 +60,7 @@
     
     $Abeilles = array(
                       'Ruche'    => array('position' => array( 'x'=>670, 'y'=>500), 'color'=>'red',),
-                      
+    // Abeille Prod JeedomZwave
                       'T1'       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
                       'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
                       'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
@@ -85,6 +96,19 @@
                       'Grad-Bureau' => array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),
                       
                       'Inconnu' => array('position' => array( 'x'=>720, 'y'=>500), 'color'=>'yellow',),
+                      
+                      // Abeille Test abeille
+                      "Test: Temperature Rond Bureau"   => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Door V1 Bureau"            => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Inondation Bureau"         => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Bouton Carre V2 Bureau"    => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Door V0 Bureau"            => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: IR Pied Bureau"            => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Interrupteur Rond"         => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: xxxxxx"                    => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: RI V0"                     => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Ampoule Bois Bureau"       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      "Test: Detecteur Smoke"           => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
                       
                       );
     

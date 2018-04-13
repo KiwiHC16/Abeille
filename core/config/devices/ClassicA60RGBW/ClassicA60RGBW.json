@@ -1,0 +1,203 @@
+{
+  "Classic A60 RGBW": {
+    "nameJeedom": "Classic A60 RGB W",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "OSRAMClassicA60RGBW"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-0000": {
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        },
+        "isVisible": 1,
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "prise"
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "On": {
+        "isVisible": 1,
+        "name": "On",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "request": "On"
+        }
+      },
+      "Off": {
+        "isVisible": 1,
+        "name": "Off",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "request": "Off"
+        }
+      },
+      "Toggle": {
+        "isVisible": 1,
+        "name": "Toggle",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "request": "Toggle"
+        },
+        "display": {
+          "forceReturnLineAfter": "1",
+          "generic_type": "LIGHT_TOGGLE"
+        }
+      },
+      "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "request": "clusterId=0006&attributeId=0000"
+        }
+      },
+      "getManufacturerName": {
+        "isVisible": 0,
+        "name": "getManufacturerName",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "request": "clusterId=0000&attributeId=0004"
+        }
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "request": "clusterId=0000&attributeId=0005"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 15,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      }
+    }
+  }
+}

@@ -194,6 +194,7 @@
     $LQI = array();
     
     deamonlog('debug', 'Start Main');
+    echo "DEBUT: ".date(DATE_RFC2822)."<br>";
     
     // https://github.com/mgdm/Mosquitto-PHP
     // http://mosquitto-php.readthedocs.io/en/latest/client.html
@@ -313,8 +314,28 @@
     }
     echo "</table>\n";
     
+    // Formating pour la doc asciidoc
+    if (0) {
+        // echo "<table>\n";
+        // echo "<tr><td>NE</td><td>Voisine</td><td>Relation</td><td>Profondeur</td><td>LQI</td></tr>\n";
+        echo "|NE|Voisine|Relation|Profondeur|LQI\n";
+        
+        foreach ( $LQI as $key => $voisine ) {
+            // echo "<tr>";
+            // echo "<td>".$voisine['NE']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
+            
+            echo "|".$voisine['NE']."|".$voisine['Voisine']."|".$voisine['Relationship']."|".$voisine['Depth']."|".$voisine['LinkQualityDec']."\n";
+            
+            // echo "</tr>\n";
+        }
+        // echo "</table>\n";
+    }
+    
     // print_r( $NE_All );
     
     // deamonlog('debug', 'sortie du loop');
-    
+    echo "FIN: ".date(DATE_RFC2822)."<br>\n";
     ?>
+
+
+

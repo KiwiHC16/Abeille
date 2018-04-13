@@ -1,0 +1,61 @@
+:toc:
+
+= LQI
+
+Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI.php et visualiser les résultats dans un browser web:
+
+http://[adresse de votre jeedom]/plugins/Abeille/Network/AbeilleLQI.php
+
+Vous pouvez vérifier que l'execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):
+
+[source,]
+----
+AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a
+----
+
+Si cela ne fonctionne pas, vous pouvez faire la manip à la main:
+[source,]
+----
+cd /var/www/html/plugins/Abeille/Network
+php AbeilleLQI.php
+----
+
+[quote,]
+____
+C'est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.
+____
+
+Le script va interroger tous les équipements qu'il détecte. Le procesus est assez long et pour l'instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.
+
+== Sur mon systeme de test, après 40s, cela donne:
+
+.LQI Systeme de test
+[width="100%",options="header,footer"]
+|====================
+|NE|Voisine|Relation|Profondeur|LQI
+|0000|df33|Child|01|152
+|0000|a008|Child|01|141
+|0000|7bd5|Child|01|169
+|0000|dcd9|Child|01|175
+|0000|3950|Child|01|167
+|0000|5dea|Child|01|144
+|0000|4ebd|Child|01|161
+|0000|633e|Child|01|219
+|0000|c7c0|Child|01|174
+|0000|d45e|Sibling|00|158
+|d45e|0000|Sibling|00|186
+|d45e|2389|Child|02|255
+|====================
+
+La première colonne contient l'adresse de l'équipement qui a été interrogé.
+La deuxieme colonne continet l'adresse de l'équipement voisin connu
+La troisieme colonne contient le type de relation entre les deux équipements.
+La quatrieme colonne contient la profondeur de l'équipement dans l'arborescence du réseau.
+La cinquième colonne contient le LQI (Link Quality Indicator), la qualité de la liaison radio.
+
+On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un "Sibling" qui est un routeur (Ampoule Ikea dans ce cas).
+
+On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (ZiGate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
+
+== Sur mon système de prod, après xxs, cela donne:
+

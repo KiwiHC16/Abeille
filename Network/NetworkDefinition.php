@@ -11,6 +11,8 @@
                      "1b7b" => "T5",
                      "8ffe" => "T6",
                      
+                     "2cd5" => "T8",
+                     
                      "a0da" => "Gauche",
                      // "0cd5" => "Milieu",
                      "60fb" => "Milieu",
@@ -74,6 +76,8 @@
                       'T4'       => array('position' => array( 'x'=>450, 'y'=>250), 'color'=>'orange',),
                       'T5'       => array('position' => array( 'x'=>500, 'y'=>200), 'color'=>'orange',),
                       'T6'       => array('position' => array( 'x'=>600, 'y'=>200), 'color'=>'orange',),
+                      
+                      'T8'       => array('position' => array( 'x'=>450, 'y'=>500), 'color'=>'orange',),
                       
                       'Gauche'    => array('position' => array( 'x'=>700, 'y'=>300), 'color'=>'orange',),
                       'Milieu'    => array('position' => array( 'x'=>650, 'y'=>300), 'color'=>'orange',),

@@ -17,11 +17,11 @@
                      "46d9" => "Droite",        // 00:0b:57:ff:fe:95:2a:69
                      "a728" => "Piano",         // 00:0b:57:ff:fe:3a:0e:7c
                      
-                     "345f" => "P-D",
-                     "2349" => "P-G",
+                     "28f2" => "P-D",
+                     "d43e" => "P-G",
                      "f984" => "P-C",
                      
-                     "d922" => "P-Entree",
+                     "4260" => "P-Entree",
                      
                      
                      "41c0" => "PriseX1",       // 00:15:8d:00:01:83:af:7b
@@ -43,6 +43,11 @@
                      "9573" => "Inconnu",
                      
                      "e4c0" => "Ch Parent Ben",
+                     
+                     "6c0B" => "Sonnette",
+
+                     "0F7e" => "Inconnu1",
+                     
   // Abeille Test abeille
                      "df33" => "Test: Temperature Rond Bureau",
                      "a008" => "Test: Door V1 Bureau",
@@ -100,6 +105,11 @@
                       'Inconnu' => array('position' => array( 'x'=>720, 'y'=>500), 'color'=>'yellow',),
                       
                       'Ch Parent Ben' => array('position' => array( 'x'=>650, 'y'=>275), 'color'=>'yellow',),
+                      
+                      'Sonnette' => array('position' => array( 'x'=>625, 'y'=>650), 'color'=>'grey',),
+                      
+                      'Inconnu1' => array('position' => array( 'x'=>425, 'y'=>650), 'color'=>'grey',),
+
                       
                       // Abeille Test abeille
                       "Test: Temperature Rond Bureau"   => array('position' => array( 'x'=>100, 'y'=>100), 'color'=>'grey',),

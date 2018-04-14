@@ -54,7 +54,7 @@
                     );
                 }
                 if ($msg == "OSRAM") {
-                    deamonlog('info', 'Preparation de la commande annonce pour Hue');
+                    deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
                     $Command = array(
                         "ReadAttributeRequestOSRAM" => "1",
                         "address" => $address,
@@ -126,7 +126,7 @@
                     "addressMode" => "02",
                     "address" => $address,
                     "destinationEndpoint" => "03",
-                    "action" => $msg,
+                    "action" => $actionId,
                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "UpGroup") {

@@ -86,7 +86,8 @@
 <form method="get">
 <select name="NE">
 <?php
-    echo '<option value="All"'.$selected.'>All</option>'."\n";
+    if ( $NE=="All" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="All"'.$selected.'>All</option>'."\n";
+    if ( $NE=="None" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="None"'.$selected.'>None</option>'."\n";
     foreach ($knownNE as $shortAddress => $name) {
         if ( $NE==$name ) { $selected = " selected "; } else { $selected = " "; }
         echo '<option value="'.$name.'"'.$selected.'>'.$name.'-'.$shortAddress.'</option>'."\n";
@@ -179,7 +180,7 @@ L pour Line to
         $targetIdName = $knownNE[$targetId];
         echo $sourceIdName . ' - ' . $targetIdName; echo "\n";
         if ($sourceIdName!=$targetIdName){
-            if ( ($sourceIdName==$NE) || ("All"==$NE) || ($sourceIdName==$NE2) ) {
+            if ( ($sourceIdName==$NE) || ("All"==$NE) || ($targetIdName==$NE2) ) {
                 echo '<path d="M'.$Abeilles[$sourceIdName]['position']['x'].','.$Abeilles[$sourceIdName]['position']['y'].' L'.$Abeilles[$targetIdName]['position']['x'].','.$Abeilles[$targetIdName]['position']['y'].'" style="stroke: #6666ff; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
                 $midX = ( $Abeilles[$sourceIdName]['position']['x'] + $Abeilles[$targetIdName]['position']['x'] ) / 2;
                 $midY = ( $Abeilles[$sourceIdName]['position']['y'] + $Abeilles[$targetIdName]['position']['y'] ) / 2;

@@ -88,7 +88,12 @@
         // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
         // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00 ) { $parameters['Type'] = "Coordinator";                                                                            }
-        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) { $parameters['Type'] = "Router";       $NE_All_local[ $parameters['Voisine'] ] = array( "LQI_Done" => 0 );       }
+        if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01 ) {
+            $parameters['Type'] = "Router";
+            if ( isset($NE_All_local[ $parameters['Voisine'] ]) ) { // deja dans la list donc on ne fait rien
+            }
+            else { $NE_All_local[ $parameters['Voisine'] ] = array( "LQI_Done" => 0 );       }
+        }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02 ) { $parameters['Type'] = "End Device";                                                                             }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03 ) { $parameters['Type'] = "Unknown";                                                                                }
         
@@ -101,7 +106,7 @@
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x40 ) { $parameters['Rx'] = "Rx-On";       }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x80 ) { $parameters['Rx'] = "Rx-Unknown";  }
         if ( (hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0xC0 ) { $parameters['Rx'] = "Rx-Unknown";  }
-        
+            
         $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
         
         // print_r( $parameters );

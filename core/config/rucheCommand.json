@@ -440,5 +440,22 @@
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
     }
+  },
+  "LQI": {
+    "name": "LQI",
+    "order": "31",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/Management_LQI_request",
+      "request": "address=#title#&StartIndex=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Index - 2 digits"
+    }
   }
 }

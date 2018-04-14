@@ -287,18 +287,20 @@
     
     // echo "\nRouteurs now\n\n";
     
-    // Let's continue with Routers found
-    foreach( $NE_All as $neAddress => $Status ) {
-        // echo "NE: ".$neAddress."\n";
-        if ( $Status['LQI_Done'] == 0 ) {
-            // echo "Let s do\n";
-            $NE = $neAddress;
-            $NE_continue = 1;
-            collectInformation( $client, $NE );
-            $NE_All[$NE]['LQI_Done'] = 1;
-        }
-        else {
-            // echo "Already done\n";
+    for ($j=0; $j<2; $j++) {
+        // Let's continue with Routers found
+        foreach( $NE_All as $neAddress => $Status ) {
+            // echo "NE: ".$neAddress."\n";
+            if ( $Status['LQI_Done'] == 0 ) {
+                // echo "Let s do\n";
+                $NE = $neAddress;
+                $NE_continue = 1;
+                collectInformation( $client, $NE );
+                $NE_All[$NE]['LQI_Done'] = 1;
+            }
+            else {
+                // echo "Already done\n";
+            }
         }
     }
 

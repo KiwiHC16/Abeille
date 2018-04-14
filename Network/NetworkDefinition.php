@@ -41,6 +41,8 @@
                      "5571" => "Grad-Bureau",
                      
                      "9573" => "Inconnu",
+                     
+                     "e4c0" => "Ch Parent Ben",
   // Abeille Test abeille
                      "df33" => "Test: Temperature Rond Bureau",
                      "a008" => "Test: Door V1 Bureau",
@@ -97,18 +99,20 @@
                       
                       'Inconnu' => array('position' => array( 'x'=>720, 'y'=>500), 'color'=>'yellow',),
                       
+                      'Ch Parent Ben' => array('position' => array( 'x'=>650, 'y'=>275), 'color'=>'yellow',),
+                      
                       // Abeille Test abeille
-                      "Test: Temperature Rond Bureau"   => array('position' => array( 'x'=>600, 'y'=>400), 'color'=>'grey',),
-                      "Test: Door V1 Bureau"            => array('position' => array( 'x'=>600, 'y'=>420), 'color'=>'grey',),
-                      "Test: Inondation Bureau"         => array('position' => array( 'x'=>600, 'y'=>440), 'color'=>'grey',),
-                      "Test: Bouton Carre V2 Bureau"    => array('position' => array( 'x'=>600, 'y'=>460), 'color'=>'grey',),
-                      "Test: Door V0 Bureau"            => array('position' => array( 'x'=>600, 'y'=>480), 'color'=>'grey',),
-                      "Test: IR Pied Bureau"            => array('position' => array( 'x'=>600, 'y'=>500), 'color'=>'grey',),
-                      "Test: Interrupteur Rond"         => array('position' => array( 'x'=>600, 'y'=>520), 'color'=>'grey',),
-                      "Test: xxxxxx"                    => array('position' => array( 'x'=>600, 'y'=>540), 'color'=>'grey',),
-                      "Test: RI V0"                     => array('position' => array( 'x'=>600, 'y'=>560), 'color'=>'grey',),
-                      "Test: Ampoule Bois Bureau"       => array('position' => array( 'x'=>600, 'y'=>580), 'color'=>'orange',),
-                      "Test: Detecteur Smoke"           => array('position' => array( 'x'=>600, 'y'=>600), 'color'=>'grey',),
+                      "Test: Temperature Rond Bureau"   => array('position' => array( 'x'=>100, 'y'=>100), 'color'=>'grey',),
+                      "Test: Door V1 Bureau"            => array('position' => array( 'x'=>100, 'y'=>150), 'color'=>'grey',),
+                      "Test: Inondation Bureau"         => array('position' => array( 'x'=>100, 'y'=>200), 'color'=>'grey',),
+                      "Test: Bouton Carre V2 Bureau"    => array('position' => array( 'x'=>100, 'y'=>250), 'color'=>'grey',),
+                      "Test: Door V0 Bureau"            => array('position' => array( 'x'=>100, 'y'=>300), 'color'=>'grey',),
+                      "Test: IR Pied Bureau"            => array('position' => array( 'x'=>100, 'y'=>350), 'color'=>'grey',),
+                      "Test: Interrupteur Rond"         => array('position' => array( 'x'=>100, 'y'=>400), 'color'=>'grey',),
+                      "Test: xxxxxx"                    => array('position' => array( 'x'=>100, 'y'=>450), 'color'=>'grey',),
+                      "Test: RI V0"                     => array('position' => array( 'x'=>100, 'y'=>500), 'color'=>'grey',),
+                      "Test: Ampoule Bois Bureau"       => array('position' => array( 'x'=>100, 'y'=>550), 'color'=>'orange',),
+                      "Test: Detecteur Smoke"           => array('position' => array( 'x'=>100, 'y'=>600), 'color'=>'grey',),
                       
                       );
     

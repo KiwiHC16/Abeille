@@ -10,7 +10,7 @@
                      "6766" => "T4",
                      "1b7b" => "T5",
                      "8ffe" => "T6",
-                     
+                     "2096" => "T7",
                      "2cd5" => "T8",
                      
                      "a0da" => "Gauche",
@@ -76,7 +76,7 @@
                       'T4'       => array('position' => array( 'x'=>450, 'y'=>250), 'color'=>'orange',),
                       'T5'       => array('position' => array( 'x'=>500, 'y'=>200), 'color'=>'orange',),
                       'T6'       => array('position' => array( 'x'=>600, 'y'=>200), 'color'=>'orange',),
-                      
+                      'T7'       => array('position' => array( 'x'=>625, 'y'=>450), 'color'=>'orange',),
                       'T8'       => array('position' => array( 'x'=>450, 'y'=>500), 'color'=>'orange',),
                       
                       'Gauche'    => array('position' => array( 'x'=>700, 'y'=>300), 'color'=>'orange',),

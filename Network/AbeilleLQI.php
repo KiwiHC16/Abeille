@@ -338,10 +338,10 @@ tr:nth-child(even) {
 <?php
 
     echo "<table>\n";
-    echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
+    echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Voisine IEEE</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
     foreach ( $LQI as $key => $voisine ) {
         echo "<tr>";
-        echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
+        echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['IEEE_Address']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
         echo "</tr>\n";
     }
     echo "</table>\n";
@@ -366,6 +366,8 @@ tr:nth-child(even) {
     }
     
     // print_r( $NE_All );
+    // print_r( $voisine );
+    // print_r( $LQI );
     
     // deamonlog('debug', 'sortie du loop');
     echo "FIN: ".date(DATE_RFC2822)."<br>\n";

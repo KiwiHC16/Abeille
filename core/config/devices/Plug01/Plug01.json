@@ -8,10 +8,20 @@
       "icone": "OsramLightify"
     },
     "Commandes": {
-      "0000-0001": {
+      "0000-4000": {
         "isVisible": 0,
         "name": "SW",
         "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0004": {
+        "isVisible": 0,
+        "name": "societe",
+        "order": 1,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -36,10 +46,7 @@
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
-        "template": "prise",
-        "display": {
-          "generic_type": "ENERGY_STATE"
-        }
+        "template": "prise"
       },
       "Time-Time": {
         "isVisible": 0,
@@ -70,9 +77,6 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ENERGY_ON"
-        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "On"
@@ -87,9 +91,6 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ENERGY_OFF"
-        },
         "configuration": {
           "topic": "CmdAbeille/#addr#/OnOffOSRAM",
           "request": "Off"
@@ -141,7 +142,7 @@
         }
       },
       "getModelIdentifier": {
-        "isVisible": 0,
+        "isVisible": 1,
         "name": "getModelIdentifier",
         "order": 12,
         "isHistorized": "0",
@@ -154,10 +155,24 @@
           "request": "clusterId=0000&attributeId=0005"
         }
       },
+      "getSWBuild": {
+        "isVisible": 0,
+        "name": "getSWBuild",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "request": "clusterId=0000&attributeId=4000"
+        }
+      },
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 13,
+        "order": 14,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -167,7 +182,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 13,
+        "order": 14,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -177,7 +192,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 14,
+        "order": 15,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -190,12 +205,40 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 15,
+        "order": 16,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
         "template": "AbeillePower"
+      },
+     "BindToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindToZigateEtat",
+        "order": 22,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+	"setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 24,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        }
       }
     }
   }

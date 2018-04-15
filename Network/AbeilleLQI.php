@@ -158,6 +158,7 @@
                 mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
 
             $indexTable++;
+            if ( $indexTable>30 ) { $GLOBALS['NE_continue']=0; }
             // usleep(100);
             $client->loop(5000);
             sleep(1);

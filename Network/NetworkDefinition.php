@@ -119,8 +119,8 @@
                       
                       'Inconnu1' => array('position' => array( 'x'=>425, 'y'=>650), 'color'=>'grey',),
                       
-                      "Velux-SdB-Tour"  => array('position' => array( 'x'=>250, 'y'=>550), 'color'=>'grey',),
-                      "Velux-Lulu"      => array('position' => array( 'x'=>250, 'y'=>650), 'color'=>'grey',),
+                      'Velux-SdB-Tour'  => array('position' => array( 'x'=>300, 'y'=>500), 'color'=>'grey',),
+                      'Velux-Lulu'      => array('position' => array( 'x'=>300, 'y'=>550), 'color'=>'grey',),
                       
 
                       

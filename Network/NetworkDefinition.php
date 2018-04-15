@@ -5,7 +5,7 @@
                      "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24
  // Abeille Prod JeedomZwave
                      "dc15" => "T1",
-                     "c551" => "T2",
+                     "1e8c" => "T2",
                      "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
                      "6766" => "T4",
                      "1b7b" => "T5",
@@ -49,6 +49,11 @@
                      "6c0B" => "Sonnette",
 
                      "0F7e" => "Inconnu1",
+                     
+                     "137f" => "Velux-SdB-Tour",
+                     "4c3a" => "Velux-Lulu",
+                     
+                     
                      
   // Abeille Test abeille
                      "df33" => "Test: Temperature Rond Bureau",
@@ -113,6 +118,10 @@
                       'Sonnette' => array('position' => array( 'x'=>625, 'y'=>650), 'color'=>'grey',),
                       
                       'Inconnu1' => array('position' => array( 'x'=>425, 'y'=>650), 'color'=>'grey',),
+                      
+                      "Velux-SdB-Tour"  => array('position' => array( 'x'=>250, 'y'=>550), 'color'=>'grey',),
+                      "Velux-Lulu"      => array('position' => array( 'x'=>250, 'y'=>650), 'color'=>'grey',),
+                      
 
                       
                       // Abeille Test abeille

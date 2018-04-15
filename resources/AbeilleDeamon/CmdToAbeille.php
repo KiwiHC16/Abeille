@@ -200,7 +200,7 @@
         if (0) { $f=fopen("/var/www/html/log/toto","w"); }
         else { $f=fopen($dest,"w"); }
         
-        deamonlog('debug','Dest:'.$dest.'cmd: '.$cmd.'len: '.$len.'datas:'.$datas);
+        deamonlog('debug','Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
         
         fwrite($f,pack("H*","01"));
         fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE

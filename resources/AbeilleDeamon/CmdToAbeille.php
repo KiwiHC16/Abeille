@@ -197,10 +197,28 @@
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
         // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
-        if (0) { $f=fopen("/var/www/html/log/toto","w"); }
-        else { $f=fopen($dest,"w"); }
         
         deamonlog('debug','Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
+        if (0) {
+            $f=fopen("/var/www/html/log/toto","w");
+            fwrite($f,pack("H*","01"));
+            fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
+            fwrite($f,pack("H*",transcode($len))); //LENGTH
+            if (!empty($datas))
+            {
+                fwrite($f,pack("H*",getChecksum($cmd,$len,$datas))); //checksum
+                fwrite($f,pack("H*",transcode($datas))); //datas
+            }else{
+                fwrite($f,pack("H*",getChecksum($cmd,$len,"00"))); //checksum
+            }
+            fwrite($f,pack("H*","03"));
+            
+            fclose($f);
+
+        }
+        
+        
+        $f=fopen($dest,"w");
         
         fwrite($f,pack("H*","01"));
         fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE

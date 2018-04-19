@@ -113,6 +113,11 @@
         
         $GLOBALS['LQI'][] = $parameters;
         
+        // Envoie de l'adresse IEEE a Abeille pour completer les objets.
+        // e.g. Abeille/d45e/IEEE-Addr
+        $mqtt = $GLOBALS['client'];
+        $mqtt->publish("Abeille/".$parameters['Voisine']."/IEEE-Addr", $parameters['IEEE_Address'], $qos);
+        
     }
     
     

@@ -267,12 +267,10 @@ class Abeille extends eqLogic
     {
         log::add('Abeille', 'debug', 'deamon stop: IN');
         // Stop other deamon
-        exec("ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | cut -d ';'  -f 1", $output);
-        foreach ($output as $item => $itemValue) {
-            log::add('Abeille', 'debug', 'deamon stop: Killing deamon: ' . $item . '/' . $itemValue);
-            system::kill($itemValue, true);
-            exec(system::getCmdSudo() . 'kill -9 ' . $itemValue . ' 2>&1');
-        }
+        exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output,'!'));
+            system::kill($output, true);
+            exec(system::getCmdSudo() . "kill -9 ".implode($output,' ')." 2>&1");
 
         // Stop main deamon
         $cron = cron::byClassAndFunction('Abeille', 'deamon');

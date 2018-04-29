@@ -430,7 +430,7 @@ class Abeille extends eqLogic
         $return['launchable'] = 'nok';
         $return['launchable_message'] = 'Service not running yet.';
 
-        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -c 'running'` + `systemctl is-active mosquitto 2>&1 | grep -c active`";
+        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -c 'running'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
         exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
         $logmsg = 'Status du service mosquitto : ' . ($outputSvc[0] > 0 ? 'OK' : 'Probleme') . '   (' . implode($outputSvc, '!') . ')';
         log::add('Abeille', 'debug', $logmsg);
@@ -449,13 +449,14 @@ class Abeille extends eqLogic
         //try to start mosquitto service if not already started.
         if ($return['launchable'] != 'ok') {
             unset($outputSvc);
-            $cmdSvc = "kill `ps -C mosquitto | tail -1 | cut -c1-6` 2>&1";
+            $cmdSvc = "kill `pgrep -f /usr/sbin/mosquitto` 2>&1";
             exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
+            log::add('Abeille', 'debug', 'kill du service mosquitto: ' . $cmdSvc . ' ' . implode($outputSvc, '!'));
             unset($outputSvc);
 
             $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
             exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
-            log::add('Abeille', 'debug', 'Status du service mosquitto (service): ' . implode($outputSvc, '!'));
+            log::add('Abeille', 'debug', 'Start du service mosquitto: ' . $cmdSvc . ' ' . implode($outputSvc, '!'));
             sleep(3);
             $return = self::serviceMosquittoStatus();
         }
@@ -493,7 +494,9 @@ class Abeille extends eqLogic
                 $return['launchable_message'] = __('Le port n\'est pas configuré ou zigate déconnectée', __FILE__);
                 throw new Exception(__('Le port n\'est pas configuré ou zigate déconnectée : ' . $return['AbeilleSerialPort'], __FILE__));
             } else {
-                exec(system::getCmdSudo() . 'chmod 777 ' . $return['AbeilleSerialPort'] . ' > /dev/null 2>&1');
+                if (substr(decoct(fileperms($return['AbeilleSerialPort'])),-4) != "0777") {
+                    exec(system::getCmdSudo() . 'chmod 777 ' . $return['AbeilleSerialPort'] . ' > /dev/null 2>&1');
+                }
                 $return['state'] = 'ok';
             }
         } else {

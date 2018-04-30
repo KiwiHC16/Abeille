@@ -20,10 +20,10 @@
                      "a728" => "Piano",         // 00:0b:57:ff:fe:3a:0e:7c
                      
                      "345f" => "P-D",
-                     "d43e" => "P-G",
+                     "2349" => "P-G",		// 00:15:8d:00:01:b1:49:a8
                      "f984" => "P-C",
                      
-                     "4260" => "P-Entree",
+                     "8f28" => "P-Entree",
                      
                      
                      "41c0" => "PriseX1",       // 00:15:8d:00:01:83:af:7b
@@ -38,20 +38,21 @@
                      "b774" => "Porte Bureau",
                      "1be0" => "Temperature Bureau",
                    
-                     "28f2" => "Fenetre SdB",
+                     "d43e" => "Fenetre SdB G",
+                     "28f2" => "Fenetre SdB D",
                      
                      "5571" => "Grad-Bureau",
                      
-                     "9573" => "Inconnu",
-                     
                      "e4c0" => "Ch Parent Ben",
                      
-                     "6c0B" => "Sonnette",
+                     "eb79" => "Sonnette",
 
-                     "0F7e" => "Inconnu1",
+                     "0F7e" => "Inconnu1", 		// 90:fd:9f:ff:fe:16:5c:2c
                      
                      "137f" => "Velux-SdB-Tour",
                      "4c3a" => "Velux-Lulu",
+
+                     "c551" => "Old-Off-Network-1", 	// 00:0B:57:ff:fe:8d:70:73
                      
                      
                      
@@ -73,8 +74,9 @@
     
     
     $Abeilles = array(
-                      'Ruche'    => array('position' => array( 'x'=>670, 'y'=>500), 'color'=>'red',),
+                      'Ruche'    => array('position' => array( 'x'=>700, 'y'=>520), 'color'=>'red',),
     // Abeille Prod JeedomZwave
+	// Terrasse
                       'T1'       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
                       'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
                       'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
@@ -83,7 +85,7 @@
                       'T6'       => array('position' => array( 'x'=>600, 'y'=>200), 'color'=>'orange',),
                       'T7'       => array('position' => array( 'x'=>625, 'y'=>450), 'color'=>'orange',),
                       'T8'       => array('position' => array( 'x'=>450, 'y'=>500), 'color'=>'orange',),
-                      
+        // Salon              
                       'Gauche'    => array('position' => array( 'x'=>700, 'y'=>300), 'color'=>'orange',),
                       'Milieu'    => array('position' => array( 'x'=>650, 'y'=>300), 'color'=>'orange',),
                       'Droite'    => array('position' => array( 'x'=>650, 'y'=>350), 'color'=>'orange',),
@@ -95,33 +97,32 @@
                       
                       'P-Entree' => array('position' => array( 'x'=>625, 'y'=>700), 'color'=>'grey',),
                       
-                      'PriseX1' => array('position' => array( 'x'=>650, 'y'=>500), 'color'=>'orange',),
-                      'PriseX2' => array('position' => array( 'x'=>650, 'y'=>520), 'color'=>'orange',),
+                      'HueGo' 			=> array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
+                      'PriseX1' 		=> array('position' => array( 'x'=>650, 'y'=>500), 'color'=>'orange',),
+                      'PriseX2' 		=> array('position' => array( 'x'=>650, 'y'=>520), 'color'=>'orange',),
                       
-                      'HueGo' => array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
-                      
-                      'Bois' => array('position' => array( 'x'=>670, 'y'=>480), 'color'=>'orange',),
+                      'Bois' 			=> array('position' => array( 'x'=>700, 'y'=>480), 'color'=>'orange',),
+                      'Grad-Bureau' 		=> array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),
                     
-                      'IR' => array('position' => array( 'x'=>690, 'y'=>480), 'color'=>'grey',),
+                      'IR' 			=> array('position' => array( 'x'=>750, 'y'=>480), 'color'=>'grey',),
+                      'Temperature Bureau' 	=> array('position' => array( 'x'=>750, 'y'=>500), 'color'=>'grey',),
+                      'Porte Bureau' 		=> array('position' => array( 'x'=>750, 'y'=>520), 'color'=>'grey',),
                       
-                      'Porte Bureau' => array('position' => array( 'x'=>725, 'y'=>480), 'color'=>'grey',),
-                      'Temperature Bureau' => array('position' => array( 'x'=>710, 'y'=>480), 'color'=>'grey',),
                       
-                      'Fenetre SdB' => array('position' => array( 'x'=>800, 'y'=>480), 'color'=>'grey',),
+                      'Fenetre SdB G' => array('position' => array( 'x'=>800, 'y'=>400), 'color'=>'grey',),
+                      'Fenetre SdB D' => array('position' => array( 'x'=>800, 'y'=>425), 'color'=>'grey',),
                       
-                      'Grad-Bureau' => array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),
                       
-                      'Inconnu' => array('position' => array( 'x'=>720, 'y'=>500), 'color'=>'yellow',),
                       
                       'Ch Parent Ben' => array('position' => array( 'x'=>650, 'y'=>275), 'color'=>'yellow',),
                       
                       'Sonnette' => array('position' => array( 'x'=>625, 'y'=>650), 'color'=>'grey',),
                       
-                      'Inconnu1' => array('position' => array( 'x'=>425, 'y'=>650), 'color'=>'grey',),
-                      
                       'Velux-SdB-Tour'  => array('position' => array( 'x'=>300, 'y'=>525), 'color'=>'grey',),
                       'Velux-Lulu'      => array('position' => array( 'x'=>300, 'y'=>575), 'color'=>'grey',),
                       
+                      'Inconnu1' 			=> array('position' => array( 'x'=>900, 'y'=>75), 'color'=>'purple',),
+                      'Old-Off-Network-1'            	=> array('position' => array( 'x'=>900, 'y'=>100), 'color'=>'purple',),
 
                       
                       // Abeille Test abeille
@@ -139,11 +140,11 @@
                       
                       );
     
-    $liaisonsRadio = array(
-                           'Ruche-T3'   => array( 'source'=>'Ruche', 'destination'=>'T3'    ),
-                           'T3-T5'      => array( 'source'=>'T3', 'destination'=>'T5'       ),
-                           'T3-Ruche'   => array( 'source'=>'T3', 'destination'=>'Ruche'    ),
-                           );
+    // $liaisonsRadio = array(
+                           // 'Ruche-T3'   => array( 'source'=>'Ruche', 'destination'=>'T3'    ),
+                           // 'T3-T5'      => array( 'source'=>'T3', 'destination'=>'T5'       ),
+                           // 'T3-Ruche'   => array( 'source'=>'T3', 'destination'=>'Ruche'    ),
+                           // );
     ?>
 
 

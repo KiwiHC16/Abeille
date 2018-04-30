@@ -2,9 +2,9 @@
 
 = LQI
 
-Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI.php et visualiser les résultats dans un browser web:
+Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:
 
-http://[adresse de votre jeedom]/plugins/Abeille/Network/AbeilleLQI.php
+http://[adresse de votre jeedom]/plugins/Abeille/Network/AbeilleLQI_Map.php
 
 Vous pouvez vérifier que l'execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):
 
@@ -17,7 +17,7 @@ Si cela ne fonctionne pas, vous pouvez faire la manip à la main:
 [source,]
 ----
 cd /var/www/html/plugins/Abeille/Network
-php AbeilleLQI.php
+php AbeilleLQI_Map.php
 ----
 
 [quote,]
@@ -25,9 +25,13 @@ ____
 C'est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.
 ____
 
-Le script va interroger tous les équipements qu'il détecte. Le procesus est assez long et pour l'instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.
+== Tableau
 
-== Sur mon systeme de test, après 40s, cela donne:
+Le script va interroger tous les équipements qu'il détecte, un à un. Le procesus est assez long et pour l'instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.
+
+Lors de la premiere execution un tableau est généré avec toutes les informations collectées (les exemples ci dessous ne contiennent pas toutes les colonnes car depuis certaines ont été ajoutées.
+
+=== Sur mon systeme de test, après 40s, cela donne:
 
 .LQI Systeme de test
 [width="100%",options="header,footer"]
@@ -57,12 +61,12 @@ On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un 
 
 On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (ZiGate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
 
-== Sur mon système de prod
+=== Sur mon système de prod
 
 Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).
 
 Petites interrogations/Observation:
-- des "Relation" sont "Unknown" : bug ou valeur remontée inconnue.
+- des "Relation" sont "Unknown" : bug ou valeur remontée inconnue, uniquement sur ma HueGo actuellement.
 - des "Profondeur" ont des valeurs "0F" qu'il faut que je comprenne.
 - Aucun des routeurs ne possède de "Child".
 
@@ -178,3 +182,52 @@ Après 4 minutes, cela donne:
 |e4c0|db83|Sibling|0F|59
 |====================
 
+== Graphique
+
+=== Configuration
+
+Afin de visualiser les données, il vous faut modifier le fichier NetworkDefinition.php dans le repertoire Abeille/Network car celui-ci contient les équipements, leur nom et positions.
+
+la premiere table:
+
+    $knownNE = array(
+                     "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24
+ // Abeille Prod JeedomZwave
+                     "dc15" => "T1",
+                     "1e8c" => "T2",
+                     "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
+...
+
+définie la liste des équipements en mettant leur adresse ZigBee et leur nom.
+
+Dans la deuxieme table vous definissez les positions des équipements et leur couleur:
+
+    $Abeilles = array(
+                      'Ruche'    => array('position' => array( 'x'=>700, 'y'=>520), 'color'=>'red',),
+    // Abeille Prod JeedomZwave
+	// Terrasse
+                      'T1'       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+                      'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
+                      'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
+                      
+                      
+=== Graphique
+
+Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j'ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:
+
+image::images/Capture_d_ecran_2018_04_30_a_23_45_51.png[]
+
+On peut voir toutes les voisines rapportées par les équipements.
+
+Vous pouvez choisir ce qui est affiché à l'écran:
+
+- premier menu permet de selectionner les équipements qui ont remontés des voisines.
+- second menu permet de selectionner les équipements qui ont été mentionné comme étant un voisin d'un autre équipement
+- le troisieme menu permet en mode cache d'utiliser les fichier json contenant les informations collectées, le mode refresh permet d'interroger le reseau
+- le dernier menu permet de selectionner l information affiché sur les fleches
+
+Par exemple, je veux toutes les relations de voisinages alors dans le premier menu je choisi all.
+
+Par exemple, je veux voir tous les équipements rapportant vori un équipement xxxx, je choisi none dans le premier menu et xxxx dans le second.
+
+Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l'ampoule bois bureau, alors que tous les autres équipements rapportent à la zigate en direct. 

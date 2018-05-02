@@ -2,7 +2,8 @@
     
 
     $knownNE = array(
-                     "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24
+                     "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24 -> Production
+                                                // 001:58:d0:00:19a:1b:22 -> Test
  // Abeille Prod JeedomZwave
                      "dc15" => "T1",
                      "1e8c" => "T2",
@@ -58,7 +59,7 @@
                      
   // Abeille Test abeille
                      "df33" => "Test: Temperature Rond Bureau",     // 00:15:8d:00:01:9f:91:99
-                     "a008" => "Test: Door V1 Bureau",              // 00:15:8d:00:01:d8:6c:3e
+                     "fdb4" => "Test: Door V1 Bureau",              // 00:15:8d:00:01:d8:6c:3e fut a008
                      "7bd5" => "Test: Inondation Bureau",           // 00:15:8d:00:01:bb:6b:49
                      "de4d" => "Test: Bouton Carre V2 Bureau",      // 00:15:8d:00:01:a6:6c:a3 fut dcd9
                      "3950" => "Test: Door V0 Bureau",              // 00:15:8d:00:02:01:47:f9

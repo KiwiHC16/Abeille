@@ -57,17 +57,18 @@
                      
                      
   // Abeille Test abeille
-                     "df33" => "Test: Temperature Rond Bureau",
-                     "a008" => "Test: Door V1 Bureau",
-                     "7bd5" => "Test: Inondation Bureau",
-                     "dcd9" => "Test: Bouton Carre V2 Bureau",
-                     "3950" => "Test: Door V0 Bureau",
-                     "5dea" => "Test: IR Pied Bureau",
-                     "4ebd" => "Test: Interrupteur Rond",
-                     "633e" => "Test: xxxxxx",
-                     "c7c0" => "Test: RI V0",
-                     "d45e" => "Test: Ampoule Bois Bureau",
-                     "2389" => "Test: Detecteur Smoke",
+                     "df33" => "Test: Temperature Rond Bureau",     // 00:15:8d:00:01:9f:91:99
+                     "a008" => "Test: Door V1 Bureau",              // 00:15:8d:00:01:d8:6c:3e
+                     "7bd5" => "Test: Inondation Bureau",           // 00:15:8d:00:01:bb:6b:49
+                     "de4d" => "Test: Bouton Carre V2 Bureau",      // 00:15:8d:00:01:a6:6c:a3 fut dcd9
+                     "3950" => "Test: Door V0 Bureau",              // 00:15:8d:00:02:01:47:f9
+                     "5dea" => "Test: IR Pied Bureau",              // 00:15:8d:00:01:dd:b1:f7
+                     "4ebd" => "Test: Interrupteur Rond",           // 00:15:8d:00:01:f3:af:91
+                     "0Ab5" => "Test: xxxxxx",                      // 00:0B:57:ff:fe:2c:82:e9 fut 633e
+                     "c7c0" => "Test: RI V0",                       // 00:15:8d:00:01:dc:15:88
+                     "d45e" => "Test: Ampoule Z Bureau",            // 90:fd:9f:ff:fe:69:13:1d
+                     "2389" => "Test: Detecteur Smoke",             // 00:15:8d:00:01:b7:b2:a2
+                     "633e" => "Test:Old Address changed 1"         //
                      
                      );
 
@@ -135,9 +136,10 @@
                       "Test: Interrupteur Rond"         => array('position' => array( 'x'=>100, 'y'=>400), 'color'=>'grey',),
                       "Test: xxxxxx"                    => array('position' => array( 'x'=>100, 'y'=>450), 'color'=>'grey',),
                       "Test: RI V0"                     => array('position' => array( 'x'=>100, 'y'=>500), 'color'=>'grey',),
-                      "Test: Ampoule Bois Bureau"       => array('position' => array( 'x'=>100, 'y'=>550), 'color'=>'orange',),
+                      "Test: Ampoule Z Bureau"          => array('position' => array( 'x'=>050, 'y'=>550), 'color'=>'orange',),
                       "Test: Detecteur Smoke"           => array('position' => array( 'x'=>100, 'y'=>600), 'color'=>'grey',),
-                      
+
+                      "Test:Old Address changed 1"            	=> array('position' => array( 'x'=>900, 'y'=>600), 'color'=>'purple',),
                       );
     
     // $liaisonsRadio = array(

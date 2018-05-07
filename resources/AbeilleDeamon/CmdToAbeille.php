@@ -509,8 +509,9 @@
         
         
         // setReport
-        // Title =>
-        // message =>
+        // Title => setReport
+        // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
+
         if ( isset($Command['setReport']) )
         {
             deamonlog('debug',"command setReport");
@@ -559,7 +560,9 @@
             // cf chap 7.1.3 of JN-UG-3113 v1.2
             $AttributeType          = $Command['AttributeType'];
             
-            $AttributeId            = $Command['AttributId'];    // "0000";
+            $AttributeId            = $Command['AttributeId'];    // "0000"
+            //$AttributeId            = "0000";
+            
             $MinInterval            = "0000";
             $MaxInterval            = "0000";
             $Timeout                = "0000";
@@ -570,7 +573,7 @@
             
             $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
             
-            deamonlog('debug',"Data: ".$data);
+            deamonlog('debug',"Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
             
             sendCmd( $dest, $cmd, $lenth, $data );
         }

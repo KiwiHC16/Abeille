@@ -386,7 +386,7 @@
                         );
                     }
                     if (count($keywords) == 8) {
-                        deamonlog('debug', '6 arguments command');
+                        deamonlog('debug', '8 arguments command');
                         $Command = array(
                             $action => $action,
                             $keywords[0] => $keywords[1],
@@ -394,6 +394,29 @@
                             $keywords[4] => $keywords[5],
                             $keywords[6] => $keywords[7],
                         );
+                    }
+                    if (count($keywords) == 10) {
+                        deamonlog('debug', '10 arguments command');
+                        $Command = array(
+                                         $action => $action,
+                                         $keywords[0] => $keywords[1],
+                                         $keywords[2] => $keywords[3],
+                                         $keywords[4] => $keywords[5],
+                                         $keywords[6] => $keywords[7],
+                                         $keywords[8] => $keywords[9],
+                                         );
+                    }
+                    if (count($keywords) == 12) {
+                        deamonlog('debug', '12 arguments command');
+                        $Command = array(
+                                         $action => $action,
+                                         $keywords[0] => $keywords[1],
+                                         $keywords[2] => $keywords[3],
+                                         $keywords[4] => $keywords[5],
+                                         $keywords[6] => $keywords[7],
+                                         $keywords[8] => $keywords[9],
+                                         $keywords[10] => $keywords[11],
+                                         );
                     }
                 }
             }

@@ -445,7 +445,6 @@
             // => 34 -> 0x22
             
             $addressMode = "02";
-            //$addressMode = "02";
             $targetShortAddress = $Command['address'];
             $sourceEndpointBind = "00";
             $destinationEndpointBind = "00";
@@ -455,14 +454,20 @@
             $radius = "30";
             $dataLength = "16";
             
-            $dummy = "00";
+            $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data
             
-            $targetExtendedAddress = "1d1369feff9ffd90";
-            $targetEndpoint = "01";
-            $clusterID = "0600";  // 0006 but need to be inverted
+            // $targetExtendedAddress = "1d1369feff9ffd90";
+            $targetExtendedAddress = $Command['targetExtendedAddress'];
+            // $targetEndpoint = "01";
+            $targetEndpoint = $Command['targetEndpoint'];
+            // $clusterID = "0600";  // 0006 but need to be inverted
+            $clusterID = $Command['clusterID'];
             $destinationAddressMode = "03";
-            $destinationAddress = "221b9a01008d1500";
-            $destinationEndpoint = "01";
+            // $destinationAddressMode = $Command['destinationAddressMode'];
+            // $destinationAddress = "221b9a01008d1500";
+            $destinationAddress = $Command['destinationAddress'];
+            // $destinationEndpoint = "01";
+            $destinationEndpoint = $Command['destinationEndpoint'];
             
             // $targetExtendedAddress  = "000B57fffe3025ad";
             // $targetExtendedAddress  = $Command['address'];
@@ -492,8 +497,8 @@
             $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
             $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
             
-            deamonlog('debug',"Data1: ".$data1." len: ".(strlen($data1)/2) );
-            deamonlog('debug',"Data2: ".$data2." len: ".(strlen($data2)/2) );
+            deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
+            deamonlog('debug',"Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2) );
             
             $data = $data1 . $data2;
             deamonlog('debug',"Data: ".$data." len: ".(strlen($data)/2) );

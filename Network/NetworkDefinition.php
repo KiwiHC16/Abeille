@@ -3,7 +3,7 @@
 
     $knownNE = array(
                      "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24 -> Production
-                                                // 001:58:d0:00:19a:1b:22 -> Test
+                                                // 00:01:58:d0:00:19a:1b:22 000158d00019a1b22 -> Test
  // Abeille Prod JeedomZwave
                      "dc15" => "T1",
                      "1e8c" => "T2",
@@ -67,7 +67,7 @@
                      "4ebd" => "Test: Interrupteur Rond",           // 00:15:8d:00:01:f3:af:91
                      "0Ab5" => "Test: xxxxxx",                      // 00:0B:57:ff:fe:2c:82:e9 fut 633e
                      "c7c0" => "Test: RI V0",                       // 00:15:8d:00:01:dc:15:88
-                     "d45e" => "Test: Ampoule Z Bureau",            // 90:fd:9f:ff:fe:69:13:1d
+                     "d45e" => "Test: Ampoule Z Bureau",            // 90:fd:9f:ff:fe:69:13:1d 90fd9ffffe69131d
                      "2389" => "Test: Detecteur Smoke",             // 00:15:8d:00:01:b7:b2:a2
                      "633e" => "Test:Old Address changed 1"         //
                      

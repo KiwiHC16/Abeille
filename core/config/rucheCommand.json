@@ -433,7 +433,7 @@
     "subType": "message",
     "configuration": {
       "topic": "CmdAbeille/Ruche/IEEE_Address_request",
-      "request": "address=#title#&endPoint=#message#"
+      "request": "address=#title#&#message#"
     },
     "display": {
       "forceReturnLineAfter": "0",
@@ -441,9 +441,26 @@
       "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
     }
   },
+  "Network_Address_request": {
+    "name": "Network Address Request",
+    "order": "31",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/Network_Address_request",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
+    }
+  },
   "LQI": {
     "name": "LQI",
-    "order": "31",
+    "order": "32",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

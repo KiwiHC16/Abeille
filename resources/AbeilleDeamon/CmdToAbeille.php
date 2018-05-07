@@ -542,15 +542,41 @@
         }
         
         //----------------------------------------------------------------------------
+        if ( isset($Command['Network_Address_request']) )
+        {
+            $cmd = "0040";
+            
+            // <target short address: uint16_t> -> 4
+            // <extended address:uint64_t>      -> 16
+            // <request type: uint8_t>          -> 2
+            // <start index: uint8_t>           -> 2
+            // Request Type:
+            // 0 = Single Request 1 = Extended Request
+            // -> 24 / 2 = 12 => 0x0C
+            
+            $address = $Command['address'];
+            $IeeeAddress = $Command['IEEEAddress'];
+            $requestType = "01";
+            $startIndex = "00";
+            
+            
+            $data = $address . $IeeeAddress . $requestType . $startIndex ;
+            $lenth = "000C"; // A verifier
+            
+            deamonlog('debug','IEEE_Address_request: '.$data . ' - ' . $lenth  );
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
         if ( isset($Command['IEEE_Address_request']) )
         {
             $cmd = "0041";
             
             
-            // <target short address: uint16_t>
-            // <short address: uint16_t>
-            // <request type: uint8_t>
-            // <start index: uint8_t>
+            // <target short address: uint16_t> -> 4
+            // <short address: uint16_t>        -> 4
+            // <request type: uint8_t>          -> 2
+            // <start index: uint8_t>           -> 2
             // Request Type: 0 = Single 1 = Extended
             
             $address = $Command['address'];

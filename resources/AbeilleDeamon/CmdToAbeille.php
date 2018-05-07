@@ -199,7 +199,7 @@
         // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
         
         deamonlog('debug','Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
-        if (0) {
+        if (1) {
             $f=fopen("/var/www/html/log/toto","w");
             fwrite($f,pack("H*","01"));
             fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
@@ -413,6 +413,94 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        // Bind Short
+        // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
+        // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
+        if ( isset($Command['bindShort']) )
+        {
+            deamonlog('debug',"command bind short");
+            // Msg Type = 0x0530
+            $cmd = "0530";
+            
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+            
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+            
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1  (22 -> 0x16)
+            // <data: auint8_t>
+                // APS Part <= data
+                    // dummy 00 to align mesages                                            -> 1
+                    // <target extended address: uint64_t>                                  -> 8
+                    // <target endpoint: uint8_t>                                           -> 1
+                    // <cluster ID: uint16_t>                                               -> 2
+                    // <destination address mode: uint8_t>                                  -> 1
+                    // <destination address:uint16_t or uint64_t>                           -> 8
+                    // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+            // => 34 -> 0x22
+            
+            $addressMode = "02";
+            //$addressMode = "02";
+            $targetShortAddress = $Command['address'];
+            $sourceEndpointBind = "00";
+            $destinationEndpointBind = "00";
+            $profileIDBind = "0000";
+            $clusterIDBind = "0021";
+            $securityMode = "02";
+            $radius = "30";
+            $dataLength = "16";
+            
+            $dummy = "00";
+            
+            $targetExtendedAddress = "1d1369feff9ffd90";
+            $targetEndpoint = "01";
+            $clusterID = "0600";  // 0006 but need to be inverted
+            $destinationAddressMode = "03";
+            $destinationAddress = "221b9a01008d1500";
+            $destinationEndpoint = "01";
+            
+            // $targetExtendedAddress  = "000B57fffe3025ad";
+            // $targetExtendedAddress  = $Command['address'];
+            //
+            //// if ( isset($Command['targetEndpoint']) ) {
+            ////    $targetEndpoint         = $Command['targetEndpoint'];
+            ////}
+            ////else {
+            ////    $targetEndpoint         = "01";
+            ////}
+            
+            // $clusterID              = "0006";
+            // // $clusterIDBind             = $Command['ClusterId'];
+            // $destinationAddressMode = "02";
+            // // $destinationAddressMode = "03";
+            
+            // $destinationAddress     = "0000";
+            // $destinationAddress     = "00158D0001B22E24";
+            // // $destinationAddress     = $Command['reportToAddress'];
+            
+            ////$destinationEndpoint    = "01";
+
+            $lenth = "0022";
+            
+            // $data =  $targetExtendedAddress . $targetEndpoint . $clusterID . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
+            // $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $profileIDBind . $clusterIDBind . $securityMode . $radius . $dataLength;
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
+            $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
+            
+            deamonlog('debug',"Data1: ".$data1." len: ".(strlen($data1)/2) );
+            deamonlog('debug',"Data2: ".$data2." len: ".(strlen($data2)/2) );
+            
+            $data = $data1 . $data2;
+            deamonlog('debug',"Data: ".$data." len: ".(strlen($data)/2) );
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+
+        }
         
         
         // setReport

@@ -819,12 +819,12 @@
         // <device list – data each entry is uint16_t>
         
         
-        deamonlog('debug',';type: 8040: (Network Address response)(Decoded but Not Processed)'
-                  . '; (Not processed*************************************************************)'
-                  . '; Level: 0x'.substr($payload, 0, 2)
-                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // deamonlog('debug',';type: 8040: (Network Address response)(Decoded but Not Processed)'
+        //          . '; (Not processed*************************************************************)'
+        //           . '; Level: 0x'.substr($payload, 0, 2)
+        //          . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
         
-        deamonlog('debug',';type: 8041: (IEEE Address response)(Not Processed)'
+        deamonlog('debug',';type: 8041: (IEEE Address response)(Decoded but Not Processed)'
                   . '; SQN : '                                    .substr($payload, 0, 2)
                   . '; Status : '                                 .substr($payload, 2, 2)
                   . '; IEEE address : '                           .substr($payload, 4,16)
@@ -832,6 +832,11 @@
                   . '; number of associated devices : '           .substr($payload,24, 2)
                   . '; start index : '                            .substr($payload,26, 2)
                   );
+        
+        if ( substr($payload, 2, 2)!= "00" ) {
+            deamonlog('debug',';type: 8041: Don t use this data there is an error, comme info not known');
+        }
+        
         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
             deamonlog('debug','associated devices: '    .substr($payload, (28 + $i), 4) );
         }
@@ -850,12 +855,12 @@
         // <start index: uint8_t>
         // <device list – data each entry is uint16_t>
         
-        deamonlog('debug',';type: 8041: (IEEE Address response)(Decoded but Not Processed)'
-                  . '; (Not processed*************************************************************)'
-                  . '; Level: 0x'.substr($payload, 0, 2)
-                  . '; Message: '.substr($payload, 2, strlen($payload) - 2)   );
+        // deamonlog('debug',';type: 8041: (IEEE Address response)(Decoded but Not Processed)'
+        //          . '; (Not processed*************************************************************)'
+        //          . '; Level: 0x'.substr($payload, 0, 2)
+        //          . '; Message: '.substr($payload, 2, strlen($payload) - 2)   );
         
-        deamonlog('debug',';type: 8041: (IEEE Address response)(Not Processed)'
+        deamonlog('debug',';type: 8041: (IEEE Address response)(Decoded but Not Processed)'
                   . '; SQN : '                                    .substr($payload, 0, 2)
                   . '; Status : '                                 .substr($payload, 2, 2)
                   . '; IEEE address : '                           .substr($payload, 4,16)
@@ -863,6 +868,11 @@
                   . '; number of associated devices : '           .substr($payload,24, 2)
                   . '; start index : '                            .substr($payload,26, 2)
                   );
+        
+        if ( substr($payload, 2, 2)!= "00" ) {
+            deamonlog('debug',';type: 8041: Don t use this data there is an error, comme info not known');
+        }
+        
         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
             deamonlog('debug','associated devices: '    .substr($payload, (28 + $i), 4) );
         }

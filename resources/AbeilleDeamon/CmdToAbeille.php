@@ -884,6 +884,70 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        // Add Group APS
+        // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
+        // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
+
+        if ( isset($Command['addGroupAPS'])  )
+        {
+            deamonlog('debug',"command add group with APS");
+            // Msg Type = 0x0530
+            $cmd = "0530";
+            
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+            
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+            
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1  (05 -> 0x05)
+            // <data: auint8_t>
+            // APS Part <= data
+                // dummy 00 to align mesages                      -> 1
+                // <cmdAddGroup>                                  -> 1
+                // <group>                                        -> 2
+                // <length>                                       -> 1
+
+            // => 16 -> 0x10
+            
+            $addressMode = "02";
+            $targetShortAddress = $Command['address'];
+            $sourceEndpointBind = "01";
+            $destinationEndpointBind = "01";
+            $profileIDBind = "0104";
+            $clusterIDBind = "0004";
+            $securityMode = "02";
+            $radius = "30";
+            $dataLength = "06";
+            
+            $dummy = "01";  // I don't know why I need this but if I don't put it then I'm missing some data
+            $dummy1 = "00";  // Dummy
+            
+            $cmdAddGroup = "00";
+            $groupId = "aaaa";
+            $length = "00";
+            
+            $lenth = "0011";
+            
+            // $data =  $targetExtendedAddress . $targetEndpoint . $clusterID . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
+            // $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $profileIDBind . $clusterIDBind . $securityMode . $radius . $dataLength;
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
+            $data2 = $dummy . $dummy1 . $cmdAddGroup . $groupId . $length;
+            
+            deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
+            deamonlog('debug',"Data2: ".$dummy . $dummy1 . $cmdAddGroup . $groupId . $length." len: ".(strlen($data2)/2) );
+            
+            $data = $data1 . $data2;
+            deamonlog('debug',"Data: ".$data." len: ".(strlen($data)/2) );
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
+        
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
             deamonlog('debug',"Remove a group to an IKEA bulb");

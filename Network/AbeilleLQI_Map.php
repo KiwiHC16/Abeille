@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html>
-<body>
+<body width: 1100px;>
 
 <?php
     

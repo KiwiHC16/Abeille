@@ -5,6 +5,7 @@
       "light": "1"
     },
     "configuration": {
+      "lastCommunicationTimeOut": "-1",
       "icone": "IkeaTradfri5BtnRond"
     },
     "Commandes": {

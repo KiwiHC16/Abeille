@@ -36,10 +36,22 @@ $eqLogics = Abeille::byType('Abeille');
 foreach ($eqLogics as $eqLogic) {
 	echo '<tr><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
+    
+    // Status Ok par defaut, apres on test et on met le status à la valeur voulue
 	$status = '<span class="label label-success" style="font-size : 1em; cursor : default;">{{OK}}</span>';
-	if ($eqLogic->getStatus('state') == 'nok') {
-		$status = '<span class="label label-danger" style="font-size : 1em; cursor : default;">{{NOK}}</span>';
+	if ($eqLogic->getStatus('state') == 'Time Out Last Communication') {
+		$status = '<span class="label label-danger" style="font-size : 1em; cursor : default;">Time Out Last Communication</span>';
 	}
+    if ($eqLogic->getStatus('state') == 'Old Last Communication (>24h)') {
+        $status = '<span class="label label-warning" style="font-size : 1em; cursor : default;">Old Last Communication (>24h)</span>';
+    }
+    if ($eqLogic->getStatus('state') == 'Very Old Last Communication (>7days)') {
+        $status = '<span class="label label-danger" style="font-size : 1em; cursor : default;">Very Old Last Communication (>7days)</span>';
+    }
+    if ($eqLogic->getStatus('state') == '-') {
+        $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">-</span>';
+    }
+
 	echo '<td>' . $status . '</td>';
 	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getStatus('lastCommunication') . '</span></td>';
 	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('createtime') . '</span></td></tr>';

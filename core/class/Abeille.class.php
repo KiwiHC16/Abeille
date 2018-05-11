@@ -22,6 +22,7 @@ include_once(dirname(__FILE__) . '/../../resources/AbeilleDeamon/lib/Tools.php')
 
 class Abeille extends eqLogic
 {
+    // Is it the health of the plugin level menu Analyse->santé ? A verifier.
     public static function health()
     {
         $return = array();
@@ -41,11 +42,14 @@ class Abeille extends eqLogic
         return $return;
     }
 
-    /**
-     * Look every 15 minutes if the kernel driver is not in error
-     */
-    public static function cron15()
+
+    public static function cron()
     {
+        log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        /**
+         * Look every 15 minutes if the kernel driver is not in error
+         */
+        
         $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
         $output = array();
         exec(system::getCmdSudo() . $cmd, $output);
@@ -53,7 +57,75 @@ class Abeille extends eqLogic
         if ($usbZigateStatus != '0') {
             message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate. Il faut débrancher/rebrancher la zigate et relancer le demon.");
             return;
+            
         }
+    }
+    
+    public static function cron15()
+    {
+        log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        /**
+         * Refresh health information
+         */
+        // $eqLogics=Abeille::byType('Abeille');
+        $eqLogics = self::byType('Abeille');
+        
+        //var_dump( $eqLogics );
+        
+        foreach ($eqLogics as $eqLogic) {
+            // var_dump( $eqLogic );
+            
+            // $eqLogic->setStatus('lastCommunication', '2018-05-12 00:44:17');
+            // $eqLogic->setStatus('state', 'unknown');
+            
+            // Default Time Out : 24 heures => Warning
+            $lastCommunicationTimeOut = 24 * 60 * 60;
+            // $lastCommunicationTimeOut = 0; // Pour test
+            
+            // ===============================================================================================================================
+            // Si equipement a un TimeOut Specifique, -1 pour ne pas tester
+            if ($eqLogic->getConfiguration("lastCommunicationTimeOut")) {
+                $lastCommunicationTimeOut = $eqLogic->getConfiguration("lastCommunicationTimeOut");
+                if ( $lastCommunicationTimeOut != -1 ){
+                    if ( strtotime($eqLogic->getStatus('lastCommunication')) + $lastCommunicationTimeOut > time() ) {
+                        // Ok
+                        $eqLogic->setStatus('state', 'ok');
+                    }
+                    else {
+                        // NOK
+                        $eqLogic->setStatus('state', 'Time Out Last Communication');
+                    }
+                }
+                else{
+                    $eqLogic->setStatus('state', '-');
+                }
+            }
+            // Si pas de Timer specifique, 24h et 7jours comme seuil d'alerte
+            else {
+                $last = strtotime($eqLogic->getStatus('lastCommunication'));
+                if ( $last > time() - $lastCommunicationTimeOut ) {
+                    // Ok
+                    $eqLogic->setStatus('state', 'ok');
+                }
+                elseif ( $last < time() - $lastCommunicationTimeOut*7 ) {
+                    // NOK 7d
+                    $eqLogic->setStatus('state', 'Very Old Last Communication (>7days)');
+                }
+                else {
+                    // NOK 24h
+                    $eqLogic->setStatus('state', 'Old Last Communication (>24h)');
+                }
+            }
+            // ===============================================================================================================================
+            
+            log::add('Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus("lastCommunication"));
+            
+            // echo $eqLogic->getStatus('state');
+            
+        }
+        
+        log::add('Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------');
+        
     }
 
 
@@ -649,6 +721,7 @@ class Abeille extends eqLogic
             $elogic->setConfiguration('topic', $nodeid);
             $elogic->setConfiguration('type', $type);
             $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+            $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
             $elogic->setIsVisible("1");
             $elogic->setConfiguration('type', $type);
             if (isset($objetConfiguration['battery_type'])) {
@@ -913,6 +986,7 @@ class Abeille extends eqLogic
                         // $elogic->checkAndUpdateCmd($cmdId, $value);
                         $elogic->checkAndUpdateCmd($cmdlogic, $value);
                         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+                        // $elogic->setStatus('state', 'toto');
 
                         /* Traitement particulier pour les batteries */
                         if ($cmdId == "Batterie-Volt") {
@@ -1014,6 +1088,7 @@ class Abeille extends eqLogic
         $elogic->setEqType_name('Abeille');
         $elogic->setConfiguration('topic', "Abeille/Ruche");
         $elogic->setConfiguration('type', 'topic');
+        $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
         $elogic->setIsVisible("1");
         $elogic->setConfiguration('icone', "Ruche");
         // eqReal_id
@@ -1233,10 +1308,67 @@ if ($debugBEN != 0) {
             $request = str_replace('#ZiGateIEEE#', "'" . $rucheIEEE . "'", $request);
 
             break;
+            
+        case "4":
+            $eqLogics=Abeille::byType('Abeille');
+            
+            //var_dump( $eqLogics );
+            
+            foreach ($eqLogics as $eqLogic) {
+                // var_dump( $eqLogic );
+                
+                // $eqLogic->setStatus('lastCommunication', '2018-05-01 00:00:01');
+                // $eqLogic->setStatus('state', 'unknown');
+                
+                // Pour tester. Force une data.
+                // if ( $eqLogic->getName()=="Abeille-d09c") { $eqLogic->setStatus('lastCommunication', '2018-05-10 12:48:01'); }
+                
+                // Default Time Out : 24 heures
+                $lastCommunicationTimeOut = 24 * 60 * 60;
+                // $lastCommunicationTimeOut = 0; // Pour test
+// =================================================
+                // Si equipement a un TimeOut Specifique, -1 pour ne pas tester
+                if ($eqLogic->getConfiguration("lastCommunicationTimeOut")) {
+                    $lastCommunicationTimeOut = $eqLogic->getConfiguration("lastCommunicationTimeOut");
+                    if ( $lastCommunicationTimeOut != -1 ){
+                        if ( strtotime($eqLogic->getStatus('lastCommunication')) + $lastCommunicationTimeOut > time() ) {
+                            // Ok
+                            $eqLogic->setStatus('state', 'ok');
+                        }
+                        else {
+                            // NOK
+                            $eqLogic->setStatus('state', 'Time Out Last Communication');
+                        }
+                    }
+                    else{
+                        $eqLogic->setStatus('state', '-');
+                    }
+                }
+                // Si pas de Timer specifique, 24h et 7jours comme seuil d'alerte
+                else {
+                    $last = strtotime($eqLogic->getStatus('lastCommunication'));
+                    if ( $last > time() - $lastCommunicationTimeOut ) {
+                        // Ok
+                        $eqLogic->setStatus('state', 'ok');
+                    }
+                    elseif ( $last < time() - $lastCommunicationTimeOut*7 ) {
+                        // NOK 7d
+                        $eqLogic->setStatus('state', 'Very Old Last Communication (>7days)');
+                    }
+                    else {
+                        // NOK 24h
+                        $eqLogic->setStatus('state', 'Old Last Communication (>24h)');
+                    }
+                }
+// =================================================
+                echo $eqLogic->getName() . "<->" . (strtotime($eqLogic->getStatus('lastCommunication'))-time()) . "<->" . $eqLogic->getStatus('state') . "\n";
+                
+            }
+            
 
     }
 
-    echo "Fin\n";
+    echo "\nFin\n";
 }
     
     

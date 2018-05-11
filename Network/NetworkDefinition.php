@@ -51,7 +51,7 @@
                      "0F7e" => "Inconnu1", 		// 90:fd:9f:ff:fe:16:5c:2c
                      
                      "137f" => "Velux-SdB-Tour",
-                     "4c3a" => "Velux-Lulu",
+                     "e311" => "Velux-Lulu",		// fut 4c3a
 
                      "c551" => "Old-Off-Network-1", 	// 00:0B:57:ff:fe:8d:70:73
                      
@@ -101,7 +101,7 @@
                       'P-Entree' => array('position' => array( 'x'=>625, 'y'=>700), 'color'=>'grey',),
                       
                       'HueGo' 			=> array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
-                      'PriseX1' 		=> array('position' => array( 'x'=>650, 'y'=>500), 'color'=>'orange',),
+                      'PriseX1' 		=> array('position' => array( 'x'=>325, 'y'=>525), 'color'=>'orange',),
                       'PriseX2' 		=> array('position' => array( 'x'=>650, 'y'=>520), 'color'=>'orange',),
                       
                       'Bois' 			=> array('position' => array( 'x'=>700, 'y'=>480), 'color'=>'orange',),

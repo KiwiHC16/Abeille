@@ -43,9 +43,9 @@ class Abeille extends eqLogic
     }
 
 
-    public static function cron()
+    public static function cron15()
     {
-        log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        log::add('Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------');
         /**
          * Look every 15 minutes if the kernel driver is not in error
          */
@@ -56,12 +56,14 @@ class Abeille extends eqLogic
         $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
         if ($usbZigateStatus != '0') {
             message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate. Il faut débrancher/rebrancher la zigate et relancer le demon.");
+            log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
             return;
             
         }
+        log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
     }
     
-    public static function cron15()
+    public static function cron()
     {
         log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
         /**

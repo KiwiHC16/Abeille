@@ -22,7 +22,7 @@
                      
                      "345f" => "P-D",
                      "2349" => "P-G",           // 00:15:8d:00:01:b1:49:a8
-                     "f984" => "P-C",
+                     "fb14" => "P-C",		// 	fut f984
                      
                      "8f28" => "P-Entree",
                      
@@ -102,7 +102,7 @@
                       
                       'HueGo' 			=> array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
                       'PriseX1' 		=> array('position' => array( 'x'=>325, 'y'=>525), 'color'=>'orange',),
-                      'PriseX2' 		=> array('position' => array( 'x'=>650, 'y'=>520), 'color'=>'orange',),
+                      'PriseX2' 		=> array('position' => array( 'x'=>750, 'y'=>450), 'color'=>'orange',),
                       
                       'Bois' 			=> array('position' => array( 'x'=>700, 'y'=>480), 'color'=>'orange',),
                       'Grad-Bureau' 		=> array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),

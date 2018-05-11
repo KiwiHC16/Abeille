@@ -32,6 +32,10 @@ $('#bt_healthAbeille').on('click', function () {
 	$('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');
 });
 
+$('#bt_networkAbeille').on('click', function () {
+    window.open("plugins/Abeille/Network/AbeilleLQI_Map.php");
+});
+
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 
 function addCmdToTable(_cmd) {

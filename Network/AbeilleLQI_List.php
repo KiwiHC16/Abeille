@@ -48,33 +48,25 @@
         $Cache = "Cache";
     }
     
-    if ( isset( $_GET['Data']) ) {
-        $Data = $_GET['Data'];
-    }
-    else {
-        $Data = "None";
-    }
-    
     require_once("NetworkDefinition.php");
     
     $DataFile = "AbeilleLQI_MapData.json";
     
-    if ( $Cache == "Cache" ) {
-        if ( file_exists($DataFile) ){
-            
-            $json = json_decode(file_get_contents($DataFile), true);
-            // $LQI = $json->data;
-            $LQI = $json['data'];
-            // print_r( $LQI );
-            // exit;
-        }
-        else {
-            echo "Le cache n existe pas, faites un refresh.<br>";
-        }
-    }
-    else {
+    if ( $Cache == "Refresh Cache" ) {
         // Ici on n'utilise pas le cache donc on lance la collecte
         require_once("AbeilleLQI.php");
+    }
+    
+    if ( file_exists($DataFile) ){
+        
+        $json = json_decode(file_get_contents($DataFile), true);
+        // $LQI = $json->data;
+        $LQI = $json['data'];
+        // print_r( $LQI );
+        // exit;
+    }
+    else {
+        echo "Le cache n existe pas, faites un refresh.<br>";
     }
     
 
@@ -143,9 +135,18 @@ tr:nth-child(even) {
 
 
 <?php
-    echo "DEBUT: ".date(DATE_RFC2822)."<br>\n";
+    // echo "DEBUT: ".date(DATE_RFC2822)."<br>\n";
     echo "<table>\n";
     echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Voisine IEEE</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
+    // var_dump( $LQI );
+    // var_dump( $NE );
+    // $NE="All";
+    
+    // On reset $NE qui est utilisé pour different truc.
+    if ( $Cache == "Refresh Cache" ) {
+        $NE="All";
+    }
+    
     foreach ( $LQI as $key => $voisine ) {
         if ( ($voisine['NE_Name']==$NE) || ("All"==$NE) || ($voisine['Voisine_Name']==$NE2) ) {
             echo "<tr>";
@@ -179,5 +180,5 @@ tr:nth-child(even) {
     // print_r( $LQI );
     
     // deamonlog('debug', 'sortie du loop');
-    echo "FIN: ".date(DATE_RFC2822)."<br>\n";
+    // echo "FIN: ".date(DATE_RFC2822)."<br>\n";
     ?>

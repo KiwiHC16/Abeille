@@ -59,21 +59,21 @@
     
     $DataFile = "AbeilleLQI_MapData.json";
     
-    if ( $Cache == "Cache" ) {
-        if ( file_exists($DataFile) ){
-            
-            $json = json_decode(file_get_contents($DataFile), true);
-            // $LQI = $json->data;
-            $LQI = $json['data'];
-            // print_r( $LQI );
-            // exit;
-        }
-        else {
-            echo "Le cache n existe pas, faites un refresh.<br>";
-        }
+    if ( $Cache == "Refresh Cache" ) {
+        // Ici on n'utilise pas le cache donc on lance la collecte
+        require_once("AbeilleLQI.php");
+    }
+    
+    if ( file_exists($DataFile) ){
+        
+        $json = json_decode(file_get_contents($DataFile), true);
+        // $LQI = $json->data;
+        $LQI = $json['data'];
+        // print_r( $LQI );
+        // exit;
     }
     else {
-        require_once("AbeilleLQI.php");
+        echo "Le cache n existe pas, faites un refresh.<br>";
     }
     
 
@@ -171,8 +171,12 @@ L pour Line to
     //    }
     
     
-    // $voisinesMap
+    // On reset $NE qui est utilisé pour different truc.
+    if ( $Cache == "Refresh Cache" ) {
+        $NE="All";
+    }
     
+    // $voisinesMap
     foreach ( $LQI as $row => $voisineList ) {
         $sourceId = $voisineList['NE'];
         $targetId= $voisineList['Voisine'];
@@ -193,7 +197,7 @@ L pour Line to
         
         
     }
-    
+    if (0) {
     // encode array to json
     $json = json_encode(array('data' => $LQI));
     
@@ -202,7 +206,7 @@ L pour Line to
     echo "JSON file created successfully...";
     else
     echo "Oops! Error creating json file...";
-    
+    }
     
     
     

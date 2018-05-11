@@ -19,6 +19,7 @@
     // require_once("../resources/AbeilleDeamon/lib/phpMQTT.php");
     require_once("NetworkDefinition.php");
     
+    $DataFile = "AbeilleLQI_MapData.json";
     
     function deamonlog($loglevel='NONE',$message=""){
         // Tools::deamonlog($loglevel,'AbeilleLQI',$message);
@@ -80,6 +81,8 @@
         $topicArray = explode("/", $message->topic);
         $parameters['Voisine'] = $topicArray[1];
         $parameters['Voisine_Name'] = $knownNE_local[$parameters['Voisine']];
+        
+        // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
         
         // Decode Bitmap Attribut
         // Bit map of attributes Described below: uint8_t
@@ -212,7 +215,7 @@
     $LQI = array();
     
     deamonlog('debug', 'Start Main');
-    echo "DEBUT: ".date(DATE_RFC2822)."<br>";
+    // echo "DEBUT: ".date(DATE_RFC2822)."<br>";
     
     // https://github.com/mgdm/Mosquitto-PHP
     // http://mosquitto-php.readthedocs.io/en/latest/client.html
@@ -326,42 +329,17 @@
     
     // Nice presentation
 ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-    width: 100%;
-    }
-    
-    td, th {
-    border: 1px solid #dddddd;
-        text-align: left;
-    padding: 8px;
-    }
-    
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
-    </style>
-    </head>
-    <body>
+
 <?php
 
-    if (0) {
-    echo "<table>\n";
-    echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Voisine IEEE</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
-    foreach ( $LQI as $key => $voisine ) {
-        echo "<tr>";
-        echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['IEEE_Address']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
-        echo "</tr>\n";
-    }
-    echo "</table>\n";
-    echo "</body>\n";
-    echo "</html>\n";
-    }
+    // encode array to json
+    $json = json_encode(array('data' => $LQI));
+    
+    //write json to file
+    if ( file_put_contents( $DataFile, $json) )
+    echo "JSON file created successfully...";
+    else
+    echo "Oops! Error creating json file...";
     
     // Formating pour la doc asciidoc
     if (0) {
@@ -384,8 +362,6 @@ tr:nth-child(even) {
     // print_r( $voisine );
     // print_r( $LQI );
     
-    // deamonlog('debug', 'sortie du loop');
-    echo "FIN: ".date(DATE_RFC2822)."<br>\n";
     ?>
 
 

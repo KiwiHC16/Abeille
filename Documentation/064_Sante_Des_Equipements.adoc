@@ -11,6 +11,8 @@ Je vous propose 2 méthodes.
 
 == Health
 
+=== Communication
+
 Un cron tourne toutes les minutes pour vérifier la date du dernier message recu pour chaque équipement. Pour visialiser le résultat ouvrir Plugins->Protocoles Domotique->Abeille et clic sur l'icone Santé. Vous devriez avoir un résultat comme:
 
 image::images/Capture_d_ecran_2018_05_11_a_13_46_17.png[]
@@ -21,6 +23,12 @@ Actuellement il existe 4 statuts:
 - Un carré vert avec Ok, soit l'équipement à un timeout de defini et le dernier message est arrivé dans cette période, soit il n'y en a pas et un message à été recu dans le 24 dernieres heures.
 - un carré orange, l'equipement n'a pas de time out defini et le dernier message est plus vieux que 24h et moins que 7 jours
 - un carré rouge, soit le capteur à un time out et le dernier message est plus vieux que ce time out, soit il n'a pas de time out et le dernier message est plus que 7 jours.
+
+=== Batterie
+
+En utilisant le menu Analyse->Equipements, vous trouverez l'état des batteries. Ici un exemple avec des objets Zwave et Abeille/Zigbee.
+
+image::images/Capture_d_ecran_2018_05_11_a_15_47_55.png[]
 
 == Script / Widget
 

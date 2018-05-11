@@ -81,7 +81,7 @@
     
     ?>
 
-<h1>Abeille Network</h1>
+<h1>Abeille Network Graph</h1>
 
 <form method="get">
 <select name="NE">

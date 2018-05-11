@@ -73,6 +73,7 @@
         }
     }
     else {
+        // Ici on n'utilise pas le cache donc on lance la collecte
         require_once("AbeilleLQI.php");
     }
     
@@ -103,14 +104,54 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
+
+<h1>Abeille Network Table</h1>
+
+<form method="get">
+<select name="NE">
+<?php
+    if ( $NE=="All" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="All"'.$selected.'>All</option>'."\n";
+    if ( $NE=="None" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="None"'.$selected.'>None</option>'."\n";
+    foreach ($knownNE as $shortAddress => $name) {
+        if ( $NE==$name ) { $selected = " selected "; } else { $selected = " "; }
+        echo '<option value="'.$name.'"'.$selected.'>'.$name.'-'.$shortAddress.'</option>'."\n";
+    }
+    ?>
+</select>
+<select name="NE2">
+<?php
+    echo '<option value="None"'.$selected.'>None</option>'."\n";
+    foreach ($knownNE as $shortAddress => $name) {
+        if ( $NE2==$name ) { $selected = " selected "; } else { $selected = " "; }
+        echo '<option value="'.$name.'"'.$selected.'>'.$name.'-'.$shortAddress.'</option>'."\n";
+    }
+    ?>
+</select>
+<select name="Cache">
+<?php
+    $CacheList = array( 'Cache', 'Refresh Cache' );
+    foreach ($CacheList as $item) {
+        if ( "Cache"==$item ) { $selected = " selected "; } else { $selected = " "; }
+        echo '<option value="'.$item.'"'.$selected.'>'.$item.'</option>'."\n";
+    }
+    ?>
+</select>
+
+
+<input type="submit" value="Submit">
+</form>
+
+
 <?php
     echo "DEBUT: ".date(DATE_RFC2822)."<br>\n";
     echo "<table>\n";
     echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Voisine IEEE</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
     foreach ( $LQI as $key => $voisine ) {
-        echo "<tr>";
-        echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['IEEE_Address']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
-        echo "</tr>\n";
+        if ( ($voisine['NE_Name']==$NE) || ("All"==$NE) || ($voisine['Voisine_Name']==$NE2) ) {
+            echo "<tr>";
+            echo "<td>".$voisine['NE']."</td><td>".$voisine['NE_Name']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Voisine_Name']."</td><td>".$voisine['IEEE_Address']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
+            echo "</tr>\n";
+        }
     }
     echo "</table>\n";
     echo "</body>\n";

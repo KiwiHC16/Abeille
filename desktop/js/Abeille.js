@@ -32,6 +32,10 @@ $('#bt_healthAbeille').on('click', function () {
 	$('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');
 });
 
+$('#bt_networkAbeilleList').on('click', function () {
+    window.open("plugins/Abeille/Network/AbeilleLQI_List.php");
+});
+
 $('#bt_networkAbeille').on('click', function () {
     window.open("plugins/Abeille/Network/AbeilleLQI_Map.php");
 });

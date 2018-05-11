@@ -350,6 +350,7 @@ tr:nth-child(even) {
     <body>
 <?php
 
+    if (0) {
     echo "<table>\n";
     echo "<tr><th>NE</th><th>NE Name</th><th>Voisine</th><th>Voisine Name</th><th>Voisine IEEE</th><th>Relation</th><th>Profondeur</th><th>LQI</th></tr>\n";
     foreach ( $LQI as $key => $voisine ) {
@@ -360,6 +361,7 @@ tr:nth-child(even) {
     echo "</table>\n";
     echo "</body>\n";
     echo "</html>\n";
+    }
     
     // Formating pour la doc asciidoc
     if (0) {

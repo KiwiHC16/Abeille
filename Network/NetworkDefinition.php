@@ -29,6 +29,7 @@
                      
                      "41c0" => "PriseX1",       // 00:15:8d:00:01:83:af:7b
                      "db83" => "PriseX2",       // 00:15:8d:00:01:83:af:eb
+                     "d86d" => "PriseXTest",    // 00:15:8d:00:01:dc:9c:42 00158d0001dc9c42
                      
                      "498d" => "HueGo",         // 00:17:88:01:02:14:ff:6b
                      
@@ -103,6 +104,7 @@
                       'HueGo' 			=> array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
                       'PriseX1' 		=> array('position' => array( 'x'=>325, 'y'=>525), 'color'=>'orange',),
                       'PriseX2' 		=> array('position' => array( 'x'=>650, 'y'=>520), 'color'=>'orange',),
+                      'PriseXTest'      => array('position' => array( 'x'=>675, 'y'=>300), 'color'=>'orange',),
                       
                       'Bois' 			=> array('position' => array( 'x'=>700, 'y'=>480), 'color'=>'orange',),
                       'Grad-Bureau' 		=> array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),

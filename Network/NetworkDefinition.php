@@ -90,7 +90,7 @@
                       'T7'       => array('position' => array( 'x'=>625, 'y'=>450), 'color'=>'orange',),
                       'T8'       => array('position' => array( 'x'=>450, 'y'=>500), 'color'=>'orange',),
         // Salon              
-                      'Gauche'    => array('position' => array( 'x'=>700, 'y'=>300), 'color'=>'orange',),
+                      'Gauche'    => array('position' => array( 'x'=>750, 'y'=>300), 'color'=>'orange',),
                       'Milieu'    => array('position' => array( 'x'=>650, 'y'=>300), 'color'=>'orange',),
                       'Droite'    => array('position' => array( 'x'=>650, 'y'=>350), 'color'=>'orange',),
                       'Piano'     => array('position' => array( 'x'=>720, 'y'=>400), 'color'=>'orange',),
@@ -103,9 +103,8 @@
                       
                       'HueGo' 			=> array('position' => array( 'x'=>650, 'y'=>480), 'color'=>'orange',),
                       'PriseX1' 		=> array('position' => array( 'x'=>325, 'y'=>525), 'color'=>'orange',),
-
                       'PriseX2' 		=> array('position' => array( 'x'=>750, 'y'=>450), 'color'=>'orange',),
-                      'PriseXTest'      => array('position' => array( 'x'=>675, 'y'=>300), 'color'=>'orange',),
+                      'PriseXTest'      => array('position' => array( 'x'=>725, 'y'=>300), 'color'=>'orange',),
                       
                       'Bois' 			=> array('position' => array( 'x'=>700, 'y'=>480), 'color'=>'orange',),
                       'Grad-Bureau' 		=> array('position' => array( 'x'=>700, 'y'=>500), 'color'=>'green',),

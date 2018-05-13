@@ -1140,7 +1140,7 @@ class Abeille extends eqLogic
                 );
             }
         }
-        print_r($rucheCommandList);
+        // print_r($rucheCommandList);
 
         //Create ruche object and commands
         foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {

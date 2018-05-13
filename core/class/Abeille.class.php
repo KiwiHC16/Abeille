@@ -436,7 +436,8 @@ class Abeille extends eqLogic
             AbeilleSerialPort: ' . $parameters_info['AbeilleSerialPort'] . ',
             qos: ' . $parameters_info['AbeilleQos'] . ',
             showAllCommands: ' . $parameters_info['showAllCommands'] . ',
-            ModeCreation: ' . $parameters_info['creationObjectMode']
+            ModeCreation: ' . $parameters_info['creationObjectMode'] . ',
+            onlyTimer: ' . $parameters_info['onlyTimer']
         );
 
         // https://github.com/mgdm/Mosquitto-PHP

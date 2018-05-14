@@ -62,7 +62,7 @@
                      "c360" => "Test: Temperature Rond Bureau",     // 00:15:8d:00:01:9f:91:99 fut df33
                      "fdb4" => "Test: Door V1 Bureau",              // 00:15:8d:00:01:d8:6c:3e fut a008
                      "26a7" => "Test: Inondation Bureau",           // 00:15:8d:00:01:bb:6b:49 00158d0001bb6b49 fut 7bd5
-                     "d09c" => "Test: Bouton Carre V2 Bureau",      // 00:15:8d:00:01:a6:6c:a3 00158d0001a66ca3 fut dcd9, de4d
+                     "5b7a" => "Test: Bouton Carre V2 Bureau",      // 00:15:8d:00:01:a6:6c:a3 00158d0001a66ca3 fut dcd9, de4d, d09c
                      "63b9" => "Test: Door V0 Bureau",              // 00:15:8d:00:02:01:47:f9 00158d00020147f9 fut 3950
                      "0113" => "Test: IR Pied Bureau",              // 00:15:8d:00:01:dd:b1:f7 00158d0001ddb1f7 fut 5dea
                      "060B" => "Test: Interrupteur Rond",           // 00:15:8d:00:01:f3:af:91 00158d0001f3af91 fut 4ebd

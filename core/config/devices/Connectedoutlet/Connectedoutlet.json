@@ -8,24 +8,34 @@
       "icone": "Connectedoutlet"
     },
     "Commandes": {
-      "0000-0001": {
-        "isVisible": 0,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "SW",
-        "order": 0,
-        "subType": "string",
-        "template": ""
-      },
       "0000-0005": {
         "isVisible": 0,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
         "name": "nom",
-        "order": 1,
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
         "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0004": {
+        "isVisible": 0,
+        "name": "societe",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-4000": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 2,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
         "template": ""
       },
       "0006-0000": {
@@ -34,7 +44,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "etat",
-        "order": 2,
+        "order": 3,
         "subType": "binary",
         "template": "prise",
         "display": {
@@ -197,6 +207,20 @@
         "subType": "other",
         "template": ""
       },
+	"getSWBuild": {
+        "isVisible": 0,
+        "name": "getSWBuild",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=4000"
+        }
+      },
       "tbd---conso--": {
         "isVisible": 1,
         "Type": "info",
@@ -228,6 +252,44 @@
         "order": 3,
         "subType": "numeric",
         "template": "badge"
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 20,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+     "BindToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindToZigateEtat",
+        "order": 22,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+        "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 24,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        }
       }
     }
   }

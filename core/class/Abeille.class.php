@@ -261,7 +261,7 @@ class Abeille extends eqLogic
 
         sleep(3);
 
-        $_id = "BEN_Start"; // JE ne sais pas alors je mets n importe quoi....
+        $_id = "deamon_start"; // JE ne sais pas alors je mets n importe quoi....
         $_subject = "CmdRuche/Ruche/CreateRuche";
         $_message = "";
         $_retain = 0;
@@ -456,6 +456,7 @@ class Abeille extends eqLogic
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
         $client->onMessage('Abeille::message');
 
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
         $client->onLog('Abeille::logmq');
 
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
@@ -604,27 +605,27 @@ class Abeille extends eqLogic
 
     public static function connect($r, $message)
     {
-        log::add('Abeille', 'info', 'Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
         config::save('state', '1', 'Abeille');
     }
 
     public static function disconnect($r)
     {
-        log::add('Abeille', 'debug', 'Déconnexion de Mosquitto avec code ' . $r);
+        log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
         config::save('state', '0', 'Abeille');
     }
 
     public
     static function subscribe()
     {
-        log::add('Abeille', 'debug', 'Subscribe to topics');
+        log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
     }
 
     public static function logmq($code, $str)
     {
-        if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-            log::add('Abeille', 'debug', $code . ' : ' . $str);
-        }
+        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+            log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // }
     }
 
 

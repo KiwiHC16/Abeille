@@ -1,0 +1,86 @@
+{
+  "Dimmerswitchwoneutral": {
+    "nameJeedom": "Legrand Dimmer Switch w/o neutral",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "Dimmerswitchwoneutral"
+    },
+    "Commandes": {
+      "0000-0005": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "nom",
+        "order": 1,
+        "subType": "string",
+        "template": ""
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "IEEE-Addr",
+        "order": 13,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Short-Addr",
+        "order": 13,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Link Quality",
+        "order": 14,
+        "subType": "string",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "Type": "info",
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Power Source",
+        "order": 15,
+        "subType": "binary",
+        "template": "AbeillePower"
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-Time",
+        "order": 5,
+        "subType": "string",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "subType": "numeric",
+        "template": "badge"
+      }
+    }
+  }
+}

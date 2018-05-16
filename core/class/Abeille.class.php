@@ -681,7 +681,7 @@ class Abeille extends eqLogic
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         // Est ce que cet equipement existe deja ? Sinon creation quand je recois son nom
-        // Cherche l objet
+        // Cherche l objet par sa ref short Address
         $elogic = self::byLogicalId($nodeid, 'Abeille');
         $objetConnu = 0;
 
@@ -693,7 +693,13 @@ class Abeille extends eqLogic
             //remove lumi. from name as all xiaomi devices have a lumi. name
             //remove all space in names for easier filename handling
             $trimmedValue = str_replace(' ', '', str_replace('lumi.', '', $value));
-
+            
+            // On enleve le / comme par exemple le nom des equipements Legrand
+            $trimmedValue = str_replace('/', '', $trimmedValue);
+            
+            // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+            $trimmedValue = str_replace( "\0", '', $trimmedValue);
+            
             log::add('Abeille', 'debug', 'value:' . $value . ' / trimmed value: ' . $trimmedValue);
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($trimmedValue, 'Abeille');
 
@@ -863,15 +869,17 @@ class Abeille extends eqLogic
 
         } else {
             // Si je recois une commande IEEE pour un objet qui n'existe pas je vais créer un objet pour visualiser cet inconnu
-            if (!is_object(
-                    $elogic
-                ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
+            // On peux recevoir l'IEEE lorsqu'un equipement s'annonce. Dans ce cas on a sa ShortAddress et son IEEE. Je ne sais pas si il y a d autres scenarios
+            // Soit on ne le connais pas car il est nouveau ou sa shortAddress a changée. Mais dans les deux cas il n'est pas connu sous la ref de sa shortAddress
+            //
+            if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
                 // Creation de l objet Abeille (hors ruche)
                 log::add('Abeille', 'info', 'objet: ' . $value . ' creation sans model');
                 message::add("Abeille", "Création d un nouvel objet INCONNU Abeille (" . $addr . ") en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
                 $elogic = new Abeille();
                 //id
                 if ($objetConnu) {
+                    // ici pour moi on ne devrait jamais être dans cas de figure. Ce code ne sert a rien je pense.
                     $name = "Abeille-" . $addr;
                 } else {
                     $name = "Abeille-" . $addr . "-Type d objet inconnu (IEEE)";

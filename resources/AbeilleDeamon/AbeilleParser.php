@@ -432,7 +432,7 @@
         
         // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
         if ((hexdec($capability) & $test) == 14) {
-            deamonlog('debug','Je demande a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
+            deamonlog('debug','Je demande a l equipement d annoncer son nom');
             
             // Pour les ampoules IKEA
             deamonlog('debug','Je demande a l equipement de type generique');
@@ -462,7 +462,7 @@
             
         }
         else{
-            deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
+            deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom car ce n est pas un routeur (il n ecoute peut etre pas).');
         }
     }
     

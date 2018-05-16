@@ -110,9 +110,9 @@
         "invertBinary": "0",
         "template": "badge"
       },
-      "On": {
+      "On1": {
         "isVisible": 1,
-        "name": "On",
+        "name": "On1",
         "order": 7,
         "isHistorized": "0",
         "Type": "action",
@@ -123,13 +123,13 @@
           "generic_type": "LIGHT_ON"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "CmdAbeille/#addr#/OnOff2",
           "request": "On"
         }
       },
-      "Off": {
+      "Off1": {
         "isVisible": 1,
-        "name": "Off",
+        "name": "Off1",
         "order": 8,
         "isHistorized": "0",
         "Type": "action",
@@ -140,13 +140,13 @@
           "generic_type": "LIGHT_OFF"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "CmdAbeille/#addr#/OnOff2",
           "request": "Off"
         }
       },
-      "Toggle": {
+      "Toggle1": {
         "isVisible": 1,
-        "name": "Toggle",
+        "name": "Toggle1",
         "order": 9,
         "isHistorized": "0",
         "Type": "action",
@@ -154,7 +154,59 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "CmdAbeille/#addr#/OnOff2",
+          "request": "Toggle"
+        },
+        "display": {
+          "generic_type": "LIGHT_TOGGLE",
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "On2": {
+        "isVisible": 1,
+        "name": "On2",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
+          "request": "On"
+        }
+      },
+      "Off2": {
+        "isVisible": 1,
+        "name": "Off2",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
+          "request": "Off"
+        }
+      },
+      "Toggle2": {
+        "isVisible": 1,
+        "name": "Toggle2",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
           "request": "Toggle"
         },
         "display": {
@@ -165,7 +217,7 @@
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 11,
+        "order": 13,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -179,7 +231,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 12,
+        "order": 14,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -193,7 +245,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 13,
+        "order": 15,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -207,7 +259,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 14,
+        "order": 16,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -221,7 +273,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 15,
+        "order": 17,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -235,7 +287,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 16,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -245,7 +297,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 16,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -255,7 +307,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 17,
+        "order": 20,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -265,7 +317,7 @@
       "Power-Source": {
         "isVisible": 0,
         "name": "Power Source",
-        "order": 18,
+        "order": 21,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -278,7 +330,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 19,
+        "order": 22,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -292,71 +344,12 @@
       "Group-Membership": {
         "isVisible": 1,
         "name": "Groups",
-        "order": 20,
+        "order": 23,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
         "template": "badge"
-      },
-      "BindToZigateLevel": {
-        "isVisible": 1,
-        "name": "BindToZigateLevel",
-        "order": 23,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
-        }
-      },
-      "setReportEtat": {
-        "isVisible": 1,
-        "name": "setReportEtat",
-        "order": 24,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
-        }
-      },
-      "setReportLevel": {
-        "isVisible": 1,
-        "name": "setReportLevel",
-        "order": 25,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
-        },
-        "display": {
-          "forceReturnLineAfter": "1"
-        }
-      },
-      "BindToZigateEtat": {
-        "isVisible": 1,
-        "name": "BindToZigateEtat",
-        "order": 22,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
-        }
       }
     }
   }

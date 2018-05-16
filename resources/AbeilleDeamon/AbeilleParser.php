@@ -432,7 +432,7 @@
         
         // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
         if ((hexdec($capability) & $test) == 14) {
-            deamonlog('debug','Je demande a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
+            deamonlog('debug','Je demande a l equipement d annoncer son nom');
             
             // Pour les ampoules IKEA
             deamonlog('debug','Je demande a l equipement de type generique');
@@ -462,7 +462,7 @@
             
         }
         else{
-            deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom pour le creer dans Abeille si il n existe pas deja');
+            deamonlog('debug','Je ne demande pas a l equipement d annoncer son nom car ce n est pas un routeur (il n ecoute peut etre pas).');
         }
     }
     
@@ -1505,9 +1505,14 @@
         }
         
         if (isset($data)) {
-            // deamonlog('debug', 'Data byte: '.$data);
-            mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-            
+            if ( $EPoint < 2 ) {
+                // deamonlog('debug', 'Data byte: '.$data);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            }
+            else {
+                // Ceci est necessaire pour les Ep Src du Xiaomi Wall Plug
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
+            }
         }
     }
     
@@ -1622,8 +1627,11 @@
     $qos = $argv[6];
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
+    
     $mqtt = new phpMQTT($server, $port, $client_id);
+    
     $fifoIN = new fifo( $in, 0777, "r" );
+    
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
     $LQI = array();

@@ -3,6 +3,8 @@
 Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.
 Après plusieurs versions avec des scripts, des variables, des retours d'état automatique,... je me suis rendu compte que je pouvais sans trop de difficulté créer ses timers au seins d'Abeille.
 
+Maintenant vous pouvez même installar Abeille en n'utilsant que les Timers sans la partie ZigBee. Pour cela dans la configuration du plugin choisissez "Mode Timer seulement" à "Oui".
+
 == Fonctionnement
 
 image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]

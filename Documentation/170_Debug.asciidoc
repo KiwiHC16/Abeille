@@ -144,6 +144,11 @@ apt-get remove mosquitto
 apt-get install mosquitto
 ----
 
+* Debian 8 sur VM
+- Je viens d'installer le plugin Abeille sur une Debian 8 en VM x86 64. Impossible de lancer le demon.
+- Même un /etc/init.d/mosquitto start à la main ne fonctionne pas. 
+- Après des recherches infructueuse je suis passé par synaptic (ssh root@machine -Y) et fait "reinstallé" de tous les modules mosquitto. Et maintenant cela fonctionne. 
+
 
     
 === Creation des objets

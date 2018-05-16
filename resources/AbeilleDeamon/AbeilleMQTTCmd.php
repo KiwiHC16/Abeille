@@ -93,6 +93,42 @@
                     "action" => $actionId,
                 );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "OnOff2") {
+                if ($msg == "On") {
+                    $actionId = "01";
+                }
+                if ($msg == "Off") {
+                    $actionId = "00";
+                }
+                if ($msg == "Toggle") {
+                    $actionId = "02";
+                }
+                $Command = array(
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "02",
+                                 "action" => $actionId,
+                                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "OnOff3") {
+                if ($msg == "On") {
+                    $actionId = "01";
+                }
+                if ($msg == "Off") {
+                    $actionId = "00";
+                }
+                if ($msg == "Toggle") {
+                    $actionId = "02";
+                }
+                $Command = array(
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "03",
+                                 "action" => $actionId,
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "OnOffHue") {
                 if ($msg == "On") {
                     $actionId = "01";

@@ -181,7 +181,15 @@ class Abeille extends eqLogic
 
 
         //check running deamon /!\ if using sudo nbprocess x2
-        $nbProcessExpected = 4; // no sudo to run deamon
+        if ( $parameters_info['onlyTimer']=='N' ) {
+            $nbProcessExpected = 4;
+        }
+        else {
+            $nbProcessExpected = 1;
+        }
+            
+        
+            // no sudo to run deamon
         exec(
             "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | cut -d ';'  -f 1 | wc -l",
             $output
@@ -253,7 +261,7 @@ class Abeille extends eqLogic
 
         sleep(3);
 
-        $_id = "BEN_Start"; // JE ne sais pas alors je mets n importe quoi....
+        $_id = "deamon_start"; // JE ne sais pas alors je mets n importe quoi....
         $_subject = "CmdRuche/Ruche/CreateRuche";
         $_message = "";
         $_retain = 0;
@@ -291,39 +299,40 @@ class Abeille extends eqLogic
 
         $parameters_info = self::getParameters();
 
-        $deamon1 = "AbeilleSerialRead.php";
-        $paramdeamon1 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
-
-        $deamon2 = "AbeilleParser.php";
-        $paramdeamon2 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
+        if ( $parameters_info['onlyTimer']!='Y' ) {
+            $deamon1 = "AbeilleSerialRead.php";
+            $paramdeamon1 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+            $log1 = " > /var/www/html/log/" . substr($deamon1, 0, (strrpos($deamon1, ".")));
+            
+            $deamon2 = "AbeilleParser.php";
+            $paramdeamon2 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
             ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
-
-        $deamon3 = "AbeilleMQTTCmd.php";
-        $paramdeamon3 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
+            $log2 = " > /var/www/html/log/" . substr($deamon2, 0, (strrpos($deamon2, ".")));
+            
+            $deamon3 = "AbeilleMQTTCmd.php";
+            $paramdeamon3 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
             ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
-
+            $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
+            
+            $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
+            log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);
+            exec($cmd . ' 2>&1 &');
+            
+            $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon2 . " " . $paramdeamon2 . $log2;
+            log::add('Abeille', 'debug', 'Start deamon Parser: ' . $cmd);
+            exec($cmd . ' 2>&1 &');
+            
+            
+            $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon3 . " " . $paramdeamon3 . $log3;
+            log::add('Abeille', 'debug', 'Start deamon MQTT: ' . $cmd);
+            exec($cmd . ' 2>&1 &');
+        }
+        
         $deamon4 = "AbeilleMQTTCmdTimer.php";
         $paramdeamon4 = $parameters_info['AbeilleSerialPort'] . ' ' . $parameters_info['AbeilleAddress'] . ' ' . $parameters_info['AbeillePort'] .
-            ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
-
-        $log1 = " > /var/www/html/log/" . substr($deamon1, 0, (strrpos($deamon1, ".")));
-        $log2 = " > /var/www/html/log/" . substr($deamon2, 0, (strrpos($deamon2, ".")));
-        $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
+        ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
         $log4 = " > /var/www/html/log/" . substr($deamon4, 0, (strrpos($deamon4, ".")));
-
-        $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
-        log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);
-        exec($cmd . ' 2>&1 &');
-
-        $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon2 . " " . $paramdeamon2 . $log2;
-        log::add('Abeille', 'debug', 'Start deamon Parser: ' . $cmd);
-        exec($cmd . ' 2>&1 &');
-
-
-        $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon3 . " " . $paramdeamon3 . $log3;
-        log::add('Abeille', 'debug', 'Start deamon MQTT: ' . $cmd);
-        exec($cmd . ' 2>&1 &');
-
+        
         $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon4 . " " . $paramdeamon4 . $log4;
         log::add('Abeille', 'debug', 'Start deamon Timer: ' . $cmd);
         exec($cmd . ' 2>&1 &');
@@ -427,7 +436,8 @@ class Abeille extends eqLogic
             AbeilleSerialPort: ' . $parameters_info['AbeilleSerialPort'] . ',
             qos: ' . $parameters_info['AbeilleQos'] . ',
             showAllCommands: ' . $parameters_info['showAllCommands'] . ',
-            ModeCreation: ' . $parameters_info['creationObjectMode']
+            ModeCreation: ' . $parameters_info['creationObjectMode'] . ',
+            onlyTimer: ' . $parameters_info['onlyTimer']
         );
 
         // https://github.com/mgdm/Mosquitto-PHP
@@ -446,6 +456,7 @@ class Abeille extends eqLogic
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
         $client->onMessage('Abeille::message');
 
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
         $client->onLog('Abeille::logmq');
 
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
@@ -553,9 +564,11 @@ class Abeille extends eqLogic
         $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
         $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
+        
+        $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
 
         // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
-        if ($return['AbeilleSerialPort'] != 'none') {
+        if ( ($return['AbeilleSerialPort'] != 'none') || ($return['onlyTimer']!="Y") ) {
             $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
             if (@!file_exists($return['AbeilleSerialPort'])) {
                 log::add(
@@ -592,27 +605,27 @@ class Abeille extends eqLogic
 
     public static function connect($r, $message)
     {
-        log::add('Abeille', 'info', 'Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
         config::save('state', '1', 'Abeille');
     }
 
     public static function disconnect($r)
     {
-        log::add('Abeille', 'debug', 'Déconnexion de Mosquitto avec code ' . $r);
+        log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
         config::save('state', '0', 'Abeille');
     }
 
     public
     static function subscribe()
     {
-        log::add('Abeille', 'debug', 'Subscribe to topics');
+        log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
     }
 
     public static function logmq($code, $str)
     {
-        if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-            log::add('Abeille', 'debug', $code . ' : ' . $str);
-        }
+        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+            log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // }
     }
 
 
@@ -669,7 +682,7 @@ class Abeille extends eqLogic
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         // Est ce que cet equipement existe deja ? Sinon creation quand je recois son nom
-        // Cherche l objet
+        // Cherche l objet par sa ref short Address
         $elogic = self::byLogicalId($nodeid, 'Abeille');
         $objetConnu = 0;
 
@@ -681,7 +694,13 @@ class Abeille extends eqLogic
             //remove lumi. from name as all xiaomi devices have a lumi. name
             //remove all space in names for easier filename handling
             $trimmedValue = str_replace(' ', '', str_replace('lumi.', '', $value));
-
+            
+            // On enleve le / comme par exemple le nom des equipements Legrand
+            $trimmedValue = str_replace('/', '', $trimmedValue);
+            
+            // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+            $trimmedValue = str_replace( "\0", '', $trimmedValue);
+            
             log::add('Abeille', 'debug', 'value:' . $value . ' / trimmed value: ' . $trimmedValue);
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($trimmedValue, 'Abeille');
 
@@ -851,15 +870,17 @@ class Abeille extends eqLogic
 
         } else {
             // Si je recois une commande IEEE pour un objet qui n'existe pas je vais créer un objet pour visualiser cet inconnu
-            if (!is_object(
-                    $elogic
-                ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
+            // On peux recevoir l'IEEE lorsqu'un equipement s'annonce. Dans ce cas on a sa ShortAddress et son IEEE. Je ne sais pas si il y a d autres scenarios
+            // Soit on ne le connais pas car il est nouveau ou sa shortAddress a changée. Mais dans les deux cas il n'est pas connu sous la ref de sa shortAddress
+            //
+            if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
                 // Creation de l objet Abeille (hors ruche)
                 log::add('Abeille', 'info', 'objet: ' . $value . ' creation sans model');
                 message::add("Abeille", "Création d un nouvel objet INCONNU Abeille (" . $addr . ") en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.");
                 $elogic = new Abeille();
                 //id
                 if ($objetConnu) {
+                    // ici pour moi on ne devrait jamais être dans cas de figure. Ce code ne sert a rien je pense.
                     $name = "Abeille-" . $addr;
                 } else {
                     $name = "Abeille-" . $addr . "-Type d objet inconnu (IEEE)";
@@ -1128,7 +1149,7 @@ class Abeille extends eqLogic
                 );
             }
         }
-        print_r($rucheCommandList);
+        // print_r($rucheCommandList);
 
         //Create ruche object and commands
         foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {

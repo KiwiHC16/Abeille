@@ -66,13 +66,13 @@
                      "63b9" => "Test: Door V0 Bureau",              // 00:15:8d:00:02:01:47:f9 00158d00020147f9 fut 3950
                      "0113" => "Test: IR Pied Bureau",              // 00:15:8d:00:01:dd:b1:f7 00158d0001ddb1f7 fut 5dea
                      "060B" => "Test: Interrupteur Rond",           // 00:15:8d:00:01:f3:af:91 00158d0001f3af91 fut 4ebd
-                     "76fb" => "Test: xxxxxx",                      // 00:0B:57:ff:fe:2c:82:e9 000B57fffe2c82e9 fut 633e, 0Ab5, 0Eb5
+                     "76fb" => "Test: Telecommande Ikea",           // 00:0B:57:ff:fe:2c:82:e9 000B57fffe2c82e9 fut 633e, 0Ab5, 0Eb5
                      "c7c0" => "Test: RI V0",                       // 00:15:8d:00:01:dc:15:88
                      "d45e" => "Test: Ampoule Z Bureau",            // 90:fd:9f:ff:fe:69:13:1d 90fd9ffffe69131d
                      "ceb8" => "Test: Ampoule 2",                   // 00:0B:57:ff:fe:c0:07:b5 000B57fffec007b5
                      "2389" => "Test: Detecteur Smoke",             // 00:15:8d:00:01:b7:b2:a2
-                     "633e" => "Test:Old Address changed 1",        //
-                     "b8fc" => "Test: Wall Switch",                 // 00:15:8d:00:01:f4:6b:79 00158d0001f46b79 - AC Power - Rx When Idle = False
+                     "633e" => "Test: Old Address changed 1",        //
+                     "c1ba" => "Test: Wall Switch",                 // 00:15:8d:00:01:f4:6b:79 00158d0001f46b79 - AC Power - Rx When Idle = False
                      
                      );
 
@@ -139,13 +139,13 @@
                       "Test: Door V0 Bureau"            => array('position' => array( 'x'=>100, 'y'=>300), 'color'=>'grey',),
                       "Test: IR Pied Bureau"            => array('position' => array( 'x'=>100, 'y'=>350), 'color'=>'grey',),
                       "Test: Interrupteur Rond"         => array('position' => array( 'x'=>100, 'y'=>400), 'color'=>'grey',),
-                      "Test: xxxxxx"                    => array('position' => array( 'x'=>100, 'y'=>450), 'color'=>'grey',),
+                      "Test: Telecommande Ikea"                    => array('position' => array( 'x'=>100, 'y'=>450), 'color'=>'grey',),
                       "Test: RI V0"                     => array('position' => array( 'x'=>100, 'y'=>500), 'color'=>'grey',),
                       "Test: Ampoule Z Bureau"          => array('position' => array( 'x'=>050, 'y'=>525), 'color'=>'orange',),
                       "Test: Ampoule 2"                 => array('position' => array( 'x'=>150, 'y'=>575), 'color'=>'orange',),
                       "Test: Detecteur Smoke"           => array('position' => array( 'x'=>100, 'y'=>600), 'color'=>'grey',),
 
-                      "Test:Old Address changed 1"      => array('position' => array( 'x'=>900, 'y'=>600), 'color'=>'purple',),
+                      "Test: Old Address changed 1"      => array('position' => array( 'x'=>900, 'y'=>600), 'color'=>'purple',),
                       "Test: Wall Switch"               => array('position' => array( 'x'=>900, 'y'=>700), 'color'=>'orange',),
                       );
     

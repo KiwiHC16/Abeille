@@ -266,7 +266,7 @@ class Abeille extends eqLogic
         $_message = "";
         $_retain = 0;
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_' . $_id);
+        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_start_' . $_id);
         $publish->setCredentials(
             $parameters_info['AbeilleUser'],
             $parameters_info['AbeillePass']
@@ -442,7 +442,7 @@ class Abeille extends eqLogic
 
         // https://github.com/mgdm/Mosquitto-PHP
         // http://mosquitto-php.readthedocs.io/en/latest/client.html
-        $client = new Mosquitto\Client($parameters_info['AbeilleConId']);
+        $client = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_' . $_id);
 
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
         $client->onConnect('Abeille::connect');
@@ -923,25 +923,25 @@ class Abeille extends eqLogic
                         $_retain = 0;
                         log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
                         $publish = new Mosquitto\Client(
-                            $parameters_info['AbeilleConId'] . '_pub_' . $_id
-                        );
-
+                                                        $parameters_info['AbeilleConId'] . '_pub_message_' . $_id
+                                                        );
+                        
                         $publish->setCredentials(
-                            $parameters_info['AbeilleUser'],
-                            $parameters_info['AbeillePass']
-                        );
-
+                                                 $parameters_info['AbeilleUser'],
+                                                 $parameters_info['AbeillePass']
+                                                 );
+                        
                         $publish->connect(
-                            $parameters_info['AbeilleAddress'],
-                            $parameters_info['AbeillePort'],
-                            60
-                        );
+                                          $parameters_info['AbeilleAddress'],
+                                          $parameters_info['AbeillePort'],
+                                          60
+                                          );
                         $publish->publish(
-                            $_subject,
-                            $_message,
-                            $parameters_info['AbeilleQos'],
-                            $_retain
-                        );
+                                          $_subject,
+                                          $_message,
+                                          $parameters_info['AbeilleQos'],
+                                          $_retain
+                                          );
                         for ($i = 0; $i < 100; $i++) {
                             // Loop around to permit the library to do its work
                             $publish->loop(1);
@@ -965,7 +965,7 @@ class Abeille extends eqLogic
                             // $cmdlogic->setOrder('0');
                             $cmdlogic->setName('Cmd de type inconnue - ' . $cmdId);
                             $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmdId);
-
+                            
                             if (isset($cmdValueDefaut["instance"])) {
                                 $cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);
                             }
@@ -975,7 +975,7 @@ class Abeille extends eqLogic
                             if (isset($cmdValueDefaut["index"])) {
                                 $cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);
                             }
-
+                            
                             // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
                             // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
                             foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
@@ -1000,7 +1000,7 @@ class Abeille extends eqLogic
                             //$cmd->setTemplate('dashboard', 'light');
                             //$cmd->setTemplate('mobile', 'light');
                             //$cmd_info->setIsVisible(0);
-
+                            
                             $cmdlogic->save();
                             $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
                         }
@@ -1010,13 +1010,17 @@ class Abeille extends eqLogic
                         $elogic->checkAndUpdateCmd($cmdlogic, $value);
                         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
                         // $elogic->setStatus('state', 'toto');
-
+                        
                         /* Traitement particulier pour les batteries */
                         if ($cmdId == "Batterie-Volt") {
                             /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
                             $elogic->setStatus('battery', ($value / 1000 - 2.7) / (3.1 - 2.7) * 100);
                             $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                         }
+                        
+                        /* Traitement particulier pour le remontée IEEE pour suivre des changements d'adresses */
+                        
+                        
                     }
                 }
             }
@@ -1059,7 +1063,7 @@ class Abeille extends eqLogic
     {
         $parameters_info = self::getParameters();
         log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
-        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_' . $_id);
+        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_publishMosquitto_' . $_id);
 
         $publish->setCredentials(
             $parameters_info['AbeilleUser'],

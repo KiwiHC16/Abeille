@@ -1005,11 +1005,20 @@ class Abeille extends eqLogic
                         }
                     } else // Si equipement et cmd existe alors on met la valeur a jour
                     {
-                        // $elogic->checkAndUpdateCmd($cmdId, $value);
-                        $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                        $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-                        // $elogic->setStatus('state', 'toto');
                         
+                        /* Traitement particulier pour le remontée IEEE pour suivre des changements d'adresses */
+                        // Si nous avons une nouvelle IEEE pour une short address alors quelque chose est surprenant et doit être géré
+                        if ($cmdId == "IEEE-Addr") {
+                            $IEEE = $cmdlogic->execCmd();
+                            if ( $value == $IEEE ) {
+                                log::add('Abeille', 'debug', 'Ok pas de changement de l adresse IEEE');
+                            }
+                            else {
+                                log::add('Abeille', 'debug', 'Alerte changement de l adresse IEEE pour un equipement !!! ' . $addr . ": ".$IEEE." => ".$value);
+                                message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)" );
+                            }
+                        }
+
                         /* Traitement particulier pour les batteries */
                         if ($cmdId == "Batterie-Volt") {
                             /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
@@ -1017,8 +1026,9 @@ class Abeille extends eqLogic
                             $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                         }
                         
-                        /* Traitement particulier pour le remontée IEEE pour suivre des changements d'adresses */
-                        
+                        /* Finalement nous faisons la mise a jour de la valeur recue. */
+                        $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                        $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
                         
                     }
                 }

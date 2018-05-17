@@ -261,12 +261,11 @@ class Abeille extends eqLogic
 
         sleep(3);
 
-        $_id = "deamon_start"; // JE ne sais pas alors je mets n importe quoi....
         $_subject = "CmdRuche/Ruche/CreateRuche";
         $_message = "";
         $_retain = 0;
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_start_' . $_id);
+        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_start' );
         $publish->setCredentials(
             $parameters_info['AbeilleUser'],
             $parameters_info['AbeillePass']
@@ -442,7 +441,7 @@ class Abeille extends eqLogic
 
         // https://github.com/mgdm/Mosquitto-PHP
         // http://mosquitto-php.readthedocs.io/en/latest/client.html
-        $client = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_' . $_id);
+        $client = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_deamon_Loop_ForEver');
 
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
         $client->onConnect('Abeille::connect');
@@ -923,7 +922,7 @@ class Abeille extends eqLogic
                         $_retain = 0;
                         log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
                         $publish = new Mosquitto\Client(
-                                                        $parameters_info['AbeilleConId'] . '_pub_message_' . $_id
+                                                        $parameters_info['AbeilleConId'] . '_pub_message'
                                                         );
                         
                         $publish->setCredentials(
@@ -1063,7 +1062,7 @@ class Abeille extends eqLogic
     {
         $parameters_info = self::getParameters();
         log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
-        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_publishMosquitto_' . $_id);
+        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_publishMosquitto');
 
         $publish->setCredentials(
             $parameters_info['AbeilleUser'],

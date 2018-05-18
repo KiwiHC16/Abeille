@@ -49,7 +49,7 @@ class Abeille extends eqLogic
         /**
          * Look every 15 minutes if the kernel driver is not in error
          */
-        
+        log::add('Abeille', 'debug', 'Check USB driver potential crash' );
         $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
         $output = array();
         exec(system::getCmdSudo() . $cmd, $output);
@@ -58,7 +58,21 @@ class Abeille extends eqLogic
             message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate. Il faut débrancher/rebrancher la zigate et relancer le demon.");
             log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
             return;
-            
+        }
+        
+        log::add('Abeille', 'debug', 'Ping NE without battery info to check Online status' );
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            if ( strlen($eqLogic->getConfiguration("battery_type")) == 0 ) {
+                $topicArray = explode( "/", $eqLogic->getLogicalId() );
+                $addr = $topicArray[1];
+                if ( strlen($addr) == 4 ) {
+                    // echo "Short: " . $topicArray[1];
+                    log::add('Abeille', 'debug', 'Ping: '.$addr );
+                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' );
+                }
+                
+            }
         }
         log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
     }
@@ -1121,7 +1135,7 @@ class Abeille extends eqLogic
     {
         $parameters_info = self::getParameters();
         log::add('Abeille', 'debug', 'Envoi du message ' . $_message . ' vers ' . $_subject);
-        $publish = new Mosquitto\Client($parameters_info['AbeilleConId'] . '_pub_publishMosquitto');
+        $publish = new Mosquitto\Client();
 
         $publish->setCredentials(
             $parameters_info['AbeilleUser'],
@@ -1498,6 +1512,26 @@ if ($debugBEN != 0) {
                 Abeille::checkShortFromIEEE( $lookForIEEE, $checkShort );
             }
             
+            break;
+        
+        // Ask Model Identifier to all equipement without battery info, those equipement should be awake
+        case "6":
+            log::add('Abeille', 'debug', 'Ping routers to check Online status' );
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                // echo "Battery: ".$collectBattery = $eqLogic->getStatus("battery")."\n";
+                // echo "Battery: ".$collectBattery = $eqLogic->getConfiguration("battery_type")." - ";
+                if ( strlen($eqLogic->getConfiguration("battery_type")) == 0 ) {
+                    $topicArray = explode( "/", $eqLogic->getLogicalId() );
+                    $addr = $topicArray[1];
+                    if ( strlen($addr) == 4 ) {
+                        echo "Short: " . $topicArray[1];
+                        Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' );
+                    }
+                    
+                }
+                echo "\n";
+            }
             break;
 
     } // switch

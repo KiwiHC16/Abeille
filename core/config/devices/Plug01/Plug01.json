@@ -5,6 +5,7 @@
       "automatism": "1"
     },
     "configuration": {
+      "protocol": "OSRAM",
       "icone": "OsramLightify"
     },
     "Commandes": {
@@ -212,7 +213,7 @@
         "invertBinary": "0",
         "template": "AbeillePower"
       },
-     "BindToZigateEtat": {
+      "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
         "order": 22,
@@ -226,7 +227,7 @@
           "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
         }
       },
-	"setReportEtat": {
+      "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
         "order": 24,

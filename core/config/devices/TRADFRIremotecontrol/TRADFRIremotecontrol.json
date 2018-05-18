@@ -5,6 +5,7 @@
       "light": "1"
     },
     "configuration": {
+      "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
       "icone": "IkeaTradfri5BtnRond"
     },

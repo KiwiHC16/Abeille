@@ -5,6 +5,7 @@
       "automatism": "1"
     },
     "configuration": {
+      "battery_type": "na",
       "icone": "Timer",
       "lastCommunicationTimeOut": "-1"
     },

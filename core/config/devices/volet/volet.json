@@ -5,6 +5,7 @@
       "light": "1"
     },
     "configuration": {
+      "protocol": "Profalux",
       "icone": "voletProFalux"
     },
     "Commandes": {

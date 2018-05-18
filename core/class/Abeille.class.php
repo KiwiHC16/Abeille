@@ -69,13 +69,11 @@ class Abeille extends eqLogic
                 if ( strlen($addr) == 4 ) {
                     // echo "Short: " . $topicArray[1];
                     log::add('Abeille', 'debug', 'Ping: '.$addr );
-                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' );
-                    sleep(5);
-                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue", '0' );
-                    sleep(5);
-                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM", '0' );
-                    sleep(5);
-                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux", '0' );
+                    if ( $eqLogic->getConfiguration("protocol") == "" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "Hue" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue", '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "OSRAM" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM", '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "Profalux" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux", '0' ); }
+                    
                     sleep(5);
                     
                 }

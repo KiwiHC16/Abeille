@@ -1239,16 +1239,34 @@
         $dataType           = substr($payload,18, 2);
         $AttributSize       = substr($payload,20, 4);
         
-        deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
-                  . '; SQN: '              .$SQN
-                  . '; Src Addr : '        .$SrcAddr
-                  . '; End Point : '       .$EPoint
-                  . '; Cluster ID : '      .$ClusterId
-                  . '; Attr ID : '         .$AttributId
-                  . '; Attr Status : '     .$AttributStatus
-                  . '; Attr Data Type : '  .$dataType
-                  . '; Attr Size : '       .$AttributSize
-                  . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2))  );
+
+
+        
+        if ( ($ClusterId=="0000") && ($AttributId=="0005") ) {
+            deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
+                      . '; SQN: '              .$SQN
+                      . '; Src Addr : '        .$SrcAddr
+                      . '; End Point : '       .$EPoint
+                      . '; Cluster ID : '      .$ClusterId
+                      . '; Attr ID : '         .$AttributId
+                      . '; Attr Status : '     .$AttributStatus
+                      . '; Attr Data Type : '  .$dataType
+                      . '; Attr Size : '       .$AttributSize
+                      . '; Data byte list : ->'  .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)) ).'<-' );
+        }
+        else {
+            deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
+                      . '; SQN: '              .$SQN
+                      . '; Src Addr : '        .$SrcAddr
+                      . '; End Point : '       .$EPoint
+                      . '; Cluster ID : '      .$ClusterId
+                      . '; Attr ID : '         .$AttributId
+                      . '; Attr Status : '     .$AttributStatus
+                      . '; Attr Data Type : '  .$dataType
+                      . '; Attr Size : '       .$AttributSize
+                      . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2))  );
+        }
+        
         
         // valeur hexadécimale	- type -> function
         // 0x00	Null
@@ -1299,7 +1317,7 @@
         }
         
         if ($dataType == "42") {
-            
+
             // Xiaomi Bouton Carré
             if (($AttributId == "ff01") && ($AttributSize == "001a")) {
                 deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );

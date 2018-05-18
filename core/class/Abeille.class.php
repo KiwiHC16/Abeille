@@ -70,6 +70,7 @@ class Abeille extends eqLogic
                     // echo "Short: " . $topicArray[1];
                     log::add('Abeille', 'debug', 'Ping: '.$addr );
                     Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' );
+                    sleep(5);
                 }
                 
             }

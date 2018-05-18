@@ -1241,8 +1241,9 @@
         
 
 
-        
-        if ( ($ClusterId=="0000") && ($AttributId=="0005") ) {
+        // 0005: ModelIdentifier
+        // 0010: Piece (nom utilisé pour Profalux)
+        if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
             deamonlog('debug', ';Type: 8102 (Attribut Report)(Processed->MQTT)'
                       . '; SQN: '              .$SQN
                       . '; Src Addr : '        .$SrcAddr

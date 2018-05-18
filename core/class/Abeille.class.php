@@ -71,6 +71,13 @@ class Abeille extends eqLogic
                     log::add('Abeille', 'debug', 'Ping: '.$addr );
                     Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' );
                     sleep(5);
+                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue", '0' );
+                    sleep(5);
+                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM", '0' );
+                    sleep(5);
+                    Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux", '0' );
+                    sleep(5);
+                    
                 }
                 
             }

@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 
 <html>
-<body width: 1100px;>
+<head>
+<style type="text/css">
+body {
+width: 100%;
+height: 100%;
+zoom:200%;
+}
+</style>
+</head>
+<body>
 
 <?php
     
@@ -125,7 +134,7 @@
 <input type="submit" value="Submit">
 </form>
 
-<svg width="1000" height="1000">
+<svg width="1100px" height="1100px">
 <defs>
 <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
 <circle cx="5" cy="5" r="3" style="stroke: none; fill:#000000;"/>

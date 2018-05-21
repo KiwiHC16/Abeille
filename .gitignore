@@ -36,4 +36,6 @@ atlassian-ide-plugin.xml
 **/COMchmod
 ._*
 **/._*
+.nfs*
+
 

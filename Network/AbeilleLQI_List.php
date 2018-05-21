@@ -53,22 +53,20 @@
 
             $.getJSON("AbeilleLQI_MapData.json", function (json) {
                 console.log(json);
-                //Sort objetcs to have IEEE
+                //Sort objetcs to have Voisin list array
                 json.data.sort(function (a, b) {
-                    if (a.IEEE_Name == b.IEEE_Name) {
+                    if (a.Voisin_Name == b.Voisin_Name) {
                         return 0;
                     }
                     ;
-                    if (a.IEEE_Name > b.IEEE_Name) {
+                    if (a.Voisin_Name > b.Voisin_Name) {
                         return 1;
                     }
                     ;
-                    if (a.IEEE_Name < b.IEEE_Name) {
+                    if (a.Voisin_Name < b.Voisin_Name) {
                         return -1;
                     }
-                    ;
-                })
-                prev = '';
+                });
 
                 var tblLegend = $('<table>');
                 tblLegend.addClass("table table-bordered table-condensed").css("width: 350px;position:fixed;margin-top : 25px;");
@@ -83,89 +81,119 @@
                 row = '<tr><td class="typeUndefined" style="width: 35px"><i class="fa fa-square fa-2x"></i></td><td>Inconnu</td></tr>';
                 tblLegend.append(row);
 
-                $('#netLegend').append(tblLegend);
+                $('#netLegend').empty()
+                    .append(tblLegend);
 
-                for (z in json.data) {
-                    console.log(json.data[z].NE_Name + '/' + json.data[z].Voisine_Name + ' * ' + json.data[z].Type); // this will show the info it in firebug console
+                var nodes = [];
+                for (var z in json.data) {
+                    console.log('Parsing: ' + json.data[z].NE_Name + '/' + json.data[z].Voisine_Name + ' * ' + json.data[z].Type); // this will show the info it in firebug console
                     // Step 2. We add nodes and edges to the graph:
                     //Add node if not already existing
-                    if (prev != json.data[z].NE_Name) {
-                        graph.addNode(json.data[z].NE_Name, {
-                            name: json.data[z].NE_Name, route: json.data[z].NeighbourTableEntries,
-                            Quality: json.data[z].LinkQualityDec, Type: json.data[z].Type
-                        });
-
+                    if ('undefined' == typeof(nodes[json.data[z].NE_Name])) {
+                        nodes[json.data[z].NE_Name] = {};
+                        nodes[json.data[z].NE_Name].name = json.data[z].NE_Name;
+                        nodes[json.data[z].NE_Name].links = [];
+                        nodes[json.data[z].NE_Name].route = json.data[z].NeighbourTableEntries;
                     }
-                    //var row = '<tr><th>' + json.data[z].LinkQualityDec+'/'+ json.data[z].Type + '</th><th>' + json.data[z].Voisine_Name +'</th></tr>';
-                    //tblLegend.append(row);
-                    graph.addLink(json.data[z].NE_Name, json.data[z].Voisine_Name,);
-                    prev = json.data[z].NE_Name;
-                }
-                ;
-            });
+                    var aTemp = nodes[json.data[z].NE_Name].links;
+                    aTemp.push(json.data[z].Voisine_Name);
 
-            // Step 3. Render the graph.
-            var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 10,
-                highlightRelatedNodes = function (nodeId, isOn) {
-                    graph.forEachLinkedNode(nodeId, function (node, link) {
-                        var linkUI = graphics.getLinkUI(link.id);
-                        if (linkUI) {
-                            linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
+                    if ('undefined' == typeof(nodes[json.data[z].Voisine_Name])) {
+                        nodes[json.data[z].Voisine_Name] = {};
+                        nodes[json.data[z].Voisine_Name].links = [];
+                        nodes[json.data[z].Voisine_Name].route = 1;
+                        nodes[json.data[z].Voisine_Name].lqi = json.data[z].LinkQualityDec;
+                        nodes[json.data[z].Voisine_Name].name = json.data[z].Voisine_Name;
+                    }
+                    // voisine_name should have the Type of the node.
+                    nodes[json.data[z].Voisine_Name].Type = json.data[z].Type;
+
+                }
+
+                nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
+                console.log(nodes);
+
+                for (node in nodes) {
+
+                    console.log('Adding node: name: ' + nodes[node].name + ' route: ' + nodes[node].route +
+                        ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
+
+                    graph.addNode(node, {
+                            name: nodes[node].name, route: nodes[node].route,
+                            Quality: nodes[node].lqi, Type: nodes[node].Type
                         }
-                    });
-                };
+                    );
+                    for (link in nodes[node].links) {
 
-            //
-            graphics.node(function (node) {
-                var nodeshape = 'rect';
-                var nodecolor = '#7BCC7B', nodeSize = 10;
-                if (typeof node.data != 'undefined') {
-                    nodecolor = (node.data.Type == 'Coordinator') ? '#a65ba6' : nodecolor;
-                    nodecolor = (node.data.Type == 'End Device') ? '#296da6' : nodecolor;
-                    nodecolor = (node.data.Type == 'Router') ? '#a65c21' : nodecolor;
+                        console.log('addind link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                        graph.addLink(node, nodes[node].links[link]);
+                    }
                 }
-                var ui = Viva.Graph.svg('g'),
-                    svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.id),
-                    img = Viva.Graph.svg(nodeshape)
-                        .attr("width", nodeSize)
-                        .attr("height", nodeSize)
-                        .attr("fill", nodecolor);
-                ui.append(svgText);
-                ui.append(img);
-                $(ui).hover(function (node) {
-                    var nodeText = 'name: ' + node.data.NE_Name + ', route: ' + node.data.NeighbourTableEntries +
-                        ', Quality: ' + node.data.LinkQualityDec + ', Type: ' + node.data.Type;
-                    $('#nodeName').html(nodeText);
-                    highlightRelatedNodes(node.id, true);
-                }, function () {
-                    highlightRelatedNodes(node.id, false);
+
+                // Step 3. Render the graph.
+                var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 10,
+                    highlightRelatedNodes = function (nodeId, isOn) {
+                        graph.forEachLinkedNode(nodeId, function (node, link) {
+                            var linkUI = graphics.getLinkUI(link.id);
+                            if (linkUI) {
+                                linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
+                            }
+                        });
+                    };
+
+                //
+                graphics.node(function (node) {
+                    var nodeshape = 'rect';
+                    var nodecolor = '#7BCC7B', nodeSize = 10;
+                    if (typeof node.data != 'undefined') {
+                        nodecolor = (node.data.Type == 'Coordinator') ? '#a65ba6' : nodecolor;
+                        nodecolor = (node.data.Type == 'End Device') ? '#296da6' : nodecolor;
+                        nodecolor = (node.data.Type == 'Router') ? '#a65c21' : nodecolor;
+                    }
+                    var ui = Viva.Graph.svg('g'),
+                        svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.id),
+                        img = Viva.Graph.svg(nodeshape)
+                            .attr("width", nodeSize)
+                            .attr("height", nodeSize)
+                            .attr("fill", nodecolor);
+                    ui.append(svgText);
+                    ui.append(img);
+                    $(ui).hover(function (node) {
+                        var nodeText = 'name: ' /*+ node.data.name + ', route: ' + node.data.route +
+                            ', Quality: ' + node.data.lqi + ', Type: ' + node.data.Type;
+                            */
+                        $('#nodeName').html(nodeText);
+
+                        highlightRelatedNodes(node.id, true);
+                    }, function () {
+                        highlightRelatedNodes(node.id, false);
+                    });
+                    return ui;
+                }).placeNode(function (nodeUI, pos) {
+                    nodeUI.attr('transform',
+                        'translate(' +
+                        (pos.x - nodeSize / 3) + ',' + (pos.y - nodeSize / 2.5) +
+                        ')');
                 });
-                return ui;
-            }).placeNode(function (nodeUI, pos) {
-                nodeUI.attr('transform',
-                    'translate(' +
-                    (pos.x - nodeSize / 3) + ',' + (pos.y - nodeSize / 2.5) +
-                    ')');
+
+                var layout = Viva.Graph.Layout.forceDirected(graph, {
+                    springLength: 100,
+                    springCoeff: 0.0005,
+                    dragCoeff: 0.02,
+                    gravity: -0.2
+                });
+
+                var renderer = Viva.Graph.View.renderer(graph, {
+                    layout: layout,
+                    graphics: graphics,
+                    prerender: 10,
+                    container: document.getElementById('netGraph')
+                });
+                renderer.run();
+
+
             });
-
-            var layout = Viva.Graph.Layout.forceDirected(graph, {
-                springLength: 100,
-                springCoeff: 0.0015,
-                dragCoeff: 0.02,
-                gravity: -0.2
-            });
-
-            var renderer = Viva.Graph.View.renderer(graph, {
-                layout: layout,
-                graphics: graphics,
-                prerender: 10,
-                container: document.getElementById('netGraph')
-            });
-            renderer.run();
-
-
         };
-
 
     </script>
 
@@ -176,8 +204,6 @@
 
 <?php
 require_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
-
-sendVarToJS('eqType', 'Abeille');
 
 /*
  (
@@ -247,46 +273,37 @@ foreach ($eqLogics as $eqLogic) {
     $knownNE[$name] = $shortAddress;
 }
 
+
 ?>
 
 
 <form method="get">
-    <select name="NE">
+    <select name="NE" id="selectNE">
         <?php
-        if ($NE == "All") {
-            $selected = " selected ";
-        } else {
-            $selected = " ";
-        }
+        $selected = ($NE == "All") ? " selected " : "";
         echo '<option value="All"' . $selected . '>All</option>' . "\n";
-        if ($NE == "None") {
-            $selected = " selected ";
-        } else {
-            $selected = " ";
-        }
-        echo '<option value="None"' . $selected . '>None</option>' . "\n";
+
+        $selected = ($NE == "None") ? " selected " : "";
+        echo '      <option value="None"' . $selected . '>None</option>' . "\n";
 
         foreach ($knownNE as $name => $shortAddress) {
-            if ($NE == $name) {
-                $selected = " selected ";
-            } else {
-                $selected = " ";
-            }
-            echo '<option value="' . $name . '"' . $selected . '>' . $name . ' x ' . $shortAddress . '</option>' . "\n";
+            $selected = ($NE == $name) ? " selected " : "";
+            echo '      <option value="' . $name . '"' . $selected . '>' . $name . ' x ' . $shortAddress . '</option>' . "\n";
         }
 
         ?>
     </select>
-    <select name="NE2">
+    <select name="NE2" id="selectNE2">
         <?php
-        echo '<option value="None"' . $selected . '>None</option>' . "\n";
+        $selected = ($NE2 == "All") ? " selected " : "";
+        echo '<option value="All"' . $selected . '>All</option>' . "\n";
+
+        $selected = ($NE2 == "None") ? " selected " : "";
+        echo '      <option value="None"' . $selected . '>None</option>' . "\n";
+
         foreach ($knownNE as $name => $shortAddress) {
-            if ($NE2 == $name) {
-                $selected = " selected ";
-            } else {
-                $selected = " ";
-            }
-            echo '<option value="' . $name . '"' . $selected . '>' . $name . ' x ' . $shortAddress . '</option>' . "\n";
+            $selected = ($NE2 == $name) ? " selected " : "";
+            echo '      <option value="' . $name . '"' . $selected . '>' . $name . ' x ' . $shortAddress . '</option>' . "\n";
         }
         ?>
     </select>
@@ -294,11 +311,7 @@ foreach ($eqLogics as $eqLogic) {
         <?php
         $CacheList = array('Cache', 'Refresh Cache');
         foreach ($CacheList as $item) {
-            if ("Cache" == $item) {
-                $selected = " selected ";
-            } else {
-                $selected = " ";
-            }
+            $selected = ($Cache == $item) ? " selected " : "";
             echo '<option value="' . $item . '"' . $selected . '>' . $item . '</option>' . "\n";
         }
         ?>
@@ -333,9 +346,10 @@ foreach ($eqLogics as $eqLogic) {
 
     foreach ($LQI as $key => $voisine) {
         if (($voisine['NE_Name'] == $NE) || ("All" == $NE) || ($voisine['Voisine_Name'] == $NE2)) {
-            echo "<tr>";
-            echo "<td>" . $voisine['NE'] . "</td><td>" . $voisine['NE_Name'] . "</td><td>" . $voisine['Voisine'] . "</td><td>" . $voisine['Voisine_Name'] . "</td><td>" . $voisine['IEEE_Address'] . "</td><td>" . $voisine['Relationship'] . "</td><td>" . $voisine['Depth'] . "</td><td>" . $voisine['LinkQualityDec'] . "</td>";
-            echo "</tr>\n";
+            echo "
+     <tr>
+          <td>" . $voisine['NE'] . "</td><td>" . $voisine['NE_Name'] . "</td><td>" . $voisine['Voisine'] . "</td><td>" . $voisine['Voisine_Name'] . "</td><td>" . $voisine['IEEE_Address'] . "</td><td>" . $voisine['Relationship'] . "</td><td>" . $voisine['Depth'] . "</td><td>" . $voisine['LinkQualityDec'] . "</td>
+     </tr>\n";
         }
     }
 

@@ -1,4 +1,4 @@
 <?php
-    $in = "/var/www/html/plugins/Abeille/resources/AbeilleDeamon/input";
+    $in = "/tmp/AbeilleDeamonInput";
     $resourcePath=realpath(dirname(__FILE__).'/../../');
 ?>

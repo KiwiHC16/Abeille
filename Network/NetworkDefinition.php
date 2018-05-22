@@ -20,7 +20,7 @@
                      "a728" => "Piano",         // 00:0b:57:ff:fe:3a:0e:7c
                      
                      "345f" => "P-D",           // 00158d0001e44ece
-                     "ea8c" => "P-G",           // 00:15:8d:00:01:b1:49:a8 000B57fffe4c338a fut 2349
+                     "ea8c" => "P-G",           // 00:15:8d:00:01:b1:49:a8 00158d0001b149a8 fut 2349
                      "fb14" => "P-C",           // 00:15:8d:00:01:ab:3f:2f 00158d0001ab3f2f	fut f984
                      
                      "8f28" => "P-Entree",      // 00158d0001b149a3
@@ -48,7 +48,7 @@
                      
                      "eb79" => "Sonnette",      // 00158d00016d8d4f
 
-                     "0F7e" => "Inconnu1", 		// 90:fd:9f:ff:fe:16:5c:2c
+                     "fde8" => "Inconnu1", 		// 90:fd:9f:ff:fe:16:5c:2c 90fd9ffffe165c2c fut 0F7e
                      
                      "137f" => "Velux-SdB-Tour",    // 00158d0001e4531b
                      "e311" => "Velux-Lulu",		// fut 4c3a

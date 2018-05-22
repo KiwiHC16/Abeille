@@ -6,25 +6,24 @@
                                                 // 00:01:58:d0:00:19:1b:22 000158d000191b22 -> Test
  // Abeille Prod JeedomZwave
                      "dc15" => "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
-                     "1e8c" => "T2",
+                     "d204" => "T2",            // 00:0B:57:ff:fe:c5:38:19 000B57fffec53819 fut 1e8c
                      "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
-                     "6766" => "T4",
-                     "1b7b" => "T5",
-                     "8ffe" => "T6",
-                     "2096" => "T7",
-                     "2cd5" => "T8",
+                     "6766" => "T4",            // 000B57fffe3025ad
+                     "1b7b" => "T5",            // 000B57fffe8da30A
+                     "8ffe" => "T6",            // 000B57fffe8e083c
+                     "2096" => "T7",            // 000B57fffe490C2a
+                     "2cd5" => "T8",            // 000B57fffe88af72
                      
-                     "a0da" => "Gauche",
-                     // "0cd5" => "Milieu",
-                     "60fb" => "Milieu",
+                     "a0da" => "Gauche",        // 000B57fffe3a563b
+                     "60fb" => "Milieu",        // 000B57fffe8dbb1a
                      "46d9" => "Droite",        // 00:0b:57:ff:fe:95:2a:69
                      "a728" => "Piano",         // 00:0b:57:ff:fe:3a:0e:7c
                      
-                     "345f" => "P-D",
-                     "2349" => "P-G",           // 00:15:8d:00:01:b1:49:a8
-                     "fb14" => "P-C",		// 	fut f984
+                     "345f" => "P-D",           // 00158d0001e44ece
+                     "ea8c" => "P-G",           // 00:15:8d:00:01:b1:49:a8 000B57fffe4c338a fut 2349
+                     "fb14" => "P-C",           // 00:15:8d:00:01:ab:3f:2f 00158d0001ab3f2f	fut f984
                      
-                     "8f28" => "P-Entree",
+                     "8f28" => "P-Entree",      // 00158d0001b149a3
                      
                      
                      "41c0" => "PriseX1",       // 00:15:8d:00:01:83:af:7b
@@ -35,23 +34,23 @@
                      
                      "7714" => "Bois",          // 00:0b:57:ff:fe:4b:ab:6a
                      
-                     "873a" => "IR",
+                     "873a" => "IR",            // 00158d0001215781
                      
-                     "b774" => "Porte Bureau",
-                     "1be0" => "Temperature Bureau",
+                     "b774" => "Porte Bureau",  // 00158d0001d5c421
+                     "1be0" => "Temperature Bureau",    // 00158d0001d6c177
                    
-                     "d43e" => "Fenetre SdB G",
-                     "28f2" => "Fenetre SdB D",
+                     "d43e" => "Fenetre SdB G", // 00158d0001e44eac
+                     "28f2" => "Fenetre SdB D", // 00158d0001ab3f20
                      
                      "5571" => "Grad-Bureau",
                      
-                     "e4c0" => "Ch Parent Ben",
+                     "e4c0" => "Ch Parent Ben", // 000B57fffed2af6a
                      
-                     "eb79" => "Sonnette",
+                     "eb79" => "Sonnette",      // 00158d00016d8d4f
 
                      "0F7e" => "Inconnu1", 		// 90:fd:9f:ff:fe:16:5c:2c
                      
-                     "137f" => "Velux-SdB-Tour",
+                     "137f" => "Velux-SdB-Tour",    // 00158d0001e4531b
                      "e311" => "Velux-Lulu",		// fut 4c3a
 
                      "c551" => "Old-Off-Network-1", 	// 00:0B:57:ff:fe:8d:70:73

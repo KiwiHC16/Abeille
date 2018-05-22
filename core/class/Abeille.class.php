@@ -1098,6 +1098,13 @@ class Abeille extends eqLogic
                             $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                         }
                         
+                        /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
+                        if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
+                            log::add('Abeille', 'debug', 'Update ONLINE Status');
+                            $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online' );
+                            $elogic->checkAndUpdateCmd($cmdlogicOnline, 1 );
+                        }
+                        
                         /* Finalement nous faisons la mise a jour de la valeur recue. */
                         $elogic->checkAndUpdateCmd($cmdlogic, $value);
                         

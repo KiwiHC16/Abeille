@@ -118,7 +118,7 @@
       },
       "On": {
         "isVisible": 1,
-        "name": "On",
+        "name": "Monter",
         "order": 7,
         "isHistorized": "0",
         "Type": "action",
@@ -132,7 +132,7 @@
       },
       "Off": {
         "isVisible": 1,
-        "name": "Off",
+        "name": "Descendre",
         "order": 8,
         "isHistorized": "0",
         "Type": "action",

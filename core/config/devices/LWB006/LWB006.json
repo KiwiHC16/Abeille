@@ -286,6 +286,23 @@
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
         }
+      },
+      "online": {
+        "isVisible": 0,
+        "name": "online",
+        "order": 44,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "ONLINE"
+        },
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "60"
+        }
       }
     }
   }

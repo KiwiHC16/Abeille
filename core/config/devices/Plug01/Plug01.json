@@ -240,6 +240,23 @@
           "topic": "CmdAbeille/Ruche/setReport",
           "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
+      },
+      "online": {
+        "isVisible": 0,
+        "name": "online",
+        "order": 44,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "ONLINE"
+        },
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "60"
+        }
       }
     }
   }

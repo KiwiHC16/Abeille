@@ -116,7 +116,7 @@ zoom:200%;
 <?php
     $CacheList = array( 'Cache', 'Refresh Cache' );
     foreach ($CacheList as $item) {
-        if ( "Cache"==$item ) { $selected = " selected "; } else { $selected = " "; }
+        if ( $Cache==$item ) { $selected = " selected "; } else { $selected = " "; }
         echo '<option value="'.$item.'"'.$selected.'>'.$item.'</option>'."\n";
     }
     ?>

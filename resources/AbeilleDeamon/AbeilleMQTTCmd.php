@@ -73,7 +73,6 @@
                         "attributeId" => "0010",
                     );
                 }
-
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOff") {
                 if ($msg == "On") {
@@ -461,7 +460,14 @@
             /*---------------------------------------------------------*/
 
             // print_r( $Command );
+            $toPrint = "";
+            foreach ( $Command as $commandItem => $commandValue)
+            { $toPrint = $toPrint . $commandItem."-".$commandValue."-"; }
+            
+            deamonlog('debug','processCmd call with: '.$toPrint);
+
             processCmd($dest, $Command, $GLOBALS['requestedlevel']);
+            
         } else {
             deamonlog(
                 'warning',

@@ -63,6 +63,119 @@
         return $mess;
     }
     
+    // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
+    function setParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
+    {
+        /*
+         <address mode: uint8_t>
+         <target short address: uint16_t>
+         <source endpoint: uint8_t>
+         <destination endpoint: uint8_t> 
+         <Cluster id: uint16_t>
+         <direction: uint8_t>
+         <manufacturer specific: uint8_t>
+         <manufacturer id: uint16_t>
+         <number of attributes: uint8_t> 
+         <attributes list: data list of uint16_t  each>
+            Direction:
+            0 - from server to client
+            1 - from client to server
+         */
+
+        $cmd = "0110";
+        $lenth = "000E";
+        
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        // $destinationEndpoint = "01";
+        //$ClusterId = "0006";
+        $Direction = "01";
+        $manufacturerSpecific = "00";
+        $manufacturerId = "0000";
+        $numberOfAttributes = "01";
+        // $attributesList = "0000";
+        $attributesList = $attributeId;
+        $attributesList = "Salon1         ";
+        
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $clusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        deamonlog('debug','data: '.$data);
+        deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
+        
+        sendCmd( $dest, $cmd, $lenth, $data );
+    }
+
+    function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
+    {
+        deamonlog('debug',"command setParam2");
+        // Msg Type = 0x0530
+        $cmd = "0530";
+        
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+        
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+        
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+        
+        $addressMode = "02";
+        $targetShortAddress = $address;
+        $sourceEndpoint = "01";
+        $destinationEndpoint = $destinationEndPoint; // "01";
+        $profileID = "0104"; // "0000";
+        $clusterID = $clusterId; // "0021";
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = "16";
+        
+        $frameControl = "00";
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute = "02";
+        
+        $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
+        $dataType = "42"; // string
+        // $Param = "53616C6F6E31202020202020202020";
+        // $Param = "Salon2         ";
+        $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
+        $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
+        // $attributValue = $Param; // "53616C6F6E31202020202020202020"; //$Param;
+        
+        $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+
+        // $dataLength = "16";
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+        deamonlog('debug',"data2: ".$data2 );
+        deamonlog('debug',"length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+        
+        $data = $data1 . $data2;
+
+        // $lenth = "0022";
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        deamonlog('debug',"data: ".$data );
+        deamonlog('debug',"lenth data: ".$lenth );
+        
+        sendCmd( $dest, $cmd, $lenth, $data );
+
+    }
+    
     function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint)
     {
         /*
@@ -199,7 +312,7 @@
         // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
         
         deamonlog('debug','Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
-        if (1) {
+        if (0) {
             $f=fopen("/var/www/html/log/toto","w");
             fwrite($f,pack("H*","01"));
             fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
@@ -821,7 +934,6 @@
             
         }
         
-        
         // ReadAttributeRequest ------------------------------------------------------------------------------------
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
         if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
@@ -1154,6 +1266,23 @@
             //echo "Get Name from: ".$Command['address']."\n";
             if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             getParam( $dest, $Command['address'], "0000", "0005",$Command['destinationEndPoint'] );
+        }
+        
+        if ( isset($Command['getLocation']) && isset($Command['address']) )
+        {
+            deamonlog('debug','Get Location from: '.$Command['address']);
+            //echo "Get Name from: ".$Command['address']."\n";
+            if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            getParam( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'] );
+        }
+        
+        if ( isset($Command['setLocation']) && isset($Command['address']) )
+        {
+            deamonlog('debug','Set Location of: '.$Command['address']);
+            if ( $Command['location'] == "" ) { $Command['location'] = "Not Def"; }
+            if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+        
+            setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'] );
         }
     }
     

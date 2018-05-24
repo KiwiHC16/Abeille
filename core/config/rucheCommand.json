@@ -180,9 +180,43 @@
       "message_placeholder": "[targetEndpoint(XX)]"
     }
   },
+  "getLocation": {
+    "name": "Get Location",
+    "order": "10",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/getLocation",
+      "request": "address=#title#&destinationEndPoint=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[targetEndpoint(XX)]"
+    }
+  },
+  "setLocation": {
+    "name": "Set Location",
+    "order": "11",
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/setLocation",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "location=xxxxxx[&destinationEndPoint=(XX)]"
+    }
+  },
   "ReadAttributeRequest": {
     "name": "Get Attribut",
-    "order": "10",
+    "order": "12",
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

@@ -19,6 +19,16 @@
         "invertBinary": "0",
         "template": ""
       },
+      "0000-0010": {
+        "isVisible": 0,
+        "name": "lieux",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
       "0000-0000": {
         "isVisible": 0,
         "name": "ZCL Version",

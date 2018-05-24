@@ -245,9 +245,17 @@
           "returnStateValue": "0",
           "returnStateTime": "60"
         }
+      },
+      "0000-ff01": {
+        "isVisible": 0,
+        "name": "Specific",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
       }
     }
   }
 }
-
-

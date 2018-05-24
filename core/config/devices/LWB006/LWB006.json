@@ -243,7 +243,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 16,
+        "order": 17,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -253,7 +253,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 17,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -266,7 +266,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 18,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -276,7 +276,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 19,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -290,7 +290,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 44,
+        "order": 21,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

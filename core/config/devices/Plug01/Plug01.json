@@ -32,7 +32,7 @@
       "0000-0005": {
         "isVisible": 0,
         "name": "nom",
-        "order": 1,
+        "order": 2,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -42,7 +42,7 @@
       "0006-0000": {
         "isVisible": 1,
         "name": "etat",
-        "order": 2,
+        "order": 3,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -52,7 +52,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 5,
+        "order": 4,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -62,7 +62,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 5,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -72,7 +72,7 @@
       "On": {
         "isVisible": 1,
         "name": "On",
-        "order": 7,
+        "order": 6,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -86,7 +86,7 @@
       "Off": {
         "isVisible": 1,
         "name": "Off",
-        "order": 8,
+        "order": 7,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -100,7 +100,7 @@
       "Toggle": {
         "isVisible": 1,
         "name": "Toggle",
-        "order": 9,
+        "order": 8,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -117,7 +117,7 @@
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 10,
+        "order": 9,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -131,7 +131,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 11,
+        "order": 10,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -145,7 +145,7 @@
       "getModelIdentifier": {
         "isVisible": 1,
         "name": "getModelIdentifier",
-        "order": 12,
+        "order": 11,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -159,7 +159,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 13,
+        "order": 12,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -173,7 +173,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 14,
+        "order": 13,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -216,7 +216,7 @@
       "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 22,
+        "order": 17,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -230,7 +230,7 @@
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 24,
+        "order": 18,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -244,7 +244,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 44,
+        "order": 19,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

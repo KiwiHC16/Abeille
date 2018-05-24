@@ -57,7 +57,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "IEEE-Addr",
-        "order": 13,
+        "order": 4,
         "subType": "string",
         "template": "badge"
       },
@@ -67,7 +67,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Short-Addr",
-        "order": 13,
+        "order": 5,
         "subType": "string",
         "template": "badge"
       },
@@ -77,7 +77,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Link Quality",
-        "order": 14,
+        "order": 6,
         "subType": "string",
         "template": "badge"
       },
@@ -91,7 +91,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Off",
-        "order": 8,
+        "order": 7,
         "subType": "other",
         "template": "",
         "display": {
@@ -108,7 +108,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "On",
-        "order": 7,
+        "order": 8,
         "subType": "other",
         "template": "",
         "display": {
@@ -124,7 +124,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Power Source",
-        "order": 15,
+        "order": 9,
         "subType": "binary",
         "template": "AbeillePower"
       },
@@ -134,7 +134,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-Time",
-        "order": 5,
+        "order": 10,
         "subType": "string",
         "template": ""
       },
@@ -144,7 +144,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 11,
         "subType": "numeric",
         "template": "badge"
       },
@@ -161,7 +161,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Toggle",
-        "order": 9,
+        "order": 12,
         "subType": "other",
         "template": ""
       },
@@ -175,7 +175,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getEtat",
-        "order": 10,
+        "order": 13,
         "subType": "other",
         "template": ""
       },
@@ -189,7 +189,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getManufacturerName",
-        "order": 11,
+        "order": 14,
         "subType": "other",
         "template": ""
       },
@@ -203,14 +203,14 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getModelIdentifier",
-        "order": 12,
+        "order": 15,
         "subType": "other",
         "template": ""
       },
 	"getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 13,
+        "order": 16,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -230,7 +230,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Conso",
-        "order": 4,
+        "order": 17,
         "subType": "numeric",
         "template": "badge"
       },
@@ -249,14 +249,14 @@
         "isHistorized": "1",
         "name": "Puissance",
         "units": "W",
-        "order": 3,
+        "order": 18,
         "subType": "numeric",
         "template": "badge"
       },
       "Group-Membership": {
         "isVisible": 1,
         "name": "Groups",
-        "order": 20,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -266,7 +266,7 @@
      "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 22,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -280,7 +280,7 @@
         "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 24,
+        "order": 21,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -294,3 +294,4 @@
     }
   }
 }
+

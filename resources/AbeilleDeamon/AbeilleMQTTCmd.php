@@ -249,10 +249,13 @@
                 $b = 0.2171167;
                 $c = -8.60201639;
                 
-                $level255 = intval($keywords[1] * 255 / 100);
-                $level = $level255 * $level255 * a + $level255 * $b + $c;
-                
                 $keywords = preg_split("/[=&]+/", $msg);
+                $level255 = intval($keywords[1] * 255 / 100);
+                deamonlog('debug', 'level255: '.$level255);
+                
+                $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
+                deamonlog('debug', 'level: '.$level);
+                
                 $Command = array(
                                  "setLevel" => "1",
                                  "addressMode" => "02",

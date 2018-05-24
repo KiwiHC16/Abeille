@@ -16,7 +16,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "nom",
-        "order": 1,
+        "order": 0,
         "subType": "string",
         "template": ""
       },
@@ -26,7 +26,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "etat",
-        "order": 2,
+        "order": 1,
         "subType": "binary",
         "template": "prise"
       },
@@ -36,7 +36,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Duration",
-        "order": 13,
+        "order": 2,
         "subType": "string",
         "template": "badge"
       },
@@ -46,7 +46,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "ExpiryTime",
-        "order": 14,
+        "order": 3,
         "subType": "string",
         "template": "badge"
       },
@@ -56,7 +56,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "RampUpDown",
-        "order": 14,
+        "order": 4,
         "subType": "string",
         "template": "badge"
       },
@@ -70,7 +70,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Start",
-        "order": 7,
+        "order": 5,
         "subType": "other",
         "template": ""
       },
@@ -84,7 +84,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Stop",
-        "order": 8,
+        "order": 6,
         "subType": "other",
         "template": ""
       },
@@ -98,7 +98,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Cancel",
-        "order": 8,
+        "order": 7,
         "subType": "other",
         "template": ""
       },
@@ -108,7 +108,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-Time",
-        "order": 5,
+        "order": 8,
         "subType": "string",
         "template": ""
       },
@@ -118,10 +118,11 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 9,
         "subType": "numeric",
         "template": "badge"
       }
     }
   }
 }
+

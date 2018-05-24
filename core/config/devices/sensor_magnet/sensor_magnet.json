@@ -45,7 +45,7 @@
       "Batterie-Volt": {
         "isVisible": 0,
         "name": "Batterie",
-        "order": 4,
+        "order": 3,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -60,7 +60,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 3,
+        "order": 4,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -70,7 +70,7 @@
       "Batterie-Volt 2": {
         "isVisible": 0,
         "name": "Batterie",
-        "order": 4,
+        "order": 5,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -85,7 +85,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 4,
+        "order": 6,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -95,7 +95,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 5,
+        "order": 7,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -105,7 +105,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 5,
+        "order": 8,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -115,7 +115,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 6,
+        "order": 9,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -128,7 +128,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 7,
+        "order": 10,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -138,3 +138,4 @@
     }
   }
 }
+

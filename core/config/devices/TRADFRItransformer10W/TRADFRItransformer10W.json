@@ -242,7 +242,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 16,
+        "order": 17,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -252,7 +252,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 17,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -262,7 +262,7 @@
       "Power-Source": {
         "isVisible": 0,
         "name": "Power Source",
-        "order": 18,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -275,7 +275,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 19,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -289,7 +289,7 @@
       "Group-Membership": {
         "isVisible": 1,
         "name": "Groups",
-        "order": 20,
+        "order": 21,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -299,7 +299,7 @@
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 23,
+        "order": 22,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -313,7 +313,7 @@
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 24,
+        "order": 23,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -327,7 +327,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 25,
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -344,7 +344,7 @@
       "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 22,
+        "order": 25,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -358,7 +358,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 44,
+        "order": 26,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -375,3 +375,4 @@
     }
   }
 }
+

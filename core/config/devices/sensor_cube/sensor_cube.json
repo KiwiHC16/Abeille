@@ -32,7 +32,7 @@
       "0012-0055": {
         "isVisible": 0,
         "name": "Mouvement",
-        "order": 1,
+        "order": 2,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -42,7 +42,7 @@
       "000c-ff05": {
         "isVisible": 1,
         "name": "Rotation (?)",
-        "order": 1,
+        "order": 3,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -77,7 +77,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 3,
+        "order": 6,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -87,7 +87,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 4,
+        "order": 7,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -97,7 +97,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 5,
+        "order": 8,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -107,7 +107,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 5,
+        "order": 9,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -117,7 +117,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 6,
+        "order": 10,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -130,7 +130,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 7,
+        "order": 11,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -140,3 +140,4 @@
     }
   }
 }
+

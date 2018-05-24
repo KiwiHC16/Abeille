@@ -170,7 +170,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 11,
+        "order": 12,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -180,7 +180,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 12,
+        "order": 13,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -193,7 +193,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 13,
+        "order": 14,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -203,3 +203,4 @@
     }
   }
 }
+

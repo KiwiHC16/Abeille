@@ -22,7 +22,7 @@
       "0000-0010": {
         "isVisible": 0,
         "name": "lieux",
-        "order": 0,
+        "order": 1,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -32,7 +32,7 @@
       "0000-0000": {
         "isVisible": 0,
         "name": "ZCL Version",
-        "order": 0,
+        "order": 2,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -42,7 +42,7 @@
       "0000-0004": {
         "isVisible": 0,
         "name": "societe",
-        "order": 1,
+        "order": 3,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -52,7 +52,7 @@
       "0000-0006": {
         "isVisible": 0,
         "name": "Date Code",
-        "order": 1,
+        "order": 4,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -62,7 +62,7 @@
       "0000-0010": {
         "isVisible": 0,
         "name": "Lieux",
-        "order": 1,
+        "order": 5,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -72,7 +72,7 @@
       "0000-4000": {
         "isVisible": 0,
         "name": "SW",
-        "order": 2,
+        "order": 6,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -82,7 +82,7 @@
       "0006-0000": {
         "isVisible": 1,
         "name": "etat",
-        "order": 3,
+        "order": 7,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -92,7 +92,7 @@
       "0008-0000": {
         "isVisible": 1,
         "name": "Level",
-        "order": 4,
+        "order": 8,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -109,7 +109,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 5,
+        "order": 9,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -119,7 +119,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 10,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -129,7 +129,7 @@
       "On": {
         "isVisible": 1,
         "name": "Monter",
-        "order": 7,
+        "order": 11,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -143,7 +143,7 @@
       "Off": {
         "isVisible": 1,
         "name": "Descendre",
-        "order": 8,
+        "order": 12,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -157,7 +157,7 @@
       "Toggle": {
         "isVisible": 1,
         "name": "Toggle",
-        "order": 9,
+        "order": 13,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -174,7 +174,7 @@
       "Level": {
         "isVisible": 1,
         "name": "setLevel",
-        "order": 10,
+        "order": 14,
         "isHistorized": "0",
         "Type": "action",
         "subType": "slider",
@@ -189,7 +189,7 @@
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 11,
+        "order": 15,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -203,7 +203,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 12,
+        "order": 16,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -217,7 +217,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 13,
+        "order": 17,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -231,7 +231,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 14,
+        "order": 18,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -245,7 +245,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 15,
+        "order": 19,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -259,7 +259,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 16,
+        "order": 20,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -269,7 +269,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 16,
+        "order": 21,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -279,7 +279,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 17,
+        "order": 22,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -289,7 +289,7 @@
       "Power-Source": {
         "isVisible": 0,
         "name": "Power Source",
-        "order": 18,
+        "order": 23,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -302,7 +302,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 19,
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -316,7 +316,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 44,
+        "order": 25,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -333,3 +333,4 @@
     }
   }
 }
+

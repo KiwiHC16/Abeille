@@ -182,7 +182,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevel",
+          "topic": "CmdAbeille/#addr#/setLevelVolet",
           "request": "Level=#slider#&duration=01"
         }
       },

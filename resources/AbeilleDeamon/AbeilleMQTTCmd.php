@@ -238,6 +238,30 @@
                     "duration" => $keywords[3],
                 );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setLevelVolet") {
+                // Pour un get level (level de 0 à 255):
+                // a=0.00081872
+                // b=0.2171167
+                // c=-8.60201639
+                // level = level * level * a + level * b + c
+                
+                $a = 0.00081872;
+                $b = 0.2171167;
+                $c = -8.60201639;
+                
+                $level255 = intval($keywords[1] * 255 / 100);
+                $level = $level255 * $level255 * a + $level255 * $b + $c;
+                
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setLevel" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01",
+                                 "Level" => $level,
+                                 "duration" => $keywords[3],
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "setLevelHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

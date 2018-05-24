@@ -44,7 +44,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 5,
+        "order": 3,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -54,7 +54,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 4,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -64,7 +64,7 @@
       "On": {
         "isVisible": 1,
         "name": "On",
-        "order": 7,
+        "order": 5,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -81,7 +81,7 @@
       "Off": {
         "isVisible": 1,
         "name": "Off",
-        "order": 8,
+        "order": 6,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -98,7 +98,7 @@
       "Toggle": {
         "isVisible": 1,
         "name": "Toggle",
-        "order": 9,
+        "order": 7,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -116,7 +116,7 @@
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 10,
+        "order": 8,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -130,7 +130,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 11,
+        "order": 9,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -144,7 +144,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 12,
+        "order": 10,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -158,7 +158,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 13,
+        "order": 11,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -168,7 +168,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 13,
+        "order": 12,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -178,7 +178,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 14,
+        "order": 13,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -191,7 +191,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 15,
+        "order": 14,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -201,7 +201,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 44,
+        "order": 15,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

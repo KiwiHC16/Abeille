@@ -88,7 +88,7 @@
       },
       "Time-Time": {
         "isVisible": 0,
-        "name": "Last",
+        "name": "Time-Time",
         "order": 4,
         "isHistorized": "0",
         "Type": "info",
@@ -98,7 +98,7 @@
       },
       "Time-TimeStamp": {
         "isVisible": 0,
-        "name": "Last Stamp",
+        "name": "Time-TimeStamp",
         "order": 5,
         "isHistorized": "0",
         "Type": "info",

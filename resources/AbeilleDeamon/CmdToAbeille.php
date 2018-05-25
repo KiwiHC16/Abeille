@@ -1284,6 +1284,53 @@
         
             setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'] );
         }
+        
+        if ( isset($Command['Leave']) && isset($Command['address']) && isset($Command['IEEE']) )
+        {
+            deamonlog('debug','Leave for: '.$Command['address']." - ".$Command['IEEE']);
+            $cmd = "0047";
+            //$lenth = "";
+            
+            // <target short address: uint16_t>
+            // <extended address: uint64_t>
+            // <Rejoin: uint8_t>
+            // <Remove Children: uint8_t>
+            //  Rejoin,
+            //      0 = Do not rejoin
+            //      1 = Rejoin
+            //  Remove Children
+            //      0 = Leave, removing children
+            //      1 = Leave, do not remove children
+
+            $address        = $Command['address'];
+            $IEEE           = $Command['IEEE'];
+            $Rejoin         = "00";
+            $RemoveChildren = "01";
+            
+            $data = $address . $IEEE . $Rejoin . $RemoveChildren;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
+        {
+            deamonlog('debug','Remove for: '.$Command['address']." - ".$Command['IEEE']);
+            $cmd = "0026";
+            //$lenth = "";
+            
+            // <target short address: uint16_t>
+            // <extended address: uint64_t>
+            
+            $address        = $Command['address'];
+            $IEEE           = $Command['IEEE'];
+            
+            $data = $address . $IEEE ;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
     }
     
     ?>

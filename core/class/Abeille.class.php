@@ -525,7 +525,7 @@ class Abeille extends eqLogic
     }
 
 
-    public function serviceMosquittoStatus()
+    public static function serviceMosquittoStatus()
     {
 
         $outputSvc = array();

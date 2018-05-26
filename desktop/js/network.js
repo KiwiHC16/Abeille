@@ -189,7 +189,16 @@ function network_display() {
         */
 
 
-    });
+    })
+        .done(function(){
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'});
+            setTimeout(function () {$('#div_networkZigbeeAlert').hide()},2000);
+        })
+        .fail(function(){
+            var msg='Données du réseau non trouvées, faites un cache-refresh sur la page Network List'
+            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+            setTimeout(function () { $('#div_networkZigbeeAlert').hide()},2000);
+        })
 };
 
 

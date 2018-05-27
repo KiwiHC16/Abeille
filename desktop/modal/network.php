@@ -17,7 +17,7 @@ if (config::byKey('active', 'Abeille', '0') == 1) {
 
 
 $neighbors = "";
-$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "rediconcolor";
+$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "redicolor";
 $mosquitto = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i>";
 $usbPath = config::byKey('AbeilleSerialPort', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
@@ -29,10 +29,10 @@ $neighbors = substr($neighbors, 0, -2);
 
 $nbProcess = count(system::ps("AbeilleDeamon", 'true'));
 if (config::byKey('onlyTimer', 'Abeille') == 'N') {
-    $color = ($nbProcess == 4) ? "greeniconcolor" : "rediconcolor";
+    $color = ($nbProcess == 4) ? "greeniconcolor" : "redicolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/4";
 } else {
-    $color = ($nbProcess == 1) ? "greeniconcolor" : "rediconcolor";
+    $color = ($nbProcess == 1) ? "greeniconcolor" : "redicolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/1";
 }
 

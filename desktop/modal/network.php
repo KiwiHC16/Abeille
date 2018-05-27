@@ -205,9 +205,27 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
                 <div id="route_network" class="tab-pane">
                     <br/>
                     <div id="div_routingTable">
-                        <a data-action="refreshNetworkCache" class="btn btn-success refreshCache"><i
-                                    class="fa fa-refresh"></i>
-                            Recalcul du cache</a>
+                        <span>
+                            <label class="control-label" data-toggle="tooltip"
+                                   title="Filtre les nodes par emetteur">Source
+                            </label>
+                            <select class="filterSource" id="nodeFrom">
+                                <option value="All">{{Tous}}</option>
+                                <option value="None">{{Aucun}}</option>
+                            </select>
+                            <label class="control-label" data-toggle="tooltip"
+                                   title="Filtre les nodes par destinataire">Destinataire
+                            </label>
+                            <select class="filterRecipient" id="nodeTo">
+                                <option value="All">{{Tous}}</option>
+                                <option value="None">{{Aucun}}</option>
+                            </select>
+                            <span class="">
+                            <a data-action="refreshNetworkCache"
+                               class="btn btn-success refreshCache"><i
+                                        class="fa fa-refresh"></i>
+                            Recalcul du cache</a></span>
+                        </span>
                         <table class="table table-condensed" id="table_routingTable">
                             <thead>
                             <tr>

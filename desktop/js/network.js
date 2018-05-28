@@ -31,6 +31,17 @@ $(".btn.refreshCache").off("click").on("click", function () {
     }, 5000);
 });
 
+$("#nodeFrom").off().change(function () {
+    var value = $(this).val();
+    filterColumnOnValue(value,0);
+});
+
+$("#nodeTo").off().change(function () {
+    var value = $(this).val();
+    filterColumnOnValue(value,2);
+});
+
+
 
 function network_display() {
     // Step 1. We create a graph object.
@@ -54,9 +65,6 @@ function network_display() {
         });
 
         var nodes = [];
-
-        console.log(json.data);
-        console.log(json.nodes);
 
         for (var z in json.data) {
             console.log('Parsing: ' + json.data[z].NE_Name + '/' + json.data[z].Voisine_Name + ' * ' + json.data[z].Type); // this will show the info it in firebug console
@@ -84,7 +92,6 @@ function network_display() {
         }
 
         nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
-        console.log(nodes);
 
         for (node in nodes) {
 
@@ -211,9 +218,12 @@ function network_links() {
                 return -1;
             }
         });
-        console.log(nodes);
         var tbody = "";
+        var nodesTo = new Object(), nodesFrom = new Object();
         for (var node_id in nodes) {
+            //console.log(nodes[node_id].Voisine + ":" + nodes[node_id].Voisine_Name + " ,");
+            nodesTo[nodes[node_id].Voisine] = nodes[node_id].Voisine_Name;
+            nodesFrom[nodes[node_id].NE] = nodes[node_id].NE_Name;
             tbody += (nodes[node_id].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
             tbody += '<td>';
             if (nodes[node_id].NE != '') {
@@ -222,13 +232,13 @@ function network_links() {
                 tbody += "{{N/A}}";
             }
             tbody += '</td>';
-            tbody += '<td>';
+            tbody += '<td id="neName">';
             tbody += '<div style="opacity:0.5"><i>' + nodes[node_id].NE_Name + '</i></div>';
             tbody += '</td>';
-            tbody += '<td>';
+            tbody += '<td id="vid">';
             tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].Voisine + '</span>';
             tbody += '</td>';
-            tbody += '<td>';
+            tbody += '<td id="vname">';
             tbody += nodes[node_id].Voisine_Name;
             tbody += '</td>';
             tbody += '<td>';
@@ -237,7 +247,7 @@ function network_links() {
             tbody += '<td>';
             tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].Depth + '</span>';
             tbody += '</td>';
-            tbody += '<td>';
+            tbody += '<td id="lqi">';
             tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].LinkQualityDec + '</span>';
             tbody += '</td>';
             tbody += '<td>';
@@ -245,7 +255,18 @@ function network_links() {
             tbody += '</td>';
             tbody += '<td></tr>';
         }
-        $('#table_routingTable tbody').empty().append(tbody)
+        $('#table_routingTable tbody').empty().append(tbody);
+        var nodeFrom = $('#nodeFrom'),
+            nodeTo = $('#nodeTo');
+        //console.log(optionAbNodes);
+        $.each(nodesFrom, function (idx, item) {
+            nodeFrom.append(new Option(item, idx));
+
+        });
+        $.each(nodesTo, function (idx, item) {
+            nodeTo.append(new Option(item, idx));
+
+        });
     })
         .done(function () {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'});
@@ -261,3 +282,28 @@ function network_links() {
             }, 2000);
         })
 };
+
+function filterColumnOnValue(data,col) {
+    var filterValue = data;
+    var filterColumn= col;
+    console.log('filtering col ' +filterColumn + ' on value ' + filterValue);
+    $('#table_routingTable > tbody > tr').each(function (idx, val) {
+        //console.log(val);
+        switch (filterValue) {
+            case 'None':
+                val.style.display = 'none';
+                break;
+            case 'All':
+                val.style.display = '';
+                break;
+            default:
+                if (val.children[filterColumn].innerHTML.includes(filterValue)) {
+                    console.log(val.innerHTML);
+                    val.style.display = '';
+                } else {
+                    val.style.display = 'none';
+                }
+                break;
+        }
+    })
+}

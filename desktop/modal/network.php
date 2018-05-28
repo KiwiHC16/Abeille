@@ -103,9 +103,9 @@ sendVarToJS('nodesFromJeedom', $nodes);
     }
 </style>
 <link rel="stylesheet" href="/3rdparty/font-awesome/css/font-awesome.min.css">
-<!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script-->
-<script type="text/javascript"
-        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script>
+<script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
+<!--script type="text/javascript"
+        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
 
 <div id='div_networkZigbeeAlert' style="display: none;"></div>

@@ -534,7 +534,7 @@ class Abeille extends eqLogic
         $return['launchable'] = 'nok';
         $return['launchable_message'] = 'Service not running yet.';
 
-        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -c 'running'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
+        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -icv 'fail'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
         exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
         $logmsg = 'Status du service mosquitto : ' . ($outputSvc[0] > 0 ? 'OK' : 'Probleme') . '   (' . implode($outputSvc, '!') . ')';
         log::add('Abeille', 'debug', $logmsg);

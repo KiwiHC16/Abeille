@@ -251,8 +251,8 @@
         $knownNE_FromAbeille[$shortAddress] = $name;
     }
     
-    echo "NE connus pas Abeille\n";
-    var_dump( $knownNE_FromAbeille );
+    // echo "NE connus pas Abeille\n";
+    // var_dump( $knownNE_FromAbeille );
     
     // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     

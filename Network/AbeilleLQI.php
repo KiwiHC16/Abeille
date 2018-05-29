@@ -101,9 +101,9 @@
         }
         if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01) {
             $parameters['Type'] = "Router";
-            if (isset($NE_All_local[$parameters['NE']])) { // deja dans la list donc on ne fait rien
+            if (isset($NE_All_local[$parameters['Voisine']])) { // deja dans la list donc on ne fait rien
             } else {
-                $NE_All_local[$parameters['NE']] = array("LQI_Done" => 0);
+                $NE_All_local[$parameters['Voisine']] = array("LQI_Done" => 0);
             }
         }
         if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02) {
@@ -377,8 +377,8 @@
             // Estimation du travail restant et info dans le fichier lock
             $total = count( $NE_All );
             $done = 0;
-            foreach ( $NE_All as $neAddress => $neStatus ) {
-                if ( $neStatus['LQI_Done'] == 1) {
+            foreach ( $NE_All as $neAddressProgress => $neStatusProgress ) {
+                if ( $neStatusProgress['LQI_Done'] == 1) {
                     $done++;
                 }
             }

@@ -367,24 +367,23 @@
     // Let's start the loop to collect all LQI
     while ( $NE_All_continue ) {
         
-        // Estimation du chemin restant et info dans le fichir lock
-        $total = count( $NE_All );
-        $toDo = 0;
-        foreach ( $NE_All as $neAddress => $neStatus ) {
-            if ( $neStatus['LQI_Done'] == 0) {
-                $toDo++;
-            }
-        }
-        fseek( $FileLockId, 0);
-        fwrite( $FileLockId, $toDo . " of " . $total );
-
-        
         // Par defaut je ne continu pas. Si je trouve au moins un NE je continue, je ferai donc une boucle à vide à la fin.
         $NE_All_continue = 0;
         
         // Let's continue with Routers found
         // foreach ($knownNE as $name => $neAddress) {
         foreach ( $NE_All as $neAddress => $neStatus ) {
+        
+            // Estimation du travail restant et info dans le fichier lock
+            $total = count( $NE_All );
+            $done = 0;
+            foreach ( $NE_All as $neAddress => $neStatus ) {
+                if ( $neStatus['LQI_Done'] == 1) {
+                    $done++;
+                }
+            }
+            fseek( $FileLockId, 0);
+            fwrite( $FileLockId, $done . " of " . $total );
             
             // Variable globale qui me permet de savoir quel NE on est en ours d'interrogation car dans le message de retour je n'ai pas cette info.
             $NE = $neAddress;

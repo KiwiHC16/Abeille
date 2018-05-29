@@ -240,7 +240,19 @@
     
     deamonlog('debug', 'Start Main');
     
+    
+    
     $DataFile = "AbeilleLQI_MapData.json";
+    $FileLock = $DataFile.".lock";
+    
+    if ( file_exists ( $FileLock ) ) {
+        deamonlog('debug', 'Une collecte est probablement en cours, fichier lock present, exit.');
+        if ($debugBen) echo "Une collecte est probablement en cours, fichier lock present, exit.\n";
+        exit;
+    }
+    else {
+        $FileLockId = fopen( $FileLock , 'w+' );
+    }
     
     // On recupere les infos d'Abeille
     $knownNE_FromAbeille = array();
@@ -335,7 +347,8 @@
     // mqqtPublishLQI($client, "d45e", "02", $qos = 0);
     // sleep(2);
     // $client->loop();
-    
+
+    fwrite( $FileLockId, "0%" );
     
     // Let's start with the Coordinator
     if ($debugBen) echo "---------: Let s start with the Coordinator\n";
@@ -353,6 +366,18 @@
     
     // Let's start the loop to collect all LQI
     while ( $NE_All_continue ) {
+        
+        // Estimation du chemin restant et info dans le fichir lock
+        $total = count( $NE_All );
+        $toDo = 0;
+        foreach ( $NE_All as $neAddress => $neStatus ) {
+            if ( $neStatus['LQI_Done'] == 0) {
+                $toDo++;
+            }
+        }
+        fseek( $FileLockId, 0);
+        fwrite( $FileLockId, $toDo . " of " . $total );
+
         
         // Par defaut je ne continu pas. Si je trouve au moins un NE je continue, je ferai donc une boucle à vide à la fin.
         $NE_All_continue = 0;
@@ -401,6 +426,9 @@
     echo "JSON file created successfully...";
     else
     echo "Oops! Error creating json file...";
+    
+    fclose( $FileLockId );
+    unlink ( $FileLock );
     
     // Formating pour la doc asciidoc
     if (0) {

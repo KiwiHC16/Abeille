@@ -365,15 +365,15 @@
             if ( strlen($name)== 0 ) { $name = "Inconnu-".$neAddress; }
             
             deamonlog('debug', 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress);
-            echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']."\n";
-            var_dump( $NE_All );
+            // echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']."\n";
+            // var_dump( $NE_All );
             
             if ( $neStatus['LQI_Done'] == 0) {
                 // echo "Let s do\n";
                 // $NE = $neAddress;
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']." Je lance la collecte\n";
+                // echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']." Je lance la collecte\n";
                 collectInformation($client, $neAddress );
                 $NE_All[$NE]['LQI_Done'] = 1;
             } else {

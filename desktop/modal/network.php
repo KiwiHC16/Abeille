@@ -17,7 +17,7 @@ if (config::byKey('active', 'Abeille', '0') == 1) {
 
 
 $neighbors = "";
-$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "redicolor";
+$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "rediconcolor";
 $mosquitto = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i>";
 $usbPath = config::byKey('AbeilleSerialPort', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
@@ -29,10 +29,10 @@ $neighbors = substr($neighbors, 0, -2);
 
 $nbProcess = count(system::ps("AbeilleDeamon", 'true'));
 if (config::byKey('onlyTimer', 'Abeille') == 'N') {
-    $color = ($nbProcess == 4) ? "greeniconcolor" : "redicolor";
+    $color = ($nbProcess == 4) ? "greeniconcolor" : "rediconcolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/4";
 } else {
-    $color = ($nbProcess == 1) ? "greeniconcolor" : "redicolor";
+    $color = ($nbProcess == 1) ? "greeniconcolor" : "rediconcolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/1";
 }
 
@@ -98,9 +98,9 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
     }
 </style>
 <link rel="stylesheet" href="/3rdparty/font-awesome/css/font-awesome.min.css">
-<!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script-->
-<script type="text/javascript"
-        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script>
+<script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
+<!--script type="text/javascript"
+        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
 
 <div id='div_networkZigbeeAlert' style="display: none;"></div>

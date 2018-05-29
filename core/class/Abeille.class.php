@@ -534,7 +534,7 @@ class Abeille extends eqLogic
         $return['launchable'] = 'nok';
         $return['launchable_message'] = 'Service not running yet.';
 
-        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -icv 'fail'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
+        $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -Eicv 'fail|unrecognized'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
         exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
         $logmsg = 'Status du service mosquitto : ' . ($outputSvc[0] > 0 ? 'OK' : 'Probleme') . '   (' . implode($outputSvc, '!') . ')';
         log::add('Abeille', 'debug', $logmsg);
@@ -585,7 +585,6 @@ class Abeille extends eqLogic
         $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
         $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
-        
         $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
 
         // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');

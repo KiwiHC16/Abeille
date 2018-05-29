@@ -16,6 +16,8 @@
     require_once("../resources/AbeilleDeamon/includes/fifo.php");
     require_once("../resources/AbeilleDeamon/includes/function.php");
 
+    $debugBen = 0;
+    
     function deamonlog($loglevel = 'NONE', $message = "")
     {
         // Tools::deamonlog($loglevel,'AbeilleLQI',$message);
@@ -251,8 +253,8 @@
         $knownNE_FromAbeille[$shortAddress] = $name;
     }
     
-    // echo "NE connus pas Abeille\n";
-    // var_dump( $knownNE_FromAbeille );
+    if ($debugBen) echo "NE connus pas Abeille\n";
+    if ($debugBen) var_dump( $knownNE_FromAbeille );
     
     // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
@@ -336,6 +338,7 @@
     
     
     // Let's start with the Coordinator
+    if ($debugBen) echo "---------: Let s start with the Coordinator\n";
     deamonlog('debug', '---------: Let s start with the Coordinator');
     $NE_All=array();
     $NE_All["0000"] = array("LQI_Done" => 0);
@@ -365,15 +368,15 @@
             if ( strlen($name)== 0 ) { $name = "Inconnu-".$neAddress; }
             
             deamonlog('debug', 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress);
-            // echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']."\n";
-            // var_dump( $NE_All );
+            if ($debugBen)  echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']."\n";
+            if ($debugBen)  var_dump( $NE_All );
             
             if ( $neStatus['LQI_Done'] == 0) {
                 // echo "Let s do\n";
                 // $NE = $neAddress;
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                // echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']." Je lance la collecte\n";
+                if ($debugBen)  echo 'AbeilleLQI main: Interrogation de ' . $name . ' - ' . $neAddress." - ".$neAddress['LQI_Done']." Je lance la collecte\n";
                 collectInformation($client, $neAddress );
                 $NE_All[$NE]['LQI_Done'] = 1;
             } else {

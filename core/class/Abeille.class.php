@@ -1081,7 +1081,7 @@ class Abeille extends eqLogic
                         // Si nous avons une nouvelle IEEE pour une short address alors quelque chose est surprenant et doit être géré
                         if ($cmdId == "IEEE-Addr") {
                             $IEEE = $cmdlogic->execCmd();
-                            if ( $value == $IEEE ) {
+                            if ( ($value == $IEEE) || ($IEEE=="") ) {
                                 log::add('Abeille', 'debug', 'Ok pas de changement de l adresse IEEE');
                             }
                             else {

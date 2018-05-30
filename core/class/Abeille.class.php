@@ -87,7 +87,9 @@ class Abeille extends eqLogic
     
     public static function cron()
     {
+        // Cron tourne toutes les minutes
         log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        
         /**
          * Refresh health information
          */
@@ -148,6 +150,15 @@ class Abeille extends eqLogic
             
         }
         
+        // Si Inclusion status est à 1 on demande un Refresh de l information
+        if ( self::checkInclusionStatus() == "01" ) {
+            log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
+            self::publishMosquitto( null, "CmdAbeille/Ruche/permitJoin", "Status", '0' );
+        }
+        else {
+            log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
+        }
+        
         log::add('Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------');
         
     }
@@ -155,8 +166,9 @@ class Abeille extends eqLogic
 
     public static function deamon_info()
     {
-        log::add('Abeille', 'debug', '-');
-        log::add('Abeille', 'debug', '**deamon info: IN**');
+        $debug_deamon_info = 0;
+        if ( $debug_deamon_info ) log::add('Abeille', 'debug', '-');
+        if ( $debug_deamon_info ) log::add('Abeille', 'debug', '**deamon info: IN**');
         $return = array();
         $return['log'] = 'Abeille_update';
         $return['state'] = 'nok';
@@ -165,16 +177,16 @@ class Abeille extends eqLogic
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (is_object($cron) && $cron->running()) {
             //$return['state'] = 'ok';
-            log::add('Abeille', 'debug', 'deamon_info: J ai trouve le cron');
+            if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info: J ai trouve le cron');
         }
         //deps ok ?
         $dependancy_info = self::dependancy_info();
         if ($dependancy_info['state'] == 'ok') {
-            log::add('Abeille', 'debug', 'deamon_info: les dependances sont Ok');
+            if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info: les dependances sont Ok');
             $return['launchable'] = 'ok';
         } else {
-            log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
-            log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
+            if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
+            if ( $debug_deamon_info ) log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
             $return['launchable'] = 'nok';
             //throw new Exception(__('Dépendances non installées, (re)lancer l\'installation : ', __FILE__));
             $return['launchable_message'] = 'Dépendances non installées, (re)lancer l\'installation';
@@ -184,11 +196,11 @@ class Abeille extends eqLogic
         //Parameters OK
         $parameters_info = self::getParameters();
         if ($parameters_info['state'] == 'ok') {
-            log::add('Abeille', 'debug', 'deamon_info: J ai les parametres');
+            if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info: J ai les parametres');
             $return['launchable'] = 'ok';
         } else {
-            log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
-            log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to parameters missing');
+            if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info: deamon is not launchable ;-(');
+            if ( $debug_deamon_info ) log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to parameters missing');
             $return['launchable'] = 'nok';
             throw new Exception(__('Problème de parametres, vérifier le port USB : ' . $parameters_info['AbeilleSerialPort'] . ', state: ' . $parameters_info['state'], __FILE__));
         }
@@ -217,11 +229,11 @@ class Abeille extends eqLogic
             $output
         );
 
-        log::add('Abeille', 'debug', 'deamon_info, nombre de demons: ' . $output[0]);
+        if ( $debug_deamon_info ) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: ' . $output[0]);
         $nbProcess = $output[0];
 
         if ($nbProcess < $nbProcessExpected) {
-            log::add(
+            if ( $debug_deamon_info ) log::add(
                 'Abeille',
                 'info',
                 'deamon_info: found ' . $nbProcess . '/' . $nbProcessExpected . ' running, at least one is missing'
@@ -230,7 +242,7 @@ class Abeille extends eqLogic
         }
 
         if ($nbProcess > $nbProcessExpected) {
-            log::add(
+            if ( $debug_deamon_info ) log::add(
                 'Abeille',
                 'error',
                 'deamon_info: ' . $nbProcess . '/' . $nbProcessExpected . ' running, too many deamon running. Stopping deamons'
@@ -240,7 +252,7 @@ class Abeille extends eqLogic
         }
 
         if ($nbProcess == $nbProcessExpected) {
-            log::add(
+            if ( $debug_deamon_info ) log::add(
                 'Abeille',
                 'Info',
                 'deamon_info: ' . $nbProcess . '/' . $nbProcessExpected . ' running, c est ce qu on veut.'
@@ -249,7 +261,7 @@ class Abeille extends eqLogic
         }
 
 
-        log::add(
+        if ( $debug_deamon_info ) log::add(
             'Abeille',
             'debug',
             '**deamon info: OUT**  deamon launchable: ' . $return['launchable'] . ' deamon state: ' . $return['state']
@@ -392,6 +404,8 @@ class Abeille extends eqLogic
     public
     static function dependancy_info()
     {
+        $debug_dependancy_info = 0;
+        
         $return = array();
         $return['state'] = 'nok';
         $return['progress_file'] = jeedom::getTmpFolder('Abeille') . '/dependance';
@@ -423,7 +437,7 @@ class Abeille extends eqLogic
             }
 
         }
-        log::add('Abeille', 'debug', 'dependancy_info: ' . $return['state']);
+        if ( $debug_dependancy_info ) log::add('Abeille', 'debug', 'dependancy_info: ' . $return['state']);
         return $return;
     }
 
@@ -527,6 +541,7 @@ class Abeille extends eqLogic
 
     public static function serviceMosquittoStatus()
     {
+        $debug_serviceMosquittoStatus = 0;
 
         $outputSvc = array();
         $outputStl = array();
@@ -537,7 +552,7 @@ class Abeille extends eqLogic
         $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -Eicv 'fail|unrecognized'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
         exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
         $logmsg = 'Status du service mosquitto : ' . ($outputSvc[0] > 0 ? 'OK' : 'Probleme') . '   (' . implode($outputSvc, '!') . ')';
-        log::add('Abeille', 'debug', $logmsg);
+        if ( $debug_serviceMosquittoStatus ) log::add('Abeille', 'debug', $logmsg);
         if ($outputSvc[0] > 0) {
             $return['launchable'] = 'ok';
             $return['launchable_message'] = 'Service mosquitto is running.';
@@ -688,6 +703,27 @@ class Abeille extends eqLogic
         return -1;
     }
 
+    public static function checkInclusionStatus( )
+    {
+        // Return: Inclusion status or -1 if error
+        $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
+        
+        // echo "VarDump ruche\n";
+        // var_dump( $ruche );
+        
+        
+        // echo "Join status collection\n";
+        $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status' );
+        if ( $cmdJoinStatus ) {
+            
+            return $cmdJoinStatus->execCmd();
+        }
+        
+        
+        // log::add('Abeille', 'debug', 'BEN: function checkShortFromIEEE return -1');
+        return -1;
+    }
+    
     public static function message($message)
     {
 
@@ -731,7 +767,7 @@ class Abeille extends eqLogic
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // On ne prend en compte que les message Abeille/#/#
+        // On ne prend en compte que les message Abeille|Ruche/#/#
         if (!preg_match("(Abeille|Ruche)", $Filter)) {
             log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
             return;
@@ -1547,7 +1583,14 @@ if ($debugBEN != 0) {
                 echo "\n";
             }
             break;
+            
+        // Check Inclusion status
+        case "7":
+            echo "Check inclusion status\n";
+            echo Abeille::checkInclusionStatus();
 
+            break;
+            
     } // switch
 
     echo "\nFin\n";

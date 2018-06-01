@@ -55,7 +55,7 @@ class Tools
 
         $configDir = dirname(__FILE__) . '/../../../core/config/';
 
-        Tools::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
+        // Tools::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
         $confFile = $configDir . $jsonFile;
 
         //file exists ?

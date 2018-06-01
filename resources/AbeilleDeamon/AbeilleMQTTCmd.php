@@ -245,16 +245,26 @@
                 // c=-8.60201639
                 // level = level * level * a + level * b + c
                 
-                $a = 0.00081872;
-                $b = 0.2171167;
-                $c = -8.60201639;
+                $a = -0.8571429;
+                $b = 1.8571429;
+                $c = 0;
                 
                 $keywords = preg_split("/[=&]+/", $msg);
-                $level255 = intval($keywords[1] * 255 / 100);
-                deamonlog('debug', 'level255: '.$level255);
                 
-                $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
-                deamonlog('debug', 'level: '.$level);
+                // $level255 = intval($keywords[1] * 255 / 100);
+                // deamonlog('debug', 'level255: '.$level255);
+                
+                $levelSlider = $keywords[1];                // Valeur entre 0 et 100
+                // deamonlog('debug', 'level Slider: '.$levelSlider);
+                
+                $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
+                
+                // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
+                $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+c;
+                $level = $levelPourcent * 255;
+                $level = min( max( round( $level), 0), 255);
+                
+                deamonlog('debug', 'level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
                 
                 $Command = array(
                                  "setLevel" => "1",

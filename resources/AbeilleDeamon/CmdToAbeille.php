@@ -902,11 +902,13 @@
             $onoff = "01";
             if ( $Command['Level']<16 )
             {
-                $level = "0".dechex($Command['Level']); // echo "setLevel: ".$Command['Level']."-".$level."-\n";
+                $level = "0".dechex($Command['Level']);
+                deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
             }
             else
             {
-                $level = dechex($Command['Level']); // echo "setLevel: ".$Command['Level']."-".$level."-\n";
+                $level = dechex($Command['Level']);
+                deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
             }
             
             // $duration = "00" . $Command['duration'];

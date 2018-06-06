@@ -8,22 +8,25 @@ $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Jamais lancé}}
 $usbPath = config::byKey('', 'Abeille', '{{Jamais lancé}}');
 $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin désactivé et démon non configuré";
 if (config::byKey('active', 'Abeille', '0') == 1) {
-    if (config::byKey('state', 'Abeille', '0')) {
+    if (Abeille::deamon_info()['state'] == 'ok') {
         $status = "<i class=\"fa fa-circle fa-lg greeniconcolor\"></i> Plugin activé et démon configuré";
     } else {
         $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin activé mais démon non configué";
     }
+
 }
 
 
 $neighbors = "";
-$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "rediconcolor";
+#$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "rediconcolor";
 $mosquitto = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i>";
 $usbPath = config::byKey('AbeilleSerialPort', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
-$nodes = count($eqLogics);
+$nodesCount = count($eqLogics);
+$nodes = array();
 foreach ($eqLogics as $eqLogic) {
     $neighbors .= $eqLogic->getName() . ", ";
+    $nodes[str_replace("/", "x", $eqLogic->getLogicalId())] = $eqLogic->getId();
 }
 $neighbors = substr($neighbors, 0, -2);
 
@@ -35,6 +38,8 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
     $color = ($nbProcess == 1) ? "greeniconcolor" : "rediconcolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/1";
 }
+
+sendVarToJS('nodesFromJeedom', $nodes);
 
 ?>
 <style>
@@ -98,9 +103,9 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
     }
 </style>
 <link rel="stylesheet" href="/3rdparty/font-awesome/css/font-awesome.min.css">
-<script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
-<!--script type="text/javascript"
-        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
+<!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script-->
+<script type="text/javascript"
+        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script>
 
 
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
@@ -117,8 +122,8 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
                                 class="fa fa-bar-chart"></i> {{Statistiques}}</a></li>
                 <li id="tab_graph"><a href="#graph_network" data-toggle="tab"><i class="fa fa-picture-o"></i>
                         {{Graphique du réseau}}</a></li>
-                <li id="tab_route"><a href="#route_network" data-toggle="tab"><i class="fa fa-table"></i> {{Table de
-                        routage}}</a></li>
+                <li id="tab_route"><a href="#route_network" data-toggle="tab"><i class="fa fa-table"></i> {{Table des
+                        noeuds}}</a></li>
             </ul>
             <div id="network-tab-content" class="tab-content">
                 <div class="tab-pane active" id="summary_network">
@@ -132,9 +137,10 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
                                         class="zigBNetworkAttr label label-default" data-l1key="awakedDelay"
                                         style="font-size : 1em;"></span></p>
                             <p>{{Le réseau contient}} <b><span class="zigBNetworkAttr"
-                                                               data-l1key="nodesCount"></span><?php echo $nodes ?></b>
+                                                               data-l1key="nodesCount"></span><?php echo $nodesCount ?>
+                                </b>
                                 {{noeuds}}</p>
-                            <p>{{Voisins :}}<span class="zigBNetworkAttr label label-default" data-l1key="neighbors"
+                            <p>{{Voisins :}}<span class="zigBNetworkAttr label-default" data-l1key="neighbors"
                                                   style="font-size : 1em;"><?php echo $neighbors ?></span></p>
                         </div>
                     </div>

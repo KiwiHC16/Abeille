@@ -8,7 +8,7 @@ $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Jamais lancé}}
 $usbPath = config::byKey('', 'Abeille', '{{Jamais lancé}}');
 $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin désactivé et démon non configuré";
 if (config::byKey('active', 'Abeille', '0') == 1) {
-    if (config::byKey('state', 'Abeille', '0')) {
+    if (Abeille::deamon_info()['state']=='ok') {
         $status = "<i class=\"fa fa-circle fa-lg greeniconcolor\"></i> Plugin activé et démon configuré";
     } else {
         $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin activé mais démon non configué";

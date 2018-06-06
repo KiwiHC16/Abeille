@@ -134,7 +134,7 @@ if (config::byKey('onlyTimer', 'Abeille') == 'N') {
                             <p>{{Le réseau contient}} <b><span class="zigBNetworkAttr"
                                                                data-l1key="nodesCount"></span><?php echo $nodes ?></b>
                                 {{noeuds}}</p>
-                            <p>{{Voisins :}}<span class="zigBNetworkAttr label label-default" data-l1key="neighbors"
+                            <p>{{Voisins :}}<span class="zigBNetworkAttr label-default" data-l1key="neighbors"
                                                   style="font-size : 1em;"><?php echo $neighbors ?></span></p>
                         </div>
                     </div>

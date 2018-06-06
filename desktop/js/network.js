@@ -33,14 +33,13 @@ $(".btn.refreshCache").off("click").on("click", function () {
 
 $("#nodeFrom").off().change(function () {
     var value = $(this).val();
-    filterColumnOnValue(value,0);
+    filterColumnOnValue(value, 0);
 });
 
 $("#nodeTo").off().change(function () {
     var value = $(this).val();
-    filterColumnOnValue(value,2);
+    filterColumnOnValue(value, 2);
 });
-
 
 
 function network_display() {
@@ -48,7 +47,6 @@ function network_display() {
     var graph = Viva.Graph.graph();
 
     $.getJSON("/plugins/Abeille/Network/AbeilleLQI_MapData.json", function (json) {
-        console.log(json);
         //Sort objetcs to have Voisin list array
         json.data.sort(function (a, b) {
             if (a.Voisin_Name == b.Voisin_Name) {
@@ -105,7 +103,7 @@ function network_display() {
             );
             for (link in nodes[node].links) {
 
-                console.log('addind link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
                 graph.addLink(node, nodes[node].links[link]);
             }
         }
@@ -157,13 +155,14 @@ function network_display() {
                 ')');
         });
 
-        var idealLength = 200;
+        var idealLength = 100;
         var layout = Viva.Graph.Layout.forceDirected(graph, {
             springLength: idealLength,
-            springCoeff: 0.0004,
+            springCoeff: 0.0008,
             stableThreshold: 0.9,
-            dragCoeff: 0.01,
-            gravity: -20,
+            dragCoeff: 0.009,
+            gravity: -1.2,
+            thetaCoeff: 0.8
         });
 
         //remove previous one
@@ -220,14 +219,21 @@ function network_links() {
         });
         var tbody = "";
         var nodesTo = new Object(), nodesFrom = new Object();
+        var idForJeedom, nodeJId, nodeJName;
         for (var node_id in nodes) {
             //console.log(nodes[node_id].Voisine + ":" + nodes[node_id].Voisine_Name + " ,");
+            idForJeedom = node_id == '0000' ? 'Ruche' : node_id;
+            nodeJName = nodes[node_id].Voisine;
+            nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
             nodesTo[nodes[node_id].Voisine] = nodes[node_id].Voisine_Name;
             nodesFrom[nodes[node_id].NE] = nodes[node_id].NE_Name;
+
             tbody += (nodes[node_id].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
             tbody += '<td>';
             if (nodes[node_id].NE != '') {
-                tbody += '<span  class="label label-primary" style="font-size : 1em;">' + nodes[node_id].NE + '</span> ';
+                nodeJName = nodes[node_id].NE;
+                nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
+                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[node_id].NE + '</span> ';
             } else {
                 tbody += "{{N/A}}";
             }
@@ -236,7 +242,9 @@ function network_links() {
             tbody += '<div style="opacity:0.5"><i>' + nodes[node_id].NE_Name + '</i></div>';
             tbody += '</td>';
             tbody += '<td id="vid">';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].Voisine + '</span>';
+            nodeJName = nodes[node_id].Voisine;
+            nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
+            tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[node_id].Voisine + '</span>';
             tbody += '</td>';
             tbody += '<td id="vname">';
             tbody += nodes[node_id].Voisine_Name;
@@ -258,7 +266,6 @@ function network_links() {
         $('#table_routingTable tbody').empty().append(tbody);
         var nodeFrom = $('#nodeFrom'),
             nodeTo = $('#nodeTo');
-        //console.log(optionAbNodes);
         $.each(nodesFrom, function (idx, item) {
             nodeFrom.append(new Option(item, idx));
 
@@ -266,6 +273,14 @@ function network_links() {
         $.each(nodesTo, function (idx, item) {
             nodeTo.append(new Option(item, idx));
 
+        });
+
+        $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
+            window.location.href = document.location.origin ='/index.php?v=d&p=Abeille&m=Abeille&id=' + $(this).children(1).attr('data-nodeid');
+        });
+
+        $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
+            window.location.href =document.location.origin +'/index.php?v=d&p=Abeille&m=Abeille&id=' + $(this).children(1).attr('data-nodeid');
         });
     })
         .done(function () {
@@ -281,12 +296,13 @@ function network_links() {
                 $('#div_networkZigbeeAlert').hide()
             }, 2000);
         })
+
 };
 
-function filterColumnOnValue(data,col) {
+function filterColumnOnValue(data, col) {
     var filterValue = data;
-    var filterColumn= col;
-    console.log('filtering col ' +filterColumn + ' on value ' + filterValue);
+    var filterColumn = col;
+    //console.log('filtering col ' + filterColumn + ' on value ' + filterValue);
     $('#table_routingTable > tbody > tr').each(function (idx, val) {
         //console.log(val);
         switch (filterValue) {
@@ -298,7 +314,7 @@ function filterColumnOnValue(data,col) {
                 break;
             default:
                 if (val.children[filterColumn].innerHTML.includes(filterValue)) {
-                    console.log(val.innerHTML);
+                    //console.log(val.innerHTML);
                     val.style.display = '';
                 } else {
                     val.style.display = 'none';

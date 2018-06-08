@@ -41,7 +41,7 @@ $("#nodeTo").off().change(function () {
     filterColumnOnValue(value, 2);
 });
 
-
+//TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display() {
     // Step 1. We create a graph object.
     var graph = Viva.Graph.graph();
@@ -82,7 +82,7 @@ function network_display() {
                 nodes[json.data[z].Voisine_Name].links = [];
                 nodes[json.data[z].Voisine_Name].route = 1;
                 nodes[json.data[z].Voisine_Name].lqi = json.data[z].LinkQualityDec;
-                nodes[json.data[z].Voisine_Name].name = json.data[z].Voisine_Name;
+                nodes[json.data[z].Voisine_Name].name = json.data[z].Voisine_Name != null ? json.data[z].Voisine_Name : 'zigbee error';
             }
             // voisine_name should have the Type of the node.
             nodes[json.data[z].Voisine_Name].Type = json.data[z].Type;
@@ -103,86 +103,89 @@ function network_display() {
             );
             for (link in nodes[node].links) {
 
-                console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
-                graph.addLink(node, nodes[node].links[link]);
+                if (nodes[node].name != null && nodes[node].links[link] != null) {
+                    console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                    graph.addLink(node, nodes[node].links[link]);
+                } else {
+                    console.log('not adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                }
             }
-        }
 
-        // Step 3. Render the graph.
-        var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 10,
-            highlightRelatedNodes = function (nodeId, isOn) {
-                graph.forEachLinkedNode(nodeId, function (node, link) {
-                    var linkUI = graphics.getLinkUI(link.id);
-                    if (linkUI) {
-                        linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
-                    }
+            // Step 3. Render the graph.
+            var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 10,
+                highlightRelatedNodes = function (nodeId, isOn) {
+                    graph.forEachLinkedNode(nodeId, function (node, link) {
+                        var linkUI = graphics.getLinkUI(link.id);
+                        if (linkUI) {
+                            linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
+                        }
+                    });
+                };
+
+            //
+            graphics.node(function (node) {
+                var nodeshape = 'rect';
+                var nodecolor = '#E5E500', nodeSize = 10;
+                if (typeof node.data != 'undefined') {
+                    nodecolor = (node.data.Type == 'Coordinator') ? '#a65ba6' : nodecolor;
+                    nodecolor = (node.data.Type == 'End Device') ? '#7BCC7B' : nodecolor;
+                    nodecolor = (node.data.Type == 'Router') ? '#00a2e8' : nodecolor;
+                }
+                var ui = Viva.Graph.svg('g'),
+                    svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.id),
+                    img = Viva.Graph.svg(nodeshape)
+                        .attr("width", nodeSize)
+                        .attr("height", nodeSize)
+                        .attr("fill", nodecolor);
+                ui.append(svgText);
+                ui.append(img);
+                $(ui).hover(function (node) {
+                    var nodeText = 'name: '
+                    /*+ node.data.name + ', route: ' + node.data.route +
+                                               ', Quality: ' + node.data.lqi + ', Type: ' + node.data.Type;
+                                               */
+                    $('#nodeName').html(nodeText);
+
+                    highlightRelatedNodes(node.id, true);
+                }, function () {
+                    highlightRelatedNodes(node.id, false);
                 });
-            };
-
-        //
-        graphics.node(function (node) {
-            var nodeshape = 'rect';
-            var nodecolor = '#E5E500', nodeSize = 10;
-            if (typeof node.data != 'undefined') {
-                nodecolor = (node.data.Type == 'Coordinator') ? '#a65ba6' : nodecolor;
-                nodecolor = (node.data.Type == 'End Device') ? '#7BCC7B' : nodecolor;
-                nodecolor = (node.data.Type == 'Router') ? '#00a2e8' : nodecolor;
-            }
-            var ui = Viva.Graph.svg('g'),
-                svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.id),
-                img = Viva.Graph.svg(nodeshape)
-                    .attr("width", nodeSize)
-                    .attr("height", nodeSize)
-                    .attr("fill", nodecolor);
-            ui.append(svgText);
-            ui.append(img);
-            $(ui).hover(function (node) {
-                var nodeText = 'name: '
-                /*+ node.data.name + ', route: ' + node.data.route +
-                                           ', Quality: ' + node.data.lqi + ', Type: ' + node.data.Type;
-                                           */
-                $('#nodeName').html(nodeText);
-
-                highlightRelatedNodes(node.id, true);
-            }, function () {
-                highlightRelatedNodes(node.id, false);
+                return ui;
+            }).placeNode(function (nodeUI, pos) {
+                nodeUI.attr('transform',
+                    'translate(' +
+                    (pos.x - nodeSize / 3) + ',' + (pos.y - nodeSize / 2.5) +
+                    ')');
             });
-            return ui;
-        }).placeNode(function (nodeUI, pos) {
-            nodeUI.attr('transform',
-                'translate(' +
-                (pos.x - nodeSize / 3) + ',' + (pos.y - nodeSize / 2.5) +
-                ')');
-        });
 
-        var idealLength = 100;
-        var layout = Viva.Graph.Layout.forceDirected(graph, {
-            springLength: idealLength,
-            springCoeff: 0.0008,
-            stableThreshold: 0.9,
-            dragCoeff: 0.009,
-            gravity: -1.2,
-            thetaCoeff: 0.8
-        });
+            var idealLength = 100;
+            var layout = Viva.Graph.Layout.forceDirected(graph, {
+                springLength: idealLength,
+                springCoeff: 0.0008,
+                stableThreshold: 0.9,
+                dragCoeff: 0.009,
+                gravity: -1.2,
+                thetaCoeff: 0.8
+            });
 
-        //remove previous one
-        $('#graph_network svg').remove();
+            //remove previous one
+            $('#graph_network svg').remove();
 
-        var renderer = Viva.Graph.View.renderer(graph, {
-            layout: layout,
-            graphics: graphics,
-            prerender: 10,
-            container: document.getElementById('graph_network')
-        });
-        renderer.run();
-        /*setTimeout(function () {
-            renderer.pause();
-            renderer.reset();
-        }, 200);
-        */
-
-
+            var renderer = Viva.Graph.View.renderer(graph, {
+                layout: layout,
+                graphics: graphics,
+                prerender: 10,
+                container: document.getElementById('graph_network')
+            });
+            renderer.run();
+            /*setTimeout(function () {
+                renderer.pause();
+                renderer.reset();
+            }, 200);
+            */
+        }
     })
+
         .done(function () {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'});
             setTimeout(function () {
@@ -219,47 +222,65 @@ function network_links() {
         });
         var tbody = "";
         var nodesTo = new Object(), nodesFrom = new Object();
-        var idForJeedom, nodeJId, nodeJName;
-        for (var node_id in nodes) {
-            //console.log(nodes[node_id].Voisine + ":" + nodes[node_id].Voisine_Name + " ,");
-            idForJeedom = node_id == '0000' ? 'Ruche' : node_id;
-            nodeJName = nodes[node_id].Voisine;
-            nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
-            nodesTo[nodes[node_id].Voisine] = nodes[node_id].Voisine_Name;
-            nodesFrom[nodes[node_id].NE] = nodes[node_id].NE_Name;
+        var nodeJId, nodeJName;
+        for (var nodeFromJson in nodes) {
 
-            tbody += (nodes[node_id].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
-            tbody += '<td>';
-            if (nodes[node_id].NE != '') {
-                nodeJName = nodes[node_id].NE;
-                nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
-                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[node_id].NE + '</span> ';
+            nodesTo[nodes[nodeFromJson].Voisine] = nodes[nodeFromJson].Voisine_Name;
+            nodesFrom[nodes[nodeFromJson].NE] = nodes[nodeFromJson].NE_Name;
+
+            //New Row
+            tbody += (nodes[nodeFromJson].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
+            //process NE to jeedom id
+            nodeJName = nodes[nodeFromJson].NE;
+            //zigbee LQI result is not null
+            if (nodeJName != 'undefined' && nodeJName != null) {
+                nodeJId = nodesFromJeedom["Abeillex" + (nodeJName == 0 ? 'Ruche' : nodeJName)];
+                //if no match to jeedom db
+                if (nodeJId == 'undefined' || nodeJId == null) {
+                    nodeJId = 'not found';
+                }
             } else {
-                tbody += "{{N/A}}";
+                //unknown node
+                nodeJId = 'not found';
             }
+            //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
+            tbody += '<td id="neId">';
+            tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
             tbody += '</td>';
             tbody += '<td id="neName">';
-            tbody += '<div style="opacity:0.5"><i>' + nodes[node_id].NE_Name + '</i></div>';
+            tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
             tbody += '</td>';
+            //Process Voisine to jeedom Id
+            nodeJName = nodes[nodeFromJson].Voisine;
+            //zigbee LQI result is not null
+            if (nodeJName != 'undefined' && nodeJName != null) {
+                nodeJId = nodesFromJeedom["Abeillex" + (nodeJName == 0 ? 'Ruche' : nodeJName)];
+                //if no match to jeedom db
+                if (nodeJId == 'undefined' || nodeJId == null) {
+                    nodeJId = 'not found';
+                }
+            } else {
+                //unknown nodes
+                nodeJId = 'not found';
+            }
+            //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
             tbody += '<td id="vid">';
-            nodeJName = nodes[node_id].Voisine;
-            nodeJId = nodesFromJeedom["Abeillex" + nodeJName.replace('0000', 'Ruche')];
-            tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[node_id].Voisine + '</span>';
+            tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
             tbody += '</td>';
             tbody += '<td id="vname">';
-            tbody += nodes[node_id].Voisine_Name;
+            tbody += nodes[nodeFromJson].Voisine_Name;
             tbody += '</td>';
             tbody += '<td>';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].Relationship + '</span>';
+            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
             tbody += '</td>';
             tbody += '<td>';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].Depth + '</span>';
+            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
             tbody += '</td>';
             tbody += '<td id="lqi">';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[node_id].LinkQualityDec + '</span>';
+            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '</span>';
             tbody += '</td>';
             tbody += '<td>';
-            tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[node_id].Type + '</span>';
+            tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
             tbody += '</td>';
             tbody += '<td></tr>';
         }
@@ -276,15 +297,40 @@ function network_links() {
         });
 
         $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
-            window.location.href = document.location.origin ='/index.php?v=d&p=Abeille&m=Abeille&id=' + $(this).children(1).attr('data-nodeid');
+            var eqTypeId = $(this).children(1).attr('data-nodeid');
+            if (eqTypeId == 'not found') {
+                $('#div_networkZigbeeAlert').showAlert({
+                    message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
+                    level: 'info'
+                });
+                setTimeout(function () {
+                    $('#div_networkZigbeeAlert').hide()
+                }, 4000);
+            } else {
+                window.location.href = document.location.origin = '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
+            }
         });
 
         $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
-            window.location.href =document.location.origin +'/index.php?v=d&p=Abeille&m=Abeille&id=' + $(this).children(1).attr('data-nodeid');
+            var eqTypeId = $(this).children(1).attr('data-nodeid');
+            if (eqTypeId == 'not found') {
+                $('#div_networkZigbeeAlert').showAlert({
+                    message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
+                    level: 'info'
+                });
+                setTimeout(function () {
+                    $('#div_networkZigbeeAlert').hide()
+                }, 4000);
+            } else {
+                window.location.href = document.location.origin + '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
+            }
         });
     })
         .done(function () {
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'});
+            $('#div_networkZigbeeAlert').showAlert({
+                message: '{{Action réalisée avec succès}}',
+                level: 'success'
+            });
             setTimeout(function () {
                 $('#div_networkZigbeeAlert').hide()
             }, 2000);

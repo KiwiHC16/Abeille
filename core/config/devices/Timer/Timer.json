@@ -57,8 +57,11 @@
         "isHistorized": "0",
         "name": "RampUpDown",
         "order": 4,
-        "subType": "string",
-        "template": "badge"
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+          "historizeRound": "2"
+        }
       },
       "Start": {
         "isVisible": 1,
@@ -125,4 +128,3 @@
     }
   }
 }
-

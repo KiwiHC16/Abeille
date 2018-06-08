@@ -8,14 +8,18 @@
      *
      */
 
+    $lib_phpMQTT = 0;
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 
+    if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     require_once("lib/Tools.php");
     include("CmdToAbeille.php");  // contient processCmd()
-    include("lib/phpMQTT.php");
+   
     include(dirname(__FILE__).'/includes/config.php');
 
+    
+    
     function deamonlog($loglevel = 'NONE', $message = "")
     {
         Tools::deamonlog($loglevel,'AbeilleMQTTCmd',$message);
@@ -32,6 +36,8 @@
 
         deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
+        if ($type == "Abeille") { return; }
+        
         if ($type == "CmdAbeille") {
             //----------------------------------------------------------------------------
             if ($action == "Annonce") {
@@ -506,18 +512,50 @@
             processCmd($dest, $Command, $GLOBALS['requestedlevel']);
             
         } else {
-            deamonlog(
-                'warning',
-                'Msg Received: Topic: {'.$topic.'} =>'.$msg.'mais je ne sais pas quoi en faire, no action.'
-            );
+            deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
         }
+        return;
     }
+    
+// ***********************************************************************************************
+// MQTT
+// ***********************************************************************************************
+    function connect($r, $message)
+    {
+        log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        // config::save('state', '1', 'Abeille');
+    }
+    
+    function disconnect($r)
+    {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+        // config::save('state', '0', 'Abeille');
+    }
+    
+    function subscribe()
+    {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+    }
+    
+    function logmq($code, $str)
+    {
+        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // }
+    }
+
+    function message($message)
+    {
+        // var_dump( $message );
+        procmsg( $message->topic, $message->payload );
+    }
+    
 // ***********************************************************************************************
     // MAIN
 // ***********************************************************************************************
     //                      1          2           3       4          5       6
     //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
-
+    
     $dest = $argv[1];
     $server = $argv[2];     // change if necessary
     $port = $argv[3];                     // change if necessary
@@ -527,32 +565,98 @@
     $qos = $argv[6];
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
-    $mqtt = new phpMQTT($server, $port, $client_id);
-
+    
+    $parameters_info = Abeille::getParameters();
+    
     if ($dest == 'none') {
         $dest = $resourcePath.'/COM';
         deamonlog('info', 'main: debug for com file: '.$dest);
         exec(system::getCmdSudo().'touch '.$dest.'; chmod 777 '.$dest.' > /dev/null 2>&1');
     }
-
-    deamonlog(
-        'info',
-        'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel
-    );
-
-
-    if (!$mqtt->connect(true, null, $username, $password)) {
-        exit(1);
+    
+    deamonlog( 'info', 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel );
+    
+    if ($GLOBAL['lib_phpMQTT']) {
+        $mqtt = new phpMQTT($server, $port, $client_id);
+        
+        if (!$mqtt->connect(true, null, $username, $password)) {
+            deamonlog( 'debug', 'Can t connect to mosquitto' );
+            exit(1);
+        }
+        
+        $topics['CmdAbeille/#'] = array("qos" => $qos, "function" => "procmsg");
+        
+        $mqtt->subscribe($topics, $qos);
+        
+        while ($mqtt->proc()) {
+        }
+        
+        $mqtt->close();
+        
+    }
+    else {
+        deamonlog( 'debug', 'Create a MQTT Client');
+        
+        // https://github.com/mgdm/Mosquitto-PHP
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html
+        $client = new Mosquitto\Client($client_id);
+        
+        // var_dump( $client );
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+        $client->onConnect('connect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+        $client->onDisconnect('disconnect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+        $client->onSubscribe('subscribe');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+        $client->onMessage('message');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+        $client->onLog('logmq');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+        $client->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $parameters_info['AbeilleQos'], 0);
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+        $client->setReconnectDelay(1, 120, 1);
+        
+        // var_dump( $client );
+        
+        try {
+            deamonlog('info', 'try part');
+            
+            $client->setCredentials( $username, $password );
+            $client->connect( $server, $port, 60 );
+            $client->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
+            
+            deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+            
+            // 1 to use loopForever et 0 to use while loop
+            if (1) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+                deamonlog( 'debug', 'Let loop for ever' );
+                $client->loopForever();
+            } else {
+                while (true) {
+                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                    $client->loop();
+                    //usleep(100);
+                }
+            }
+            
+            $client->disconnect();
+            unset($client);
+            
+        } catch (Exception $e) {
+            log::add('Abeille', 'error', $e->getMessage());
+        }
     }
 
-    $topics['CmdAbeille/#'] = array("qos" => $qos, "function" => "procmsg");
 
-    $mqtt->subscribe($topics, $qos);
-
-    while ($mqtt->proc()) {
-    }
-
-    $mqtt->close();
 
     deamonlog('info', 'Fin du script');
 

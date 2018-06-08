@@ -8,12 +8,14 @@
      *
      */
     
+    $lib_phpMQTT = 0;
     
     require_once dirname(__FILE__)."/../../../../core/php/core.inc.php";
     require_once("lib/Tools.php");
     require_once("includes/config.php");
     require_once("includes/fifo.php");
-    require_once("lib/phpMQTT.php");
+    
+    if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
@@ -33,13 +35,21 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
-            $mqtt->close();
-        } else {
-            deamonlog('WARNING', 'Time out!');
+        if ( $GLOBAL['lib_phpMQTT'] ) {
+            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+                $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
+                $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
+                $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
+                $mqtt->close();
+            } else {
+                deamonlog('WARNING', 'Time out!');
+            }
+        }
+        else {
+            $mqtt = $mqtt;
+            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
         }
     }
     
@@ -47,16 +57,21 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-            // $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
-            // $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
-            // $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
-            
+        if ( $GLOBAL['lib_phpMQTT'] ) {
+            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+                // $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
+                // $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
+                // $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
+                
+                $mqtt->publish("LQI/".$Addr."/".$Index, $data, $qos);
+                
+                $mqtt->close();
+            } else {
+                deamonlog('WARNING', 'Time out!');
+            }
+        }
+        else {
             $mqtt->publish("LQI/".$Addr."/".$Index, $data, $qos);
-            
-            $mqtt->close();
-        } else {
-            deamonlog('WARNING', 'Time out!');
         }
     }
     
@@ -72,11 +87,16 @@
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+        if ( $GLOBAL['lib_phpMQTT'] ) {
+            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+                $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
+                $mqtt->close();
+            } else {
+                deamonlog('error','Time out!');
+            }
+        }
+        else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
-            $mqtt->close();
-        } else {
-            deamonlog('error','Time out!');
         }
     }
     
@@ -84,11 +104,16 @@
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+        if ( $GLOBAL['lib_phpMQTT'] ) {
+            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+                $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
+                $mqtt->close();
+            } else {
+                deamonlog('error','Time out!');
+            }
+        }
+        else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
-            $mqtt->close();
-        } else {
-            deamonlog('error','Time out!');
         }
     }
     
@@ -840,7 +865,7 @@
         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
             deamonlog('debug','associated devices: '    .substr($payload, (28 + $i), 4) );
         }
- 
+        
     }
     
     function decode8041($mqtt, $payload, $ln, $qos)
@@ -1046,7 +1071,7 @@
         $LQI[$srcAddress]=array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
         
         $data =
-         "NeighbourTableEntries="       .substr($payload, 4, 2)
+        "NeighbourTableEntries="       .substr($payload, 4, 2)
         ."&Index="                      .substr($payload, 8, 2)
         ."&ExtendedPanId="              .substr($payload,14,16)
         ."&IEEE_Address="               .substr($payload,30,16)
@@ -1239,8 +1264,8 @@
         $dataType           = substr($payload,18, 2);
         $AttributSize       = substr($payload,20, 4);
         
-
-
+        
+        
         // 0005: ModelIdentifier
         // 0010: Piece (nom utilisé pour Profalux)
         if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
@@ -1318,7 +1343,7 @@
         }
         
         if ($dataType == "42") {
-
+            
             // Xiaomi Bouton Carré
             if (($AttributId == "ff01") && ($AttributSize == "001a")) {
                 deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
@@ -1627,6 +1652,38 @@
                   . '; SQN: : '.substr($payload, 12, 2)   );
     }
     
+    // ***********************************************************************************************
+    // MQTT
+    // ***********************************************************************************************
+    function connect($r, $message)
+    {
+        log::add('AbeilleParser', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        // config::save('state', '1', 'Abeille');
+    }
+    
+    function disconnect($r)
+    {
+        log::add('AbeilleParser', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+        // config::save('state', '0', 'Abeille');
+    }
+    
+    function subscribe()
+    {
+        log::add('AbeilleParser', 'debug', 'Mosquitto: Subscribe to topics');
+    }
+    
+    function logmq($code, $str)
+    {
+        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+        log::add('AbeilleParser', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // }
+    }
+    
+    function message($message)
+    {
+        // var_dump( $message );
+        procmsg( $message->topic, $message->payload );
+    }
     
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
@@ -1647,35 +1704,113 @@
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
     
-    $mqtt = new phpMQTT($server, $port, $client_id);
+    $LQI = array();
+    
+    deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos );
     
     $fifoIN = new fifo( $in, 0777, "r" );
     
-    $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-    
-    $LQI = array();
-    
-    deamonlog(
-              'info',
-              'Starting parsing from '.$in.' to mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos
-              );
+    deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos );
     
     if (!file_exists($in)) {
         deamonlog('error', 'ERROR, fichier '.$in.' n existe pas');
         exit(1);
     }
     
-    while (true) {
-        if (!file_exists($in)) {
-            deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
-            exit(1);
+    $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
+    
+    if ($GLOBAL['lib_phpMQTT']) {
+        $mqtt = new phpMQTT($server, $port, $client_id);
+        while (true) {
+            if (!file_exists($in)) {
+                deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
+                exit(1);
+            }
+            //traitement de chaque trame;
+            $data = $fifoIN->read();
+            protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
+            usleep(1);
+            
         }
-        //traitement de chaque trame;
-        $data = $fifoIN->read();
-        protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
-        usleep(1);
+    }
+    else {
+        deamonlog( 'debug', 'Create a MQTT Client');
+        
+        // https://github.com/mgdm/Mosquitto-PHP
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html
+        $mqtt = new Mosquitto\Client($client_id);
+        
+        // var_dump( $mqtt );
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+        $mqtt->onConnect('connect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+        $mqtt->onDisconnect('disconnect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+        $mqtt->onSubscribe('subscribe');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+        $mqtt->onMessage('message');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+        $mqtt->onLog('logmq');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+        $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+        $mqtt->setReconnectDelay(1, 120, 1);
+        
+        // var_dump( $mqtt );
+        
+        try {
+            deamonlog('info', 'try part');
+            
+            $mqtt->setCredentials( $username, $password );
+            $mqtt->connect( $server, $port, 60 );
+            // $mqtt->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
+            
+            deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+            
+            // 1 to use loopForever et 0 to use while loop
+            if (0) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+                deamonlog( 'debug', 'Let loop for ever' );
+                $mqtt->loopForever();
+            } else {
+                while (true) {
+                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                    $mqtt->loop();
+                    //usleep(100);
+                    if (!file_exists($in)) {
+                        deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
+                        exit(1);
+                    }
+                    //traitement de chaque trame;
+                    $data = $fifoIN->read();
+                    protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
+                    usleep(1);
+                }
+            }
+            
+            $mqtt->disconnect();
+            unset($mqtt);
+            
+        } catch (Exception $e) {
+            log::add('Abeille', 'error', $e->getMessage());
+        }
         
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     deamonlog('warning', 'sortie du loop');
     

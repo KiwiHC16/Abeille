@@ -9,12 +9,13 @@
      *
      */
     
+    $lib_phpMQTT = 0;
     
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     
     require_once("lib/Tools.php");
     // include("CmdToAbeille.php");  // contient processCmd()
-    include("lib/phpMQTT.php");
+    if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     include(dirname(__FILE__).'/includes/config.php');
     include(dirname(__FILE__).'/includes/function.php');
     
@@ -38,19 +39,28 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
-            $mqtt->close();
-        } else {
-            deamonlog('WARNING', 'Time out!');
-            echo "\n\nWARNING', Time out!\n\n";
+        if ( $lib_phpMQTT ) {
+            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
+                $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
+                $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
+                $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
+                $mqtt->close();
+            } else {
+                deamonlog('WARNING', 'Time out!');
+                echo "\n\nWARNING', Time out!\n\n";
+            }
+        }
+        else {
+            $mqtt = $mqtt;
+            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
         }
     }
-     
+    
+    
     function execCommandeTimer( $commande, $options ) {
-        echo "Commande: " . $commande . "\n";
+        // echo "Commande: " . $commande . "\n";
         try { // on fait cmd::byString pour trouver une commande mais si elle n'est pas trouvée ca genere une exception et le execCmd n'est pas executé.
             $cmd = cmd::byString( $commande );
             $cmd->execCmd( $options );
@@ -95,7 +105,7 @@
                     // echo $address . " running \n";
                     if ( (time()-$lastWidgetUpdate) > $RefreshWidgetRate ){
                         mqqtPublish($mqtt, $address, "Var", "Duration", $Timer['T3']-time(), $qos);
-                        print_r( $Timer ); echo "\n";
+                        // print_r( $Timer ); echo "\n";
                     }
                     
                     if ( (time()-$lastCmdUpdate) > $RefreshCmdRate ) {
@@ -144,7 +154,7 @@
         
         // Crée les variables dans la chaine et associe la valeur.
         $parameters = proper_parse_str( $msg );
-        print_r( $parameters );
+        // print_r( $parameters );
         
         deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         
@@ -163,6 +173,7 @@
                 deamonlog('debug', 'TimeStart');
                 // $keywords = preg_split("/[=&]+/", $msg);
                 if ( isset($parameters["durationSeconde"]) ) {
+                    
                     mqqtPublish($mqtt, $address, "0006", "0000", "1", $qos);
                  
                     if ( isset($parameters["messageStart"]) ) {
@@ -196,7 +207,7 @@
                     $Timers[$address]['T3'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'] + $parameters['RampDown'];
                     $Timers[$address]['state'] = 'T0->T1';
                     
-                    print_r( $Timers );
+                    // print_r( $Timers );
                     
                     mqqtPublish($mqtt, $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $Timers[$address]['T3']), $qos);
                     mqqtPublish($mqtt, $address, "Var", "Duration", $Timers[$address]['T3']-time(), $qos);
@@ -285,6 +296,40 @@
             
         }
     }
+    
+    // ***********************************************************************************************
+    // MQTT
+    // ***********************************************************************************************
+    function connect($r, $message)
+    {
+        log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        // config::save('state', '1', 'Abeille');
+    }
+    
+    function disconnect($r)
+    {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+        // config::save('state', '0', 'Abeille');
+    }
+    
+    function subscribe()
+    {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+    }
+    
+    function logmq($code, $str)
+    {
+        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // }
+    }
+    
+    function message($message)
+    {
+        // var_dump( $message );
+        procmsg( $message->topic, $message->payload );
+    }
+    
     // ***********************************************************************************************
     // MAIN
     // ***********************************************************************************************
@@ -296,11 +341,11 @@
     $port = $argv[3];                     // change if necessary
     $username = $argv[4];                   // set your username
     $password = $argv[5];                   // set your password
-    $client_id = "AbeilleMQTTCmdTimer"; // make sure this is unique for connecting to sever - you could use uniqid()
+    $mqtt_id = "AbeilleMQTTCmdTimer"; // make sure this is unique for connecting to sever - you could use uniqid()
     $qos = $argv[6];
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
-    $mqtt = new phpMQTT($server, $port, $client_id);
+    
     
     $RefreshWidgetRate = 5; // s
     $RefreshCmdRate = 1; // s
@@ -309,28 +354,94 @@
     
     $Timers = array();
     
-    deamonlog(
-              'info',
-              'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel
-              );
+    $parameters_info = Abeille::getParameters();
+    
+    deamonlog('info', 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel );
     echo 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel."\n" ;
     
-    if (!$mqtt->connect(true, null, $username, $password)) {
-        exit(1);
+    if ($lib_phpMQTT) {
+        $mqtt = new phpMQTT($server, $port, $mqtt_id);
+        
+        if (!$mqtt->connect(true, null, $username, $password)) {
+            exit(1);
+        }
+        
+        $topics['CmdTimer/#'] = array("qos" => $qos, "function" => "procmsg");
+        
+        $mqtt->subscribe($topics, $qos);
+        
+        
+        while ($mqtt->proc()) {
+            sleep(0.1);
+            checkExparies();
+        }
+        
+        $mqtt->close();
     }
-    
-    $topics['CmdTimer/#'] = array("qos" => $qos, "function" => "procmsg");
-    
-    $mqtt->subscribe($topics, $qos);
-    
-    
-    while ($mqtt->proc()) {
-        sleep(0.1);
-        checkExparies();
+    else {
+        deamonlog( 'debug', 'Create a MQTT Client');
+        
+        // https://github.com/mgdm/Mosquitto-PHP
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html
+        $mqtt = new Mosquitto\Client($mqtt_id);
+        
+        // var_dump( $mqtt );
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+        $mqtt->onConnect('connect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+        $mqtt->onDisconnect('disconnect');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+        $mqtt->onSubscribe('subscribe');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+        $mqtt->onMessage('message');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+        $mqtt->onLog('logmq');
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+        $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+        
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+        $mqtt->setReconnectDelay(1, 120, 1);
+        
+        // var_dump( $mqtt );
+        
+        try {
+            deamonlog('info', 'try part');
+            
+            $mqtt->setCredentials( $username, $password );
+            $mqtt->connect( $server, $port, 60 );
+            $mqtt->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
+            
+            deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+            
+            // 1 to use loopForever et 0 to use while loop
+            if (0) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+                deamonlog( 'debug', 'Let loop for ever' );
+                $mqtt->loopForever();
+            } else {
+                while (true) {
+                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                    $mqtt->loop();
+                    //usleep(100);
+                    sleep(0.1);
+                    checkExparies();
+                }
+            }
+            
+            $mqtt->disconnect();
+            unset($mqtt);
+            
+        } catch (Exception $e) {
+            log::add('Abeille', 'error', $e->getMessage());
+        }
+
     }
-     
-    
-    $mqtt->close();
     
     deamonlog('info', 'Fin du script');
     

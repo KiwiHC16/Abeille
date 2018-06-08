@@ -39,7 +39,7 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ( $lib_phpMQTT ) {
+        if ( $GLOBAL['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
                 $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
@@ -51,7 +51,6 @@
             }
         }
         else {
-            $mqtt = $mqtt;
             $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
@@ -359,7 +358,7 @@
     deamonlog('info', 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel );
     echo 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel."\n" ;
     
-    if ($lib_phpMQTT) {
+    if ($GLOBAL['lib_phpMQTT']) {
         $mqtt = new phpMQTT($server, $port, $mqtt_id);
         
         if (!$mqtt->connect(true, null, $username, $password)) {

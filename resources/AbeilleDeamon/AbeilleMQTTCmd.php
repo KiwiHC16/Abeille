@@ -576,7 +576,7 @@
     
     deamonlog( 'info', 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel );
     
-    if ($lib_phpMQTT) {
+    if ($GLOBAL['lib_phpMQTT']) {
         $mqtt = new phpMQTT($server, $port, $client_id);
         
         if (!$mqtt->connect(true, null, $username, $password)) {

@@ -218,7 +218,7 @@ function network_display() {
 function network_links() {
 
     $.getJSON("/plugins/Abeille/Network/AbeilleLQI_MapData.json", function (json) {
-            var nodes = json.data;
+        var nodes = json.data;
 
             //Sort objects to have Voisin list array
             nodes.sort(function (a, b) {
@@ -312,7 +312,7 @@ function network_links() {
             $.each(nodesTo, function (idx, item) {
                 nodeTo.append(new Option(item, idx));
 
-            });
+        });
 
             $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');

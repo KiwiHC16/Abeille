@@ -41,6 +41,7 @@ $("#nodeTo").off().change(function () {
     filterColumnOnValue(value, 2);
 });
 
+
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display() {
     // Step 1. We create a graph object.
@@ -62,7 +63,7 @@ function network_display() {
             }
         });
 
-        var nodes = [], currentJsonNode,aTemp;
+        var nodes = [], currentJsonNode, aTemp;
 
         for (var nodeFromJson in json.data) {
             currentJsonNode = json.data[nodeFromJson];
@@ -71,11 +72,11 @@ function network_display() {
             //Add node if not already existing
 
             //Handle ZigBee name error
-            if (null == currentJsonNode.Voisine_Name ) {
-                currentJsonNode.Voisine_Name= currentJsonNode.IEEE_Address;
+            if (null == currentJsonNode.Voisine_Name) {
+                currentJsonNode.Voisine_Name = currentJsonNode.IEEE_Address;
             }
 
-            if (null == currentJsonNode.NE ) {
+            if (null == currentJsonNode.NE) {
                 currentJsonNode.NE = currentJsonNode.IEEE_Address;
             }
 
@@ -315,8 +316,8 @@ function network_links() {
 
             $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
-                console.log("eqType: "+ eqTypeId);
-                if (eqTypeId.indexOf('not found')>=0) {
+                console.log("eqType: " + eqTypeId);
+                if (eqTypeId.indexOf('not found') >= 0) {
 
                     $('#div_networkZigbeeAlert').showAlert({
                         message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
@@ -332,8 +333,8 @@ function network_links() {
 
             $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
-                console.log("eqType: "+ eqTypeId);
-                if (eqTypeId.indexOf('not found')>=0) {
+                console.log("eqType: " + eqTypeId);
+                if (eqTypeId.indexOf('not found') >= 0) {
                     $('#div_networkZigbeeAlert').showAlert({
                         message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
                         level: 'info'
@@ -355,6 +356,8 @@ function network_links() {
             setTimeout(function () {
                 $('#div_networkZigbeeAlert').hide()
             }, 2000);
+            $("#table_routingTable").tablesorter({sortList: [[0, 0], [1, 0]]});
+
         })
         .fail(function () {
             var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';

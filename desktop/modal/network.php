@@ -103,7 +103,9 @@ sendVarToJS('nodesFromJeedom', $nodes);
     }
 </style>
 <link rel="stylesheet" href="/3rdparty/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/3rdparty/jquery.tablesorter/css/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
+<!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
 <!--script type="text/javascript"
         src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
@@ -232,17 +234,17 @@ sendVarToJS('nodesFromJeedom', $nodes);
                                         class="fa fa-refresh"></i>
                             Recalcul du cache</a></span>
                         </span>
-                        <table class="table table-condensed" id="table_routingTable">
+                        <table class="table table-condensed tablesorter" id="table_routingTable">
                             <thead>
                             <tr>
-                                <th>{{ID}}</th>
-                                <th>{{Name}}</th>
-                                <th>{{Voisine}}</th>
-                                <th>{{Voisine_Name}}</th>
-                                <th>{{Relation}}</th>
-                                <th>{{Profondeur}}</th>
-                                <th>{{LQI }}</th>
-                                <th>{{Type }}</th>
+                                <th class="header">{{ID}}</th>
+                                <th class="header">{{Name}}</th>
+                                <th class="header">{{Voisine}}</th>
+                                <th class="header">{{Voisine_Name}}</th>
+                                <th class="header">{{Relation}}</th>
+                                <th class="header">{{Profondeur}}</th>
+                                <th class="header">{{LQI }}</th>
+                                <th class="header">{{Type }}</th>
                             </tr>
                             </thead>
                             <tbody>

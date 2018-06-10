@@ -41,6 +41,7 @@ $("#nodeTo").off().change(function () {
     filterColumnOnValue(value, 2);
 });
 
+
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display() {
     // Step 1. We create a graph object.
@@ -62,30 +63,43 @@ function network_display() {
             }
         });
 
-        var nodes = [];
+        var nodes = [], currentJsonNode, aTemp;
 
-        for (var z in json.data) {
-            console.log('Parsing: ' + json.data[z].NE_Name + '/' + json.data[z].Voisine_Name + ' * ' + json.data[z].Type); // this will show the info it in firebug console
+        for (var nodeFromJson in json.data) {
+            currentJsonNode = json.data[nodeFromJson];
+            console.log('Parsing: ' + currentJsonNode.NE_Name + '/' + currentJsonNode.Voisine_Name + ' * ' + currentJsonNode.Type); // this will show the info it in firebug console
             // Step 2. We add nodes and edges to the graph:
             //Add node if not already existing
-            if ('undefined' == typeof(nodes[json.data[z].NE_Name])) {
-                nodes[json.data[z].NE_Name] = {};
-                nodes[json.data[z].NE_Name].name = json.data[z].NE_Name;
-                nodes[json.data[z].NE_Name].links = [];
-                nodes[json.data[z].NE_Name].route = json.data[z].NeighbourTableEntries;
-            }
-            var aTemp = nodes[json.data[z].NE_Name].links;
-            aTemp.push(json.data[z].Voisine_Name);
 
-            if ('undefined' == typeof(nodes[json.data[z].Voisine_Name])) {
-                nodes[json.data[z].Voisine_Name] = {};
-                nodes[json.data[z].Voisine_Name].links = [];
-                nodes[json.data[z].Voisine_Name].route = 1;
-                nodes[json.data[z].Voisine_Name].lqi = json.data[z].LinkQualityDec;
-                nodes[json.data[z].Voisine_Name].name = json.data[z].Voisine_Name != null ? json.data[z].Voisine_Name : 'zigbee error';
+            //Handle ZigBee name error
+            if (null == currentJsonNode.Voisine_Name) {
+                currentJsonNode.Voisine_Name = currentJsonNode.IEEE_Address;
+            }
+
+            if (null == currentJsonNode.NE) {
+                currentJsonNode.NE = currentJsonNode.IEEE_Address;
+            }
+
+            //Populate only undefined nodes as nodes a repeated if routers exist
+            if ('undefined' == typeof(nodes[currentJsonNode.NE_Name])) {
+                nodes[currentJsonNode.NE_Name] = {};
+                nodes[currentJsonNode.NE_Name].name = currentJsonNode.NE_Name;
+                nodes[currentJsonNode.NE_Name].links = [];
+                nodes[currentJsonNode.NE_Name].route = currentJsonNode.NeighbourTableEntries;
+            }
+            //Add Voisine as link to NE
+            aTemp = nodes[currentJsonNode.NE_Name].links;
+            aTemp.push(currentJsonNode.Voisine_Name);
+
+            if ('undefined' == typeof(nodes[currentJsonNode.Voisine_Name])) {
+                nodes[currentJsonNode.Voisine_Name] = {};
+                nodes[currentJsonNode.Voisine_Name].links = [];
+                nodes[currentJsonNode.Voisine_Name].route = 1;
+                nodes[currentJsonNode.Voisine_Name].lqi = currentJsonNode.LinkQualityDec;
+                nodes[currentJsonNode.Voisine_Name].name = currentJsonNode.Voisine_Name;
             }
             // voisine_name should have the Type of the node.
-            nodes[json.data[z].Voisine_Name].Type = json.data[z].Type;
+            nodes[currentJsonNode.Voisine_Name].Type = currentJsonNode.Type;
 
         }
 
@@ -204,128 +218,136 @@ function network_display() {
 function network_links() {
 
     $.getJSON("/plugins/Abeille/Network/AbeilleLQI_MapData.json", function (json) {
-        var nodes = json.data;
+            var nodes = json.data;
 
-        //Sort objects to have Voisin list array
-        nodes.sort(function (a, b) {
-            if (a.Voisin_Name == b.Voisin_Name) {
-                return 0;
-            }
-            ;
-            if (a.Voisin_Name > b.Voisin_Name) {
-                return 1;
-            }
-            ;
-            if (a.Voisin_Name < b.Voisin_Name) {
-                return -1;
-            }
-        });
-        var tbody = "";
-        var nodesTo = new Object(), nodesFrom = new Object();
-        var nodeJId, nodeJName;
-        for (var nodeFromJson in nodes) {
+            //Sort objects to have Voisin list array
+            nodes.sort(function (a, b) {
+                if (a.Voisin_Name == b.Voisin_Name) {
+                    return 0;
+                }
+                ;
+                if (a.Voisin_Name > b.Voisin_Name) {
+                    return 1;
+                }
+                ;
+                if (a.Voisin_Name < b.Voisin_Name) {
+                    return -1;
+                }
+            });
+            var tbody = "";
+            var nodesTo = new Object(), nodesFrom = new Object();
+            var nodeJId, nodeJName;
 
-            nodesTo[nodes[nodeFromJson].Voisine] = nodes[nodeFromJson].Voisine_Name;
-            nodesFrom[nodes[nodeFromJson].NE] = nodes[nodeFromJson].NE_Name;
+            for (var nodeFromJson in nodes) {
+                //Handle ZigBee name error
+                if (nodes[nodeFromJson].Voisine_Name == null) {
+                    nodes[nodeFromJson].Voisine_Name = nodes[nodeFromJson].IEEE_Address;
+                }
 
-            //New Row
-            tbody += (nodes[nodeFromJson].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
-            //process NE to jeedom id
-            nodeJName = nodes[nodeFromJson].NE;
-            //zigbee LQI result is not null
-            if (nodeJName != 'undefined' && nodeJName != null) {
+                if (nodes[nodeFromJson].NE == null) {
+                    nodes[nodeFromJson].NE = nodes[nodeFromJson].IEEE_Address;
+                }
+
+                //Populate selectBox options
+                nodesTo[nodes[nodeFromJson].Voisine] = nodes[nodeFromJson].Voisine_Name;
+                nodesFrom[nodes[nodeFromJson].NE] = nodes[nodeFromJson].NE_Name;
+
+                //New Row
+                tbody += (nodes[nodeFromJson].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
+                //process NE to jeedom id
+                nodeJName = nodes[nodeFromJson].NE;
+                //zigbee LQI result is not null
                 nodeJId = nodesFromJeedom["Abeillex" + (nodeJName == 0 ? 'Ruche' : nodeJName)];
                 //if no match to jeedom db
                 if (nodeJId == 'undefined' || nodeJId == null) {
-                    nodeJId = 'not found';
+                    nodeJId = 'not found in jeedom DB';
                 }
-            } else {
-                //unknown node
-                nodeJId = 'not found';
-            }
-            //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
-            tbody += '<td id="neId">';
-            tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
-            tbody += '</td>';
-            tbody += '<td id="neName">';
-            tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
-            tbody += '</td>';
-            //Process Voisine to jeedom Id
-            nodeJName = nodes[nodeFromJson].Voisine;
-            //zigbee LQI result is not null
-            if (nodeJName != 'undefined' && nodeJName != null) {
+
+
+                //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
+                tbody += '<td id="neId">';
+                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
+                tbody += '</td>';
+                tbody += '<td id="neName">';
+                tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
+                tbody += '</td>';
+                //Process Voisine to jeedom Id
+                nodeJName = nodes[nodeFromJson].Voisine;
+                //zigbee LQI result is not null
                 nodeJId = nodesFromJeedom["Abeillex" + (nodeJName == 0 ? 'Ruche' : nodeJName)];
                 //if no match to jeedom db
                 if (nodeJId == 'undefined' || nodeJId == null) {
-                    nodeJId = 'not found';
+                    nodeJId = 'not found in jeedom DB';
                 }
-            } else {
-                //unknown nodes
-                nodeJId = 'not found';
+
+
+                //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
+                tbody += '<td id="vid">';
+                tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
+                tbody += '</td>';
+                tbody += '<td id="vname">';
+                tbody += nodes[nodeFromJson].Voisine_Name;
+                tbody += '</td>';
+                tbody += '<td>';
+                tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
+                tbody += '</td>';
+                tbody += '<td>';
+                tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
+                tbody += '</td>';
+                tbody += '<td id="lqi">';
+                tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '</span>';
+                tbody += '</td>';
+                tbody += '<td>';
+                tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
+                tbody += '</td>';
+                tbody += '<td></tr>';
             }
-            //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
-            tbody += '<td id="vid">';
-            tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
-            tbody += '</td>';
-            tbody += '<td id="vname">';
-            tbody += nodes[nodeFromJson].Voisine_Name;
-            tbody += '</td>';
-            tbody += '<td>';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
-            tbody += '</td>';
-            tbody += '<td>';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
-            tbody += '</td>';
-            tbody += '<td id="lqi">';
-            tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '</span>';
-            tbody += '</td>';
-            tbody += '<td>';
-            tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
-            tbody += '</td>';
-            tbody += '<td></tr>';
+            $('#table_routingTable tbody').empty().append(tbody);
+            var nodeFrom = $('#nodeFrom'),
+                nodeTo = $('#nodeTo');
+            $.each(nodesFrom, function (idx, item) {
+                nodeFrom.append(new Option(item, idx));
+
+            });
+            $.each(nodesTo, function (idx, item) {
+                nodeTo.append(new Option(item, idx));
+
+            });
+
+            $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
+                var eqTypeId = $(this).children(1).attr('data-nodeid');
+                console.log("eqType: " + eqTypeId);
+                if (eqTypeId.indexOf('not found') >= 0) {
+
+                    $('#div_networkZigbeeAlert').showAlert({
+                        message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
+                        level: 'info'
+                    });
+                    setTimeout(function () {
+                        $('#div_networkZigbeeAlert').hide()
+                    }, 4000);
+                } else {
+                    window.location.href = document.location.origin = '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
+                }
+            });
+
+            $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
+                var eqTypeId = $(this).children(1).attr('data-nodeid');
+                console.log("eqType: " + eqTypeId);
+                if (eqTypeId.indexOf('not found') >= 0) {
+                    $('#div_networkZigbeeAlert').showAlert({
+                        message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
+                        level: 'info'
+                    });
+                    setTimeout(function () {
+                        $('#div_networkZigbeeAlert').hide()
+                    }, 4000);
+                } else {
+                    window.location.href = document.location.origin + '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
+                }
+            });
         }
-        $('#table_routingTable tbody').empty().append(tbody);
-        var nodeFrom = $('#nodeFrom'),
-            nodeTo = $('#nodeTo');
-        $.each(nodesFrom, function (idx, item) {
-            nodeFrom.append(new Option(item, idx));
-
-        });
-        $.each(nodesTo, function (idx, item) {
-            nodeTo.append(new Option(item, idx));
-
-        });
-
-        $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
-            var eqTypeId = $(this).children(1).attr('data-nodeid');
-            if (eqTypeId == 'not found') {
-                $('#div_networkZigbeeAlert').showAlert({
-                    message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
-                    level: 'info'
-                });
-                setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide()
-                }, 4000);
-            } else {
-                window.location.href = document.location.origin = '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
-            }
-        });
-
-        $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
-            var eqTypeId = $(this).children(1).attr('data-nodeid');
-            if (eqTypeId == 'not found') {
-                $('#div_networkZigbeeAlert').showAlert({
-                    message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
-                    level: 'info'
-                });
-                setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide()
-                }, 4000);
-            } else {
-                window.location.href = document.location.origin + '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
-            }
-        });
-    })
+    )
         .done(function () {
             $('#div_networkZigbeeAlert').showAlert({
                 message: '{{Action réalisée avec succès}}',
@@ -334,6 +356,8 @@ function network_links() {
             setTimeout(function () {
                 $('#div_networkZigbeeAlert').hide()
             }, 2000);
+            $("#table_routingTable").tablesorter({sortList: [[0, 0], [1, 0]]});
+
         })
         .fail(function () {
             var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';
@@ -343,7 +367,7 @@ function network_links() {
             }, 2000);
         })
 
-};
+}
 
 function filterColumnOnValue(data, col) {
     var filterValue = data;

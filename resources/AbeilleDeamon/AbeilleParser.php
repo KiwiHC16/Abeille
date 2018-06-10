@@ -1549,7 +1549,7 @@
         }
         
         if (isset($data)) {
-            if ( $EPoint < 2 ) {
+            if ( hexdec($EPoint) < 2 ) {
                 // deamonlog('debug', 'Data byte: '.$data);
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
             }

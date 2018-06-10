@@ -8,7 +8,7 @@
       "icone": "OSRAMClassicA60RGBW"
     },
     "Commandes": {
-      "0000-0001": {
+      "0000-03-0001": {
         "isVisible": 0,
         "name": "SW",
         "order": 0,
@@ -18,7 +18,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-0005": {
+      "0000-03-0005": {
         "isVisible": 0,
         "name": "nom",
         "order": 1,
@@ -28,7 +28,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0006-0000": {
+      "0006-03-0000": {
         "display": {
           "generic_type": "LIGHT_STATE"
         },
@@ -218,5 +218,3 @@
     }
   }
 }
-
-

@@ -9,7 +9,7 @@
       "icone": "OsramLightify"
     },
     "Commandes": {
-      "0000-4000": {
+      "0000-03-4000": {
         "isVisible": 0,
         "name": "SW",
         "order": 0,
@@ -19,7 +19,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-0004": {
+      "0000-03-0004": {
         "isVisible": 0,
         "name": "societe",
         "order": 1,
@@ -29,7 +29,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-0005": {
+      "0000-03-0005": {
         "isVisible": 0,
         "name": "nom",
         "order": 2,
@@ -39,7 +39,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0006-0000": {
+      "0006-03-0000": {
         "isVisible": 1,
         "name": "etat",
         "order": 3,
@@ -261,5 +261,3 @@
     }
   }
 }
-
-

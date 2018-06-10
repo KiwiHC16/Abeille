@@ -1555,6 +1555,7 @@
             }
             else {
                 // Ceci est necessaire pour les Ep Src du Xiaomi Wall Plug
+                // Mais du coup il  faut changer les modeles de toutes les NE qui on un EP diff de 01.
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
             }
         }

@@ -7,112 +7,147 @@ HOST=localhost
 IDENTSUB="AbeilleSubVerif"
 IDENTPUB="AbeillePubVerif"
 PORT=1883
-TOPIC='Abeille/Verif'
-USER="jeedom1"
-PASS="jeedom1"
-MESSAGE="c est moi, timestamp: $(date +%s)"
-FIFO=/var/www/html/plugins/Abeille/resources/AbeilleDaemon/input
+
+USER="jeedom"
+PASS="jeedom"
+
+FIFO=/tmp/AbeilleDeamonInput
 MLOG=/var/log/mosquitto/mosquitto.log
 
-[[ -f sub.log ]] && rm sub.log
 
 
-KEY="OK, Zigate usb key found"
+
+## Zigate tests
+KEY="OK, au moins un port USB found sur lequel peut être la zigate."
 [[ -e $(ls -l /dev/ttyUSB* ) ]] && KEY="WARN: Missing Zigate USB Key"
 echo $KEY
-
+ls -l /dev/ttyUSB*
 
 GRP="OK, www-data belongs to dialout"
 [[ $(groups www-data | grep -c dialout ) -eq 0 ]] && GRP="ERROR: www-data does not belong to dial-out"
 echo $GRP
 
-MSQTT="OK, Mosquitto programm found"
-[[ -z $(which mosquitto) ]] && MQSTT="ERROR: mosquitto programm not found"
-echo $MSQTT
 
-MSQTT="OK, Service mosquitto is running"
-[[ $(/etc/init.d/mosquitto status | egrep -ic "not|fail") -ne 0 ]] && MQSTT="ERROR, mosquitto service is not running"
-echo $MQSTT
-
+## Up Link
 #Verifier la presence du fichier pipe
 PIPE="ERROR, File $FIFO was not found"
 [[ -e ${FIFO} ]] && PIPE="OK, File $FIFO was found"
 echo $PIPE
 
+## les demons qui tournent
+DEMON_NB="Ok, 4 demons tournent"
+[[  $(ps -ef | grep "plugins/Abeille" | grep -v grep | wc -l) -ne 4 ]] && DEMON_NB="Error, nous n'avons pas nos 4 demons qui tournent"
+echo $DEMON
 
+
+## MQTT
+MSQTT="OK, mosquitto_sub programm found"
+[[ -z $(which mosquitto_sub) ]] && MQSTT="ERROR: mosquitto_sub programm not found"
+echo $MSQTT
+
+MSQTT="OK, mosquitto_pub programm found"
+[[ -z $(which mosquitto_pub) ]] && MQSTT="ERROR: mosquitto_pub programm not found"
+echo $MSQTT
+
+
+
+MSQTT="OK, Service mosquitto is running"
+[[ $(/etc/init.d/mosquitto status | egrep -ic "not|fail") -ne 0 ]] && MQSTT="ERROR, mosquitto service is not running"
+echo $MQSTT
+
+
+
+##---------------------------------------------------------------------------------------------
 echo -e "\nChecking connection to mosquitto"
 
+TOPIC="Abeille/Verif"
+MESSAGE="c est moi, timestamp: $(date +%s)"
 
-#Mosquitto
-#mosquitto_sub -h localhost -i AbeilleSubVerif -p 1883 -t "Abeille/Verif" -u jeedom -P jeedom
-nohup $MOSQUITTO_SUB -h $HOST -i $IDENTSUB -p $PORT -t $TOPIC -u $USER -P $PASS -q 1 -C 1 >sub.log 2>&1 &
+[[ -f sub1.log ]] && rm sub1.log
+
+## nohup $MOSQUITTO_SUB -h $HOST -i $IDENTSUB -p $PORT -t $TOPIC -u $USER -P $PASS -q 0 -C 1 >sub1.log 2>&1 &
+nohup  mosquitto_sub -h localhost -i tutu -p 1883 -t $TOPIC -u jeedom -P jeedom -q 0 -C 1 >sub1.log 2>&1 &
 SUBPID=$!
 
-#mosquitto_pub -h localhost -i AbeillePubVerif -t "Abeille/Verif" -m "C est moi" -u jeedom -P jeedom
-$MOSQUITTO_PUB -h $HOST -i $IDENTPUB -t $TOPIC -u $USER -P $PASS -m "$MESSAGE" -q 1 -d
+sleep 3
+
+$MOSQUITTO_PUB -h $HOST -i $IDENTPUB -t $TOPIC -u $USER -P $PASS -m "$MESSAGE" -q 0 -d
 
 n=5
 while [[ $n -gt 0 ]]
     do
-        cat sub.log
+        cat sub1.log
         sleep 1
         echo $n seconds
         let n--
-        [[  $(wc -l < sub.log) -gt 0 ]] && break
+        [[  $(wc -l < sub1.log) -gt 0 ]] && break
     done;
 
 MSG="ERROR, message was improperly transmitted or not at all"
-[[ $(wc -l < sub.log) -eq 1 ]] && [[ $(cat sub.log) == "$MESSAGE" ]] && MSG="OK, message was properly transmitted"
-echo "$MSG // expected: $MESSAGE //transmitted: $(cat sub.log) "
+[[ $(wc -l < sub1.log) -eq 1 ]] && [[ $(cat sub1.log) == "$MESSAGE" ]] && MSG="OK, message was properly transmitted"
+echo "$MSG // expected: $MESSAGE //transmitted: $(cat sub1.log) "
 
-echo -e "\n Mosquitto log"
-tail -5 /var/log/mosquitto/mosquitto.log
+##---------------------------------------------------------------------------------------------
+## Test lien mosquitto->zigate->mosquitto
 
+echo -e "\nChecking connection mosquitto->zigate->mosquitto"
+[[ -f sub2.log ]] && rm sub2.log
+
+TOPIC="Abeille/Ruche/SW-SDK"
+##nohup $MOSQUITTO_SUB -h $HOST -i $IDENTSUB -p $PORT -t $TOPIC -u $USER -P $PASS -q 0 -C 1 >sub.log 2>&1 &
+nohup  mosquitto_sub -h localhost -i toto -p 1883 -t $TOPIC -u jeedom -P jeedom -q 0 -C 1 >sub2.log 2>&1 &
+SUBPID=$!
+
+sleep 3
+
+TOPIC="CmdAbeille/Ruche/getVersion"
+MESSAGE="Version"
+$MOSQUITTO_PUB -h $HOST -i $IDENTPUB -t $TOPIC -u $USER -P $PASS -m "$MESSAGE" -q 0 -d
+
+n=5
+while [[ $n -gt 0 ]]
+    do
+        cat sub2.log
+        sleep 1
+        echo $n seconds
+        let n--
+        [[  $(wc -l < sub2.log) -gt 0 ]] && break
+    done;
+
+MSG="ERROR, on ne parvient pas a dialoguer avec la zigate"
+[[ $(wc -l < sub2.log) -eq 1 ]] && [[ $(cat sub2.log) == "030D" ]] && MSG="OK, la zigate repond"
+echo "$MSG // zigate version expected: 030D // zigate version received: $(cat sub2.log) "
+
+##---------------------------------------------------------------------------------------------
+
+
+## On ne peut pas faire le tail sur le log, on n'a pas les droits
+##echo -e "\n Mosquitto log"
+##tail -5 /var/log/mosquitto/mosquitto.log
+
+##---------------------------------------------------------------------------------------------
 ## As 1 msg should have received, the sub should have terminate itself.
-MSG="OK, no remaining $MOSQUITTO_SUB to kill"
-[[ ! -z $(ps h -o pid -p $SUBPID) ]] && MSG="ERROR, killing remaining $MOSQUITTO_SUB PID $SUBPID" && kill $SUBPID
-echo $MSG
+##MSG="OK, no remaining $MOSQUITTO_SUB to kill"
+##[[ ! -z $(ps h -o pid -p $SUBPID) ]] && MSG="ERROR, killing remaining $MOSQUITTO_SUB PID $SUBPID" && kill $SUBPID
+##echo $MSG
 
 ## COMMENT: transmission aleatoire du message, a investiguer.....
+##---------------------------------------------------------------------------------------------
 
-#
-#fuser /dev/ttyUSB0 -> pid -> ps -ef | grep pid -> www-data  9744  8497  0 00:13 pts/0    00:00:00 grep 24098
-#www-data 24098     1  0 janv.21 ?      00:00:00 /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDaemon/AbeilleSerialRead.php
-#
+##
+##
+echo "Qui utilise les ports ttyUSB*"
+fuser /dev/ttyUSB*
+echo "Qui utilise les pipe"
+fuser $FIFO
+echo "Liste des processus appartenant a www-data"
+ps -ef | grep www-data
 
 
-#prwxr-xr-x 1 www-data www-data 0 janv. 22 00:15 /var/www/html/plugins/Abeille/resources/AbeilleDaemon/input
-#
-#fuser input
-#fuser $FIFO
-#/var/www/html/plugins/Abeille/resources/AbeilleDaemon/input: 16802 16804 24098 24100
-#
-#fuser input
-#/var/www/html/plugins/Abeille/resources/AbeilleDaemon/input: 16802 16804 24098 24100
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$ ps -ef | grep 16802
-#www-data 10046  8497  0 00:17 pts/0    00:00:00 grep 16802
-#www-data 16802     1 99 janv.21 ?      05:59:53 /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDaemon/AbeilleSerialRead.php /dev/ttyUSB0 /dev/ttyUSB0.log
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$ ps -ef | grep 16804
-#www-data 10048  8497  0 00:17 pts/0    00:00:00 grep 16804
-#www-data 16804     1  0 janv.21 ?      00:00:00 /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDaemon/AbeilleParser.php
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$ ps -ef | grep 24098
-#www-data 10050  8497  0 00:17 pts/0    00:00:00 grep 24098
-#www-data 24098     1  0 janv.21 ?      00:00:00 /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDaemon/AbeilleSerialRead.php
-#www-data@Abeille:~/html/plugins/Abeille/resources/AbeilleDaemon$ ps -ef | grep 24100
-#www-data 10107  8497  0 00:18 pts/0    00:00:00 grep 24100
-#www-data 24100     1  0 janv.21 ?      00:00:00 /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDaemon/AbeilleParser.php
-#
-#
-#Envoyer une requete Version sur zigate au niveau /dev/ttyUSB0 et verifier la reponse sur AbeilleParser.php
-#
-#Faire generer à AbeilleParser un message MQTT et verifier qu'on le recoit
+
 #
 #Envoyer a Mosquitto un demande de version et verifier qu on a un reponse amosquitto
 #
 #Envoyer par jeedom un message a mosquitto et verifier qu on le recoit
 #
 #envoyer un messaege de jeedom a mosquitto et verifier qu il revient
-#
-#Envoyer une demande de version a aigate et verifier qu il revient

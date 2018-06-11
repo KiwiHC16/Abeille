@@ -300,4 +300,7 @@ Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
 mosquitto_sub -t "#" -v
 
+== Script de test et vérifications
+
+Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base.
 

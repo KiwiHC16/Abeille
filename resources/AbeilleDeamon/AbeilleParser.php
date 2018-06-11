@@ -1342,6 +1342,18 @@
             $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
         }
         
+        // Example Cube Xiaomi
+        // Sniffer dit Single Precision Floating Point
+        // b9 1e 38 c2 -> -46,03
+        if ($dataType == "39") {
+            // $data = hexdec(substr($payload, 24, 4));
+            // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+            $hexNumber = substr($payload, 24, 8);
+            $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            $bin = pack('H*', $hexNumberOrder );
+            $data = unpack("f", $bin )[1];
+        }
+        
         if ($dataType == "42") {
             
             // Xiaomi Bouton Carré

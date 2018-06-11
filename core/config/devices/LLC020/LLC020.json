@@ -157,13 +157,30 @@
         },
         "configuration": {
           "topic": "CmdAbeille/#addr#/setLevelHue",
-          "request": "Level=#slider#&duration=01"
+          "request": "Level=#slider#&duration=10"
+        }
+      },
+      "Level Stop": {
+        "name": "setLevelStopHue",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "isVisible": 1,
+        "display": {
+          "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setLevelStopHue",
+          "request": "1"
         }
       },
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 11,
+        "order": 12,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -177,7 +194,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 12,
+        "order": 13,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -191,7 +208,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 13,
+        "order": 14,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -205,7 +222,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 14,
+        "order": 15,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -219,7 +236,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 15,
+        "order": 16,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -233,7 +250,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 16,
+        "order": 17,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -243,7 +260,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 17,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -253,7 +270,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 18,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -266,7 +283,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 19,
+        "order": 20,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -276,7 +293,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 20,
+        "order": 21,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -289,7 +306,7 @@
       },
       "Colour": {
         "name": "Colour",
-        "order": 21,
+        "order": 22,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -302,7 +319,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 22,
+        "order": 23,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

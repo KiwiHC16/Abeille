@@ -281,6 +281,16 @@
                                  "duration" => $keywords[3],
                                  );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setLevelStopHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setLevelStop" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "sourceEndpoint" => "01",
+                                 "destinationEndpoint" => "0B",
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "setLevelHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

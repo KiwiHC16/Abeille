@@ -941,6 +941,28 @@
             
         }
         
+        // setLevelStop
+        if ( isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']) )
+        {
+        // <address mode: uint8_t>
+        // <target short address: uint16_t>
+        // <source endpoint: uint8_t>
+        // <destination endpoint: uint8_t>
+            
+            $cmd = "0084";
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
+            $sourceEndpoint         = $Command['sourceEndpoint'];
+            $destinationEndpoint    = $Command['destinationEndpoint'];
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint ;
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
+        
         // ReadAttributeRequest ------------------------------------------------------------------------------------
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
         if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )

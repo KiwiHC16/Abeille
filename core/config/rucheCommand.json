@@ -159,7 +159,7 @@
     "display": {
       "forceReturnLineAfter": "0",
       "title_placeholder": "Adresse IEEE de l equipement",
-      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&reportToAddress=IEEE_ZZZZ"
+      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&reportToAddress=ZZZZZZZZZZZZZZZZ"
     }
   },
   "BindShort": {

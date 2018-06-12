@@ -410,7 +410,7 @@ while ($NE_All_continue) {
             $name = "Inconnu-" . $currentNeAddress;
         }
 
-        $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ' - ' . $currentNeAddress['LQI_Done'] . ')');
+        $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ' - ' . $currentNeStatus['LQI_Done'] . ')');
         if ($nbwritten<1) {
             echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
             exit;

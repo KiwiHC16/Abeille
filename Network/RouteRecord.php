@@ -73,6 +73,14 @@
             echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst']."\n";
             var_dump( $packet['_source']['layers']['zbee_nwk']['Command Frame: Route Record'] );
             echo "-------------------------------------\n";
+            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.src'] . "->";
+            
+            foreach 
+            
+            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst']."\n";
+            echo "-------------------------------------\n";
+            echo "-------------------------------------\n";
+            
         }
     }
     

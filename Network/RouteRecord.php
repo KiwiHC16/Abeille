@@ -37,9 +37,9 @@
              */
             $json = json_decode($content, true);
             
-            echo "Tools: nb line " . strlen($content) . "\n";
+            // echo "Tools: nb line " . strlen($content) . "\n";
             
-            var_dump( $json );
+            // var_dump( $json );
             
             return $json;
         }
@@ -63,27 +63,44 @@
     
     
     $packets = packets::getDataFromJson('RouteRecord.json');
-    var_dump( $packets );
+    // var_dump( $packets );
+    
+    $routes = array();
     
     foreach ($packets as $key => $packet){
         //commandes
         if ( isset( $packet['_source']['layers']['zbee_nwk']['Command Frame: Route Record'] ) )
         {
-            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.src']."\n";
-            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst']."\n";
-            var_dump( $packet['_source']['layers']['zbee_nwk']['Command Frame: Route Record'] );
-            echo "-------------------------------------\n";
-            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.src'] . "->";
+            // echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.src']."\n";
+            // echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst']."\n";
+            // var_dump( $packet['_source']['layers']['zbee_nwk']['Command Frame: Route Record'] );
+            // echo "-------------------------------------\n";
+            $data = substr($packet['_source']['layers']['zbee_nwk']['zbee_nwk.src'],-4) . "->";
+            // echo substr($packet['_source']['layers']['zbee_nwk']['zbee_nwk.src'],-4) . "->";
             
-            foreach 
+            foreach ($packet['_source']['layers']['zbee_nwk']['Command Frame: Route Record'] as $field => $fieldData ) {
+                if ( $field == "zbee_nwk.cmd.relay_device" ) {
+                    $data = $data . substr($fieldData,-4)."->";
+                    // echo substr($fieldData,-4)."->";
+                    }
+                
+            }
             
-            echo $packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst']."\n";
-            echo "-------------------------------------\n";
-            echo "-------------------------------------\n";
-            
+            $data = $data . substr($packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst'],-4);
+            // echo substr($packet['_source']['layers']['zbee_nwk']['zbee_nwk.dst'],-4)."\n";
+            // echo "-------------------------------------\n";
+            // echo "-------------------------------------\n";
+            $routes[] = $data;
         }
     }
     
+    echo "Results : \n";
+    $routes = array_unique( $routes );
+    
+    foreach ( $routes as $id => $route ) {
+        echo $route . "\n";
+        // var_dump( $routes );
+    }
   
     ?>
 

@@ -56,7 +56,7 @@ function logmq($code, $str)
 // ---------------------------------------------------------------------------------------------------------------------------
 function message($message)
 {
-    $NE_All_local = &$GLOBALS['NE_All'];
+    $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
     $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
 
     //lqiLog('--- process a new message -----------------------');
@@ -274,7 +274,11 @@ foreach ($eqLogics as $eqLogic) {
 }
 
 benLog("NE connus pas Abeille");
-if ($debugBen) var_dump($knownNE_FromAbeille);
+    if ($debugBen) {
+        var_dump($knownNE_FromAbeille);
+        echo "----------------------------------\n";
+    }
+    
 
 // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 
@@ -382,7 +386,10 @@ while ($NE_All_continue) {
     // Let's continue with Routers found
     // foreach ($knownNE as $name => $neAddress) {
     foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
-
+        benLog("=============================================================");
+        benLog("Start Loop");
+        
+        //-----------------------------------------------------------------------------
         // Estimation du travail restant et info dans le fichier lock
         $total = count($NE_All_BuildFromLQI);
         $done = 0;
@@ -391,9 +398,10 @@ while ($NE_All_continue) {
                 $done++;
             }
         }
-
         benLog("AbeilleLQI main: " . $done . " of " . $total);
 
+        //-----------------------------------------------------------------------------
+        
         // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
         $NE = $currentNeAddress;
 
@@ -407,6 +415,7 @@ while ($NE_All_continue) {
             echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
             exit;
         }
+        
         benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress . " - " . $currentNeAddress['LQI_Done']);
         if ($debugBen) var_dump($NE_All_BuildFromLQI);
 

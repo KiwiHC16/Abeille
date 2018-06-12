@@ -1,0 +1,117 @@
+{
+  "lumi.sensor_86sw2": {
+    "nameJeedom": "Xiaomi Interrupteur Mural Carré Double",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiButtonSW861",
+      "battery_type": "1x3V CR2032"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-0000": {
+        "isVisible": 1,
+        "name": "etat1",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-02-0000": {
+        "isVisible": 1,
+        "name": "etat2",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower"
+      }
+    }
+  }
+}

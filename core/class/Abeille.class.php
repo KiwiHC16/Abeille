@@ -362,6 +362,8 @@ class Abeille extends eqLogic
             log::add('Abeille', 'debug', 'Start deamon socat: ' . $cmd);
             exec($cmd . ' 2>&1 &');
             
+            sleep(5);
+            
             $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
             log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);
             exec($cmd . ' 2>&1 &');

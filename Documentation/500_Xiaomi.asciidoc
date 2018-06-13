@@ -114,3 +114,8 @@ Remonte son nom
 Apparaige
 Remonte son nom et appli version
 Remonte ff01 (len 37)
+
+== Xiaomi Cube Aqara
+
+image::images/Capture_d_ecran_2018_06_12_a_22_00_03.png[]
+

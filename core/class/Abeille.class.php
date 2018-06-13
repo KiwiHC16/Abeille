@@ -353,7 +353,7 @@ class Abeille extends eqLogic
             $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
             
             $deamon5 = "AbeilleSocat.php";
-            $paramdeamon5 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+            $paramdeamon5 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille')).' '.$parameters_info['IpWifiZigate'];
             $log5 = " > /var/www/html/log/" . substr($deamon5, 0, (strrpos($deamon5, ".")));
             
             
@@ -498,7 +498,8 @@ class Abeille extends eqLogic
             qos: ' . $parameters_info['AbeilleQos'] . ',
             showAllCommands: ' . $parameters_info['showAllCommands'] . ',
             ModeCreation: ' . $parameters_info['creationObjectMode'] . ',
-            onlyTimer: ' . $parameters_info['onlyTimer']
+            onlyTimer: ' . $parameters_info['onlyTimer'] . ',
+            IpWifiZigate : '. $parameters_info['IpWifiZigate']
         );
 
         // https://github.com/mgdm/Mosquitto-PHP
@@ -627,6 +628,7 @@ class Abeille extends eqLogic
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
         $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
         $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
+        $return['IpWifiZigate'] = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
 
         // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
         if ($return['AbeilleSerialPort'] == "/tmp/zigate") {

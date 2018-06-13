@@ -75,6 +75,22 @@
           "maxValue": "3.3"
         }
       },
+      "Batterie-Pourcent": {
+        "isVisible": 0,
+        "name": "BatteriePourcent",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "1"
+        }
+      },
       "0000-ff01": {
         "isVisible": 0,
         "name": "Specific",
@@ -161,4 +177,3 @@
     }
   }
 }
-

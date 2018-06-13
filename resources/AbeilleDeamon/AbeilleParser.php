@@ -34,7 +34,7 @@
     function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
-        // deamonlog("debug","mqttPublish with Qos: ".$qos);
+        deamonlog("debug","mqttPublish with Qos: ".$qos);
         if ( $GLOBAL['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
@@ -46,7 +46,6 @@
             }
         }
         else {
-            $mqtt = $mqtt;
             $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
@@ -1368,6 +1367,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
                 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
             }
             
@@ -1380,6 +1380,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
                 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
             }
             
             // Xiaomi capteur temperature rond
@@ -1394,8 +1395,9 @@
                 deamonlog('debug', 'Temperature: '  .$temperature);
                 deamonlog('debug', 'Humidity: '     .$humidity);
                 
-                mqqtPublish( $mqtt, $SrcAddr, $ClusterId,$AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
-                mqqtPublish( $mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId,$AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
                 mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
                 mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
@@ -1418,6 +1420,7 @@
                 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1442,6 +1445,7 @@
                 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1466,6 +1470,7 @@
                 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
                 mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1484,6 +1489,7 @@
                 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
             }
             
@@ -1504,6 +1510,7 @@
                 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1551,6 +1558,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
                 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
                 
             }
             

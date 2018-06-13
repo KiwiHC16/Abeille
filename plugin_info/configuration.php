@@ -29,6 +29,7 @@
     <div class="form-group">
         <fieldset>
             <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
+
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Mosquitto passe les messages entre les différents éléments du plugin, le plugin installera mosquitto sur jeedom si besoin.">{{IP de Mosquitto : }}</label>
                 <div class="col-sm-4">
@@ -93,6 +94,7 @@
                 <div class="col-lg-4">
                     <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
                         <option value="none" >{{Aucun}}</option>
+                        <option value="/tmp/zigate" >{{WIFI}}</option>
                         <!--option value="auto">{{Auto}}</option-->
                         <?php
                             foreach (jeedom::getUsbMapping('', true) as $name => $value) {
@@ -148,5 +150,15 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate.">{{IP de Zigate Wifi : }}</label>
+                <div class="col-sm-4">
+                    <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1"/>
+                </div>
+            </div>
+
+
+
          </fieldset>
+    </div>
 </form>

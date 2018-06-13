@@ -4,7 +4,7 @@
     /***
      * AbeilleSerialRead
      *
-     * Get information from selected port (/dev/ttyUSB0), transcode data from binary to hex.
+     * Get information from selected port (/dev/ttyUSB0 pour TTL ou socat pour WIFI), transcode data from binary to hex.
      * and write it to FIFO file.
      *
      */
@@ -60,23 +60,26 @@
         exec(system::getCmdSudo().'touch '.$serial.'; chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
-
     if (!file_exists($serial)) {
         deamonlog('error','Error: Fichier '.$serial.' n existe pas');
         exit(1);
     }
 
-
     $fifoIN = new fifo($in, 0777, "w" );
     deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
 
-    _exec("stty -F ".$serial." sane", $out);
-    // echo "Setup ttyUSB default configuration, resultat: \n";
-    // print_r( $out );
-
-    _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb raw", $out);
-    // echo "Setup ttyUSB configuration, resultat: \n";
-    // print_r( $out );
+    if ( $serial == "/tmp/ZiGateSend" ) {
+        deamonlog('info','Pas de stty car nous sommes en WIFI');
+    }
+    else    {
+        _exec("stty -F ".$serial." sane", $out);
+        // echo "Setup ttyUSB default configuration, resultat: \n";
+        // print_r( $out );
+        
+        _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb raw", $out);
+        // echo "Setup ttyUSB configuration, resultat: \n";
+        // print_r( $out );
+    }
 
     $f = fopen($serial, "r");
 

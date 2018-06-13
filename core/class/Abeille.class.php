@@ -69,10 +69,10 @@ class Abeille extends eqLogic
                 if ( strlen($addr) == 4 ) {
                     // echo "Short: " . $topicArray[1];
                     log::add('Abeille', 'debug', 'Ping: '.$addr );
-                    if ( $eqLogic->getConfiguration("protocol") == "" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default", '0' ); }
-                    if ( $eqLogic->getConfiguration("protocol") == "Hue" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue", '0' ); }
-                    if ( $eqLogic->getConfiguration("protocol") == "OSRAM" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM", '0' ); }
-                    if ( $eqLogic->getConfiguration("protocol") == "Profalux" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux", '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "" )         { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default",           '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "Hue" )      { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue",               '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "OSRAM" )    { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM",             '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "Profalux" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux",   '0' ); }
                     
                     sleep(5);
                     
@@ -216,7 +216,12 @@ class Abeille extends eqLogic
 
         //check running deamon /!\ if using sudo nbprocess x2
         if ( $parameters_info['onlyTimer']=='N' ) {
-            $nbProcessExpected = 4;
+            if ($parameters_info['AbeilleSerialPort']=='/tmp/zigate') {
+                $nbProcessExpected = 5;
+            }
+            else {
+                $nbProcessExpected = 4;
+            }
         }
         else {
             $nbProcessExpected = 1;
@@ -225,7 +230,7 @@ class Abeille extends eqLogic
         
             // no sudo to run deamon
         exec(
-            "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | cut -d ';'  -f 1 | wc -l",
+            "ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l",
             $output
         );
 
@@ -347,6 +352,16 @@ class Abeille extends eqLogic
             ' ' . $parameters_info['AbeilleUser'] . ' ' . $parameters_info['AbeillePass'] . ' ' . $parameters_info['AbeilleQos'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
             $log3 = " > /var/www/html/log/" . substr($deamon3, 0, (strrpos($deamon3, ".")));
             
+            $deamon5 = "AbeilleSocat.php";
+            $paramdeamon5 = $parameters_info['AbeilleSerialPort'] . ' ' . log::convertLogLevel(log::getLogLevel('Abeille'));
+            $log5 = " > /var/www/html/log/" . substr($deamon5, 0, (strrpos($deamon5, ".")));
+            
+            
+            
+            $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon5 . " " . $paramdeamon5 . $log5;
+            log::add('Abeille', 'debug', 'Start deamon socat: ' . $cmd);
+            exec($cmd . ' 2>&1 &');
+            
             $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon1 . " " . $paramdeamon1 . $log1;
             log::add('Abeille', 'debug', 'Start deamon SerialRead: ' . $cmd);
             exec($cmd . ' 2>&1 &');
@@ -359,6 +374,8 @@ class Abeille extends eqLogic
             $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon3 . " " . $paramdeamon3 . $log3;
             log::add('Abeille', 'debug', 'Start deamon MQTT: ' . $cmd);
             exec($cmd . ' 2>&1 &');
+
+            
         }
         
         $deamon4 = "AbeilleMQTTCmdTimer.php";
@@ -383,7 +400,7 @@ class Abeille extends eqLogic
     {
         log::add('Abeille', 'debug', 'deamon stop: IN');
         // Stop other deamon
-        exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
+        exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
             log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output,'!'));
             system::kill($output, true);
             exec(system::getCmdSudo() . "kill -9 ".implode($output,' ')." 2>&1");
@@ -603,6 +620,10 @@ class Abeille extends eqLogic
         $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
 
         // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
+        if ($return['AbeilleSerialPort'] == "/tmp/zigate") {
+            $return['state'] = 'ok';
+            return $return;
+        }
         if ( ($return['AbeilleSerialPort'] != 'none') || ($return['onlyTimer']!="Y") ) {
             $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
             if (@!file_exists($return['AbeilleSerialPort'])) {
@@ -623,6 +644,7 @@ class Abeille extends eqLogic
             //if serialPort= none then nothing to check
             $return['state'] = 'ok';
         }
+            
         $return['state'] = 'ok';
         return $return;
     }

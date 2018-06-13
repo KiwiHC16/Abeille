@@ -401,11 +401,18 @@ class Abeille extends eqLogic
     static function deamon_stop()
     {
         log::add('Abeille', 'debug', 'deamon stop: IN');
+        // Stop socat if exist
+        exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '{print $1}' | tr  '\n' ' '", $output);
+        log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output,'!'));
+        system::kill($output, true);
+        exec(system::getCmdSudo() . "kill -15 ".implode($output,' ')." 2>&1");
+        exec(system::getCmdSudo() . "kill -9 ".implode($output,' ')." 2>&1");
+        
         // Stop other deamon
         exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
-            log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output,'!'));
-            system::kill($output, true);
-            exec(system::getCmdSudo() . "kill -9 ".implode($output,' ')." 2>&1");
+        log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output,'!'));
+        system::kill($output, true);
+        exec(system::getCmdSudo() . "kill -9 ".implode($output,' ')." 2>&1");
 
         // Stop main deamon
         $cron = cron::byClassAndFunction('Abeille', 'deamon');

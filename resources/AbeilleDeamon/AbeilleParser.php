@@ -184,6 +184,7 @@
         // 04-05: Length
         // 06: crc
         // 07-: Data / Payload
+        // Last 8 bit is Link quality (modif zigate)
         // xx: 03 Stop
         
         $tab = "";
@@ -212,6 +213,7 @@
             $crctmp = $crctmp ^ hexdec($datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)]);
         }
         $quality = $datas[10 + ($i * 2) - 2].$datas[10 + ($i * 2) - 1];
+        $quality = hexdec( $quality );
         
         $payloadLength = strlen($payload) - 2;
         
@@ -385,7 +387,7 @@
                 break;
                 
             case "8102" :
-                decode8102($mqtt, $payload, $ln, $qos);
+                decode8102($mqtt, $payload, $ln, $qos, $quality);
                 break;
                 
             case "8110" :
@@ -1242,7 +1244,7 @@
                   . '; Status : '.substr($payload, 10, 2)  );
     }
     
-    function decode8102($mqtt, $payload, $ln, $qos)
+    function decode8102($mqtt, $payload, $ln, $qos, $quality)
     {
         
         
@@ -1264,6 +1266,7 @@
         $dataType           = substr($payload,18, 2);
         $AttributSize       = substr($payload,20, 4);
         
+        mqqtPublish($mqtt, $SrcAddr, 'Link', 'Quality', $quality, $qos);
         
         
         // 0005: ModelIdentifier

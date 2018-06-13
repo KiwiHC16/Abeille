@@ -4,7 +4,7 @@
 
 === ZiGate
 
-- La ZiGate est avec le bon firmware et connectée au port USB (le firmware actuellement testé est la version 3b: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
+- La ZiGate est avec le bon firmware et connectée au port USB ou sur son module wifi (le firmware actuellement testé est la version 3d: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
 
 === Widget
 
@@ -109,6 +109,12 @@ image::images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
 image::images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
 
 * Quand le statut Dépendance passe à Ok en vert (Patientez 2 ou 3 minutes), définir l objet ID et le port serie puis Démarrer les Démons.
+
+[source,]
+----
+Si vous avez un zigate USB, choisissez le bon port /dev/ttyUSBx.
+Si vous avez une zigate Wifi, choisissez le port "WIFI" dans la liste et indiquer son adresse IP.
+----
 
 image::images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 

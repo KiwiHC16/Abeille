@@ -256,7 +256,7 @@ $eqLogics = eqLogic::byType('Abeille');
                     <thead>
                     <tr>
                         <th style="width: 50px;">#</th>
-                        <th style="width: 150px;">{{Nom}}</th>
+                        <th style="width: 300px;">{{Nom}}</th>
                         <th style="width: 120px;">{{Sous-Type}}</th>
                         <th style="width: 400px;">{{Topic}}</th>
                         <th style="width: 600px;">{{Payload}}</th>

@@ -4,24 +4,30 @@ Version Beta en cours de development.
 
 
 2018-06-14:
+
 - Ajout de la connectivité en Wifi.
 - Ajout des LQI remontant des trames zigate
 
 2018-06-12:
+
 - Ajout du double interrupteur mural sur pile xiaomi.
 - Network modal (graph automatique du reseau)
 - Ajout aqara Cube
 
 2018-06-11:
+
 - Stop for Volet Profalux #253
 
 2018-06-01:
+
 - Profalux Volets Calibration
 
 2018-05-30:
+
 - Inclusion status dans le widget mis à jour en fonction de l'etat de la zigate
 
 2018-05-28:
+
 - Ajout des equipements DIY
 
 ........

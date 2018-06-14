@@ -1,0 +1,17 @@
+= De-installation
+
+Le plugin Abeille utilise:
+- le code du plugin lui-même et
+- un broker MQTT mosquitto.
+
+Par défaut, lors de l'installation de Abeille, le code du plugin est installé depuis le market et le broker est installé lors de l installation des dépendances.
+
+Le broker MQTT peux être utilisé par d'autres logiciels comme par d'autres plugins.
+
+C'est pourquoi lors de la desinstallation d'Abeille, mosquitto n'est pas desintallé, ni sa configuration.
+
+Si vous souhaitez le desinstaller, vous avez le script "manual_remove_of_mosquito.sh" qui peut vous aider à enlever les déclaraitons faites dans apaches.
+
+Pour la désinstallation de mosquitto, cela depend de votre système et il y a plein de doc sur le net (je manque de temps pour faire la doc...).
+
+

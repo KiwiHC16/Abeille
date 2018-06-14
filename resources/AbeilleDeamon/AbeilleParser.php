@@ -1371,6 +1371,18 @@
                 
             }
             
+            // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
+            elseif (($AttributId == "ff01") && ($AttributSize == "001b")) {
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall 1 Switch)" );
+                
+                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
+            }
+            
             // Xiaomi Door Sensor
             elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
                 deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
@@ -1383,7 +1395,7 @@
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
             }
             
-            // Xiaomi capteur temperature rond
+            // Xiaomi capteur temperature rond / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
             elseif (($AttributId == "ff01") && ($AttributSize == "001f")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond)');
                 

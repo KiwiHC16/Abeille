@@ -29,55 +29,63 @@
     function procmsg($topic, $msg)
     {
         global $dest;
-
-        deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
-
-        list($type, $address, $action) = explode('/', $topic);
-
-        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
-
-        if ($type == "Abeille") { return; }
         
-        if ($type == "CmdAbeille") {
+        deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
+        
+        list($type, $address, $action) = explode('/', $topic);
+        
+        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+        
+        // if ($type == "Abeille") { return; }
+        
+        // Je traite que les CmdAbeille/..../....
+        // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
+        
+        if ($type != "CmdAbeille") {
+            // deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
+            return;
+        }
+        
+        if ($address != "Ruche") {
             //----------------------------------------------------------------------------
             if ($action == "Annonce") {
                 if ($msg == "Default") {
                     deamonlog('info', 'Preparation de la commande annonce pour default');
                     $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0005",
-                    );
+                                     "ReadAttributeRequest" => "1",
+                                     "address" => $address,
+                                     "clusterId" => "0000",
+                                     "attributeId" => "0005",
+                                     );
                 }
                 if ($msg == "Hue") {
                     deamonlog('info', 'Preparation de la commande annonce pour Hue');
                     $Command = array(
-                        "ReadAttributeRequestHue" => "1",
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0005",
-                    );
+                                     "ReadAttributeRequestHue" => "1",
+                                     "address" => $address,
+                                     "clusterId" => "0000",
+                                     "attributeId" => "0005",
+                                     );
                 }
                 if ($msg == "OSRAM") {
                     deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
                     $Command = array(
-                        "ReadAttributeRequestOSRAM" => "1",
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0005",
-                    );
+                                     "ReadAttributeRequestOSRAM" => "1",
+                                     "address" => $address,
+                                     "clusterId" => "0000",
+                                     "attributeId" => "0005",
+                                     );
                 }
                 //----------------------------------------------------------------------------
             } elseif ($action == "AnnonceProfalux") {
                 if ($msg == "Default") {
                     deamonlog('info', 'Preparation de la commande annonce pour default');
                     $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0010",
-                    );
+                                     "ReadAttributeRequest" => "1",
+                                     "address" => $address,
+                                     "clusterId" => "0000",
+                                     "attributeId" => "0010",
+                                     );
                 }
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOff") {
@@ -91,12 +99,12 @@
                     $actionId = "02";
                 }
                 $Command = array(
-                    "onoff" => "1",
-                    "addressMode" => "02",
-                    "address" => $address,
-                    "destinationEndpoint" => "01",
-                    "action" => $actionId,
-                );
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01",
+                                 "action" => $actionId,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOff2") {
                 if ($msg == "On") {
@@ -145,12 +153,12 @@
                     $actionId = "02";
                 }
                 $Command = array(
-                    "onoff" => "1",
-                    "addressMode" => "02",
-                    "address" => $address,
-                    "destinationEndpoint" => "0B",
-                    "action" => $actionId,
-                );
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "0B",
+                                 "action" => $actionId,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOffOSRAM") {
                 if ($msg == "On") {
@@ -163,21 +171,21 @@
                     $actionId = "02";
                 }
                 $Command = array(
-                    "onoff" => "1",
-                    "addressMode" => "02",
-                    "address" => $address,
-                    "destinationEndpoint" => "03",
-                    "action" => $actionId,
-                );
+                                 "onoff" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "03",
+                                 "action" => $actionId,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "UpGroup") {
                 $Command = array(
-                    "UpGroup" => "1",
-                    "addressMode" => "01",
-                    "address" => $address,
-                    "destinationEndpoint" => "01", // Set but not send on radio
-                    "step" => $msg,
-                );
+                                 "UpGroup" => "1",
+                                 "addressMode" => "01",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01", // Set but not send on radio
+                                 "step" => $msg,
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "DownGroup") {
                 $Command = array(
@@ -209,55 +217,45 @@
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 deamonlog('debug', 'Msg Received: '.$msg);
-                if ( $address == "Ruche" ) {
-                    // Payload: address=7191&clusterId=0006&attributId=0000
-                    $Command = array(
-                                     "ReadAttributeRequest" => "1",
-                                     "address" => $keywords[1],
-                                     "clusterId" => $keywords[3],
-                                     "attributeId" => $keywords[5],
-                                     );
-                    $address = $keywords[1];
-                    deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
-                }
-                else {
-                    $Command = array(
-                                     "ReadAttributeRequest" => "1",
-                                     "address" => $address,
-                                     "clusterId" => $keywords[1],
-                                     "attributeId" => $keywords[3],
-                                     );
-                    deamonlog('debug', 'Msg Received: '.$msg.' from NE');
-                }
+                
+                
+                $Command = array(
+                                 "ReadAttributeRequest" => "1",
+                                 "address" => $address,
+                                 "clusterId" => $keywords[1],
+                                 "attributeId" => $keywords[3],
+                                 );
+                deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+            
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "ReadAttributeRequestHue" => "1",
-                    "address" => $address,
-                    "clusterId" => $keywords[1],
-                    "attributeId" => $keywords[3],
-                );
+                                 "ReadAttributeRequestHue" => "1",
+                                 "address" => $address,
+                                 "clusterId" => $keywords[1],
+                                 "attributeId" => $keywords[3],
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestOSRAM") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "ReadAttributeRequestOSRAM" => "1",
-                    "address" => $address,
-                    "clusterId" => $keywords[1],
-                    "attributeId" => $keywords[3],
-                );
+                                 "ReadAttributeRequestOSRAM" => "1",
+                                 "address" => $address,
+                                 "clusterId" => $keywords[1],
+                                 "attributeId" => $keywords[3],
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setLevel") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "setLevel" => "1",
-                    "addressMode" => "02",
-                    "address" => $address,
-                    "destinationEndpoint" => "01",
-                    "Level" => intval($keywords[1] * 255 / 100),
-                    "duration" => $keywords[3],
-                );
+                                 "setLevel" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setLevelVolet") {
                 // Pour un get level (level de 0 à 255):
@@ -319,45 +317,45 @@
             } elseif ($action == "setLevelHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "setLevel" => "1",
-                    "addressMode" => "02",
-                    "address" => $address,
-                    "destinationEndpoint" => "0B",
-                    "Level" => intval($keywords[1] * 255 / 100),
-                    "duration" => $keywords[3],
-                );
+                                 "setLevel" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "0B",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setLevelGroup") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "setLevel" => "1",
-                    "addressMode" => "01",
-                    "address" => $address,
-                    "destinationEndpoint" => "01",
-                    "Level" => intval($keywords[1] * 255 / 100),
-                    "duration" => $keywords[3],
-                );
-
+                                 "setLevel" => "1",
+                                 "addressMode" => "01",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "01",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
+                
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColour") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "setColour" => "1",
-                    "address" => $address,
-                    "X" => $keywords[1],
-                    "Y" => $keywords[3],
-                    "destinationEndPoint" => "01",
-                );
+                                 "setColour" => "1",
+                                 "address" => $address,
+                                 "X" => $keywords[1],
+                                 "Y" => $keywords[3],
+                                 "destinationEndPoint" => "01",
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "setColour" => "1",
-                    "address" => $address,
-                    "X" => $keywords[1],
-                    "Y" => $keywords[3],
-                    "destinationEndPoint" => "0B",
-                );
+                                 "setColour" => "1",
+                                 "address" => $address,
+                                 "X" => $keywords[1],
+                                 "Y" => $keywords[3],
+                                 "destinationEndPoint" => "0B",
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setTemperature") {
                 // T°K   Hex sent  Dec eq
@@ -410,10 +408,10 @@
             } elseif ($action == "Management_LQI_request") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "Management_LQI_request" => "1",
-                    "address" => $keywords[1],
-                    "StartIndex" => $keywords[3],
-                );
+                                 "Management_LQI_request" => "1",
+                                 "address" => $keywords[1],
+                                 "StartIndex" => $keywords[3],
+                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "IEEE_Address_request") {
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -428,128 +426,145 @@
             } elseif ($action == "identifySend") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "identifySend" => "1",
-                    "address" => $address,
-                    "duration" => "0010", // $keywords[1]
-                    "DestinationEndPoint" => "01",
-                );
+                                 "identifySend" => "1",
+                                 "address" => $address,
+                                 "duration" => "0010", // $keywords[1]
+                                 "DestinationEndPoint" => "01",
+                                 );
             } elseif ($action == "identifySendHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                    "identifySend" => "1",
-                    "address" => $address,
-                    "duration" => "0010", // $keywords[1]
-                    "DestinationEndPoint" => "0B",
-                );
+                                 "identifySend" => "1",
+                                 "address" => $address,
+                                 "duration" => "0010", // $keywords[1]
+                                 "DestinationEndPoint" => "0B",
+                                 );
             } /* at ruche level pour l instant */
             elseif ($action == "getGroupMembership") {
                 $Command = array(
-                    "getGroupMembership" => "1",
-                    "address" => $address,
-                );
+                                 "getGroupMembership" => "1",
+                                 "address" => $address,
+                                 );
             } /* elseif ($action == "") {
-         $keywords = preg_split("/[=&]+/", $msg);
-         $Command = array(
-         "setLevel" => "1",
-         "address" => $address,
-         "clusterId" => "0008",
-         "Level" => intval($keywords[1] * 255 / 100),
-         "duration" => $keywords[3],
-         );
-         */
-
+               $keywords = preg_split("/[=&]+/", $msg);
+               $Command = array(
+               "setLevel" => "1",
+               "address" => $address,
+               "clusterId" => "0008",
+               "Level" => intval($keywords[1] * 255 / 100),
+               "duration" => $keywords[3],
+               );
+               */
+            
             else {
-                if ($address != "Ruche") {
-                    deamonlog('warning', 'AbeilleCommand unknown: '.$action.' not even for ruche');
-                }
+                deamonlog('warning', 'AbeilleCommand unknown: '.$action );
             }
-
-
-            /*---------------------------------------------------------*/
-            if ($address == "Ruche") {
-                $keywords = preg_split("/[=&]+/", $msg);
-
-                // Si une string simple
-                if (count($keywords) == 1) {
-                    $Command = array($action => $msg);
-                } // Si une command type get http param1=value1&param2=value2
-                else {
-                    if (count($keywords) == 2) {
-                        deamonlog('debug', '2 arguments command');
-                        $Command = array(
-                            $action => $action,
-                            $keywords[0] => $keywords[1],
-                        );
-                    }
-                    if (count($keywords) == 4) {
-                        deamonlog('debug', '4 arguments command');
-                        $Command = array(
-                            $action => $action,
-                            $keywords[0] => $keywords[1],
-                            $keywords[2] => $keywords[3],
-                        );
-                    }
-                    if (count($keywords) == 6) {
-                        deamonlog('debug', '6 arguments command');
-                        $Command = array(
-                            $action => $action,
-                            $keywords[0] => $keywords[1],
-                            $keywords[2] => $keywords[3],
-                            $keywords[4] => $keywords[5],
-                        );
-                    }
-                    if (count($keywords) == 8) {
-                        deamonlog('debug', '8 arguments command');
-                        $Command = array(
-                            $action => $action,
-                            $keywords[0] => $keywords[1],
-                            $keywords[2] => $keywords[3],
-                            $keywords[4] => $keywords[5],
-                            $keywords[6] => $keywords[7],
-                        );
-                    }
-                    if (count($keywords) == 10) {
-                        deamonlog('debug', '10 arguments command');
-                        $Command = array(
-                                         $action => $action,
-                                         $keywords[0] => $keywords[1],
-                                         $keywords[2] => $keywords[3],
-                                         $keywords[4] => $keywords[5],
-                                         $keywords[6] => $keywords[7],
-                                         $keywords[8] => $keywords[9],
-                                         );
-                    }
-                    if (count($keywords) == 12) {
-                        deamonlog('debug', '12 arguments command');
-                        $Command = array(
-                                         $action => $action,
-                                         $keywords[0] => $keywords[1],
-                                         $keywords[2] => $keywords[3],
-                                         $keywords[4] => $keywords[5],
-                                         $keywords[6] => $keywords[7],
-                                         $keywords[8] => $keywords[9],
-                                         $keywords[10] => $keywords[11],
-                                         );
-                    }
-                }
-            }
-
-
-            /*---------------------------------------------------------*/
-
-            // print_r( $Command );
-            $toPrint = "";
-            foreach ( $Command as $commandItem => $commandValue)
-            { $toPrint = $toPrint . $commandItem."-".$commandValue."-"; }
-            
-            deamonlog('debug','processCmd call with: '.$toPrint);
-
-            processCmd($dest, $Command, $GLOBALS['requestedlevel']);
-            
-        } else {
-            deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
         }
-        return;
+        
+        
+        else {
+            /*---------------------------------------------------------*/
+        // if ($address == "Ruche") {
+        $done = 0;
+        
+        if ($action == "ReadAttributeRequest") {
+            $keywords = preg_split("/[=&]+/", $msg);
+            deamonlog('debug', 'Msg Received: '.$msg);
+            
+            // Payload: address=7191&clusterId=0006&attributId=0000
+            $Command = array(
+                             "ReadAttributeRequest" => "1",
+                             "address" => $keywords[1],
+                             "clusterId" => $keywords[3],
+                             "attributeId" => $keywords[5],
+                             );
+            $address = $keywords[1];
+            deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
+            $done = 1;
+        }
+        
+        if ( !$done ) {
+            $keywords = preg_split("/[=&]+/", $msg);
+            
+            // Si une string simple
+            if (count($keywords) == 1) {
+                $Command = array($action => $msg);
+            } // Si une command type get http param1=value1&param2=value2
+            
+            if (count($keywords) == 2) {
+                deamonlog('debug', '2 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 );
+            }
+            if (count($keywords) == 4) {
+                deamonlog('debug', '4 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 $keywords[2] => $keywords[3],
+                                 );
+            }
+            if (count($keywords) == 6) {
+                deamonlog('debug', '6 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 $keywords[2] => $keywords[3],
+                                 $keywords[4] => $keywords[5],
+                                 );
+            }
+            if (count($keywords) == 8) {
+                deamonlog('debug', '8 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 $keywords[2] => $keywords[3],
+                                 $keywords[4] => $keywords[5],
+                                 $keywords[6] => $keywords[7],
+                                 );
+            }
+            if (count($keywords) == 10) {
+                deamonlog('debug', '10 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 $keywords[2] => $keywords[3],
+                                 $keywords[4] => $keywords[5],
+                                 $keywords[6] => $keywords[7],
+                                 $keywords[8] => $keywords[9],
+                                 );
+            }
+            if (count($keywords) == 12) {
+                deamonlog('debug', '12 arguments command');
+                $Command = array(
+                                 $action => $action,
+                                 $keywords[0] => $keywords[1],
+                                 $keywords[2] => $keywords[3],
+                                 $keywords[4] => $keywords[5],
+                                 $keywords[6] => $keywords[7],
+                                 $keywords[8] => $keywords[9],
+                                 $keywords[10] => $keywords[11],
+                                 );
+                
+            }
+        }
+    }
+    
+    
+    /*---------------------------------------------------------*/
+    
+    // print_r( $Command );
+    $toPrint = "";
+    foreach ( $Command as $commandItem => $commandValue) { $toPrint = $toPrint . $commandItem."-".$commandValue."-"; }
+    
+    deamonlog('debug','processCmd call with: '.$toPrint);
+    
+    processCmd($dest, $Command, $GLOBALS['requestedlevel']);
+    
+    
+    return;
     }
     
 // ***********************************************************************************************

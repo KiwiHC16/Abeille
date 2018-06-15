@@ -1,38 +1,43 @@
 <?php
-
-
+    
+    
     /***
      * AbeilleMQTTCCmd subscribe to Abeille topic and receive message sent by AbeilleParser.
      *
      *
      *
      */
-
+    
     $lib_phpMQTT = 0;
-
+    
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-
+    
     if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     require_once("lib/Tools.php");
     include("CmdToAbeille.php");  // contient processCmd()
-   
+    
     include(dirname(__FILE__).'/includes/config.php');
-
+    include(dirname(__FILE__).'/includes/function.php');
     
     
     function deamonlog($loglevel = 'NONE', $message = "")
     {
         Tools::deamonlog($loglevel,'AbeilleMQTTCmd',$message);
     }
-
-
+    
+    
     function procmsg($topic, $msg)
     {
         global $dest;
         
-        deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
-        
         list($type, $address, $action) = explode('/', $topic);
+        
+        if ($type != "CmdAbeille") {
+            // deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
+            return;
+        }
+        
+        deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
         
         deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         
@@ -41,10 +46,7 @@
         // Je traite que les CmdAbeille/..../....
         // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
         
-        if ($type != "CmdAbeille") {
-            // deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
-            return;
-        }
+        
         
         if ($address != "Ruche") {
             //----------------------------------------------------------------------------
@@ -226,7 +228,7 @@
                                  "attributeId" => $keywords[3],
                                  );
                 deamonlog('debug', 'Msg Received: '.$msg.' from NE');
-            
+                
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestHue") {
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -464,112 +466,142 @@
         
         else {
             /*---------------------------------------------------------*/
-        // if ($address == "Ruche") {
-        $done = 0;
-        
-        if ($action == "ReadAttributeRequest") {
-            $keywords = preg_split("/[=&]+/", $msg);
-            deamonlog('debug', 'Msg Received: '.$msg);
+            // if ($address == "Ruche") {
+            $done = 0;
             
-            // Payload: address=7191&clusterId=0006&attributId=0000
-            $Command = array(
-                             "ReadAttributeRequest" => "1",
-                             "address" => $keywords[1],
-                             "clusterId" => $keywords[3],
-                             "attributeId" => $keywords[5],
-                             );
-            $address = $keywords[1];
-            deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
-            $done = 1;
-        }
-        
-        if ( !$done ) {
-            $keywords = preg_split("/[=&]+/", $msg);
+            // Crée les variables dans la chaine et associe la valeur.
+            $parameters = proper_parse_str( $msg );
             
-            // Si une string simple
-            if (count($keywords) == 1) {
-                $Command = array($action => $msg);
-            } // Si une command type get http param1=value1&param2=value2
+            if ($action == "ReadAttributeRequest") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                deamonlog('debug', 'Msg Received: '.$msg);
+                
+                // Payload: address=7191&clusterId=0006&attributId=0000
+                $Command = array(
+                                 "ReadAttributeRequest" => "1",
+                                 "address" => $keywords[1],
+                                 "clusterId" => $keywords[3],
+                                 "attributeId" => $keywords[5],
+                                 );
+                $address = $keywords[1];
+                deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
+                $done = 1;
+            }
             
-            if (count($keywords) == 2) {
-                deamonlog('debug', '2 arguments command');
+            if ($action == "bindShort") {
                 $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
+                                 "bindShort"                => "1",
+                                 "address"                  => $parameters['address'],
+                                 "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+                                 "targetEndpoint"           => $parameters['targetEndpoint'],
+                                 "clusterID"                => $parameters['ClusterId'],
+                                 "destinationAddress"       => $parameters['reportToAddress'],
+                                 "destinationEndpoint"      => "01",
                                  );
-            }
-            if (count($keywords) == 4) {
-                deamonlog('debug', '4 arguments command');
-                $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
-                                 $keywords[2] => $keywords[3],
-                                 );
-            }
-            if (count($keywords) == 6) {
-                deamonlog('debug', '6 arguments command');
-                $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
-                                 $keywords[2] => $keywords[3],
-                                 $keywords[4] => $keywords[5],
-                                 );
-            }
-            if (count($keywords) == 8) {
-                deamonlog('debug', '8 arguments command');
-                $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
-                                 $keywords[2] => $keywords[3],
-                                 $keywords[4] => $keywords[5],
-                                 $keywords[6] => $keywords[7],
-                                 );
-            }
-            if (count($keywords) == 10) {
-                deamonlog('debug', '10 arguments command');
-                $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
-                                 $keywords[2] => $keywords[3],
-                                 $keywords[4] => $keywords[5],
-                                 $keywords[6] => $keywords[7],
-                                 $keywords[8] => $keywords[9],
-                                 );
-            }
-            if (count($keywords) == 12) {
-                deamonlog('debug', '12 arguments command');
-                $Command = array(
-                                 $action => $action,
-                                 $keywords[0] => $keywords[1],
-                                 $keywords[2] => $keywords[3],
-                                 $keywords[4] => $keywords[5],
-                                 $keywords[6] => $keywords[7],
-                                 $keywords[8] => $keywords[9],
-                                 $keywords[10] => $keywords[11],
-                                 );
+                $done = 1;
                 
             }
+            
+            if ($action == "setReport") {
+                $Command = array(
+                                 "setReport"                => "1",
+                                 "address"                  => $parameters['address'],
+                                 "targetEndpoint"           => $parameters['targetEndpoint'],
+                                 "ClusterId"                => $parameters['ClusterId'],
+                                 "AttributeType"            => $parameters['AttributeType'],
+                                 "AttributeId"              => $parameters['AttributeId'],
+                                 );
+                $done = 1;
+                
+            }
+            
+            if ( !$done ) {
+                $keywords = preg_split("/[=&]+/", $msg);
+                
+                // Si une string simple
+                if (count($keywords) == 1) {
+                    $Command = array($action => $msg);
+                } // Si une command type get http param1=value1&param2=value2
+                
+                if (count($keywords) == 2) {
+                    deamonlog('debug', '2 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     );
+                }
+                if (count($keywords) == 4) {
+                    deamonlog('debug', '4 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     );
+                }
+                if (count($keywords) == 6) {
+                    deamonlog('debug', '6 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     $keywords[4] => $keywords[5],
+                                     );
+                }
+                if (count($keywords) == 8) {
+                    deamonlog('debug', '8 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     $keywords[4] => $keywords[5],
+                                     $keywords[6] => $keywords[7],
+                                     );
+                }
+                if (count($keywords) == 10) {
+                    deamonlog('debug', '10 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     $keywords[4] => $keywords[5],
+                                     $keywords[6] => $keywords[7],
+                                     $keywords[8] => $keywords[9],
+                                     );
+                }
+                if (count($keywords) == 12) {
+                    deamonlog('debug', '12 arguments command');
+                    $Command = array(
+                                     $action => $action,
+                                     $keywords[0] => $keywords[1],
+                                     $keywords[2] => $keywords[3],
+                                     $keywords[4] => $keywords[5],
+                                     $keywords[6] => $keywords[7],
+                                     $keywords[8] => $keywords[9],
+                                     $keywords[10] => $keywords[11],
+                                     );
+                    
+                }
+            }
         }
+        
+        
+        /*---------------------------------------------------------*/
+        
+        // print_r( $Command );
+        $toPrint = "";
+        foreach ( $Command as $commandItem => $commandValue) { $toPrint = $toPrint . $commandItem."-".$commandValue."-"; }
+        
+        deamonlog('debug','processCmd call with: '.$toPrint);
+        
+        processCmd($dest, $Command, $GLOBALS['requestedlevel']);
+        
+        
+        return;
     }
     
-    
-    /*---------------------------------------------------------*/
-    
-    // print_r( $Command );
-    $toPrint = "";
-    foreach ( $Command as $commandItem => $commandValue) { $toPrint = $toPrint . $commandItem."-".$commandValue."-"; }
-    
-    deamonlog('debug','processCmd call with: '.$toPrint);
-    
-    processCmd($dest, $Command, $GLOBALS['requestedlevel']);
-    
-    
-    return;
-    }
-    
-// ***********************************************************************************************
-// MQTT
-// ***********************************************************************************************
+    // ***********************************************************************************************
+    // MQTT
+    // ***********************************************************************************************
     function connect($r, $message)
     {
         log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
@@ -593,16 +625,16 @@
         log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
         // }
     }
-
+    
     function message($message)
     {
         // var_dump( $message );
         procmsg( $message->topic, $message->payload );
     }
     
-// ***********************************************************************************************
+    // ***********************************************************************************************
     // MAIN
-// ***********************************************************************************************
+    // ***********************************************************************************************
     //                      1          2           3       4          5       6
     //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
     
@@ -705,10 +737,10 @@
             log::add('Abeille', 'error', $e->getMessage());
         }
     }
-
-
-
+    
+    
+    
     deamonlog('info', 'Fin du script');
-
-
-?>
+    
+    
+    ?>

@@ -34,4 +34,17 @@
         return $arr;
     }
 
+    // Inverse l ordre des des octets.
+    function reverse_hex( $a ) {
+        $reverse = "";
+        
+        for ($i = strlen($a)-2; $i >= 0; $i-=2) {
+            // echo $i . " -> " . $a[$i] . $a[$i+1] . "\n";
+            
+            $reverse .= $a[$i].$a[$i+1];
+            
+            
+        }
+        return $reverse;
+    }
 ?>

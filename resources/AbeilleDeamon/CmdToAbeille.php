@@ -572,18 +572,18 @@
             $radius = "30";
             $dataLength = "16";
             
-            $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data
+            $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
             
             // $targetExtendedAddress = "1d1369feff9ffd90";
-            $targetExtendedAddress = $Command['targetExtendedAddress'];
+            $targetExtendedAddress = reverse_hex($Command['targetExtendedAddress']);
             // $targetEndpoint = "01";
             $targetEndpoint = $Command['targetEndpoint'];
             // $clusterID = "0600";  // 0006 but need to be inverted
-            $clusterID = $Command['clusterID'];
+            $clusterID = reverse_hex($Command['clusterID']);
             $destinationAddressMode = "03";
             // $destinationAddressMode = $Command['destinationAddressMode'];
             // $destinationAddress = "221b9a01008d1500";
-            $destinationAddress = $Command['destinationAddress'];
+            $destinationAddress = reverse_hex($Command['destinationAddress']);
             // $destinationEndpoint = "01";
             $destinationEndpoint = $Command['destinationEndpoint'];
             

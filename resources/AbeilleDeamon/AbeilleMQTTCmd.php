@@ -208,12 +208,27 @@
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "ReadAttributeRequest" => "1",
-                    "address" => $address,
-                    "clusterId" => $keywords[1],
-                    "attributeId" => $keywords[3],
-                );
+                deamonlog('debug', 'Msg Received: '.$msg);
+                if ( $address == "Ruche" ) {
+                    // Payload: address=7191&clusterId=0006&attributId=0000
+                    $Command = array(
+                                     "ReadAttributeRequest" => "1",
+                                     "address" => $keywords[1],
+                                     "clusterId" => $keywords[3],
+                                     "attributeId" => $keywords[5],
+                                     );
+                    $address = $keywords[1];
+                    deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
+                }
+                else {
+                    $Command = array(
+                                     "ReadAttributeRequest" => "1",
+                                     "address" => $address,
+                                     "clusterId" => $keywords[1],
+                                     "attributeId" => $keywords[3],
+                                     );
+                    deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                }
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestHue") {
                 $keywords = preg_split("/[=&]+/", $msg);

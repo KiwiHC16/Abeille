@@ -1,16 +1,16 @@
 {
   "CLA60RGBWOSRAM": {
-    "nameJeedom": "CLA 60 RGBW OSRAM",
+    "nameJeedom": "CLA60RGBWOSRAM",
     "Categorie": {
-      "automatism": "1"
+      "light": "1"
     },
     "configuration": {
       "icone": "CLA60RGBWOSRAM"
     },
     "Commandes": {
-      "0000-03-0001": {
+      "0000-03-0005": {
         "isVisible": 0,
-        "name": "SW",
+        "name": "nom",
         "order": 0,
         "isHistorized": "0",
         "Type": "info",
@@ -18,9 +18,9 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-03-0005": {
+      "0000-0004": {
         "isVisible": 0,
-        "name": "nom",
+        "name": "societe",
         "order": 1,
         "isHistorized": "0",
         "Type": "info",
@@ -28,23 +28,50 @@
         "invertBinary": "0",
         "template": ""
       },
+      "0000-4000": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 2,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
       "0006-03-0000": {
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        },
         "isVisible": 1,
         "name": "etat",
-        "order": 2,
+        "order": 3,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
-        "template": "prise"
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
+      },
+      "0008-03-0000": {
+        "isVisible": 1,
+        "name": "Level",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "calculValueOffset": "#value#/255*100"
+        }
       },
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 3,
+        "order": 5,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -54,7 +81,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 4,
+        "order": 6,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -64,7 +91,7 @@
       "On": {
         "isVisible": 1,
         "name": "On",
-        "order": 5,
+        "order": 7,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -81,7 +108,7 @@
       "Off": {
         "isVisible": 1,
         "name": "Off",
-        "order": 6,
+        "order": 8,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -98,7 +125,7 @@
       "Toggle": {
         "isVisible": 1,
         "name": "Toggle",
-        "order": 7,
+        "order": 9,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -113,52 +140,116 @@
           "generic_type": "LIGHT_TOGGLE"
         }
       },
+      "Level": {
+        "isVisible": 1,
+        "name": "setLevel",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "value": "Level",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setLevelOSRAM",
+          "request": "Level=#slider#&duration=01"
+        },
+        "display": {
+          "forceReturnLineAfter": "1",
+          "generic_type": "LIGHT_SLIDER"
+        }
+      },
+      "Colour": {
+        "name": "Colour",
+        "order": 11,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "message",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "request": "X=#title#&Y=#message#"
+        },
+        "display": {
+          "forceReturnLineAfter": "0",
+          "title_placeholder": "XXXX",
+          "message_placeholder": "YYYY"
+        }
+      },
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 8,
+        "order": 12,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
           "request": "clusterId=0006&attributeId=0000"
+        }
+      },
+      "getLevel": {
+        "isVisible": 0,
+        "name": "getLevel",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0008&attributeId=0000"
         }
       },
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 9,
+        "order": 14,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 10,
+        "order": 15,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=0005"
+        }
+      },
+      "getSWBuild": {
+        "isVisible": 0,
+        "name": "getSWBuild",
+        "order": 16,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=4000"
         }
       },
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 11,
+        "order": 17,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -168,7 +259,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 12,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -178,7 +269,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 13,
+        "order": 20,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -191,17 +282,103 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 14,
+        "order": 21,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
         "template": "AbeillePower"
       },
+      "Identify": {
+        "isVisible": 0,
+        "name": "Identify",
+        "order": 22,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/identifySend",
+          "request": "duration=0010"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 23,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "BindToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindToZigateEtat",
+        "order": 24,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "BindToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindToZigateLevel",
+        "order": 25,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 26,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        }
+      },
+      "setReportLevel": {
+        "isVisible": 1,
+        "name": "setReportLevel",
+        "order": 27,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 15,
+        "order": 28,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

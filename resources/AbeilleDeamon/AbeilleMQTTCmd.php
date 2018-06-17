@@ -259,6 +259,17 @@
                                  "duration" => $keywords[3],
                                  );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setLevelOSRAM") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setLevel" => "1",
+                                 "addressMode" => "02",
+                                 "address" => $address,
+                                 "destinationEndpoint" => "03",
+                                 "Level" => intval($keywords[1] * 255 / 100),
+                                 "duration" => $keywords[3],
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "setLevelVolet") {
                 // Pour un get level (level de 0 à 255):
                 // a=0.00081872
@@ -357,6 +368,16 @@
                                  "X" => $keywords[1],
                                  "Y" => $keywords[3],
                                  "destinationEndPoint" => "0B",
+                                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "setColourOSRAM") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                                 "setColour" => "1",
+                                 "address" => $address,
+                                 "X" => $keywords[1],
+                                 "Y" => $keywords[3],
+                                 "destinationEndPoint" => "03",
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setTemperature") {

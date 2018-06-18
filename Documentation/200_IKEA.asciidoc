@@ -198,5 +198,5 @@ Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il
 
 Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un reveil du gradateur permet de recuperer le nom.
 
-
+Voir la telecommande 5 boutons pour avoir plus de details sur le controle de groupe,...
 

@@ -119,3 +119,7 @@ Remonte ff01 (len 37)
 
 image::images/Capture_d_ecran_2018_06_12_a_22_00_03.png[]
 
+== Wall Switch Double Battery (lumi.sensor_86sw2)
+
+Il repond au getName sur EP 01 si on fait de multiple appuie sur l'interrupteur de gauche.
+

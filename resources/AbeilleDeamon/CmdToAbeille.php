@@ -658,8 +658,14 @@
             
             $addressMode            = "02";                     // 01 = short
             $targetShortAddress     = $Command['address'];
-            $sourceEndpoint         = "01";
-            // $destinationEndpoint    = "01";
+            // $sourceEndpoint         = "01";
+            if ( isset($Command['sourceEndpoint']) ) {
+                $sourceEndpoint         = $Command['sourceEndpoint'];
+            }
+            else {
+                $sourceEndpoint         = "01";
+            }
+            // $targetEndpoint    = "01";
             if ( isset($Command['targetEndpoint']) ) {
                 $targetEndpoint         = $Command['targetEndpoint'];
             }

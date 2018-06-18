@@ -224,7 +224,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=03"
         }
       },
       "setReportEtat": {
@@ -238,7 +238,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
       },
       "online": {

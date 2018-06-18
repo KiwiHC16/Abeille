@@ -45,3 +45,8 @@ image::images/Capture-d_ecran_2018_02_14_a_11_15_18.png[]
 
 Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ...
 
+= Telecommande / Philips Hue Dimmer Switch
+
+== Association
+
+Appuie avec un trombone longtemps sur le bouton en face arriere avec la zigate en mode Inclusion.

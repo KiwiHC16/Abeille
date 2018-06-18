@@ -5,7 +5,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "icone": "Dimmerswitchwoneutral"
+      "icone": "Dimmerswitchwoneutral",
+      "protocol": "LEGRAND"
     },
     "Commandes": {
       "0000-0005": {
@@ -358,6 +359,3 @@
     }
   }
 }
-
-
-

@@ -1,11 +1,12 @@
-{ 
+{
   "CLA60RGBWOSRAM": {
     "nameJeedom": "CLA60RGBWOSRAM",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-      "icone": "CLA60RGBWOSRAM"
+      "icone": "CLA60RGBWOSRAM",
+      "protocol": "OSRAM"
     },
     "Commandes": {
       "0000-03-0005": {

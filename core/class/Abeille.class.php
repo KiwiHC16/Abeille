@@ -871,12 +871,11 @@ class Abeille extends eqLogic
             $elogic->setConfiguration('type', $type);
             $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
             $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
-            $elogic->setIsVisible("1");
             $elogic->setConfiguration('type', $type);
-            if (isset($objetConfiguration['battery_type'])) {
-                log::add('Abeille', 'debug', 'define battery: ' . $objetConfiguration['battery_type']);
-                $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
-            }
+            if (isset($objetConfiguration['battery_type'])) { $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']); }
+            if (isset($objetConfiguration['protocol']))     { $elogic->setConfiguration('protocol', $objetConfiguration['protocol']); }
+            $elogic->setIsVisible("1");
+
 
             // eqReal_id
             $elogic->setIsEnable("1");

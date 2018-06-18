@@ -5,7 +5,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "icone": "OSRAMClassicA60Wclear-LIGHTIFY"
+      "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
+      "protocol": "OSRAM"
     },
     "Commandes": {
       "0000-03-0001": {

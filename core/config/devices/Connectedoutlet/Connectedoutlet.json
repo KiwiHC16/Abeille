@@ -5,7 +5,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "icone": "Connectedoutlet"
+      "icone": "Connectedoutlet",
+      "protocol": "LEGRAND"
     },
     "Commandes": {
       "0000-0005": {
@@ -207,7 +208,7 @@
         "subType": "other",
         "template": ""
       },
-	"getSWBuild": {
+      "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
         "order": 16,
@@ -263,7 +264,7 @@
         "invertBinary": "0",
         "template": "badge"
       },
-     "BindToZigateEtat": {
+      "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
         "order": 20,
@@ -277,7 +278,7 @@
           "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
         }
       },
-        "setReportEtat": {
+      "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
         "order": 21,
@@ -294,6 +295,3 @@
     }
   }
 }
-
-
-

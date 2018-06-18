@@ -5,7 +5,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "icone": "OSRAMClassicA60RGBW"
+      "icone": "OSRAMClassicA60RGBW",
+      "protocol": "OSRAM"
     },
     "Commandes": {
       "0000-03-0001": {

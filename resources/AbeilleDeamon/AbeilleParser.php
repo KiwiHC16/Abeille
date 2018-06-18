@@ -552,7 +552,14 @@
     }
     function decode8007($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug',';type: 8008: (“Factory New” Restart)(Not Processed)'
+        deamonlog('debug',';type: 8007: (“Factory New” Restart)(Not Processed)'
+                  . '; (Not processed*************************************************************)'
+                  . '; Level: 0x'.substr($payload, 0, 2)
+                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    }
+    function decode8008($mqtt, $payload, $ln, $qos)
+    {
+        deamonlog('debug',';type: 8008: (“Function inconnue pas dans la doc")(Not Processed)'
                   . '; (Not processed*************************************************************)'
                   . '; Level: 0x'.substr($payload, 0, 2)
                   . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );

@@ -316,10 +316,70 @@
           "request": "X=#title#&Y=#message#"
         }
       },
+      "Blanc": {
+        "name": "Blanc",
+        "order": 23,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "request": "X=6000&Y=6000"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Bleu": {
+        "name": "Bleu",
+        "order": 24,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "request": "X=228F&Y=228F"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Rouge": {
+        "name": "Rouge",
+        "order": 25,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "request": "X=AE13&Y=51EB"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Vert": {
+        "name": "Vert",
+        "order": 26,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "request": "X=147A&Y=D709"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 23,
+        "order": 27,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

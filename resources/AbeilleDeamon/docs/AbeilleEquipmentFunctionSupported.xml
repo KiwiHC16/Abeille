@@ -15,10 +15,10 @@
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>10560</WindowHeight>
+  <WindowHeight>8400</WindowHeight>
   <WindowWidth>47840</WindowWidth>
-  <WindowTopX>1880</WindowTopX>
-  <WindowTopY>24880</WindowTopY>
+  <WindowTopX>13460</WindowTopX>
+  <WindowTopY>6700</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
  </ExcelWorkbook>
@@ -39,6 +39,10 @@
    <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#F20884"/>
    <Interior ss:Color="#FF99CC" ss:Pattern="Solid"/>
   </Style>
+  <Style ss:ID="s28" ss:Name="Neutre">
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#993300"/>
+   <Interior ss:Color="#FFF58C" ss:Pattern="Solid"/>
+  </Style>
   <Style ss:ID="s62">
    <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
   </Style>
@@ -52,7 +56,10 @@
   <Style ss:ID="s67" ss:Parent="s27">
    <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
   </Style>
-  <Style ss:ID="s82">
+  <Style ss:ID="s69" ss:Parent="s28">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
+  </Style>
+  <Style ss:ID="s70">
    <Font ss:Size="14" ss:Color="#333333"/>
   </Style>
  </Styles>
@@ -71,6 +78,8 @@
    <Column ss:Width="77" ss:Span="1"/>
    <Column ss:Index="18" ss:Width="17"/>
    <Column ss:Width="87" ss:Span="1"/>
+   <Column ss:Index="21" ss:Width="115"/>
+   <Column ss:Index="24" ss:Width="115"/>
    <Row ss:AutoFitHeight="0"/>
    <Row ss:Index="3" ss:AutoFitHeight="0">
     <Cell ss:Index="7"><Data ss:Type="String">ZigBee</Data></Cell>
@@ -220,9 +229,12 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Unreportable Attribut</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Unreportable Attribut</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
@@ -242,15 +254,18 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Unreportable Attribut</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Unreportable Attribut</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s82"/>
+    <Cell ss:StyleID="s70"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -264,9 +279,7 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:Index="21" ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
@@ -505,8 +518,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>13</ActiveRow>
-     <ActiveCol>12</ActiveCol>
+     <ActiveRow>16</ActiveRow>
+     <ActiveCol>19</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

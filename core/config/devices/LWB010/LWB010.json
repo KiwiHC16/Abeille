@@ -287,10 +287,69 @@
           "request": "duration=0010"
         }
       },
+      "BindToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindToZigateEtat",
+        "order": 21,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
+        }
+      },
+      "BindToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindToZigateLevel",
+        "order": 22,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 23,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=0B&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        }
+      },
+      "setReportLevel": {
+        "isVisible": 1,
+        "name": "setReportLevel",
+        "order": 24,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=0B&ClusterId=0008&AttributeId=0000&AttributeType=20"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 21,
+        "order": 25,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

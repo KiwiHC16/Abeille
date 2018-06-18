@@ -18,7 +18,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-0004": {
+      "0000-03-0004": {
         "isVisible": 0,
         "name": "societe",
         "order": 1,
@@ -28,7 +28,7 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-4000": {
+      "0000-03-4000": {
         "isVisible": 0,
         "name": "SW",
         "order": 2,
@@ -152,7 +152,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/#addr#/setLevelOSRAM",
-          "request": "Level=#slider#&duration=01"
+          "request": "Level=#slider#&duration=FF"
         },
         "display": {
           "forceReturnLineAfter": "1",
@@ -246,7 +246,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0006&attributeId=0000"
         }
       },
@@ -260,7 +260,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0008&attributeId=0000"
         }
       },
@@ -274,7 +274,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
@@ -288,7 +288,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0005"
         }
       },
@@ -302,7 +302,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=4000"
         }
       },
@@ -387,7 +387,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=03"
         }
       },
       "BindToZigateLevel": {
@@ -401,7 +401,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#&targetEndpoint=03"
         }
       },
       "setReportEtat": {
@@ -415,7 +415,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0006&AttributeId=0000&AttributeType=10"
+          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
       },
       "setReportLevel": {
@@ -429,7 +429,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
+          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0008&AttributeId=0000&AttributeType=20"
         },
         "display": {
           "forceReturnLineAfter": "1"

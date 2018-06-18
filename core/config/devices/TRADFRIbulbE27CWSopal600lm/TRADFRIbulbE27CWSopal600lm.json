@@ -152,7 +152,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/#addr#/setLevel",
-          "request": "Level=#slider#&duration=01"
+          "request": "Level=#slider#&duration=FF"
         },
         "display": {
           "forceReturnLineAfter": "1",

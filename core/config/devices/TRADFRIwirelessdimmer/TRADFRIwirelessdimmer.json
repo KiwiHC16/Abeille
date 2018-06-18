@@ -1,0 +1,137 @@
+{
+  "TRADFRI wireless dimmer": {
+    "nameJeedom": "IKEA TRADFRI Dimmer Jaune",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "battery_type": "1x3V CR2032",
+      "lastCommunicationTimeOut": "-1",
+      "icone": "IkeaTradfriDimmer"
+    },
+    "Commandes": {
+      "Off": {
+        "name": "Off",
+        "order": 0,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
+          "request": "Off"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom-lumiere-off\"></i>"
+        }
+      },
+      "Toggle": {
+        "name": "Toggle",
+        "order": 1,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
+          "request": "Toggle"
+        },
+        "display": {
+          "icon": "<i class=\"fa fa-power-off\"></i>",
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "On": {
+        "name": "On",
+        "order": 2,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
+          "request": "On"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Level": {
+        "name": "setLevel",
+        "order": 5,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/setLevelGroup",
+          "request": "Level=#slider#&duration=01"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "0001-0021": {
+        "isVisible": 0,
+        "name": "Batterie",
+        "order": 6,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "units": "%",
+        "configuration": {
+          "minValue": "0",
+          "maxValue": "100"
+        }
+      },
+      "getBattery": {
+        "isVisible": 0,
+        "name": "get Battery",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0001&attributeId=0021"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      }
+    }
+  }
+}

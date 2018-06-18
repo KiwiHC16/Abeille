@@ -73,6 +73,7 @@ class Abeille extends eqLogic
                     if ( $eqLogic->getConfiguration("protocol") == "Hue" )      { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Hue",               '0' ); }
                     if ( $eqLogic->getConfiguration("protocol") == "OSRAM" )    { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "OSRAM",             '0' ); }
                     if ( $eqLogic->getConfiguration("protocol") == "Profalux" ) { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "AnnonceProfalux",   '0' ); }
+                    if ( $eqLogic->getConfiguration("protocol") == "LEGRAND" )  { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default",           '0' ); }
                     
                     sleep(5);
                     
@@ -1167,7 +1168,8 @@ class Abeille extends eqLogic
                         }
                         
                         /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
-                        if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
+                        // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
+                        if ( preg_match( "/^0000-[0-9A-F]*-*0005/", $cmdId ) || preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId ) ) {
                             log::add('Abeille', 'debug', 'Update ONLINE Status');
                             $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online' );
                             $elogic->checkAndUpdateCmd($cmdlogicOnline, 1 );

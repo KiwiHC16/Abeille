@@ -119,3 +119,21 @@ Remonte ff01 (len 37)
 
 image::images/Capture_d_ecran_2018_06_12_a_22_00_03.png[]
 
+== Wall Switch Double Battery (lumi.sensor_86sw2)
+
+=== Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)
+
+=== getName
+
+Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de gauche et pendant cette periode on fait un getName depuis la ruche.
+
+=== Appui Tres Long (>10s) sur bouton de gauche
+
+Leave
+
+
+

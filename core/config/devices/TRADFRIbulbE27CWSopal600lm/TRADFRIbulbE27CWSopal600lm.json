@@ -160,11 +160,10 @@
         }
       },
       "Colour": {
-        "isVisible 2": 1,
+        "isVisible": 1,
         "name": "Colour",
         "order": 11,
         "isHistorized": "0",
-        "isVisible": "1",
         "Type": "action",
         "subType": "message",
         "configuration": {
@@ -177,10 +176,70 @@
           "message_placeholder": "YYYY"
         }
       },
+      "Blanc": {
+        "name": "Blanc",
+        "order": 12,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColour",
+          "request": "X=6000&Y=6000"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Bleu": {
+        "name": "Bleu",
+        "order": 13,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColour",
+          "request": "X=228F&Y=228F"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Rouge": {
+        "name": "Rouge",
+        "order": 14,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColour",
+          "request": "X=AE13&Y=51EB"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Vert": {
+        "name": "Vert",
+        "order": 15,
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/setColour",
+          "request": "X=147A&Y=D709"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 12,
+        "order": 16,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -194,7 +253,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 13,
+        "order": 17,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -208,7 +267,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 14,
+        "order": 18,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -222,7 +281,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 15,
+        "order": 19,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -236,7 +295,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 16,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -250,7 +309,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 17,
+        "order": 21,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -260,7 +319,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 18,
+        "order": 22,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -270,7 +329,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 19,
+        "order": 23,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -280,7 +339,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 20,
+        "order": 24,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -293,7 +352,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 21,
+        "order": 25,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -303,7 +362,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 22,
+        "order": 26,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -320,7 +379,7 @@
       "Group-Membership": {
         "isVisible": 1,
         "name": "Groups",
-        "order": 23,
+        "order": 27,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -330,7 +389,7 @@
       "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 24,
+        "order": 28,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -344,7 +403,7 @@
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 25,
+        "order": 29,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -358,7 +417,7 @@
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 26,
+        "order": 30,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -372,7 +431,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 27,
+        "order": 31,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -389,7 +448,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 28,
+        "order": 32,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -406,4 +465,3 @@
     }
   }
 }
-

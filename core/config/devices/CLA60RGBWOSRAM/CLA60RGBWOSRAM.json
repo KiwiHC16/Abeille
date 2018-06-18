@@ -230,7 +230,7 @@
         "subType": "other",
         "configuration": {
           "topic": "CmdAbeille/#addr#/setColourOSRAM",
-          "request": "X=147A&Y=14FD"
+          "request": "X=147A&Y=D709"
         },
         "display": {
           "forceReturnLineAfter": "1"

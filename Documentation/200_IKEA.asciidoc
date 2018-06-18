@@ -196,7 +196,7 @@ Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il
 
 === 4 clics sur OO
 
-Message Leave, puis Beacon Requets puis association si réseau en mode inclusion.
+Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un reveil du gradateur permet de recuperer le nom.
 
 
 

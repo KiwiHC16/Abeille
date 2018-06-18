@@ -188,5 +188,15 @@ Vous avez maintenant une télécommande pour controler le groupe AAAA.
 image::images/Capture_d_ecran_2018_03_02_a_10_35_28.png[]
 
 
+== Gradateur
 
+=== Un clic sur OO
+
+Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il n'y a pas d'association (Probablement le cas si deja associé à una utre reseau).
+
+=== 4 clics sur OO
+
+Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un reveil du gradateur permet de recuperer le nom.
+
+Voir la telecommande 5 boutons pour avoir plus de details sur le controle de groupe,...
 

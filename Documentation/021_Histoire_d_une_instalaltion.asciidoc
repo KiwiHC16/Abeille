@@ -58,6 +58,13 @@ Configuration:
 - Choisissez l'Objet Parent: Abeille
 - Sauvegarder
 
+Le demon doit démarrer et passer au vert.
+Dans mon cas mosquitto fait encore des siennes et il n'a pas démarré. Un reboot du systeme résoud le problème.
+Rafraichir la page et vérifier que le demon est passé au vert: Statut Ok et Configuration: Ok.
+
+ET maintenant tout est pret. Retour sur Dashboard.
+
+
 
 
 

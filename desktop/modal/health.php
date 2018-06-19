@@ -28,15 +28,21 @@ $eqLogics = Abeille::byType('Abeille');
 			<th>{{ID}}</th>
 			<th>{{Statut}}</th>
 			<th>{{Dernière communication}}</th>
+            <th>{{Depuis (h)}}</th>
 			<th>{{Date création}}</th>
 		</tr>
 	</thead>
 	<tbody>
 	 <?php
 foreach ($eqLogics as $eqLogic) {
-	echo '<tr><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
-	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
     
+    // Module
+	echo '<tr><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
+	
+    // ID
+    echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
+    
+    // Status
     // Status Ok par defaut, apres on test et on met le status à la valeur voulue
 	$status = '<span class="label label-success" style="font-size : 1em; cursor : default;">{{OK}}</span>';
 	if ($eqLogic->getStatus('state') == 'Time Out Last Communication') {
@@ -51,9 +57,15 @@ foreach ($eqLogics as $eqLogic) {
     if ($eqLogic->getStatus('state') == '-') {
         $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">-</span>';
     }
-
 	echo '<td>' . $status . '</td>';
+    
+    // Dernieree Comm
 	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getStatus('lastCommunication') . '</span></td>';
+    
+    // Depuis
+    echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . (round((time()-strtotime($eqLogic->getStatus('lastCommunication')))/3600)) . '</span></td>';
+    
+    // Date Creation
 	echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('createtime') . '</span></td></tr>';
 }
 ?>

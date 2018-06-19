@@ -34,7 +34,7 @@
     function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
-        deamonlog("debug","mqttPublish with Qos: ".$qos);
+        // deamonlog("debug","mqttPublish with Qos: ".$qos);
         if ( $GLOBAL['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);

@@ -1,6 +1,6 @@
 = Histore d une installation
 
-== Une VM sous parallel OSX: debian 9.3.0 / Jeedom x.y.z / Abeille a.b.c
+== Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07
 
 === VM
 
@@ -48,6 +48,17 @@ Installer stable (Version 2018-06-19 01:01:07)
 Voulez vous aller sur la .... -> Ok
 
 === Configuration du plugin
+
+Activer
+Dependances -> Relancer (ou vous attendez et elles devraient s'installer automatiquement).
+Deux messages doivent s'afficher pour confirmer le lancement et le lien vers la doc.
+Une fois les dépendances installées, la date de derniere installation doit apparaitre.
+Configuration:
+- Choisissez le port serie (on suppose que vous avez une zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
+- Choisissez l'Objet Parent: Abeille
+- Sauvegarder
+
+
 
 
 

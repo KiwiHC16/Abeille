@@ -62,10 +62,18 @@ Le demon doit démarrer et passer au vert.
 Dans mon cas mosquitto fait encore des siennes et il n'a pas démarré. Un reboot du systeme résoud le problème.
 Rafraichir la page et vérifier que le demon est passé au vert: Statut Ok et Configuration: Ok.
 
-ET maintenant tout est pret. Retour sur Dashboard.
+ET maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.
 
 
+=== Demarrage du reseau
 
+Si vous selectionnez "Version" alors kes champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour.
+Vous pouvez démarrer le réseau "Start Network".
+Et faire un "get Network Status", d'autres champs vont se mettre à jour.
+
+Voilà l'installation d'Abeille dans Jeedom est finie. Vous pouvez intégrer vo équipements.
+
+En tout 1h pour faire une installation from scratch.
 
 
 

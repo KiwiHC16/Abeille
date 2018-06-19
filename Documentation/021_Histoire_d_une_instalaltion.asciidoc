@@ -9,13 +9,20 @@ Configuration: choisissez un réseau ponté pour avoir un IP à vous.
 === Debian
 
 Installation de Debian des plus classique (Un gros 1/4 d'heure depuis un ISO sur disque).
+
 Pas d'environnement de bureau, juste un serveur ssh et les utilitaires usuels système.
+
 Une mise a jour en fin d'installation:
+
+
+[source,]
+----
 su -
 vi /etc/apt/sources.list
 # deb cdrom:[Debian GNU/Linux 9.3.0 _Stretch_ - Official amd64 DVD Binary-1 20171209-12:11]/ stretch contrib main
 apt-get update
 apt-get upgrade
+----
 
 === Jeedom
 
@@ -24,56 +31,80 @@ La documentation Jeedom est à la page https://jeedom.github.io/documentation/in
 Perso j'utilise le dernier chapitre (Chapitre 10 - Autres) (Un gros 1/4 d'heure)
 
 Connectez-vous en SSH à votre système et faites :
+
+[source,]
+----
 su -
 wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ./install.sh
 ./install.sh -w /var/www/html  -m Jeedom
 reboot
+----
+
 
 === Web Browser
 
 Ouvrir la page de votre Jeedom: http://Mon_IP_JEEDOM
+
 admin/admin
+
 Ne plus afficher et cloture fenetre du dessus.
-Creation d'un Objet Abeille pour accueillir tous les futures équipement zigbee: Menu->Outils->Objets->'+', Sauvegarder et retour sur la page principale(Dashboard)
+
+Creation d'un Objet Abeille pour accueillir tous les futures équipement zigbee: 
+
+Menu->Outils->Objets->'+', Sauvegarder et retour sur la page principale(Dashboard)
 
 === Ajout Plugin Abeille
 
 Menu->Plugins->Gestion des plugins
+
 Market
+
 Recherche Abeille
+
 Selectionner Abeille
+
 Installer stable (Version 2018-06-19 01:01:07)
+
 Voulez vous aller sur la .... -> Ok
 
 === Configuration du plugin
 
 Activer
+
 Dependances -> Relancer (ou vous attendez et elles devraient s'installer automatiquement).
+
 Deux messages doivent s'afficher pour confirmer le lancement et le lien vers la doc.
+
 Une fois les dépendances installées, la date de derniere installation doit apparaitre.
+
 Configuration:
-- Choisissez le port serie (on suppose que vous avez une zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
-- Choisissez l'Objet Parent: Abeille
-- Sauvegarder
+
+* Choisissez le port serie (on suppose que vous avez une zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
+* Choisissez l'Objet Parent: Abeille
+* Sauvegarder
 
 Le demon doit démarrer et passer au vert.
+
 Dans mon cas mosquitto fait encore des siennes et il n'a pas démarré. Un reboot du systeme résoud le problème.
+
 Rafraichir la page et vérifier que le demon est passé au vert: Statut Ok et Configuration: Ok.
 
-ET maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.
+Et maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.
 
 
 === Demarrage du reseau
 
-Si vous selectionnez "Version" alors kes champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour.
+Si vous selectionnez "Version" alors kes champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour. Cela confirme que cela fonctionne.
+
 Vous pouvez démarrer le réseau "Start Network".
+
 Et faire un "get Network Status", d'autres champs vont se mettre à jour.
 
 Voilà l'installation d'Abeille dans Jeedom est finie. Vous pouvez intégrer vo équipements.
 
-En tout 1h pour faire une installation from scratch.
+En tout 1h pour faire une installation from scratch (et écrire cette doc).
 
 
 

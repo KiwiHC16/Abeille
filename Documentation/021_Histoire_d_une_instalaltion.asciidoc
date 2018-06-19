@@ -29,5 +29,31 @@ wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ./install.sh
 ./install.sh -w /var/www/html  -m Jeedom
+reboot
+
+=== Web Browser
+
+Ouvrir la page de votre Jeedom: http://Mon_IP_JEEDOM
+admin/admin
+Ne plus afficher et cloture fenetre du dessus.
+Creation d'un Objet Abeille pour accueillir tous les futures équipement zigbee: Menu->Outils->Objets->'+', Sauvegarder et retour sur la page principale(Dashboard)
+
+=== Ajout Plugin Abeille
+
+Menu->Plugins->Gestion des plugins
+Market
+Recherche Abeille
+Selectionner Abeille
+Installer stable (Version 2018-06-19 01:01:07)
+Voulez vous aller sur la .... -> Ok
+
+=== Configuration du plugin
+
+
+
+
+
+
+
 
 

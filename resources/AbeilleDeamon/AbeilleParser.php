@@ -1057,7 +1057,7 @@
         
         // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
         
-        deamonlog('debug', 'Type: 804E: (Management LQI response)(Decoded but Not Processed)'
+        deamonlog('debug', ';Type: 804E: (Management LQI response)(Decoded but Not Processed)'
                   . '; SQN: '                          .substr($payload, 0, 2)
                   . '; status: '                       .substr($payload, 2, 2)
                   . '; Neighbour Table Entries: '      .substr($payload, 4, 2)

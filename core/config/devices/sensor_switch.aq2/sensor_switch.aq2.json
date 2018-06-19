@@ -40,6 +40,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "AbeilleRejectValue": "0",
           "returnStateValue": "0",
           "returnStateTime": "1",
           "repeatEventManagement": "always"

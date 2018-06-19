@@ -1146,6 +1146,7 @@ class Abeille extends eqLogic
                         }
                     } else // Si equipement et cmd existe alors on met la valeur a jour
                     {
+                        $valeurOk = 1;
                         
                         /* Traitement particulier pour le remontée IEEE pour suivre des changements d'adresses */
                         // Si nous avons une nouvelle IEEE pour une short address alors quelque chose est surprenant et doit être géré
@@ -1175,9 +1176,22 @@ class Abeille extends eqLogic
                             $elogic->checkAndUpdateCmd($cmdlogicOnline, 1 );
                         }
                         
-                        /* Finalement nous faisons la mise a jour de la valeur recue. */
-                        $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                        // Traitement particulier pour rejeter certaines valeurs
+                        // exemple: le Xiaomi Wall Switch 2 Bouton envoie un On et un Off dans le même message donc Abeille recoit un ON/OFF consecutif et
+                        // ne sais pas vraiment le gérer donc ici on rejete le Off et on met un retour d'etat dans la commande Jeedom
                         
+                        if ( $cmdlogic->getConfiguration('AbeilleRejectValue') == $value ) {
+                            /* Finalement nous faisons la mise a jour de la valeur recue. */
+                            $valeurOk = 0;
+                            log::add('Abeille', 'debug', 'Rejet de la valeur: '.$value);
+                        }
+                        
+                        
+                        if ( $valeurOk ) {
+                            /* Finalement nous faisons la mise a jour de la valeur recue. */
+                            // log::add('Abeille', 'debug', 'Mise a jour de la valeurOk: '.$value);
+                            $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                        }
                     }
                 }
             }

@@ -129,7 +129,7 @@ Remonte ff01 (len 37)
 
 === getName
 
-Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de gauche et pendant cette periode on fait un getName depuis la ruche.
+Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de droite (7s) et pendant cette periode on fait un getName depuis la ruche.
 
 === Appui Tres Long (>10s) sur bouton de gauche
 

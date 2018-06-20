@@ -96,7 +96,7 @@ Et maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équi
 
 === Demarrage du reseau
 
-Si vous selectionnez "Version" alors kes champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour. Cela confirme que cela fonctionne.
+Si vous selectionnez "Version" alors les champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour. Cela confirme que cela fonctionne.
 
 Vous pouvez démarrer le réseau "Start Network".
 

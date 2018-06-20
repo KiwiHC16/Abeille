@@ -68,15 +68,24 @@
     $fifoIN = new fifo($in, 0777, "w" );
     deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
 
-    if ( $serial == "/tmp/ZiGateSend" ) {
+    if ( $serial == "/tmp/zigate" ) {
         deamonlog('info','Pas de stty car nous sommes en WIFI');
+        
+        _exec("stty -F ".$serial." sane", $out);
+        // echo "Setup ttyUSB default configuration, resultat: \n";
+        // print_r( $out );
+        
+        _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
+        // echo "Setup ttyUSB configuration, resultat: \n";
+        // print_r( $out );
+        
     }
     else    {
         _exec("stty -F ".$serial." sane", $out);
         // echo "Setup ttyUSB default configuration, resultat: \n";
         // print_r( $out );
         
-        _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb raw", $out);
+        _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
         // echo "Setup ttyUSB configuration, resultat: \n";
         // print_r( $out );
     }

@@ -218,7 +218,7 @@
         
         //verification du CRC
         if (hexdec($crc) != $crctmp) {
-            deamonlog('error','CRC is not as expected ('.$crctmp.') is '.$crc.' ');
+            deamonlog('error',';CRC is not as expected ('.$crctmp.') is '.$crc.' ');
         }
         
         // deamonlog('debug',';type: '.$type.' quality: '.$quality);

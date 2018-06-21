@@ -491,7 +491,10 @@
             $done = 0;
             
             // Crée les variables dans la chaine et associe la valeur.
-            $parameters = proper_parse_str( $msg );
+            $fields = preg_split("/[=&]+/", $msg);
+            if (count($fields) > 1) {
+                $parameters = proper_parse_str( $msg );
+            }
             
             if ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);

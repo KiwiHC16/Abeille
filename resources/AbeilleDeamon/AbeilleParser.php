@@ -56,7 +56,7 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ( $GLOBAL['lib_phpMQTT'] ) {
+        if ( $GLOBALS['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 // $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
                 // $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
@@ -86,7 +86,7 @@
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ( $GLOBAL['lib_phpMQTT'] ) {
+        if ( $GLOBALS['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
                 $mqtt->close();
@@ -103,7 +103,7 @@
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ( $GLOBAL['lib_phpMQTT'] ) {
+        if ( $GLOBALS['lib_phpMQTT'] ) {
             if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
                 $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
                 $mqtt->close();
@@ -1762,7 +1762,7 @@
     
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
-    if ($GLOBAL['lib_phpMQTT']) {
+    if ($GLOBALS['lib_phpMQTT']) {
         $mqtt = new phpMQTT($server, $port, $client_id);
         while (true) {
             if (!file_exists($in)) {
@@ -1815,7 +1815,7 @@
             $mqtt->connect( $server, $port, 60 );
             // $mqtt->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
             
-            deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+            // deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
             
             // 1 to use loopForever et 0 to use while loop
             if (0) {

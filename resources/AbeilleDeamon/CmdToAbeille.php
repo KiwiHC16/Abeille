@@ -31,7 +31,7 @@
         deamonlog('debug','len data: '.strlen($datas));
         //echo "len data: ".strlen($datas)."\n";
         
-        for ($i=0;$i<=(strlen($datas));$i+=2)
+        for ($i=0;$i<=(strlen($datas)-2);$i+=2)
         {
             // echo "i: ".$i."\n";
             $temp ^= hexdec($datas[$i].$datas[$i+1]);

@@ -65,7 +65,7 @@ PS: si vous supprimez un équipement, n'oubliez pas que cela supprime aussi l'hi
 
 Lorsqu'un objet est crée, une icône lui est associée. Lorsqu'un nouvel objet est ajouté dans le fichier JSON _plugins/Abeille/core/class/devices/objet.json_, il est possible de lui attribuer une icône personnalisée. Le nom affichée est celui du champ nameJeedom, l'icone utilisée celle de configuration->icone
 
-Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire _plugins/Abeille/docs/images/_ (500x500 px semble correct)
+Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire _plugins/Abeille/images/_ (500x500 px semble correct)
 
 image:images/Device_icone01.png[]
 

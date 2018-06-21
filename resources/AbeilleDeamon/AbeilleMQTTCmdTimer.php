@@ -147,6 +147,11 @@
         global $mqtt;
         global $Timers;
         
+        $test = explode('/', $topic);
+        if ( sizeof( $test ) !=3 ) {
+            return ;
+        }
+        
         // Process only CmdTimer messages.
         list($type, $address, $action) = explode('/', $topic);
         if ($type != "CmdTimer") { return ; }

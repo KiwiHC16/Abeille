@@ -30,6 +30,11 @@
     {
         global $dest;
         
+        $test = explode('/', $topic);
+        if ( sizeof( $test ) !=3 ) {
+            return ;
+        }
+        
         list($type, $address, $action) = explode('/', $topic);
         
         if ($type != "CmdAbeille") {

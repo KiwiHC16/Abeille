@@ -189,8 +189,8 @@ L pour Line to
     foreach ( $LQI as $row => $voisineList ) {
         $sourceId = $voisineList['NE'];
         $targetId= $voisineList['Voisine'];
-        $sourceIdName = $knownNE[$sourceId];
-        $targetIdName = $knownNE[$targetId];
+        if ( isset($knownNE[$sourceId]) ) { $sourceIdName = $knownNE[$sourceId]; } else { $sourceIdName = "SourceInconnue"; }
+        if ( isset($knownNE[$targetId]) ) { $targetIdName = $knownNE[$targetId]; } else { $targetIdName = "TargetInconnue"; }
         echo $sourceIdName . ' - ' . $targetIdName; echo "\n";
         if ($sourceIdName!=$targetIdName){
             if ( ($sourceIdName==$NE) || ("All"==$NE) || ($targetIdName==$NE2) ) {

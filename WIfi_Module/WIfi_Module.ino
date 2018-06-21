@@ -1,9 +1,9 @@
 
 
 /*
-  ESP8266 Wifi Module HW UART v0.2
+  ESP8266 Wifi Module HW UART
  */
-
+#define VERSION "<a href='https://github.com/KiwiHC16/Abeille/blob/master/Documentation/950_Wifi_Module.adoc'>0.3.UART_HW</a> teste sur  Adafruit Feather Huzzah ESP8266"
 
 #define USE_WDT
 
@@ -37,12 +37,13 @@ String modeWiFi="STA";
 #define BAUD_RATE 115200
 
 #define BUFFER_SIZE 128
-#define VERSION "0.1"
+
 
 ESP8266WebServer serverWeb(80);
-char serverIndex[1024];
-char serverIndexUpdate[512];
-char serverIndexReboot[256];
+char serverIndex[1024];       // 802 used
+char serverIndexUpdate[1024]; // 902 used
+char serverIndexReboot[1024]; // 427 used
+
 const char* Style = "";
 
 WiFiServer server(ConfigSettings.tcpListenPort);
@@ -250,10 +251,9 @@ void setup(void)
     modeWiFi="AP";
   }
 
-sprintf(serverIndex,"<h1>ZiGate WiFi Config v%s</h1><form method='POST' action='save'><br>SSID : <br><input type='text' name='WIFISSID' value='%s'><br>Password : <br><input type='password' name='WIFIpassword' value=''><br>@IP : <br><input type='text' name='ipAddress' value='%s'><br>@Mask : <br><input type='text' name='ipMask' value='%s'><br>@Gateway : <br><input type='text' name='ipGW' value='%s'><br>Server Port : <br>%d<br><br><input type='submit' name='save' value='Save'></form><br><form method='GET' action='/reboot'><input type='submit' name='reboot' value='Reboot'></form><br><br><a href='/update'>Update Firmware</a>",VERSION,ConfigSettings.ssid.c_str(),ConfigSettings.ipAddress.c_str(),ConfigSettings.ipMask.c_str(),ConfigSettings.ipGW.c_str(),ConfigSettings.tcpListenPort);
-sprintf(serverIndexUpdate,"<h1>ZiGate WiFi Config v%s</h1><h2>Update Firmware</h2><form method='POST' action='/updateFile' enctype='multipart/form-data'><input type='file' name='update'><br><br><input type='submit' value='Update' onclick=\"document.getElementById('load').innerHTML='Loading ...'\"><div id='load'></div></form>",VERSION);
-
-
+sprintf(serverIndex,"<h1>Module WiFi pour Zigate</h1>Version: %s<form method='POST' action='save'><br>SSID : <br><input type='text' name='WIFISSID' value='%s'><br>Password : <br><input type='password' name='WIFIpassword' value=''><br>@IP : <br><input type='text' name='ipAddress' value='%s'><br>@Mask : <br><input type='text' name='ipMask' value='%s'><br>@Gateway : <br><input type='text' name='ipGW' value='%s'><br>Server Port : <br>%d<br><br><input type='submit' name='save' value='Save'></form><br><form method='GET' action='/reboot'><input type='submit' name='reboot' value='Reboot'></form><br><br><a href='/update'>Update Firmware</a>",VERSION,ConfigSettings.ssid.c_str(),ConfigSettings.ipAddress.c_str(),ConfigSettings.ipMask.c_str(),ConfigSettings.ipGW.c_str(),ConfigSettings.tcpListenPort);
+// sprintf(serverIndexUpdate,"<h1>Module WiFi pour Zigate</h1>Version: %s<h2>Update Firmware</h2>Cette version utilise l UART Hardware.</br></br>Il faut deconnecter la zigate du module Wifi pour que le (re-)demarrage se passe correctement, puis la rebrancher.</br></br>Pour mettre a jour le module Wifi: <ul><li>Debrancher la zigate</li><li>Bouton: Choisir le fichier</li><li>Bouton: Update Firmware</li><li>attendre le rafraichissement de la page</li><li>reconnecter la zigate</li><li>redemarrer le plugin Abeille.</li></ul><form method='POST' action='/updateFile' enctype='multipart/form-data'><input type='file' name='update'><br><br><input type='submit' value='Update' onclick=\"document.getElementById('load').innerHTML='Loading ...'\"><div id='load'></div></form><br><a href='/'>Home</a>",VERSION);
+sprintf(serverIndexUpdate,"<h1>Module WiFi pour Zigate</h1>Version: %s<h2>Update Firmware</h2>Cette version utilise l UART Hardware.</br></br><form method='POST' action='/updateFile' enctype='multipart/form-data'><input type='file' name='update'><br><br><input type='submit' value='Update' onclick=\"document.getElementById('load').innerHTML='Loading ...'\"><div id='load'></div></form><br><a href='/'>Home</a>",VERSION);
 
   
   Serial.println("WIFI OK");

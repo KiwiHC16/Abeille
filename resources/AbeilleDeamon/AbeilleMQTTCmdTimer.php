@@ -148,11 +148,10 @@
         global $Timers;
         
         // Process only CmdTimer messages.
+        list($type, $address, $action) = explode('/', $topic);
         if ($type != "CmdTimer") { return ; }
         
         deamonlog('info', ';Msg Received: Topic: {'.$topic.'} => '.$msg);
-        
-        list($type, $address, $action) = explode('/', $topic);
         
         deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         

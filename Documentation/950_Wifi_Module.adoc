@@ -33,3 +33,4 @@ Batterie est égale à:
 * Je peux mettre la zigate ou je veux
 * si le cable USB est branché sur un charger, je suis autonome en cas de coupure de courant
 
+Vous trouverez le source et le bin à la page: https://github.com/KiwiHC16/Abeille/tree/master/WIfi_Module

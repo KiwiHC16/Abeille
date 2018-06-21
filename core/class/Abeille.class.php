@@ -572,7 +572,6 @@ class Abeille extends eqLogic
         $debug_serviceMosquittoStatus = 0;
 
         $outputSvc = array();
-        $outputStl = array();
         $return = array();
         $return['launchable'] = 'nok';
         $return['launchable_message'] = 'Service not running yet.';
@@ -581,6 +580,12 @@ class Abeille extends eqLogic
         exec(system::getCmdSudo() . $cmdSvc, $outputSvc);
         $logmsg = 'Status du service mosquitto : ' . ($outputSvc[0] > 0 ? 'OK' : 'Probleme') . '   (' . implode($outputSvc, '!') . ')';
         if ( $debug_serviceMosquittoStatus ) log::add('Abeille', 'debug', $logmsg);
+        //Docker workaround as service will not write a pid file for mosquitto (status will always fail)
+        if (file_exists("/.dockerenv")== true ){
+            $outputSvc= array();
+            exec(system::getCmdSudo() . "pgrep mosquitto", $outputSvc);
+            if ( $debug_serviceMosquittoStatus ) log::add('Abeille','debug','docker test: pid of mosquitto: ' . $outputSvc[0]);
+        }
         if ($outputSvc[0] > 0) {
             $return['launchable'] = 'ok';
             $return['launchable_message'] = 'Service mosquitto is running.';

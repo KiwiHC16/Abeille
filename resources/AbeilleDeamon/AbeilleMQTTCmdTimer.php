@@ -147,153 +147,155 @@
         global $mqtt;
         global $Timers;
         
-        deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
+        // Process only CmdTimer messages.
+        if ($type != "CmdTimer") { return ; }
+        
+        deamonlog('info', ';Msg Received: Topic: {'.$topic.'} => '.$msg);
         
         list($type, $address, $action) = explode('/', $topic);
+        
+        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
         
         // Crée les variables dans la chaine et associe la valeur.
         $parameters = proper_parse_str( $msg );
         // print_r( $parameters );
         
-        deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+        //----------------------------------------------------------------------------
+        // actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=#put_the_cmd_here#
+        // T0 = Start
+        // T1 = Start + RampUp
+        // T2 = Start + RampUp + Duration
+        // T3 = Start + RampUp + Duration + RampDown
         
-        if ($type == "CmdTimer") {
-            //----------------------------------------------------------------------------
-            // actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=#put_the_cmd_here#
-            // T0 = Start
-            // T1 = Start + RampUp
-            // T2 = Start + RampUp + Duration
-            // T3 = Start + RampUp + Duration + RampDown
-            
-            // Action Start est à T0
-            // Action Stop est à T3
-            
-            if ($action == "TimerStart") {
-                deamonlog('debug', 'TimeStart');
-                // $keywords = preg_split("/[=&]+/", $msg);
-                if ( isset($parameters["durationSeconde"]) ) {
-                    
-                    mqqtPublish($mqtt, $address, "0006", "0000", "1", $qos);
-                 
-                    if ( isset($parameters["messageStart"]) ) {
-                        $options['message'] = $parameters["messageStart"];
-                    }
-                    
-                    // On verifie les temps
-                    if ( isset($parameters['RampUp']) ) {
-                        if ( $parameters['RampUp'] < 1 ) { $parameters['RampUp'] = 1; }
-                    }
-                    else { $parameters['RampUp'] = 1; }
-                    
-                    if ( isset($parameters['durationSeconde']) ) {
-                        if ( $parameters['durationSeconde'] < 1 ) { $parameters['durationSeconde'] = 1; }
-                    }
-                    else { $parameters['durationSeconde'] = 1; }
-                    
-                    if ( isset($parameters['RampDown']) ) {
-                        if ( $parameters['RampDown'] < 1 ) { $parameters['RampDown'] = 1; }
-                    }
-                    else { $parameters['RampDown'] = 1; }
-                    
-                    // On crée un Timer avec ses parametres
-                    $Timers[$address] = $parameters;
-                    
-                    // On calcule les points/temps de passages
-                    $now = time();
-                    $Timers[$address]['T0'] = $now;
-                    $Timers[$address]['T1'] = $now + $parameters['RampUp'];
-                    $Timers[$address]['T2'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'];
-                    $Timers[$address]['T3'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'] + $parameters['RampDown'];
-                    $Timers[$address]['state'] = 'T0->T1';
-                    
-                    // print_r( $Timers );
-                    
-                    mqqtPublish($mqtt, $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $Timers[$address]['T3']), $qos);
-                    mqqtPublish($mqtt, $address, "Var", "Duration", $Timers[$address]['T3']-time(), $qos);
-                    // print_r($Timers);
-                    if ( isset($parameters["actionStart"]) ) {
-                        if (  $parameters["actionStart"] != "#put_the_cmd_here#" ) {
-                            execCommandeTimer( $parameters["actionStart"], $options );
-                            }
-                        else { deamonlog('debug', "commande not set for TimerStart"); }
-                    }
-                    elseif ( isset($parameters["scenarioStart"]) ) {
-                            execScenarioTimer( $parameters["scenarioStart"] );
-                    }
-                    else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
+        // Action Start est à T0
+        // Action Stop est à T3
+        
+        if ($action == "TimerStart") {
+            deamonlog('debug', 'TimeStart');
+            // $keywords = preg_split("/[=&]+/", $msg);
+            if ( isset($parameters["durationSeconde"]) ) {
+                
+                mqqtPublish($mqtt, $address, "0006", "0000", "1", $qos);
+                
+                if ( isset($parameters["messageStart"]) ) {
+                    $options['message'] = $parameters["messageStart"];
                 }
                 
-                //----------------------------------------------------------------------------
-                // actionCancel=#put_the_cmd_here#
-            } elseif ($action == "TimerCancel") {
-                deamonlog('debug', 'TimerCancel');
-                // $keywords = preg_split("/[=&]+/", $msg);
-                mqqtPublish($mqtt, $address, "0006", "0000", "0", $qos);
-                mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
-                mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
-                // mqqtPublish($mqtt, $address, "Var", "RampUpDown", "0", $qos); // Cancel, je laisse en l etat, stop je mets a 0
-                $Timers[$address] = -1;
+                // On verifie les temps
+                if ( isset($parameters['RampUp']) ) {
+                    if ( $parameters['RampUp'] < 1 ) { $parameters['RampUp'] = 1; }
+                }
+                else { $parameters['RampUp'] = 1; }
+                
+                if ( isset($parameters['durationSeconde']) ) {
+                    if ( $parameters['durationSeconde'] < 1 ) { $parameters['durationSeconde'] = 1; }
+                }
+                else { $parameters['durationSeconde'] = 1; }
+                
+                if ( isset($parameters['RampDown']) ) {
+                    if ( $parameters['RampDown'] < 1 ) { $parameters['RampDown'] = 1; }
+                }
+                else { $parameters['RampDown'] = 1; }
+                
+                // On crée un Timer avec ses parametres
+                $Timers[$address] = $parameters;
+                
+                // On calcule les points/temps de passages
+                $now = time();
+                $Timers[$address]['T0'] = $now;
+                $Timers[$address]['T1'] = $now + $parameters['RampUp'];
+                $Timers[$address]['T2'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'];
+                $Timers[$address]['T3'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'] + $parameters['RampDown'];
+                $Timers[$address]['state'] = 'T0->T1';
+                
+                // print_r( $Timers );
+                
+                mqqtPublish($mqtt, $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $Timers[$address]['T3']), $qos);
+                mqqtPublish($mqtt, $address, "Var", "Duration", $Timers[$address]['T3']-time(), $qos);
                 // print_r($Timers);
-                
-                if ( isset($parameters["message"]) ) {
-                    $options['message'] = $parameters["message"];
-                }
-                
-                if ( isset($parameters["actionCancel"]) ) {
-                    if ( $parameters["actionCancel"] != "#put_the_cmd_here#" ) {
-                        execCommandeTimer( $parameters["actionCancel"], $options );
-                        
+                if ( isset($parameters["actionStart"]) ) {
+                    if (  $parameters["actionStart"] != "#put_the_cmd_here#" ) {
+                        execCommandeTimer( $parameters["actionStart"], $options );
                     }
-                    else { deamonlog('debug', "commande not set for TimerCancel"); }
+                    else { deamonlog('debug', "commande not set for TimerStart"); }
                 }
-                elseif ( $parameters["scenarioCancel"] ) {
-                    execScenarioTimer( $parameters["scenarioCancel"] );
+                elseif ( isset($parameters["scenarioStart"]) ) {
+                    execScenarioTimer( $parameters["scenarioStart"] );
                 }
                 else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
-                
-                unset( $Timers[$address] );
-                
-                //----------------------------------------------------------------------------
-                // actionStop=#put_the_cmd_here#
-            } elseif ($action == "TimerStop") {
-                deamonlog('debug', 'TimerStop');
-                // $keywords = preg_split("/[=&]+/", $msg);
-                
-                mqqtPublish($mqtt, $address, "0006", "0000", "-", $qos);
-                mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
-                mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
-                mqqtPublish($mqtt, $address, "Var", "RampUpDown", "0", $qos);
-                
-                // $Timers[$address] = -1;
-                // print_r($Timers);
-                
-                // Necessaire par exemple pour la commande qui envoie un sms
-                if ( isset($parameters["message"]) ) {
-                    $options['message'] = $parameters["message"];
-                }
-                
-                if ( isset($parameters["actionStop"]) ) {
-                    if ( $parameters["actionStop"] != "#put_the_cmd_here#" ) {
-                        execCommandeTimer( $parameters["actionStop"], $options );
-                    }
-                    else { deamonlog('debug',"commande not set for TimerStop"); }
-                }
-                elseif ( isset($parameters["scenarioStop"]) ) {
-                        execScenarioTimer( $parameters["scenarioStop"] );
-                    }
-                else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
-                
-                unset( $Timers[$address] );
-                
-                
-                //----------------------------------------------------------------------------
-            } else {
-                deamonlog('debug', 'Command unknown, so not processed.');
             }
             
             //----------------------------------------------------------------------------
+            // actionCancel=#put_the_cmd_here#
+        } elseif ($action == "TimerCancel") {
+            deamonlog('debug', 'TimerCancel');
+            // $keywords = preg_split("/[=&]+/", $msg);
+            mqqtPublish($mqtt, $address, "0006", "0000", "0", $qos);
+            mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
+            mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
+            // mqqtPublish($mqtt, $address, "Var", "RampUpDown", "0", $qos); // Cancel, je laisse en l etat, stop je mets a 0
+            $Timers[$address] = -1;
+            // print_r($Timers);
             
+            if ( isset($parameters["message"]) ) {
+                $options['message'] = $parameters["message"];
+            }
+            
+            if ( isset($parameters["actionCancel"]) ) {
+                if ( $parameters["actionCancel"] != "#put_the_cmd_here#" ) {
+                    execCommandeTimer( $parameters["actionCancel"], $options );
+                    
+                }
+                else { deamonlog('debug', "commande not set for TimerCancel"); }
+            }
+            elseif ( $parameters["scenarioCancel"] ) {
+                execScenarioTimer( $parameters["scenarioCancel"] );
+            }
+            else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
+            
+            unset( $Timers[$address] );
+            
+            //----------------------------------------------------------------------------
+            // actionStop=#put_the_cmd_here#
+        } elseif ($action == "TimerStop") {
+            deamonlog('debug', 'TimerStop');
+            // $keywords = preg_split("/[=&]+/", $msg);
+            
+            mqqtPublish($mqtt, $address, "0006", "0000", "-", $qos);
+            mqqtPublish($mqtt, $address, "Var", "ExpiryTime", "-", $qos);
+            mqqtPublish($mqtt, $address, "Var", "Duration", "-", $qos);
+            mqqtPublish($mqtt, $address, "Var", "RampUpDown", "0", $qos);
+            
+            // $Timers[$address] = -1;
+            // print_r($Timers);
+            
+            // Necessaire par exemple pour la commande qui envoie un sms
+            if ( isset($parameters["message"]) ) {
+                $options['message'] = $parameters["message"];
+            }
+            
+            if ( isset($parameters["actionStop"]) ) {
+                if ( $parameters["actionStop"] != "#put_the_cmd_here#" ) {
+                    execCommandeTimer( $parameters["actionStop"], $options );
+                }
+                else { deamonlog('debug',"commande not set for TimerStop"); }
+            }
+            elseif ( isset($parameters["scenarioStop"]) ) {
+                execScenarioTimer( $parameters["scenarioStop"] );
+            }
+            else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
+            
+            unset( $Timers[$address] );
+            
+            
+            //----------------------------------------------------------------------------
+        } else {
+            deamonlog('debug', 'Command unknown, so not processed.');
         }
+        
+        //----------------------------------------------------------------------------
+        
+        
     }
     
     // ***********************************************************************************************

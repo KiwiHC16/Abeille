@@ -777,6 +777,11 @@ class Abeille extends eqLogic
         // [CmdAbeille:Abeille] / $addr / $cmdId => $value
         // $nodeId = [CmdAbeille:Abeille] / $addr
 
+        $test = explode('/', $message->topic);
+        if ( sizeof( $test ) !=3 ) {
+            return ;
+        }
+        
         $topicArray = explode("/", $message->topic);
 
         // cmdId est le dernier champ du topic

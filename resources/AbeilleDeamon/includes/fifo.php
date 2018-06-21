@@ -1,6 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__).'/../lib/Tools.php');
+include("../lib/Tools.php");
+//    require_once(dirname(__FILE__).'/../lib/Tools.php');
 require_once dirname(__FILE__).'/../../../../../core/php/core.inc.php';
 
 

@@ -8,17 +8,17 @@
   <Author>dfd</Author>
   <LastAuthor>dfd</LastAuthor>
   <Created>2018-06-18T09:55:11Z</Created>
-  <LastSaved>2018-06-18T14:12:01Z</LastSaved>
+  <LastSaved>2018-06-22T11:49:00Z</LastSaved>
   <Version>14.0</Version>
  </DocumentProperties>
  <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>8400</WindowHeight>
-  <WindowWidth>47840</WindowWidth>
-  <WindowTopX>13460</WindowTopX>
-  <WindowTopY>6700</WindowTopY>
+  <WindowHeight>9920</WindowHeight>
+  <WindowWidth>53800</WindowWidth>
+  <WindowTopX>7740</WindowTopX>
+  <WindowTopY>4580</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
  </ExcelWorkbook>
@@ -59,34 +59,36 @@
   <Style ss:ID="s69" ss:Parent="s28">
    <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
   </Style>
-  <Style ss:ID="s70">
+  <Style ss:ID="s71">
    <Font ss:Size="14" ss:Color="#333333"/>
   </Style>
  </Styles>
  <Worksheet ss:Name="Feuil1">
-  <Table ss:ExpandedColumnCount="28" ss:ExpandedRowCount="21" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="29" ss:ExpandedRowCount="21" x:FullColumns="1"
    x:FullRows="1" ss:DefaultColumnWidth="65" ss:DefaultRowHeight="15">
    <Column ss:Index="2" ss:Width="75"/>
    <Column ss:Width="53"/>
    <Column ss:Index="5" ss:Width="177"/>
    <Column ss:Width="17"/>
    <Column ss:Width="212"/>
+   <Column ss:Width="69"/>
    <Column ss:Width="120"/>
    <Column ss:Width="114"/>
    <Column ss:Width="17"/>
-   <Column ss:Index="15" ss:Width="17"/>
+   <Column ss:Index="16" ss:Width="17"/>
    <Column ss:Width="77" ss:Span="1"/>
-   <Column ss:Index="18" ss:Width="17"/>
+   <Column ss:Index="19" ss:Width="17"/>
    <Column ss:Width="87" ss:Span="1"/>
-   <Column ss:Index="21" ss:Width="115"/>
-   <Column ss:Index="24" ss:Width="115"/>
+   <Column ss:Index="22" ss:Width="115"/>
+   <Column ss:Index="25" ss:Width="115"/>
+   <Column ss:Index="27" ss:Width="127"/>
    <Row ss:AutoFitHeight="0"/>
    <Row ss:Index="3" ss:AutoFitHeight="0">
     <Cell ss:Index="7"><Data ss:Type="String">ZigBee</Data></Cell>
-    <Cell ss:Index="11"><Data ss:Type="String">Function de base</Data></Cell>
-    <Cell ss:Index="16"><Data ss:Type="String">Function Adv</Data></Cell>
-    <Cell ss:Index="19"><Data ss:Type="String">Etat</Data></Cell>
-    <Cell ss:Index="22"><Data ss:Type="String">Level</Data></Cell>
+    <Cell ss:Index="12"><Data ss:Type="String">Function de base</Data></Cell>
+    <Cell ss:Index="17"><Data ss:Type="String">Function Adv</Data></Cell>
+    <Cell ss:Index="20"><Data ss:Type="String">Etat</Data></Cell>
+    <Cell ss:Index="23"><Data ss:Type="String">Level</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Zigate</Data></Cell>
@@ -95,6 +97,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Equipement</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">f1</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">getModelIdentifier</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">getLocation</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">getManufacturerName</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">getSWBuild</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">f2</Data></Cell>
@@ -106,12 +109,13 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">getEtat</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">getLevel</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">f4</Data></Cell>
-    <Cell ss:StyleID="s62"><Data ss:Type="String">Bind Level</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Bind</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">Bind (short)</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">setReport</Data></Cell>
-    <Cell ss:StyleID="s62"><Data ss:Type="String">Bind Level</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Bind</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">Bind (short)</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">setReport</Data></Cell>
+    <Cell ss:Index="27" ss:StyleID="s62"><Data ss:Type="String">LQI</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
@@ -130,7 +134,8 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:Index="19" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:Index="20" ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -144,6 +149,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Prise</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Plug 01&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;OSRAM&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;V1.04.12&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
@@ -154,7 +160,7 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">na</Data></Cell>
-    <Cell ss:Index="19" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:Index="20" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
@@ -172,6 +178,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Ampoule Couleur</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;CLA60 RGBW OSRAM&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;OSRAM&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;V1.05.10&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
@@ -182,7 +189,7 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
-    <Cell ss:Index="19" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:Index="20" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
@@ -191,6 +198,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -218,6 +226,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Hue Go</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;LLC020&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Philips&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;5.90.1.20202&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
@@ -235,6 +244,7 @@
     <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
     <Cell ss:StyleID="s69"><Data ss:Type="String">Semble Ok</Data></Cell>
     <Cell ss:StyleID="s67"><Data ss:Type="String">Unreportable Attribut</Data></Cell>
+    <Cell ss:Index="27" ss:StyleID="s27"><Data ss:Type="String">Remonte n'importe quoi</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
@@ -243,6 +253,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">LWB010</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;LWB010&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Philips&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;1.23.0_r20156&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
@@ -265,7 +276,7 @@
     <Cell ss:Index="2" ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s70"/>
+    <Cell ss:StyleID="s71"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -279,7 +290,8 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:Index="21" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:Index="22" ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
@@ -288,6 +300,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">TRADFRI bulb E27 CWS opal 600lm</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;TRADFRI bulb E27 CWS opal 600lm&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;IKEA of Sweden&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;1.3.002&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
@@ -327,75 +340,34 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-   </Row>
-   <Row ss:AutoFitHeight="0">
-    <Cell ss:Index="2" ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s63"><Data ss:Type="DateTime">2018-06-22T00:00:00.000</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Profalux</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Volet</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Volet&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">na</Data></Cell>
     <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-   </Row>
-   <Row ss:AutoFitHeight="0">
-    <Cell ss:Index="2" ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -437,27 +409,6 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-   </Row>
-   <Row ss:AutoFitHeight="0">
-    <Cell ss:Index="2" ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
@@ -481,9 +432,80 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
@@ -518,8 +540,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>16</ActiveRow>
-     <ActiveCol>19</ActiveCol>
+     <ActiveRow>2</ActiveRow>
+     <ActiveCol>7</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

@@ -48,7 +48,7 @@
         "invertBinary": "0",
         "template": "light",
         "display": {
-          "generic_type": "LIGHT_STATE"
+          "generic_type": "LIGHT_STATE_BOOL"
         }
       },
       "0008-0000": {
@@ -66,6 +66,9 @@
           "maxValue": "100",
           "historizeRound": "0",
           "calculValueOffset": "#value#/255*100"
+        },
+        "display": {
+          "generic_type": "LIGHT_STATE"
         }
       },
       "Time-Time": {
@@ -296,10 +299,38 @@
         "invertBinary": "0",
         "template": "badge"
       },
-      "BindToZigateLevel": {
-        "isVisible": 1,
-        "name": "BindToZigateLevel",
+      "BindToZigateEtat": {
+        "isVisible": 0,
+        "name": "BindToZigateEtat",
         "order": 22,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bind",
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateEtat",
+        "order": 23,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "BindToZigateLevel": {
+        "isVisible": 0,
+        "name": "BindToZigateLevel",
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -310,10 +341,24 @@
           "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
         }
       },
+      "BindShortToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindShortToZigateLevel",
+        "order": 25,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        }
+      },
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 23,
+        "order": 26,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -327,7 +372,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 24,
+        "order": 27,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -341,24 +386,10 @@
           "forceReturnLineAfter": "1"
         }
       },
-      "BindToZigateEtat": {
-        "isVisible": 1,
-        "name": "BindToZigateEtat",
-        "order": 25,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
-        }
-      },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 26,
+        "order": 28,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -375,4 +406,3 @@
     }
   }
 }
-

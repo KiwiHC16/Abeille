@@ -1,0 +1,39 @@
+= Groupes
+
+== Intro
+
+Les équipements peuvent être adressés par au moins deux façons:
+
+* Adresse courte: Les adresses courtes permettent de contacter un équipement spécifiques.
+* Adresse de groupe: Les adresses de groupes permettent de joindre un ensembles d'équipement en même temps.
+
+Les adresses de groupe sont typiquement utilisées pas les télécommandes zigbee: Hue, Ikea,...
+
+La gestion des groupes se fait depuis la ruche avec 3 commandes:
+
+* Ajout
+* Retrait
+* Consultation
+
+A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets abeille.
+
+Un équipement peut avoir plusieures adresses de groupes. Permet de répondre à plusieures télécommandes par exemple.
+
+== Ajout d un groupe à un équipement
+
+Premier champ: adresse de l'équipement
+Deuxieme champ: End Point de l'équipement
+Troisiemen champ: l'adresse de groupe a ajouter
+
+== Retrait d un groupe à un équipement
+
+Premier champ: adresse de l'équipement
+Deuxieme champ: End Point de l'équipement
+Troisiemen champ: l'adresse de groupe a retirer
+
+== Récupérer les groupes d'un équipement
+
+Premier champ: adresse de l'équipement
+Deuxieme champ: End Point de l'équipement
+
+

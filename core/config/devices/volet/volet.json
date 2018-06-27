@@ -330,10 +330,20 @@
           "request": "duration=0010"
         }
       },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 26,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 26,
+        "order": 27,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

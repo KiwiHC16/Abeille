@@ -214,7 +214,7 @@
         "template": "AbeillePower"
       },
       "BindToZigateEtat": {
-        "isVisible": 1,
+        "isVisible": 0,
         "name": "BindToZigateEtat",
         "order": 17,
         "isHistorized": "0",
@@ -227,10 +227,24 @@
           "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=03"
         }
       },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateEtat",
+        "order": 18,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=03&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 18,
+        "order": 19,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -244,7 +258,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 19,
+        "order": 20,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

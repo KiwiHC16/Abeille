@@ -30,6 +30,8 @@
     {
         global $dest;
         
+        $msg =  preg_replace("/[^A-Za-z0-9&=]/",'',$msg);
+        
         $test = explode('/', $topic);
         if ( sizeof( $test ) !=3 ) {
             return ;

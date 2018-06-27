@@ -60,7 +60,7 @@ class Abeille extends eqLogic
             
         }
         
-        log::add('Abeille', 'debug', 'Ping NE without battery info to check Online status' );
+        log::add('Abeille', 'debug', 'Ping NE without battery to check Online status' );
         $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             if ( strlen($eqLogic->getConfiguration("battery_type")) == 0 ) {

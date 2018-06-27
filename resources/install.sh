@@ -172,18 +172,13 @@ if [[ -d "/etc/php5/" ]]; then
 
   apt-get -y install php5-dev
 
-  if [[ -d "/etc/php5/cli/" && ! `cat /etc/php5/cli/php.ini | grep "mosquitto"` ]]; then
-    echo "" | pecl install Mosquitto-beta
-    echo "extension=mosquitto.so" | tee -a /etc/php5/cli/php.ini
-  fi
+  for phpdir in "/etc/php5/cli/" "/etc/php5/fpm/"  "/etc/php5/apache2/"; do
+    if [[ -d ${phpdir} && $(php -m | grep -c mosquitto) -eq 0 ]]; then
+        echo "" | pecl install Mosquitto-beta
+        [[ $(grep -c "mosquitto" ${phpdir}/php.ini) -eq 0 ]] && echo "extension=mosquitto.so" | tee -a ${phpdir}/php.ini
+    fi
+  done
 
-  if [[ -d "/etc/php5/fpm/" && ! `cat /etc/php5/fpm/php.ini | grep "mosquitto"` ]]; then
-    echo "extension=mosquitto.so" | tee -a /etc/php5/fpm/php.ini
-  fi
-
-  if [[ -d "/etc/php5/apache2/" && ! `cat /etc/php5/apache2/php.ini | grep "mosquitto"` ]]; then
-    echo "extension=mosquitto.so" | tee -a /etc/php5/apache2/php.ini
-  fi
 
 else
   echo 70 > ${PROGRESS_FILE}

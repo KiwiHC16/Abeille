@@ -4,6 +4,8 @@
 
 Mettre en Inclusion la zigate et brancher la prise OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Abeille.
 
+Si la prise était déjà associé à un réseau, un appui long sur le bouton lateral doit provoque l'association (Zigate en mode inclusion).
+
 == Ampoule E27 CLA 60 RGBW OSRAM (Classic E27 Multicolor)
 
 Mettre en Inclusion la zigate et brancher l'ampoule OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Abeille.

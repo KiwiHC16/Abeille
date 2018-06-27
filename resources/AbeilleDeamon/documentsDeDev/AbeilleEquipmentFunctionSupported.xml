@@ -8,17 +8,17 @@
   <Author>dfd</Author>
   <LastAuthor>dfd</LastAuthor>
   <Created>2018-06-18T09:55:11Z</Created>
-  <LastSaved>2018-06-22T11:49:00Z</LastSaved>
+  <LastSaved>2018-06-27T12:19:23Z</LastSaved>
   <Version>14.0</Version>
  </DocumentProperties>
  <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>6160</WindowHeight>
+  <WindowHeight>14160</WindowHeight>
   <WindowWidth>53800</WindowWidth>
-  <WindowTopX>4540</WindowTopX>
-  <WindowTopY>100</WindowTopY>
+  <WindowTopX>15880</WindowTopX>
+  <WindowTopY>23020</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
  </ExcelWorkbook>
@@ -116,6 +116,7 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Bind (short)</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">setReport</Data></Cell>
     <Cell ss:Index="27" ss:StyleID="s62"><Data ss:Type="String">LQI</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">HomeBridge</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
@@ -161,14 +162,14 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">na</Data></Cell>
     <Cell ss:Index="20" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
@@ -190,11 +191,10 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
     <Cell ss:Index="20" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
+    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">No</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:Index="25" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
@@ -389,27 +389,31 @@
     <Cell ss:StyleID="s62"/>
    </Row>
    <Row ss:AutoFitHeight="0">
-    <Cell ss:Index="2" ss:StyleID="s62"/>
+    <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="DateTime">2018-06-27T00:00:00.000</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">NXP</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">ZLO-Dimmer</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;ZLO-DimmableLight&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;NXP&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">yes-&gt;&quot;1000-0001&quot;</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">na</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;On/Off&quot;</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes-&gt;&quot;Level&quot;</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
-    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:Index="25" ss:StyleID="s65"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:Index="27" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"/>
@@ -540,9 +544,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>5</ActiveRow>
-     <ActiveCol>1</ActiveCol>
-     <RangeSelection>R6C2:R6C25</RangeSelection>
+     <ActiveRow>7</ActiveRow>
+     <ActiveCol>26</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

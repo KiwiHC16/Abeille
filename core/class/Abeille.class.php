@@ -766,13 +766,6 @@ class Abeille extends eqLogic
     public static function message($message)
     {
 
-        if ($GLOBALS['debugBEN']) {
-            echo "Function message.\n";
-        }
-        if ($GLOBALS['debugBEN']) {
-            print_r($message);
-            echo "\n";
-        }
         log::add('Abeille', 'debug', '--- process a new message -----------------------');
         log::add('Abeille', 'debug', 'Message ->' . $message->payload . '<- sur ' . $message->topic);
         $parameters_info = self::getParameters();

@@ -15,10 +15,10 @@
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>11100</WindowHeight>
-  <WindowWidth>53800</WindowWidth>
-  <WindowTopX>15960</WindowTopX>
-  <WindowTopY>26160</WindowTopY>
+  <WindowHeight>7340</WindowHeight>
+  <WindowWidth>2124</WindowWidth>
+  <WindowTopX>3260</WindowTopX>
+  <WindowTopY>8080</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
  </ExcelWorkbook>
@@ -64,7 +64,7 @@
   </Style>
  </Styles>
  <Worksheet ss:Name="Feuil1">
-  <Table ss:ExpandedColumnCount="33" ss:ExpandedRowCount="21" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="37" ss:ExpandedRowCount="21" x:FullColumns="1"
    x:FullRows="1" ss:DefaultColumnWidth="65" ss:DefaultRowHeight="15">
    <Column ss:Index="2" ss:Width="75"/>
    <Column ss:Width="53"/>
@@ -84,6 +84,8 @@
    <Column ss:AutoFitWidth="0" ss:Width="20"/>
    <Column ss:AutoFitWidth="0" ss:Width="107" ss:Span="2"/>
    <Column ss:Index="30" ss:AutoFitWidth="0" ss:Width="23"/>
+   <Column ss:AutoFitWidth="0" ss:Width="103" ss:Span="2"/>
+   <Column ss:Index="34" ss:AutoFitWidth="0" ss:Width="23"/>
    <Column ss:Width="127"/>
    <Row ss:AutoFitHeight="0"/>
    <Row ss:Index="3" ss:AutoFitHeight="0">
@@ -93,6 +95,7 @@
     <Cell ss:Index="20"><Data ss:Type="String">Etat</Data></Cell>
     <Cell ss:Index="23"><Data ss:Type="String">Level</Data></Cell>
     <Cell ss:Index="27"><Data ss:Type="String">Group</Data></Cell>
+    <Cell ss:Index="31"><Data ss:Type="String">Group</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Zigate</Data></Cell>
@@ -123,7 +126,10 @@
     <Cell ss:StyleID="s62"><Data ss:Type="String">Add</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">Remove</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">Get All</Data></Cell>
-    <Cell ss:Index="31" ss:StyleID="s62"><Data ss:Type="String">LQI</Data></Cell>
+    <Cell ss:Index="31" ss:StyleID="s62"><Data ss:Type="String">Add</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Remove</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">Membership</Data></Cell>
+    <Cell ss:Index="35" ss:StyleID="s62"><Data ss:Type="String">LQI</Data></Cell>
     <Cell ss:StyleID="s62"><Data ss:Type="String">HomeBridge</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
@@ -182,6 +188,10 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
+    <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
@@ -272,7 +282,7 @@
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
     <Cell ss:StyleID="s62"/>
-    <Cell ss:Index="31" ss:StyleID="s27"><Data ss:Type="String">Remonte n'importe quoi</Data></Cell>
+    <Cell ss:Index="35" ss:StyleID="s27"><Data ss:Type="String">Remonte n'importe quoi</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">30D (TTL)</Data></Cell>
@@ -468,7 +478,7 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:Index="31" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:Index="35" ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
@@ -604,9 +614,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>5</ActiveRow>
-     <ActiveCol>26</ActiveCol>
-     <RangeSelection>R6C27:R6C29</RangeSelection>
+     <ActiveRow>7</ActiveRow>
+     <ActiveCol>32</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

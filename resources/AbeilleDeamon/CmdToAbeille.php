@@ -727,6 +727,30 @@
                 sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        if ( isset($Command['getSceneMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
+        {
+            $cmd = "00A6";
+            
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <group ID: uint16_t>
+            
+            $addressMode = "02";                                    // Short Address -> 2
+            $address = $Command['address'];                         // -> 4
+            $sourceEndpoint = "01";                                 // -> 2
+            $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
+
+            $groupID = $Command['groupID'];
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupID ;
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
         if ( isset($Command['ActiveEndPoint']) )
         {
             $cmd = "0045";

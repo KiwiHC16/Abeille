@@ -374,6 +374,9 @@
                 
                 #reponse scene
                 #80a0-80a6
+            case "80a6" :
+                decode80a6($mqtt, $payload, $ln, $qos);
+                break;
                 
                 #Reponse Attributs
                 #8100-8140
@@ -1095,9 +1098,7 @@
         mqqtPublishLQI($mqtt, $NeighbourAddr, $index, $data, $qos);
     }
     
-    ##TODO
-    ##Reponse groupe
-    ##8060-8063
+    //----------------------------------------------------------------------------------------------------------------
     function decode8060($mqtt, $payload, $ln, $qos)
     {
         
@@ -1111,8 +1112,6 @@
                   . '; clusterId: '    .substr($payload, 4, 4) );
     }
     
-    
-    
     function decode8062($mqtt, $payload, $ln, $qos)
     {
         
@@ -1123,11 +1122,6 @@
         // <capacity: uint8_t>                                      -> 2
         // <Group count: uint8_t>                                   -> 2
         // <List of Group id: list each data item uint16_t>         -> 4x
-        
-        // . '; SQN: '          .payload length: '          .strlen($payload) );
-        // . '; SQN: '          .group part of the payload length: '          .$groupSize
-        
-        $groupSize = strlen($payload)-12-2; // 2 last are RSSI
         
         deamonlog('debug', ';Type: 8062: (Group Memebership)(Processed->MQTT)'
                   . '; SQN: '          .substr($payload, 0, 2)
@@ -1173,12 +1167,65 @@
                   . '; statusId: '     .substr($payload, 8, 2)
                   . '; groupId: '      .substr($payload,10, 4) );
     }
-    
-    
-    
+    //----------------------------------------------------------------------------------------------------------------
     ##TODO
     #reponse scene
     #80a0-80a6
+    
+    function decode80a6($mqtt, $payload, $ln, $qos)
+    {
+        
+        // <Sequence number: uint8_t>                               -> 2
+        // <endpoint: uint8_t>                                      -> 2
+        // <Cluster id: uint16_t>                                   -> 4
+        // <Src Addr: uint16_t> (added only from 3.0d version)      -> 4
+        // <capacity: uint8_t>                                      -> 2
+        // <Group count: uint8_t>                                   -> 2
+        // <List of Group id: list each data item uint16_t>         -> 4x
+        
+        // <sequence number: uint8_t>               -> 2
+        // <endpoint : uint8_t>                     -> 2
+        // <cluster id: uint16_t>                   -> 4
+        // <status: uint8_t>                        -> 2
+        // <capacity: uint8_t>                      -> 2
+        // <group ID: uint16_t>                     -> 4
+        // <scene count: uint8_t>                   -> 2
+        // <scene list: data each element uint8_t>  -> 2
+        
+        deamonlog('debug', ';Type: 80A6: (Scene Memebership)(Processed->MQTT)'
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; status: '       .substr($payload, 8, 2)
+                  . '; capacity: '     .substr($payload,10, 2)
+                  . '; group ID: '     .substr($payload,12, 4)
+                  . '; scene count: '  .substr($payload,16, 2)  );
+        
+        $groupID = substr($payload,12, 4);
+        
+        $sceneCount = hexdec( substr($payload,16, 2) );
+        
+        $sceneId="";
+        for ($i=0;$i<$sceneCount;$i++)
+        {
+            deamonlog('debug', 'scene '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,18+$i*2, 2));
+            $sceneId .= '-' . substr($payload,16+$i*4, 4);
+        }
+        
+        // Envoie Group-Membership (pas possible car il me manque l address short.
+        // $SrcAddr = substr($payload, 8, 4);
+        $ClusterId = "Scene";
+        $AttributId = "Membership";
+        if ( $sceneId == "" ) { $data = $groupID."-none"; } else { $data = $groupID . $sceneId; }
+        
+        deamonlog('debug', 'Group-Scenes: ->' . $data . "<-" );
+        
+        // Je ne peux pas envoyer, je ne sais pas qui a repondu
+        // mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+    }
+    //----------------------------------------------------------------------------------------------------------------
+
     
     #Reponse Attributs
     #8100-8140

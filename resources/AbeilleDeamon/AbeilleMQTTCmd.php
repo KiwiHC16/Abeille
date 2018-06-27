@@ -557,7 +557,17 @@
                 
                 }
 
-            
+            if ($action == "getSceneMembership") {
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "getSceneMembership"       => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 );
+                $done = 1;
+                
+            }
             
             
             if ( !$done ) {

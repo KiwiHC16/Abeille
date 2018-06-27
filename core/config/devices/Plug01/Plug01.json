@@ -264,6 +264,16 @@
           "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
       },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 21,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
       "online": {
         "isVisible": 0,
         "name": "online",

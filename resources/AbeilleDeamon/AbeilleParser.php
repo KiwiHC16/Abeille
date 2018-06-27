@@ -1129,7 +1129,7 @@
         
         $groupSize = strlen($payload)-12-2; // 2 last are RSSI
         
-        deamonlog('debug', 'Type: 8062: (Group Memebership)(Processed->MQTT)'
+        deamonlog('debug', ';Type: 8062: (Group Memebership)(Processed->MQTT)'
                   . '; SQN: '          .substr($payload, 0, 2)
                   . '; endPoint: '     .substr($payload, 2, 2)
                   . '; clusterId: '    .substr($payload, 4, 4)
@@ -1144,15 +1144,15 @@
             deamonlog('debug', 'group '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,16+$i*4, 4));
             $groupsId .= '-' . substr($payload,16+$i*4, 4);
         }
-        deamonlog('debug', 'Groups: '.$groupsId);
+        deamonlog('debug', 'Groups: ->'.$groupsId."<-");
         
-        deamonlog('debug', 'Level: 0x'.substr($payload, strlen($payload)-2, 2));
+        // deamonlog('debug', 'Level: 0x'.substr($payload, strlen($payload)-2, 2));
         
         // Envoie Group-Membership
         $SrcAddr = substr($payload, 8, 4);
         $ClusterId = "Group";
         $AttributId = "Membership";
-        $data = $groupsId;
+        if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
         
     }

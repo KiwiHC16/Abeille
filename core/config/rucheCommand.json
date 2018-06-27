@@ -142,7 +142,7 @@
     "display": {
       "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "DestinationEndPoint=XX"
+      "message_placeholder": "[DestinationEndPoint=XX]"
     }
   },
   "Bind": {

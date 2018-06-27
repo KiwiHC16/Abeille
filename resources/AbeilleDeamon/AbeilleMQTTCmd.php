@@ -544,6 +544,20 @@
                 
             }
             
+            if ($action == "getGroupMembership") {
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "getGroupMembership"       => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                );
+                $done = 1;
+                
+                }
+
+            
+            
+            
             if ( !$done ) {
                 $keywords = preg_split("/[=&]+/", $msg);
                 

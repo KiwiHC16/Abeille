@@ -56,6 +56,8 @@ function logmq($code, $str)
 // ---------------------------------------------------------------------------------------------------------------------------
 function message($message)
 {
+    global $qos;
+    
     $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
     $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
 
@@ -416,7 +418,7 @@ while ($NE_All_continue) {
             exit;
         }
         
-        benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress . " - " . $currentNeAddress['LQI_Done']);
+        benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
         if ($debugBen) var_dump($NE_All_BuildFromLQI);
 
         if ($currentNeStatus['LQI_Done'] == 0) {
@@ -424,7 +426,7 @@ while ($NE_All_continue) {
             // $NE = $neAddress;
             $NE_All_continue = 1;
             $NE_continue = 1;
-            benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress . " - " . $currentNeAddress['LQI_Done'] . " Je lance la collecte");
+            benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " Je lance la collecte");
             sleep(5);
             collectInformation($client, $currentNeAddress);
             $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;

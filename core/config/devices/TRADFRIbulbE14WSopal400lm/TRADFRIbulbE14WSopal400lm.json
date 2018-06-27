@@ -362,7 +362,7 @@
         "template": "badge"
       },
       "BindToZigateEtat": {
-        "isVisible": 1,
+        "isVisible": 0,
         "name": "BindToZigateEtat",
         "order": 26,
         "isHistorized": "0",
@@ -375,10 +375,24 @@
           "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
         }
       },
-      "BindToZigateLevel": {
+      "BindShortToZigateEtat": {
         "isVisible": 1,
-        "name": "BindToZigateLevel",
+        "name": "BindShortToZigateEtat",
         "order": 27,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
+      "BindToZigateLevel": {
+        "isVisible": 0,
+        "name": "BindToZigateLevel",
+        "order": 28,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -389,10 +403,24 @@
           "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
         }
       },
+      "BindShortToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindShortToZigateLevel",
+        "order": 29,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        }
+      },
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 28,
+        "order": 30,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -406,7 +434,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 29,
+        "order": 31,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -415,12 +443,15 @@
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
           "request": "address=#addr#&ClusterId=0008&AttributeId=0000&AttributeType=20"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 30,
+        "order": 32,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -437,4 +468,3 @@
     }
   }
 }
-

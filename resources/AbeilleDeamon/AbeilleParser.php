@@ -381,6 +381,10 @@
             case "80a3" :
                 decode80a3($mqtt, $payload, $ln, $qos);
                 break;
+               
+            case "80a4" :
+                decode80a6($mqtt, $payload, $ln, $qos);
+                break;
                 
             case "80a6" :
                 decode80a6($mqtt, $payload, $ln, $qos);

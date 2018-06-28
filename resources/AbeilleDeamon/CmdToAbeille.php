@@ -779,6 +779,32 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
+        if ( isset($Command['recallScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
+        {
+            $cmd = "00A5";
+            
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <group ID: uint16_t>
+            // <scene ID: uint8_t>
+            
+            $addressMode = "02";                                    // Short Address -> 2
+            $address = $Command['address'];                         // -> 4
+            $sourceEndpoint = "01";                                 // -> 2
+            $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
+            
+            $groupID = $Command['groupID'];
+            $sceneID = $Command['sceneID'];
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupID . $sceneID;
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
         if ( isset($Command['addScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) && isset($Command['sceneName']) )
         {
             $cmd = "00A1";

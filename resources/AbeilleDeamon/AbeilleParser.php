@@ -1199,7 +1199,7 @@
         // <extensions data: data each element is uint8_t>      -> 2
 
         
-        deamonlog('debug', ';Type: 80A0: (Scene View)(Processed->MQTT)'
+        deamonlog('debug', ';Type: 80A0: (Scene View)(Decoded but not Processed)'
                   . '; SQN: '                           .substr($payload, 0, 2)
                   . '; endPoint: '                      .substr($payload, 2, 2)
                   . '; clusterId: '                     .substr($payload, 4, 4)
@@ -1251,12 +1251,33 @@
         // <group ID: uint16_t>         -> 4
 
         
-        deamonlog('debug', ';Type: 80A3: (Remove All Scene)(Processed->MQTT)'
+        deamonlog('debug', ';Type: 80A3: (Remove All Scene)(Decoded but not Processed)'
                   . '; SQN: '          .substr($payload, 0, 2)
                   . '; endPoint: '     .substr($payload, 2, 2)
                   . '; clusterId: '    .substr($payload, 4, 4)
                   . '; status: '       .substr($payload, 8, 2)
                   . '; group ID: '     .substr($payload,10, 4) );
+        
+    }
+    
+    function decode80a4($mqtt, $payload, $ln, $qos)
+    {
+        
+        // <sequence number: uint8_t>   -> 2
+        // <endpoint : uint8_t>         -> 2
+        // <cluster id: uint16_t>       -> 4
+        // <status: uint8_t>            -> 2
+        // <group ID: uint16_t>         -> 4
+        // <scene ID: uint8_t>          -> 2
+        
+        
+        deamonlog('debug', ';Type: 80A3: (Store Scene Response)(Decoded but not Processed)'
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; status: '       .substr($payload, 8, 2)
+                  . '; group ID: '     .substr($payload,10, 4)
+                  . '; scene ID: '     .substr($payload,14, 2) );
         
     }
     
@@ -1297,7 +1318,7 @@
         for ($i=0;$i<$sceneCount;$i++)
         {
             deamonlog('debug', 'scene '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,18+$i*2, 2));
-            $sceneId .= '-' . substr($payload,16+$i*4, 4);
+            $sceneId .= '-' . substr($payload,18+$i*2, 2);
         }
         
         // Envoie Group-Membership (pas possible car il me manque l address short.

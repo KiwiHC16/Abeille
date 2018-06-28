@@ -161,6 +161,23 @@
       "message_placeholder": "-"
     }
   },
+  "storeScene": {
+    "name": "storeScene",
+    "order": 12,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/storeScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
   "removeScene": {
     "name": "Remove Scene",
     "order": 11,
@@ -178,7 +195,7 @@
       "message_placeholder": "-"
     }
   },
-    "removeSceneAll": {
+  "removeSceneAll": {
     "name": "Remove Scene All",
     "order": 11,
     "isHistorized": "0",
@@ -195,7 +212,7 @@
       "message_placeholder": "DestinationEndPoint=YY&groupID=XXXX"
     }
   },
-    "viewScene": {
+  "viewScene": {
     "name": "viewScene",
     "order": 12,
     "isHistorized": "0",

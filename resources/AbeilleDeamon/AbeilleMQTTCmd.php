@@ -573,6 +573,20 @@
                 
             }
             
+            if ($action == "storeScene") {
+                
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "storeScene"               => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 "sceneID"                  => $parameters['sceneID'],
+                                 );
+                $done = 1;
+                
+            }
+            
             if ($action == "addScene") {
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(

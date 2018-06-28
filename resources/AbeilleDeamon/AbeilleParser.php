@@ -377,6 +377,10 @@
             case "80a0" :
                 decode80a0($mqtt, $payload, $ln, $qos);
                 break;
+            
+            case "80a3" :
+                decode80a3($mqtt, $payload, $ln, $qos);
+                break;
                 
             case "80a6" :
                 decode80a6($mqtt, $payload, $ln, $qos);
@@ -1235,6 +1239,25 @@
         // Je ne peux pas envoyer, je ne sais pas qui a repondu
         // mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
         */
+    }
+    
+    function decode80a3($mqtt, $payload, $ln, $qos)
+    {
+        
+        // <sequence number: uint8_t>   -> 2
+        // <endpoint : uint8_t>         -> 2
+        // <cluster id: uint16_t>       -> 4
+        // <status: uint8_t>            -> 2
+        // <group ID: uint16_t>         -> 4
+
+        
+        deamonlog('debug', ';Type: 80A3: (Remove All Scene)(Processed->MQTT)'
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; status: '       .substr($payload, 8, 2)
+                  . '; group ID: '     .substr($payload,10, 4) );
+        
     }
     
     function decode80a6($mqtt, $payload, $ln, $qos)

@@ -374,6 +374,10 @@
                 
                 #reponse scene
                 #80a0-80a6
+            case "80a0" :
+                decode80a0($mqtt, $payload, $ln, $qos);
+                break;
+                
             case "80a6" :
                 decode80a6($mqtt, $payload, $ln, $qos);
                 break;
@@ -500,7 +504,7 @@
         $status = substr($payload, 0, 2);
         $SQN = substr($payload, 2, 2);
         
-        deamonlog('debug',';type: 8000 (Status)(Not Processed)'
+        deamonlog('debug',';type: 8000: (Status)(Not Processed)'
                   . '; Length: '.hexdec($ln)
                   . '; Status: '.displayStatus($status)
                   . '; SQN: '.$SQN );
@@ -1171,6 +1175,67 @@
     ##TODO
     #reponse scene
     #80a0-80a6
+    function decode80a0($mqtt, $payload, $ln, $qos)
+    {
+        // <sequence number: uint8_t>                           -> 2
+        // <endpoint : uint8_t>                                 -> 2
+        // <cluster id: uint16_t>                               -> 4
+        // <status: uint8_t>                                    -> 2
+        
+        // <group ID: uint16_t>                                 -> 4
+        // <scene ID: uint8_t>                                  -> 2
+        // <transition time: uint16_t>                          -> 4
+        
+        // <scene name length: uint8_t>                         -> 2
+        // <scene name max length: uint8_t>                     -> 2
+        // <scene name  data: data each element is uint8_t>     -> 2
+        
+        // <extensions length: uint16_t>                        -> 4
+        // <extensions max length: uint16_t>                    -> 4
+        // <extensions data: data each element is uint8_t>      -> 2
+
+        
+        deamonlog('debug', ';Type: 80A0: (Scene View)(Processed->MQTT)'
+                  . '; SQN: '                           .substr($payload, 0, 2)
+                  . '; endPoint: '                      .substr($payload, 2, 2)
+                  . '; clusterId: '                     .substr($payload, 4, 4)
+                  . '; status: '                        .substr($payload, 8, 2)
+                  
+                  . '; group ID: '                      .substr($payload,10, 4)
+                  . '; scene ID: '                      .substr($payload,14, 2)
+                  . '; transition time: '               .substr($payload,16, 4)
+                  
+                  . '; scene name lenght: '             .substr($payload,20, 2)
+                  . '; scene name max lenght: '         .substr($payload,22, 2)
+                  . '; scene name : '                   .substr($payload,24, 2)
+                  
+                  . '; scene extensions lenght: '       .substr($payload,26, 4)
+                  . '; scene extensions max lenght: '   .substr($payload,30, 4)
+                  . '; scene extensions : '             .substr($payload,34, 2) );
+        /*
+        $groupID = substr($payload,10, 4);
+        
+        $sceneCount = hexdec( substr($payload,16, 2) );
+        
+        $sceneId="";
+        for ($i=0;$i<$sceneCount;$i++)
+        {
+            deamonlog('debug', 'scene '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,18+$i*2, 2));
+            $sceneId .= '-' . substr($payload,16+$i*4, 4);
+        }
+        
+        // Envoie Group-Membership (pas possible car il me manque l address short.
+        // $SrcAddr = substr($payload, 8, 4);
+        $ClusterId = "Scene";
+        $AttributId = "View";
+        if ( $sceneId == "" ) { $data = $groupID."-none"; } else { $data = $groupID . $sceneId; }
+        
+        deamonlog('debug', 'Group-Scenes: ->' . $data . "<-" );
+        
+        // Je ne peux pas envoyer, je ne sais pas qui a repondu
+        // mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        */
+    }
     
     function decode80a6($mqtt, $payload, $ln, $qos)
     {

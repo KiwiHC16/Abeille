@@ -158,7 +158,7 @@
     },
     "display": {
       "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
+      "message_placeholder": "-"
     }
   },
   "removeScene": {
@@ -175,7 +175,24 @@
     "display": {
       "forceReturnLineAfter": "0",
       "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
+      "message_placeholder": "-"
+    }
+  },
+    "viewScene": {
+    "name": "viewScene",
+    "order": 12,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/viewScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
     }
   },
   "getSceneMemberShip": {
@@ -192,7 +209,7 @@
     "display": {
       "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "[DestinationEndPoint=XX]"
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
     }
   },
   "Bind": {

@@ -557,6 +557,36 @@
                 
                 }
 
+            // Scene -----------------------------------------------------------------------------------------------
+            
+            if ($action == "viewScene") {
+
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "viewScene"                => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 "sceneID"                  => $parameters['sceneID'],
+                                 );
+                $done = 1;
+                
+            }
+            
+            if ($action == "addScene") {
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "addScene"                => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 "sceneID"                  => $parameters['sceneID'],
+                                 "sceneName"                => $parameters['sceneName'],
+                                 );
+                $done = 1;
+                
+            }
+            
             if ($action == "getSceneMembership") {
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
@@ -569,7 +599,7 @@
                 
             }
             
-            
+            //  -----------------------------------------------------------------------------------------------
             if ( !$done ) {
                 $keywords = preg_split("/[=&]+/", $msg);
                 

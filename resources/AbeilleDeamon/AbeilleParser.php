@@ -1205,7 +1205,7 @@
                   . '; scene ID: '                      .substr($payload,14, 2)
                   . '; transition time: '               .substr($payload,16, 4)
                   
-                  . '; scene name lenght: '             .substr($payload,20, 2)
+                  . '; scene name lenght: '             .substr($payload,20, 2)  // Osram Plug repond 0 pour lenght et rien apres.
                   . '; scene name max lenght: '         .substr($payload,22, 2)
                   . '; scene name : '                   .substr($payload,24, 2)
                   

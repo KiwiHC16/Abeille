@@ -178,6 +178,23 @@
       "message_placeholder": "-"
     }
   },
+    "removeSceneAll": {
+    "name": "Remove Scene All",
+    "order": 11,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/removeSceneAll",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=YY&groupID=XXXX"
+    }
+  },
     "viewScene": {
     "name": "viewScene",
     "order": 12,

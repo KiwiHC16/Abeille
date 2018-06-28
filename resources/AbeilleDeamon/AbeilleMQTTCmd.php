@@ -598,6 +598,18 @@
                 $done = 1;
                 
             }
+
+            if ($action == "removeSceneAll") {
+                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "removeSceneAll"           => "1",
+                                 "address"                  => $parameters['address'],
+                                 "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 );
+                $done = 1;
+                
+            }
             
             //  -----------------------------------------------------------------------------------------------
             if ( !$done ) {

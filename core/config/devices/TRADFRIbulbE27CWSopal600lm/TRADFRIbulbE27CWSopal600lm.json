@@ -400,10 +400,24 @@
           "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
         }
       },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateEtat",
+        "order": 29,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        }
+      },
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 29,
+        "order": 30,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -414,10 +428,24 @@
           "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
         }
       },
+      "BindShortToZigateLevel": {
+        "isVisible": 1,
+        "name": "BindShortToZigateLevel",
+        "order": 31,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        }
+      },
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 30,
+        "order": 32,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -431,7 +459,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 31,
+        "order": 33,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -448,7 +476,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 32,
+        "order": 34,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

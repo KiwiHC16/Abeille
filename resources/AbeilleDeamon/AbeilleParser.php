@@ -1726,14 +1726,14 @@
     
     function decode8701($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', ' type: 8701 (Route Discovery Confirm)(Decoded but Not Processed)'
+        deamonlog('debug', ';type: 8701 (Route Discovery Confirm)(Decoded but Not Processed)'
                   . '; Status : '.substr($payload, 0, 2)
                   . '; Nwk Status : '.substr($payload, 2, 2)  );
     }
     
     function decode8702($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'type: 8701: (APS Data Confirm Fail)(Decoded but Not Processed)'
+        deamonlog('debug', ';type: 8702: (APS Data Confirm Fail)(Decoded but Not Processed)'
                   . '; Status : '.substr($payload, 0, 2)
                   . '; Source Endpoint : '.substr($payload, 2, 2)
                   . '; Destination Endpoint : '.substr($payload, 4, 2)

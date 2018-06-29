@@ -177,9 +177,26 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "1",
+      "forceReturnLineAfter": "0",
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
+  "sceneGroupRecall": {
+    "name": "sceneGroupRecall",
+    "order": 11,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/sceneGroupRecall",
+      "request": "addressGroup=#title#&sceneID=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse du Groupe",
+      "message_placeholder": "ZZ (sceneId)"
     }
   },
   "addScene": {

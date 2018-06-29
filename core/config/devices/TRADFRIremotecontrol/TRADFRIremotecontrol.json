@@ -116,10 +116,61 @@
           "forceReturnLineAfter": "1"
         }
       },
+      "Sc1": {
+        "name": "Sc1",
+        "order": 6,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+          "request": "(MettreNumeroDeSceneIci)"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Sc2": {
+        "name": "Sc2",
+        "order": 7,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+          "request": "(MettreNumeroDeSceneIci)"
+        },
+        "display": {
+          "forceReturnLineAfter": "0"
+        }
+      },
+      "Sc3": {
+        "name": "Sc3",
+        "order": 8,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+          "request": "(MettreNumeroDeSceneIci)"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "0001-0021": {
         "isVisible": 0,
         "name": "Batterie",
-        "order": 6,
+        "order": 9,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -134,7 +185,7 @@
       "getBattery": {
         "isVisible": 0,
         "name": "get Battery",
-        "order": 7,
+        "order": 10,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -151,7 +202,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 8,
+        "order": 11,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -161,7 +212,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 9,
+        "order": 12,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -171,4 +222,3 @@
     }
   }
 }
-

@@ -434,6 +434,21 @@
                                  "temperature" => $temperatureConsigne,
                                  "destinationEndPoint" => "01",
                                  );
+                
+                //----------------------------------------------------------------------------
+            } elseif ($action == "sceneGroupRecall") {
+                
+                $Command = array(
+                                 "sceneGroupRecall"         => "1",
+                                 "address"                  => $address,   // Ici c est l adresse du group.
+                                 
+                                 // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "DestinationEndPoint"      => "ff",
+                                 // "groupID"                  => $parameters['groupID'],
+                                 "groupID"                  => $address,
+                                 "sceneID"                  => $msg,
+                                 );
+                
                 //----------------------------------------------------------------------------
             } elseif ($action == "Management_LQI_request") {
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -552,15 +567,15 @@
                                  "getGroupMembership"       => "1",
                                  "address"                  => $parameters['address'],
                                  "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                );
+                                 );
                 $done = 1;
                 
-                }
-
+            }
+            
             // Scene -----------------------------------------------------------------------------------------------
             
             if ($action == "viewScene") {
-
+                
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                  "viewScene"                => "1",
@@ -601,6 +616,23 @@
                 
             }
             
+            if ($action == "sceneGroupRecall") {
+                
+                // if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                $Command = array(
+                                 "sceneGroupRecall"         => "1",
+                                 "address"                  => $parameters['addressGroup'],   // Ici c est l adresse du group.
+                                 
+                                 // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                 "DestinationEndPoint"      => "ff",
+                                 // "groupID"                  => $parameters['groupID'],
+                                 "groupID"                  => $parameters['addressGroup'],
+                                 "sceneID"                  => $parameters['sceneID'],
+                                 );
+                $done = 1;
+                
+            }
+            
             if ($action == "addScene") {
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
@@ -626,7 +658,7 @@
                 $done = 1;
                 
             }
-
+            
             if ($action == "removeSceneAll") {
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(

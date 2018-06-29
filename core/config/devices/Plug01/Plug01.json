@@ -135,6 +135,9 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
           "request": "clusterId=0006&attributeId=0000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "getManufacturerName": {
@@ -262,6 +265,9 @@
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
           "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "Group-Membership": {
@@ -272,7 +278,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
       },
       "online": {
         "isVisible": 0,

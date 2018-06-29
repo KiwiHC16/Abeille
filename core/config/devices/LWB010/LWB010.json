@@ -186,6 +186,9 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
           "request": "clusterId=0008&attributeId=0000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "getManufacturerName": {
@@ -285,12 +288,28 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/identifySend",
           "request": "duration=0010"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 21,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 21,
+        "order": 22,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -304,7 +323,7 @@
       "BindShortToZigateEtat": {
         "isVisible": 1,
         "name": "BindShortToZigateEtat",
-        "order": 22,
+        "order": 23,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -312,13 +331,16 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bindShort",
-          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 23,
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -332,7 +354,7 @@
       "BindShortToZigateLevel": {
         "isVisible": 1,
         "name": "BindShortToZigateLevel",
-        "order": 24,
+        "order": 25,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -340,13 +362,16 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bindShort",
-          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 25,
+        "order": 26,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -360,7 +385,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 26,
+        "order": 27,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -377,7 +402,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 27,
+        "order": 28,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

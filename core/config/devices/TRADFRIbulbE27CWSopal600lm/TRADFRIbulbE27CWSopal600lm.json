@@ -262,6 +262,9 @@
         "configuration": {
           "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
           "request": "clusterId=0008&attributeId=0000"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "getManufacturerName": {
@@ -384,7 +387,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
       },
       "BindToZigateEtat": {
         "isVisible": 1,
@@ -412,6 +418,9 @@
         "configuration": {
           "topic": "CmdAbeille/Ruche/bindShort",
           "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "BindToZigateLevel": {
@@ -440,6 +449,9 @@
         "configuration": {
           "topic": "CmdAbeille/Ruche/bindShort",
           "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "setReportEtat": {

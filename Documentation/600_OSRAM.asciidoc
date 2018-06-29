@@ -32,3 +32,4 @@ Mettre en Inclusion la zigate et brancher l'ampoule OSRAM. Elle devrait joindre 
 
 Ampoule déjà connectée à un réseau:
 Physically reset your light by either the lamp switch (as long as not a three way switch) or by unplugging your power cord 5 times & plugging it back in as so the light turns on (waiting 3 sec in between cycles). After the 5th time your light will confirm reset by blinking & changing colors. Thanks to: https://community.smartthings.com/t/how-to-reset-a-osram-lightify-a19-bulb-without-deleting-from-your-st-hub/40691
+Pui attendre quelque seconde, eteindre electriquement puis allumer l'ampoule et elle devrait se créer dans Abeille.

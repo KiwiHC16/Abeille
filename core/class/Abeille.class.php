@@ -210,8 +210,8 @@ class Abeille extends eqLogic
         //Check for running mosquitto service
         $deamon_info = self::serviceMosquittoStart();
         if ($deamon_info['launchable'] != 'ok') {
-            message::add("Abeille", "Le service mosquitto n'a pas pu être démarré");
-            throw new Exception(__('Vérifier l\'installation de mosquitto, le service ne démarre pas', __FILE__));
+            message::add("Abeille", "Le service mosquitto n'a pas pu être démarré.");
+            throw new Exception(__('Vérifier l\'installation de mosquitto, le service ne démarre pas. Essayer de supprimer le fichier /var/log/mosquitto/mosquitto.log', __FILE__));
         }
 
 

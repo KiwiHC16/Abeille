@@ -136,7 +136,7 @@ echo
 echo "Avancement: 5% ---------------------------------------------------------------------------------------------------> Install lsb-release php-pear"
 echo
 
-apt-get -y install lsb-release php-pear
+apt-get -y install lsb-release php-pear make locales
 [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de pear et lsb-release. Pb réseau ?"
 
 echo 8 > ${PROGRESS_FILE}
@@ -175,6 +175,7 @@ if [[ -d "/etc/php5/" ]]; then
   for phpdir in "/etc/php5/cli/" "/etc/php5/fpm/"  "/etc/php5/apache2/"; do
     if [[ -d ${phpdir} && $(php -m | grep -c mosquitto) -eq 0 ]]; then
         echo "" | pecl install Mosquitto-beta
+        pecl update-channels
         [[ $(grep -c "mosquitto" ${phpdir}/php.ini) -eq 0 ]] && echo "extension=mosquitto.so" | tee -a ${phpdir}/php.ini
     fi
   done
@@ -233,6 +234,13 @@ echo
 
 rm ${PROGRESS_FILE}
 
+[[ ! -e /var/log/mosquitto ]] && mkdir -p /var/log/mosquitto
+# Set service start at boot the oldway
+update-rc.d mosquitto defaults
+update-rc.d mosquitto enable
+# the new way
+systemctl enable mosquitto
+
 
 # Docker detection, may be useful to add RPI detection here.
 if [[ $(grep -c docker /proc/1/cgroup) -gt 0 ]]; then
@@ -251,5 +259,3 @@ else
   /etc/init.d/${SERVICE} restart &
 
 fi
-# Set service start at boot.
-update-rc.d mosquitto enable

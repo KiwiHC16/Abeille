@@ -192,6 +192,7 @@ Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0
 [source,]
 ----
 docker run --name=jeedomabeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomabeille
+docker run --name=jeedomgite --device=/dev/ttyACM0 -p 51826:51826 -p 5353:5353 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomgite
 ----
 
 Donc Jeedom sera accessible sur le port 80 à l'adresse IP du host. 2222 pour ssh et 3306 pour mysql.

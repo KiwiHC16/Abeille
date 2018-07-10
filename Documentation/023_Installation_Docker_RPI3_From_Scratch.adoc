@@ -1,0 +1,376 @@
+:toc:
+
+= Docker
+
+
+
+Installation d'abeille dans docker
+(Il y a certainement plus simple mais je ne suis pas expert en Docker et cette méthode semble bien fonctionner).
+
+== Preparation du docker
+
+* installer 2018-06-27-raspbian-stretch-lite.zip sur une SD
+* demarrer le RPI3
+* se logger pi/raspberry (atttention au clavier US par defaut)
+* lancer raspi-config (faire la conf que vous souhaitez): sshd, all memory space, clavier, locales,...
+* Vérifier la conf réseau
+* Vous connecter en ssh pour la suite: 
+[source,]
+----
+ssh pi@IP
+----
+* La suite se fait entant que root: sudo su -
+[source,]
+----
+sudo su -
+----
+* une classique mise a jour du systeme: 
+[source,]
+----
+apt-get update, apt-get upgrade
+----
+* Restart du RPI
+[source,]
+----
+reboot
+ssh pi@IP
+sudo su -
+----
+* Installation de docker: 
+[source,]
+----
+apt-get install docker
+apt-get install docker.io
+----
+* Vérifier que cela fonctionne, un docker ps -a pour voir les images:
+[source,]
+----
+docker ps -a
+----
+On voit ici qu'il n'y a pas d'image, il faut en créer une.
+
+Créons un system pour le docker.
+http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/
+
+[source,]
+----
+mkdir DockerAbeille
+cd DockerAbeille
+----
+Recuperer le fichier 2018-06-27-raspbian-stretch-lite.zip par scp par exemple. Puis:
+[source,]
+----
+unzip 2018-06-27-raspbian-stretch-lite.zip 
+losetup -Pr /dev/loop0 2018-06-27-raspbian-stretch-lite.img
+mkdir rpi
+mount -o ro /dev/loop0p2 ./rpi
+tar -C ./rpi -czpf 2018-06-27-raspbian-stretch-lite.tar.gz --numeric-owner .
+umount ./rpi
+losetup -d /dev/loop0
+losetup -d /dev/loop0
+rmdir rpi
+rm 2018-06-27-raspbian-stretch-lite.img
+rm 2018-06-27-raspbian-stretch-lite.zip
+
+echo 'FROM scratch' > Dockerfile
+echo 'ADD ./2018-06-27-raspbian-stretch-lite.tar.gz /' >> Dockerfile
+echo 'CMD ["/bin/bash"]' >> Dockerfile
+----
+
+Maintenant on lance la creation du docker:
+[source,]
+----
+docker build -t jeedomabeille .
+----
+Bien mettre le . a la fin de la ligne.
+
+Le résultat doit ressembler à:
+[source,]
+----
+root@docker:~/DockerAbeille# docker build -t jeedomabeille .
+Sending build context to Docker daemon 348.4 MB
+Step 0 : FROM scratch
+ ---> 
+Step 1 : ADD ./2018-06-27-raspbian-stretch-lite.tar.gz /
+ ---> f7009768b966
+Removing intermediate container ef5668638536
+Step 2 : CMD /bin/bash
+ ---> Running in d95d0e65bbb4
+ ---> 286ea5048dfd
+Removing intermediate container d95d0e65bbb4
+Successfully built 286ea5048dfd
+----
+
+Et si vous demandez les images:
+[source,]
+----
+root@docker:~/DockerAbeille# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+jeedomabeille       latest              286ea5048dfd        12 minutes ago      900.9 MB
+
+----
+
+Démarrons le cotainer:
+[source,]
+----
+docker run -it jeedomabeille
+----
+
+Le shell vous donne la main dans le docker:
+[source,]
+----
+root@52b658b7d8f8:/# 
+----
+
+Vous pouvez arreter le docker depuis un shell sur le host:
+[source,]
+----
+root@docker:~/DockerAbeille# docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+52b658b7d8f8        jeedomabeille       "/bin/bash"         3 minutes ago       Up 3 minutes                            sad_stallman
+root@docker:~/DockerAbeille# docker stop 52b658b7d8f8
+52b658b7d8f8
+----
+
+Vous pouvez demarrer de docker depuis un shell sur le host:
+[source,]
+----
+root@docker:~/DockerAbeille# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                       PORTS               NAMES
+52b658b7d8f8        jeedomabeille       "/bin/bash"         7 minutes ago       Exited (127) 3 minutes ago                       sad_stallman
+root@docker:~/DockerAbeille# docker start 52b658b7d8f8
+52b658b7d8f8
+
+----
+
+Vous pouvez vous connecter au docker:
+[source,]
+----
+root@docker:~/DockerAbeille# docker attach 52b658b7d8f8
+
+root@52b658b7d8f8:/# 
+
+----
+Faites plusieur "enter" pour avoir le prompt.
+
+
+Maintenant que le docker fonctionne on va faire l installation de jeedom et abeille.
+
+== Installation Jeedom
+
+Dans le container precedent nous n'avons pas pris en compte les besoins réseaux et port série.
+Effaçons l'ancien container.
+[source,]
+----
+docker rm 52b658b7d8f8
+----
+
+Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0 (la zigate).
+
+[source,]
+----
+docker run --name=jeedomabeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomabeille
+----
+
+Donc Jeedom sera accessible sur le port 80 à l'adresse IP du host. 2222 pour ssh et 3306 pour mysql.
+J'ai mis un nom pour être plus sympas à gérer.
+
+Vous pourrez le demarrer/arreter par:
+[source,]
+----
+docker stop jeedomabeille
+docker start jeedomabeille
+----
+
+Passons a l installation des services:
+[source,]
+----
+docker attach jeedomabeille
+apt-get update
+apt-get upgrade
+apt-get install openssh-server
+dpkg-reconfigure openssh-server
+/etc/init.d/ssh start
+apt-get install mariadb-server
+apt-get install apache2
+
+----
+
+Maintenant le systeme doit être prêt pour l installation de jeedom lui-meme. 
+(https://jeedom.github.io/documentation/installation/fr_FR/index => Chap 10)
+
+[source,]
+----
+wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+chmod +x install.sh
+./install.sh -w /var/www/html -m Jeedom
+----
+
+L installation va se dérouler en 11 grandes étapes.
+
+
+
+[source,]
+----
+étape 11 vérification de jeedom réussie
+/!\ IMPORTANT /!\ Le mot de passe root MySQL est Jeedom
+Installation finie. Un redémarrage devrait être effectué
+----
+
+avec un ps -ef, vous devriez voir apache, ssh et mysql fonctionner.
+
+Puis vous vous connecter à Jeedom avec l adresse http://IP_Host:80/
+Connectez vous avec admin/admin.
+Sauf que cela ne fonctionne pas !! ->Mot de passe ou nom d'utilisateur incorrect<-
+
+Il demande un reboot donc allons y:
+
+[source,]
+----
+docker stop jeedomabeille
+docker start jeedomabeille
+docker attach jeedomabeille
+/etc/init.d/ssh start
+/etc/init.d/mysql start
+/etc/init.d/apache2 start
+----
+
+On ne peut toujours pas se connecter, je ne sais pas pourquoi....
+
+Donc on va passer par une autre solution: https://jeedom.github.io/documentation/howto/fr_FR/reset.password
+
+Problement de "Could not reliably determine the server's fully qualified domain name, using 172.17.0.14. Set the 'ServerName' directive globally to suppress this message":
+mettre en debut de fichier /etc/apache2/apache2.conf la line :
+# Global configuration
+#
+ServerName 2b8faafb19a4
+
+root@2b8faafb19a4:/etc/apache2# apachectl configtest
+Syntax OK
+
+[source,]
+----
+# Global configuration
+#
+ServerName 2b8faafb19a4
+----
+Puis tester:
+[source,]
+----
+root@2b8faafb19a4:/etc/apache2# apachectl configtest
+Syntax OK
+----
+
+[source,]
+----
+root@2b8faafb19a4:/etc/apache2# cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.14	2b8faafb19a4	jeedomabeille
+172.17.0.14	jeedomabeille.bridge
+----
+
+[source,]
+----
+cat /var/www/html/core/config/common.config.php
+mysql -ujeedom -p
+use jeedom;
+REPLACE INTO user SET `login`='adminTmp',password='c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec',profils='admin', enable='1';
+exit
+----
+
+Et maintenant on peut se connecter en adminTmp/admin.
+
+Aller dans la conf reseau et mettre l adresse du host dans les adresses http.
+
+Maintenant on peut se connecter en admin/admin donc on peut effacer l utilisateur adminTmp.
+
+== Installation du plugin Abeille
+
+* Créer un objet Abeille.
+* Installer le plugin Abeille depuis le market.
+* L'activer.
+* Lancer l installation des dépendances.
+* Definissez les bons parametres du demon.
+* Lancer le demon
+* L objet Ruche doit être créé.
+* un petit getVersion et vous devriez avoir le champ SW et SDK qui se mettent à jour.
+
+Enjoy !!!
+
+
+[quote,Me]
+____
+Vous allez certainement avoir le message:
+"Jeedom est en cours de démarrage, veuillez patienter. La page se rechargera automatiquement une fois le démarrage terminé."
+
+Aller dans le "Moteur de taches" et lancer "Jeedom-cron".
+____
+
+= Backup du Docker
+
+Toutes les operations suivantes se font depuis le host.
+
+Pour avoir les docker en fonctionnement :
+[source,]
+----
+docker ps
+----
+
+Pour avoir les docker en stock:
+[source,]
+----
+docker ps -a
+----
+
+Créons un image du docker en prod: jeedomabeille et appelons cette image jeedomabeille_backup
+
+[source,]
+----
+docker commit -p jeedomabeille jeedomabeille_backup
+----
+
+Attention: avec le -p le container est en pause donc jeedom ne fonctionne plus le temps de faire la capture.
+
+Par exemple: faites cette operation avant de faire des opérations irréversibles qui risquent de planter votre jeedom.
+
+
+Pour voir les images crées et disponiqbles:
+[source,]
+----
+docker images
+----
+
+= Recuperer une image docker
+[source,]
+----
+docker save -o ~/jeedomabeille_backup.tar jeedomabeille_backup
+ls -l ~/jeedomabeille_backup.tar
+----
+
+soyez patient le tar fait 3G.
+
+= Mettre en prod/recover une image Docker
+
+If we have transferred our "container1.tar" backup file to another docker host system we first need to load backed up tar file into a docker's local image repository:
+
+
+[source,]
+----
+docker load -i /root/jeedomabeille_backup.tar
+docker images
+----
+
+Plus besoin d'aller chercher les cartes SD dans les differents RPI3 pour en faire de images. Tout va se faire à distance maintenant !!! YaaahhhOOOOUUU !!!!!
+
+
+Vous pouvez effacer de vieilles images par:
+[source,]
+----
+docker rmi jeedomabeille_backup
+----
+

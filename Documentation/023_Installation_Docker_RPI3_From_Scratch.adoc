@@ -414,3 +414,9 @@ Tout ne fonctionne pas mais c'est plus sympas que la ligne de commande.
 Il semble que la version rpi par defaut est un peu ancienne et certaine feture comme volume ne sont pas dispo.
 
 
+= Plugins
+
+== Zwave
+
+Sur ma machine jeedomprorpi, le repertoire /tmp/jeedom/openzwave n'a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/jeedom/openzwave et tout est ok maintenant.
+

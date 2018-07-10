@@ -156,6 +156,28 @@ Faites plusieur "enter" pour avoir le prompt.
 
 Maintenant que le docker fonctionne on va faire l installation de jeedom et abeille.
 
+[quote,me]
+____
+To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the [underline]#*CTRL-p suivi de CTRL-q*# key sequence.
+____
+
+== Service dans le docker
+
+Les services ne demarrent pas tout seuls dans le docker, il aurait probablement du le faire dans Dockfile.
+
+Donc j'ajoute quelques lignes à /etc/rc.local:
+
+[source,]
+----
+docker start jeedomabeille
+docker exec -u root jeedomabeille /etc/init.d/ssh start
+docker exec -u root jeedomabeille /etc/init.d/mysql start
+docker exec -u root jeedomabeille /etc/init.d/apache2 start
+----
+
+que je mets sur le host dans /root sous le nom startJeedomAbeileDocker.sh.
+et un bon vieux:  chmod u+x startJeedomAbeileDocker.sh
+
 == Installation Jeedom
 
 Dans le container precedent nous n'avons pas pris en compte les besoins réseaux et port série.
@@ -373,4 +395,22 @@ Vous pouvez effacer de vieilles images par:
 ----
 docker rmi jeedomabeille_backup
 ----
+
+= Docker GUI
+
+Thanks to:
+* http://blog.hypriot.com/post/new-docker-ui-portainer/
+* https://portainer.readthedocs.io/en/latest/deployment.html
+
+Il semble qu'on puisse utiliser une interface graphique "portainer.io" sur le rpi, saisir:
+[source,]
+----
+docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer:arm -H unix:///var/run/docker.sock
+----
+
+Puis se logger sur http://IP_Host:9000
+Tout ne fonctionne pas mais c'est plus sympas que la ligne de commande.
+
+Il semble que la version rpi par defaut est un peu ancienne et certaine feture comme volume ne sont pas dispo.
+
 

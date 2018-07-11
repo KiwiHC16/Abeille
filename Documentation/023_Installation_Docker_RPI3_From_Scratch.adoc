@@ -9,6 +9,8 @@ Installation d'abeille dans docker
 
 == Preparation du docker
 
+=== Preparation sous Raspbian
+
 * installer 2018-06-27-raspbian-stretch-lite.zip sur une SD
 * demarrer le RPI3
 * se logger pi/raspberry (atttention au clavier US par defaut)
@@ -47,10 +49,30 @@ apt-get install docker.io
 ----
 docker ps -a
 ----
+
+On voit ici qu’il n’y a pas d’image, il faut en créer une. Flasher la SD. Demarrer le PI et une commande:
+
+[source,]
+----
+docker ps
+----
+
+Permet de voir que docker fonctionne.
+
+=== Preparation sous hypriot
+
+La version officielle raspbian est un peu vieille et nous n'avons pas toutes les nouveautés. Hypriot a une version bien plus recente et nous facilite la vie (pas de config manuelle tout est prêt). Elle permet aussi de faire tourner le plugin Homebridge (macvlan).
+http://blog.hypriot.com
+
+Telecharger leur image à l adresse: http://blog.hypriot.com/downloads/
+
 On voit ici qu'il n'y a pas d'image, il faut en créer une.
 
-Créons un system pour le docker.
+== Créons un system pour le docker.
+
 http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/
+
+Ici je ne cherche pas à faire une image la plus petite possible mais la plus proche possible d'une install classique sur un HW RPI3. De ce fait l'image fait presque 1G.
 
 [source,]
 ----
@@ -110,7 +132,7 @@ jeedomabeille       latest              286ea5048dfd        12 minutes ago      
 
 ----
 
-Démarrons le cotainer:
+Démarrons le container:
 [source,]
 ----
 docker run -it jeedomabeille
@@ -194,6 +216,17 @@ Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0
 docker run --name=jeedomabeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomabeille
 docker run --name=jeedomgite --device=/dev/ttyACM0 -p 51826:51826 -p 5353:5353 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomgite
 ----
+
+Si vous êtes sur hyprio et voulez exposer la machine completement, créé le Networks puis le Containers:
+[source,]
+----
+docker network create -d macvlan --subnet=192.168.4.0/24 --gateway=192.168.4.2 -o parent=eth0 pub_net
+docker run --name=jeedomgite --device=/dev/ttyACM0 --network pub_net --ip=192.168.4.38 --hostname=jeedomgite -it jeedomgite /bin/bash
+----
+[quote,Me]
+____
+Attention de ne pas vous prendre les pieds dans le tapis entre les adresses du "HW" rpi et les addresses des containers.
+____
 
 Donc Jeedom sera accessible sur le port 80 à l'adresse IP du host. 2222 pour ssh et 3306 pour mysql.
 J'ai mis un nom pour être plus sympas à gérer.
@@ -336,7 +369,15 @@ ____
 
 = Backup du Docker
 
+Plusieures solutions s'offrent à nous. Il est interessant de comprende ce qui se passe. Un bon article à lire: https://tuhrig.de/difference-between-save-and-export-in-docker/
+
 Toutes les operations suivantes se font depuis le host.
+
+== Commit / Save / Load
+
+Permet de garder tout l'historique.
+
+=== Commit
 
 Pour avoir les docker en fonctionnement :
 [source,]
@@ -368,7 +409,7 @@ Pour voir les images crées et disponiqbles:
 docker images
 ----
 
-= Recuperer une image docker
+=== Save
 [source,]
 ----
 docker save -o ~/jeedomabeille_backup.tar jeedomabeille_backup
@@ -377,7 +418,7 @@ ls -l ~/jeedomabeille_backup.tar
 
 soyez patient le tar fait 3G.
 
-= Mettre en prod/recover une image Docker
+=== Load
 
 If we have transferred our "container1.tar" backup file to another docker host system we first need to load backed up tar file into a docker's local image repository:
 
@@ -387,6 +428,27 @@ If we have transferred our "container1.tar" backup file to another docker host s
 docker load -i /root/jeedomabeille_backup.tar
 docker images
 ----
+
+== Export / Import
+
+Garde que la derniere version.
+
+=== Export
+
+[source,]
+----
+docker ps -a
+docker export <CONTAINER ID> > /home/export.tar
+----
+
+=== Import
+
+[source,]
+----
+cat /home/export.tar | sudo docker import - NameYouWant:latest
+----
+
+== Conclusion 
 
 Plus besoin d'aller chercher les cartes SD dans les differents RPI3 pour en faire de images. Tout va se faire à distance maintenant !!! YaaahhhOOOOUUU !!!!!
 
@@ -398,6 +460,8 @@ docker rmi jeedomabeille_backup
 ----
 
 = Docker GUI
+
+== Sur la raspbian
 
 Thanks to:
 * http://blog.hypriot.com/post/new-docker-ui-portainer/
@@ -414,6 +478,17 @@ Tout ne fonctionne pas mais c'est plus sympas que la ligne de commande.
 
 Il semble que la version rpi par defaut est un peu ancienne et certaine feture comme volume ne sont pas dispo.
 
+== Sur la hypriot
+
+https://hub.docker.com/r/hypriot/rpi-portainer/
+
+[source,]
+----
+docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock hypriot/rpi-portainer
+----
+
+Puis se logger sur http://IP_Host:9000.
+Tout fonctionne bien mieux que sur la version raspbian.
 
 = Plugins
 

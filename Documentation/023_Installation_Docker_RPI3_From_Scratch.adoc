@@ -187,7 +187,7 @@ ____
 
 Les services ne demarrent pas tout seuls dans le docker, il aurait probablement du le faire dans Dockfile.
 
-Donc j'ajoute quelques lignes à /etc/rc.local:
+Donc j'ajoute quelques lignes à /etc/rc.local pour Raspbian:
 
 [source,]
 ----
@@ -199,6 +199,68 @@ docker exec -u root jeedomabeille /etc/init.d/apache2 start
 
 que je mets sur le host dans /root sous le nom startJeedomAbeileDocker.sh.
 et un bon vieux:  chmod u+x startJeedomAbeileDocker.sh
+
+et pour hypriot qui n'a pas de rc.local, je fait un script:
+
+[source,]
+----
+sudo su -
+cd /etc/init.d
+vi startDockers
+----
+
+Je mets dedans:
+[source,]
+----
+#! /bin/sh
+# /etc/init.d/startDockers 
+
+### BEGIN INIT INFO
+# Provides:          startDockers
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Simple script to start a program at boot
+# Description:       A simple script from www.stuffaboutcode.com which will start / stop a program a boot / shutdown.
+### END INIT INFO
+
+# If you want a command to always run, put it here
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting startDockers"
+    # run application you want to start
+    docker start jeedomgite
+    docker exec -u root jeedomgite /etc/init.d/ssh start
+    docker exec -u root jeedomgite /etc/init.d/mysql start
+    docker exec -u root jeedomgite /etc/init.d/apache2 start
+    ;;
+  stop)
+    echo "Stopping startDockers"
+    # kill application you want to stop
+    docker stop jeedomgite
+    ;;
+  *)
+    echo "Usage: /etc/init.d/startDockers {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+----
+
+Je sauvegarde.
+
+[source,]
+----
+chmod 755 /etc/init.d/startDockers
+/etc/init.d/startDockers start
+update-rc.d startDockers defaults
+----
+
+Thanks to https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html
 
 == Installation Jeedom
 
@@ -476,7 +538,7 @@ docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.
 Puis se logger sur http://IP_Host:9000
 Tout ne fonctionne pas mais c'est plus sympas que la ligne de commande.
 
-Il semble que la version rpi par defaut est un peu ancienne et certaine feture comme volume ne sont pas dispo.
+Il semble que la version rpi par defaut est un peu ancienne et certaine feature comme volume ne sont pas dispo.
 
 == Sur la hypriot
 
@@ -495,4 +557,8 @@ Tout fonctionne bien mieux que sur la version raspbian.
 == Zwave
 
 Sur ma machine jeedomprorpi, le repertoire /tmp/jeedom/openzwave n'a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/jeedom/openzwave et tout est ok maintenant.
+
+== homebridge
+
+Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvlan et affecter une adresse spécifique.
 

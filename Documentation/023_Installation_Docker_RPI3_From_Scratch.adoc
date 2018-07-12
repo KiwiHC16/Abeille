@@ -195,6 +195,7 @@ docker start jeedomabeille
 docker exec -u root jeedomabeille /etc/init.d/ssh start
 docker exec -u root jeedomabeille /etc/init.d/mysql start
 docker exec -u root jeedomabeille /etc/init.d/apache2 start
+docker exec -u root jeedomabeille /etc/init.d/cron start
 ----
 
 que je mets sur le host dans /root sous le nom startJeedomAbeileDocker.sh.
@@ -236,6 +237,7 @@ case "$1" in
     docker exec -u root jeedomgite /etc/init.d/ssh start
     docker exec -u root jeedomgite /etc/init.d/mysql start
     docker exec -u root jeedomgite /etc/init.d/apache2 start
+    docker exec -u root jeedomgite /etc/init.d/cron start
     ;;
   stop)
     echo "Stopping startDockers"
@@ -259,6 +261,13 @@ chmod 755 /etc/init.d/startDockers
 /etc/init.d/startDockers start
 update-rc.d startDockers defaults
 ----
+
+Ajouter la ligne
+[source,]
+----
+* * * * * su --shell=/bin/bash - www-data -c '/usr/bin/php /var/www/html/core/php/jeeCron.php' >> /dev/null
+----
+dans le cron root.
 
 Thanks to https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html
 

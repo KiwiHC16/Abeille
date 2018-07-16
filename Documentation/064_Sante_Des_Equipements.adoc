@@ -30,6 +30,23 @@ En utilisant le menu Analyse->Equipements, vous trouverez l'état des batteries.
 
 image::images/Capture_d_ecran_2018_05_11_a_15_47_55.png[]
 
+==== Seuil d'alerte
+
+Menu->Roues crantées->Configuration->Equipements.
+
+Mettez les valeurs qui vous conviennent:
+
+image::images/Capture_d_ecran_2018_07_16_a_11_28_07.png[]
+
+==== Alerte
+
+Menu->Roues crantées->Configuration->Logs
+
+image::images/Capture_d_ecran_2018_07_16_a_11_29_52.png[]
+
+par exemple ici, une alarme est envoyée sur mon tél.
+
+
 == Script / Widget
 
 Vous aurez un widget comme celui ci:

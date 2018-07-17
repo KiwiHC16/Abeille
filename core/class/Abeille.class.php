@@ -132,7 +132,7 @@ class Abeille extends eqLogic
                 if ( $TimeOut != -1 ){
                     if ( ($last + $TimeOut) > time() ) {
                         // Ok
-                        $eqLogic->setStatus('state', 'ok1');
+                        $eqLogic->setStatus('state', 'ok');
                         $eqLogic->setStatus('timeout', 0);
                     }
                     else {
@@ -150,7 +150,7 @@ class Abeille extends eqLogic
                 // $last = strtotime($eqLogic->getStatus('lastCommunication'));
                 if ( $last > (time() - $TimeOut) ) {
                     // Ok
-                    $eqLogic->setStatus('state', 'ok2');
+                    $eqLogic->setStatus('state', 'ok');
                     $eqLogic->setStatus('timeout', 0);
                 }
                 elseif ( $last < (time() - $TimeOut*7) ) {

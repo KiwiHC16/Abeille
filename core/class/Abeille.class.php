@@ -130,8 +130,9 @@ class Abeille extends eqLogic
             
             log::add('Abeille', 'debug', 'Last: '.$last.' Timeout: '.$TimeOut.'s - Last+TimeOut: '.($last+$TimeOut).' now: '.time());
             
-            if ($TimeOut==-1) {
+            if ($TimeOut==-60) {
                 $eqLogic->setStatus('state', '-');
+                $eqLogic->setStatus('timeout', 0);
             }
             else if ($TimeOut>0) {
                 if ( ($last + $TimeOut) > time() ) {

@@ -1,6 +1,7 @@
 {
   "volet": {
     "nameJeedom": "Volet ProFalux",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

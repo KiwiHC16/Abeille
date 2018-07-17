@@ -1,6 +1,7 @@
 {
   "lumi.sensor_magnet.aq2": {
     "nameJeedom": "Xiaomi Door Sensor Aqara 2",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },
@@ -133,4 +134,3 @@
     }
   }
 }
-

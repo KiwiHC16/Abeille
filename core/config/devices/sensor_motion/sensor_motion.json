@@ -1,6 +1,7 @@
 {
   "lumi.sensor_motion": {
     "nameJeedom": "Xiaomi Presence",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },
@@ -138,4 +139,3 @@
     }
   }
 }
-

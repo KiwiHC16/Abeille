@@ -1,6 +1,7 @@
 {
   "lumi.sensor_ht": {
     "nameJeedom": "Xiaomi Temperature Rond",
+    "timeout": "60",
     "Categorie": {
       "heating": "1"
     },
@@ -156,4 +157,3 @@
     }
   }
 }
-

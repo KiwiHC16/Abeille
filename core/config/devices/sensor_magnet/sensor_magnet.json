@@ -1,6 +1,7 @@
 {
   "lumi.sensor_magnet": {
     "nameJeedom": "Xiaomi Door Sensor",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },

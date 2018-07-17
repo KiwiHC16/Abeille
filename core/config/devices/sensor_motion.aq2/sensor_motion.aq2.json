@@ -1,6 +1,7 @@
 {
   "lumi.sensor_motion.aq2": {
     "nameJeedom": "Xiaomi Presence Aqara 2",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },
@@ -152,4 +153,3 @@
     }
   }
 }
-

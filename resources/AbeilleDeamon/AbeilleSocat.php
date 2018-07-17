@@ -32,7 +32,7 @@
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
     
     if ( $serial != $WifiLink ) {
-        deamonlog('info','Pas de connection wifi donc je ne fait rien, et je n aurais pas du être lancé.');
+        deamonlog('info','Pas de connection wifi donc je ne fais rien, et je n aurais pas du être lancé.');
         exit(1);
     }
     

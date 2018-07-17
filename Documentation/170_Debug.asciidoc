@@ -63,6 +63,8 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 * Tester la ZiGate en ligne de commande
 
+* Vérifiez bien que vous n'avez pas plusieurs Plugins essayant d'utiliser le même port série (/dev/ttyUSBx).
+
 ** Jeedom vers ZiGate
 
 On envoie 

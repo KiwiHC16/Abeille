@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbGU10W400lm": {
     "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 W 400lm",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },
@@ -305,4 +306,3 @@
     }
   }
 }
-

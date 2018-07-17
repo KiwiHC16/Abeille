@@ -1,6 +1,7 @@
 {
   "Classic A60 RGBW": {
     "nameJeedom": "Classic A60 RGB W",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },

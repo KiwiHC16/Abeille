@@ -110,7 +110,10 @@ class Abeille extends eqLogic
             // $lastCommunicationTimeOut = 0; // Pour test
             
             // ===============================================================================================================================
-            // Si equipement a un TimeOut Specifique, -1 pour ne pas tester
+            // TimeOut de l'equipement
+            // Si = -1 ne pas traiter comme les Timers
+            // Si = 0 alors on n'a pas de valeur on prend par defaut
+            // Si > 0 alors on prend la valeur
             
             // if ($eqLogic->getConfiguration("lastCommunicationTimeOut")) {
             //    $lastCommunicationTimeOut = $eqLogic->getConfiguration("lastCommunicationTimeOut");
@@ -120,29 +123,26 @@ class Abeille extends eqLogic
             
             if ( strtotime($eqLogic->getStatus('lastCommunication')) > 0 ) {
                 $last = strtotime($eqLogic->getStatus('lastCommunication'));
-                }
-            if ( $eqLogic->getTimeout() > 0 ) {
+            }
+            if ( $eqLogic->getTimeout() >= -1 ) {
                 $TimeOut = $eqLogic->getTimeout()*60;
-                }
+            }
             
             log::add('Abeille', 'debug', 'Last: '.$last.' Timeout: '.$TimeOut.'s - Last+TimeOut: '.($last+$TimeOut).' now: '.time());
             
-            if ($TimeOut>0) {
-                
-                if ( $TimeOut != -1 ){
-                    if ( ($last + $TimeOut) > time() ) {
-                        // Ok
-                        $eqLogic->setStatus('state', 'ok');
-                        $eqLogic->setStatus('timeout', 0);
-                    }
-                    else {
-                        // NOK
-                        $eqLogic->setStatus('state', 'Time Out Last Communication');
-                        $eqLogic->setStatus('timeout', 1);
-                    }
+            if ($TimeOut==-1) {
+                $eqLogic->setStatus('state', '-');
+            }
+            else if ($TimeOut>0) {
+                if ( ($last + $TimeOut) > time() ) {
+                    // Ok
+                    $eqLogic->setStatus('state', 'ok');
+                    $eqLogic->setStatus('timeout', 0);
                 }
-                else{
-                    $eqLogic->setStatus('state', '-');
+                else {
+                    // NOK
+                    $eqLogic->setStatus('state', 'Time Out Last Communication');
+                    $eqLogic->setStatus('timeout', 1);
                 }
             }
             // Si pas de Timer specifique, 24h et 7jours comme seuil d'alerte

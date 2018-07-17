@@ -1,6 +1,7 @@
 {
   "Timer": {
     "nameJeedom": "Timer",
+    "timeout": "-1",
     "Categorie": {
       "automatism": "1"
     },

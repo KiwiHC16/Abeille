@@ -61,7 +61,8 @@ class Abeille extends eqLogic
         }
         
         log::add('Abeille', 'debug', 'Ping Zigate to check Online status' );
-        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion", "Version",           '0' );
+        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion",         "Version",           '0' );
+        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getNetworkStatus",   "getNetworkStatus",  '0' );
         
         log::add('Abeille', 'debug', 'Ping NE with 220V to check Online status' );
         $eqLogics = Abeille::byType('Abeille');

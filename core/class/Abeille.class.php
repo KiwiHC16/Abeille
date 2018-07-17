@@ -1322,7 +1322,7 @@ class Abeille extends eqLogic
         // eqReal_id
         $elogic->setIsEnable("1");
         // status
-        // timeout
+        $elogic->setTimeout( 60 ); // timeout
         // $elogic->setCategory();
         // display
         // order

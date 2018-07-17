@@ -243,7 +243,7 @@
                 break;
                 
             case "8003" :
-                decode8003($mqtt, $payload, $ln, $qos);
+                decode8003($mqtt, $payload, $ln, $qos, $clusterTab);
                 break;
                 
             case "8004" :
@@ -536,27 +536,62 @@
                   . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
     }
     
-    function decode8003($mqtt, $payload, $ln, $qos)
+    function decode8003($mqtt, $payload, $ln, $qos, $clusterTab)
     {
-        deamonlog('debug',';type: 8003: (Liste des clusters de l’objet)(Not Processed)'
-                  . '; (Not processed*************************************************************)'
-                  . '; Level: 0x'.substr($payload, 0, 2)
-                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // <source endpoint: uint8_t t>
+        // <profile ID: uint16_t>
+        // <cluster list: data each entry is uint16_t>
+        
+        $sourceEndPoint = substr($payload, 0, 2);
+        $profileID      = substr($payload, 2, 4);
+        
+        // deamonlog('debug',';type: 8003: (Liste des clusters de l’objet)(Not Processed - Just decoded). sourceEndPoint: '.$sourceEndPoint.' profileID: '.$profileID );
+        
+        $len = (strlen($payload)-2-4-2)/4;
+        for ($i = 0; $i < $len; $i++) {
+            deamonlog('debug',';type: 8003: (Liste des clusters de l’objet)(Not Processed - Just decoded); sourceEndPoint: '.$sourceEndPoint.'; profileID: '.$profileID.'; cluster: '.substr($payload, (6 + ($i*4) ), 4). ' - ' . $clusterTab['0x'.substr($payload, (6 + ($i*4) ), 4)]);
+        }
+        
+        
     }
     
     function decode8004($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug',';type: 8004: (Liste des attributs de l’objet)(Not Processed)'
-                  . '; (Not processed*************************************************************)'
-                  . '; Level: 0x'.substr($payload, 0, 2)
-                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // <source endpoint: uint8_t>
+        // <profile ID: uint16_t>
+        // <cluster ID: uint16_t>
+        // <attribute list: data each entry is uint16_t>
+        
+        $sourceEndPoint = substr($payload, 0, 2);
+        $profileID      = substr($payload, 2, 4);
+        $clusterID      = substr($payload, 6, 4);
+        
+        // deamonlog('debug',';type: 8004: (Liste des Attributs de l’objet)(Not Processed - Just decoded). sourceEndPoint: '.$sourceEndPoint.' profileID: '.$profileID.' clusterID: '.$clusterID );
+        
+        $len = (strlen($payload)-2-4-4-2)/4;
+        for ($i = 0; $i < $len; $i++) {
+            deamonlog('debug',';type: 8004: (Liste des Attributs de l’objet)(Not Processed - Just decoded); sourceEndPoint: '.$sourceEndPoint.'; profileID: '.$profileID.'; clusterID: '.$clusterID.'; attribute: '.substr($payload, (10 + ($i*4) ), 4) );
+        }
+        
     }
     function decode8005($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)'
-                  . '; (Not processed*************************************************************)'
-                  . '; Level: 0x'.substr($payload, 0, 2)
-                  . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)' );
+        
+        // <source endpoint: uint8_t>
+        // <profile ID: uint16_t>
+        // <cluster ID: uint16_t>
+        //<command ID list:data each entry is uint8_t>
+        
+        $sourceEndPoint = substr($payload, 0, 2);
+        $profileID      = substr($payload, 2, 4);
+        $clusterID      = substr($payload, 6, 4);
+        
+        $len = (strlen($payload)-2-4-4-2)/2;
+        for ($i = 0; $i < $len; $i++) {
+            deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed - Just decoded); sourceEndPoint: '.$sourceEndPoint.'; profileID: '.$profileID.'; clusterID: '.$clusterID.'; commandes: '.substr($payload, (10 + ($i*2) ), 2) );
+        }
+    
     }
     function decode8006($mqtt, $payload, $ln, $qos)
     {

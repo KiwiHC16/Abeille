@@ -130,7 +130,7 @@ class Abeille extends eqLogic
             }
             
             if ( $eqLogic->getTimeout() == '' ) {
-                $TimeOut = -1;
+                $TimeOut = 0;
             }
             else if ( $eqLogic->getTimeout() == -1 ) {
                 $TimeOut = -1;

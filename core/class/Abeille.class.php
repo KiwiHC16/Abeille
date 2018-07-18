@@ -128,13 +128,20 @@ class Abeille extends eqLogic
             if ( strtotime($eqLogic->getStatus('lastCommunication')) > 0 ) {
                 $last = strtotime($eqLogic->getStatus('lastCommunication'));
             }
-            if ( $eqLogic->getTimeout() >= -1 ) {
+            
+            if ( $eqLogic->getTimeout() == '' ) {
+                $TimeOut = -1;
+            }
+            else if ( $eqLogic->getTimeout() == -1 ) {
+                $TimeOut = -1;
+            }
+            else if ( $eqLogic->getTimeout() > -1 ) {
                 $TimeOut = $eqLogic->getTimeout()*60;
             }
             
             log::add('Abeille', 'debug', 'Last: '.$last.' Timeout: '.$TimeOut.'s - Last+TimeOut: '.($last+$TimeOut).' now: '.time());
             
-            if ($TimeOut==-60) {
+            if ($TimeOut==-1) {
                 $eqLogic->setStatus('state', '-');
                 $eqLogic->setStatus('timeout', 0);
             }
@@ -150,8 +157,8 @@ class Abeille extends eqLogic
                     $eqLogic->setStatus('timeout', 1);
                 }
             }
-            // Si pas de Timer specifique, 24h et 7jours comme seuil d'alerte
-            else {
+            // Si pas de Timer specifique soit Time Out = 0 , 24h et 7jours comme seuil d'alerte
+            else if ( $TimeOut==0 ) {
                 // $last = strtotime($eqLogic->getStatus('lastCommunication'));
                 if ( $last > (time() - $TimeOut) ) {
                     // Ok
@@ -168,6 +175,9 @@ class Abeille extends eqLogic
                     $eqLogic->setStatus('state', 'Old Last Communication (>24h)');
                     $eqLogic->setStatus('timeout', 1);
                 }
+            }
+            else {
+                log::add('Abeille', 'debug', 'Timeout: ->'.$TimeOut.'<- Valeur que je ne sais pas gérer.');
             }
             // ===============================================================================================================================
             

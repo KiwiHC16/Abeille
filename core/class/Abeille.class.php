@@ -159,13 +159,14 @@ class Abeille extends eqLogic
             }
             // Si pas de Timer specifique soit Time Out = 0 , 24h et 7jours comme seuil d'alerte
             else if ( $TimeOut==0 ) {
+                $TimeOutStandard = 24*60*60;
                 // $last = strtotime($eqLogic->getStatus('lastCommunication'));
-                if ( $last > (time() - $TimeOut) ) {
+                if ( ($last + $TimeOutStandard) > time() ) {
                     // Ok
                     $eqLogic->setStatus('state', 'ok');
                     $eqLogic->setStatus('timeout', 0);
                 }
-                elseif ( $last < (time() - $TimeOut*7) ) {
+                elseif ( ($last+$TimeOutStandard*7) < time() ) {
                     // NOK 7d
                     $eqLogic->setStatus('state', 'Very Old Last Communication (>7days)');
                     $eqLogic->setStatus('timeout', 1);

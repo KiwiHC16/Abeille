@@ -80,8 +80,15 @@ Le volet devrait faire des mouvement de va-et-vient puis s'arrêter
 * La télécommande devrait à nouveau fonctionner
 * Recommencer à nouveau la procédure d'inclusion
 
+== Retour expérience
 
-
+[quote,MaxDak]
+____
+Confronté au même problème à savoir: va et viens en guise de réponse à toutes les commandes (mes volets profalux sont récents moins d'un mois).
+J'ai enfin réussi à les piloter !
+J'ai suivi la procédure classique d'appairage à la seule différence que j'ai fermé totalement le volet avant de commencer la procédure.
+Et la miracle toutes les commandes fonctionnent...
+____
 
 
 

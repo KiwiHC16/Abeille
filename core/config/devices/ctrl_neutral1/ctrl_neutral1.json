@@ -1,0 +1,366 @@
+{
+  "ctrl_neutral1": {
+    "nameJeedom": "Xiaomi Wall Switch w/o Neutral",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "ctrl_neutral1"
+    },
+    "Commandes": {
+      "0000-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0010": {
+        "isVisible": 0,
+        "name": "lieux",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-0004": {
+        "isVisible": 0,
+        "name": "societe",
+        "order": 2,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0000-4000": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 3,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "0006-02-0000": {
+        "isVisible": 1,
+        "name": "etat charge 1",
+        "order": 4,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
+      },
+      "0006-03-0000": {
+        "isVisible": 1,
+        "name": "etat charge 2",
+        "order": 5,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
+      },
+      "0006-04-0000": {
+        "isVisible": 1,
+        "name": "etat switch 1",
+        "order": 6,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
+      },
+      "0006-05-0000": {
+        "isVisible": 1,
+        "name": "etat switch 2",
+        "order": 7,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "light",
+        "display": {
+          "generic_type": "LIGHT_STATE"
+        }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "On1": {
+        "isVisible": 1,
+        "name": "On1",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff2",
+          "request": "On"
+        }
+      },
+      "Off1": {
+        "isVisible": 1,
+        "name": "Off1",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff2",
+          "request": "Off"
+        }
+      },
+      "Toggle1": {
+        "isVisible": 1,
+        "name": "Toggle1",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff2",
+          "request": "Toggle"
+        },
+        "display": {
+          "generic_type": "LIGHT_TOGGLE",
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "On2": {
+        "isVisible": 1,
+        "name": "On2",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_ON"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
+          "request": "On"
+        }
+      },
+      "Off2": {
+        "isVisible": 1,
+        "name": "Off2",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "display": {
+          "generic_type": "LIGHT_OFF"
+        },
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
+          "request": "Off"
+        }
+      },
+      "Toggle2": {
+        "isVisible": 1,
+        "name": "Toggle2",
+        "order": 15,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/OnOff3",
+          "request": "Toggle"
+        },
+        "display": {
+          "generic_type": "LIGHT_TOGGLE",
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "order": 16,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0006&attributeId=0000"
+        }
+      },
+      "getLevel": {
+        "isVisible": 0,
+        "name": "getLevel",
+        "order": 17,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0008&attributeId=0000"
+        }
+      },
+      "getManufacturerName": {
+        "isVisible": 0,
+        "name": "getManufacturerName",
+        "order": 18,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=0004"
+        }
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "order": 19,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=0005"
+        }
+      },
+      "getSWBuild": {
+        "isVisible": 0,
+        "name": "getSWBuild",
+        "order": 20,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "request": "clusterId=0000&attributeId=4000"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 21,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 22,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 23,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "name": "Power Source",
+        "order": 24,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower",
+        "display": {
+          "showNameOndashboard": "0"
+        }
+      },
+      "Identify": {
+        "isVisible": 0,
+        "name": "Identify",
+        "order": 25,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addr#/identifySend",
+          "request": "duration=0010"
+        }
+      },
+      "Group-Membership": {
+        "isVisible": 1,
+        "name": "Groups",
+        "order": 26,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 = Abeille
 
-(Version stable - 13/08/2018 ).
+(Version master ).
 
 == Abeille pour Jeedom (Gateway ZiGate)
 

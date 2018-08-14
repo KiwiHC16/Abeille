@@ -157,6 +157,9 @@ Association
 Device annonce
 Mais rien d'autre ne remonte, il faut interroger le nom pour créer l objet.
 
+==== 4x sur bouton arriere provoque Leave
+
+Si la telecommande est associée, 4x sur bouton OO provoque un leave.
 
 ==== Recuperer le group utilisé par une télécommande
 

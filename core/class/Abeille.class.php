@@ -59,10 +59,7 @@ class Abeille extends eqLogic
             log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
             
         }
-        
-        log::add('Abeille', 'debug', 'Ping Zigate to check Online status' );
-        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion",         "Version",           '0' );
-        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getNetworkStatus",   "getNetworkStatus",  '0' );
+
         
         log::add('Abeille', 'debug', 'Ping NE with 220V to check Online status' );
         $eqLogics = Abeille::byType('Abeille');
@@ -94,6 +91,11 @@ class Abeille extends eqLogic
     {
         // Cron tourne toutes les minutes
         log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        
+        
+        log::add('Abeille', 'debug', 'Ping Zigate to check Online status' );
+        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion",         "Version",           '0' );
+        Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getNetworkStatus",   "getNetworkStatus",  '0' );
         
         /**
          * Refresh health information

@@ -7,7 +7,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getVersion",
+      "topic": "getVersion",
       "request": "Version"
     },
     "display": {
@@ -22,7 +22,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/startNetwork",
+      "topic": "startNetwork",
       "request": "StartNetwork"
     }
   },
@@ -34,7 +34,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getNetworkStatus",
+      "topic": "getNetworkStatus",
       "request": "getNetworkStatus"
     },
     "display": {
@@ -49,7 +49,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/SetPermit",
+      "topic": "SetPermit",
       "request": "Inclusion"
     }
   },
@@ -61,7 +61,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/permitJoin",
+      "topic": "permitJoin",
       "request": "Status"
     },
     "display": {
@@ -89,7 +89,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/Leave",
+      "topic": "Leave",
       "request": "address=#title#&IEEE=#message#"
     },
     "display": {
@@ -106,7 +106,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/Remove",
+      "topic": "Remove",
       "request": "IEEE=#title#"
     },
     "display": {
@@ -123,7 +123,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/addGroup",
+      "topic": "addGroup",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -139,7 +139,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/removeGroup",
+      "topic": "removeGroup",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -156,7 +156,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getGroupMembership",
+      "topic": "getGroupMembership",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -173,7 +173,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/storeScene",
+      "topic": "storeScene",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -190,7 +190,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/recallScene",
+      "topic": "recallScene",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -207,7 +207,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/sceneGroupRecall",
+      "topic": "sceneGroupRecall",
       "request": "addressGroup=#title#&sceneID=#message#"
     },
     "display": {
@@ -224,7 +224,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/addScene",
+      "topic": "addScene",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -240,7 +240,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/removeScene",
+      "topic": "removeScene",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -257,7 +257,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/removeSceneAll",
+      "topic": "removeSceneAll",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -274,7 +274,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/viewScene",
+      "topic": "viewScene",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -291,7 +291,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getSceneMembership",
+      "topic": "getSceneMembership",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -308,7 +308,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/bind",
+      "topic": "bind",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -325,7 +325,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/bindShort",
+      "topic": "bindShort",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -342,7 +342,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/setReport",
+      "topic": "setReport",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -359,7 +359,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getName",
+      "topic": "getName",
       "request": "address=#title#&destinationEndPoint=#message#"
     },
     "display": {
@@ -376,7 +376,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/getLocation",
+      "topic": "getLocation",
       "request": "address=#title#&destinationEndPoint=#message#"
     },
     "display": {
@@ -393,7 +393,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/setLocation",
+      "topic": "setLocation",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -410,7 +410,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/ReadAttributeRequest",
+      "topic": "ReadAttributeRequest",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -427,7 +427,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/abeilleList",
+      "topic": "abeilleList",
       "request": "abeilleListAll"
     }
   },
@@ -539,7 +539,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/networkStatus",
+      "topic": "networkStatus",
       "request": "Request"
     }
   },
@@ -561,7 +561,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/ActiveEndPoint",
+      "topic": "ActiveEndPoint",
       "request": "address=#title#",
       "retain": "0"
     },
@@ -579,7 +579,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/SimpleDescriptorRequest",
+      "topic": "SimpleDescriptorRequest",
       "request": "address=#title#&endPoint=#message#",
       "retain": "0"
     },
@@ -597,7 +597,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/reset",
+      "topic": "reset",
       "request": "reset"
     },
     "display": {
@@ -612,7 +612,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/ErasePersistentData",
+      "topic": "ErasePersistentData",
       "request": "ErasePersistentData"
     },
     "display": {
@@ -627,7 +627,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/replaceEquipement",
+      "topic": "replaceEquipement",
       "request": "old=#title#&new=#message#"
     },
     "display": {
@@ -664,7 +664,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/IEEE_Address_request",
+      "topic": "IEEE_Address_request",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -681,7 +681,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/Network_Address_request",
+      "topic": "Network_Address_request",
       "request": "address=#title#&#message#"
     },
     "display": {
@@ -698,7 +698,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "CmdAbeille/Ruche/Management_LQI_request",
+      "topic": "Management_LQI_request",
       "request": "address=#title#&StartIndex=#message#"
     },
     "display": {

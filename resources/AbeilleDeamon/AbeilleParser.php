@@ -618,7 +618,7 @@
     function decode8009($mqtt, $payload, $ln, $qos)
     {
         
-        deamonlog('debug',';type: 8009: (Network State response (Firm v3.0d))(Processed->MQTT)');
+        deamonlog('debug',';type: 8009: (Network State response)(Processed->MQTT)');
         
         // <Short Address: uint16_t>
         // <Extended Address: uint64_t>

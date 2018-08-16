@@ -736,9 +736,9 @@ class Abeille extends eqLogic
 
     public static function logmq($code, $str)
     {
-        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-            log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
-        // }
+        
+           // log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+     
     }
 
     public static function checkShortFromIEEE( $lookForIEEE, $checkShort )
@@ -812,19 +812,27 @@ class Abeille extends eqLogic
             return ;
         }
         
-        // $topicArray = explode("/", $message->topic);
-
+        // Filter est le premier champ
+        $Filter = $topicArray[0];
+        
+        // $key = count($topicArray) - 1;
+        // unset($topicArray[$key]);
+        // $addr = end($topicArray);
+        $addr = $topicArray[1];
+        
         // cmdId est le dernier champ du topic
-        $cmdId = end($topicArray);
-        $key = count($topicArray) - 1;
-        unset($topicArray[$key]);
-        $addr = end($topicArray);
+        // $cmdId = end($topicArray);
+        $cmdId = $topicArray[2];
+        
         // nodeid est le topic sans le dernier champ
-        $nodeid = implode($topicArray, '/');
+        // $nodeid = implode($topicArray, '/');
+        $nodeid = $topicArray[0].'/'.$topicArray[1];
+        
         $value = $message->payload;
+        
         // type = topic car pas json
         $type = 'topic';
-        $Filter = $topicArray[0];
+
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

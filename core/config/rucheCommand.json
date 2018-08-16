@@ -1,7 +1,7 @@
 {
   "Version": {
     "name": "Version",
-    "order": 0,
+        "order": 0,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -16,7 +16,7 @@
   },
   "Start Network": {
     "name": "Start Network",
-    "order": 1,
+        "order": 1,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -28,7 +28,7 @@
   },
   "get Network Status": {
     "name": "get Network Status",
-    "order": 2,
+        "order": 2,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -43,7 +43,7 @@
   },
   "Inclusion": {
     "name": "Inclusion",
-    "order": 3,
+        "order": 3,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -55,7 +55,7 @@
   },
   "Inclusion Status": {
     "name": "Inclusion Status",
-    "order": 4,
+        "order": 4,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -70,7 +70,7 @@
   },
   "permitJoin-Status": {
     "name": "Permit Join Status",
-    "order": 5,
+        "order": 5,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -83,7 +83,7 @@
   },
   "Leave": {
     "name": "Leave",
-    "order": 6,
+        "order": 6,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -93,14 +93,31 @@
       "request": "address=#title#&IEEE=#message#"
     },
     "display": {
-      "forceReturnLineAfter": "1",
+      "forceReturnLineAfter": "0",
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "Adresse IEEE de l equipement"
     }
   },
+  "Remove": {
+    "name": "Remove",
+        "order": 7,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "CmdAbeille/Ruche/Remove",
+      "request": "IEEE=#title#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse IEEE de l equipement",
+      "message_placeholder": "na"
+    }
+  },
   "addGroup": {
     "name": "Add Group",
-    "order": 7,
+        "order": 8,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -116,7 +133,7 @@
   },
   "removeGroup": {
     "name": "Remove Group",
-    "order": 8,
+        "order": 9,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -133,7 +150,7 @@
   },
   "getGroupMemberShip": {
     "name": "getGroupMemberShip",
-    "order": 9,
+        "order": 10,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -150,7 +167,7 @@
   },
   "storeScene": {
     "name": "storeScene",
-    "order": 10,
+        "order": 11,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -167,7 +184,7 @@
   },
   "recallScene": {
     "name": "recallScene",
-    "order": 11,
+        "order": 12,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -184,7 +201,7 @@
   },
   "sceneGroupRecall": {
     "name": "sceneGroupRecall",
-    "order": 11,
+        "order": 13,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -201,7 +218,7 @@
   },
   "addScene": {
     "name": "Add Scene",
-    "order": 12,
+        "order": 14,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -217,7 +234,7 @@
   },
   "removeScene": {
     "name": "Remove Scene",
-    "order": 13,
+        "order": 15,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -234,7 +251,7 @@
   },
   "removeSceneAll": {
     "name": "Remove Scene All",
-    "order": 14,
+        "order": 16,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -251,7 +268,7 @@
   },
   "viewScene": {
     "name": "viewScene",
-    "order": 15,
+        "order": 17,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -268,7 +285,7 @@
   },
   "getSceneMemberShip": {
     "name": "getSceneMemberShip",
-    "order": 16,
+        "order": 18,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -285,7 +302,7 @@
   },
   "Bind": {
     "name": "Bind",
-    "order": 17,
+        "order": 19,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -302,7 +319,7 @@
   },
   "BindShort": {
     "name": "BindShort",
-    "order": 18,
+        "order": 20,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -319,7 +336,7 @@
   },
   "SetReport": {
     "name": "setReport",
-    "order": 19,
+        "order": 21,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -336,7 +353,7 @@
   },
   "getName": {
     "name": "Get Name",
-    "order": 20,
+        "order": 22,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -353,7 +370,7 @@
   },
   "getLocation": {
     "name": "Get Location",
-    "order": 21,
+        "order": 23,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -370,7 +387,7 @@
   },
   "setLocation": {
     "name": "Set Location",
-    "order": 22,
+        "order": 24,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -387,7 +404,7 @@
   },
   "ReadAttributeRequest": {
     "name": "Get Attribut",
-    "order": 23,
+        "order": 25,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -404,7 +421,7 @@
   },
   "AbeilleList": {
     "name": "Liste Equipements",
-    "order": 24,
+        "order": 26,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -416,7 +433,7 @@
   },
   "Time-Time": {
     "name": "Last",
-    "order": 25,
+        "order": 27,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -426,7 +443,7 @@
   },
   "Time-TimeStamp": {
     "name": "Last Stamps",
-    "order": 26,
+        "order": 28,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -436,7 +453,7 @@
   },
   "SW-Application": {
     "name": "SW",
-    "order": 27,
+        "order": 29,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -446,7 +463,7 @@
   },
   "SW-SDK": {
     "name": "SDK",
-    "order": 28,
+        "order": 30,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -456,7 +473,7 @@
   },
   "Network-Status": {
     "name": "Network Status",
-    "order": 29,
+        "order": 31,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -466,7 +483,7 @@
   },
   "Short-Addr": {
     "name": "Short Addr",
-    "order": 30,
+        "order": 32,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -476,7 +493,7 @@
   },
   "PAN-ID": {
     "name": "PAN ID",
-    "order": 31,
+        "order": 33,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -486,7 +503,7 @@
   },
   "Ext_PAN-ID": {
     "name": "Ext PAN ID",
-    "order": 32,
+        "order": 34,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -496,7 +513,7 @@
   },
   "IEEE-Addr": {
     "name": "IEEE Addr",
-    "order": 33,
+        "order": 35,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -506,7 +523,7 @@
   },
   "Network-Channel": {
     "name": "Network Channel",
-    "order": 34,
+        "order": 36,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -516,7 +533,7 @@
   },
   "Network Status Request": {
     "name": "Network Status Request (Not implemented)",
-    "order": 35,
+        "order": 37,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -528,7 +545,7 @@
   },
   "joinLeave-IEEE": {
     "name": "joinLeave",
-    "order": 36,
+        "order": 38,
     "isHistorized": "1",
     "isVisible": "1",
     "Type": "info",
@@ -538,7 +555,7 @@
   },
   "ActiveEndPoint": {
     "name": "ActiveEndPoint",
-    "order": 37,
+        "order": 39,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -556,7 +573,7 @@
   },
   "SimpleDescriptorRequest": {
     "name": "SimpleDescriptorRequest",
-    "order": 38,
+        "order": 40,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -574,7 +591,7 @@
   },
   "Reset": {
     "name": "Reset",
-    "order": 39,
+        "order": 41,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -589,7 +606,7 @@
   },
   "ErasePersistentData": {
     "name": "Erase Persistent Data",
-    "order": 40,
+        "order": 42,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -604,7 +621,7 @@
   },
   "replaceEquipement": {
     "name": "Replace Equipement",
-    "order": 41,
+        "order": 43,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -621,7 +638,7 @@
   },
   "Network-Bind": {
     "name": "Last Bind",
-    "order": 42,
+        "order": 44,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -631,7 +648,7 @@
   },
   "Network-Report": {
     "name": "Last Report",
-    "order": 43,
+        "order": 45,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -641,7 +658,7 @@
   },
   "IEEE_Address_request": {
     "name": "IEEE Address Request",
-    "order": 44,
+        "order": 46,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -658,7 +675,7 @@
   },
   "Network_Address_request": {
     "name": "Network Address Request",
-    "order": 45,
+        "order": 47,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -675,7 +692,7 @@
   },
   "LQI": {
     "name": "LQI",
-    "order": 46,
+        "order": 48,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

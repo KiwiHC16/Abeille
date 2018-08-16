@@ -1564,16 +1564,22 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
         
-        if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
+        // if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
+        // https://github.com/KiwiHC16/Abeille/issues/332
+        if ( isset($Command['Remove']) && isset($Command['IEEE']) )
         {
-            deamonlog('debug','Remove for: '.$Command['address']." - ".$Command['IEEE']);
+            // deamonlog('debug','Remove for: '.$Command['address']." - ".$Command['IEEE']);
+            deamonlog('debug','Remove for: '.$Command['IEEE']);
             $cmd = "0026";
-            //$lenth = "";
             
+            // Doc is probably not up to date, need to provide IEEE twice
+            // Tested and works in case of a NE in direct to coordinator
+            // To be tested if message is routed.
             // <target short address: uint16_t>
             // <extended address: uint64_t>
             
-            $address        = $Command['address'];
+            // $address        = $Command['address'];
+            $address        = $Command['IEEE'];
             $IEEE           = $Command['IEEE'];
             
             $data = $address . $IEEE ;

@@ -136,4 +136,18 @@ Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de d
 Leave
 
 
+== Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
 
+=== Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+=== getName
+
+Il repond au getName sur EP 01 s.
+
+=== Appui Tres Long (>8s) sur bouton de gauche
+
+Leave

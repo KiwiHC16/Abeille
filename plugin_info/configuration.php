@@ -131,6 +131,16 @@
             </div>
 
             <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Automatique: si  un changement d adresse courte est détecté, l objet jeedom sera mis à  jour. Manuel: Abeille ne fera rien sur changement d adresse courte d un équipement.">{{Mode de gestion des adresses courtes}}</label>
+                <div class="col-lg-4">
+                    <select style="width:auto" class="configKey form-control" data-l1key="adresseCourteMode">
+                        <option value="Automatique">{{Automatique}}</option>
+                        <option value="Manuel">{{Manuel}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Ce mode active l'affichage de toutes les commandes et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire.">{{Affichage mode dévelopeur}}</label>
                 <div class="col-lg-4">
                     <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">

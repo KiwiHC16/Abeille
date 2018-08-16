@@ -538,6 +538,7 @@ class Abeille extends eqLogic
             qos: ' . $parameters_info['AbeilleQos'] . ',
             showAllCommands: ' . $parameters_info['showAllCommands'] . ',
             ModeCreation: ' . $parameters_info['creationObjectMode'] . ',
+            adresseCourteMode: ' . $parameters_info['adresseCourteMode'] . ',
             onlyTimer: ' . $parameters_info['onlyTimer'] . ',
             IpWifiZigate : '. $parameters_info['IpWifiZigate']
         );
@@ -671,6 +672,7 @@ class Abeille extends eqLogic
         $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1');
         $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
         $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
+        $return['adresseCourteMode'] = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
         $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
         $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
         $return['IpWifiZigate'] = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
@@ -858,7 +860,7 @@ class Abeille extends eqLogic
         $objetConnu = 0;
 
 
-        // Je viens de revoir son nom donc je créé l objet.
+        // Je viens de recevoir son nom donc je créé l objet.
         if (   !is_object($elogic) && (preg_match ( "/^0000-[0-9A-F]*-*0005/", $cmdId ) || preg_match ( "/^0000-[0-9A-F]*-*0010/", $cmdId ) ) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
             
             log::add('Abeille', 'info', 'Recherche objet: ' . $value . ' dans les objets connus');
@@ -1125,6 +1127,13 @@ class Abeille extends eqLogic
                         if ( strlen($ShortFound) == 4 ) {
                             log::add('Abeille', 'debug', "Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
                             message::add("Abeille", "Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
+                            
+                            if ( config::byKey('adresseCourteMode', 'Abeille', 'Automatique') == "Automatique" ) {
+                            // $elogic->setLogicalId($nodeid);
+                            // $elogic->setName($name);
+                            // $elogic->setConfiguration('topic', $nodeid);
+                            // $elogic->save();
+                            }
                         }
                     }
                     

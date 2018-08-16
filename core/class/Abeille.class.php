@@ -958,11 +958,26 @@ class Abeille extends eqLogic
                 $cmdlogic->setLogicalId($cmd);
                 $cmdlogic->setOrder($cmdValueDefaut["order"]);
                 $cmdlogic->setName($cmdValueDefaut["name"]);
-
+                // value
+                
                 if ($cmdValueDefaut["Type"] == "info") {
-                    $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
+                    // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
+                    $cmdlogic->setConfiguration('topic', $cmd);
                 }
-
+                if ($cmdValueDefaut["Type"] == "action") {
+                    $cmdlogic->setConfiguration('retain', '0');
+                    
+                    if (isset($cmdValueDefaut["value"])) {
+                        // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
+                        log::add('Abeille', 'debug', 'Define cmd info pour cmd action: ' . $elogic->getName() . " - " . $cmdValueDefaut["value"]);
+                        
+                        $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $elogic->getName(), $cmdValueDefaut["value"]);
+                        $cmdlogic->setValue($cmdPointeur_Value->getId());
+                        
+                    }
+                    
+                }
+                
                 // La boucle est pour info et pour action
                 foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
@@ -1002,27 +1017,7 @@ class Abeille extends eqLogic
 
                 $cmdlogic->save();
 
-                // value
-                if ($cmdValueDefaut["Type"] == "action") {
-                    $cmdlogic->setConfiguration('retain', '0');
 
-                    if (isset($cmdValueDefaut["value"])) {
-                        // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                        log::add('Abeille', 'debug', 'Define cmd info pour cmd action: ' . $elogic->getName() . " - " . $cmdValueDefaut["value"]);
-
-                        $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $elogic->getName(), $cmdValueDefaut["value"]);
-                        $cmdlogic->setValue($cmdPointeur_Value->getId());
-
-                    }
-
-                } elseif ($cmdValueDefaut["Type"] == "info") {
-                    if (isset($cmdValueDefaut["value"])) {
-                        // Commanted as not sure what to do with this parameter in info cmd case.
-                        //        $cmdlogic->setConfiguration('value', $cmdValueDefaut["value"]);
-                    }
-                } else {
-                    log::add('Abeille', 'debug', 'Define cmd de type inconnu');
-                }
 
                 // html
                 // alert
@@ -1401,13 +1396,32 @@ class AbeilleCmd extends cmd
 {
     public function execute($_options = null)
     {
+        log::add('Abeille', 'Debug', 'excute function');
         switch ($this->getType()) {
             case 'action' :
-                // request c'est le payload dans la page de configuration
-                $request = $this->getConfiguration('request', '1');
-
+                //
                 /* ------------------------------ */
-                /* En cours de dev by KiwiHC16 pour bind */
+                // Topic est l arborescence MQTT: La fonction Zigate
+                
+                $Abeilles = new Abeille();
+                
+                $NE_Id = $this->getEqLogic_id();
+                $NE = $Abeilles->byId( $NE_Id );
+                
+                // ob_start();
+                // var_dump($NE);
+                // $result = ob_get_clean();
+                // log::add('Abeille', 'Debug', $result);
+                
+                $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+                
+                /* ------------------------------ */
+                // Je fais les remplacement dans les parametres
+                
+                // request: c'est le payload dans la page de configuration pour une commande
+                // C est les parametres de la commande pour la zigate
+                $request = $this->getConfiguration('request', '1');
+                
                 if (strpos($request, '#addrIEEE#') > 0) {
                     $ruche = new Abeille();
                     $commandIEEE = new AbeilleCmd();
@@ -1437,10 +1451,9 @@ class AbeilleCmd extends cmd
                     $request = str_replace('#addrIEEE#', $commandIEEE, $request);
                     $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
                 }
-                /* ------------------------------ */
-                // Topic est l arborescence MQTT
-                $topic = $this->getConfiguration('topic');
+                
 
+                
                 switch ($this->getSubType()) {
                     case 'slider':
                         $request = str_replace('#slider#', $_options['slider'], $request);

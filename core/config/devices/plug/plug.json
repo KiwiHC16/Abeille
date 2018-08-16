@@ -71,23 +71,6 @@
         "subType": "string",
         "template": "badge"
       },
-      "Off": {
-        "isVisible": 1,
-        "Type": "action",
-        "configuration": {
-          "request": "Off",
-          "topic": "CmdAbeille/#addr#/OnOff"
-        },
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Off",
-        "order": 6,
-        "subType": "other",
-        "template": "",
-        "display": {
-          "generic_type": "ENERGY_OFF"
-        }
-      },
       "On": {
         "isVisible": 1,
         "Type": "action",
@@ -98,45 +81,29 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "On",
-        "order": 7,
+        "order": 6,
         "subType": "other",
         "template": "",
         "display": {
           "generic_type": "ENERGY_ON"
         }
       },
-      "Power-Source": {
-        "isVisible": 0,
-        "Type": "info",
-        "display": {
-          "showNameOndashboard": "0"
+      "Off": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "Off",
+          "topic": "CmdAbeille/#addr#/OnOff"
         },
         "invertBinary": "0",
         "isHistorized": "0",
-        "name": "Power Source",
-        "order": 8,
-        "subType": "binary",
-        "template": "AbeillePower"
-      },
-      "Time-Time": {
-        "isVisible": 0,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Time-Time",
-        "order": 9,
-        "subType": "string",
-        "template": ""
-      },
-      "Time-TimeStamp": {
-        "isVisible": 0,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Time-TimeStamp",
-        "order": 10,
-        "subType": "numeric",
-        "template": "badge"
+        "name": "Off",
+        "order": 7,
+        "subType": "other",
+        "template": "",
+        "display": {
+          "generic_type": "ENERGY_OFF"
+        }
       },
       "Toggle": {
         "isVisible": 1,
@@ -151,9 +118,42 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Toggle",
-        "order": 11,
+        "order": 8,
         "subType": "other",
         "template": ""
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "Type": "info",
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Power Source",
+        "order": 9,
+        "subType": "binary",
+        "template": "AbeillePower"
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-Time",
+        "order": 10,
+        "subType": "string",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-TimeStamp",
+        "order": 11,
+        "subType": "numeric",
+        "template": "badge"
       },
       "getEtat": {
         "isVisible": 0,
@@ -195,7 +195,10 @@
         "name": "getModelIdentifier",
         "order": 14,
         "subType": "other",
-        "template": ""
+        "template": "",
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
       },
       "tbd---conso--": {
         "isVisible": 1,
@@ -249,7 +252,7 @@
       "0000-ff01": {
         "isVisible": 0,
         "name": "Specific",
-        "order": 5,
+        "order": 18,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",

@@ -137,7 +137,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "OnOff",
           "request": "On"
         }
       },
@@ -151,7 +151,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "OnOff",
           "request": "Off"
         }
       },
@@ -165,7 +165,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOff",
+          "topic": "OnOff",
           "request": "Toggle"
         },
         "display": {
@@ -183,7 +183,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelVolet",
+          "topic": "setLevelVolet",
           "request": "Level=#slider#&duration=01"
         }
       },
@@ -200,7 +200,7 @@
           "forceReturnLineAfter": "1"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelStop",
+          "topic": "setLevelStop",
           "request": "1"
         }
       },
@@ -214,7 +214,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0006&attributeId=0000"
         }
       },
@@ -228,7 +228,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0008&attributeId=0000"
         }
       },
@@ -242,7 +242,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
@@ -256,7 +256,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=0005"
         }
       },
@@ -270,7 +270,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=4000"
         }
       },
@@ -327,7 +327,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/identifySend",
+          "topic": "identifySend",
           "request": "duration=0010"
         }
       },

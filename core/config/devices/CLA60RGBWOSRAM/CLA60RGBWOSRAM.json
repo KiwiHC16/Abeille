@@ -103,7 +103,7 @@
           "generic_type": "LIGHT_ON"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "On"
         }
       },
@@ -120,7 +120,7 @@
           "generic_type": "LIGHT_OFF"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "Off"
         }
       },
@@ -134,7 +134,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "Toggle"
         },
         "display": {
@@ -153,7 +153,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelOSRAM",
+          "topic": "setLevelOSRAM",
           "request": "Level=#slider#&duration=FF"
         },
         "display": {
@@ -169,7 +169,7 @@
         "Type": "action",
         "subType": "message",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=#title#&Y=#message#"
         },
         "display": {
@@ -186,7 +186,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=6000&Y=6000"
         },
         "display": {
@@ -201,7 +201,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=228F&Y=228F"
         },
         "display": {
@@ -216,7 +216,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=AE13&Y=51EB"
         },
         "display": {
@@ -231,7 +231,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=147A&Y=D709"
         },
         "display": {
@@ -248,7 +248,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0006&attributeId=0000"
         }
       },
@@ -262,7 +262,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0008&attributeId=0000"
         }
       },
@@ -276,7 +276,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
@@ -290,7 +290,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0005"
         }
       },
@@ -304,7 +304,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=4000"
         }
       },
@@ -361,7 +361,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/identifySend",
+          "topic": "identifySend",
           "request": "duration=0010"
         },
         "display": {

@@ -106,7 +106,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0001&attributeId=0021"
         },
         "display": {

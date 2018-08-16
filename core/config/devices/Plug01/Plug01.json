@@ -82,7 +82,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "On"
         },
         "display": {
@@ -99,7 +99,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "Off"
         },
         "display": {
@@ -116,7 +116,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffOSRAM",
+          "topic": "OnOffOSRAM",
           "request": "Toggle"
         },
         "display": {
@@ -133,7 +133,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0006&attributeId=0000"
         },
         "display": {
@@ -150,7 +150,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
@@ -164,7 +164,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=0005"
         }
       },
@@ -178,7 +178,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestOSRAM",
+          "topic": "ReadAttributeRequestOSRAM",
           "request": "clusterId=0000&attributeId=4000"
         }
       },

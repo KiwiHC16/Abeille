@@ -102,7 +102,7 @@
           "generic_type": "LIGHT_ON"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "topic": "OnOffHue",
           "request": "On"
         }
       },
@@ -119,7 +119,7 @@
           "generic_type": "LIGHT_OFF"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "topic": "OnOffHue",
           "request": "Off"
         }
       },
@@ -133,7 +133,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/OnOffHue",
+          "topic": "OnOffHue",
           "request": "Toggle"
         },
         "display": {
@@ -156,7 +156,7 @@
           "generic_type": "LIGHT_SLIDER"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelHue",
+          "topic": "setLevelHue",
           "request": "Level=#slider#&duration=10"
         }
       },
@@ -173,7 +173,7 @@
           "forceReturnLineAfter": "1"
         },
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setLevelStopHue",
+          "topic": "setLevelStopHue",
           "request": "1"
         }
       },
@@ -187,7 +187,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "topic": "ReadAttributeRequestHue",
           "request": "clusterId=0006&attributeId=0000"
         }
       },
@@ -201,7 +201,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "topic": "ReadAttributeRequestHue",
           "request": "clusterId=0008&attributeId=0000"
         }
       },
@@ -215,7 +215,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "topic": "ReadAttributeRequestHue",
           "request": "clusterId=0000&attributeId=0004"
         }
       },
@@ -229,7 +229,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "topic": "ReadAttributeRequestHue",
           "request": "clusterId=0000&attributeId=0005"
         }
       },
@@ -243,7 +243,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequestHue",
+          "topic": "ReadAttributeRequestHue",
           "request": "clusterId=0000&attributeId=4000"
         }
       },
@@ -300,7 +300,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/identifySendHue",
+          "topic": "identifySendHue",
           "request": "duration=0010"
         }
       },
@@ -312,7 +312,7 @@
         "Type": "action",
         "subType": "message",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourHue",
+          "topic": "setColourHue",
           "request": "X=#title#&Y=#message#"
         }
       },
@@ -324,7 +324,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=6000&Y=6000"
         },
         "display": {
@@ -339,7 +339,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=228F&Y=228F"
         },
         "display": {
@@ -354,7 +354,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=AE13&Y=51EB"
         },
         "display": {
@@ -369,7 +369,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/setColourOSRAM",
+          "topic": "setColourOSRAM",
           "request": "X=147A&Y=D709"
         },
         "display": {

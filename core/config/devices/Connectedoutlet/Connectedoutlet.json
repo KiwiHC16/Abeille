@@ -88,7 +88,7 @@
         "Type": "action",
         "configuration": {
           "request": "Off",
-          "topic": "CmdAbeille/#addr#/OnOff"
+          "topic": "OnOff"
         },
         "invertBinary": "0",
         "isHistorized": "0",
@@ -105,7 +105,7 @@
         "Type": "action",
         "configuration": {
           "request": "On",
-          "topic": "CmdAbeille/#addr#/OnOff"
+          "topic": "OnOff"
         },
         "invertBinary": "0",
         "isHistorized": "0",
@@ -155,7 +155,7 @@
         "Type": "action",
         "configuration": {
           "request": "Toggle",
-          "topic": "CmdAbeille/#addr#/OnOff"
+          "topic": "OnOff"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -172,7 +172,7 @@
         "Type": "action",
         "configuration": {
           "request": "clusterId=0006&attributeId=0000",
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+          "topic": "ReadAttributeRequest"
         },
         "invertBinary": "0",
         "isHistorized": "0",
@@ -186,7 +186,7 @@
         "Type": "action",
         "configuration": {
           "request": "clusterId=0000&attributeId=0004",
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+          "topic": "ReadAttributeRequest"
         },
         "invertBinary": "0",
         "isHistorized": "0",
@@ -200,7 +200,7 @@
         "Type": "action",
         "configuration": {
           "request": "clusterId=0000&attributeId=0005",
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest"
+          "topic": "ReadAttributeRequest"
         },
         "invertBinary": "0",
         "isHistorized": "0",
@@ -219,7 +219,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/#addr#/ReadAttributeRequest",
+          "topic": "ReadAttributeRequest",
           "request": "clusterId=0000&attributeId=4000"
         }
       },

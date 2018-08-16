@@ -56,6 +56,11 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 === Configuration 
 
 * Verifier la configuration réseau et en particulier /hostname, /etc/hosts
+* Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l'objet de rattachement de l'équipement Ruche n'est pas défini.
+[source,]
+----
+[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+----
 
 === Connection avec la Zigate
 

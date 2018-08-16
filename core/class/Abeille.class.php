@@ -1413,8 +1413,15 @@ class AbeilleCmd extends cmd
                 // $result = ob_get_clean();
                 // log::add('Abeille', 'Debug', $result);
                 
-                $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+                // log::add('Abeille', 'Debug', $this->getConfiguration('topic') );
                 
+                if ( strpos( "_".$this->getConfiguration('topic'), "CmdAbeille" ) == 1 ) {
+                    $topic = $this->getConfiguration('topic');
+                }
+                else {
+                    $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+                }
+                    
                 /* ------------------------------ */
                 // Je fais les remplacement dans les parametres
                 

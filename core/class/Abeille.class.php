@@ -785,27 +785,20 @@ class Abeille extends eqLogic
     {
         // Return: Inclusion status or -1 if error
         $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
-        
-        // echo "VarDump ruche\n";
-        // var_dump( $ruche );
-        
-        
+      
         // echo "Join status collection\n";
         $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status' );
         if ( $cmdJoinStatus ) {
-            
             return $cmdJoinStatus->execCmd();
         }
         
-        
-        // log::add('Abeille', 'debug', 'BEN: function checkShortFromIEEE return -1');
         return -1;
     }
     
     public static function message($message)
     {
 
-        log::add('Abeille', 'debug', '--- process a new message -----------------------');
+        // log::add('Abeille', 'debug', '--- process a new message -----------------------');
         log::add('Abeille', 'debug', 'Message ->' . $message->payload . '<- sur ' . $message->topic);
         $parameters_info = self::getParameters();
         /*----------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -814,12 +807,12 @@ class Abeille extends eqLogic
         // [CmdAbeille:Abeille] / $addr / $cmdId => $value
         // $nodeId = [CmdAbeille:Abeille] / $addr
 
-        $test = explode('/', $message->topic);
-        if ( sizeof( $test ) !=3 ) {
+        $topicArray = explode("/", $message->topic);
+        if ( sizeof( $topicArray ) !=3 ) {
             return ;
         }
         
-        $topicArray = explode("/", $message->topic);
+        // $topicArray = explode("/", $message->topic);
 
         // cmdId est le dernier champ du topic
         $cmdId = end($topicArray);
@@ -858,7 +851,6 @@ class Abeille extends eqLogic
 
 
         // Je viens de revoir son nom donc je créé l objet.
-        // if (!is_object($elogic) && (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
         if (   !is_object($elogic) && (preg_match ( "/^0000-[0-9A-F]*-*0005/", $cmdId ) || preg_match ( "/^0000-[0-9A-F]*-*0010/", $cmdId ) ) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
             
             log::add('Abeille', 'info', 'Recherche objet: ' . $value . ' dans les objets connus');
@@ -1084,7 +1076,8 @@ class Abeille extends eqLogic
                 $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
                 $elogic->save();
 
-            } else {
+            }
+            else {
                 // Si l objet dans Jeedom n existe pas on va interroger l objet pour en savoir plus, s il repond on pourra le construire.
                 if (!is_object($elogic)) {
                     if (0) {
@@ -1122,7 +1115,7 @@ class Abeille extends eqLogic
                         unset($publish);
                     }
                     
-                    // Si le message est une annonce on recoit short address et IEEE.
+                    // Si le message est une annonce on recoit short address et IEEE alors que l'eq dans jeedom n'existe pas.
                     // Si je module c'est reconnecté avec une autre adresse, on ne doit pas trouver l objet dans Abeille par sa short address mais on doit trouver sa mac address
                     if ( $cmdId == "IEEE-Addr" ) {
                         $ShortFound = Abeille::checkShortFromIEEE( $value, $addr );
@@ -1241,30 +1234,6 @@ class Abeille extends eqLogic
             }
         }
 
-
-        /*
-         else {
-         // payload is json
-         $json = json_decode($value, true);
-         foreach ($json as $cmdId => $value) {
-         $topicjson = $nodeid . '{' . $cmdId . '}';
-         log::add('Abeille', 'info', 'Message json : ' . $value . ' pour information : ' . $cmdId);
-         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(),$cmdId);
-         if (!is_object($cmdlogic)) {
-         log::add('Abeille', 'info', 'Cmdlogic n existe pas, creation');
-         $cmdlogic = new AbeilleCmd();
-         $cmdlogic->setEqLogic_id($elogic->getId());
-         $cmdlogic->setEqType('Abeille');
-         $cmdlogic->setSubType('string');
-         $cmdlogic->setLogicalId($cmdId);
-         $cmdlogic->setType('info');
-         $cmdlogic->setName( $cmdId );
-         $cmdlogic->setConfiguration('topic', $topicjson);
-         $cmdlogic->save();
-         }
-         $elogic->checkAndUpdateCmd($cmdId,$value);
-         }
-         */
     }
 
 

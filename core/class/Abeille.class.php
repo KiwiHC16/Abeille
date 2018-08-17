@@ -74,9 +74,7 @@ class Abeille extends eqLogic
                     if ( $eqLogic->getConfiguration("protocol") == "LEGRAND" )  { Abeille::publishMosquitto( null, "CmdAbeille/" . $addr . "/Annonce", "Default",           '0' ); }
                     
                     sleep(5);
-                    
                 }
-                
             }
         }
         log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
@@ -915,7 +913,8 @@ class Abeille extends eqLogic
                 log::add(
                          'Abeille',
                          'info',
-                         'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
+                         // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
+                         'Creation de la commande: ' . $cmd . ' suivant model de l objet pour l objet: ' . $name
                          );
                 $cmdlogic = new AbeilleCmd();
                 // id
@@ -1306,8 +1305,9 @@ class Abeille extends eqLogic
             log::add(
                 'Abeille',
                 'info',
-                'Creation de la command: ' . $nodeid . '/' . $cmd . ' suivant model de l objet: ' . $nomObjet
-            );
+                // 'Creation de la command: ' . $nodeid . '/' . $cmd . ' suivant model de l objet: ' . $nomObjet
+               'Creation de la command: ' . $cmd . ' suivant model de l objet: ' . $nomObjet
+               );
             $cmdlogic = new AbeilleCmd();
             // id
             $cmdlogic->setEqLogic_id($elogic->getId());
@@ -1316,9 +1316,11 @@ class Abeille extends eqLogic
             $cmdlogic->setOrder($cmdValueDefaut["order"]);
             $cmdlogic->setName($cmdValueDefaut["name"]);
             if ($cmdValueDefaut["Type"] == "action") {
-                $cmdlogic->setConfiguration('topic', 'Cmd' . $nodeid . '/' . $cmd);
+                // $cmdlogic->setConfiguration('topic', 'Cmd' . $nodeid . '/' . $cmd);
+                $cmdlogic->setConfiguration('topic', $cmd);
             } else {
-                $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
+                // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
+                $cmdlogic->setConfiguration('topic', $cmd);
             }
             if ($cmdValueDefaut["Type"] == "action") {
                 $cmdlogic->setConfiguration('retain', '0');
@@ -1354,7 +1356,7 @@ class AbeilleCmd extends cmd
 {
     public function execute($_options = null)
     {
-        log::add('Abeille', 'Debug', 'excute function');
+        // log::add('Abeille', 'Debug', 'execute function');
         switch ($this->getType()) {
             case 'action' :
                 //
@@ -1373,11 +1375,16 @@ class AbeilleCmd extends cmd
                 
                 // log::add('Abeille', 'Debug', $this->getConfiguration('topic') );
                 
-                if ( strpos( "_".$this->getConfiguration('topic'), "CmdAbeille" ) == 1 ) {
+                if ( strpos( "_".$this->getConfiguration('topic'), "Abeille" ) == 1 ) {
+                    $topic = $this->getConfiguration('topic');
+                }
+                else if (strpos( "_".$this->getConfiguration('topic'), "CmdTimer" ) == 1 ) {
                     $topic = $this->getConfiguration('topic');
                 }
                 else {
                     $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+                    // $topic = $this->getConfiguration('topic');
+
                 }
                     
                 /* ------------------------------ */

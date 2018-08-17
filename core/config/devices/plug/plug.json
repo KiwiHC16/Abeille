@@ -18,13 +18,23 @@
         "subType": "string",
         "template": ""
       },
+      "0000-0004": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Manufacturer",
+        "order": 1,
+        "subType": "string",
+        "template": ""
+      },
       "0000-0005": {
         "isVisible": 0,
         "Type": "info",
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "nom",
-        "order": 1,
+        "order": 2,
         "subType": "string",
         "template": ""
       },
@@ -34,7 +44,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "etat",
-        "order": 2,
+        "order": 3,
         "subType": "binary",
         "template": "prise",
         "display": {
@@ -47,7 +57,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "IEEE-Addr",
-        "order": 3,
+        "order": 4,
         "subType": "string",
         "template": "badge"
       },
@@ -57,7 +67,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Short-Addr",
-        "order": 4,
+        "order": 5,
         "subType": "string",
         "template": "badge"
       },
@@ -67,7 +77,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Link Quality",
-        "order": 5,
+        "order": 6,
         "subType": "string",
         "template": "badge"
       },
@@ -81,7 +91,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "On",
-        "order": 6,
+        "order": 7,
         "subType": "other",
         "template": "",
         "display": {
@@ -98,7 +108,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Off",
-        "order": 7,
+        "order": 8,
         "subType": "other",
         "template": "",
         "display": {
@@ -118,7 +128,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Toggle",
-        "order": 8,
+        "order": 9,
         "subType": "other",
         "template": ""
       },
@@ -131,7 +141,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Power Source",
-        "order": 9,
+        "order": 10,
         "subType": "binary",
         "template": "AbeillePower"
       },
@@ -141,7 +151,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-Time",
-        "order": 10,
+        "order": 11,
         "subType": "string",
         "template": ""
       },
@@ -151,7 +161,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "Time-TimeStamp",
-        "order": 11,
+        "order": 12,
         "subType": "numeric",
         "template": "badge"
       },
@@ -165,7 +175,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getEtat",
-        "order": 12,
+        "order": 13,
         "subType": "other",
         "template": ""
       },
@@ -179,7 +189,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getManufacturerName",
-        "order": 13,
+        "order": 14,
         "subType": "other",
         "template": ""
       },
@@ -193,7 +203,7 @@
         "invertBinary": "0",
         "isHistorized": "0",
         "name": "getModelIdentifier",
-        "order": 14,
+        "order": 15,
         "subType": "other",
         "template": "",
         "display": {
@@ -209,7 +219,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Conso",
-        "order": 15,
+        "order": 16,
         "subType": "numeric",
         "template": "badge"
       },
@@ -228,14 +238,14 @@
         "isHistorized": "1",
         "name": "Puissance",
         "units": "W",
-        "order": 16,
+        "order": 17,
         "subType": "numeric",
         "template": "badge"
       },
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 17,
+        "order": 18,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
@@ -252,7 +262,7 @@
       "0000-ff01": {
         "isVisible": 0,
         "name": "Specific",
-        "order": 18,
+        "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",

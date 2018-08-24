@@ -310,6 +310,7 @@ class Abeille extends eqLogic
     public static function deamon_start_cleanup($message = null) {
         // This function is used to run some cleanup before the demon start, or update the database du to data change needed.
         $debug = 0;
+        $restartNeeded = 0;
         
         log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire' );
         
@@ -329,12 +330,16 @@ class Abeille extends eqLogic
             }
             // $rowArray = json_decode($row->configuration);
             $rowArray = json_decode( $row['configuration'] );
-            if ( $debug ) { echo "rowArray: \n"; var_dump( $rowArray ); }
-            // echo $rowArray->topic." => ";
+            if ( $debug ) { echo "rowArray: \n"; var_dump( $rowArray );
+                
+                echo "Position: ".strpos("_".$rowArray->topic,"Abeille/")."\n";
+                
+                if ( $row['type'] == "info" ) { echo "test1: ok\n"; }
+                if (strpos("_".$rowArray->topic,"Abeille/")==1) { echo "test2: ok\n"; }
+            }
             
-            if ( ($row->type == 'Info') && (strpos("_".$rowArray->topic,"Abeille/")==1) ) {
+            if ( ($row['type'] == 'info') && (strpos("_".$rowArray->topic,"Abeille/")==1) ) {
                 $rowArray->topic = str_replace("Abeille/", "", $rowArray->topic );
-                // echo $rowArray->topic." => ";
                 $position = strpos($rowArray->topic,"/");
                 if ( $position > 1 ) {
                     $rowArray->topic = substr( $rowArray->topic, $position-strlen($rowArray->topic)+1 );
@@ -342,11 +347,12 @@ class Abeille extends eqLogic
                 $sqlRequest = 1;
             }
             
-            if ($row->type == 'action') {
+            if ($row['type'] == 'action') {
                 if (strpos($rowArray->topic,"Ruche") > 1) {
                     // Je ne change pas
                 }
                 elseif (strpos($rowArray->topic,"Group") > 1) {
+                    // Je ne change pas
                 }
                 else {
                     if (strpos("_".$rowArray->topic,"CmdAbeille/")==1) {
@@ -355,7 +361,7 @@ class Abeille extends eqLogic
                         if ( $position > 1 ) {
                             $rowArray->topic = substr( $rowArray->topic, $position-strlen($rowArray->topic)+1 );
                         }
-                    $sqlRequest = 1;
+                        $sqlRequest = 1;
                     }
                 }
             }
@@ -363,9 +369,10 @@ class Abeille extends eqLogic
             // var_dump( $rowArray );
             
             if ( $sqlRequest==1 ) {
+                $restartNeeded = 1;
                 $sql = "update cmd set logicalId='".$rowArray->topic."', configuration='".json_encode($rowArray)."' where id='".$row['id']."'";
                 log::add('Abeille', 'debug', 'deamon_start_cleanup: '.$sql );
-                if ( $debug ) { echo $sql."\n"; }
+                if ( 1 ) { echo $sql."\n"; }
                 // $rows = $db->fetchAll($sql);
             }
         }
@@ -378,6 +385,11 @@ class Abeille extends eqLogic
         //
         //
        log::add('Abeille', 'debug', 'deamon_start_cleanup: Fin des modifications si nécessaire' );
+        
+        if (restartNeeded == 1 ) {
+            // afficher un message utilisateur pour qu il reboot le bousain.
+            message::add("Abeille", "La base de données a ete mise a jour suite a la mise a jour, il faut faire un restart de jeedom.");
+        }
         
         return;
     }

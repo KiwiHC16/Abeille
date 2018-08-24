@@ -330,8 +330,8 @@ class Abeille extends eqLogic
             }
             // $rowArray = json_decode($row->configuration);
             $rowArray = json_decode( $row['configuration'] );
-            if ( $debug ) { echo "rowArray: \n"; var_dump( $rowArray );
-                
+            if ( $debug ) {
+                echo "rowArray: \n"; var_dump( $rowArray );
                 echo "Position: ".strpos("_".$rowArray->topic,"Abeille/")."\n";
                 
                 if ( $row['type'] == "info" ) { echo "test1: ok\n"; }
@@ -372,7 +372,7 @@ class Abeille extends eqLogic
                 $restartNeeded = 1;
                 $sql = "update cmd set logicalId='".$rowArray->topic."', configuration='".json_encode($rowArray)."' where id='".$row['id']."'";
                 log::add('Abeille', 'debug', 'deamon_start_cleanup: '.$sql );
-                if ( 1 ) { echo $sql."\n"; }
+                if ( $debug ) { echo $sql."\n"; }
                 // $rows = $db->fetchAll($sql);
                 $rows = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
             }

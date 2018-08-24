@@ -374,6 +374,7 @@ class Abeille extends eqLogic
                 log::add('Abeille', 'debug', 'deamon_start_cleanup: '.$sql );
                 if ( 1 ) { echo $sql."\n"; }
                 // $rows = $db->fetchAll($sql);
+                $rows = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
             }
         }
         

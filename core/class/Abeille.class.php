@@ -1467,7 +1467,7 @@ class AbeilleCmd extends cmd
                 
                 // log::add('Abeille', 'Debug', $this->getConfiguration('topic') );
                 
-                if ( strpos( "_".$this->getConfiguration('topic'), "Abeille" ) == 1 ) {
+                if ( strpos( "_".$this->getConfiguration('topic'), "CmdAbeille" ) == 1 ) {
                     $topic = $this->getConfiguration('topic');
                 }
                 else if (strpos( "_".$this->getConfiguration('topic'), "CmdTimer" ) == 1 ) {

@@ -306,7 +306,82 @@ class Abeille extends eqLogic
 
         return $return;
     }
+    
+    public static function deamon_start_cleanup($message = null) {
+        // This function is used to run some cleanup before the demon start, or update the database du to data change needed.
+        $debug = 0;
+        
+        log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire' );
+        
+        // ******************************************************************************************************************
+        // Suite à la modification permettant de mettre a jour les objets sur changement de short address, il faut modifier les configuraitons des commandes en base de données.
+        log::add('Abeille', 'debug', 'deamon_start_cleanup: mise a niveau pour la modification necessaire a la gestion des changements d adresse courte' );
+        
+        $sql = "SELECT id, logicalId, type, configuration FROM `cmd` WHERE `eqType` = 'Abeille' AND `configuration` LIKE '%topic%'";
+        $rows = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
+        
+        foreach ($rows as $key => $row) {
+            $sqlRequest = 0;
+            if ( $debug ) {
+                echo "-------------------------------\n";
+                echo "row: \n"; var_dump(  $row );
+                echo "row id: ".$row['id']."\n";
+            }
+            // $rowArray = json_decode($row->configuration);
+            $rowArray = json_decode( $row['configuration'] );
+            if ( $debug ) { echo "rowArray: \n"; var_dump( $rowArray ); }
+            // echo $rowArray->topic." => ";
+            
+            if ( ($row->type == 'Info') && (strpos("_".$rowArray->topic,"Abeille/")==1) ) {
+                $rowArray->topic = str_replace("Abeille/", "", $rowArray->topic );
+                // echo $rowArray->topic." => ";
+                $position = strpos($rowArray->topic,"/");
+                if ( $position > 1 ) {
+                    $rowArray->topic = substr( $rowArray->topic, $position-strlen($rowArray->topic)+1 );
+                }
+                $sqlRequest = 1;
+            }
+            
+            if ($row->type == 'action') {
+                if (strpos($rowArray->topic,"Ruche") > 1) {
+                    // Je ne change pas
+                }
+                elseif (strpos($rowArray->topic,"Group") > 1) {
+                }
+                else {
+                    if (strpos("_".$rowArray->topic,"CmdAbeille/")==1) {
+                        $rowArray->topic = str_replace("CmdAbeille/", "", $rowArray->topic );
+                        $position = strpos($rowArray->topic,"/");
+                        if ( $position > 1 ) {
+                            $rowArray->topic = substr( $rowArray->topic, $position-strlen($rowArray->topic)+1 );
+                        }
+                    $sqlRequest = 1;
+                    }
+                }
+            }
+            // echo $rowArray->topic."\n";
+            // var_dump( $rowArray );
+            
+            if ( $sqlRequest==1 ) {
+                $sql = "update cmd set logicalId='".$rowArray->topic."', configuration='".json_encode($rowArray)."' where id='".$row['id']."'";
+                log::add('Abeille', 'debug', 'deamon_start_cleanup: '.$sql );
+                if ( $debug ) { echo $sql."\n"; }
+                // $rows = $db->fetchAll($sql);
+            }
+        }
+        
 
+        
+        // ******************************************************************************************************************
+        // Espace pour les prochaines mise a niveau
+        //
+        //
+        //
+       log::add('Abeille', 'debug', 'deamon_start_cleanup: Fin des modifications si nécessaire' );
+        
+        return;
+    }
+    
     public static function deamon_start($_debug = false) {
         log::add('Abeille', 'debug', 'deamon_start: IN');
 
@@ -329,6 +404,10 @@ class Abeille extends eqLogic
         }
         $cron->run();
 
+        sleep(3);
+        
+        self::deamon_start_cleanup();
+        
         sleep(3);
 
         $_subject = "CmdRuche/Ruche/CreateRuche";
@@ -739,7 +818,7 @@ class Abeille extends eqLogic
                     if ( $cmdShort ) {
                         if ( $cmdShort->execCmd() == $checkShort ) {
                             // echo "Success ";
-                            log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return 0');
+                            // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return 0');
                             return 0;
                         }
                         else {
@@ -747,7 +826,7 @@ class Abeille extends eqLogic
                             // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
                             // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
                             // return $cmdShort->execCmd();
-                            log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
+                            // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
                             return substr($abeille->getlogicalId(),-4);
                         }
                         return $return;
@@ -755,7 +834,7 @@ class Abeille extends eqLogic
                 }
             }
         }
-        log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return -1');
+        // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return -1');
         return -1;
     }
 
@@ -1646,9 +1725,14 @@ if ($debugBEN != 0) {
 
             break;
             
+        case "8":
+            echo "Check cleanup\n";
+            Abeille::deamon_start_cleanup();
+            break;
+            
     } // switch
 
-    echo "\nFin\n";
+    echo "Fin\n";
 }
     
     

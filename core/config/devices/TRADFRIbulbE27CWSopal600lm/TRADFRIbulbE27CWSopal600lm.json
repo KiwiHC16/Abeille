@@ -67,12 +67,38 @@
           "maxValue": "100",
           "historizeRound": "0",
           "calculValueOffset": "#value#/255*100"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "0300-0003": {
+        "isVisible": 1,
+        "name": "colorX",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "template": "badge",
+        "units": ""
+      },
+      "0300-0004": {
+        "isVisible": 1,
+        "name": "colorY",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "template": "badge",
+        "units": "",
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 5,
+        "order": 7,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -82,7 +108,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 8,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -92,7 +118,7 @@
       "On": {
         "isVisible": 1,
         "name": "On",
-        "order": 7,
+        "order": 9,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -109,7 +135,7 @@
       "Off": {
         "isVisible": 1,
         "name": "Off",
-        "order": 8,
+        "order": 10,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -126,7 +152,7 @@
       "Toggle": {
         "isVisible": 1,
         "name": "Toggle",
-        "order": 9,
+        "order": 11,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -144,7 +170,7 @@
       "Level": {
         "isVisible": 1,
         "name": "setLevel",
-        "order": 10,
+        "order": 12,
         "isHistorized": "0",
         "Type": "action",
         "subType": "slider",
@@ -163,7 +189,7 @@
       "Colour": {
         "isVisible": 1,
         "name": "Colour",
-        "order": 11,
+        "order": 13,
         "isHistorized": "0",
         "Type": "action",
         "subType": "message",
@@ -179,7 +205,7 @@
       },
       "Blanc": {
         "name": "Blanc",
-        "order": 12,
+        "order": 14,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -194,7 +220,7 @@
       },
       "Bleu": {
         "name": "Bleu",
-        "order": 13,
+        "order": 15,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -209,7 +235,7 @@
       },
       "Rouge": {
         "name": "Rouge",
-        "order": 14,
+        "order": 16,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -224,7 +250,7 @@
       },
       "Vert": {
         "name": "Vert",
-        "order": 15,
+        "order": 17,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -237,10 +263,41 @@
           "forceReturnLineAfter": "1"
         }
       },
+      "getColorX": {
+        "isVisible": 0,
+        "name": "getColorX",
+        "order": 18,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequest",
+          "request": "clusterId=0300&attributeId=0003"
+        }
+      },
+      "getColorY": {
+        "isVisible": 0,
+        "name": "getColorY",
+        "order": 19,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequest",
+          "request": "clusterId=0300&attributeId=0004"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "order": 16,
+        "order": 20,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -254,7 +311,7 @@
       "getLevel": {
         "isVisible": 0,
         "name": "getLevel",
-        "order": 17,
+        "order": 21,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -271,7 +328,7 @@
       "getManufacturerName": {
         "isVisible": 0,
         "name": "getManufacturerName",
-        "order": 18,
+        "order": 22,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -285,7 +342,7 @@
       "getModelIdentifier": {
         "isVisible": 0,
         "name": "getModelIdentifier",
-        "order": 19,
+        "order": 23,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -299,7 +356,7 @@
       "getSWBuild": {
         "isVisible": 0,
         "name": "getSWBuild",
-        "order": 20,
+        "order": 24,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -313,7 +370,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 21,
+        "order": 25,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -323,7 +380,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 22,
+        "order": 26,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -333,7 +390,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 23,
+        "order": 27,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -343,7 +400,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 24,
+        "order": 28,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -356,7 +413,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 25,
+        "order": 29,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
@@ -366,7 +423,7 @@
       "Identify": {
         "isVisible": 0,
         "name": "Identify",
-        "order": 26,
+        "order": 30,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -383,7 +440,7 @@
       "Group-Membership": {
         "isVisible": 1,
         "name": "Groups",
-        "order": 27,
+        "order": 31,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -396,7 +453,7 @@
       "BindToZigateEtat": {
         "isVisible": 1,
         "name": "BindToZigateEtat",
-        "order": 28,
+        "order": 32,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -410,7 +467,7 @@
       "BindShortToZigateEtat": {
         "isVisible": 1,
         "name": "BindShortToZigateEtat",
-        "order": 29,
+        "order": 33,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -427,7 +484,7 @@
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 30,
+        "order": 34,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -441,7 +498,7 @@
       "BindShortToZigateLevel": {
         "isVisible": 1,
         "name": "BindShortToZigateLevel",
-        "order": 31,
+        "order": 35,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -458,7 +515,7 @@
       "setReportEtat": {
         "isVisible": 1,
         "name": "setReportEtat",
-        "order": 32,
+        "order": 36,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -472,7 +529,7 @@
       "setReportLevel": {
         "isVisible": 1,
         "name": "setReportLevel",
-        "order": 33,
+        "order": 37,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -489,7 +546,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 34,
+        "order": 38,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

@@ -48,58 +48,6 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0006-02-0000": {
-        "isVisible": 1,
-        "name": "etat charge 1",
-        "order": 4,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
-      },
-      "0006-03-0000": {
-        "isVisible": 1,
-        "name": "etat charge 2",
-        "order": 5,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
-      },
-      "0006-04-0000": {
-        "isVisible": 1,
-        "name": "etat switch 1",
-        "order": 6,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
-      },
-      "0006-05-0000": {
-        "isVisible": 1,
-        "name": "etat switch 2",
-        "order": 7,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
-      },
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
@@ -120,9 +68,9 @@
         "invertBinary": "0",
         "template": "badge"
       },
-      "On1": {
+      "On": {
         "isVisible": 1,
-        "name": "On1",
+        "name": "On",
         "order": 10,
         "isHistorized": "0",
         "Type": "action",
@@ -133,13 +81,13 @@
           "generic_type": "LIGHT_ON"
         },
         "configuration": {
-          "topic": "OnOff2",
+          "topic": "OnOff",
           "request": "On"
         }
       },
-      "Off1": {
+      "Off": {
         "isVisible": 1,
-        "name": "Off1",
+        "name": "Off",
         "order": 11,
         "isHistorized": "0",
         "Type": "action",
@@ -150,13 +98,13 @@
           "generic_type": "LIGHT_OFF"
         },
         "configuration": {
-          "topic": "OnOff2",
+          "topic": "OnOff",
           "request": "Off"
         }
       },
-      "Toggle1": {
+      "Toggle": {
         "isVisible": 1,
-        "name": "Toggle1",
+        "name": "Toggle",
         "order": 12,
         "isHistorized": "0",
         "Type": "action",
@@ -164,59 +112,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "OnOff2",
-          "request": "Toggle"
-        },
-        "display": {
-          "generic_type": "LIGHT_TOGGLE",
-          "forceReturnLineAfter": "1"
-        }
-      },
-      "On2": {
-        "isVisible": 1,
-        "name": "On2",
-        "order": 13,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
-        "configuration": {
-          "topic": "OnOff3",
-          "request": "On"
-        }
-      },
-      "Off2": {
-        "isVisible": 1,
-        "name": "Off2",
-        "order": 14,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "display": {
-          "generic_type": "LIGHT_OFF"
-        },
-        "configuration": {
-          "topic": "OnOff3",
-          "request": "Off"
-        }
-      },
-      "Toggle2": {
-        "isVisible": 1,
-        "name": "Toggle2",
-        "order": 15,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "OnOff3",
+          "topic": "OnOff",
           "request": "Toggle"
         },
         "display": {

@@ -1801,7 +1801,16 @@
             // Xiaomi Presence Infrarouge
             elseif (($AttributId == "ff02")) {
                 // Non decodé a ce stade
-                deamonlog("debug", "Champ 0xFF02 non decode a ce stade");
+                // deamonlog("debug", "Champ 0xFF02 non decode a ce stade");
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations" );
+                
+                $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
+                
+                deamonlog('debug', 'Voltage: '      .$voltage);
+                
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.1-($voltage/1000))/(3.1-2.8))*100)),$qos);
+                
             } else {
                 $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur.
             }

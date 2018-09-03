@@ -26,6 +26,7 @@ $eqLogics = Abeille::byType('Abeille');
 		<tr>
 			<th>{{Module}}</th>
 			<th>{{ID}}</th>
+            <th>{{Address}}</th>
 			<th>{{Statut}}</th>
 			<th>{{Dernière communication}}</th>
             <th>{{Depuis (h)}}</th>
@@ -41,6 +42,9 @@ foreach ($eqLogics as $eqLogic) {
 	
     // ID
     echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
+    
+    // Short Address
+    echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getLogicalId() . '</span></td>';
     
     // Status
     // Status Ok par defaut, apres on test et on met le status à la valeur voulue

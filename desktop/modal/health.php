@@ -65,7 +65,7 @@ foreach ($eqLogics as $eqLogic) {
     echo '<td>' . $lastComm . '</td>';
     
     // Depuis
-    $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">' . (round((time()-strtotime($eqLogic->getStatus('lastCommunication')))/3600)) . '</span>';
+    $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">' . (floor((time()-strtotime($eqLogic->getStatus('lastCommunication')))/3600)) . '</span>';
     if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">-</span>'; }
     echo '<td>' . $Depuis . '</td>';
     

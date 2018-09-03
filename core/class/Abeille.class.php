@@ -41,6 +41,17 @@ class Abeille extends eqLogic
         return $return;
     }
 
+    public static function cronDaily() {
+        log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
+        /**
+         * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
+         */
+        log::add('Abeille', 'debug', 'Launching AbeilleLQI.php' );
+        $cmd = "cd /var/www/html/plugins/Abeille/Network/; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
+        log::add('Abeille', 'debug', $cmd );
+        exec( $cmd );
+    }
+    
     public static function cron15() {
         log::add('Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------');
         /**

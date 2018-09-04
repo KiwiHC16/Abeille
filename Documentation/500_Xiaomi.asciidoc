@@ -46,11 +46,19 @@ Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
 
 === Fonctionnement
 
+==== Etat
+
 Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
 
 Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
 
+==== Multi
+
+Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par defaut l'objet créé demande à jeedom de faire un retour d'état à 0 apres une minute. Cela peut être enlevé dans les parametres de la commande.
+
 === Scenario
+
+==== Etat
 
 Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
 
@@ -64,8 +72,10 @@ image::images/Capture_d_ecran_2018_09_04_a_13_05_49.png[]
 
 image::images/Capture_d_ecran_2018_09_04_a_13_05_.36.png[]
 
+==== Multi
 
-
+Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple. 
+Par defaut, en gros, le scenario se declenche et si vous testez la valeur multi > 1, c'est un evenement appui multiple et si valeur à 0 alors evenement jeedom de retour d etat.
 
 == Capteur Inondation (lumi.sensor_wleak.aq1)
 

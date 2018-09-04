@@ -8,7 +8,6 @@
 
 Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
-lumi.sensor_switch.aq2
 === Si deja associé
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
@@ -24,6 +23,20 @@ Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automati
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
 
+== Bouton Rond (lumi.sensor_switch)
+
+=== Appui court (<1s) sur bouton arriere avec trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis son nom lumi.sensor_switch
+
+=== Fonctionnement
+
+Ce bouton envoie un message lors de l'appui mais aussi lors du relachement. L'état dans Abeille/Jeedom reflete l'état du bouton.
+
+=== Scenario
+
+Sur reception d'un changement l'état, un scénario peut être lancé et la valeur de l'état peut être testée lors du déroulement du scénario.
 
 == Bouton Carre (lumi.sensor_switch.aq2)
 
@@ -31,12 +44,27 @@ Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automat
 
 Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
 
-== Bouton Rond (lumi.sensor_switch)
+=== Fonctionnement
 
-=== Appui court (<1s) sur bouton arriere avec trombone
+Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
 
-Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
-Puis son nom lumi.sensor_switch
+Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
+
+=== Scenario
+
+Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
+
+Par défaut le bouton est configuré pour déclencher les scenariis à chaque appui (même si l'etat était déjà à 1). Mais Jeedom va aussi provoquer un evenement au bout d'une minute en passant la valeur à 0. 
+
+Lors de l'execution du scenario, si vous testé l'état du bouton est qu'il est à un vous avez recu un evenement appui bouton, si l'état est 0, vous avez recu un evenement retour à zero apres une minute. 
+
+Par exemple pour commander une ampoule Ikea:
+
+image::images/Capture_d_ecran_2018_09_04_a_13_05_49.png[]
+
+image::images/Capture_d_ecran_2018_09_04_a_13_05_.36.png[]
+
+
 
 
 == Capteur Inondation (lumi.sensor_wleak.aq1)

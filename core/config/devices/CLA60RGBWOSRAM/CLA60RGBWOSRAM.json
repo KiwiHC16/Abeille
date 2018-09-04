@@ -47,11 +47,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "template": "light"
       },
       "0008-03-0000": {
         "isVisible": 1,
@@ -97,11 +95,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "On"
@@ -114,11 +110,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_OFF"
-        },
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "Off"
@@ -131,6 +125,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -138,8 +133,7 @@
           "request": "Toggle"
         },
         "display": {
-          "forceReturnLineAfter": "1",
-          "generic_type": "LIGHT_TOGGLE"
+          "forceReturnLineAfter": "1"
         }
       },
       "Level": {
@@ -149,6 +143,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "slider",
+        "generic_type": "LIGHT_SLIDER",
         "value": "Level",
         "invertBinary": "0",
         "template": "",
@@ -157,8 +152,7 @@
           "request": "Level=#slider#&duration=FF"
         },
         "display": {
-          "forceReturnLineAfter": "1",
-          "generic_type": "LIGHT_SLIDER"
+          "forceReturnLineAfter": "1"
         }
       },
       "Colour": {
@@ -444,11 +438,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

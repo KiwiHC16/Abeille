@@ -48,10 +48,8 @@
         "name": "etat",
         "order": 3,
         "subType": "binary",
-        "template": "prise",
-        "display": {
-          "generic_type": "ENERGY_STATE"
-        }
+        "generic_type": "ENERGY_STATE",
+        "template": "prise"
       },
       "IEEE-Addr": {
         "isVisible": 0,
@@ -95,10 +93,8 @@
         "name": "Off",
         "order": 7,
         "subType": "other",
-        "template": "",
-        "display": {
-          "generic_type": "ENERGY_OFF"
-        }
+        "generic_type": "ENERGY_OFF",
+        "template": ""
       },
       "On": {
         "isVisible": 1,
@@ -112,10 +108,8 @@
         "name": "On",
         "order": 8,
         "subType": "other",
-        "template": "",
-        "display": {
-          "generic_type": "ENERGY_ON"
-        }
+        "generic_type": "ENERGY_ON",
+        "template": ""
       },
       "Power-Source": {
         "isVisible": 0,
@@ -237,9 +231,6 @@
         "template": "badge"
       },
       "tbd---puissance--": {
-        "display": {
-          "generic_type": "POWER"
-        },
         "isVisible": 1,
         "Type": "info",
         "configuration": {
@@ -253,6 +244,7 @@
         "units": "W",
         "order": 18,
         "subType": "numeric",
+        "generic_type": "POWER",
         "template": "badge"
       },
       "Group-Membership": {

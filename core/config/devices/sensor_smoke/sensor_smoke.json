@@ -31,15 +31,13 @@
         "template": ""
       },
       "0500-0000": {
-        "display": {
-          "generic_type": "SMOKE"
-        },
         "isVisible": 1,
         "name": "Etat",
         "order": 2,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "SMOKE",
         "invertBinary": "1",
         "template": "alert"
       },

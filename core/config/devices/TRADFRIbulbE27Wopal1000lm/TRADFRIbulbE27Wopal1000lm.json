@@ -47,10 +47,8 @@
         "name": "etat",
         "order": 3,
         "subType": "binary",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "generic_type": "LIGHT_STATE",
+        "template": "light"
       },
       "0008-0000": {
         "isVisible": 1,
@@ -77,13 +75,11 @@
         "name": "On",
         "order": 5,
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "template": "",
         "configuration": {
           "request": "On",
           "topic": "OnOff"
-        },
-        "display": {
-          "generic_type": "LIGHT_ON"
         }
       },
       "Off": {
@@ -94,13 +90,11 @@
         "name": "Off",
         "order": 6,
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "template": "",
         "configuration": {
           "request": "Off",
           "topic": "OnOff"
-        },
-        "display": {
-          "generic_type": "LIGHT_OFF"
         }
       },
       "Toggle": {
@@ -111,13 +105,13 @@
         "name": "Toggle",
         "order": 7,
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "template": "",
         "configuration": {
           "request": "Toggle",
           "topic": "OnOff"
         },
         "display": {
-          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -129,6 +123,7 @@
         "name": "setLevel",
         "order": 8,
         "subType": "slider",
+        "generic_type": "LIGHT_SLIDER",
         "value": "Level",
         "template": "",
         "configuration": {
@@ -136,8 +131,7 @@
           "topic": "setLevel"
         },
         "display": {
-          "forceReturnLineAfter": "1",
-          "generic_type": "LIGHT_SLIDER"
+          "forceReturnLineAfter": "1"
         }
       },
       "IEEE-Addr": {
@@ -391,11 +385,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

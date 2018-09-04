@@ -46,10 +46,8 @@
         "name": "etat",
         "order": 3,
         "subType": "binary",
-        "template": "prise",
-        "display": {
-          "generic_type": "ENERGY_STATE"
-        }
+        "generic_type": "ENERGY_STATE",
+        "template": "prise"
       },
       "IEEE-Addr": {
         "isVisible": 0,
@@ -93,10 +91,8 @@
         "name": "On",
         "order": 7,
         "subType": "other",
-        "template": "",
-        "display": {
-          "generic_type": "ENERGY_ON"
-        }
+        "generic_type": "ENERGY_ON",
+        "template": ""
       },
       "Off": {
         "isVisible": 1,
@@ -110,10 +106,8 @@
         "name": "Off",
         "order": 8,
         "subType": "other",
-        "template": "",
-        "display": {
-          "generic_type": "ENERGY_OFF"
-        }
+        "generic_type": "ENERGY_OFF",
+        "template": ""
       },
       "Toggle": {
         "isVisible": 1,
@@ -224,9 +218,6 @@
         "template": "badge"
       },
       "tbd---puissance--": {
-        "display": {
-          "generic_type": "POWER"
-        },
         "isVisible": 1,
         "Type": "info",
         "configuration": {
@@ -240,6 +231,7 @@
         "units": "W",
         "order": 17,
         "subType": "numeric",
+        "generic_type": "POWER",
         "template": "badge"
       },
       "online": {
@@ -249,11 +241,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

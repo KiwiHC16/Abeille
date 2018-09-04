@@ -36,12 +36,10 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "BRIGHTNESS",
         "invertBinary": "0",
         "template": "",
-        "units": "Lux",
-        "display": {
-          "generic_type": "BRIGHTNESS"
-        }
+        "units": "Lux"
       },
       "0402-0000": {
         "isVisible": 1,
@@ -50,14 +48,12 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "TEMPERATURE",
         "invertBinary": "0",
         "template": "tempIMG",
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "1"
-        },
-        "display": {
-          "generic_type": "TEMPERATURE"
         },
         "units": "°C"
       },
@@ -68,11 +64,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "PRESENCE",
         "invertBinary": "1",
-        "template": "presence",
-        "display": {
-          "generic_type": "PRESENCE"
-        }
+        "template": "presence"
       },
       "Batterie-Volt": {
         "isVisible": 0,

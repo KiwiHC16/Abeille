@@ -31,15 +31,13 @@
         "template": ""
       },
       "0006-03-0000": {
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        },
         "isVisible": 1,
         "name": "etat",
         "order": 2,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
         "template": "prise"
       },
@@ -70,11 +68,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "On"
@@ -87,11 +83,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_OFF"
-        },
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "Off"
@@ -104,6 +98,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -111,8 +106,7 @@
           "request": "Toggle"
         },
         "display": {
-          "forceReturnLineAfter": "1",
-          "generic_type": "LIGHT_TOGGLE"
+          "forceReturnLineAfter": "1"
         }
       },
       "getEtat": {
@@ -207,11 +201,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

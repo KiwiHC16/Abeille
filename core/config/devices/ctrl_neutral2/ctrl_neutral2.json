@@ -55,11 +55,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "template": "light"
       },
       "0006-03-0000": {
         "isVisible": 1,
@@ -68,11 +66,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "template": "light"
       },
       "0006-04-0000": {
         "isVisible": 1,
@@ -81,11 +77,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "template": "light"
       },
       "0006-05-0000": {
         "isVisible": 1,
@@ -94,11 +88,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
-        "template": "light",
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        }
+        "template": "light"
       },
       "Time-Time": {
         "isVisible": 0,
@@ -127,11 +119,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
         "configuration": {
           "topic": "OnOff2",
           "request": "On"
@@ -144,11 +134,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_OFF"
-        },
         "configuration": {
           "topic": "OnOff2",
           "request": "Off"
@@ -161,6 +149,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -168,7 +157,6 @@
           "request": "Toggle"
         },
         "display": {
-          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -179,11 +167,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
         "configuration": {
           "topic": "OnOff3",
           "request": "On"
@@ -196,11 +182,9 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "LIGHT_OFF"
-        },
         "configuration": {
           "topic": "OnOff3",
           "request": "Off"
@@ -213,6 +197,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -220,7 +205,6 @@
           "request": "Toggle"
         },
         "display": {
-          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -364,5 +348,3 @@
     }
   }
 }
-
-

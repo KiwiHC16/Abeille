@@ -37,11 +37,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "PRESENCE",
         "invertBinary": "1",
         "template": "presence",
-        "display": {
-          "generic_type": "PRESENCE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "1",
@@ -55,12 +53,10 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "BRIGHTNESS",
         "invertBinary": "0",
         "template": "",
-        "units": "Lux",
-        "display": {
-          "generic_type": "BRIGHTNESS"
-        }
+        "units": "Lux"
       },
       "Batterie-Volt": {
         "isVisible": 0,

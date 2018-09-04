@@ -37,14 +37,12 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "TEMPERATURE",
         "invertBinary": "0",
         "template": "tempIMG",
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "1"
-        },
-        "display": {
-          "generic_type": "TEMPERATURE"
         },
         "units": "°C"
       },
@@ -55,6 +53,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "HUMIDITY",
         "invertBinary": "0",
         "template": "hydro3IMG",
         "configuration": {
@@ -62,10 +61,7 @@
           "historizeRound": "0",
           "value": ""
         },
-        "units": "%",
-        "display": {
-          "generic_type": "HUMIDITY"
-        }
+        "units": "%"
       },
       "0403-0000": {
         "isVisible": 0,
@@ -74,11 +70,11 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "WEATHER_PRESSURE",
         "invertBinary": "0",
         "template": "badge",
         "units": "hPa",
         "display": {
-          "generic_type": "WEATHER_PRESSURE",
           "forceReturnLineAfter": "1"
         }
       },
@@ -89,11 +85,11 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "WEATHER_PRESSURE",
         "invertBinary": "0",
         "template": "barometre",
         "units": "hPa",
         "display": {
-          "generic_type": "WEATHER_PRESSURE",
           "forceReturnLineAfter": "1"
         },
         "configuration": {

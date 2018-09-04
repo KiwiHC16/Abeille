@@ -46,11 +46,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ENERGY_STATE",
         "invertBinary": "0",
-        "template": "prise",
-        "display": {
-          "generic_type": "ENERGY_STATE"
-        }
+        "template": "prise"
       },
       "Time-Time": {
         "isVisible": 0,
@@ -79,14 +77,12 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "ENERGY_ON",
         "invertBinary": "0",
         "template": "",
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "On"
-        },
-        "display": {
-          "generic_type": "ENERGY_ON"
         }
       },
       "Off": {
@@ -96,14 +92,12 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "ENERGY_OFF",
         "invertBinary": "0",
         "template": "",
         "configuration": {
           "topic": "OnOffOSRAM",
           "request": "Off"
-        },
-        "display": {
-          "generic_type": "ENERGY_OFF"
         }
       },
       "Toggle": {
@@ -290,11 +284,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

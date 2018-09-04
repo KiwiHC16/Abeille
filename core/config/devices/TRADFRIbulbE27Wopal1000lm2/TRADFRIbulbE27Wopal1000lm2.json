@@ -40,16 +40,14 @@
         "template": ""
       },
       "0006-0000": {
-        "display": {
-          "generic_type": "LIGHT_STATE"
-        },
         "isVisible": 1,
         "Type": "info",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "etat",
         "order": 3,
-        "subType": "binary",
         "template": "light"
       },
       "0008-0000": {
@@ -105,8 +103,7 @@
       },
       "Level": {
         "display": {
-          "forceReturnLineAfter": "1",
-          "generic_type": "LIGHT_SLIDER"
+          "forceReturnLineAfter": "1"
         },
         "isVisible": 1,
         "Type": "action",
@@ -119,6 +116,7 @@
         "name": "setLevel",
         "order": 8,
         "subType": "slider",
+        "generic_type": "LIGHT_SLIDER",
         "value": "Level",
         "template": ""
       },
@@ -134,7 +132,7 @@
       },
       "Off": {
         "display": {
-          "generic_type": "LIGHT_OFF"
+          
         },
         "isVisible": 1,
         "Type": "action",
@@ -147,12 +145,10 @@
         "name": "Off",
         "order": 10,
         "subType": "other",
+        "generic_type": "LIGHT_OFF",
         "template": ""
       },
       "On": {
-        "display": {
-          "generic_type": "LIGHT_ON"
-        },
         "isVisible": 1,
         "Type": "action",
         "configuration": {
@@ -164,6 +160,7 @@
         "name": "On",
         "order": 11,
         "subType": "other",
+        "generic_type": "LIGHT_ON",
         "template": ""
       },
       "Power-Source": {
@@ -207,7 +204,6 @@
           "topic": "OnOff"
         },
         "display": {
-          "generic_type": "LIGHT_TOGGLE",
           "forceReturnLineAfter": "1"
         },
         "invertBinary": "0",
@@ -215,6 +211,7 @@
         "name": "Toggle",
         "order": 15,
         "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
         "template": ""
       },
       "getEtat": {
@@ -294,11 +291,9 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
-        "display": {
-          "generic_type": "ONLINE"
-        },
         "configuration": {
           "returnStateValue": "0",
           "returnStateTime": "60"

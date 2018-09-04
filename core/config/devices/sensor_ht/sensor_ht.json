@@ -37,14 +37,12 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "TEMPERATURE",
         "invertBinary": "0",
         "template": "tempIMG",
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "1"
-        },
-        "display": {
-          "generic_type": "TEMPERATURE"
         },
         "units": "°C"
       },
@@ -55,16 +53,14 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "HUMIDITY",
         "invertBinary": "0",
         "template": "hydro3IMG",
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "0"
         },
-        "units": "%",
-        "display": {
-          "generic_type": "HUMIDITY"
-        }
+        "units": "%"
       },
       "Batterie-Volt": {
         "isVisible": 0,

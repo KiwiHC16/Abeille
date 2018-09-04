@@ -20,16 +20,6 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0000-0010": {
-        "isVisible": 0,
-        "name": "lieux",
-        "order": 1,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-      },
       "0000-0000": {
         "isVisible": 0,
         "name": "ZCL Version",
@@ -87,6 +77,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
+        "generic_type": "FLAP_STATE",
         "invertBinary": "0",
         "template": "light"
       },
@@ -97,6 +88,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "FLAP_SLIDER",
         "invertBinary": "0",
         "template": "",
         "units": "%",
@@ -134,6 +126,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "FLAP_UP",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -148,6 +141,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "FLAP_DOWN",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -193,6 +187,7 @@
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
+        "generic_type": "FLAP_STOP",
         "invertBinary": "0",
         "template": "",
         "isVisible": 1,

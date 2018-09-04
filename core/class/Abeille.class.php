@@ -1063,6 +1063,7 @@ class Abeille extends eqLogic
                 $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                 $cmdlogic->setType($cmdValueDefaut["Type"]);
                 $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+                $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
                 // unite
                 if (isset($cmdValueDefaut["units"])) {
                     $cmdlogic->setUnite($cmdValueDefaut["units"]);

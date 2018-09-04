@@ -401,6 +401,14 @@
             }
         }
         
+        // Resets (“Factory New”) the Control Bridge but persists the frame counters. 
+        if ( isset($Command['FactoryNewReset']) )
+        {
+            if ($Command['FactoryNewReset']=="FactoryNewReset")
+            {
+                sendCmd($dest,"0013","0000","");
+            }
+        }
         
         // abeilleList abeilleListAll
         if ( isset($Command['abeilleList']) )

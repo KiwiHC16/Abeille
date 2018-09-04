@@ -619,9 +619,24 @@
       "forceReturnLineAfter": "1"
     }
   },
+  "Factory New Reset": {
+    "name": "Factory New Reset",
+    "order": 43,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "FactoryNewReset",
+      "request": "FactoryNewReset"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
   "replaceEquipement": {
     "name": "Replace Equipement",
-    "order": 43,
+    "order": 44,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -638,7 +653,7 @@
   },
   "Network-Bind": {
     "name": "Last Bind",
-    "order": 44,
+    "order": 45,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -648,7 +663,7 @@
   },
   "Network-Report": {
     "name": "Last Report",
-    "order": 45,
+    "order": 46,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -658,7 +673,7 @@
   },
   "IEEE_Address_request": {
     "name": "IEEE Address Request",
-    "order": 46,
+    "order": 47,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -675,7 +690,7 @@
   },
   "Network_Address_request": {
     "name": "Network Address Request",
-    "order": 47,
+    "order": 48,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -692,7 +707,7 @@
   },
   "LQI": {
     "name": "LQI",
-    "order": 48,
+    "order": 49,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

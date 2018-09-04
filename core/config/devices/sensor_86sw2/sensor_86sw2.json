@@ -63,7 +63,7 @@
           "AbeilleRejectValue": "0"
         }
       },
-            "0006-03-0000": {
+      "0006-03-0000": {
         "isVisible": 1,
         "name": "etat3",
         "order": 4,
@@ -111,6 +111,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
         "unite": "%",

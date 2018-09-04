@@ -46,7 +46,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",
-        "generic_type": "LIGHT_STATE",
+        "generic_type": "LIGHT_STATE_BOOL",
         "invertBinary": "0",
         "template": "light"
       },
@@ -57,6 +57,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "LIGHT_STATE",
         "invertBinary": "0",
         "template": "",
         "units": "%",

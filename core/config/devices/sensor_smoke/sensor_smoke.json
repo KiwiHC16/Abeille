@@ -65,6 +65,7 @@
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
+        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
         "configuration": {

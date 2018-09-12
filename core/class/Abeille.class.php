@@ -52,6 +52,63 @@ class Abeille extends eqLogic
         exec( $cmd );
     }
     
+    public static function cronHourly () {
+        log::add('Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------');
+        
+        log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
+        
+        $ruche = new Abeille();
+        $commandIEEE = new AbeilleCmd();
+        
+        // Recupere IEEE de la Ruche/ZiGate
+        $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
+        log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+        
+        $ZiGateIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
+        log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
+        
+        // $eqLogics = Abeille::byType('Abeille');
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
+            if ( (strpos("_".$eqLogic->getConfiguration("icone"),"TRADFRI") > 0) && (strpos("_".$eqLogic->getConfiguration("icone"),"bulb") > 0 ) ) {
+                $topicArray = explode( "/", $eqLogic->getLogicalId() );
+                $addr = $topicArray[1];
+                log::add('Abeille', 'debug', 'Short: '.$addr);
+                
+                /*
+                 if ( is_object($elogic) ) { $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "IEEE-Addr"); }
+                 $addrIEEE = $cmdlogic->execCmd();
+                 log::add('Abeille', 'debug', 'IEEE: '.$addrIEEE);
+                 */
+                
+                $abeille = new Abeille();
+                $commandIEEE = new AbeilleCmd();
+                
+                // Recupere IEEE de la Ruche/ZiGate
+                $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+                log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+                
+                $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
+                log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
+                
+                
+                log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr );
+                Abeille::publishMosquitto( null, "CmdAbeille/Ruche/bindShort", "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE, '0' );
+                sleep(5);
+                Abeille::publishMosquitto( null, "CmdAbeille/Ruche/bindShort", "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE, '0' );
+                sleep(5);
+                Abeille::publishMosquitto( null, "CmdAbeille/Ruche/setReport", "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10", '0' );
+                sleep(5);
+                Abeille::publishMosquitto( null, "CmdAbeille/Ruche/setReport", "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20", '0' );
+                
+                sleep(5);
+            }
+        }
+        
+        log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
+    }
+    
     public static function cron15() {
         log::add('Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------');
         /**

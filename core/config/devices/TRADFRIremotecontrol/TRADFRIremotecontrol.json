@@ -177,7 +177,7 @@
         "subType": "numeric",
         "generic_type": "BATTERY",
         "invertBinary": "0",
-        "template": "",
+        "template": "vuMeter",
         "units": "%",
         "configuration": {
           "minValue": "0",

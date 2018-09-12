@@ -67,6 +67,7 @@
         "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
+        "unite": "%",
         "configuration": {
           "calculValueOffset": "#value#",
           "minValue": "0",

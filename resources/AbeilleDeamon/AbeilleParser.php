@@ -472,7 +472,8 @@
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
         
         // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
-        if ((hexdec($capability) & $test) == 14) {
+        // if ((hexdec($capability) & $test) == 14) {
+        if (1) {
             deamonlog('debug','Je demande a l equipement d annoncer son nom');
             
             // Pour les ampoules IKEA
@@ -480,21 +481,21 @@
             $data = 'Default'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
             
-            sleep(2);
+            // sleep(2);
             
             // Pour les ampoules Hue
             deamonlog('debug','Je demande a l equipement de type Hue');
             $data = 'Hue'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
             
-            sleep(2);
+            // sleep(2);
             
             // Pour les ampoules OSRAM
             deamonlog('debug','Je demande a l equipement de type OSRAM');
             $data = 'OSRAM'; // destinationEndPoint
             mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
             
-            sleep(2);
+            // sleep(2);
             
             // Pour les volets ProFalux
             deamonlog('debug','Je demande a l equipement de type ProFalux');

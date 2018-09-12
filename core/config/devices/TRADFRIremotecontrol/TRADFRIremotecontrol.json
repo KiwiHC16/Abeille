@@ -220,6 +220,37 @@
         "subType": "string",
         "invertBinary": "0",
         "template": "badge"
+      },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateBatterie",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/bindShort",
+          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/Ruche/setReport",
+          "request": "address=#addr#&ClusterId=0001&AttributeId=0021&AttributeType=20"
+        }
       }
     }
   }

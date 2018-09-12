@@ -97,6 +97,8 @@
         else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
         }
+        sleep(10);
+        $mqtt->publish("CmdAbeille/Ruche/abeilleList", "abeilleListAll", $qos);
     }
     
     function mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos = 0)

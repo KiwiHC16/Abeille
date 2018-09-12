@@ -62,19 +62,19 @@ class Abeille extends eqLogic
         
         // Recupere IEEE de la Ruche/ZiGate
         $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
-        log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+        // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
         
         $ZiGateIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
-        log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
+        // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
         
         // $eqLogics = Abeille::byType('Abeille');
         $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
-            log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
-            if ( (strpos("_".$eqLogic->getConfiguration("icone"),"TRADFRI") > 0) && (strpos("_".$eqLogic->getConfiguration("icone"),"bulb") > 0 ) ) {
+            // log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
+            if ( strpos("_".$eqLogic->getConfiguration("icone"),"IkeaTradfriBulb") > 0 ) {
                 $topicArray = explode( "/", $eqLogic->getLogicalId() );
                 $addr = $topicArray[1];
-                log::add('Abeille', 'debug', 'Short: '.$addr);
+                // log::add('Abeille', 'debug', 'Short: '.$addr);
                 
                 /*
                  if ( is_object($elogic) ) { $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "IEEE-Addr"); }
@@ -87,10 +87,10 @@ class Abeille extends eqLogic
                 
                 // Recupere IEEE de la Ruche/ZiGate
                 $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-                log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+                // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
                 
                 $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
-                log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
+                // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
                 
                 
                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr );

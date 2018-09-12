@@ -82,6 +82,7 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "vuMeter",
+        "units": "V",
         "configuration": {
           "calculValueOffset": "#value#/1000",
           "minValue": "0",
@@ -98,7 +99,7 @@
         "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "%",
+        "units": "%",
         "configuration": {
           "minValue": "0",
           "maxValue": "100",

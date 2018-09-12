@@ -56,11 +56,11 @@
         "generic_type": "HUMIDITY",
         "invertBinary": "0",
         "template": "hydro3IMG",
+        "units": "%",
         "configuration": {
           "calculValueOffset": "#value#/100",
           "historizeRound": "0"
-        },
-        "units": "%"
+        }
       },
       "Batterie-Volt": {
         "isVisible": 0,
@@ -71,6 +71,7 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "vuMeter",
+        "units": "V",
         "configuration": {
           "calculValueOffset": "#value#/1000",
           "minValue": "0",
@@ -87,6 +88,7 @@
         "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
+        "units": "%",
         "configuration": {
           "calculValueOffset": "#value#",
           "minValue": "0",

@@ -1832,7 +1832,7 @@
     
     function decode8110($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type: 8110: (	Write Attribute Response)(Not Processed)'
+        deamonlog('debug', ';Type: 8110: (	Write Attribute Response)(Not Processed)'
                   . '; (Not processed*************************************************************)'
                   . '; Level: 0x'.substr($payload, 0, 2)
                   . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
@@ -1846,7 +1846,7 @@
         // <Cluster id: uint16_t>
         // <Status: uint8_t>
         
-        deamonlog('debug', 'Type: 8120: (Configure Reporting response)(Decoded but not Processed)'
+        deamonlog('debug', ';type: 8120: (Configure Reporting response)(Decoded but not Processed)'
                   . '; SQN: '              .substr($payload, 0, 2)
                   . '; Source address: '   .substr($payload, 2, 4)
                   . '; EndPoint: '         .substr($payload, 6, 2)

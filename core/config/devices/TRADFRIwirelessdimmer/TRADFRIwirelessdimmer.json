@@ -1,7 +1,7 @@
 {
   "TRADFRI wireless dimmer": {
     "nameJeedom": "IKEA TRADFRI Dimmer Jaune",
-    "timeout": "60",
+    "timeout": "-1",
     "Categorie": {
       "light": "1"
     },

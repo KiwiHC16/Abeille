@@ -152,65 +152,35 @@ class Abeille extends eqLogic
     
     public static function cron() {
         // Cron tourne toutes les minutes
-        log::add('Abeille', 'debug', 'Starting cron ------------------------------------------------------------------------------------------------------------------------');
+        log::add('Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------');
         
         
-        log::add('Abeille', 'debug', 'Ping Zigate to check Online status' );
+        log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status' );
         Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion",         "Version",           '0' );
         Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getNetworkStatus",   "getNetworkStatus",  '0' );
         
         /**
          * Refresh health information
          */
-        // $eqLogics=Abeille::byType('Abeille');
+        log::add('Abeille', 'debug', '----------- Refresh health information' );
         $eqLogics = self::byType('Abeille');
         
-        //var_dump( $eqLogics );
-        
         foreach ($eqLogics as $eqLogic) {
-            // var_dump( $eqLogic );
             
-            // $eqLogic->setStatus('lastCommunication', '2018-05-12 00:44:17');
-            // $eqLogic->setStatus('state', 'unknown');
-            
-            // Default Time Out : 24 heures => Warning
-            $lastCommunicationTimeOut = 24 * 60 * 60;
-            // $lastCommunicationTimeOut = 0; // Pour test
-            
-            // ===============================================================================================================================
-            // TimeOut de l'equipement
-            // Si = -1 ne pas traiter comme les Timers
-            // Si = 0 alors on n'a pas de valeur on prend par defaut
-            // Si > 0 alors on prend la valeur
-            
-            // if ($eqLogic->getConfiguration("lastCommunicationTimeOut")) {
-            //    $lastCommunicationTimeOut = $eqLogic->getConfiguration("lastCommunicationTimeOut");
-            
-            $TimeOut = -1;
-            $last = -1;
-            
-            if ( strtotime($eqLogic->getStatus('lastCommunication')) > 0 ) {
-                $last = strtotime($eqLogic->getStatus('lastCommunication'));
-            }
-            
-            if ( $eqLogic->getTimeout() == '' ) {
-                $TimeOut = 0;
-            }
-            else if ( $eqLogic->getTimeout() == -1 ) {
-                $TimeOut = -1;
-            }
-            else if ( $eqLogic->getTimeout() > -1 ) {
-                $TimeOut = $eqLogic->getTimeout()*60;
-            }
-            
-            log::add('Abeille', 'debug', 'Last: '.$last.' Timeout: '.$TimeOut.'s - Last+TimeOut: '.($last+$TimeOut).' now: '.time());
-            
-            if ($TimeOut==-1) {
-                $eqLogic->setStatus('state', '-');
-                $eqLogic->setStatus('timeout', 0);
-            }
-            else if ($TimeOut>0) {
-                if ( ($last + $TimeOut) > time() ) {
+            if ($eqLogic->getTimeout() > 0) {
+                if ( strtotime($eqLogic->getStatus('lastCommunication')) > 0 ) {
+                    $last = strtotime($eqLogic->getStatus('lastCommunication'));
+                }
+                else {
+                    $last = 0;
+                }
+                
+                log::add('Abeille', 'debug', '--' );
+                log::add('Abeille', 'debug', 'Name: '.$eqLogic->getName().' Last: '.$last.' Timeout: '.$eqLogic->getTimeout().'s - Last+TimeOut: '.($last+$eqLogic->getTimeout()).' now: '.time().' Delta: '.(time()-($last+$eqLogic->getTimeout())) );
+                
+                // Alerte sur TimeOut Defini
+                
+                if ( ($last + $eqLogic->getTimeout()) > time() ) {
                     // Ok
                     $eqLogic->setStatus('state', 'ok');
                     $eqLogic->setStatus('timeout', 0);
@@ -219,37 +189,18 @@ class Abeille extends eqLogic
                     // NOK
                     $eqLogic->setStatus('state', 'Time Out Last Communication');
                     $eqLogic->setStatus('timeout', 1);
+                    
                 }
-            }
-            // Si pas de Timer specifique soit Time Out = 0 , 24h et 7jours comme seuil d'alerte
-            else if ( $TimeOut==0 ) {
-                $TimeOutStandard = 24*60*60;
-                // $last = strtotime($eqLogic->getStatus('lastCommunication'));
-                if ( ($last + $TimeOutStandard) > time() ) {
-                    // Ok
-                    $eqLogic->setStatus('state', 'ok');
-                    $eqLogic->setStatus('timeout', 0);
-                }
-                elseif ( ($last+$TimeOutStandard*7) < time() ) {
-                    // NOK 7d
-                    $eqLogic->setStatus('state', 'Very Old Last Communication (>7days)');
-                    $eqLogic->setStatus('timeout', 1);
-                }
-                else {
-                    // NOK 24h
-                    $eqLogic->setStatus('state', 'Old Last Communication (>24h)');
-                    $eqLogic->setStatus('timeout', 1);
-                }
+                
+                // ===============================================================================================================================
+                
+                log::add('Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus("lastCommunication").' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus('timeout').' state: '.$eqLogic->getStatus('state') );
+                
             }
             else {
-                log::add('Abeille', 'debug', 'Timeout: ->'.$TimeOut.'<- Valeur que je ne sais pas gérer.');
+                $eqLogic->setStatus('state', '-');
+                $eqLogic->setStatus('timeout', 0);
             }
-            // ===============================================================================================================================
-            
-            log::add('Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus("lastCommunication").' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus('timeout').' state: '.$eqLogic->getStatus('state') );
-            
-            // echo $eqLogic->getStatus('state');
-            
         }
         
         // Si Inclusion status est à 1 on demande un Refresh de l information
@@ -1050,6 +1001,8 @@ class Abeille extends eqLogic
             // status
             // timeout
             $elogic->setTimeout( $objetDefSpecific["timeout"] );
+            // message::add("Abeille", "TimeOut in JSON:".$objetDefSpecific["timeout"] );
+            
             $elogic->setCategory(
                                  array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
                                  );

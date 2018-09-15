@@ -1,13 +1,14 @@
 {
   "lumi.sensor_ht": {
     "nameJeedom": "Xiaomi Temperature Rond",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "heating": "1"
     },
     "configuration": {
       "icone": "XiaomiTemperatureRond",
-      "battery_type": "1x3V CR2032"
+      "battery_type": "1x3V CR2032",
+      "lastCommunicationTimeOut": "-1"
     },
     "Commandes": {
       "0000-0001": {

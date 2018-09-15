@@ -1,7 +1,7 @@
 {
   "TRADFRIbulbE14WSopal400lm": {
     "nameJeedom": "TRADFRI bulb E14 White Spectre opal 400lm",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "light": "1"
     },

@@ -1,7 +1,7 @@
 {
   "lumi.sensor_86sw2": {
     "nameJeedom": "Xiaomi Interrupteur Mural Carré Double",
-    "timeout": "60",
+    "timeout": "3600",
     "Commentaire": "Remonte le nom lumi.sensor_86sw2 apres association et lumi.sensor_86sw2Un sur un getName EP 01  donc les deux fichiers doivent être identiques.",
     "Categorie": {
       "automatism": "1"

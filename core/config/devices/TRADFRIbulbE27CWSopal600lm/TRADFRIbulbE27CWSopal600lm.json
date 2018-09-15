@@ -1,7 +1,7 @@
 {
   "TRADFRIbulbE27CWSopal600lm": {
     "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 Color White Spectre Opal 600lm",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "light": "1"
     },

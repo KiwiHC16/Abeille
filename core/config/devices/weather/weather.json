@@ -1,7 +1,7 @@
 {
   "lumi.weather": {
     "nameJeedom": "Xiaomi Temperature Carre",
-    "battery_type": "1xCR2032",
+    "timeout": "3600",
     "Categorie": {
       "heating": "1"
     },

@@ -1,7 +1,7 @@
 {
   "Connectedoutlet": {
     "nameJeedom": "Legrand Prise Connected Outlet",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "automatism": "1"
     },

@@ -1,7 +1,7 @@
 {
   "TRADFRIbulbE27opal1000lm": {
     "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "light": "1"
     },

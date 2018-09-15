@@ -1,7 +1,7 @@
 {
   "lumi.sensor_86sw1": {
     "nameJeedom": "Xiaomi Interrupteur Carré simple",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "automatism": "1"
     },

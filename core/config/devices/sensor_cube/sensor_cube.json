@@ -1,7 +1,7 @@
 {
   "lumi.sensor_cube": {
     "nameJeedom": "Xiaomi Cube",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "automatism": "1"
     },

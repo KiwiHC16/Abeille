@@ -1,7 +1,7 @@
 {
   "lumi.sensor_smoke": {
     "nameJeedom": "Xiaomi Smoke Sensor",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "security": "1"
     },

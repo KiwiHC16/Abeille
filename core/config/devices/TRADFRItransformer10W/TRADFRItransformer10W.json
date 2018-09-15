@@ -1,7 +1,7 @@
 {
   "TRADFRItransformer10W": {
     "nameJeedom": "IKEA Ampoule TRADFRI transformer 10W",
-    "timeout": "60",
+    "timeout": "3600",
     "Categorie": {
       "light": "1"
     },

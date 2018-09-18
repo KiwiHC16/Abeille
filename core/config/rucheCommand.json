@@ -397,14 +397,31 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "0",
+      "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "location=xxxxxx[&destinationEndPoint=(XX)]"
     }
   },
+  "WriteAttributeRequest": {
+    "name": "Write Attribut",
+    "order": 25,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "WriteAttributeRequest",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Proprio=ZZZZ&clusterId=XXXX&attributeId=YYYY"
+    }
+  },
   "ReadAttributeRequest": {
     "name": "Get Attribut",
-    "order": 25,
+    "order": 26,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -414,14 +431,14 @@
       "request": "address=#title#&#message#"
     },
     "display": {
-      "forceReturnLineAfter": "0",
+      "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "clusterId=XXXX&attributeId=YYYY"
     }
   },
   "AbeilleList": {
     "name": "Liste Equipements",
-    "order": 26,
+    "order": 27,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -433,7 +450,7 @@
   },
   "Time-Time": {
     "name": "Last",
-    "order": 27,
+    "order": 28,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -443,7 +460,7 @@
   },
   "Time-TimeStamp": {
     "name": "Last Stamps",
-    "order": 28,
+    "order": 29,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -453,7 +470,7 @@
   },
   "SW-Application": {
     "name": "SW",
-    "order": 29,
+    "order": 30,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -463,7 +480,7 @@
   },
   "SW-SDK": {
     "name": "SDK",
-    "order": 30,
+    "order": 31,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -473,7 +490,7 @@
   },
   "Network-Status": {
     "name": "Network Status",
-    "order": 31,
+    "order": 32,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -483,7 +500,7 @@
   },
   "Short-Addr": {
     "name": "Short Addr",
-    "order": 32,
+    "order": 33,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -493,7 +510,7 @@
   },
   "PAN-ID": {
     "name": "PAN ID",
-    "order": 33,
+    "order": 34,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -503,7 +520,7 @@
   },
   "Ext_PAN-ID": {
     "name": "Ext PAN ID",
-    "order": 34,
+    "order": 35,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -513,7 +530,7 @@
   },
   "IEEE-Addr": {
     "name": "IEEE Addr",
-    "order": 35,
+    "order": 36,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -523,7 +540,7 @@
   },
   "Network-Channel": {
     "name": "Network Channel",
-    "order": 36,
+    "order": 37,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -533,7 +550,7 @@
   },
   "Network Status Request": {
     "name": "Network Status Request (Not implemented)",
-    "order": 37,
+    "order": 38,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -545,7 +562,7 @@
   },
   "joinLeave-IEEE": {
     "name": "joinLeave",
-    "order": 38,
+    "order": 39,
     "isHistorized": "1",
     "isVisible": "1",
     "Type": "info",
@@ -555,7 +572,7 @@
   },
   "ActiveEndPoint": {
     "name": "ActiveEndPoint",
-    "order": 39,
+    "order": 40,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -573,7 +590,7 @@
   },
   "SimpleDescriptorRequest": {
     "name": "SimpleDescriptorRequest",
-    "order": 40,
+    "order": 41,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -591,7 +608,7 @@
   },
   "Reset": {
     "name": "Reset",
-    "order": 41,
+    "order": 42,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -606,7 +623,7 @@
   },
   "ErasePersistentData": {
     "name": "Erase Persistent Data",
-    "order": 42,
+    "order": 43,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -621,7 +638,7 @@
   },
   "Factory New Reset": {
     "name": "Factory New Reset",
-    "order": 43,
+    "order": 44,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -636,7 +653,7 @@
   },
   "replaceEquipement": {
     "name": "Replace Equipement",
-    "order": 44,
+    "order": 45,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -653,7 +670,7 @@
   },
   "Network-Bind": {
     "name": "Last Bind",
-    "order": 45,
+    "order": 46,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -663,7 +680,7 @@
   },
   "Network-Report": {
     "name": "Last Report",
-    "order": 46,
+    "order": 47,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "info",
@@ -673,7 +690,7 @@
   },
   "IEEE_Address_request": {
     "name": "IEEE Address Request",
-    "order": 47,
+    "order": 48,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -690,7 +707,7 @@
   },
   "Network_Address_request": {
     "name": "Network Address Request",
-    "order": 48,
+    "order": 49,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
@@ -707,7 +724,7 @@
   },
   "LQI": {
     "name": "LQI",
-    "order": 49,
+    "order": 50,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",

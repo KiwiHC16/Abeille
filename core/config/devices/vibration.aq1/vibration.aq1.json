@@ -30,26 +30,78 @@
         "invertBinary": "0",
         "template": ""
       },
-      "0406-0000": {
+      "0101-0055": {
         "isVisible": 1,
-        "name": "etat",
+        "name": "Evenement",
+        "Comment": "1: Vibration, 2: rotation, 3: chute",
         "order": 2,
         "isHistorized": "1",
         "Type": "info",
-        "subType": "binary",
-        "generic_type": "PRESENCE",
-        "invertBinary": "1",
-        "template": "presence",
+        "subType": "numeric",
         "configuration": {
-          "returnStateValue": "0",
-          "returnStateTime": "1",
           "repeatEventManagement": "always"
+        }
+      },
+      "0101-0503": {
+        "isVisible": 1,
+        "name": "Angle",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "configuration": {
+          "repeatEventManagement": "always"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "Sensivity Low": {
+        "isVisible": 1,
+        "name": "Low",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "WriteAttributeRequest",
+          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15",
+          "repeatEventManagement": "always"
+        }
+      },
+      "Sensivity Medium": {
+        "isVisible": 1,
+        "name": "Medium",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "WriteAttributeRequest",
+          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=0b",
+          "repeatEventManagement": "always"
+        }
+      },
+      "Sensivity High": {
+        "isVisible": 1,
+        "name": "High",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+          "topic": "WriteAttributeRequest",
+          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=01",
+          "repeatEventManagement": "always"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "Batterie-Volt": {
         "isVisible": 0,
         "name": "Batterie",
-        "order": 3,
+        "order": 7,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -65,7 +117,7 @@
       "Batterie-Pourcent": {
         "isVisible": 0,
         "name": "BatteriePourcent",
-        "order": 3,
+        "order": 8,
         "isHistorized": "1",
         "Type": "info",
         "subType": "numeric",
@@ -78,12 +130,15 @@
           "minValue": "0",
           "maxValue": "100",
           "historizeRound": "0"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
         }
       },
       "0000-ff01": {
         "isVisible": 0,
         "name": "Specific",
-        "order": 4,
+        "order": 9,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -93,7 +148,7 @@
       "Time-Time": {
         "isVisible": 0,
         "name": "Time-Time",
-        "order": 5,
+        "order": 10,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -103,7 +158,7 @@
       "Time-TimeStamp": {
         "isVisible": 0,
         "name": "Time-TimeStamp",
-        "order": 6,
+        "order": 11,
         "isHistorized": "0",
         "Type": "info",
         "subType": "numeric",
@@ -113,7 +168,7 @@
       "IEEE-Addr": {
         "isVisible": 0,
         "name": "IEEE-Addr",
-        "order": 7,
+        "order": 12,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -123,7 +178,7 @@
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",
-        "order": 8,
+        "order": 13,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -133,7 +188,7 @@
       "Link-Quality": {
         "isVisible": 0,
         "name": "Link Quality",
-        "order": 9,
+        "order": 14,
         "isHistorized": "0",
         "Type": "info",
         "subType": "string",
@@ -146,7 +201,7 @@
           "showNameOndashboard": "0"
         },
         "name": "Power Source",
-        "order": 10,
+        "order": 15,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",

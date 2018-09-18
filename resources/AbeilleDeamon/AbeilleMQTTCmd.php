@@ -195,6 +195,7 @@
                                  "destinationEndpoint" => "01", // Set but not send on radio
                                  "step" => $msg,
                                  );
+                
                 //----------------------------------------------------------------------------
             } elseif ($action == "DownGroup") {
                 $Command = array(
@@ -204,6 +205,7 @@
                                  "destinationEndpoint" => "01", // Set but not send on radio
                                  "step" => $msg,
                                  );
+                
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOffGroup") {
                 if ($msg == "On") {
@@ -222,7 +224,25 @@
                                  "destinationEndpoint" => "01", // Set but not send on radio
                                  "action" => $actionId,
                                  );
+                
                 //----------------------------------------------------------------------------
+            } elseif ($action == "WriteAttributeRequest") {
+                $keywords = preg_split("/[=&]+/", $msg);
+                deamonlog('debug', 'Msg Received: '.$msg);
+                
+                // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+                $Command = array(
+                                 "WriteAttributeRequest" => "1",
+                                 "address" => $address,
+                                 "Proprio" => $keywords[1],
+                                 "clusterId" => $keywords[3],
+                                 "attributeId" => $keywords[5],
+                                 "attributeType" => $keywords[7],
+                                 "value" => $keywords[9],
+                                 );
+                deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                
+               //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 deamonlog('debug', 'Msg Received: '.$msg);

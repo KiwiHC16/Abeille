@@ -189,3 +189,28 @@ Il repond au getName sur EP 01 s.
 === Appui Tres Long (>8s) sur bouton de gauche
 
 Leave
+
+=== Capteur Vibration
+
+=== Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+=== Attribute 0055
+
+Il semblerai qu'une valeur:
+
+* 1 indique une detection de vibration
+* 2 indique un rotation
+* 3 indique une chute
+
+=== Attribute 0503
+
+Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
+
+=== Attribut 0508
+
+Inconnu, est envoyé après attribut 0055.
+

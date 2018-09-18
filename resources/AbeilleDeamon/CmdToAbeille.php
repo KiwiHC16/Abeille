@@ -63,6 +63,75 @@
         return $mess;
     }
     
+    
+    // Command 0x0110
+    
+    // Sequence as example:
+    // 01 02 11 10 02 10 10 34 02 12 02 14 AE 02 11 02 11 02 10 02 10 02 10 02 11 11 5F 02 11 FF 02 1D 20 02 11 03
+    // 01 Start
+    // 02 11 10 -> 01 10 -> Cmd 0110
+    // 02 10 10 -> 00 10 -> Lenght 16
+    // 34 -> CHKSM
+    // 02 12 -> 02 Address mode
+    // 02 14 AE -> 04AE address
+    // 02 11 -> 01 -> Source Ep
+    // 02 11 -> 01 -> dst Endpoint
+    // 02 10 02 10 -> 00 00 -> Cluster Id :  Basic Custer
+    // 02 10 -> Direction 00 - from server to client
+    // 02 11 -> 01 Manufacturer specific: yes
+    // 11 5F -> 115f -> Xiaomi
+    // 02 11 -> 01 -> Number of attribute
+    // FF 02 1D -> FF0D Attribut
+    // 20 -> Type
+    // 02 11 -> 01 -> Valeur
+    // 03 Stop
+    
+    function setParamXiaomi($dest,$Command)
+    {
+        // Write Attribute request
+        // Msg Type = 0x0110
+        
+        // <address mode: uint8_t>
+        // <target short address: uint16_t>
+        // <source endpoint: uint8_t>
+        // <destination endpoint: uint8_t>
+        // <Cluster id: uint16_t>
+        // <direction: uint8_t>
+        // <manufacturer specific: uint8_t>
+        // <manufacturer id: uint16_t>
+        // <number of attributes: uint8_t>
+        // <attributes list: data list of uint16_t  each>
+        //      Direction:
+        //          0 - from server to client
+        //          1 - from client to server
+        //      Manufacturer specific :
+        //          1 – Yes
+        //          0 – No
+        
+        $cmd                    = "0110";
+        
+        $addressMode            = "02"; // Short Address -> 2
+        $address                = $Command['address'];
+        $sourceEndpoint         = "01";
+        $destinationEndpoint    = "01";
+        $clusterId              = $Command['clusterId'];
+        $direction              = "00";
+        $manufacturerSpecific   = "01";
+        $proprio                = $Command['Proprio'];
+        $numberOfAttributes     = "01";
+        $attributeId            = $Command['attributeId'];
+        $attributeType          = $Command['attributeType'];
+        $value                  = $Command['value'];
+        
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $clusterId . $direction . $manufacturerSpecific . $proprio . $numberOfAttributes . $attributeId . $attributeType . $value;
+        
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        
+        sendCmd( $dest, $cmd, $lenth, $data );
+        
+    }
+    
+    
     // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
     function setParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
     {
@@ -1191,6 +1260,12 @@
             
             sendCmd( $dest, $cmd, $lenth, $data );
             
+        }
+
+        // WriteAttributeRequest ------------------------------------------------------------------------------------
+        if ( (isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
+        {
+            setParamXiaomi( $dest, $Command );
         }
         
         // ReadAttributeRequest ------------------------------------------------------------------------------------

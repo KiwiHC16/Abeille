@@ -50,9 +50,15 @@ zoom:200%;
     
     // On complete table avec le NE dans Jeedom
     foreach ( $abeilles as $abeilleIndex=>$abeille ) {
-        $shortAddress=substr($abeille->getLogicalId(),-4);
-        if ( $shortAddress=="uche" ) { $shortAddress = "0000"; }
-        $table[$shortAddress]['name'] = $abeille->getName();
+        // Il faut exclure les Timers
+        if ( strpos($abeille->getLogicalId(), "Timer") > 0 ) {
+            // C est un Timer, je ne fais rien
+        }
+        else {
+            $shortAddress=substr($abeille->getLogicalId(),-4);
+            if ( $shortAddress=="uche" ) { $shortAddress = "0000"; }
+            $table[$shortAddress]['name'] = $abeille->getName();
+        }
     }
     
     // Parametre pour positionner les points
@@ -65,27 +71,33 @@ zoom:200%;
     // On va positionner les points sur la base des infos qu'on a dans Jeedom
     foreach ( $abeilles as $abeilleIndex=>$abeille ) {
         
-        if ( ($abeille->getConfiguration()["positionX"]=="") || ($abeille->getConfiguration()["positionY"]=="")) {
-            $X = $centerX + $rayon * cos($angle/180*3.14);
-            $Y = $centerY + $rayon * sin($angle/180*3.14);
-            $angle = $angle + $angleIncrement;
+        if ( strpos($abeille->getLogicalId(), "Timer") > 0 ) {
+            // C est un Timer, je ne fais rien
         }
         else {
-            $X = $abeille->getConfiguration()["positionX"];
-            $Y = $abeille->getConfiguration()["positionY"];
-        }
-        
-        $shortAddress = substr($abeille->getLogicalId(),-4);
-        if ( $shortAddress=="uche" ) { $shortAddress = "0000"; }
-        
-        $table[$shortAddress]['x'] = $X;
-        $table[$shortAddress]['y'] = $Y;
-        
-        if ( $abeille->getConfiguration()["battery_type"]== "" ) {
-            $table[$shortAddress]['color'] = "Orange";
-        }
-        else {
-            $table[$shortAddress]['color'] = "Green";
+            
+            if ( ($abeille->getConfiguration()["positionX"]=="") || ($abeille->getConfiguration()["positionY"]=="")) {
+                $X = $centerX + $rayon * cos($angle/180*3.14);
+                $Y = $centerY + $rayon * sin($angle/180*3.14);
+                $angle = $angle + $angleIncrement;
+            }
+            else {
+                $X = $abeille->getConfiguration()["positionX"];
+                $Y = $abeille->getConfiguration()["positionY"];
+            }
+            
+            $shortAddress = substr($abeille->getLogicalId(),-4);
+            if ( $shortAddress=="uche" ) { $shortAddress = "0000"; }
+            
+            $table[$shortAddress]['x'] = $X;
+            $table[$shortAddress]['y'] = $Y;
+            
+            if ( $abeille->getConfiguration()["battery_type"]== "" ) {
+                $table[$shortAddress]['color'] = "Orange";
+            }
+            else {
+                $table[$shortAddress]['color'] = "Green";
+            }
         }
     }
     

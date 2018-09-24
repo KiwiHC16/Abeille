@@ -1,7 +1,10 @@
 = ChangeLog
 
 Version Beta en cours de development.
-
+2018-09-24:
+- Network Graph: positionne les abeilles inconnues automatiquement, ou utilise les cooredonnées définies dans les objets. #355
+- Integration du capteur Xiaomi vibration (pas le setting encore)
+- Gestion des adresses courtes et utilisation des IEEE comme réference
 
 2018-06-14:
 

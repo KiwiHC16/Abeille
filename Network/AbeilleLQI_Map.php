@@ -224,17 +224,23 @@ L pour Line to
     // $voisinesMap
     foreach ( $LQI as $row => $voisineList ) {
         
-        // if ( isset($knownNE[$sourceId]) ) { $sourceIdName = $knownNE[$sourceId]; } else { $sourceIdName = "SourceInconnue"; }
-        // if ( isset($table[$sourceId]) ) { $sourceIdName = $table[$sourceId]; } else { $sourceIdName = "SourceInconnue"; }
-        // if ( isset($knownNE[$targetId]) ) { $targetIdName = $knownNE[$targetId]; } else { $targetIdName = "TargetInconnue"; }
-        // if ( isset($table[$targetId]) ) { $targetIdName = $table[$targetId]; } else { $targetIdName = "TargetInconnue"; }
-        
         if ( ($NE==$voisineList['NE']) || ($NE=="All") || ($NE2==$voisineList['Voisine']) ) {
             if ( isset($table[$voisineList['NE']]) && isset($table[$voisineList['Voisine']]) ) {
                 $midX = ( $table[$voisineList['NE']]['x'] + $table[$voisineList['Voisine']]['x'] ) / 2;
                 $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
                 
-                echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: #6666ff; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+                if ( $Data=="LinkQualityDec" ) {
+                    if ( $voisineList[$Data]<70 )                                   { $colorLine = "#FF0000"; }
+                    if ( ($voisineList[$Data]>=70) && ($voisineList[$Data]<150) )   { $colorLine = "#FF8C00"; }
+                    if ( $voisineList[$Data]>=150 )                                 { $colorLine = "#008000"; }
+                    echo "1";
+                }
+                else {
+                    $colorLine = "#00BFFF";
+                    echo "0";
+                }
+                
+                echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
                 echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
             }
         }

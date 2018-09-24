@@ -60,7 +60,7 @@ zoom:200%;
     $centerY = 500;
     $angle = 0;
     $angleIncrement = 360/sizeof( $table );
-    $rayon = 200;
+    $rayon = 450;
     
     // On va positionner les points sur la base des infos qu'on a dans Jeedom
     foreach ( $abeilles as $abeilleIndex=>$abeille ) {

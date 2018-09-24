@@ -190,16 +190,6 @@ zoom:200%;
     </defs>
 
 
-
-
-L ordre d affichage est important
-
-Maison
-
-
-<path d="M625,270 L800,270, L800,800, L625,800, L625,600 L200,600, L200,500 L625,500 L625,270" style="stroke: #66ffff; stroke-width: 1px; fill: none; " />
-
-
 Abeilles
 
 <?php

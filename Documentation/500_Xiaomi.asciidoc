@@ -190,7 +190,7 @@ Il repond au getName sur EP 01 s.
 
 Leave
 
-=== Capteur Vibration
+== Capteur Vibration
 
 === Appui long (7s) sur bouton de gauche
 
@@ -214,3 +214,22 @@ Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
 
 Inconnu, est envoyé après attribut 0055.
 
+== Capteur Smoke
+
+=== 3 appuis sur le bouton de facade
+
+Après avoir mis la zigate en mode inclusion, 3 appuis sur le bouton en facade permet de joindre le réseau.
+
+La même action, 3 appuis, alors que la zigate n'est pas en mode inclusion permet de quitter le réseau.
+
+=== Sensibilité du capteur
+
+Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev).
+
+=== Test du capteur
+
+Il est possible d'envoyer un message vers le capteur pour voir s'il répond. Le sensor va faire un bip. Après demande, il faut attendre au plus 15s (temps de réveil).
+
+=== Réveil
+
+Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.

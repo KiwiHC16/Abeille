@@ -1,4 +1,4 @@
-= ZiGate Backup
+= ZiGate Backup/Restore
 
 [source,]
 ----
@@ -54,7 +54,24 @@ Voilà le restore est fait. Débranchez la ZiGate du port USB.
 
 Vous avez une nouvelle ZiGate identique à l'originale (Sauf peut être l'adresse MAC). Si vous perdez la première (crash HW par exemple), il vous suffi de la remplacer par la nouvelle.
 
-== A noter
+= Remplacer la ZiGate
+
+Si pour une raison ou une autre vous devez/voulez remplacer la ZiGate alors il faut faire les actions suivantes:
+(On part de l'hypotheses que Abeille/Jeedom est à jour).
+
+* Remplacer la ZiGate par une nouvelle vide
+
+* Redemarrer Abeille
+
+* Depuis la ruche démarrer le réseau zigbee (La ZiGate doit être prête)
+
+* Passer en mode inclusion
+
+* Appairer tous les équipements du réseau
+
+* Abeille mettra a jours les informtions dans Jeedom.
+
+= A noter
 
 === Adresse MAC
 

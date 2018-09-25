@@ -97,8 +97,8 @@
         else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
         }
-        sleep(10);
-        $mqtt->publish("CmdAbeille/Ruche/abeilleList", "abeilleListAll", $qos);
+        // sleep(10);
+        // $mqtt->publish("CmdAbeille/Ruche/abeilleList", "abeilleListAll", $qos);
     }
 
     function mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos = 0)
@@ -472,6 +472,9 @@
 
         // Envoie de la IEEE a Jeedom
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
+        
+        // Rafraichi le champ Ruche, JoinLeave
+        mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
 
         // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
         // if ((hexdec($capability) & $test) == 14) {
@@ -503,6 +506,7 @@
             deamonlog('debug','Je demande a l equipement de type ProFalux');
             $data = 'Default'; // destinationEndPoint
             mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos);
+
 
         }
         else{

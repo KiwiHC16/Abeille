@@ -1374,7 +1374,7 @@ class Abeille extends eqLogic
         //id
         $elogic->setName("Ruche");
         $elogic->setLogicalId("Abeille/Ruche");
-        $elogic->setObject_id($parameters_info['AbeilleParentId']);
+        if ($parameters_info['AbeilleParentId']>0) { $elogic->setObject_id($parameters_info['AbeilleParentId']); } else {  $elogic->setObject_id(null); }
         $elogic->setEqType_name('Abeille');
         $elogic->setConfiguration('topic', "Abeille/Ruche");
         $elogic->setConfiguration('type', 'topic');

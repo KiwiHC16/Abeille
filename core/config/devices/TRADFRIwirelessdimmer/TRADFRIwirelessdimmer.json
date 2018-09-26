@@ -162,7 +162,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0001&AttributeId=0021&AttributeType=20"
+          "request": "address=#addr#&targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500"
         }
       }
     }

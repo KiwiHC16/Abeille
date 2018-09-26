@@ -1,7 +1,7 @@
 {
   "TRADFRI remote control": {
     "nameJeedom": "IKEA TRADFRI Rond 5 Boutons Remote Control",
-    "timeout": "0",
+    "timeout": "3600",
     "Categorie": {
       "light": "1"
     },
@@ -249,7 +249,7 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&ClusterId=0001&AttributeId=0021&AttributeType=20"
+          "request": "address=#addr#&targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500"
         }
       }
     }

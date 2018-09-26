@@ -576,6 +576,7 @@
                                  "ClusterId"                => $parameters['ClusterId'],
                                  "AttributeType"            => $parameters['AttributeType'],
                                  "AttributeId"              => $parameters['AttributeId'],
+                                 "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
                                  );
                 $done = 1;
                 

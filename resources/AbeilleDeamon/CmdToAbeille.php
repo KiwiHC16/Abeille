@@ -736,19 +736,9 @@
             $addressMode            = "02";                     // 01 = short
             $targetShortAddress     = $Command['address'];
             // $sourceEndpoint         = "01";
-            if ( isset($Command['sourceEndpoint']) ) {
-                $sourceEndpoint         = $Command['sourceEndpoint'];
-            }
-            else {
-                $sourceEndpoint         = "01";
-            }
+            if ( $Command['sourceEndpoint']>1 ) { $sourceEndpoint = $Command['sourceEndpoint']; } else { $sourceEndpoint = "01"; }
             // $targetEndpoint    = "01";
-            if ( isset($Command['targetEndpoint']) ) {
-                $targetEndpoint         = $Command['targetEndpoint'];
-            }
-            else {
-                $targetEndpoint         = "01";
-            }
+            if ( $Command['targetEndpoint']>1 ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
             $ClusterId              = $Command['ClusterId'];
             $direction              = "00";                     // To Server / To Client
             $manufacturerSpecific   = "00";                     // Tx Server / Rx Client
@@ -765,7 +755,7 @@
             //$AttributeId            = "0000";
             
             $MinInterval            = "0000";
-            $MaxInterval            = "0000";
+            if ( strlen($Command['MaxInterval'])>0 ) { $MaxInterval = $Command['MaxInterval']; } else { $MaxInterval = "0000"; }
             $Timeout                = "0000";
             $Change                 = "00";
             

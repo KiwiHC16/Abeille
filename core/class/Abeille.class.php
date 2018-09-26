@@ -1229,7 +1229,12 @@ class Abeille extends eqLogic
                 log::add('Abeille', 'debug', 'Alerte changement de l adresse IEEE pour un equipement !!! ' . $addr . ": ".$IEEE." => ".$value);
                 message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)" );
             }
-            $elogic->checkAndUpdateCmd($cmdlogic, $value);
+            if ( $IEEE == "0000000000000000" ) {
+                log::add('Abeille', 'debug', 'IEEE est null, je ne l utilise pas.');
+            }
+            else {
+                $elogic->checkAndUpdateCmd($cmdlogic, $value);
+            }
             return;
         }
         

@@ -196,17 +196,17 @@ Abeilles
     // Dessine des points pour chaque equipement
     foreach ( $table as $id => $point ) {
         echo '<circle cx="'.$point['x'].'" cy="'.$point['y'].'" r="10" fill="'.$point['color'].'" />'."\n";
-        echo '<a xlink:href="http://jeedomzwave/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'.($point['x']+10).'" y="'.$point['y'].'" fill="red" style="font-size: 8px;">'.$point['name'].' ('.$id.')</text> </a>'."\n";
+        echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'.($point['x']+10).'" y="'.$point['y'].'" fill="red" style="font-size: 8px;">'.$point['name'].' ('.$id.')</text> </a>'."\n";
     }
     // Dessine la legende
     echo '<circle cx="100" cy="900" r="10" fill="green" />'."\n";
-    echo '<a xlink:href="http://jeedomzwave/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>'."\n";
+    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>'."\n";
     
     echo '<circle cx="100" cy="925" r="10" fill="orange" />'."\n";
-    echo '<a xlink:href="http://jeedomzwave/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>'."\n";
+    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>'."\n";
     
     echo '<circle cx="100" cy="950" r="10" fill="red" />'."\n";
-    echo '<a xlink:href="http://jeedomzwave/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>'."\n";
+    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>'."\n";
 ?>
 
 Liaisons Radio

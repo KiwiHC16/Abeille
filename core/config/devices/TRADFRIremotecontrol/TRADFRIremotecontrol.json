@@ -251,6 +251,26 @@
           "topic": "setReport",
           "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500"
         }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 15,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 16,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge"
       }
     }
   }

@@ -520,6 +520,38 @@
                "duration" => $keywords[3],
                );
                */
+            elseif ($action == "bindShort") {
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                $Command = array(
+                                 "bindShort"                => "1",
+                                 "address"                  => $address,
+                                 "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+                                 "targetEndpoint"           => $parameters['targetEndpoint'],
+                                 "clusterID"                => $parameters['ClusterId'],
+                                 "destinationAddress"       => $parameters['reportToAddress'],
+                                 "destinationEndpoint"      => "01",
+                                 );
+            }
+            
+            elseif ($action == "setReport") {
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                
+                $Command = array(
+                                 "setReport"                => "1",
+                                 "address"                  => $address,
+                                 "targetEndpoint"           => $parameters['targetEndpoint'],
+                                 "ClusterId"                => $parameters['ClusterId'],
+                                 "AttributeType"            => $parameters['AttributeType'],
+                                 "AttributeId"              => $parameters['AttributeId'],
+                                 "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
+                                 );
+            }
             
             else {
                 deamonlog('warning', 'AbeilleCommand unknown: '.$action );

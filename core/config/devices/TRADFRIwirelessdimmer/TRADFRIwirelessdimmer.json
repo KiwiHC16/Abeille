@@ -144,8 +144,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/bindShort",
-          "request": "address=#addr#&targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#"
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -161,8 +161,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500"
+          "topic": "setReport",
+          "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500"
         }
       }
     }

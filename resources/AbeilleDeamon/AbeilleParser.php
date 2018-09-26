@@ -1835,7 +1835,7 @@
             elseif (($AttributId == "ff02")) {
                 // Non decodé a ce stade
                 // deamonlog("debug", "Champ 0xFF02 non decode a ce stade");
-                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations" );
+                deamonlog("debug","Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (IR V1)" );
 
                 $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
 

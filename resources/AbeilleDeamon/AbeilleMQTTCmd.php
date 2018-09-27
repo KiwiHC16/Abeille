@@ -227,18 +227,55 @@
                 
                 //----------------------------------------------------------------------------
             } elseif ($action == "WriteAttributeRequest") {
-                $keywords = preg_split("/[=&]+/", $msg);
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                // $keywords = preg_split("/[=&]+/", $msg);
                 deamonlog('debug', 'Msg Received: '.$msg);
                 
                 // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                 $Command = array(
                                  "WriteAttributeRequest" => "1",
                                  "address" => $address,
-                                 "Proprio" => $keywords[1],
-                                 "clusterId" => $keywords[3],
-                                 "attributeId" => $keywords[5],
-                                 "attributeType" => $keywords[7],
-                                 "value" => $keywords[9],
+                                 // "Proprio" => $keywords[1],
+                                 "Proprio" => $parameters['Proprio'],
+                                 // "clusterId" => $keywords[3],
+                                 "clusterId" => $parameters['clusterId'],
+                                 // "attributeId" => $keywords[5],
+                                 "attributeId" => $parameters['attributeId'],
+                                 // "attributeType" => $keywords[7],
+                                 "attributeType" => $parameters['attributeType'],
+                                 // "value" => $keywords[9],
+                                 "value" => $parameters['value'],
+                                 
+                                 );
+                deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                
+                //----------------------------------------------------------------------------
+            } elseif ($action == "WriteAttributeRequestVibration") {
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                // $keywords = preg_split("/[=&]+/", $msg);
+                deamonlog('debug', 'Msg Received: '.$msg);
+                
+                // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+                $Command = array(
+                                 "WriteAttributeRequestVibration" => "1",
+                                 "address" => $address,
+                                 // "Proprio" => $keywords[1],
+                                 "Proprio" => $parameters['Proprio'],
+                                 // "clusterId" => $keywords[3],
+                                 "clusterId" => $parameters['clusterId'],
+                                 // "attributeId" => $keywords[5],
+                                 "attributeId" => $parameters['attributeId'],
+                                 // "attributeType" => $keywords[7],
+                                 "attributeType" => $parameters['attributeType'],
+                                 // "value" => $keywords[9],
+                                 "value" => $parameters['value'],
+                                 
                                  );
                 deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                 

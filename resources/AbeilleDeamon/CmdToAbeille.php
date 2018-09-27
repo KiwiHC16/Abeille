@@ -86,6 +86,7 @@
     // 02 11 -> 01 -> Valeur
     // 03 Stop
     
+    // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
     function setParamXiaomi($dest,$Command)
     {
         // Write Attribute request
@@ -236,13 +237,100 @@
         
         $data = $data1 . $data2;
 
-        // $lenth = "0022";
         $lenth = sprintf("%04s",dechex(strlen( $data )/2));
         deamonlog('debug',"data: ".$data );
         deamonlog('debug',"lenth data: ".$lenth );
         
         sendCmd( $dest, $cmd, $lenth, $data );
 
+    }
+    
+    function setParam3($dest,$Command)
+    {
+        // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+        
+        // isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value'])
+        deamonlog('debug',"command setParam3");
+        // Msg Type = 0x0530
+        $cmd = "0530";
+        
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+        
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+        
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+        
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+        
+        $addressMode = "02";
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint = "01";
+        if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+        
+        $profileID = "0104";
+        $clusterID = $Command['clusterId'];
+        
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = define later
+        
+        $frameControlAPS = "40";   // APS Control Field
+                                // If Ack Request 0x40 If no Ack then 0x00
+                                // Avec 0x40 j'ai un default response
+        
+        $frameControlZCL = "14";   // ZCL Control Field
+                                // Disable Default Response + Manufacturer Specific
+        
+        $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+        
+        $Proprio = $Command['Proprio'][2].$Command['Proprio'][3].$Command['Proprio'][0].$Command['Proprio'][1];
+        
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute = "02";
+        
+        // $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
+        $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+        
+        // $dataType = "42"; // string
+        $dataType = $Command['attributeType'];
+        
+        $Param = $Command['value'];
+        // $lengthAttribut = sprintf("%02s",dechex(strlen( $Param )));
+        // $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
+        $attributValue = $Command['value'];
+        
+        $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+        
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+        
+        deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+        
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+        
+        $data = $data1 . $data2;
+        
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        
+        deamonlog('debug',"data: ".$data );
+        deamonlog('debug',"lenth data: ".$lenth );
+        
+        sendCmd( $dest, $cmd, $lenth, $data );
+        
     }
     
     function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint)
@@ -1255,6 +1343,13 @@
         // WriteAttributeRequest ------------------------------------------------------------------------------------
         if ( (isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
         {
+            setParam2( $dest, $Command );
+        }
+        
+        // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
+        if ( (isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
+        {
+            // function setParam3($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
             setParamXiaomi( $dest, $Command );
         }
         

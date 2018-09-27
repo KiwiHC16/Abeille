@@ -64,7 +64,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "WriteAttributeRequest",
+          "topic": "WriteAttributeRequestVibration",
           "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15",
           "repeatEventManagement": "always"
         }
@@ -77,7 +77,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "WriteAttributeRequest",
+          "topic": "WriteAttributeRequestVibration",
           "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=0b",
           "repeatEventManagement": "always"
         }
@@ -90,7 +90,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "WriteAttributeRequest",
+          "topic": "WriteAttributeRequestVibration",
           "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=01",
           "repeatEventManagement": "always"
         },

@@ -153,6 +153,18 @@ Apparaige
 Remonte son nom et appli version
 Remonte ff01 (len 37)
 
+=== Info
+
+Rapport:
+
+- petite variation de temperature ou humidité, rapport one fois par heure
+- Si variation de plus de 0,5°C ou de plus de 6% d'humidité aors rapport immédiat
+
+Précision (Source Appli IOS MI FAQ Xiaomi)
+
+- Temperature +-0,3°C
+- Humidité +-3%
+
 == Xiaomi Cube Aqara
 
 image::images/Capture_d_ecran_2018_06_12_a_22_00_03.png[]

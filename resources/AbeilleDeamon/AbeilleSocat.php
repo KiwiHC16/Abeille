@@ -45,7 +45,8 @@
         // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
     
-        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
+        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
     
         deamonlog('Info','Command: '.$cmd);
         shell_exec( $cmd );

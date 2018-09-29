@@ -1598,7 +1598,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
             }
 
@@ -1611,7 +1611,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
             }
 
             // Xiaomi Door Sensor
@@ -1623,7 +1623,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
             }
 
             // Xiaomi capteur temperature rond / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
@@ -1640,7 +1640,7 @@
 
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId,$AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
@@ -1663,7 +1663,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1688,7 +1688,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1713,7 +1713,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1732,7 +1732,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
             }
 
@@ -1753,7 +1753,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1778,7 +1778,7 @@
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1827,7 +1827,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
             }
 
@@ -1842,7 +1842,7 @@
                 deamonlog('debug', 'Voltage: '      .$voltage);
 
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.125-($voltage/1000))/(3.125-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
             } else {
                 $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur.

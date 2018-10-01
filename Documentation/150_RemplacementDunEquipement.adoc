@@ -4,7 +4,7 @@ Si vous voulez remplacer un équipement par un autre (identique) par exemple par
 
 [source,]
 ----
-Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tous les tenants et aboutissements.
+Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.
 ----
 
 Prenons l'exemple du remplassement d'un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.
@@ -42,3 +42,16 @@ Vous pouvez maintenant changer le nom de l'objet "Abeille-8818-New" à la valeur
 image::images/Capture_d_ecran_2018_03_01_a_17_09_46.png[]
 
 
+= Remplacement d'une commande
+
+Vous pouvez remplacer une commande A par une autre commande B à l'aide des boutons oranges:
+
+image::images/Capture_d_ecran_2018_10_01_a_12_32_20.png[]
+
+Cela permet de mettre à jour les scénarios, les autres objets,... faisant référence à cette commande. C'est très pratique et rapide.
+
+Mais car il y a un mais, ou plutôt n'oubliez pas qu'une commande est attachée à un objet, un historique et éventeullement un autre Jeedom par JeeLink. A vous de gérer ces aspects.
+
+Si vous aviez une mesure de temperature A que vous avez remplacé par une mesure B et que vous voulez aussi transferer l'historique de A vers B:
+
+image::images/Capture_d_ecran_2018_10_01_a_12_31_57.png[]

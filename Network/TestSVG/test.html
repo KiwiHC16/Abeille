@@ -2,7 +2,7 @@
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     
     var myVoisinesOrg;
-    var offsetX = 10;
+    var a = 10;
     var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
     var center = JSON.parse(centerJSON);
     
@@ -10,13 +10,9 @@
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             myVoisinesOrg = JSON.parse(this.responseText);
-            // document.getElementById("position3").innerHTML = JSON.stringify(myVoisinesOrg);
-            // document.getElementById("position3").innerHTML = myVoisinesOrg.data.lenght; // NOk
-            
         }
     };
-// xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
-xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false);
+xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
 xmlhttp.send();
 
 var myJSON = '{ "0000": { "name": "Door", "x": 500, "y": 500, "color": "Red" } }';
@@ -46,9 +42,8 @@ function makeDraggable(evt) {
     var Y = 0;
     
     function startDrag(evt) {
-        // document.getElementById("position").innerHTML = evt.target.classList; // draggable
-        // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
-        document.getElementById("position4").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
+
+        document.getElementById("Debug4").innerHTML = "Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
         
         if (evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
@@ -94,15 +89,14 @@ function makeDraggable(evt) {
         if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
         }
         else {
-            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
+            myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
         }
         var myJSONNew = JSON.stringify(myObjNew);
         
-        document.getElementById("position").innerHTML = "JSONOrg / JSONNew : <BR>" + myJSONOrg + "<BR>" + myJSONNew;
+        document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
         
-        document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesAbeilles(myObjNew)+dessineLesVoisinesV2();
-         
-        document.getElementById("position5").innerHTML = dessineLesVoisinesV2();
+        document.getElementById("Debug5").innerHTML = dessineLesVoisinesV2();
         
         selectedElement = false;
         
@@ -111,6 +105,8 @@ function makeDraggable(evt) {
 
 function dessineLaLegende() {
     var legende = "";
+    
+    legende = legende + '<g id="legend">';
     
     legende = legende + '<circle cx="100" cy="875" r="10" fill="red" /></br>\n';
     legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="red" style="font-size: 8px;">Coordinator</text> </a></br>\n';
@@ -124,11 +120,16 @@ function dessineLaLegende() {
     legende = legende + '<circle cx="100" cy="950" r="10" fill="grey" />\n';
     legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
     
+     legende = legende + '</g>';
+    
     return legende;
 }
 
-function dessineLesVoisinesV2() {
-    var lesVoisines = "=> ";
+function dessineLesVoisinesV2(offsetX) {
+    var lesVoisines = "";
+    
+    lesVoisines = lesVoisines + '<g id="lesVoisines">';
+    
     for (voisines in myVoisinesOrg.data) {
         
         lesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
@@ -152,8 +153,8 @@ function dessineLesVoisinesV2() {
         lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
         
     }
-    // lesVoisines = lesVoisines + JSON.stringify(myVoisinesOrg) + " / ";
-    // var lesVoisines = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+    
+    lesVoisines = lesVoisines + '</g>';
     
     return lesVoisines;
 }
@@ -228,27 +229,21 @@ document.write( '</head>');
 
 document.write( '<body>');
 document.write( '<p id="demo"></p>');
-document.write( '<svg xmlns="http://www.w3.org/2000/svg" id="dessin" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
+document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
 
 
 
-document.write( dessineLesAbeilles(myObjOrg) );
-document.write( dessineLesVoisinesV2(myObjOrg) );
 document.write( dessineLaLegende() );
+document.write( dessineLesVoisinesV2(10) );
+document.write( dessineLesAbeilles(myObjNew) );
 
 document.write( '</svg>' );
 
 document.write( '<p id="position">position</p>' );
 document.write( '<p id="position3">position3</p>' );
 document.getElementById("position3").innerHTML = Object.keys(myVoisinesOrg.data).length;
-document.write( '<p id="position4">position4</p>' );
-document.write( '<p id="position5">position5</p>' );
-
-
-
-document.write( '<svg id="position2" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px"></svg>' );
-
-
+document.write( '<p id="Debug4">Debug4</p>' );
+document.write( '<p id="Debug5">Debug5</p>' );
 
 document.write( '</body>' );
 document.write( '</html>' );

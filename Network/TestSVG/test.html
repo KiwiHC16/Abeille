@@ -15,7 +15,7 @@
         }
     };
 
-xmlhttp.open("GET", "/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
+xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
 xmlhttp.send();
 
 var xmlhttpName = new XMLHttpRequest();
@@ -330,10 +330,101 @@ function restore() {
     refreshAll("All");
 }
 
-function testSelect(form) {
+function selectSource(form) {
     // alert (form.list.selectedIndex);
     // alert (form.list.value);
     refreshAll(form.list.value);
+}
+
+function selectDestination(form) {
+    // alert (form.list.selectedIndex);
+    // alert (form.list.value);
+    refreshAll(form.list.value);
+}
+
+function selectDetails(form) {
+    // alert (form.list.selectedIndex);
+    // alert (form.list.value);
+    refreshAll(form.list.value);
+}
+
+function selectParent(form) {
+    // alert (form.list.selectedIndex);
+    // alert (form.list.value);
+    refreshAll(form.list.value);
+}
+
+function filtreSource() {
+    
+    document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
+    document.write( '<SELECT NAME="list" >');
+    document.write( '<OPTION value="All" selected>All</OPTION>');
+    document.write( '<OPTION value="None" >None</OPTION>');
+    
+    for (shortAddress in names[0]) {
+        console.log("Name: " + JSON.stringify(shortAddress));
+        document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
+    }
+   
+    document.write( '</SELECT>');
+    document.write( '</br>');
+    document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectSource(this.form)"/>');
+    document.write( '</FORM>');
+}
+
+function filtreDestination() {
+    document.write( '<FORM NAME="myformDestination" ACTION="" METHOD="GET">');
+    document.write( '<SELECT NAME="list" >');
+    document.write( '<OPTION value="All" selected>All</OPTION>');
+    document.write( '<OPTION value="None" >None</OPTION>');
+    
+    for (shortAddress in names[0]) {
+        console.log("Name: " + JSON.stringify(shortAddress));
+        document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
+    }
+    
+    document.write( '</SELECT>');
+    document.write( '</br>');
+    document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDestination(this.form)"/>');
+    document.write( '</FORM>');
+}
+
+function filtreDetails() {
+    var dataList = [ "Depth", "LinkQualityDec", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
+    
+    document.write( '<FORM NAME="selectDetails" ACTION="" METHOD="GET">');
+    document.write( '<SELECT NAME="list" >');
+    
+    for (data in dataList) {
+        // if ( $Data==$item ) { $selected = " selected "; } else { $selected = " "; }
+        document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
+    }
+    
+    document.write( '</SELECT>');
+    document.write( '</br>');
+    document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDetails(this.form)"/>');
+    document.write( '</FORM>');
+}
+
+function filtreParent() {
+    var dataList = [ "All", "Sibling", "Child" ];
+    
+    document.write( '<FORM NAME="selectParent" ACTION="" METHOD="GET">');
+    document.write( '<SELECT NAME="list" >');
+    
+    for (data in dataList) {
+        // if ( $Data==$item ) { $selected = " selected "; } else { $selected = " "; }
+        document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
+    }
+    
+    document.write( '</SELECT>');
+    document.write( '</br>');
+    document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectParent(this.form)">');
+    document.write( '</FORM>');
+}
+
+function Refresh() {
+    // to be implemented
 }
 
 myJSON_AddMissing();
@@ -359,20 +450,18 @@ document.write( dessineLesAbeilles(myObjNew) );
 
 document.write( '</svg></br>' );
 
-document.write( '<FORM NAME="myform2" ACTION="" METHOD="GET">');
-document.write( '<SELECT NAME="list" SIZE="3">');
-document.write( '<OPTION value="All" selected>All</OPTION>');
-document.write( '<OPTION value="None" >None</OPTION>');
-document.write( '<OPTION value="0000" >Ruche</OPTION>');
-document.write( '</SELECT>');
-document.write( '</br>');
-document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="testSelect(this.form)">');
-document.write( '</FORM>');
+document.write( '<table><tr>' );
+document.write( '<td>' );filtreSource(); document.write( '</td>' );
+document.write( '<td>' );filtreDestination(); document.write( '</td>' );
+document.write( '<td>' );filtreDetails(); document.write( '</td>' );
+document.write( '<td>' );filtreParent(); document.write( '</td>' );
+document.write( '</tr></table>' );
 
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
 document.write( '<button id="save" onclick="save()">save</button>');
 document.write( '<button id="restore" onclick="restore()">restore</button>');
+document.write( '<button id="Refresh" onclick="Refresh()">Refresh</button>');
 
 document.write( '</body>' );
 document.write( '</html>' );

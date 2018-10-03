@@ -10,7 +10,7 @@
         $shortAddress = str_replace("Abeille/", "", $eqLogic->getLogicalId());
         $shortAddress = ($name == 'Ruche') ? "0000" : $shortAddress;
         
-        $json = $json . '"' . $shortAddress.'": "'.$name.'", ';
+        $json = $json . '"' . $shortAddress.'": { "name": "'.$name.'" }, ';
     }
     
     $json = substr($json,0,-2) . ' }] ';

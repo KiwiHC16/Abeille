@@ -288,21 +288,31 @@ function myJSON_AddMissing() {
     }
 }
 
+function refreshAll() {
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
+    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+}
+
 function rucheCentered() {
     myObjNew["0000"].x = center.X;
     myObjNew["0000"].y = center.Y;
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
-    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+    refreshAll();
 }
 
 function placementAuto() {
     setPosition("AutoForce");
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
-    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+    refreshAll();
 }
 
 function save() {
+    // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    localStorage.setItem('myObjNew', JSON.stringify(myObjNew));
+}
 
+function restore() {
+    // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
+    refreshAll();
 }
 
 myJSON_AddMissing();
@@ -328,7 +338,8 @@ document.write( '</svg></br>' );
 
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
-document.write( '<button id="save" onclick="ve()">save</button>');
+document.write( '<button id="save" onclick="save()">save</button>');
+document.write( '<button id="restore" onclick="restore()">restore</button>');
 
 document.write( '</body>' );
 document.write( '</html>' );

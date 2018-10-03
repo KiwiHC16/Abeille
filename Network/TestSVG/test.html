@@ -1,177 +1,176 @@
-<html>
-    <head>
-    </head>
+<script type="text/javascript">
     
-    <body>
+    function makeDraggable(evt) {
+        var svg = evt.target;
+        svg.addEventListener('mousedown',   startDrag, false);
+        svg.addEventListener('mousemove',   drag, false);
+        svg.addEventListener('mouseup',     endDrag, false);
+        svg.addEventListener('mouseleave',  endDrag);
         
+        function getMousePosition(evt) {
+            var CTM = svg.getScreenCTM();
+            return {
+                x: (evt.clientX - CTM.e) / CTM.a,
+                y: (evt.clientY - CTM.f) / CTM.d
+            };
+        }
         
-        <script type="text/javascript">
-            function makeDraggable(evt) {
-                var svg = evt.target;
-                svg.addEventListener('mousedown',   startDrag, false);
-                svg.addEventListener('mousemove',   drag, false);
-                svg.addEventListener('mouseup',     endDrag, false);
-                svg.addEventListener('mouseleave',  endDrag);
+        var selectedElement, offset, transform;
+        var positionX = "Position: X=";
+        var positionY = " Y=";
+        var X = 0;
+        var Y = 0;
+        
+        function startDrag(evt) {
+            // document.getElementById("position").innerHTML = evt.target.classList; // draggable
+            // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
+            document.getElementById("position").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
+            
+            if (evt.target.classList.contains('draggable')) {
+                // if (evt.target.classList.match('draggable')) {
+                selectedElement = evt.target;
+                offset = getMousePosition(evt);
                 
-                function getMousePosition(evt) {
-                    var CTM = svg.getScreenCTM();
-                    return {
-                        x: (evt.clientX - CTM.e) / CTM.a,
-                        y: (evt.clientY - CTM.f) / CTM.d
-                    };
+                // Make sure the first transform on the element is a translate transform
+                var transforms = selectedElement.transform.baseVal;
+                
+                if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                    // Create an transform that translates by (0, 0)
+                    var translate = svg.createSVGTransform();
+                    translate.setTranslate(0, 0);
+                    selectedElement.transform.baseVal.insertItemBefore(translate, 0);
                 }
                 
-                var selectedElement, offset, transform;
-                var positionX = "Position: X=";
-                var positionY = " Y=";
-                var X = 0;
-                var Y = 0;
-                
-                function startDrag(evt) {
-                    // document.getElementById("position").innerHTML = evt.target.classList; // draggable
-                    // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
-                    document.getElementById("position").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
-                    
-                    if (evt.target.classList.contains('draggable')) {
-                        // if (evt.target.classList.match('draggable')) {
-                        selectedElement = evt.target;
-                        offset = getMousePosition(evt);
-                        
-                        // Make sure the first transform on the element is a translate transform
-                        var transforms = selectedElement.transform.baseVal;
-                        
-                        if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-                            // Create an transform that translates by (0, 0)
-                            var translate = svg.createSVGTransform();
-                            translate.setTranslate(0, 0);
-                            selectedElement.transform.baseVal.insertItemBefore(translate, 0);
-                        }
-                        
-                        // Get initial translation
-                        transform = transforms.getItem(0);
-                        offset.x -= transform.matrix.e;
-                        offset.y -= transform.matrix.f;
-                    }
-                }
-                
-                function drag(evt) {
-                    if (selectedElement) {
-                        evt.preventDefault();
-                        var coord = getMousePosition(evt);
-                        transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                    }
-                }
-                
-                function endDrag(evt) {
-                    
-                    if (selectedElement) {
-                        evt.preventDefault();
-                        var coord = getMousePosition(evt);
-                        transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                    }
-                    X = coord.x - offset.x;
-                    Y = coord.y - offset.y;
-                    // document.getElementById("position").innerHTML = positionX + X + positionY + Y;
-                    // dessineLaLegende();
-                    // document.getElementById("dessin").innerHTML = "coucou";
-                    
-                    var myObjOrg = JSON.parse(myJSON);
-                    var myJSONOrg = JSON.stringify(myObjOrg);
-                    
-                    var myObjNew = JSON.parse(myJSON);
-                    myObjNew[evt.target.id].x = myObjNew[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjNew[evt.target.id].y + Y;
-                    var myJSONNew = JSON.stringify(myObjNew);
-                    
-                    document.getElementById("position").innerHTML = myJSONOrg + " -> " + myJSONNew;
-                    
-                    var X1 = myObjNew['aaaa'].x; var Y1 = myObjNew['aaaa'].y;
-                    var X2 = myObjNew['bbbb'].x; var Y2 = myObjNew['bbbb'].y;
-                    
-                    var line = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
-                    // var line = 'coucou';
-                    
-                    document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesVoisines(myObjNew)+dessineLesAbeilles(myObjNew);
-                    
-                    var svgText = line; // + dessineLaLegende();
-                    
-                    
-                    // document.getElementById("position").innerHTML = line;
-                    // document.getElementById("dessin").innerHTML = legende;
-                    
-                    selectedElement = false;
-                    
-                }
+                // Get initial translation
+                transform = transforms.getItem(0);
+                offset.x -= transform.matrix.e;
+                offset.y -= transform.matrix.f;
             }
-        
-        function dessineLaLegende() {
-            // Dessine la legende
-            /*
-            document.write( '<circle cx="100" cy="900" r="10" fill="green" />\n' );
-            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>\n' );
-            
-            document.write( '<circle cx="100" cy="925" r="10" fill="orange" />\n' );
-            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>\n' );
-            
-            document.write( '<circle cx="100" cy="950" r="10" fill="red" />\n' );
-            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>\n' );
-            */
-             
-            var legende = "";
-            legende = legende + '<circle cx="100" cy="900" r="10" fill="green" /></br>\n';
-            legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a></br>\n';
-            
-            legende = legende + '<circle cx="100" cy="925" r="10" fill="orange" />\n';
-            legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a></br>\n';
-            
-            legende = legende + '<circle cx="100" cy="950" r="10" fill="red" />\n';
-            legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
-            
-            // document.getElementById("position2").innerHTML = legende;
-            
-            return legende;
         }
         
-        function dessineLesVoisines(myObj) {
-            // Dessine les voisines
-            var X1 = myObj['aaaa'].x; var Y1 = myObj['aaaa'].y;
-            var X2 = myObj['bbbb'].x; var Y2 = myObj['bbbb'].y;
-            
-            // document.write( '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>' );
-            var lesVoisines = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
-            
-            return lesVoisines;
-            
-        }
-        
-        function dessineLesAbeilles(myObj) {
-            // Dessine les abeilles
-            var lesAbeilles = "";
-            for (shortAddress in myObj) {
-                // document.write( myObj[x].name );
-                // document.write( "<rect class=\"draggable\"     x=\""+myObj[shortAddress].x+"\"   y=\""+myObj[shortAddress].y+"\" width=\"8\"     height=\"10\"     fill=\"#007bff\"  transform=\"translate(10, 0)\"></rect>" );
-                
-                // document.write( "<circle class=\"draggable\" id=\""+shortAddress+"\"   cx=\""+myObj[shortAddress].x+"\"  cy=\""+myObj[shortAddress].y+"\"              r=\"10\"           fill=\"#DEDEDE\"  transform=\"translate(10, 0)\"></circle>" );
-                lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="#DEDEDE"  transform="translate(10, 0)"></circle>';
+        function drag(evt) {
+            if (selectedElement) {
+                evt.preventDefault();
+                var coord = getMousePosition(evt);
+                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
             }
-            return lesAbeilles;
         }
         
-        var myJSON = '{ "aaaa": { "name": "Door", "x": 200, "y": 200 }, "bbbb": { "name": "Window", "x": 800, "y": 800 } }';
-        var myObj = JSON.parse(myJSON);
-        // document.write( myObj["aaaa"].name );
+        function endDrag(evt) {
+            
+            if (selectedElement) {
+                evt.preventDefault();
+                var coord = getMousePosition(evt);
+                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+            }
+            X = coord.x - offset.x;
+            Y = coord.y - offset.y;
+            // document.getElementById("position").innerHTML = positionX + X + positionY + Y;
+            // dessineLaLegende();
+            // document.getElementById("dessin").innerHTML = "coucou";
+            
+            var myObjOrg = JSON.parse(myJSON);
+            var myJSONOrg = JSON.stringify(myObjOrg);
+            
+            var myObjNew = JSON.parse(myJSON);
+            myObjNew[evt.target.id].x = myObjNew[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjNew[evt.target.id].y + Y;
+            var myJSONNew = JSON.stringify(myObjNew);
+            
+            document.getElementById("position").innerHTML = myJSONOrg + " -> " + myJSONNew;
+            
+            var X1 = myObjNew['aaaa'].x; var Y1 = myObjNew['aaaa'].y;
+            var X2 = myObjNew['bbbb'].x; var Y2 = myObjNew['bbbb'].y;
+            
+            var line = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+            // var line = 'coucou';
+            
+            document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesVoisines(myObjNew)+dessineLesAbeilles(myObjNew);
+            
+            var svgText = line; // + dessineLaLegende();
+            
+            
+            // document.getElementById("position").innerHTML = line;
+            // document.getElementById("dessin").innerHTML = legende;
+            
+            selectedElement = false;
+            
+        }
+    }
+
+function dessineLaLegende() {
+    // Dessine la legende
+    /*
+     document.write( '<circle cx="100" cy="900" r="10" fill="green" />\n' );
+     document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>\n' );
+     
+     document.write( '<circle cx="100" cy="925" r="10" fill="orange" />\n' );
+     document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>\n' );
+     
+     document.write( '<circle cx="100" cy="950" r="10" fill="red" />\n' );
+     document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>\n' );
+     */
+    
+    var legende = "";
+    legende = legende + '<circle cx="100" cy="900" r="10" fill="green" /></br>\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a></br>\n';
+    
+    legende = legende + '<circle cx="100" cy="925" r="10" fill="orange" />\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a></br>\n';
+    
+    legende = legende + '<circle cx="100" cy="950" r="10" fill="red" />\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
+    
+    // document.getElementById("position2").innerHTML = legende;
+    
+    return legende;
+}
+
+function dessineLesVoisines(myObj) {
+    // Dessine les voisines
+    var X1 = myObj['aaaa'].x; var Y1 = myObj['aaaa'].y;
+    var X2 = myObj['bbbb'].x; var Y2 = myObj['bbbb'].y;
+    
+    // document.write( '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>' );
+    var lesVoisines = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+    
+    return lesVoisines;
+    
+}
+
+function dessineLesAbeilles(myObj) {
+    // Dessine les abeilles
+    var lesAbeilles = "";
+    for (shortAddress in myObj) {
+        // document.write( myObj[x].name );
+        // document.write( "<rect class=\"draggable\"     x=\""+myObj[shortAddress].x+"\"   y=\""+myObj[shortAddress].y+"\" width=\"8\"     height=\"10\"     fill=\"#007bff\"  transform=\"translate(10, 0)\"></rect>" );
         
-        document.write( '<svg xmlns="http://www.w3.org/2000/svg" id="dessin" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
-        
-        // dessineLaLegende();
-        document.write( dessineLesAbeilles(myObj) );
-        document.write( dessineLesVoisines(myObj) );
-        document.write( dessineLaLegende() );
-        
-        document.write( "</svg>" );
-        </script>
-        
-        <p id="position"></p>
-        <svg id="position2" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px"></svg>
-        
-    </body>
-</html>
+        // document.write( "<circle class=\"draggable\" id=\""+shortAddress+"\"   cx=\""+myObj[shortAddress].x+"\"  cy=\""+myObj[shortAddress].y+"\"              r=\"10\"           fill=\"#DEDEDE\"  transform=\"translate(10, 0)\"></circle>" );
+        lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="#DEDEDE"  transform="translate(10, 0)"></circle>';
+    }
+    return lesAbeilles;
+}
+
+var myJSON = '{ "aaaa": { "name": "Door", "x": 200, "y": 200 }, "bbbb": { "name": "Window", "x": 800, "y": 800 } }';
+var myObjOrg = JSON.parse(myJSON);
+var myObjNew = JSON.parse(myJSON);
+
+document.write( '<html>');
+document.write( '<head>');
+document.write( '</head>');
+
+document.write( '<body>');
+document.write( '<svg xmlns="http://www.w3.org/2000/svg" id="dessin" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
+
+document.write( dessineLesAbeilles(myObj) );
+document.write( dessineLesVoisines(myObj) );
+document.write( dessineLaLegende() );
+
+document.write( '</svg>' );
+
+document.write( '<p id="position"></p>' );
+document.write( '<svg id="position2" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px"></svg>' );
+
+document.write( '</body>');
+document.write( '</html>');
+    </script>
+

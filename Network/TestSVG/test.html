@@ -137,7 +137,7 @@ function dessineLaLegende() {
     return legende;
 }
 
-function dessineLesTextes(offsetX) {
+function dessineLesTextes(offsetX, NeFilter) {
     var lesTextes = "";
     
     lesTextes = lesTextes + '<g id="lesTextes">';
@@ -173,7 +173,7 @@ function dessineLesTextes(offsetX) {
     return lesTextes;
 }
 
-function dessineLesVoisinesV2(offsetX,NeFilter) {
+function dessineLesVoisinesV2(offsetX, NeFilter) {
     var lesVoisines = "";
     
     lesVoisines = lesVoisines + '<g id="lesVoisines">';
@@ -213,7 +213,7 @@ function dessineLesVoisinesV2(offsetX,NeFilter) {
     return lesVoisines;
 }
 
-function dessineLesAbeilles(myObj) {
+function dessineLesAbeilles(myObj, NeFilter) {
     var lesAbeilles = '<g id="lesAbeilles">';
     for (shortAddress in myObj) {
         lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="'+myObj[shortAddress].color+'"  transform="translate(10, 0)"></circle>';
@@ -222,7 +222,7 @@ function dessineLesAbeilles(myObj) {
     return lesAbeilles;
 }
 
-function dessineLesAbeillesText(myObj, offsetX) {
+function dessineLesAbeillesText(myObj, offsetX, NeFilter) {
     var lesAbeillesText = '<g id="lesAbeillesText">';
     var X = 0;
     var Y = 0;
@@ -315,9 +315,9 @@ function refreshAll(NeFilter) {
     
     document.getElementById("legend").innerHTML = dessineLaLegende();
     document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(10,NeFilter);
-    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
-    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22);
-    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew);
+    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,NeFilter);
+    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,NeFilter);
+    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew,NeFilter);
 }
 
 function rucheCentered() {

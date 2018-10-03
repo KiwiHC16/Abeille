@@ -28,7 +28,7 @@ xmlhttpName.onreadystatechange = function() {
 xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
 xmlhttpName.send();
 
-var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes" } }';
+var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes", "Type":"Coordinator" } }';
 
 var myObjOrg = JSON.parse(myJSON);
 var myObjNew = JSON.parse(myJSON);
@@ -56,7 +56,7 @@ function makeDraggable(evt) {
     
     function startDrag(evt) {
         
-        console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
+        // console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
         
         if (evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
@@ -225,6 +225,7 @@ function dessineLesAbeillesText(myObj, offsetX) {
     var lesAbeillesText = '<g id="lesAbeillesText">';
     var X = 0;
     var Y = 0;
+    console.log( JSON.stringify(myObj) );
     for (shortAddress in myObj) {
         X = myObj[shortAddress].x + offsetX;
         Y = myObj[shortAddress].y;
@@ -266,13 +267,14 @@ function setPosition(mode) {
 }
 
 function myJSON_AddMissing() {
+    var color = "";
     
     for (voisines in myVoisinesOrg.data) {
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
-            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
             
             // myObjOrg[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
             // myObjNew[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
@@ -280,24 +282,27 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE];
-            myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE];
+            myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
+            myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
 
         }
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
-            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
             
             // myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
             // myObjNew[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
-            myObjNew[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
+            if ( myVoisinesOrg.data[voisines].Type == "End Device" ) { color="Green"; }
+            if ( myVoisinesOrg.data[voisines].Type == "Router" ) { color="Orange"; }
+            if ( myVoisinesOrg.data[voisines].Type == "Coordinator" ) { color="Red"; }
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine];
-            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine];
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
             
         }
     }
@@ -362,7 +367,7 @@ function filtreSource() {
     document.write( '<OPTION value="None" >None</OPTION>');
     
     for (shortAddress in names[0]) {
-        console.log("Name: " + JSON.stringify(shortAddress));
+        // console.log("Name: " + JSON.stringify(shortAddress));
         document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
     }
    
@@ -379,7 +384,7 @@ function filtreDestination() {
     document.write( '<OPTION value="None" >None</OPTION>');
     
     for (shortAddress in names[0]) {
-        console.log("Name: " + JSON.stringify(shortAddress));
+        // console.log("Name: " + JSON.stringify(shortAddress));
         document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
     }
     
@@ -468,7 +473,7 @@ document.write( '</html>' );
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
 console.log("Name list: "+JSON.stringify(names));
-console.log("Name 1: " + JSON.stringify(names[0]["0000"]));
+// console.log("Name 1: " + JSON.stringify(names[0]["0000"]));
 
 console.log("End --------------");
 

@@ -2,66 +2,225 @@
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     
     var myVoisinesOrg;
+    var offsetX = 10;
+    var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
+    var center = JSON.parse(centerJSON);
     
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             myVoisinesOrg = JSON.parse(this.responseText);
+            // document.getElementById("position3").innerHTML = JSON.stringify(myVoisinesOrg);
+            // document.getElementById("position3").innerHTML = myVoisinesOrg.data.lenght; // NOk
+            
         }
     };
-    // xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
-    xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false);
-    xmlhttp.send();
+// xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
+xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false);
+xmlhttp.send();
 
-var myJSON = '{ "0000": { "name": "Door", "x": 200, "y": 200 }, \
-"13c0": { "name": "Window", "x": 800, "y": 800 }, \
-"4cb0": { "name": "Window", "x": 400, "y": 400 }, \
-"48a1": { "name": "Window", "x": 425, "y": 400 }, \
-"9516": { "name": "Window", "x": 450, "y": 400 }, \
-"144d": { "name": "Window", "x": 500, "y": 400 } \
-}';
+var myJSON = '{ "0000": { "name": "Door", "x": 500, "y": 500, "color": "Red" } }';
 
-var myObjOrg = JSON.parse( myJSON );
+var myObjOrg = JSON.parse(myJSON);
+var myObjNew = JSON.parse(myJSON);
 
-//                     "c276": { "name": "Window", "x": 475, "y": 400 }, \
+function makeDraggable(evt) {
+    var svg = evt.target;
+    svg.addEventListener('mousedown',   startDrag, false);
+    svg.addEventListener('mousemove',   drag, false);
+    svg.addEventListener('mouseup',     endDrag, false);
+    svg.addEventListener('mouseleave',  endDrag);
+    
+    function getMousePosition(evt) {
+        var CTM = svg.getScreenCTM();
+        return {
+            x: (evt.clientX - CTM.e) / CTM.a,
+            y: (evt.clientY - CTM.f) / CTM.d
+        };
+    }
+    
+    var selectedElement, offset, transform;
+    var positionX = "Position: X=";
+    var positionY = " Y=";
+    var X = 0;
+    var Y = 0;
+    
+    function startDrag(evt) {
+        // document.getElementById("position").innerHTML = evt.target.classList; // draggable
+        // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
+        document.getElementById("position4").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
+        
+        if (evt.target.classList.contains('draggable')) {
+            selectedElement = evt.target;
+            offset = getMousePosition(evt);
+            
+            // Make sure the first transform on the element is a translate transform
+            var transforms = selectedElement.transform.baseVal;
+            
+            if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                // Create an transform that translates by (0, 0)
+                var translate = svg.createSVGTransform();
+                translate.setTranslate(0, 0);
+                selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+            }
+            
+            // Get initial translation
+            transform = transforms.getItem(0);
+            offset.x -= transform.matrix.e;
+            offset.y -= transform.matrix.f;
+        }
+    }
+    
+    function drag(evt) {
+        if (selectedElement) {
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+        }
+    }
+    
+    function endDrag(evt) {
+        
+        if (selectedElement) {
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+        }
+        X = coord.x - offset.x;
+        Y = coord.y - offset.y;
+        
+        var myJSONOrg = JSON.stringify(myObjOrg);
+        
+        if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
+        }
+        else {
+            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+        }
+        var myJSONNew = JSON.stringify(myObjNew);
+        
+        document.getElementById("position").innerHTML = "JSONOrg / JSONNew : <BR>" + myJSONOrg + "<BR>" + myJSONNew;
+        
+        document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesAbeilles(myObjNew)+dessineLesVoisinesV2();
+         
+        document.getElementById("position5").innerHTML = dessineLesVoisinesV2();
+        
+        selectedElement = false;
+        
+    }
+}
 
-function myJSON_AddMissing() {
+function dessineLaLegende() {
+    var legende = "";
+    
+    legende = legende + '<circle cx="100" cy="875" r="10" fill="red" /></br>\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="red" style="font-size: 8px;">Coordinator</text> </a></br>\n';
+    
+    legende = legende + '<circle cx="100" cy="900" r="10" fill="green" /></br>\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="green" style="font-size: 8px;">End Equipment</text> </a></br>\n';
+    
+    legende = legende + '<circle cx="100" cy="925" r="10" fill="orange" />\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="orange" style="font-size: 8px;">Routeur</a></br>\n';
+    
+    legende = legende + '<circle cx="100" cy="950" r="10" fill="grey" />\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
+    
+    return legende;
+}
+
+function dessineLesVoisinesV2() {
+    var lesVoisines = "=> ";
     for (voisines in myVoisinesOrg.data) {
         
-        // document.write( JSON.stringify(myVoisinesOrg.data) );
+        lesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
+        var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
+        var X1=0; var X2=0; var Y1=0; var Y2=0;
         
-        // document.write( "</br>zaza</br>" );
+        if ( typeof myObjNew[NE] == "undefined" ) {
+            
+        }
+        else {
+            if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+            if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+        }
+        if ( typeof myObjNew[voisine] == "undefined" ) {
+        }
+        else {
+            if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+            if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+        }
+        // lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+        lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
         
-        // document.write( voisines );  // indice: 0, 1, 2, 3, ...
-        
-         document.write( "</br>----------------------------------</br>" );
-        document.write( myVoisinesOrg.data[voisines].NE + " " + myVoisinesOrg.data[voisines].Voisine + "</br>");
-        document.write( JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].NE]) + " " + JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].Voisine]) );
-        
-        // document.write( "</br>zizi</br>" );
-        // document.write( JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].NE]) );
-        // document.write( "</br>zeze</br>" );
-        // document.write( myObjOrg[myVoisinesOrg.data[voisines].NE].x );
+    }
+    // lesVoisines = lesVoisines + JSON.stringify(myVoisinesOrg) + " / ";
+    // var lesVoisines = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+    
+    return lesVoisines;
+}
+
+function dessineLesAbeilles(myObj) {
+    var lesAbeilles = "";
+    for (shortAddress in myObj) {
+        lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="'+myObj[shortAddress].color+'"  transform="translate(10, 0)"></circle>';
+    }
+    return lesAbeilles;
+}
+
+function myJSON_AddMissing() {
+    var nbVoisines = Object.keys(myVoisinesOrg.data).length
+    var iVoisines = 0;
+    for (voisines in myVoisinesOrg.data) {
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
-            // "c276": { "name": "Window", "x": 475, "y": 400 },
-            document.write( "</br>Beurk</br>" );
-            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 333, "y": 333 };
+
+            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150, "color": "black" };
+            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150, "color": "black" };
+            
+            myObjOrg[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
+            myObjNew[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
+            
+            X = center.X + center.rayon * Math.cos(2*Math.PI*iVoisines/nbVoisines);
+            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iVoisines/nbVoisines);
+            
+            myObjOrg[myVoisinesOrg.data[voisines].NE].x = X;
+            myObjOrg[myVoisinesOrg.data[voisines].NE].y = Y;
+            
+            myObjNew[myVoisinesOrg.data[voisines].NE].x = X;
+            myObjNew[myVoisinesOrg.data[voisines].NE].y = Y;
+            
+            myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
+            myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
+            
+            iVoisines++;
+            
         }
-        else {
-            document.write( "</br>Ok1</br>" );
-        }
+
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
-            // "c276": { "name": "Window", "x": 475, "y": 400 },
-            document.write( "</br>Beurk</br>" );
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 333, "y": 333 };
-        }
-        else {
-            document.write( "</br>Ok2</br>" );
+
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150, "color": "black" };
+            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150, "color": "black" };
+            
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
+            
+            X = center.X + center.rayon * Math.cos(2*Math.PI*iVoisines/nbVoisines);
+            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iVoisines/nbVoisines);
+            
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].x = X;
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].y = Y;
+            
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].x = X;
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].y = Y;
+            
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
+            
+            iVoisines++;
         }
     }
 }
 
+myJSON_AddMissing();
 
 document.write( '<html>');
 document.write( '<head>');
@@ -69,15 +228,27 @@ document.write( '</head>');
 
 document.write( '<body>');
 document.write( '<p id="demo"></p>');
-document.write( JSON.stringify(myObjOrg) );
-document.write( '<hr>' );
-document.write( JSON.stringify(myVoisinesOrg) );
-document.write( "</br>toto</br>" );
-myJSON_AddMissing();
-document.write( "</br>tata</br>" );
-document.write( '<hr>' );
+document.write( '<svg xmlns="http://www.w3.org/2000/svg" id="dessin" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
 
-document.write( JSON.stringify(myObjOrg) );
+
+
+document.write( dessineLesAbeilles(myObjOrg) );
+document.write( dessineLesVoisinesV2(myObjOrg) );
+document.write( dessineLaLegende() );
+
+document.write( '</svg>' );
+
+document.write( '<p id="position">position</p>' );
+document.write( '<p id="position3">position3</p>' );
+document.getElementById("position3").innerHTML = Object.keys(myVoisinesOrg.data).length;
+document.write( '<p id="position4">position4</p>' );
+document.write( '<p id="position5">position5</p>' );
+
+
+
+document.write( '<svg id="position2" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px"></svg>' );
+
+
 
 document.write( '</body>' );
 document.write( '</html>' );

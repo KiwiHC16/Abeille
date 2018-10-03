@@ -8,6 +8,11 @@
     var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
     var center = JSON.parse(centerJSON);
     
+    var Source = "All";
+    var Destination = "All";
+    var Parameter = "LinkQualityDec";
+    var Hierarchy = "All";
+    
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -137,8 +142,9 @@ function dessineLaLegende() {
     return legende;
 }
 
-function dessineLesTextes(offsetX, NeFilter) {
+function dessineLesTextes(offsetX) {
     var lesTextes = "";
+    var info = "";
     
     lesTextes = lesTextes + '<g id="lesTextes">';
     
@@ -148,24 +154,35 @@ function dessineLesTextes(offsetX, NeFilter) {
         var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
         var X1=0; var X2=0; var Y1=0; var Y2=0; var midX=0; var midY=0;
         
-        if ( typeof myObjNew[NE] == "undefined" ) {
+        if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==myVoisinesOrg.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
+            if ( typeof myObjNew[NE] == "undefined" ) {
+                
+            }
+            else {
+                if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+                if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+            }
+            if ( typeof myObjNew[voisine] == "undefined" ) {
+            }
+            else {
+                if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+                if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+            }
             
+            midX=(X1+X2)/2; midY=(Y1+Y2)/2;
+            
+            if ( Parameter == "LinkQualityDec" )    { info = myVoisinesOrg.data[voisines].LinkQualityDec;   }
+            if ( Parameter == "Depth" )             { info = myVoisinesOrg.data[voisines].Depth;            }
+            if ( Parameter == "Voisine" )           { info = myVoisinesOrg.data[voisines].Voisine;          }
+            if ( Parameter == "IEEE_Address" )      { info = myVoisinesOrg.data[voisines].IEEE_Address;     }
+            if ( Parameter == "Type" )              { info = myVoisinesOrg.data[voisines].Type;             }
+            if ( Parameter == "Relationship" )      { info = myVoisinesOrg.data[voisines].Relationship;     }
+            if ( Parameter == "Rx" )                { info = myVoisinesOrg.data[voisines].Rx;               }
+            
+            console.log("dessineLesTextes function: Parameter: " + Parameter );
+            
+            lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+info+'</text>';
         }
-        else {
-            if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
-            if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
-        }
-        if ( typeof myObjNew[voisine] == "undefined" ) {
-        }
-        else {
-            if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
-            if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
-        }
-        
-        midX=(X1+X2)/2; midY=(Y1+Y2)/2;
-        
-        lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+myVoisinesOrg.data[voisines].LinkQualityDec+'</text>';
-        
     }
     
     lesTextes = lesTextes + '</g>';
@@ -173,7 +190,7 @@ function dessineLesTextes(offsetX, NeFilter) {
     return lesTextes;
 }
 
-function dessineLesVoisinesV2(offsetX, NeFilter) {
+function dessineLesVoisinesV2(offsetX) {
     var lesVoisines = "";
     
     lesVoisines = lesVoisines + '<g id="lesVoisines">';
@@ -182,7 +199,7 @@ function dessineLesVoisinesV2(offsetX, NeFilter) {
         
         var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
         
-        if ( (NeFilter=="All") || (NeFilter==NE) ) {
+        if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==myVoisinesOrg.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
             var X1=0; var X2=0; var Y1=0; var Y2=0;
             var color="orange";
             
@@ -309,15 +326,14 @@ function myJSON_AddMissing() {
     }
 }
 
-function refreshAll(NeFilter) {
-    // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,NeFilter);
-    // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+function refreshAll() {
+    console.log("function refreshAll: "+ Source + "-" + Destination + "-" + Parameter + "-" + Hierarchy );
     
     document.getElementById("legend").innerHTML = dessineLaLegende();
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(10,NeFilter);
-    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,NeFilter);
-    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,NeFilter);
-    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew,NeFilter);
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(10);
+    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
+    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22);
+    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew);
 }
 
 function rucheCentered() {
@@ -344,38 +360,33 @@ function restore() {
 }
 
 function selectSource(form) {
-    // alert (form.list.selectedIndex);
-    // alert (form.list.value);
-    refreshAll(form.list.value);
+    Source = form.list.value;
+    refreshAll();
 }
 
 function selectDestination(form) {
-    // alert (form.list.selectedIndex);
-    // alert (form.list.value);
-    refreshAll(form.list.value);
+    Destination = form.list.value;
+    refreshAll();
 }
 
 function selectDetails(form) {
-    // alert (form.list.selectedIndex);
-    // alert (form.list.value);
-    refreshAll(form.list.value);
+    Parameter = form.list.value;
+    console.log("selectDetails function: Parameter: " + Parameter );
+    refreshAll();
 }
 
 function selectParent(form) {
-    // alert (form.list.selectedIndex);
-    // alert (form.list.value);
-    refreshAll(form.list.value);
+    Hierarchy = form.list.value;
+    refreshAll();
 }
 
 function filtreSource() {
-    
     document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
     document.write( '<SELECT NAME="list" >');
     document.write( '<OPTION value="All" selected>All</OPTION>');
     document.write( '<OPTION value="None" >None</OPTION>');
     
     for (shortAddress in names[0]) {
-        // console.log("Name: " + JSON.stringify(shortAddress));
         document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
     }
    
@@ -405,11 +416,10 @@ function filtreDestination() {
 function filtreDetails() {
     var dataList = [ "Depth", "LinkQualityDec", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
     
-    document.write( '<FORM NAME="selectDetails" ACTION="" METHOD="GET">');
+    document.write( '<FORM NAME="myformDetails" ACTION="" METHOD="GET">');
     document.write( '<SELECT NAME="list" >');
     
     for (data in dataList) {
-        // if ( $Data==$item ) { $selected = " selected "; } else { $selected = " "; }
         document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
     }
     
@@ -422,7 +432,7 @@ function filtreDetails() {
 function filtreParent() {
     var dataList = [ "All", "Sibling", "Child" ];
     
-    document.write( '<FORM NAME="selectParent" ACTION="" METHOD="GET">');
+    document.write( '<FORM NAME="myformParent" ACTION="" METHOD="GET">');
     document.write( '<SELECT NAME="list" >');
     
     for (data in dataList) {
@@ -462,10 +472,10 @@ document.write( dessineLesAbeilles(myObjNew) );
 document.write( '</svg></br>' );
 
 document.write( '<table><tr>' );
-document.write( '<td>' );filtreSource(); document.write( '</td>' );
-document.write( '<td>' );filtreDestination(); document.write( '</td>' );
-document.write( '<td>' );filtreDetails(); document.write( '</td>' );
-document.write( '<td>' );filtreParent(); document.write( '</td>' );
+document.write( '<td>' );   filtreSource();         document.write( '</td>' );
+document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
+document.write( '<td>' );   filtreDetails();        document.write( '</td>' );
+document.write( '<td>' );   filtreParent();         document.write( '</td>' );
 document.write( '</tr></table>' );
 
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');

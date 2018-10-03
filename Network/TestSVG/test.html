@@ -1,42 +1,48 @@
 <script type="text/javascript">
-    // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
-    
-    console.log("Begin --------------");
-    
-    var myVoisinesOrg;
-    var a = 10;
-    var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
-    var center = JSON.parse(centerJSON);
-    
-    var Source = "All";
-    var Destination = "All";
-    var Parameter = "LinkQualityDec";
-    var Hierarchy = "All";
-    
+// Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
+
+console.log("Begin --------------");
+
+var myVoisinesOrg;
+var names;
+var a = 10;
+var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
+var center = JSON.parse(centerJSON);
+
+var Source = "All";
+var Destination = "All";
+var Parameter = "LinkQualityDec";
+var Hierarchy = "All";
+
+var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes", "Type":"Coordinator" } }';
+
+var myObjOrg = JSON.parse(myJSON);
+var myObjNew = JSON.parse(myJSON);
+
+function getVoisinesJSON() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             myVoisinesOrg = JSON.parse(this.responseText);
         }
     };
+    
+    xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttp.send();
+}
 
-xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
-xmlhttp.send();
+function getNamesJSON() {
+    var xmlhttpName = new XMLHttpRequest();
+    xmlhttpName.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            names = JSON.parse(this.responseText);
+        }
+    };
+    
+    xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttpName.send();
+}
 
-var xmlhttpName = new XMLHttpRequest();
-xmlhttpName.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        names = JSON.parse(this.responseText);
-    }
-};
-
-xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
-xmlhttpName.send();
-
-var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes", "Type":"Coordinator" } }';
-
-var myObjOrg = JSON.parse(myJSON);
-var myObjNew = JSON.parse(myJSON);
 
 function makeDraggable(evt) {
     var svg = evt.target;
@@ -61,26 +67,31 @@ function makeDraggable(evt) {
     
     function startDrag(evt) {
         
-        // console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
+        console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
         
         if (evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
-            offset = getMousePosition(evt);
+            offset = getMousePosition(evt); // Position du clic de souris dans les coordonnées SVG.
+            console.log("Debug - offset: "+JSON.stringify(offset));
             
             // Make sure the first transform on the element is a translate transform
+            // Should not be needed as Abeille have a Translate
             var transforms = selectedElement.transform.baseVal;
             
             if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
                 // Create an transform that translates by (0, 0)
+                console.log("Debug - Need a TRANSLATE - NOT expected");
                 var translate = svg.createSVGTransform();
                 translate.setTranslate(0, 0);
                 selectedElement.transform.baseVal.insertItemBefore(translate, 0);
             }
             
-            // Get initial translation
+            // Get initial translation from Abeille Object
             transform = transforms.getItem(0);
             offset.x -= transform.matrix.e;
             offset.y -= transform.matrix.f;
+            
+            console.log("Debug - offset with transform: "+JSON.stringify(offset));
         }
     }
     
@@ -88,6 +99,7 @@ function makeDraggable(evt) {
         if (selectedElement) {
             evt.preventDefault();
             var coord = getMousePosition(evt);
+            // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
             transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
         }
     }
@@ -97,12 +109,15 @@ function makeDraggable(evt) {
         if (selectedElement) {
             evt.preventDefault();
             var coord = getMousePosition(evt);
+            console.log("Debug - endDrag - coord (arrivée): "+JSON.stringify(coord));
+            // Ne change pas les coordonnées de l objet mais sa translation
             transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-            
+            console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
             X = coord.x - offset.x;
             Y = coord.y - offset.y;
+            console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
             
-            var myJSONOrg = JSON.stringify(myObjOrg);
+            // var myJSONOrg = JSON.stringify(myObjOrg);
             
             if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
             }
@@ -110,20 +125,20 @@ function makeDraggable(evt) {
                 myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
                 myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
             }
-            var myJSONNew = JSON.stringify(myObjNew);
+            // var myJSONNew = JSON.stringify(myObjNew);
             
-            document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0, "All");
-            document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
-            document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+            document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+            document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+            document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
         }
         selectedElement = false;
     }
 }
 
-function dessineLaLegende() {
+function dessineLaLegende(includeGroup) {
     var legende = "";
     
-    legende = legende + '<g id="legend">';
+    if ( includeGroup=="Yes" ) { legende = legende + '<g id="legend">'; }
     
     legende = legende + '<circle cx="100" cy="875" r="10" fill="red" /></br>\n';
     legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="red" style="font-size: 8px;">Coordinator</text> </a></br>\n';
@@ -137,16 +152,16 @@ function dessineLaLegende() {
     legende = legende + '<circle cx="100" cy="950" r="10" fill="grey" />\n';
     legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
     
-    legende = legende + '</g>';
+    if ( includeGroup=="Yes" ) { legende = legende + '</g>'; }
     
     return legende;
 }
 
-function dessineLesTextes(offsetX) {
+function dessineLesTextes(offsetX, includeGroup) {
     var lesTextes = "";
     var info = "";
     
-    lesTextes = lesTextes + '<g id="lesTextes">';
+    if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '<g id="lesTextes">'; }
     
     for (voisines in myVoisinesOrg.data) {
         
@@ -179,21 +194,21 @@ function dessineLesTextes(offsetX) {
             if ( Parameter == "Relationship" )      { info = myVoisinesOrg.data[voisines].Relationship;     }
             if ( Parameter == "Rx" )                { info = myVoisinesOrg.data[voisines].Rx;               }
             
-            console.log("dessineLesTextes function: Parameter: " + Parameter );
+            // console.log("dessineLesTextes function: Parameter: " + Parameter );
             
             lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+info+'</text>';
         }
     }
     
-    lesTextes = lesTextes + '</g>';
+    if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '</g>'; }
     
     return lesTextes;
 }
 
-function dessineLesVoisinesV2(offsetX) {
+function dessineLesVoisinesV2(offsetX,includeGroup) {
     var lesVoisines = "";
     
-    lesVoisines = lesVoisines + '<g id="lesVoisines">';
+    if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
     
     for (voisines in myVoisinesOrg.data) {
         
@@ -225,31 +240,38 @@ function dessineLesVoisinesV2(offsetX) {
         
     }
     
-    lesVoisines = lesVoisines + '</g>';
+    if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '</g>'; }
     
     return lesVoisines;
 }
 
-function dessineLesAbeilles(myObj, NeFilter) {
-    var lesAbeilles = '<g id="lesAbeilles">';
-    for (shortAddress in myObj) {
-        lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="'+myObj[shortAddress].color+'"  transform="translate(10, 0)"></circle>';
+function dessineLesAbeilles(includeGroup) {
+    var lesAbeilles = "";
+    
+    if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '<g id="lesAbeilles">'; }
+    for (shortAddress in myObjNew) {
+        myObjOrg[shortAddress].x = myObjNew[shortAddress].x;
+        myObjOrg[shortAddress].y = myObjNew[shortAddress].y;
+        lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObjNew[shortAddress].x+'"  cy="'+myObjNew[shortAddress].y+'"              r="10"           fill="'+myObjNew[shortAddress].color+'"  transform="translate(0, 0)"></circle>';
     }
-    lesAbeilles = lesAbeilles + '</g>';
+    if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '</g>'; }
     return lesAbeilles;
 }
 
-function dessineLesAbeillesText(myObj, offsetX, NeFilter) {
-    var lesAbeillesText = '<g id="lesAbeillesText">';
+function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
+    var lesAbeillesText = "";
     var X = 0;
     var Y = 0;
+    
+    if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '<g id="lesAbeillesText">'; }
+
     // console.log( JSON.stringify(myObj) );
     for (shortAddress in myObj) {
         X = myObj[shortAddress].x + offsetX;
         Y = myObj[shortAddress].y;
         lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
     }
-    lesAbeillesText = lesAbeillesText + '</g>';
+    if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '</g>'; }
     return lesAbeillesText;
 }
 
@@ -270,10 +292,12 @@ function setPosition(mode) {
             
             iAbeille++;
         }
-        if ( (myObjNew[abeille].positionDefined == "Yes") && (mode=="AutoForce") ) {
+        if ( mode=="AutoForce" ) {
             X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
             Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
             
+            myObjOrg[abeille].x = X;
+            myObjOrg[abeille].y = Y;
             myObjNew[abeille].x = X;
             myObjNew[abeille].y = Y;
             
@@ -284,6 +308,10 @@ function setPosition(mode) {
     }
 }
 
+// myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
+// On parcourt las voisines et à chaque nouvelle abeille on l'ajoute à myObjOrg et myObjNew
+// On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
+// Idem pour la couleur
 function myJSON_AddMissing() {
     var color = "";
     
@@ -294,24 +322,18 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
             myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
             
-            // myObjOrg[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
-            // myObjNew[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
-            
             myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
             
             myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
             myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
-
+            
         }
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
             
             myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
             myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-            
-            // myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
-            // myObjNew[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
             
             if ( myVoisinesOrg.data[voisines].Type == "End Device" ) { color="Green"; }
             if ( myVoisinesOrg.data[voisines].Type == "Router" ) { color="Orange"; }
@@ -327,13 +349,15 @@ function myJSON_AddMissing() {
 }
 
 function refreshAll() {
-    console.log("function refreshAll: "+ Source + "-" + Destination + "-" + Parameter + "-" + Hierarchy );
+    // console.log("function refreshAll: "+ Source + "-" + Destination + "-" + Parameter + "-" + Hierarchy );
     
-    document.getElementById("legend").innerHTML = dessineLaLegende();
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(10);
-    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
-    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22);
-    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew);
+    document.getElementById("legend").innerHTML = dessineLaLegende("No");
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,"No");
+    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles("No");
+    // Je ne peux pas redessiner les abeilles car l'objet graphique contient la Transklation et les x, y d'origine
+    // alors que dans myObjNew j'ai les nouvelles coordonnées mais pas la translation.
 }
 
 function rucheCentered() {
@@ -344,7 +368,7 @@ function rucheCentered() {
 
 function placementAuto() {
     setPosition("AutoForce");
-    refreshAll("All");
+    refreshAll();
 }
 
 function save() {
@@ -371,7 +395,7 @@ function selectDestination(form) {
 
 function selectDetails(form) {
     Parameter = form.list.value;
-    console.log("selectDetails function: Parameter: " + Parameter );
+    // console.log("selectDetails function: Parameter: " + Parameter );
     refreshAll();
 }
 
@@ -389,7 +413,7 @@ function filtreSource() {
     for (shortAddress in names[0]) {
         document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
     }
-   
+    
     document.write( '</SELECT>');
     document.write( '</br>');
     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectSource(this.form)"/>');
@@ -450,6 +474,9 @@ function Refresh() {
     // to be implemented
 }
 
+getVoisinesJSON();
+getNamesJSON();
+
 myJSON_AddMissing();
 setPosition("Auto");
 
@@ -463,11 +490,11 @@ document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100
 
 document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.png" ></image>');
 
-document.write( dessineLaLegende() );
-document.write( dessineLesVoisinesV2(10,"All") );
-document.write( dessineLesTextes(10) );
-document.write( dessineLesAbeillesText(myObjNew, 22) );
-document.write( dessineLesAbeilles(myObjNew) );
+document.write( dessineLaLegende("Yes") );
+document.write( dessineLesVoisinesV2(0,"Yes") );
+document.write( dessineLesTextes(10,"Yes") );
+document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
+document.write( dessineLesAbeilles("Yes") );
 
 document.write( '</svg></br>' );
 
@@ -484,7 +511,7 @@ document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Cent
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
 document.write( '<button id="save" onclick="save()">save</button>');
 document.write( '<button id="restore" onclick="restore()">restore</button>');
-document.write( '<button id="Refresh" onclick="Refresh()">Refresh</button>');
+document.write( '<button id="Refresh" onclick="Refresh()">Refresh (not implemented yet</button>');
 
 document.write( '</body>' );
 document.write( '</html>' );

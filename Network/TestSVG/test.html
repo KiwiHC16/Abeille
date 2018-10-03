@@ -166,36 +166,38 @@ function dessineLesTextes(offsetX) {
     return lesTextes;
 }
 
-function dessineLesVoisinesV2(offsetX) {
+function dessineLesVoisinesV2(offsetX,NeFilter) {
     var lesVoisines = "";
     
     lesVoisines = lesVoisines + '<g id="lesVoisines">';
     
     for (voisines in myVoisinesOrg.data) {
         
-        // lesTexteslesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
         var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
-        var X1=0; var X2=0; var Y1=0; var Y2=0;
-        var color="orange";
         
-        if ( typeof myObjNew[NE] == "undefined" ) {
+        if ( (NeFilter=="All") || (NeFilter==NE) ) {
+            var X1=0; var X2=0; var Y1=0; var Y2=0;
+            var color="orange";
             
+            if ( typeof myObjNew[NE] == "undefined" ) {
+                
+            }
+            else {
+                if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+                if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+            }
+            if ( typeof myObjNew[voisine] == "undefined" ) {
+            }
+            else {
+                if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+                if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+            }
+            
+            if ( myVoisinesOrg.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+            if ( myVoisinesOrg.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+            
+            lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
         }
-        else {
-            if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
-            if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
-        }
-        if ( typeof myObjNew[voisine] == "undefined" ) {
-        }
-        else {
-            if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
-            if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
-        }
-        
-        if ( myVoisinesOrg.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-        if ( myVoisinesOrg.data[voisines].LinkQualityDec <  50 ) { color = "red";}
-        
-        lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
         
     }
     
@@ -288,20 +290,20 @@ function myJSON_AddMissing() {
     }
 }
 
-function refreshAll() {
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
+function refreshAll(NeFilter) {
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,NeFilter);
     document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
 }
 
 function rucheCentered() {
     myObjNew["0000"].x = center.X;
     myObjNew["0000"].y = center.Y;
-    refreshAll();
+    refreshAll("All");
 }
 
 function placementAuto() {
     setPosition("AutoForce");
-    refreshAll();
+    refreshAll("All");
 }
 
 function save() {
@@ -312,7 +314,13 @@ function save() {
 function restore() {
     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
     myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
-    refreshAll();
+    refreshAll("All");
+}
+
+function testSelect(form) {
+    // alert (form.list.selectedIndex);
+    // alert (form.list.value);
+    refreshAll(form.list.value);
 }
 
 myJSON_AddMissing();
@@ -334,7 +342,19 @@ document.write( dessineLesTextes(10) );
 document.write( dessineLesAbeillesText(myObjNew, 22) );
 document.write( dessineLesAbeilles(myObjNew) );
 
+
+
 document.write( '</svg></br>' );
+
+document.write( '<FORM NAME="myform2" ACTION="" METHOD="GET">');
+document.write( '<SELECT NAME="list" SIZE="3">');
+document.write( '<OPTION value="All" selected>All</OPTION>');
+document.write( '<OPTION value="None" >None</OPTION>');
+document.write( '<OPTION value="0000" >Ruche</OPTION>');
+document.write( '</SELECT>');
+document.write( '</br>');
+document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="testSelect(this.form)">');
+document.write( '</FORM>');
 
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');

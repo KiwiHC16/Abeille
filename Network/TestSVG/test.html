@@ -16,7 +16,10 @@
 xmlhttp.open("GET", "/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
 xmlhttp.send();
 
-var myJSON = '{ "0000": { "name": "Door", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes" } }';
+
+// Il faut récupérer un JSOn avec les noms
+
+var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes" } }';
 
 var myObjOrg = JSON.parse(myJSON);
 var myObjNew = JSON.parse(myJSON);
@@ -97,6 +100,7 @@ function makeDraggable(evt) {
         
         document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
         document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
+        document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
         
         document.getElementById("Debug5").innerHTML = dessineLesVoisinesV2();
         
@@ -192,7 +196,6 @@ function dessineLesVoisinesV2(offsetX) {
         if ( myVoisinesOrg.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
         if ( myVoisinesOrg.data[voisines].LinkQualityDec <  50 ) { color = "red";}
         
-        // lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
         lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
         
     }
@@ -208,6 +211,19 @@ function dessineLesAbeilles(myObj) {
         lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="'+myObj[shortAddress].color+'"  transform="translate(10, 0)"></circle>';
     }
     return lesAbeilles;
+}
+
+function dessineLesAbeillesText(myObj, offsetX) {
+    var lesAbeillesText = '<g id="lesAbeillesText">';
+    var X = 0;
+    var Y = 0;
+    for (shortAddress in myObj) {
+        X = myObj[shortAddress].x + offsetX;
+        Y = myObj[shortAddress].y;
+        lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+    }
+    lesAbeillesText = lesAbeillesText + '</g>';
+    return lesAbeillesText;
 }
 
 function setPosition() {
@@ -234,11 +250,11 @@ function myJSON_AddMissing() {
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
-            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
-            myObjNew[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
+            // myObjOrg[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
+            // myObjNew[myVoisinesOrg.data[voisines].NE].name = myVoisinesOrg.data[voisines].Voisine;
             
             myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
@@ -247,11 +263,11 @@ function myJSON_AddMissing() {
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
-            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
+            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No" };
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
-            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
+            // myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
+            // myObjNew[myVoisinesOrg.data[voisines].Voisine].name = myVoisinesOrg.data[voisines].Voisine;
             
             myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
@@ -276,6 +292,7 @@ document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/
 document.write( dessineLaLegende() );
 document.write( dessineLesVoisinesV2(10) );
 document.write( dessineLesTextes(10) );
+document.write( dessineLesAbeillesText(myObjNew, 22) );
 document.write( dessineLesAbeilles(myObjNew) );
 
 document.write( '</svg>' );

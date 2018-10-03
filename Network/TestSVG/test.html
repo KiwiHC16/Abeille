@@ -18,8 +18,15 @@
 xmlhttp.open("GET", "/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
 xmlhttp.send();
 
+var xmlhttpName = new XMLHttpRequest();
+xmlhttpName.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        names = JSON.parse(this.responseText);
+    }
+};
 
-// Il faut récupérer un JSOn avec les noms
+xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
+xmlhttpName.send();
 
 var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes" } }';
 
@@ -86,24 +93,24 @@ function makeDraggable(evt) {
             evt.preventDefault();
             var coord = getMousePosition(evt);
             transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+            
+            X = coord.x - offset.x;
+            Y = coord.y - offset.y;
+            
+            var myJSONOrg = JSON.stringify(myObjOrg);
+            
+            if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
+            }
+            else {
+                myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
+                myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+            }
+            var myJSONNew = JSON.stringify(myObjNew);
+            
+            document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0, "All");
+            document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
+            document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
         }
-        X = coord.x - offset.x;
-        Y = coord.y - offset.y;
-        
-        var myJSONOrg = JSON.stringify(myObjOrg);
-        
-        if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
-        }
-        else {
-            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
-            myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
-        }
-        var myJSONNew = JSON.stringify(myObjNew);
-        
-        document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
-        document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
-        document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
-        
         selectedElement = false;
     }
 }
@@ -272,6 +279,9 @@ function myJSON_AddMissing() {
             
             myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
+            
+            myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE];
+            myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE];
 
         }
         
@@ -285,6 +295,9 @@ function myJSON_AddMissing() {
             
             myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].Voisine].color = 'grey';
+            
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine];
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine];
             
         }
     }
@@ -337,7 +350,7 @@ document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100
 document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.png" ></image>');
 
 document.write( dessineLaLegende() );
-document.write( dessineLesVoisinesV2(10) );
+document.write( dessineLesVoisinesV2(10,"All") );
 document.write( dessineLesTextes(10) );
 document.write( dessineLesAbeillesText(myObjNew, 22) );
 document.write( dessineLesAbeilles(myObjNew) );
@@ -363,6 +376,10 @@ document.write( '<button id="restore" onclick="restore()">restore</button>');
 
 document.write( '</body>' );
 document.write( '</html>' );
+
+// console.log("Name list: "+JSON.stringify(myVoisinesOrg));
+console.log("Name list: "+JSON.stringify(names));
+console.log("Name 1: " + JSON.stringify(names[0]["0000"]));
 
 console.log("End --------------");
 

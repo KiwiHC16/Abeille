@@ -3,6 +3,7 @@
     
     var myVoisinesOrg;
     var offsetX = 10;
+    var center = '{ "X": 500, "Y": 500}';
     
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -11,103 +12,106 @@
             document.getElementById("position3").innerHTML = JSON.stringify(myVoisinesOrg);
         }
     };
-    xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
-    xmlhttp.send();
+xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
+xmlhttp.send();
 
-    var myJSON = '{ "0000": { "name": "Door", "x": 200, "y": 200 }, \
-                    "13c0": { "name": "Window", "x": 800, "y": 800 }, \
-                    "4cb0": { "name": "Window", "x": 400, "y": 400 }, \
-                    "48a1": { "name": "Window", "x": 425, "y": 400 }, \
-                    "9516": { "name": "Window", "x": 450, "y": 400 }, \
-                    "c276": { "name": "Window", "x": 475, "y": 400 }, \
-                    "144d": { "name": "Window", "x": 500, "y": 400 } \
-                    }';
-                    
-    var myObjOrg = JSON.parse(myJSON);
-    var myObjNew = JSON.parse(myJSON);
+var myJSON = '{ "0000": { "name": "Door", "x": 200, "y": 200 }, \
+"13c0": { "name": "Window", "x": 800, "y": 800 }, \
+"4cb0": { "name": "Window", "x": 400, "y": 400 }, \
+"48a1": { "name": "Window", "x": 425, "y": 400 }, \
+"9516": { "name": "Window", "x": 450, "y": 400 }, \
+"144d": { "name": "Window", "x": 500, "y": 400 } \
+}';
+
+//                     "c276": { "name": "Window", "x": 475, "y": 400 }, \
+
+var myObjOrg = JSON.parse(myJSON);
+var myObjNew = JSON.parse(myJSON);
+
+function makeDraggable(evt) {
+    var svg = evt.target;
+    svg.addEventListener('mousedown',   startDrag, false);
+    svg.addEventListener('mousemove',   drag, false);
+    svg.addEventListener('mouseup',     endDrag, false);
+    svg.addEventListener('mouseleave',  endDrag);
     
-    function makeDraggable(evt) {
-        var svg = evt.target;
-        svg.addEventListener('mousedown',   startDrag, false);
-        svg.addEventListener('mousemove',   drag, false);
-        svg.addEventListener('mouseup',     endDrag, false);
-        svg.addEventListener('mouseleave',  endDrag);
+    function getMousePosition(evt) {
+        var CTM = svg.getScreenCTM();
+        return {
+            x: (evt.clientX - CTM.e) / CTM.a,
+            y: (evt.clientY - CTM.f) / CTM.d
+        };
+    }
+    
+    var selectedElement, offset, transform;
+    var positionX = "Position: X=";
+    var positionY = " Y=";
+    var X = 0;
+    var Y = 0;
+    
+    function startDrag(evt) {
+        // document.getElementById("position").innerHTML = evt.target.classList; // draggable
+        // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
+        document.getElementById("position4").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
         
-        function getMousePosition(evt) {
-            var CTM = svg.getScreenCTM();
-            return {
-                x: (evt.clientX - CTM.e) / CTM.a,
-                y: (evt.clientY - CTM.f) / CTM.d
-            };
-        }
-        
-        var selectedElement, offset, transform;
-        var positionX = "Position: X=";
-        var positionY = " Y=";
-        var X = 0;
-        var Y = 0;
-        
-        function startDrag(evt) {
-            // document.getElementById("position").innerHTML = evt.target.classList; // draggable
-            // document.getElementById("position").innerHTML = evt.target.tagName; // Circle
-            document.getElementById("position4").innerHTML = evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
+        if (evt.target.classList.contains('draggable')) {
+            selectedElement = evt.target;
+            offset = getMousePosition(evt);
             
-            if (evt.target.classList.contains('draggable')) {
-                selectedElement = evt.target;
-                offset = getMousePosition(evt);
-                
-                // Make sure the first transform on the element is a translate transform
-                var transforms = selectedElement.transform.baseVal;
-                
-                if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-                    // Create an transform that translates by (0, 0)
-                    var translate = svg.createSVGTransform();
-                    translate.setTranslate(0, 0);
-                    selectedElement.transform.baseVal.insertItemBefore(translate, 0);
-                }
-                
-                // Get initial translation
-                transform = transforms.getItem(0);
-                offset.x -= transform.matrix.e;
-                offset.y -= transform.matrix.f;
+            // Make sure the first transform on the element is a translate transform
+            var transforms = selectedElement.transform.baseVal;
+            
+            if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                // Create an transform that translates by (0, 0)
+                var translate = svg.createSVGTransform();
+                translate.setTranslate(0, 0);
+                selectedElement.transform.baseVal.insertItemBefore(translate, 0);
             }
-        }
-        
-        function drag(evt) {
-            if (selectedElement) {
-                evt.preventDefault();
-                var coord = getMousePosition(evt);
-                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-            }
-        }
-        
-        function endDrag(evt) {
             
-            if (selectedElement) {
-                evt.preventDefault();
-                var coord = getMousePosition(evt);
-                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-            }
-            X = coord.x - offset.x;
-            Y = coord.y - offset.y;
-
-            var myJSONOrg = JSON.stringify(myObjOrg);
-            
-            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
-            var myJSONNew = JSON.stringify(myObjNew);
-            
-            document.getElementById("position").innerHTML = myJSONOrg + " -> " + myJSONNew;
-            
-            // document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesVoisines(myObjNew)+dessineLesAbeilles(myObjNew)+dessineLesVoisinesV2();
-            document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesAbeilles(myObjNew)+dessineLesVoisinesV2();
-            
-            // document.getElementById("position5").innerHTML = JSON.stringify(myVoisinesOrg.data[0]);
-            document.getElementById("position5").innerHTML = dessineLesVoisinesV2();
-            
-            selectedElement = false;
-            
+            // Get initial translation
+            transform = transforms.getItem(0);
+            offset.x -= transform.matrix.e;
+            offset.y -= transform.matrix.f;
         }
     }
+    
+    function drag(evt) {
+        if (selectedElement) {
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+        }
+    }
+    
+    function endDrag(evt) {
+        
+        if (selectedElement) {
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+        }
+        X = coord.x - offset.x;
+        Y = coord.y - offset.y;
+        
+        var myJSONOrg = JSON.stringify(myObjOrg);
+        
+        if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
+        }
+        else {
+            myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X; myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+        }
+        var myJSONNew = JSON.stringify(myObjNew);
+        
+        document.getElementById("position").innerHTML = myJSONOrg + " -> " + myJSONNew;
+        
+        document.getElementById("position2").innerHTML = dessineLaLegende()+dessineLesAbeilles(myObjNew)+dessineLesVoisinesV2();
+         
+        document.getElementById("position5").innerHTML = dessineLesVoisinesV2();
+        
+        selectedElement = false;
+        
+    }
+}
 
 function dessineLaLegende() {
     var legende = "";
@@ -138,13 +142,24 @@ function dessineLesVoisinesV2() {
         
         lesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
         var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
+        var X1=0; var X2=0; var Y1=0; var Y2=0;
         
-        var X1 = myObjNew[NE].x + offsetX;       var Y1 = myObjNew[NE].y;
-        var X2 = myObjNew[voisine].x + offsetX;  var Y2 = myObjNew[voisine].y;
-        
+        if ( typeof myObjNew[NE] == "undefined" ) {
+            
+        }
+        else {
+            if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+            if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+        }
+        if ( typeof myObjNew[voisine] == "undefined" ) {
+        }
+        else {
+            if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+            if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+        }
         // lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
         lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
-    
+        
     }
     // lesVoisines = lesVoisines + JSON.stringify(myVoisinesOrg) + " / ";
     // var lesVoisines = '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
@@ -160,7 +175,18 @@ function dessineLesAbeilles(myObj) {
     return lesAbeilles;
 }
 
-
+function myJSON_AddMissing() {
+    for (voisines in myVoisinesOrg.data) {
+        if ( myJSON[myVoisinesOrg.data[voisines].NE].x > 0 ) {
+            // Ok je l ai deja
+        }
+        else {
+            // On ne la pas alors on l ajoute
+            myJSON[myVoisinesOrg.data[voisines].NE].x = 333;
+            myJSON[myVoisinesOrg.data[voisines].NE].y = 333;
+        }
+    }
+}
 
 document.write( '<html>');
 document.write( '<head>');

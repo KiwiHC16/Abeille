@@ -214,10 +214,11 @@ function dessineLesVoisinesV2(offsetX,NeFilter) {
 }
 
 function dessineLesAbeilles(myObj) {
-    var lesAbeilles = "";
+    var lesAbeilles = '<g id="lesAbeilles">';
     for (shortAddress in myObj) {
         lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObj[shortAddress].x+'"  cy="'+myObj[shortAddress].y+'"              r="10"           fill="'+myObj[shortAddress].color+'"  transform="translate(10, 0)"></circle>';
     }
+    lesAbeilles = lesAbeilles + '</g>';
     return lesAbeilles;
 }
 
@@ -225,7 +226,7 @@ function dessineLesAbeillesText(myObj, offsetX) {
     var lesAbeillesText = '<g id="lesAbeillesText">';
     var X = 0;
     var Y = 0;
-    console.log( JSON.stringify(myObj) );
+    // console.log( JSON.stringify(myObj) );
     for (shortAddress in myObj) {
         X = myObj[shortAddress].x + offsetX;
         Y = myObj[shortAddress].y;
@@ -309,8 +310,14 @@ function myJSON_AddMissing() {
 }
 
 function refreshAll(NeFilter) {
-    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,NeFilter);
-    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+    // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,NeFilter);
+    // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+    
+    document.getElementById("legend").innerHTML = dessineLaLegende();
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(10,NeFilter);
+    document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
+    document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22);
+    document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles(myObjNew);
 }
 
 function rucheCentered() {
@@ -331,6 +338,7 @@ function save() {
 
 function restore() {
     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    myObjOld = JSON.parse( localStorage.getItem('myObjNew') );
     myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
     refreshAll("All");
 }
@@ -451,8 +459,6 @@ document.write( dessineLesTextes(10) );
 document.write( dessineLesAbeillesText(myObjNew, 22) );
 document.write( dessineLesAbeilles(myObjNew) );
 
-
-
 document.write( '</svg></br>' );
 
 document.write( '<table><tr>' );
@@ -472,7 +478,7 @@ document.write( '</body>' );
 document.write( '</html>' );
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
-console.log("Name list: "+JSON.stringify(names));
+// console.log("Name list: "+JSON.stringify(names));
 // console.log("Name 1: " + JSON.stringify(names[0]["0000"]));
 
 console.log("End --------------");

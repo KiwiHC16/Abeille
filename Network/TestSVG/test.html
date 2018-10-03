@@ -12,7 +12,8 @@
             document.getElementById("position3").innerHTML = JSON.stringify(myVoisinesOrg);
         }
     };
-xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
+// xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", true);
+xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false);
 xmlhttp.send();
 
 var myJSON = '{ "0000": { "name": "Door", "x": 200, "y": 200 }, \
@@ -177,16 +178,44 @@ function dessineLesAbeilles(myObj) {
 
 function myJSON_AddMissing() {
     for (voisines in myVoisinesOrg.data) {
-        if ( myJSON[myVoisinesOrg.data[voisines].NE].x > 0 ) {
-            // Ok je l ai deja
+        
+        // document.write( JSON.stringify(myVoisinesOrg.data) );
+        
+        // document.write( "</br>zaza</br>" );
+        
+        // document.write( voisines );  // indice: 0, 1, 2, 3, ...
+        
+        document.write( "</br>----------------------------------</br>" );
+        document.write( myVoisinesOrg.data[voisines].NE + " " + myVoisinesOrg.data[voisines].Voisine + "</br>");
+        document.write( JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].NE]) + " " + JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].Voisine]) );
+        
+        // document.write( "</br>zizi</br>" );
+        // document.write( JSON.stringify(myObjOrg[myVoisinesOrg.data[voisines].NE]) );
+        // document.write( "</br>zeze</br>" );
+        // document.write( myObjOrg[myVoisinesOrg.data[voisines].NE].x );
+        
+        if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
+            // "c276": { "name": "Window", "x": 475, "y": 400 },
+            document.write( "</br>Beurk</br>" );
+            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150 };
+            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "Window", "x": 50, "y": 150 };
         }
         else {
-            // On ne la pas alors on l ajoute
-            myJSON[myVoisinesOrg.data[voisines].NE].x = 333;
-            myJSON[myVoisinesOrg.data[voisines].NE].y = 333;
+            document.write( "</br>Ok1</br>" );
+        }
+        if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+            // "c276": { "name": "Window", "x": 475, "y": 400 },
+            document.write( "</br>Beurk</br>" );
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150 };
+            myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "Window", "x": 50, "y": 150 };
+        }
+        else {
+            document.write( "</br>Ok2</br>" );
         }
     }
 }
+
+
 
 document.write( '<html>');
 document.write( '<head>');
@@ -208,8 +237,11 @@ document.write( '<p id="position4">position4</p>' );
 document.write( '<p id="position5">position5</p>' );
 document.write( '<svg id="position2" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px"></svg>' );
 
+myJSON_AddMissing();
+
 document.write( '</body>' );
 document.write( '</html>' );
+
 
 
     </script>

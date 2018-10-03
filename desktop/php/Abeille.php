@@ -170,7 +170,7 @@ $eqLogics = eqLogic::byType('Abeille');
                         </div>
                          
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">{{Type de piles}}</label>
+                            <label class="col-sm-3 control-label">{{Time Out}}</label>
                             <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="timeout"
                                 placeholder="{{En secondes}}"/>

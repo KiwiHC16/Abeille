@@ -414,7 +414,7 @@ function filtreDestination() {
 }
 
 function filtreDetails() {
-    var dataList = [ "Depth", "LinkQualityDec", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
+    var dataList = [ "LinkQualityDec", "Depth", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
     
     document.write( '<FORM NAME="myformDetails" ACTION="" METHOD="GET">');
     document.write( '<SELECT NAME="list" >');
@@ -472,6 +472,8 @@ document.write( dessineLesAbeilles(myObjNew) );
 document.write( '</svg></br>' );
 
 document.write( '<table><tr>' );
+document.write( '<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
+
 document.write( '<td>' );   filtreSource();         document.write( '</td>' );
 document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
 document.write( '<td>' );   filtreDetails();        document.write( '</td>' );

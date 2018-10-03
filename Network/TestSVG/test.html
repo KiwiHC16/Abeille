@@ -96,6 +96,7 @@ function makeDraggable(evt) {
         var myJSONNew = JSON.stringify(myObjNew);
         
         document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
+        document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
         
         document.getElementById("Debug5").innerHTML = dessineLesVoisinesV2();
         
@@ -126,16 +127,16 @@ function dessineLaLegende() {
     return legende;
 }
 
-function dessineLesVoisinesV2(offsetX) {
-    var lesVoisines = "";
+function dessineLesTextes(offsetX) {
+    var lesTextes = "";
     
-    lesVoisines = lesVoisines + '<g id="lesVoisines">';
+    lesTextes = lesTextes + '<g id="lesTextes">';
     
     for (voisines in myVoisinesOrg.data) {
         
-        lesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
+        // lesTextes = lesTextes + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
         var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
-        var X1=0; var X2=0; var Y1=0; var Y2=0;
+        var X1=0; var X2=0; var Y1=0; var Y2=0; var midX=0; var midY=0;
         
         if ( typeof myObjNew[NE] == "undefined" ) {
             
@@ -150,8 +151,49 @@ function dessineLesVoisinesV2(offsetX) {
             if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
             if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
         }
+        
+        midX=(X1+X2)/2; midY=(Y1+Y2)/2;
+        
+        lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+myVoisinesOrg.data[voisines].LinkQualityDec+'</text>';
+        
+    }
+    
+    lesTextes = lesTextes + '</g>';
+    
+    return lesTextes;
+}
 
-        lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+function dessineLesVoisinesV2(offsetX) {
+    var lesVoisines = "";
+    
+    lesVoisines = lesVoisines + '<g id="lesVoisines">';
+    
+    for (voisines in myVoisinesOrg.data) {
+        
+        // lesTexteslesVoisines = lesVoisines + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
+        var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
+        var X1=0; var X2=0; var Y1=0; var Y2=0;
+        var color="orange";
+        
+        if ( typeof myObjNew[NE] == "undefined" ) {
+            
+        }
+        else {
+            if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+            if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+        }
+        if ( typeof myObjNew[voisine] == "undefined" ) {
+        }
+        else {
+            if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+            if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+        }
+        
+        if ( myVoisinesOrg.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+        if ( myVoisinesOrg.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+        
+        // lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:rgb(255,0,0);stroke-width:2"/>';
+        lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
         
     }
     
@@ -168,8 +210,25 @@ function dessineLesAbeilles(myObj) {
     return lesAbeilles;
 }
 
+function setPosition() {
+    var iAbeille = 0;
+    var nbAbeille = Object.keys(myObjNew).length
+    for (abeille in myObjNew) {
+        if (myObjNew[abeille].positionDefined == "No") {
+            X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
+            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
+            
+            myObjOrg[abeille].x = X;
+            myObjOrg[abeille].y = Y;
+            myObjNew[abeille].x = X;
+            myObjNew[abeille].y = Y;
+            
+            iAbeille++;
+        }
+    }
+}
+
 function myJSON_AddMissing() {
-    var NE = "";
     
     for (voisines in myVoisinesOrg.data) {
         
@@ -199,28 +258,10 @@ function myJSON_AddMissing() {
             
         }
     }
-    
-    var iAbeille = 0;
-    var nbAbeille = Object.keys(myObjNew).length
-    for (abeille in myObjNew) {
-        document.write( JSON.stringify(abeille)+"<br>" );
-        document.write( JSON.stringify(myObjNew[abeille])+"<br>" );
-        if (myObjNew[abeille].positionDefined == "No") {
-            X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
-            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
-            
-            myObjOrg[abeille].x = X;
-            myObjOrg[abeille].y = Y;
-            myObjNew[abeille].x = X;
-            myObjNew[abeille].y = Y;
-            
-            iAbeille++;
-        }
-    }
-    
 }
 
 myJSON_AddMissing();
+setPosition();
 
 document.write( '<html>');
 document.write( '<head>');
@@ -230,10 +271,11 @@ document.write( '<body>');
 document.write( '<p id="demo"></p>');
 document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
 
-
+document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.png" ></image>');
 
 document.write( dessineLaLegende() );
 document.write( dessineLesVoisinesV2(10) );
+document.write( dessineLesTextes(10) );
 document.write( dessineLesAbeilles(myObjNew) );
 
 document.write( '</svg>' );

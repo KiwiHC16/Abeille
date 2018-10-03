@@ -1,6 +1,8 @@
 <script type="text/javascript">
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     
+    console.log("Begin --------------");
+    
     var myVoisinesOrg;
     var a = 10;
     var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
@@ -47,7 +49,7 @@ function makeDraggable(evt) {
     
     function startDrag(evt) {
         
-        document.getElementById("Debug4").innerHTML = "Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id; // circle, svg
+        console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
         
         if (evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
@@ -102,10 +104,7 @@ function makeDraggable(evt) {
         document.getElementById("lesTextes").innerHTML = dessineLesTextes(10);
         document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
         
-        document.getElementById("Debug5").innerHTML = dessineLesVoisinesV2();
-        
         selectedElement = false;
-        
     }
 }
 
@@ -226,11 +225,11 @@ function dessineLesAbeillesText(myObj, offsetX) {
     return lesAbeillesText;
 }
 
-function setPosition() {
+function setPosition(mode) {
     var iAbeille = 0;
     var nbAbeille = Object.keys(myObjNew).length
     for (abeille in myObjNew) {
-        if (myObjNew[abeille].positionDefined == "No") {
+        if ( (myObjNew[abeille].positionDefined == "No") && (mode=="Auto") ) {
             X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
             Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
             
@@ -238,6 +237,19 @@ function setPosition() {
             myObjOrg[abeille].y = Y;
             myObjNew[abeille].x = X;
             myObjNew[abeille].y = Y;
+            
+            myObjNew[abeille].positionDefined = "Yes";
+            
+            iAbeille++;
+        }
+        if ( (myObjNew[abeille].positionDefined == "Yes") && (mode=="AutoForce") ) {
+            X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
+            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
+            
+            myObjNew[abeille].x = X;
+            myObjNew[abeille].y = Y;
+            
+            myObjNew[abeille].positionDefined = "Yes";
             
             iAbeille++;
         }
@@ -276,8 +288,25 @@ function myJSON_AddMissing() {
     }
 }
 
+function rucheCentered() {
+    myObjNew["0000"].x = center.X;
+    myObjNew["0000"].y = center.Y;
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
+    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+}
+
+function placementAuto() {
+    setPosition("AutoForce");
+    document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0);
+    document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 12);
+}
+
+function save() {
+
+}
+
 myJSON_AddMissing();
-setPosition();
+setPosition("Auto");
 
 document.write( '<html>');
 document.write( '<head>');
@@ -295,17 +324,15 @@ document.write( dessineLesTextes(10) );
 document.write( dessineLesAbeillesText(myObjNew, 22) );
 document.write( dessineLesAbeilles(myObjNew) );
 
-document.write( '</svg>' );
+document.write( '</svg></br>' );
 
-document.write( '<p id="position">position</p>' );
-document.write( '<p id="position3">position3</p>' );
-document.getElementById("position3").innerHTML = Object.keys(myVoisinesOrg.data).length;
-document.write( '<p id="Debug4">Debug4</p>' );
-document.write( '<p id="Debug5">Debug5</p>' );
+document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
+document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
+document.write( '<button id="save" onclick="ve()">save</button>');
 
 document.write( '</body>' );
 document.write( '</html>' );
 
-
+console.log("End --------------");
 
     </script>

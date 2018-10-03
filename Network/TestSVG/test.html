@@ -1,142 +1,103 @@
 <html>
     <head>
-        <style type="tex/css">
-            .static {
-                cursor: not-allowed;
-            }
-            .draggable {
-                cursor: move;
-            }
-        </style>
     </head>
     
     <body>
-        
         <p id="position"></p>
         
-        <svg xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
-
-            <defs>
+        <script type="text/javascript">
+            function makeDraggable(evt) {
+                var svg = evt.target;
+                svg.addEventListener('mousedown',   startDrag, false);
+                svg.addEventListener('mousemove',   drag, false);
+                svg.addEventListener('mouseup',     endDrag, false);
+                svg.addEventListener('mouseleave',  endDrag);
                 
-                <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
-                    <circle cx="5" cy="5" r="3" style="stroke: none; fill:#000000;"/>
-                   </marker>
+                function getMousePosition(evt) {
+                    var CTM = svg.getScreenCTM();
+                    return {
+                        x: (evt.clientX - CTM.e) / CTM.a,
+                        y: (evt.clientY - CTM.f) / CTM.d
+                    };
+                }
                 
-                <marker id="markerArrow" markerWidth="30" markerHeight="30" refX="30" refY="6" orient="auto">
-              
-                    <path d="M2,2 L2,11 L20,6 L2,2" style="fill: #000000;" />
-                    </marker>
-                </defs>
-
-            <script type="text/javascript">
-
-              
-
-                function makeDraggable(evt) {
-                    var svg = evt.target;
-                    svg.addEventListener('mousedown', startDrag, false);
-                    svg.addEventListener('mousemove', drag, false);
-                    svg.addEventListener('mouseup', endDrag, false);
-                    svg.addEventListener('mouseleave', endDrag);
-                    
-                    function getMousePosition(evt) {
-                        var CTM = svg.getScreenCTM();
-                        return {
-                            x: (evt.clientX - CTM.e) / CTM.a,
-                            y: (evt.clientY - CTM.f) / CTM.d
-                        };
-                    }
-                    
-                    var selectedElement, offset, transform;
-                    var positionX = "Position: X=";
-                    var positionY = " Y=";
-                    var X = 0;
-                    var Y = 0;
-                    
-                    function startDrag(evt) {
-                        if (evt.target.classList.contains('draggable')) {
-                            selectedElement = evt.target;
-                            offset = getMousePosition(evt);
-                            
-                            // Make sure the first transform on the element is a translate transform
-                            var transforms = selectedElement.transform.baseVal;
-                            
-                            if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-                                // Create an transform that translates by (0, 0)
-                                var translate = svg.createSVGTransform();
-                                translate.setTranslate(0, 0);
-                                selectedElement.transform.baseVal.insertItemBefore(translate, 0);
-                            }
-                            
-                            // Get initial translation
-                            transform = transforms.getItem(0);
-                            offset.x -= transform.matrix.e;
-                            offset.y -= transform.matrix.f;
-                        }
-                    }
-                    
-                    function drag(evt) {
-                        if (selectedElement) {
-                            evt.preventDefault();
-                            var coord = getMousePosition(evt);
-                            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                        }
-                    }
-                    
-                    function endDrag(evt) {
-                        if (selectedElement) {
-                            evt.preventDefault();
-                            var coord = getMousePosition(evt);
-                            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                        }
-                        X = coord.x - offset.x;
-                        Y = coord.y - offset.y;
-                        document.getElementById("position").innerHTML = positionX + X + positionY + Y;
-                        selectedElement = false;
+                var selectedElement, offset, transform;
+                var positionX = "Position: X=";
+                var positionY = " Y=";
+                var X = 0;
+                var Y = 0;
+                
+                function startDrag(evt) {
+                    if (evt.target.classList.contains('draggable')) {
+                        selectedElement = evt.target;
+                        offset = getMousePosition(evt);
                         
-                    }
-                    
-                    function drawNetwork() {
-                        var NE = {Name:"toto", X:300, Y:20};
-                        AllNE[0] = NE;
-                        var NE = {Name:"tata", X:40, Y:40};
-                        AllNE[1] = NE;
+                        // Make sure the first transform on the element is a translate transform
+                        var transforms = selectedElement.transform.baseVal;
                         
-                        var i;
-                        for (i = 0; i < cars.length; i++) {
-                            document.write( '<circle class="draggable"   cx="'+AllNE[i].X+'"  cy="'+AllNE[0]+'.Y"              r="10"           fill="#DEDEDE"  transform="translate(10, 0)"></circle>' );
-                            
+                        if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                            // Create an transform that translates by (0, 0)
+                            var translate = svg.createSVGTransform();
+                            translate.setTranslate(0, 0);
+                            selectedElement.transform.baseVal.insertItemBefore(translate, 0);
                         }
                         
-                        document.getElementById("position").innerHTML = "Draw Network";
+                        // Get initial translation
+                        transform = transforms.getItem(0);
+                        offset.x -= transform.matrix.e;
+                        offset.y -= transform.matrix.f;
                     }
                 }
+                
+                function drag(evt) {
+                    if (selectedElement) {
+                        evt.preventDefault();
+                        var coord = getMousePosition(evt);
+                        transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+                    }
+                }
+                
+                function endDrag(evt) {
+                    if (selectedElement) {
+                        evt.preventDefault();
+                        var coord = getMousePosition(evt);
+                        transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+                    }
+                    X = coord.x - offset.x;
+                    Y = coord.y - offset.y;
+                    document.getElementById("position").innerHTML = positionX + X + positionY + Y;
+                    selectedElement = false;
+                    
+                }
+            }
+        </script>
+        
+        <script type="text/javascript">
             
+           var myJSON = '{ "aaaa": { "name": "Door", "x": 200, "y": 200 }, "bbbb": { "name": "Window", "x": 800, "y": 800 } }';
+           var myObj = JSON.parse(myJSON);
+           // document.write( myObj["aaaa"].name );
            
-            
-            </script>
-            
-            <!--
-            The translate(<x> [<y>]) transform function moves the object by x and y (i.e. xnew = xold + <x>, ynew = yold + <y>). If y is not provided, it is assumed to be zero.
-            The rotate(<a> [<x> <y>]) transform function specifies a rotation by a degrees about a given point. If optional parameters x and y are not supplied, the rotation is about the origin of the current user coordinate system. If optional parameters x and y are supplied, the rotate is about the point (x, y).
-            <rect class="draggable"     x="4"   y="5" width="8"     height="10"     fill="#007bff"  transform="translate(10, 0) rotate(90,5,5)"></rect>
-            -->
-            
-            
-            
-            <rect class="draggable"     x="4"   y="5" width="8"     height="10"     fill="#007bff"  transform="translate(10, 0)"></rect>
-            <rect class="draggable"     x="18"  y="5" width="8"     height="10"     fill="#888"     transform="translate(10, 0)"></rect>
-            
-            <circle class="draggable"   cx="20"  cy="20"              r="10"           fill="#DEDEDE"  transform="translate(10, 0)"></circle>
-            <circle class="draggable"   cx="200"  cy="200"              r="10"           fill="#DEDEDE"  transform="translate(10, 0)"></circle>
-            
-            <line x1="20" y1="20" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" transform="translate(10, 0)" />
-           </svg>
+           document.write( "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1100px\" height=\"1100px\" onload=\"makeDraggable(evt)\">" );
+           
+           for (shortAddress in myObj) {
+               // document.write( myObj[x].name );
+               // document.write( "<rect class=\"draggable\"     x=\""+myObj[shortAddress].x+"\"   y=\""+myObj[shortAddress].y+"\" width=\"8\"     height=\"10\"     fill=\"#007bff\"  transform=\"translate(10, 0)\"></rect>" );
+               document.write( "<circle class=\"draggable\"   cx=\""+myObj[shortAddress].x+"\"  cy=\""+myObj[shortAddress].y+"\"              r=\"10\"           fill=\"#DEDEDE\"  transform=\"translate(10, 0)\"></circle>" );
+           }
         
-            <script type="text/javascript">
-                 drawNetwork();
-                </script>
-        
+            // Dessine la legende
+            document.write( '<circle cx="100" cy="900" r="10" fill="green" />\n' );
+            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>\n' );
+            
+            document.write( '<circle cx="100" cy="925" r="10" fill="orange" />\n' );
+            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>\n' );
+            
+            document.write( '<circle cx="100" cy="950" r="10" fill="red" />\n' );
+            document.write( '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>\n' );
+
+            document.write( "</svg>" );
+        </script>
         
     </body>
 </html>

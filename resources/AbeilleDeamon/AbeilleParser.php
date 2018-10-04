@@ -1634,7 +1634,7 @@
                 $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                 $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
 
-                deamonlog('debug', 'Voltage: '.$voltage.'Temperature: '.$temperature.'Humidity: '.$humidity );
+                deamonlog('debug', ';Type: 8102; Address:'.$SrcAddr.'; Voltage: '.$voltage.'; Temperature: '.$temperature.'; Humidity: '.$humidity );
                 // deamonlog('debug', 'Temperature: '  .$temperature);
                 // deamonlog('debug', 'Humidity: '     .$humidity);
 
@@ -1706,7 +1706,7 @@
                 $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                 $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
-                deamonlog('debug', 'ff01/25: Voltage: '      .$voltage.'ff01/25: Temperature: '.$temperature.'ff01/25: Humidity: '.$humidity.'ff01/25: Pression: '.$pression);
+                deamonlog('debug', ';Type: 8102; Address:'.$SrcAddr.'; ff01/25: Voltage: '.$voltage.'; ff01/25: Temperature: '.$temperature.'; ff01/25: Humidity: '.$humidity.'; ff01/25: Pression: '.$pression);
                 // deamonlog('debug', 'ff01/25: Temperature: '  .$temperature);
                 // deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
                 // deamonlog('debug', 'ff01/25: Pression: '     .$pression);

@@ -774,7 +774,7 @@
             $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
             mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $dataLink, $qos);
 
-            deamonlog('debug','Abeille i: '.$i
+            deamonlog('debug','type: 8015 (Abeille List) Abeille i: '.$i
                       . '; ID : '.substr($payload, $i * 26 + 0, 2)
                       . '; Short Addr : '.$SrcAddr
                       . '; IEEE Addr: '.$dataAddr

@@ -250,23 +250,24 @@ Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.
 
 Les abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines. 
 
+[quote,Kiwi]
+____
 Pour qu'une valeur soit prise en compte, clic sur le bouton Test associé en dessous.
+____
 
-Source: La relation de voisinage qui a pour source la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
+* Source: La relation de voisinage qui a pour source la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
 
-Source: La relation de voisinage qui a pour destination la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
+* Destination: La relation de voisinage qui a pour destination la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
 
-Parametre: permet de selectionner la valeurs associée à la relation qui sera imprimer le long du lien.
+* Parametre: permet de selectionner la valeurs associée à la relation qui sera imprimer le long du lien. Si le parametre choisi est le LinkQualityDec alors le code couleur est vert LQI bon, orange LQI moyen , rouge LQI pas bon.
 
-Si le parametre choisi est le LinkQualityDec alors le code couleur est vert LQI bon, orange LQI moyen , rouge LQI pas bon.
+* Relation: permet de choisir les relations hirarchique que l'on veut afficher.
 
-Relation: permet de choisir les relations hirarchique que l'on veut afficher.
+* Save: permet de sauvegarder en local sur le PC CLient un graph.
 
-Save: permet de sauvegarder en local sur le PC CLient un graph.
+* Restore: permet de recupérer un graph sauvegardé
 
-Restore: permet de recupérer un graph sauvegardé
-
-Exemple avec tout de positionné:
+Exemple avec tout positionné à la main:
 
 image::images/Capture_d_ecran_2018_10_04_a_02_23_37.png[]
 
@@ -279,3 +280,7 @@ Vue interressante car elle permet de voir quels sont le équipements terminaux r
 Exemple en demandant la Ruche au centre:
 
 image::images/Capture_d_ecran_2018_10_04_a_02_24_23.png[]
+
+Exemple avec l'upload d'une image en fond d'écran:
+
+image::images/Capture_d_ecran_2018_10_04_a_11_15_34.png[]

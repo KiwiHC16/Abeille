@@ -474,6 +474,8 @@ function Refresh() {
     // to be implemented
 }
 
+
+
 getVoisinesJSON();
 getNamesJSON();
 
@@ -488,7 +490,7 @@ document.write( '<body>');
 document.write( '<p id="demo"></p>');
 document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
 
-document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/AbeilleLQI_MapData.png" ></image>');
+document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>');
 
 document.write( dessineLaLegende("Yes") );
 document.write( dessineLesVoisinesV2(0,"Yes") );
@@ -497,6 +499,8 @@ document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
 document.write( dessineLesAbeilles("Yes") );
 
 document.write( '</svg></br>' );
+
+
 
 document.write( '<table><tr>' );
 document.write( '<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
@@ -507,11 +511,20 @@ document.write( '<td>' );   filtreDetails();        document.write( '</td>' );
 document.write( '<td>' );   filtreParent();         document.write( '</td>' );
 document.write( '</tr></table>' );
 
+
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
 document.write( '<button id="save" onclick="save()">save</button>');
 document.write( '<button id="restore" onclick="restore()">restore</button>');
 document.write( '<button id="Refresh" onclick="Refresh()">Refresh (not implemented yet</button>');
+
+
+document.write( '<form action="upload.php" method="post" enctype="multipart/form-data">' );
+document.write( 'Select image to upload:<br>' );
+document.write( '<input type="file" name="fileToUpload" id="fileToUpload">' );
+document.write( '<input type="submit" value="Upload Image" name="submit">' );
+document.write( '</form>' );
+document.write( '<p>L image doit etre au format png</p>' );
 
 document.write( '</body>' );
 document.write( '</html>' );

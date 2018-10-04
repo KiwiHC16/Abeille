@@ -337,6 +337,13 @@ function myJSON_AddAbeillesFromJeedom() {
         myObjOrg[name].positionDefined = "Yes";
         myObjNew[name].positionDefined = "Yes";
         }
+        else {
+            myObjOrg[name].x = names[0][name].positionX;
+            myObjNew[name].x = names[0][name].positionX;
+            
+            myObjOrg[name].y = names[0][name].positionY;
+            myObjNew[name].y = names[0][name].positionY;
+        }
         
         
     }

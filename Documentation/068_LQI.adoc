@@ -211,7 +211,7 @@ Dans la deuxieme table vous definissez les positions des équipements et leur co
                       'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
                       
                       
-=== Graphique
+=== Graphique (Old Version)
 
 Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j'ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:
 
@@ -232,21 +232,25 @@ Par exemple, je veux voir tous les équipements rapportant vori un équipement x
 
 Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l'ampoule bois bureau, alors que tous les autres équipements rapportent à la zigate en direct. 
 
-== Graphique Nouvelle Version
+== Graphique (Nouvelle Version)
 
 === Configuration
 
-Normalement il n'y rien a faire de particulier. Juste un clic sur "Network Graph":
+Normalement après 24h les informations sont disponibles. Si vous n'avez pas les 24h ou souhaiter rafraichier les données, il faut avoir fait un "Recalcul du cache" (Network List->Table des noeuds->Recalcul du cache).
+
+Juste un clic sur "Network Graph":
 
 image::images/Capture_d_ecran_2018_10_04_a_02_39_04.png[]
 
-Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les abeilles en clic dessus, deplacement, relache.
+Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les abeilles (clic, deplacement, relache).
 
 image::images/Capture_d_ecran_2018_10_04_a_02_24_10.png[]
 
-Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.
+
 
 === Filtre
+
+image::images/Capture_d_ecran_2018_10_04_a_11_44_30.png[]
 
 Les abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines. 
 
@@ -269,11 +273,14 @@ ____
 
 Exemple avec tout positionné à la main:
 
-image::images/Capture_d_ecran_2018_10_04_a_02_23_37.png[]
-
-Exemple qu'avec les relations Child:
 
 image::images/Capture_d_ecran_2018_10_04_a_02_23_17.png[]
+
+Exemple qu'avec les relations Child (Filter Child):
+
+image::images/Capture_d_ecran_2018_10_04_a_02_23_37.png[]
+
+On peut voir ici que j'ai 4 End Device sur la ruche(zigate), 5 sur la priseY,...
 
 Vue interressante car elle permet de voir quels sont le équipements terminaux rattachés à quels routeurs.
 
@@ -284,3 +291,5 @@ image::images/Capture_d_ecran_2018_10_04_a_02_24_23.png[]
 Exemple avec l'upload d'une image en fond d'écran:
 
 image::images/Capture_d_ecran_2018_10_04_a_11_15_34.png[]
+
+Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.

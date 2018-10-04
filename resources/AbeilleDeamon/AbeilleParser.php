@@ -1634,7 +1634,7 @@
                 $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                 $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
 
-                deamonlog('debug', 'Voltage: '      .$voltage);
+                deamonlog('debug', 'Voltage: '.$voltage.'Temperature: '.$temperature.'Humidity: '.$humidity );
                 // deamonlog('debug', 'Temperature: '  .$temperature);
                 // deamonlog('debug', 'Humidity: '     .$humidity);
 
@@ -1642,8 +1642,8 @@
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
-                // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
-                // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
+                mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
+                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
 
             }
 
@@ -1706,17 +1706,17 @@
                 $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                 $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
-                deamonlog('debug', 'ff01/25: Voltage: '      .$voltage);
-                deamonlog('debug', 'ff01/25: Temperature: '  .$temperature);
-                deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
-                deamonlog('debug', 'ff01/25: Pression: '     .$pression);
+                deamonlog('debug', 'ff01/25: Voltage: '      .$voltage.'ff01/25: Temperature: '.$temperature.'ff01/25: Humidity: '.$humidity.'ff01/25: Pression: '.$pression);
+                // deamonlog('debug', 'ff01/25: Temperature: '  .$temperature);
+                // deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
+                // deamonlog('debug', 'ff01/25: Pression: '     .$pression);
 
                 mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
                 mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
-                // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
 

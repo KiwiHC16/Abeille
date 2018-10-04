@@ -150,7 +150,7 @@ function dessineLaLegende(includeGroup) {
     legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="orange" style="font-size: 8px;">Routeur</a></br>\n';
     
     legende = legende + '<circle cx="100" cy="950" r="10" fill="grey" />\n';
-    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Inconnu par Jeedom</text> </a></br>\n';
+    legende = legende + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a></br>\n';
     
     if ( includeGroup=="Yes" ) { legende = legende + '</g>'; }
     
@@ -309,6 +309,31 @@ function setPosition(mode) {
 }
 
 // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
+// On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
+// On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
+// Idem pour la couleur
+function myJSON_AddAbeillesFromJeedom() {
+    console.log("Names: "+JSON.stringify(names));
+    for (name in names[0]) {
+        
+        if (name!="0000") {
+        myObjOrg[name] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+        myObjNew[name] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+        
+        myObjOrg[name].color = 'grey';
+        myObjNew[name].color = 'grey';
+        
+        console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
+        
+        myObjOrg[name].name = names[0][name].name;
+        myObjNew[name].name = names[0][name].name;
+        }
+        
+        
+    }
+}
+
+// myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
 // On parcourt las voisines et à chaque nouvelle abeille on l'ajoute à myObjOrg et myObjNew
 // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
 // Idem pour la couleur
@@ -316,6 +341,7 @@ function myJSON_AddMissing() {
     var color = "";
     
     for (voisines in myVoisinesOrg.data) {
+        console.log("Voisine: "+myVoisinesOrg.data[voisines].NE+"->"+myVoisinesOrg.data[voisines].Voisine);
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
             
@@ -325,8 +351,14 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
             myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
-            myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
+            if ( typeof names[0][myVoisinesOrg.data[voisines].NE] === "undefined" ) {
+                myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
+                myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
+            }
+            else {
+                myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
+                myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
+            }
             
         }
         
@@ -340,10 +372,31 @@ function myJSON_AddMissing() {
             if ( myVoisinesOrg.data[voisines].Type == "Coordinator" ) { color="Red"; }
             myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
             myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
+           
+            if ( typeof names[0][myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+            }
+            else {
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+            }
+        }
+        else {
+            if ( myVoisinesOrg.data[voisines].Type == "End Device" ) { color="Green"; }
+            if ( myVoisinesOrg.data[voisines].Type == "Router" ) { color="Orange"; }
+            if ( myVoisinesOrg.data[voisines].Type == "Coordinator" ) { color="Red"; }
+            myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
+            myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
             
-            myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
-            myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
-            
+            if ( typeof names[0][myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+            }
+            else {
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+            }
         }
     }
 }
@@ -479,7 +532,11 @@ function Refresh() {
 getVoisinesJSON();
 getNamesJSON();
 
+myJSON_AddAbeillesFromJeedom();
+console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 myJSON_AddMissing();
+console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+
 setPosition("Auto");
 
 document.write( '<html>');

@@ -248,7 +248,9 @@ Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.
 
 === Filtre
 
-Les abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.
+Les abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines. 
+
+Pour qu'une valeur soit prise en compte, clic sur le bouton Test associé en dessous.
 
 Source: La relation de voisinage qui a pour source la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
 

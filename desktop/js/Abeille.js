@@ -39,7 +39,7 @@ $('#bt_networkAbeilleList').on('click', function () {
 });
 
 $('#bt_networkAbeille').on('click', function () {
-    window.open("plugins/Abeille/Network/AbeilleLQI_Map.php");
+    window.open("plugins/Abeille/Network/TestSVG/test.html");
 });
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});

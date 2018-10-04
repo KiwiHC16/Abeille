@@ -271,6 +271,18 @@ ____
 
 * Restore: permet de recupérer un graph sauvegardé
 
+Utilisation du filtre par l'exemple:
+
+* Je veux voir toutes les abeilles vues par la ruche (zigate). Je choisi Ruche dans la source et none dans destination.
+
+* Je veux représenter qui voit la sonnette. Je choisi Sonnette dans la destination et none dans la source.
+
+* Je veux voir toutes les relations Child. Je mets All dans Source et Destination, Child dans Relation.
+
+* Je choisi la valeur affichée le long de la ligne avec le parametre. Le plus utilisé probablement est LinkQualityDec qui represente la qualité de la relation radio dans le sens Source - Destination. Le nombre est entre 0 et 250. Pour des équipments proches d'environ 20cm j'ai des valeurs autour de 180. Au dessus de 220, je me dis que la valeur est farfelue surtout quand elle vaut 255. Tous les équipements ne semblent pas remonter des infos pertinentes. En dessous de 50 la liaison est vraiment pas bonne, il faut probablement faire quelque chose comme ajouter un routeur.
+
+=== Exemples
+
 Exemple avec tout positionné à la main:
 
 

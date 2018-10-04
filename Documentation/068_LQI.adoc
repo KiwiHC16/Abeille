@@ -236,7 +236,11 @@ Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils 
 
 === Configuration
 
-Normalement il n'y rien a faire de particulier. Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les abeilles en clic dessus, deplacement, relache.
+Normalement il n'y rien a faire de particulier. Juste un clic sur "Network Graph":
+
+image::images/Capture_d_ecran_2018_10_04_a_02_39_04.png[]
+
+Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les abeilles en clic dessus, deplacement, relache.
 
 image::images/Capture_d_ecran_2018_10_04_a_02_24_10.png[]
 

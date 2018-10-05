@@ -9,8 +9,8 @@
         $name = $eqLogic->getName();
         $shortAddress = str_replace("Abeille/", "", $eqLogic->getLogicalId());
         $shortAddress = ($name == 'Ruche') ? "0000" : $shortAddress;
-        $X = max( 10, $eqLogic->getConfiguration('positionX'));
-        $Y = max( 20, $eqLogic->getConfiguration('positionY'));
+        $X = max( 0, $eqLogic->getConfiguration('positionX'));
+        $Y = max( 0, $eqLogic->getConfiguration('positionY'));
         
         $json = $json . '"' . $shortAddress.'": { "name": "'.$name.'", "positionX": '.$X.', "positionY": '.$Y.' }, ';
     }

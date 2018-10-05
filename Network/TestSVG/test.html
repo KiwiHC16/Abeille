@@ -43,7 +43,6 @@ function getNamesJSON() {
     xmlhttpName.send();
 }
 
-
 function makeDraggable(evt) {
     var svg = evt.target;
     svg.addEventListener('mousedown',   startDrag, false);
@@ -317,16 +316,14 @@ function myJSON_AddAbeillesFromJeedom() {
     for (name in names[0]) {
         
         if (name!="0000") {
-        myObjOrg[name] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-        myObjNew[name] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-        
-        myObjOrg[name].color = 'grey';
-        myObjNew[name].color = 'grey';
-        
-        console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
-        
-        myObjOrg[name].name = names[0][name].name;
-        myObjNew[name].name = names[0][name].name;
+            myObjOrg[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+            myObjNew[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+            
+            console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
+            
+            myObjOrg[name].name = names[0][name].name;
+            myObjNew[name].name = names[0][name].name;
+        }
         
         myObjOrg[name].x = names[0][name].positionX;
         myObjNew[name].x = names[0][name].positionX;
@@ -334,18 +331,14 @@ function myJSON_AddAbeillesFromJeedom() {
         myObjOrg[name].y = names[0][name].positionY;
         myObjNew[name].y = names[0][name].positionY;
         
-        myObjOrg[name].positionDefined = "Yes";
-        myObjNew[name].positionDefined = "Yes";
+        if ( (names[0][name].positionX>0) && (names[0][name].positionY>0) ) {
+            myObjOrg[name].positionDefined = "Yes";
+            myObjNew[name].positionDefined = "Yes";
         }
         else {
-            myObjOrg[name].x = names[0][name].positionX;
-            myObjNew[name].x = names[0][name].positionX;
-            
-            myObjOrg[name].y = names[0][name].positionY;
-            myObjNew[name].y = names[0][name].positionY;
+            myObjOrg[name].positionDefined = "No";
+            myObjNew[name].positionDefined = "No";
         }
-        
-        
     }
 }
 
@@ -361,11 +354,8 @@ function myJSON_AddMissing() {
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
             
-            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-            
-            myObjOrg[myVoisinesOrg.data[voisines].NE].color = 'grey';
-            myObjNew[myVoisinesOrg.data[voisines].NE].color = 'grey';
+            myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+            myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
             
             if ( typeof names[0][myVoisinesOrg.data[voisines].NE] === "undefined" ) {
                 myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";

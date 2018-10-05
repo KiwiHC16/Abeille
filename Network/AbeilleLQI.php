@@ -251,7 +251,7 @@ $nbwritten = 0;
 if (file_exists($FileLock)) {
     $content = file_get_contents($FileLock);
     benLog($FileLock . ' content: ' . $content);
-    if (strstr($content, "done") == false) {
+    if (strpos("_".$content, "done") != 1) {
         echo 'Oops, une collecte est déja en cours... Veuillez attendre la fin de l\'opération';
         benLog('debug', 'Une collecte est probablement en cours, fichier lock present, exit.');
         exit;
@@ -441,8 +441,9 @@ $client->disconnect();
 unset($client);
 
 //announce end of processing
-file_put_contents($FileLock, "done");
-
+//file_put_contents($FileLock, "done");
+file_put_contents($FileLock, "done - ".date('l jS \of F Y h:i:s A'));
+    
 // encode array to json
 $json = json_encode(array('data' => $LQI));
 

@@ -378,7 +378,7 @@ function setPosition(mode) {
 
 function refreshNetworkCollectionProgress() {
     refreshNetworkInformationProgress();
-    // console.log("Debug - function - refreshNetworkCollectionProgress - "+networkInformationProgress);
+    console.log("Debug - function - refreshNetworkCollectionProgress - "+networkInformationProgress);
     document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
 }
 
@@ -688,6 +688,7 @@ document.write( '</html>' );
 
 setInterval(function() {
            refreshNetworkCollectionProgress();
+           // console.log("function refreshNetworkCollectionProgress");
            }, 1000); // ms
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));

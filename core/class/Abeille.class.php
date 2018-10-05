@@ -1222,19 +1222,21 @@ class Abeille extends eqLogic
         if ( is_object($elogic) && ($cmdId == "IEEE-Addr") ) {
             // Update IEEE cmd
             $IEEE = $cmdlogic->execCmd();
-            if ( ($value == $IEEE) || ($IEEE=="") ) {
-                log::add('Abeille', 'debug', 'Ok pas de changement de l adresse IEEE');
+            if ( $IEEE == $value ) {
+                log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.');
+                return;
             }
-            else {
-                log::add('Abeille', 'debug', 'Alerte changement de l adresse IEEE pour un equipement !!! ' . $addr . ": ".$IEEE." => ".$value);
-                message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)" );
+            
+            // Je ne sais pas pourquoi des fois on recoit des IEEE null
+            if ( $value == "0000000000000000") {
+                log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
+                return;
             }
-            if ( $IEEE == "0000000000000000" ) {
-                log::add('Abeille', 'debug', 'IEEE est null, je ne l utilise pas.');
-            }
-            else {
-                $elogic->checkAndUpdateCmd($cmdlogic, $value);
-            }
+            
+            log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! ' . $addr . ": ".$IEEE." => ".$value);
+            message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)" );
+            $elogic->checkAndUpdateCmd($cmdlogic, $value);
+        
             return;
         }
         

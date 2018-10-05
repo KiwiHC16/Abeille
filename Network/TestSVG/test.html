@@ -654,11 +654,11 @@ document.write( '<td>' );   filtreParent();         document.write( '</td>' );
 document.write( '</tr></table>' );
 
 document.write( '<table><tr><td>' );
-document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
-document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
-document.write( '<button id="save" onclick="save()">local save</button>');
-document.write( '<button id="restore" onclick="local restore()">restore</button>');
-document.write( '<button id="save" onclick="saveAbeilles()">abeilles save</button>');
+document.write( '<button id="rucheCentered" onclick="rucheCentered()"   >Ruche Centered</button>');
+document.write( '<button id="placementAuto" onclick="placementAuto()"   >Placement Auto</button>');
+document.write( '<button id="save"          onclick="save()"            >local save</button>');
+document.write( '<button id="restore"       onclick="restore()"         >local restore</button>');
+document.write( '<button id="save"          onclick="saveAbeilles()"    >abeilles save</button>');
 document.write( '</td></tr></table>' );
 
 document.write( '<table><tr><td>' );
@@ -675,9 +675,9 @@ document.write( '<form action="upload.php" method="post" enctype="multipart/form
 document.write( '<table><tr><td>' )
 document.write( 'Select image to upload:<br>' );
 document.write( '</td><td>' );
-document.write( '<input type="file" name="fileToUpload" id="fileToUpload">' );
+document.write( '<input type="file" name="fileToUpload" id="fileToUpload"/>' );
 document.write( '</td><td>' );
-document.write( '<input type="submit" value="Upload Image" name="submit">' );
+document.write( '<input type="submit" value="Upload Image" name="submit"/>' );
 document.write( '</td><td>' );
 document.write( '<p>(L image doit etre au format png)</p>' );
 document.write( '</td></tr></table>' );

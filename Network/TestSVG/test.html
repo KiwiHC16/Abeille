@@ -67,24 +67,37 @@ function setTopoJSONOld(Topo) {
 
 function setTopoJSON(Topo) {
     // console.log("Coucou");
-    var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
+    // var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
+    var requestTopoURL = "/plugins/Abeille/Network/TestSVG/TopoSet.php";
+    // var param = encodeURIComponent(Topo);
+    var param = "TopoJSON="+Topo;
     // console.log(requestTopo);
     // console.log(Topo);
     // console.log(requestTopo+Topo);
     var xmlhttpSetTopo = new XMLHttpRequest();
+    
     xmlhttpSetTopo.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200 ) {
             TopoSetReply = this.responseText;
             console.log(TopoSetReply);
         }
     }
+    
+    xmlhttpSetTopo.open("POST", requestTopoURL, true );
+    
+    // xmlhttpSetTopo.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+
 
     // console.log(requestTopo+Topo);
     // xmlhttpSetTopo.setRequestHeader('Content-Type: application/json; charset=utf-8');
+    xmlhttpSetTopo.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
-    xmlhttpSetTopo.open("GET", requestTopo+encodeURIComponent(Topo), false );
-    xmlhttpSetTopo.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
-    xmlhttpSetTopo.send();
+    // xmlhttpSetTopo.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
+    
+    xmlhttpSetTopo.send(encodeURI(param));
+    // xmlhttpSetTopo.send(encodeURI("TopoJSON=toto"));
+    console.log("Params sent->"+param);
     
 }
 

@@ -888,27 +888,6 @@ class Abeille extends eqLogic
         
         $parameters_info = self::getParameters();
         
-        /*----------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Analyse du message recu
-        // [CmdAbeille:Abeille] / Address / Cluster-Parameter
-        // [CmdAbeille:Abeille] / $addr / $cmdId => $value
-        // $nodeId = [CmdAbeille:Abeille] / $addr
-
-        $topicArray = explode("/", $message->topic);
-        if ( sizeof( $topicArray ) !=3 ) {
-            return ;
-        }
-        
-        $Filter = $topicArray[0];
-        $addr = $topicArray[1];
-        $cmdId = $topicArray[2];
-        $nodeid = $topicArray[0].'/'.$topicArray[1];
-        
-        $value = $message->payload;
-        
-        $type = 'topic';         // type = topic car pas json
-
-
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // demande de creation de ruche au cas ou elle n'est pas deja crée....
         // La ruche est aussi un objet Abeille
@@ -917,14 +896,44 @@ class Abeille extends eqLogic
             self::createRuche($message);
             return;
         }
-
+      
+ 
+        
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // On ne prend en compte que les message Abeille|Ruche/#/#
-        if (!preg_match("(^Abeille|^Ruche)", $Filter)) {
+        // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
+        
+        // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
+        if (!preg_match("(^Abeille|^Ruche|^CmdCreate)", $message->topic)) {
             // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
             return;
         }
         log::add('Abeille', 'debug', "Topic: ->". $message->topic . "<- Value ->" . $message->payload . "<-");
+        
+
+        /*----------------------------------------------------------------------------------------------------------------------------------------------*/
+        // Analyse du message recu
+        // [CmdAbeille:Abeille] / Address / Cluster-Parameter
+        // [CmdAbeille:Abeille] / $addr / $cmdId => $value
+        // $nodeId = [CmdAbeille:Abeille] / $addr
+        
+        $topicArray = explode("/", $message->topic);
+        if ( sizeof( $topicArray ) !=3 ) {
+            return ;
+        }
+        
+        $Filter = $topicArray[0];
+        if ( $Filter == "CmdCreate" ) { $Filter = "Abeille"; }
+        $addr = $topicArray[1];
+        $cmdId = $topicArray[2];
+        $nodeid = $Filter.'/'.$addr;
+        
+        $value = $message->payload;
+        
+        $type = 'topic';         // type = topic car pas json
+
+
+
+
         
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
@@ -1407,14 +1416,15 @@ class Abeille extends eqLogic
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+                if ( $objetId == "Timer" ) { $visible = 1; } else { $visible=0; }
                 $rucheCommandList[$objetId] = array(
                     "name" => $objetId,
                     "order" => $i++,
-                    "isVisible" => "0",
+                    "isVisible" => $visible,
                     "isHistorized" => "0",
                     "Type" => "action",
                     "subType" => "other",
-                    "configuration" => array("topic" => "Abeille/" . $objetId . "/0000-0005", "request" => $objetId),
+                    "configuration" => array("topic" => "CmdCreate/" . $objetId . "/0000-0005", "request" => $objetId),
                 );
             }
         }
@@ -1500,6 +1510,9 @@ class AbeilleCmd extends cmd
                     $topic = $this->getConfiguration('topic');
                 }
                 else if (strpos( "_".$this->getConfiguration('topic'), "CmdTimer" ) == 1 ) {
+                    $topic = $this->getConfiguration('topic');
+                }
+                else if (strpos( "_".$this->getConfiguration('topic'), "CmdCreate" ) == 1 ) {
                     $topic = $this->getConfiguration('topic');
                 }
                 else {

@@ -5,6 +5,9 @@ console.log("Begin --------------");
 
 var myVoisinesOrg;
 var names;
+var networkInformation = "";
+var networkInformationProgress = "Sleeping";
+
 var a = 10;
 var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
 var center = JSON.parse(centerJSON);
@@ -41,6 +44,31 @@ function getNamesJSON() {
     
     xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
     xmlhttpName.send();
+}
+
+function refreshNetworkInformation() {
+    var xmlhttpRefreshNetworkInformation = new XMLHttpRequest();
+    xmlhttpRefreshNetworkInformation.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            networkInformation = this.responseText;
+            console.log("Debug - refreshNetworkInformation function:"+networkInformation);
+        }
+    };
+    xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/Network/AbeilleLQI.php", true);
+    xmlhttpRefreshNetworkInformation.send();
+}
+
+function refreshNetworkInformationProgress() {
+    var xmlhttpRefreshNetworkInformationProgress = new XMLHttpRequest();
+    xmlhttpRefreshNetworkInformationProgress.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            networkInformationProgress = this.responseText;
+            // console.log("Debug - Progress:"+networkInformationProgress);
+        }
+    };
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock", false);
+    //xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false);
+    xmlhttpRefreshNetworkInformationProgress.send();
 }
 
 function makeDraggable(evt) {
@@ -307,19 +335,25 @@ function setPosition(mode) {
     }
 }
 
+function refreshNetworkCollectionProgress() {
+    refreshNetworkInformationProgress();
+    // console.log("Debug - function - refreshNetworkCollectionProgress - "+networkInformationProgress);
+    document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
+}
+
 // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
 // On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
 // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
 // Idem pour la couleur
 function myJSON_AddAbeillesFromJeedom() {
-    console.log("Names: "+JSON.stringify(names));
+    // console.log("Names: "+JSON.stringify(names));
     for (name in names[0]) {
         
         if (name!="0000") {
             myObjOrg[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
             myObjNew[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
             
-            console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
+            // console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
             
             myObjOrg[name].name = names[0][name].name;
             myObjNew[name].name = names[0][name].name;
@@ -350,7 +384,7 @@ function myJSON_AddMissing() {
     var color = "";
     
     for (voisines in myVoisinesOrg.data) {
-        console.log("Voisine: "+myVoisinesOrg.data[voisines].NE+"->"+myVoisinesOrg.data[voisines].Voisine);
+        // console.log("Voisine: "+myVoisinesOrg.data[voisines].NE+"->"+myVoisinesOrg.data[voisines].Voisine);
         
         if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
             
@@ -529,8 +563,9 @@ function filtreParent() {
     document.write( '</FORM>');
 }
 
-function Refresh() {
+function ReLoad() {
     // to be implemented
+    location.reload(true);
 }
 
 
@@ -539,9 +574,9 @@ getVoisinesJSON();
 getNamesJSON();
 
 myJSON_AddAbeillesFromJeedom();
-console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+// console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 myJSON_AddMissing();
-console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+// console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 
 setPosition("Auto");
 
@@ -574,23 +609,41 @@ document.write( '<td>' );   filtreDetails();        document.write( '</td>' );
 document.write( '<td>' );   filtreParent();         document.write( '</td>' );
 document.write( '</tr></table>' );
 
-
+document.write( '<table><tr><td>' );
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
 document.write( '<button id="save" onclick="save()">save</button>');
 document.write( '<button id="restore" onclick="restore()">restore</button>');
-document.write( '<button id="Refresh" onclick="Refresh()">Refresh (not implemented yet</button>');
+document.write( '</td></tr></table>' );
 
+document.write( '<table><tr><td>' );
+document.write( '<button id="Refresh" onclick="refreshNetworkInformation()">Refresh Network Information</button>');
+document.write( '</td><td>' );
+document.write( '<p id="refreshInformation">'+networkInformationProgress+'</p>' );
+document.write( '</td><td>' );
+document.write( '<button id="ReLoadThePage" onclick="ReLoad()">ReLoadThePage</button>');
+document.write( '</td></tr></table>' );
+
+document.write( '<br>');
 
 document.write( '<form action="upload.php" method="post" enctype="multipart/form-data">' );
+document.write( '<table><tr><td>' )
 document.write( 'Select image to upload:<br>' );
+document.write( '</td><td>' );
 document.write( '<input type="file" name="fileToUpload" id="fileToUpload">' );
+document.write( '</td><td>' );
 document.write( '<input type="submit" value="Upload Image" name="submit">' );
+document.write( '</td><td>' );
+document.write( '<p>(L image doit etre au format png)</p>' );
+document.write( '</td></tr></table>' );
 document.write( '</form>' );
-document.write( '<p>L image doit etre au format png</p>' );
 
 document.write( '</body>' );
 document.write( '</html>' );
+
+setInterval(function() {
+           refreshNetworkCollectionProgress();
+           }, 10000); // 10s
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
 // console.log("Name list: "+JSON.stringify(names));

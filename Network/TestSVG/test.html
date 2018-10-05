@@ -66,7 +66,7 @@ function setTopoJSONOld(Topo) {
 */
 
 function setTopoJSON(Topo) {
-    console.log("Coucou");
+    // console.log("Coucou");
     var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
     // console.log(requestTopo);
     // console.log(Topo);
@@ -78,8 +78,12 @@ function setTopoJSON(Topo) {
             console.log(TopoSetReply);
         }
     }
-    console.log(requestTopo+Topo);
-    xmlhttpSetTopo.open("GET", requestTopo+Topo, false );
+
+    // console.log(requestTopo+Topo);
+    // xmlhttpSetTopo.setRequestHeader('Content-Type: application/json; charset=utf-8');
+    
+    xmlhttpSetTopo.open("GET", requestTopo+encodeURIComponent(Topo), false );
+    xmlhttpSetTopo.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
     xmlhttpSetTopo.send();
     
 }

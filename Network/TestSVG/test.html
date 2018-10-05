@@ -7,6 +7,7 @@ var myVoisinesOrg;
 var names;
 var networkInformation = "";
 var networkInformationProgress = "Sleeping";
+var TopoSetReply = "";
 
 var a = 10;
 var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
@@ -34,16 +35,53 @@ function getVoisinesJSON() {
     xmlhttp.send();
 }
 
-function getNamesJSON() {
-    var xmlhttpName = new XMLHttpRequest();
-    xmlhttpName.onreadystatechange = function() {
+function getTopoJSON() {
+    var xmlhttpGetTopo = new XMLHttpRequest();
+    xmlhttpGetTopo.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             names = JSON.parse(this.responseText);
         }
     };
     
-    xmlhttpName.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpName.send();
+    xmlhttpGetTopo.open("GET", "/plugins/Abeille/Network/TestSVG/TopoGet.php", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttpGetTopo.send();
+}
+/*
+function setTopoJSONOld(Topo) {
+    var xmlhttpSetTopo = new XMLHttpRequest();
+    var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
+    
+    console.log("setTopoJSON function: ".Topo);
+    xmlhttpSetTopo.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            TopoSetReply = this.responseText;
+            console.log("setTopoReply: ".TopoSetReply);
+        }
+    };
+    
+    console.log("Request: ".request);
+    xmlhttpSetTopo.open("GET", requestTopo+Topo, false); // False pour bloquer sur la recuperation du fichier
+    xmlhttpSetTopo.send();
+}
+*/
+
+function setTopoJSON(Topo) {
+    console.log("Coucou");
+    var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
+    // console.log(requestTopo);
+    // console.log(Topo);
+    // console.log(requestTopo+Topo);
+    var xmlhttpSetTopo = new XMLHttpRequest();
+    xmlhttpSetTopo.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200 ) {
+            TopoSetReply = this.responseText;
+            console.log(TopoSetReply);
+        }
+    }
+    console.log(requestTopo+Topo);
+    xmlhttpSetTopo.open("GET", requestTopo+Topo, false );
+    xmlhttpSetTopo.send();
+    
 }
 
 function refreshNetworkInformation() {
@@ -66,8 +104,7 @@ function refreshNetworkInformationProgress() {
             // console.log("Debug - Progress:"+networkInformationProgress);
         }
     };
-    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock", false);
-    //xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/TestSVG/test.php", false);
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock", true);
     xmlhttpRefreshNetworkInformationProgress.send();
 }
 
@@ -568,10 +605,13 @@ function ReLoad() {
     location.reload(true);
 }
 
-
+function saveAbeilles() {
+    // console.log("Debug - saveAbeilles function - "+JSON.stringify(myObjNew));
+    setTopoJSON(JSON.stringify(myObjNew));
+}
 
 getVoisinesJSON();
-getNamesJSON();
+getTopoJSON();
 
 myJSON_AddAbeillesFromJeedom();
 // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
@@ -612,8 +652,9 @@ document.write( '</tr></table>' );
 document.write( '<table><tr><td>' );
 document.write( '<button id="rucheCentered" onclick="rucheCentered()">Ruche Centered</button>');
 document.write( '<button id="placementAuto" onclick="placementAuto()">Placement Auto</button>');
-document.write( '<button id="save" onclick="save()">save</button>');
-document.write( '<button id="restore" onclick="restore()">restore</button>');
+document.write( '<button id="save" onclick="save()">local save</button>');
+document.write( '<button id="restore" onclick="local restore()">restore</button>');
+document.write( '<button id="save" onclick="saveAbeilles()">abeilles save</button>');
 document.write( '</td></tr></table>' );
 
 document.write( '<table><tr><td>' );
@@ -643,7 +684,7 @@ document.write( '</html>' );
 
 setInterval(function() {
            refreshNetworkCollectionProgress();
-           }, 10000); // 10s
+           }, 1000); // ms
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
 // console.log("Name list: "+JSON.stringify(names));

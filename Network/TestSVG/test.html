@@ -101,6 +101,7 @@ function refreshNetworkInformation() {
 }
 
 function refreshNetworkInformationProgress() {
+    var d = new Date();
     var xmlhttpRefreshNetworkInformationProgress = new XMLHttpRequest();
     xmlhttpRefreshNetworkInformationProgress.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -108,7 +109,7 @@ function refreshNetworkInformationProgress() {
             // console.log("Debug - Progress:"+networkInformationProgress);
         }
     };
-    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock", true);
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock?"+d.getTime(), true);
     xmlhttpRefreshNetworkInformationProgress.send();
 }
 

@@ -39,8 +39,49 @@ $('#bt_networkAbeilleList').on('click', function () {
 });
 
 $('#bt_networkAbeille').on('click', function () {
-    window.open("plugins/Abeille/Network/TestSVG/test.html");
+    window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.html");
 });
+/*
+$('#bt_networkAbeille').on('click', function () {
+                               $('#md_modal').dialog({title: "{{Graph Abeille}}"});
+                               $('#md_modal').load('plugins/Abeille/Network/AbeilleLQI_List.php').dialog('open');
+                               //window.open("plugins/Abeille/Network/AbeilleLQI_List.php");
+                               });
+*/
+$('#bt_include').on('click', function () {
+                    console.log("bt_include");
+                    var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                    xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    xmlhttpMQTTSendIncludeResult = this.responseText;
+                    }
+                    };
+                    
+                    xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                    xmlhttpMQTTSendInclude.send();
+                    }
+                    );
+
+$('#bt_exclude').on('click', function () {
+                    console.log("bt_exclude");
+// To be defined
+                    }
+                    );
+
+$('#bt_createTimer').on('click', function () {
+                        console.log("bt_createTimer");
+                        var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+                        xmlhttpMQTTSendTimer.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        xmlhttpMQTTSendTimerResult = this.responseText;
+                        }
+                        };
+                        
+                        xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_Timer_0000-0005&payload=Timer", false); // False pour bloquer sur la recuperation du fichier
+                        xmlhttpMQTTSendTimer.send();
+                        location.reload(true);
+                        }
+                        );
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 

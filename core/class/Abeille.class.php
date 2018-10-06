@@ -156,9 +156,15 @@ class Abeille extends eqLogic
         
         
         log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status' );
+        if ($parameters_info['onlyTimer']=='N') {
         Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getVersion",         "Version",           '0' );
         Abeille::publishMosquitto( null, "CmdAbeille/Ruche/getNetworkStatus",   "getNetworkStatus",  '0' );
-        
+        }
+        else {
+            Abeille::publishMosquitto( null, "Abeille/Ruche/SW-SDK", "TimerMode", '0');
+            Abeille::publishMosquitto( null, "Abeille/Ruche/Time-TimeStamp", time(), '0' );         // TimeStamp
+            Abeille::publishMosquitto( null, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s"), '0'); // 2018-10-06 03:13:31
+        }
         /**
          * Refresh health information
          */

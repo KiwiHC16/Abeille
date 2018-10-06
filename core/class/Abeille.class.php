@@ -1416,11 +1416,10 @@ class Abeille extends eqLogic
             $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
             // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
             foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-                if ( $objetId == "Timer" ) { $visible = 1; } else { $visible=0; }
                 $rucheCommandList[$objetId] = array(
                     "name" => $objetId,
                     "order" => $i++,
-                    "isVisible" => $visible,
+                    "isVisible" => "0",
                     "isHistorized" => "0",
                     "Type" => "action",
                     "subType" => "other",

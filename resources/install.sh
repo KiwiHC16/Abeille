@@ -163,46 +163,27 @@ echo
 apt-get -y install mosquitto mosquitto-clients libmosquitto-dev
 [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de mosquitto. Pb réseau ?"
 
+PHPVAR=""
+[[ -d "/etc/php5/" ]] && PHPVER=5 && PHPETC=/etc/php5
+[[ -d "/etc/php/7.0" ]] && PHPVER=7.0 && PHPETC=/etc/php/7.0
+[[ -d "/etc/php/7.2" ]] && PHPVER=7.2 && PHPETC=/etc/php/7.2
 
-if [[ -d "/etc/php5/" ]]; then
+if [[ ! -z ${PHPVER} ]]; then
   echo 70 > ${PROGRESS_FILE}
   echo
-  echo "Avancement: 70% ---------------------------------------------------------------------------------------------------> php5 deja present on installe php-dev et les librairies mosquitto"
+  echo "Avancement: 70% ---------------------------------------------------------------------------------------------------> php deja present on installe php-dev et les librairies mosquitto"
   echo
 
-  apt-get -y install php5-dev
+  apt-get -y install php${PHPVER}-dev
+  pecl update-channels
+  pecl channel-update pecl.php.net
+  echo "" | pecl install Mosquitto-beta
 
-  for phpdir in "/etc/php5/cli/" "/etc/php5/fpm/"  "/etc/php5/apache2/"; do
-    if [[ -d ${phpdir} && $(php -m | grep -c mosquitto) -eq 0 ]]; then
-        echo "" | pecl install Mosquitto-beta
-        pecl update-channels
-        [[ $(grep -c "mosquitto" ${phpdir}/php.ini) -eq 0 ]] && echo "extension=mosquitto.so" | tee -a ${phpdir}/php.ini
+  for phpdir in "${PHPETC}/cli/" "${PHPETC}/fpm/"  "${PHPETC}/apache2/"; do
+    if [[ -d ${phpdir} && $(grep -c mosquitto ${phpdir}/php.ini ) -eq 0 ]]; then
+        echo "extension=mosquitto.so" | tee -a ${phpdir}/php.ini
     fi
   done
-
-
-else
-  echo 70 > ${PROGRESS_FILE}
-  echo
-  echo "Avancement: 70% ---------------------------------------------------------------------------------------------------> php5 pas present on installe php7-dev et les librairies mosquitto"
-  echo
-
-  apt-get -y install php7.0-dev
-  [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de php7-dev. Pb réseau ?"
-
-  if [[ -d "/etc/php/7.0/cli/" && ! `cat /etc/php/7.0/cli/php.ini | grep "mosquitto"` ]]; then
-    echo "" | pecl install Mosquitto-alpha
-    echo "extension=mosquitto.so" | tee -a /etc/php/7.0/cli/php.ini
-  fi
-
-  if [[ -d "/etc/php/7.0/fpm/" && ! `cat /etc/php/7.0/fpm/php.ini | grep "mosquitto"` ]]; then
-    echo "extension=mosquitto.so" | tee -a /etc/php/7.0/fpm/php.ini
-  fi
-
-  if [[ -d "/etc/php/7.0/apache2/" && ! `cat /etc/php/7.0/apache2/php.ini | grep "mosquitto"` ]]; then
-    echo "extension=mosquitto.so" | tee -a /etc/php/7.0/apache2/php.ini
-  fi
-
 fi
 
 echo 90 > ${PROGRESS_FILE}

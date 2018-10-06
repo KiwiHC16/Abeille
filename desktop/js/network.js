@@ -444,16 +444,23 @@ function network_links() {
                     tbody += '</td>';
                     tbody += '<td></tr>';
                 }
+
+                //construct table , append value to select button
                 $('#table_routingTable tbody').empty().append(tbody);
-                var nodeFrom = $('#nodeFrom'),
-                    nodeTo = $('#nodeTo');
+                var nodeFrom = $('#nodeFrom').empty(),
+                    nodeTo = $('#nodeTo').empty();
+
+                nodeFrom.append('<option value="All">{{Tous}}</option>');
+                nodeFrom.append('<option value="None">{{Aucun}}</option>');
+
+                nodeTo.append('<option value="All">{{Tous}}</option>');
+                nodeTo.append('<option value="None">{{Aucun}}</option>');
+
                 $.each(nodesFrom, function (idx, item) {
                     nodeFrom.append(new Option(item, idx));
-
                 });
                 $.each(nodesTo, function (idx, item) {
                     nodeTo.append(new Option(item, idx));
-
                 });
 
                 $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {

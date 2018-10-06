@@ -31,7 +31,7 @@ foreach ($eqLogics as $eqLogic) {
 $neighbors = substr($neighbors, 0, -2);
 
 $nbProcess = count(system::ps("AbeilleDeamon", 'true'));
-    
+
 if (config::byKey('onlyTimer', 'Abeille') == 'N') {
     $nbProcessExpected = 4;
     if ( $usbPath == '/tmp/zigate' ) { $nbProcessExpected++; }
@@ -222,20 +222,16 @@ sendVarToJS('nodesFromJeedom', $nodes);
                                    title="Filtre les nodes par emetteur">Source
                             </label>
                             <select class="filterSource" id="nodeFrom">
-                                <option value="All">{{Tous}}</option>
-                                <option value="None">{{Aucun}}</option>
                             </select>
                             <label class="control-label" data-toggle="tooltip"
                                    title="Filtre les nodes par destinataire">Destinataire
                             </label>
                             <select class="filterRecipient" id="nodeTo">
-                                <option value="All">{{Tous}}</option>
-                                <option value="None">{{Aucun}}</option>
                             </select>
-                            <span class="">
+                            <span class="" style="padding: 3px 20px;">
                             <a data-action="refreshNetworkCache"
                                class="btn btn-success refreshCache"><i
-                                        class="fa fa-refresh"></i>
+                                        class="fa fa-refresh" ></i>
                             Recalcul du cache</a></span>
                         </span>
                         <table class="table table-condensed tablesorter" id="table_routingTable">

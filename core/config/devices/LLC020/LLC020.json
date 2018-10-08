@@ -302,7 +302,7 @@
         "name": "Colour",
         "order": 22,
         "isHistorized": "0",
-        "isVisible": "1",
+        "isVisible": "0",
         "Type": "action",
         "subType": "message",
         "configuration": {
@@ -318,7 +318,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "setColourOSRAM",
+          "topic": "setColourHue",
           "request": "X=6000&Y=6000"
         },
         "display": {
@@ -333,7 +333,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "setColourOSRAM",
+          "topic": "setColourHue",
           "request": "X=228F&Y=228F"
         },
         "display": {
@@ -348,7 +348,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "setColourOSRAM",
+          "topic": "setColourHue",
           "request": "X=AE13&Y=51EB"
         },
         "display": {
@@ -363,7 +363,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-          "topic": "setColourOSRAM",
+          "topic": "setColourHue",
           "request": "X=147A&Y=D709"
         },
         "display": {

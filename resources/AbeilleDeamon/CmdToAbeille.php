@@ -825,7 +825,7 @@
             // $sourceEndpoint         = "01";
             if ( hexdec($Command['sourceEndpoint'])>1 ) { $sourceEndpoint = $Command['sourceEndpoint']; } else { $sourceEndpoint = "01"; }
             // $targetEndpoint    = "01";
-            if ( hexdec($Command['targetEndpoint']>1) ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
+            if ( hexdec($Command['targetEndpoint'])>1 ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
             $ClusterId              = $Command['ClusterId'];
             $direction              = "00";                     // To Server / To Client
             $manufacturerSpecific   = "00";                     // Tx Server / Rx Client

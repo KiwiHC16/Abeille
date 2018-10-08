@@ -10,13 +10,14 @@
             // C'est un timer, je ne l envoie pas
         }
         else {
+            $logicalId = $eqLogic->getId();
             $name = $eqLogic->getName();
             $shortAddress = str_replace("Abeille/", "", $eqLogic->getLogicalId());
             $shortAddress = ($name == 'Ruche') ? "0000" : $shortAddress;
             $X = max( 0, $eqLogic->getConfiguration('positionX'));
             $Y = max( 0, $eqLogic->getConfiguration('positionY'));
             
-            $json = $json . '"' . $shortAddress.'": { "name": "'.$name.'", "positionX": '.$X.', "positionY": '.$Y.' }, ';
+            $json = $json . '"' . $shortAddress.'": { "name": "'.$name.'", "positionX": '.$X.', "positionY": '.$Y.', "logicalId": "'.$logicalId.'" }, ';
         }
     }
     

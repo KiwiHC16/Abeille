@@ -626,11 +626,10 @@
                 // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
                 sendCmd($dest,$cmd,$lenth,$data); //1E = 30 secondes
                 
-                sleep(5);
-                
-                $CommandAdditionelle['permitJoin'] = "permitJoin";
-                $CommandAdditionelle['permitJoin'] = "Status";
-                processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
+                // $CommandAdditionelle['permitJoin'] = "permitJoin";
+                // $CommandAdditionelle['permitJoin'] = "Status";
+                // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
+                Abeille::publishMosquitto(null, "CmdAbeille/Ruche/permitJoin", "Status", '0');
             }
         }
         

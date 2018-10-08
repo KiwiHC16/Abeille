@@ -380,8 +380,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
         }
       },
       "BindToZigateLevel": {
@@ -394,8 +394,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
         }
       },
       "setReportEtat": {
@@ -408,8 +408,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=0B&ClusterId=0006&AttributeId=0000&AttributeType=10"
+          "topic": "setReport",
+          "request": "targetEndpoint=0B&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
       },
       "setReportLevel": {
@@ -422,8 +422,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=0B&ClusterId=0008&AttributeId=0000&AttributeType=20"
+          "topic": "setReport",
+          "request": "targetEndpoint=0B&ClusterId=0006&AttributeId=0000&AttributeType=10"
         },
         "display": {
           "forceReturnLineAfter": "1"

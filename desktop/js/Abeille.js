@@ -83,6 +83,49 @@ $('#bt_createTimer').on('click', function () {
                         }
                         );
 
+$('#bt_toogleAffichageNetwork').on('click', function () {
+                                   console.log("bt_toogleAffichageNetwork");
+                                   var xmlhttpMQTTAffichageNetwork = new XMLHttpRequest();
+                                   xmlhttpMQTTAffichageNetwork.onreadystatechange = function() {
+                                   if (this.readyState == 4 && this.status == 200) {
+                                   xmlhttpMQTTAffichageNetwork = this.responseText;
+                                   }
+                                   };
+                                   
+                                   xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageNetwork&payload=bt_toogleAffichageNetwork", false); // False pour bloquer sur la recuperation du fichier
+                                   xmlhttpMQTTAffichageNetwork.send();
+                                   }
+                                   );
+
+$('#bt_toogleAffichageTime').on('click', function () {
+                                console.log("bt_toogleAffichageTime");
+                                var xmlhttpMQTTAffichageTime = new XMLHttpRequest();
+                                xmlhttpMQTTAffichageTime.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status == 200) {
+                                xmlhttpMQTTAffichageTime = this.responseText;
+                                }
+                                };
+                                
+                                xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageTime&payload=bt_toogleAffichageTime", false); // False pour bloquer sur la recuperation du fichier
+                                xmlhttpMQTTAffichageTime.send();
+                                }
+                                );
+
+$('#bt_toogleAffichageAdditionalCommand').on('click', function () {
+                                             console.log("bt_toogleAffichageAdditionalCommand");
+                                             var xmlhttpMQTTAffichageAdditionalCommand = new XMLHttpRequest();
+                                             xmlhttpMQTTAffichageAdditionalCommand.onreadystatechange = function() {
+                                             if (this.readyState == 4 && this.status == 200) {
+                                             xmlhttpMQTTAffichageAdditionalCommand = this.responseText;
+                                             }
+                                             };
+                                             
+                                             xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageAdditionalCommand&payload=bt_toogleAffichageAdditionalCommand", false); // False pour bloquer sur la recuperation du fichier
+                                             xmlhttpMQTTAffichageAdditionalCommand.send();
+                                             }
+                                             );
+
+
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 
 function addCmdToTable(_cmd) {

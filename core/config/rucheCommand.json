@@ -81,15 +81,15 @@
       "forceReturnLineAfter": "1"
     }
   },
-  "Leave": {
-    "name": "Leave",
+  "Mgt Leave": {
+    "name": "Mgt Leave",
     "order": 6,
     "isHistorized": "0",
     "isVisible": "1",
     "Type": "action",
     "subType": "message",
     "configuration": {
-      "topic": "Leave",
+      "topic": "MgtLeave",
       "request": "address=#title#&IEEE=#message#"
     },
     "display": {

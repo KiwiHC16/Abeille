@@ -17,7 +17,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "0000-0B-0004": {
         "isVisible": 0,
@@ -27,7 +30,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "0000-0B-4000": {
         "isVisible": 0,
@@ -37,7 +43,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "0006-0B-0000": {
         "isVisible": 1,
@@ -75,7 +84,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": ""
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
       },
       "Time-TimeStamp": {
         "isVisible": 0,
@@ -85,7 +97,10 @@
         "Type": "info",
         "subType": "numeric",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
       },
       "On": {
         "isVisible": 1,
@@ -165,7 +180,8 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequestHue",
-          "request": "clusterId=0006&attributeId=0000"
+          "request": "clusterId=0006&attributeId=0000",
+          "visibilityCategory": "additionalCommand"
         }
       },
       "getLevel": {
@@ -179,7 +195,8 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequestHue",
-          "request": "clusterId=0008&attributeId=0000"
+          "request": "clusterId=0008&attributeId=0000",
+          "visibilityCategory": "additionalCommand"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -196,7 +213,8 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequestHue",
-          "request": "clusterId=0000&attributeId=0004"
+          "request": "clusterId=0000&attributeId=0004",
+          "visibilityCategory": "additionalCommand"
         }
       },
       "getModelIdentifier": {
@@ -210,7 +228,8 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequestHue",
-          "request": "clusterId=0000&attributeId=0005"
+          "request": "clusterId=0000&attributeId=0005",
+          "visibilityCategory": "additionalCommand"
         }
       },
       "getSWBuild": {
@@ -224,7 +243,8 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequestHue",
-          "request": "clusterId=0000&attributeId=4000"
+          "request": "clusterId=0000&attributeId=4000",
+          "visibilityCategory": "additionalCommand"
         }
       },
       "IEEE-Addr": {
@@ -235,7 +255,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "Short-Addr": {
         "isVisible": 0,
@@ -245,7 +268,10 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "Link-Quality": {
         "isVisible": 0,
@@ -255,20 +281,26 @@
         "Type": "info",
         "subType": "string",
         "invertBinary": "0",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "Power-Source": {
         "isVisible": 0,
-        "display": {
-          "showNameOndashboard": "0"
-        },
         "name": "Power Source",
         "order": 19,
         "isHistorized": "0",
         "Type": "info",
         "subType": "binary",
         "invertBinary": "0",
-        "template": "AbeillePower"
+        "template": "AbeillePower",
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
       },
       "Identify": {
         "isVisible": 0,
@@ -281,7 +313,8 @@
         "template": "",
         "configuration": {
           "topic": "identifySend",
-          "request": "duration=0010"
+          "request": "duration=0010",
+          "visibilityCategory": "additionalCommand"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -298,6 +331,9 @@
         "template": "badge",
         "display": {
           "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+          "visibilityCategory": "Network"
         }
       },
       "BindToZigateEtat": {
@@ -311,7 +347,8 @@
         "template": "",
         "configuration": {
           "topic": "CmdAbeille/Ruche/bind",
-          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
+          "request": "address=#addrIEEE#&ClusterId=0006&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B",
+          "visibilityCategory": "Network"
         }
       },
       "BindShortToZigateEtat": {
@@ -325,7 +362,8 @@
         "template": "",
         "configuration": {
           "topic": "bindShort",
-          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0006&reportToAddress=#ZiGateIEEE#"
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0006&reportToAddress=#ZiGateIEEE#",
+          "visibilityCategory": "Network"
         },
         "display": {
           "forceReturnLineAfter": "1"
@@ -341,6 +379,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "Network",
           "topic": "CmdAbeille/Ruche/bind",
           "request": "address=#addrIEEE#&ClusterId=0008&reportToAddress=#ZiGateIEEE#&targetEndpoint=0B"
         }
@@ -355,6 +394,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "Network",
           "topic": "bindShort",
           "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=0B&ClusterId=0008&reportToAddress=#ZiGateIEEE#"
         },
@@ -372,6 +412,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "Network",
           "topic": "setReport",
           "request": "sourceEndpoint=01&targetEndpoint=0B&ClusterId=0006&AttributeId=0000&AttributeType=10"
         }
@@ -386,6 +427,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "Network",
           "topic": "setReport",
           "request": "sourceEndpoint=01&targetEndpoint=0B&ClusterId=0008&AttributeId=0000&AttributeType=20"
         },
@@ -394,6 +436,7 @@
         }
       },
       "online": {
+        "visibilityCategory": "Network",
         "isVisible": 0,
         "name": "online",
         "order": 28,
@@ -404,6 +447,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "Network",
           "returnStateValue": "0",
           "returnStateTime": "60"
         }

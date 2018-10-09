@@ -1703,7 +1703,7 @@
             setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'] );
         }
         
-        if ( isset($Command['Leave']) && isset($Command['address']) && isset($Command['IEEE']) )
+        if ( isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']) )
         {
             deamonlog('debug','Leave for: '.$Command['address']." - ".$Command['IEEE']);
             $cmd = "0047";

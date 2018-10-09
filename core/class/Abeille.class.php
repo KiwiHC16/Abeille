@@ -1082,7 +1082,54 @@
 
             return -1;
         }
-
+        
+        public static function CmdAffichage( $affichageType ) {
+            // $affichageType could be:
+            //  toogleAffichageNetwork
+            //  toogleAffichageTime
+            //  toogleAffichageAdditionalCommand
+            
+            $visibilityInitState = "0";
+            $visibilityInitStateKnown = "0";
+            
+            $convert = array(
+                             "toogleAffichageNetwork"=>"Network",
+                             "toogleAffichageTime"=>"Time",
+                             "toogleAffichageAdditionalCommand"=>"additionalCommand"
+                             );
+            
+            log::add('Abeille', 'debug', 'Entering CmdAffichage' );
+            
+            $abeilles = self::byType('Abeille');
+            foreach ($abeilles as $key=>$abeille) {
+                $cmds = $abeille->getCmd();
+                foreach ( $cmds as $keyCmd=>$cmd ){
+                    // log::add('Abeille', 'debug', 'Boucle' );
+                    log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
+                    
+                    // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
+                    if ( $cmd->getConfiguration("visibilityCategory")==$convert[$affichageType] ) {
+                        echo "Name: ".$abeille->getName()."-".$cmd->getName()."-".$cmd->getConfiguration("visibilityCategory").'-'.$convert[$affichageType]."\n";
+                        
+                        if ( $cmd->getIsVisible()==1 )
+                            { $cmd->setIsVisible(0); }
+                        else
+                            { $cmd->setIsVisible(1); }
+                    }
+                    // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
+                    // $cmd->getConfiguration("visibilityCategory","All"); // All si l info n existe pas
+                    // $cmd->getConfiguration("visibiltyTemplate","All"); // All si l info n existe pas
+                    $cmd->save();
+                }
+                $abeille->save();
+                $abeille->refresh();
+            }
+            echo "Type: ".$convert[$affichageType]."\n";
+            
+            log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
+            return;
+        }
+        
         public static function message($message)
         {
 
@@ -1103,7 +1150,7 @@
             // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
 
             // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
-            if (!preg_match("(^Abeille|^Ruche|^CmdCreate)", $message->topic)) {
+            if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
                 // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
                 return;
             }
@@ -1134,6 +1181,14 @@
             $type = 'topic';         // type = topic car pas json
 
 
+            // Si cmd Affichage
+            if ( $Filter == "CmdAffichage") {
+                log::add('Abeille', 'debug', 'Call CmdAffichage' );
+                self::CmdAffichage( $cmdId );
+                return;
+            }
+            
+            
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Cherche l objet par sa ref short Address et la commande
             $elogic = self::byLogicalId($nodeid, 'Abeille');
@@ -1306,6 +1361,8 @@
                         // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
 
                     }
+                    // On conserve l infoo du template pour la visibility
+                    $cmdlogic->setConfiguration( "visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
                     // template
                     $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
@@ -2076,6 +2133,14 @@
             case "8":
                 echo "Check cleanup\n";
                 Abeille::deamon_start_cleanup();
+                break;
+                
+            case "9":
+                echo "Test Affichage\n";
+                //  toogleAffichageNetwork
+                //  toogleAffichageTime
+                //  toogleAffichageAdditionalCommand
+                Abeille::CmdAffichage( "toogleAffichageNetwork" );
                 break;
 
         } // switch

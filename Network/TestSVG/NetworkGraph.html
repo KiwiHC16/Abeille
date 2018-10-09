@@ -351,7 +351,12 @@ function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
     for (shortAddress in myObj) {
         X = myObj[shortAddress].x + offsetX;
         Y = myObj[shortAddress].y;
-        lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+names[0][shortAddress].logicalId+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+        if( (typeof names[0][shortAddress] === "object") && (names[0][shortAddress] !== null) ) {
+            lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+names[0][shortAddress].logicalId+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+        }
+        else {
+            lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+        }
     }
     if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '</g>'; }
     return lesAbeillesText;

@@ -240,7 +240,7 @@ Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev
 
 === Test du capteur
 
-Il est possible d'envoyer un message vers le capteur pour voir s'il répond. Le sensor va faire un bip. Après demande, il faut attendre au plus 15s (temps de réveil).
+Il est possible d'envoyer un message vers le capteur pour voir s'il répond. Le sensor va faire un bip. Après demande, il faut attendre au plus 15s (temps de réveil). La demande est dans le réseau pendant 6s et après tombe en time out (d'apres des lectures à droite à gauche) donc il peut falloir faire plusieurs demandes. En gros il faut faire la demande au plus tot 6s avant le reveil du cateur.
 
 === Réveil
 

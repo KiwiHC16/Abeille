@@ -1089,8 +1089,9 @@
             //  toogleAffichageTime
             //  toogleAffichageAdditionalCommand
             
-            $visibilityInitState = "0";
-            $visibilityInitStateKnown = "0";
+            // On prend la premiere commande comme référence pour ne pas avoir des NE en anti-phase
+            $visibilityInitState = 0;
+            $visibilityInitStateKnown = 0;
             
             $convert = array(
                              "toogleAffichageNetwork"=>"Network",
@@ -1105,16 +1106,19 @@
                 $cmds = $abeille->getCmd();
                 foreach ( $cmds as $keyCmd=>$cmd ){
                     // log::add('Abeille', 'debug', 'Boucle' );
-                    log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
+                    // log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
                     
                     // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
                     if ( $cmd->getConfiguration("visibilityCategory")==$convert[$affichageType] ) {
-                        echo "Name: ".$abeille->getName()."-".$cmd->getName()."-".$cmd->getConfiguration("visibilityCategory").'-'.$convert[$affichageType]."\n";
+                        log::add('Abeille', 'debug', "Name: ".$abeille->getName()."-".$cmd->getName()."-".$cmd->getConfiguration("visibilityCategory").'-'.$convert[$affichageType]."\n");
                         
-                        if ( $cmd->getIsVisible()==1 )
-                            { $cmd->setIsVisible(0); }
-                        else
-                            { $cmd->setIsVisible(1); }
+                        if ($visibilityInitStateKnown==0)   { $visibilityInitState=$cmd->getIsVisible(); $visibilityInitStateKnown=1; }
+                        if ( $visibilityInitState==0 ) {
+                            $cmd->setIsVisible(1);
+                        }
+                        else {
+                            $cmd->setIsVisible(0);
+                        }
                     }
                     // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
                     // $cmd->getConfiguration("visibilityCategory","All"); // All si l info n existe pas
@@ -1124,7 +1128,7 @@
                 $abeille->save();
                 $abeille->refresh();
             }
-            echo "Type: ".$convert[$affichageType]."\n";
+            log::add('Abeille', 'debug',  "Type: ".$convert[$affichageType]."\n");
             
             log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
             return;
@@ -1776,7 +1780,7 @@
                         "isHistorized" => "0",
                         "Type" => "action",
                         "subType" => "other",
-                        "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId),
+                        "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
                     );
                 }
             }

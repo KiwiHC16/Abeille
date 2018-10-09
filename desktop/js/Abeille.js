@@ -14,6 +14,11 @@
 * You should have received a copy of the GNU General Public License
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
+
+function myTimer() {
+    document.getElementById("alert").style.display = 'none';
+}
+
 $("#table_cmd").delegate(".listEquipementInfo", 'click', function () {
     var el = $(this);
     jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function (result) {
@@ -94,6 +99,9 @@ $('#bt_toogleAffichageNetwork').on('click', function () {
                                    
                                    xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageNetwork&payload=bt_toogleAffichageNetwork", false); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
+                                   
+                                   document.getElementById("alert").style.display = 'inline';
+                                   setTimeout(myTimer, 5000);
                                    }
                                    );
 
@@ -108,6 +116,9 @@ $('#bt_toogleAffichageTime').on('click', function () {
                                 
                                 xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageTime&payload=bt_toogleAffichageTime", false); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
+                                
+                                document.getElementById("alert").style.display = 'inline';
+                                setTimeout(myTimer, 5000);
                                 }
                                 );
 
@@ -122,6 +133,9 @@ $('#bt_toogleAffichageAdditionalCommand').on('click', function () {
                                              
                                              xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageAdditionalCommand&payload=bt_toogleAffichageAdditionalCommand", false); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
+                                             
+                                             document.getElementById("alert").style.display = 'inline';
+                                             setTimeout(myTimer, 5000);
                                              }
                                              );
 
@@ -233,3 +247,5 @@ function addCmdToTable(_cmd) {
 		});
 	}
 }
+
+document.getElementById("alert").style.display = 'none';

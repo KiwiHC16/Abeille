@@ -8,6 +8,8 @@ $eqLogics = eqLogic::byType('Abeille');
 
 ?>
 
+<div id="alert"><p style="color:black; background-color:MediumSeaGreen";><br>   Modification appliquée<br><br></p></div>
+
 <div class="row row-overflow">
     <div class="col-lg-2 col-sm-3 col-sm-4">
         <div class="bs-sidebar">
@@ -106,7 +108,7 @@ $eqLogics = eqLogic::byType('Abeille');
                 <center>
                 <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
                 </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Add Cmd</center></span>
+                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
             </div>
         </div>
 

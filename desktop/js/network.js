@@ -164,7 +164,8 @@ function network_display() {
     // Step 1. We create a graph object.
     var graph = Viva.Graph.graph();
 
-    $.getJSON("plugins/Abeille/Network/AbeilleLQI_MapData.json", function (json) {
+    // Load JSON-encoded data from the server using a GET HTTP request.
+    $.getJSON("plugins/Abeille/Network/AbeilleLQI_MapData.json?"+Date.now(), function (json) {
         //Sort objects to have list array sorted on Voisin values
         // empty array ?
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
@@ -352,7 +353,7 @@ function network_display() {
 
 function network_links() {
 
-    $.getJSON("/plugins/Abeille/Network/AbeilleLQI_MapData.json", function (json) {
+    $.getJSON("/plugins/Abeille/Network/AbeilleLQI_MapData.json?"+Date.now(), function (json) {
 
             // empty array ?
             if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {

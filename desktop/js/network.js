@@ -506,8 +506,10 @@ function network_links() {
             setTimeout(function () {
                 $('#div_networkZigbeeAlert').hide()
             }, 2000);
-            $("#table_routingTable").tablesorter({sortList: [[0, 0], [1, 0]]});
-
+            $("#table_routingTable").tablesorter({
+                sortList: [[0, 0], [1, 0]]
+            });
+            $('#table_routingTable').trigger('update');
         })
         .fail(function () {
             var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';

@@ -2008,59 +2008,9 @@
 
                 break;
 
-            // Test la verification des last communication dans la page health
+            // Free for a new test
             case "4":
-                $eqLogics = Abeille::byType('Abeille');
-
-                //var_dump( $eqLogics );
-
-                foreach ($eqLogics as $eqLogic) {
-                    // var_dump( $eqLogic );
-
-                    // $eqLogic->setStatus('lastCommunication', '2018-05-01 00:00:01');
-                    // $eqLogic->setStatus('state', 'unknown');
-
-                    // Pour tester. Force une data.
-                    // if ( $eqLogic->getName()=="Abeille-d09c") { $eqLogic->setStatus('lastCommunication', '2018-05-10 12:48:01'); }
-
-                    // Default Time Out : 24 heures
-                    $lastCommunicationTimeOut = 24 * 60 * 60;
-                    // $lastCommunicationTimeOut = 0; // Pour test
-// =================================================
-                    // Si equipement a un TimeOut Specifique, -1 pour ne pas tester
-                    if ($eqLogic->getConfiguration("lastCommunicationTimeOut")) {
-                        $lastCommunicationTimeOut = $eqLogic->getConfiguration("lastCommunicationTimeOut");
-                        if ($lastCommunicationTimeOut != -1) {
-                            if (strtotime($eqLogic->getStatus('lastCommunication')) + $lastCommunicationTimeOut > time(
-                                )) {
-                                // Ok
-                                $eqLogic->setStatus('state', 'ok');
-                            } else {
-                                // NOK
-                                $eqLogic->setStatus('state', 'Time Out Last Communication');
-                            }
-                        } else {
-                            $eqLogic->setStatus('state', '-');
-                        }
-                    } // Si pas de Timer specifique, 24h et 7jours comme seuil d'alerte
-                    else {
-                        $last = strtotime($eqLogic->getStatus('lastCommunication'));
-                        if ($last > time() - $lastCommunicationTimeOut) {
-                            // Ok
-                            $eqLogic->setStatus('state', 'ok');
-                        } elseif ($last < time() - $lastCommunicationTimeOut * 7) {
-                            // NOK 7d
-                            $eqLogic->setStatus('state', 'Very Old Last Communication (>7days)');
-                        } else {
-                            // NOK 24h
-                            $eqLogic->setStatus('state', 'Old Last Communication (>24h)');
-                        }
-                    }
-// =================================================
-                    echo $eqLogic->getName()."<->".(strtotime($eqLogic->getStatus('lastCommunication')) - time(
-                            ))."<->".$eqLogic->getStatus('state')."\n";
-
-                }
+               
                 break;
 
             // Cherche l objet qui a une IEEE specifique

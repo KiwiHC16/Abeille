@@ -245,3 +245,11 @@ Il est possible d'envoyer un message vers le capteur pour voir s'il répond. Le 
 === Réveil
 
 Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.
+
+== Capteur Gaz
+
+=== Appairage
+
+=== Routeur
+
+Ce capteur est aussi router.

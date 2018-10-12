@@ -20,9 +20,29 @@ Ce bouton est créé au moment de la création de l'objet. Celui ci permet de de
 
 Pour que l'ampoule puisse remonter automatiquement son état à Jeedom, il faut mettre en place un "bind" et un "set report".
 
-Pour se faire, il faut utiliser les commandes bind et setReport sur l'objet Ruche.
+Pour se faire, il faut utiliser les commandes bind et setReport sur l'objet Ampoule.
 
-==== Bind:
+Le widget ampoule doit être plus ou moins comme cela:
+
+image::images/Capture_d_ecran_2018_10_12_a_16_51_39.png[]
+
+Il faut faire apparaite les commandes de configuration. Aller dans la page de configuration du plugin et selectionner "Network" dans le chapitre "Affichage Commandes". Maintenant le widget doit ressembler à:
+
+image::images/Capture_d_ecran_2018_10_12_a_16_58_44.png[]
+
+il suffit de faire un BindShortToZigateEtat, setReportEtat. Si votre ampoule supporte la variation d'intensité, faites un BindShortToZigateLevel, setReportLevel.
+
+[quote,Kiwi]
+____
+Pour que cela fonctionne il est important que le champ IEEE soit rempli. Si tel n'est pas le cas faites un Liste Equipement sur la ruche et si cela ne suffit pas faire un "Recalcul du Cache" dans Network List de la page de conf du plug in.
+____
+
+[quote,Kiwi]
+____
+Y a encore du travail en cours pour simplifier cette partie.
+____
+
+=== Bind specifique:
 
 Identifiez l'ampoule que vous voulez parametrer:
 
@@ -59,6 +79,9 @@ Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode
 image::images/Capture_d_ecran_2018_02_21_a_23_27_29.png[]
 
 qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
+
+
+== Report Manuel:
 
 Ensuite parametrer l'envoie de rapport:
 

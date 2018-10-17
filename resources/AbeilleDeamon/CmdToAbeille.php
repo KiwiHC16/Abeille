@@ -130,6 +130,14 @@
         
         sendCmd( $dest, $cmd, $lenth, $data );
         
+        if ( isset($Command['repeat']) ) {
+            if ( $Command['repeat']>1 ) {
+                for ($x = 2; $x <= $Command['repeat']; $x++) {
+                    sleep(5);
+                    sendCmd( $dest, $cmd, $lenth, $data );
+                }
+            }
+        }
     }
     
     

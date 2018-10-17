@@ -261,7 +261,7 @@
                 // $keywords = preg_split("/[=&]+/", $msg);
                 deamonlog('debug', 'Msg Received: '.$msg);
                 
-                // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+                // Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=03010000&repeat=1
                 $Command = array(
                                  "WriteAttributeRequestVibration" => "1",
                                  "address" => $address,
@@ -275,7 +275,8 @@
                                  "attributeType" => $parameters['attributeType'],
                                  // "value" => $keywords[9],
                                  "value" => $parameters['value'],
-                                 
+                                 "repeat" => $parameters['repeat'],
+                                
                                  );
                 deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                 

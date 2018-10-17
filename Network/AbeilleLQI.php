@@ -260,6 +260,7 @@ if (file_exists($FileLock)) {
 
 $nbwritten = file_put_contents($FileLock, "init");
 if ($nbwritten<1) {
+    unlink($FileLock);
     echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
     exit;
 }
@@ -287,7 +288,7 @@ benLog("NE connus pas Abeille");
 $LQI = array();
 
 // echo "DEBUT: ".date(DATE_RFC2822)."<br>";
-//lqiLog('debug', '---------: definition et connectio a mosquitto');
+//lqiLog('debug', '---------: definition et connection a mosquitto');
 
 // https://github.com/mgdm/Mosquitto-PHP
 // http://mosquitto-php.readthedocs.io/en/latest/client.html
@@ -414,6 +415,7 @@ while ($NE_All_continue) {
 
         $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ' - ' . $currentNeStatus['LQI_Done'] . ')');
         if ($nbwritten<1) {
+            unlink($FileLock);
             echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
             exit;
         }
@@ -451,6 +453,7 @@ $json = json_encode(array('data' => $LQI));
 if (file_put_contents($DataFile, $json))
     echo "JSON file created successfully...";
 else
+    unlink($DataFile);
     echo "Oops! Error creating json file...";
 
 

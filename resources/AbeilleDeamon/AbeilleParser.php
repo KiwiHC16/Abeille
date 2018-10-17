@@ -8,14 +8,12 @@
      *
      */
 
-    $lib_phpMQTT = 0;
+     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     require_once dirname(__FILE__)."/../../../../core/php/core.inc.php";
     require_once("lib/Tools.php");
     require_once("includes/config.php");
     require_once("includes/fifo.php");
-
-    if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
 
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleParser',$message);
@@ -35,43 +33,16 @@
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ( $GLOBALS['lib_phpMQTT'] ) {
-            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-                $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
-                $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
-                $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
-                $mqtt->close();
-            } else {
-                deamonlog('WARNING', 'Time out!');
-            }
-        }
-        else {
             $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
-        }
     }
 
     function mqqtPublishLQI($mqtt, $Addr, $Index, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-        if ( $GLOBALS['lib_phpMQTT'] ) {
-            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-                // $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, $data, $qos);
-                // $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp", time(), $qos);
-                // $mqtt->publish("Abeille/".$SrcAddr."/Time-Time", date("Y-m-d H:i:s"), $qos);
-
-                $mqtt->publish("LQI/".$Addr."/".$Index, $data, $qos);
-
-                $mqtt->close();
-            } else {
-                deamonlog('WARNING', 'Time out!');
-            }
-        }
-        else {
             $mqtt->publish("LQI/".$Addr."/".$Index, $data, $qos);
-        }
     }
 
     /**
@@ -86,36 +57,14 @@
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ( $GLOBALS['lib_phpMQTT'] ) {
-            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-                $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
-                $mqtt->close();
-            } else {
-                deamonlog('error','Time out!');
-            }
-        }
-        else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
-        }
-        // sleep(10);
-        // $mqtt->publish("CmdAbeille/Ruche/abeilleList", "abeilleListAll", $qos);
     }
 
     function mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos = 0)
     {
         // Abeille / short addr / Annonce -> data
         // deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-        if ( $GLOBALS['lib_phpMQTT'] ) {
-            if ($mqtt->connect(true, null, $GLOBALS['username'], $GLOBALS['password'])) {
-                $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
-                $mqtt->close();
-            } else {
-                deamonlog('error','Time out!');
-            }
-        }
-        else {
             $mqtt->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
-        }
     }
 
     function hex2str($hex)
@@ -445,6 +394,7 @@
     /* Decode functions
      /*--------------------------------------------------------------------------------------------------*/
 
+    // Device announce
     function decode004d($mqtt, $payload, $qos)
     {
 
@@ -461,7 +411,7 @@
         // Bit 7 - Allocate Address             => 128 no
         $test = 2 + 4 + 8;
 
-        deamonlog('debug',';type; 004d; (Device announce)(Processed->MQTT)'
+        deamonlog('debug',';Type; 004d; (Device announce)(Processed->MQTT)'
                   . '; Src Addr : '.substr($payload, 0, 4)
                   . '; IEEE : '.substr($payload, 4, 16)
                   . '; MAC capa : '.substr($payload, 20, 2)   );
@@ -470,47 +420,21 @@
         $IEEE = substr($payload, 4, 16);
         $capability = substr($payload, 20, 2);
 
-        // Envoie de la IEEE a Jeedom
+        // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
-        
-        // Rafraichi le champ Ruche, JoinLeave
+
+        // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
         mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
 
-        // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
-        // if ((hexdec($capability) & $test) == 14) {
-        if (1) {
-            deamonlog('debug','Je demande a l equipement d annoncer son nom');
-
-            // Pour les ampoules IKEA
-            deamonlog('debug','Je demande a l equipement de type generique');
-            $data = 'Default'; // destinationEndPoint
-            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
-
-            // sleep(2);
-
-            // Pour les ampoules Hue
-            deamonlog('debug','Je demande a l equipement de type Hue');
-            $data = 'Hue'; // destinationEndPoint
-            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
-
-            // sleep(2);
-
-            // Pour les ampoules OSRAM
-            deamonlog('debug','Je demande a l equipement de type OSRAM');
-            $data = 'OSRAM'; // destinationEndPoint
-            mqqtPublishAnnounce($mqtt, $SrcAddr, $data, $qos);
-
-            // sleep(2);
-
-            // Pour les volets ProFalux
-            deamonlog('debug','Je demande a l equipement de type ProFalux');
-            $data = 'Default'; // destinationEndPoint
-            mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $data, $qos);
-
-
+        // Demande au NE d'annoncer ses EPs
+        if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
+            // Ca veut dire qu'un annonce à deja créé l info, meme si on recoit plusieurs Annonce, on en traite qu'un.
         }
-        else{
-            deamonlog('debug',';type; 004d;Je ne demande pas a l equipement d annoncer son nom car ce n est pas un routeur (il n ecoute peut etre pas).');
+        else {
+            $GLOBALS['NE'][$SrcAddr] = array( 'IEEE'=>$IEEE, 'capa'=>$capability );
+            deamonlog('debug',';Type; 004d; Nouvel equipement: '.$SrcAddr.' - '.$IEEE.' - '.$GLOBALS['NE'][$SrcAddr]['IEEE']);
+            deamonlog('debug',';Type; 004d; Je demande a l equipement d annoncer ses EP');
+            $mqtt->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$SrcAddr, $qos);
         }
     }
 
@@ -524,7 +448,7 @@
                   . '; Status: '.displayStatus($status)
                   . '; SQN: '.$SQN );
 
-        if ( $SQN==0 ) { deamonlog('debug',';type; 8000;SQN: 0 for messages which are not transmitted over the air.'); }
+        if ( $SQN==0 ) { deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
     }
 
     function decode8001($mqtt, $payload, $ln, $qos)
@@ -644,7 +568,7 @@
         $AttributId = "Addr";
         $data = $ShortAddress;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-        deamonlog('debug','ZiGate Short Address: '.$ShortAddress);
+        deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress);
 
         // Envoie Extended Address
         $SrcAddr = "Ruche";
@@ -652,7 +576,7 @@
         $AttributId = "Addr";
         $data = $ExtendedAddress;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-        deamonlog('debug','IEEE Address: '.$ExtendedAddress);
+        deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress);
 
         // Envoie PAN ID
         $SrcAddr = "Ruche";
@@ -660,7 +584,7 @@
         $AttributId = "ID";
         $data = $PAN_ID;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-        deamonlog('debug','PAN ID: '.$PAN_ID);
+        deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID);
 
         // Envoie Ext PAN ID
         $SrcAddr = "Ruche";
@@ -668,7 +592,7 @@
         $AttributId = "ID";
         $data = $Ext_PAN_ID;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-        deamonlog('debug','Ext_PAN_ID: '.$Ext_PAN_ID);
+        deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID);
 
         // Envoie Channel
         $SrcAddr = "Ruche";
@@ -676,9 +600,9 @@
         $AttributId = "Channel";
         $data = $Channel;
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-        deamonlog('debug','Channel: '.$Channel);
+        deamonlog('debug',';type; 8009; Channel: '.$Channel);
 
-        deamonlog('debug','; Level: 0x'.substr($payload, 0, 2));
+        deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2));
         // deamonlog('debug','Message: ');
         // deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
     }
@@ -692,14 +616,14 @@
         $ClusterId = "SW";
         $AttributId = "Application";
         $data = substr($payload, 0, 4);
-        deamonlog("debug", ';'.$AttributId.": ".$data." qos:".$qos);
+        deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
 
         $SrcAddr = "Ruche";
         $ClusterId = "SW";
         $AttributId = "SDK";
         $data = substr($payload, 4, 4);
-        deamonlog('debug',';'.$AttributId.': '.$data.' qos:'.$qos);
+        deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
 
@@ -1019,19 +943,44 @@
 
     function decode8045($mqtt, $payload, $ln, $qos)
     {
+        $SrcAddr = substr($payload, 4, 4);
+        $EP = substr($payload, 10, 2);
+        
         $endPointList = "";
         for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
             // deamonlog('debug','Endpoint : '    .substr($payload, (10 + $i), 2));
             $endPointList = $endPointList . '; Endpoint : '.substr($payload, (10 + $i), 2) ;
         }
-
+        
         deamonlog('debug',';type; 8045; (Active Endpoints Response)(Not Processed)'
                   . '; SQN : '             .substr($payload, 0, 2)
                   . '; Status : '          .substr($payload, 2, 2)
                   . '; Short Address : '   .substr($payload, 4, 4)
                   . '; Endpoint Count : '  .substr($payload, 8, 2)
                   . '; Endpoint List :'    .$endPointList             );
-
+        
+        // Si routeur alors demande son nom (permet de declencher la creation des objets pour ampoules IKEA
+        // if ((hexdec($capability) & $test) == 14) {
+        
+        $EP_table = array(
+                          '01' => 'Default',
+                          '03' => 'OSRAM',
+                          '0B' => 'Hue',
+                          );
+        if ( isset($EP_table[$EP]) ) {
+            deamonlog('debug',';type; 8045; Demande le modelIdentifier de l equipement');
+            mqqtPublishAnnounce($mqtt, $SrcAddr, $EP_table[$EP], $qos);
+            sleep(2);
+            deamonlog('debug',';type; 8045; Demande le Location de l equipement');
+            mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $EP_table[$EP], $qos);
+        }
+        else {
+            deamonlog('debug',';type; 8045; Alerte EP inconnu: '.$SrcAddr.' - '.$EP);
+        }
+        
+        $GLOBALS['NE'][$SrcAddr]['EP']=$EP;
+        // mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
     }
 
     function decode8046($mqtt, $payload, $ln, $qos)
@@ -1052,7 +1001,7 @@
 
     function decode8048($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', 'Type; 8048; (Leave Indication)(Processed->Draft-MQTT)'
+        deamonlog('debug', ';Type; 8048; (Leave Indication)(Processed->Draft-MQTT)'
                   . '; extended addr : '.substr($payload, 0, 16)
                   . '; rejoin status : '.substr($payload, 16, 2)    );
 
@@ -1498,7 +1447,7 @@
         // 0005: ModelIdentifier
         // 0010: Piece (nom utilisé pour Profalux)
         if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
-            deamonlog('debug', ';Type; 8102;(Attribut Report)(Processed->MQTT)'
+            deamonlog('debug', ';Type; 8102; (Attribut Report)(Processed->MQTT)'
                       . '; SQN: '              .$SQN
                       . '; Src Addr : '        .$SrcAddr
                       . '; End Point : '       .$EPoint
@@ -1855,6 +1804,15 @@
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
             }
         }
+        
+        // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
+        if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
+            if ( ($ClusterId=="0000") && ( $AttributId=="0010" ) ) {
+                mqqtPublish($mqtt, $SrcAddr, 'IEEE',  'Addr', $GLOBALS['NE'][$SrcAddr]['IEEE'],     $qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Short', 'Addr', $SrcAddr,                             $qos);
+                unset($GLOBALS['NE'][$SrcAddr]);
+            }
+        }
     }
 
     function decode8110($mqtt, $payload, $ln, $qos)
@@ -2001,6 +1959,7 @@
     $requestedlevel = $argv[7];
     $requestedlevel = '' ? 'none' : $argv[7];
 
+    $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
     $LQI = array();
 
     deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos );
@@ -2016,21 +1975,7 @@
 
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 
-    if ($GLOBALS['lib_phpMQTT']) {
-        $mqtt = new phpMQTT($server, $port, $client_id);
-        while (true) {
-            if (!file_exists($in)) {
-                deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
-                exit(1);
-            }
-            //traitement de chaque trame;
-            $data = $fifoIN->read();
-            protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
-            usleep(1);
 
-        }
-    }
-    else {
         deamonlog( 'debug', 'Create a MQTT Client');
 
         // https://github.com/mgdm/Mosquitto-PHP
@@ -2099,7 +2044,7 @@
             log::add('Abeille', 'error', $e->getMessage());
         }
 
-    }
+    
 
 
 

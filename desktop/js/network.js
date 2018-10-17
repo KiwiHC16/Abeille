@@ -44,37 +44,47 @@ $("#nodeTo").off().change(function () {
 
 function updateZigBeeJsonCache() {
     $.ajax({
-        url: "/plugins/Abeille/Network/AbeilleLQI.php",
-        async: true,
-        success: function (data) {
-            var levelAlert = "danger";
-            var timeAlert = 5000;
-            var messageAlert = data;
-            if (data.indexOf("successfully") >= 0) {
-                levelAlert = "info";
-                timeAlert = 2000;
+            url: "/plugins/Abeille/Network/AbeilleLQI.php",
+            async: true,
+            error: function (jqXHR, status, error) {
+                console.log("updateZigBeeJsonCache error status: " + status);
+                console.log("updateZigBeeJsonCache error msg: " + error);
+                $('#table_routingTable tbody').empty()
+                $('#div_networkZigbeeAlert').showAlert({
+                    message: 'Error, while processing zigbee network information, please see logs',
+                    level: 'danger'
+                });
+                window.setTimeout(function () {
+                    $('#div_networkZigbeeAlert').hide()
+                }, 5000);
+
+            },
+            success: function (data, status, jqhr) {
+                //console.log("updateZigBeeJsonCache success status: " + status);
+                //console.log("updateZigBeeJsonCache success msg: " + data);
+                // php file checks for write rights
+                if (data == 'init') {
+                    return
+                }
+                var levelAlert = "danger";
+                var timeAlert = 5000;
+                var messageAlert = data;
+                if (data.indexOf("successfully") >= 0) {
+                    levelAlert = "info";
+                    $('#table_routingTable').trigger("update");
+                    network_links();
+                }
+                //Wait to second for ajx php to start processing
+                setTimeout(function () {
+                    updateAlertFromZigBeeJsonLog(true);
+                }, 2000);
+                $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
+                window.setTimeout(function () {
+                    $('#div_networkZigbeeAlert').hide()
+                }, 3000);
             }
-
-            $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
-            setTimeout(function () {
-                $('#div_networkZigbeeAlert').hide()
-            }, timeAlert);
-            $('#table_routingTable').trigger("update");
-            network_links();
         }
-        ,
-        always: function () {
-            window.setTimeout(function () {
-                $('#div_networkZigbeeAlert').hide()
-
-
-            }, 3000);
-        }
-    });
-    //Wait to second for ajx php to start processing
-    setTimeout(function () {
-        updateAlertFromZigBeeJsonLog(true);
-    }, 2000);
+    );
 }
 
 function getAbeilleLog(_autoUpdate, _log) {
@@ -119,7 +129,7 @@ function getAbeilleLog(_autoUpdate, _log) {
                 }, 1000);
             }
         }
-    })
+    });
 }
 
 
@@ -131,15 +141,20 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
         global: false,
         cache: false,
         error: function (request, status, error) {
-            console.log("updateAlertFromZigBeeJsonLog status: " + status);
-            console.log("updateAlertFromZigBeeJsonLog errror: " + error);
+            console.log("updateAlertFromZigBeeJsonLog error status: " + status);
+            console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
+            $('#div_networkZigbeeAlert').showAlert({
+                message: "Error, cannot read status file, please refresh cache.",
+                level: 'danger'
+            });
+            _autoUpdate = 0;
             setTimeout(function () {
-                updateAlertFromZigBeeJsonLog(_autoUpdate);
-            }, 1000);
+                $('#div_networkZigbeeAlert').hide();
+            }, 5000);
         },
         success: function (data) {
-            console.log("updateAlertFromZigBeeJsonLog data: " + data);
-            if (data.indexOf("done") != -1) {
+            console.log("updateAlertFromZigBeeJsonLog success data: " + data);
+            if (data.toLowerCase().indexOf("done") != -1) {
                 $('#div_networkZigbeeAlert').showAlert({message: data, level: 'success'});
                 _autoUpdate = 0;
                 setTimeout(function () {
@@ -147,11 +162,14 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
                 }, 3000);
             }
             else {
-                $('#div_networkZigbeeAlert').showAlert({message: data, level: 'info'});
-                _autoUpdate = 1;
+                $('#div_networkZigbeeAlert').showAlert({
+                    message: "Error, cannot read status file, please refresh cache.",
+                    level: 'danger'
+                });
+                _autoUpdate = 0;
                 setTimeout(function () {
-                    updateAlertFromZigBeeJsonLog(_autoUpdate);
-                }, 1000);
+                    $('#div_networkZigbeeAlert').hide();
+                }, 5000);
             }
         }
     })
@@ -174,6 +192,7 @@ function network_display() {
     request.done(function (json) {
         //Sort objects to have list array sorted on Voisin values
         // empty array ?
+        console.log(json);
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
             console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
@@ -338,13 +357,11 @@ function network_display() {
     request.fail(function () {
         var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List'
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+        $('#graph_network svg').remove();
+
     });
 
     request.always(function (data) {
-        if (data == -1) {
-            $('#div_networkZigbeeAlert').alert({level: "danger", message: "Aucune donnée a traiter"});
-        }
-
         window.setTimeout(function () {
             $('#div_networkZigbeeAlert').hide()
         }, 3000);
@@ -361,7 +378,7 @@ function network_links() {
 
     jqXHR.done(function (json, textStatus, jqXHR) {
         // empty array ?
-        if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
+        if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1 || json.data.includes('OOPS')) {
             console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
         }
@@ -521,6 +538,7 @@ function network_links() {
         console.log("network.js: network_links: fail: " + textStatus);
         var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+        $('#table_routingTable tbody').empty()
     });
 
     jqXHR.always(function (json, textStatus, jqXHR) {

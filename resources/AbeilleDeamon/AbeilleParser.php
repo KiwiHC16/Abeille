@@ -427,7 +427,8 @@
         mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
 
         // Demande au NE d'annoncer ses EPs
-        if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
+        // if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
+        if (0) {
             // Ca veut dire qu'un annonce à deja créé l info, meme si on recoit plusieurs Annonce, on en traite qu'un.
         }
         else {

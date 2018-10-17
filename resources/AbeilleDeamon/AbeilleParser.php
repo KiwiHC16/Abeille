@@ -1600,7 +1600,8 @@
 
             // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
             elseif (($AttributId == "ff01") && ($AttributSize == "001b")) {
-                deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall 1 Switch)" );
+                deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall 1 Switch, Gaz Sensor)" );
+                // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 

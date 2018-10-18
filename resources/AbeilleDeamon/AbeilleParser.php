@@ -11,6 +11,7 @@
      // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     require_once dirname(__FILE__)."/../../../../core/php/core.inc.php";
+    require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
     require_once("lib/Tools.php");
     require_once("includes/config.php");
     require_once("includes/fifo.php");
@@ -1787,22 +1788,16 @@
             }
         }
         
-        deamonlog("debug",";Type; 8102; test");
         // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
         if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
-            deamonlog("debug",";Type; 8102; test0");
             if ( $GLOBALS['NE'][$SrcAddr]['action']=="ActiveEndPointReceived->modelIdentifier") {
-                deamonlog("debug",";Type; 8102; test1");
                 if ( ($ClusterId=="0000") && ( $AttributId=="0005" ) ) {
-                    deamonlog("debug",";Type; 8102; test11");
                     $GLOBALS['NE'][$SrcAddr]['state'] = "modelIdentifier";
                     $GLOBALS['NE'][$SrcAddr]['modelIdentifier']=$data;
                 }
             }
             if ($GLOBALS['NE'][$SrcAddr]['action']=="modelIdentifier->location") {
-                deamonlog("debug",";Type; 8102; test2");
                 if ( ($ClusterId=="0000") && ( $AttributId=="0010" ) ) {
-                    deamonlog("debug",";Type; 8102; test21");
                     $GLOBALS['NE'][$SrcAddr]['state'] = "location";
                     $GLOBALS['NE'][$SrcAddr]['location']=$data;
                 }
@@ -1939,6 +1934,44 @@
     // Gestion des annonces
     // ***********************************************************************************************
     
+    function getNE( $short ) {
+        
+        $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild'  );
+        
+        $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
+        
+        foreach ( $getStates as $getState ) {
+            $cmd = $abeille->getCmd('action', $getState);
+            if ($cmd) {
+                deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
+                $cmd->execCmd();
+                sleep(2);
+            }
+        }
+
+        
+        $GLOBALS['NE'][$short]['state']='currentState';
+    }
+    
+    function configureNE( $short ) {
+        
+        $commandeConfiguration = array( 'BindShortToZigateEtat', 'BindShortToZigateLevel', 'setReportEtat', 'setReportLevel');
+        
+        // $tyty = new Abeille();
+        
+        $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
+        
+        foreach ( $commandeConfiguration as $config ) {
+            $cmd = $abeille->getCmd('action', $config);
+            if ($cmd) {
+                deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
+                $cmd->execCmd();
+                sleep(2);
+            }
+        }
+        $GLOBALS['NE'][$short]['state']='configuration';
+    }
+    
     function processAnnonce( $NE, $mqtt, $qos ) {
         $EP_table = array(
                           '01' => 'Default',
@@ -1951,7 +1984,9 @@
         // ActiveEndPoint
         // modelIdentifier
         // location
-        // configuration
+        // configuration: bind, setReport
+        // currentState : get etat: etat, level
+        // done
         
         // Transition
         // none
@@ -1959,14 +1994,14 @@
         // ActiveEndPointReceived->modelIdentifier
         // modelIdentifier->location
         // location->configuration
+        // configuration->currentState
+        // done
         
-        // if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce begin, NE: '.json_encode($GLOBALS['NE'])); }
+
         foreach ( $NE as $short=>$infos ) {
-            // if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce '.$infos['state']); }
             switch ($infos['state']) {
                 case 'annonceReceived':
-                    // if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce case annonceReceived' ); }
-                    // if ($infos['action']=="none") {
+
                     if (!isset($NE[$short]['action'])) {
                         if ( (($infos['time'])+5) < time() ) {
                             deamonlog('debug',';Type; fct; processAnnonce ; Demande le EP de l equipement');
@@ -2005,8 +2040,29 @@
                     if ( $NE[$short]['action'] == "modelIdentifier->location" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande Configuration Equipement qui doit etre cree');
                         // Call configuration, comment ?
+                        configureNE($short);
                         $GLOBALS['NE'][$short]['action']="location->configuration";
                     }
+                    break;
+                    
+                case 'configuration':
+                    if ( $NE[$short]['action'] == "location->configuration" ) {
+                        deamonlog('debug',';Type; fct; processAnnonce ; Demande Current State Equipement qui doit etre cree');
+                        // Call configuration, comment ?
+                        getNE($short);
+                        // $GLOBALS['NE'][$short]['action']="location->configuration";
+                        $GLOBALS['NE'][$short]['action']="configuration->currentState";
+                    }
+                    break;
+                    
+                case 'currentState':
+                    if ( $NE[$short]['action'] == "configuration->currentState" ) {
+                        $GLOBALS['NE'][$short]['state']="done";
+                        $GLOBALS['NE'][$short]['action']="done";
+                    }
+                    break;
+                    
+                case 'done':
                     break;
                     
                 default:
@@ -2020,7 +2076,7 @@
         if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
         foreach ( $NE as $short=>$infos ) {
             if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['time']+60).' - ' . time() ); }
-            if ( (($infos['time'])+20) < time() ) {
+            if ( (($infos['time'])+60) < time() ) {
                 if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
                 mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                 mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);

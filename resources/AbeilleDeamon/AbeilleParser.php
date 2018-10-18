@@ -2134,79 +2134,75 @@
     }
 
     $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-
-
-        deamonlog( 'debug', 'Create a MQTT Client');
-
-        // https://github.com/mgdm/Mosquitto-PHP
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html
-        $mqtt = new Mosquitto\Client($client_id);
-
-        // var_dump( $mqtt );
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-        $mqtt->onConnect('connect');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-        $mqtt->onDisconnect('disconnect');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-        $mqtt->onSubscribe('subscribe');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-        $mqtt->onMessage('message');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-        $mqtt->onLog('logmq');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-        $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-        $mqtt->setReconnectDelay(1, 120, 1);
-
-        // var_dump( $mqtt );
-
-        try {
-            deamonlog('info', 'try part');
-
-            $mqtt->setCredentials( $username, $password );
-            $mqtt->connect( $server, $port, 60 );
-            // $mqtt->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
-
-            // deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
-
-            // 1 to use loopForever et 0 to use while loop
-            if (0) {
-                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
-                deamonlog( 'debug', 'Let loop for ever' );
-                $mqtt->loopForever();
-            } else {
-                while (true) {
-                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                    $mqtt->loop();
-                    //usleep(100);
-                    if (!file_exists($in)) {
-                        deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
-                        exit(1);
-                    }
-                    //traitement de chaque trame;
-                    $data = $fifoIN->read();
-                    protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
-                    usleep(1);
-                    processAnnonce($NE, $mqtt, $qos);
-                    cleanUpNE($NE, $mqtt, $qos);
-                    sleep(0.5);
+    
+    
+    deamonlog( 'debug', 'Create a MQTT Client');
+    
+    // https://github.com/mgdm/Mosquitto-PHP
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html
+    $mqtt = new Mosquitto\Client($client_id);
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+    $mqtt->onConnect('connect');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+    $mqtt->onDisconnect('disconnect');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+    $mqtt->onSubscribe('subscribe');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+    $mqtt->onMessage('message');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+    $mqtt->onLog('logmq');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+    $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+    $mqtt->setReconnectDelay(1, 120, 1);
+    
+    try {
+        deamonlog('info', 'try part');
+        
+        $mqtt->setCredentials( $username, $password );
+        $mqtt->connect( $server, $port, 60 );
+        // $mqtt->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
+        
+        // deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+        
+        // 1 to use loopForever et 0 to use while loop
+        if (0) {
+            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+            deamonlog( 'debug', 'Let loop for ever' );
+            $mqtt->loopForever();
+        } else {
+            while (true) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                $mqtt->loop();
+                //usleep(100);
+                if (!file_exists($in)) {
+                    deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
+                    exit(1);
                 }
+                //traitement de chaque trame;
+                $data = $fifoIN->read();
+                protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
+                usleep(1);
+                processAnnonce($NE, $mqtt, $qos);
+                cleanUpNE($NE, $mqtt, $qos);
+                sleep(0.5);
             }
-
-            $mqtt->disconnect();
-            unset($mqtt);
-
-        } catch (Exception $e) {
-            log::add('Abeille', 'error', $e->getMessage());
         }
-
+        
+        $mqtt->disconnect();
+        unset($mqtt);
+        
+    } catch (Exception $e) {
+        log::add('Abeille', 'error', $e->getMessage());
+    }
+    
     deamonlog('warning', 'sortie du loop');
 
     ?>

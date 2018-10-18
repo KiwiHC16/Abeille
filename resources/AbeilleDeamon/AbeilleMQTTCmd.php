@@ -424,6 +424,25 @@
                                  "destinationEndPoint" => "01",
                                  );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setColourRGB") {
+                $rouge = hexdec(substr($msg,0,2));
+                $vert  = hexdec(substr($msg,2,2));
+                $bleu  = hexdec(substr($msg,4,2));
+                deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                $client->publish('Abeille/'.$address.'/colorRouge', $rouge*100/255, $qos);
+                $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255, $qos);
+                $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255, $qos);
+                
+                $Command = array(
+                                 "setColourRGB" => "1",
+                                 "address" => $address,
+                                 "R" => $rouge,
+                                 "G" => $vert,
+                                 "B" => $bleu,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "setRouge") {
                 $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
                 

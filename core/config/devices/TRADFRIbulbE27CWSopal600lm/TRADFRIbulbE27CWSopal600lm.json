@@ -619,12 +619,12 @@
         "subType": "message",
         "configuration": {
           "topic": "setColourRGB",
-          "request": "X=#title#",
+          "request": "#title#",
           "visibilityCategory": "All"
         },
         "display": {
           "forceReturnLineAfter": "1",
-          "title_placeholder": "#RGB",
+          "title_placeholder": "RRGGBB",
           "message_placeholder": "na"
         }
       },

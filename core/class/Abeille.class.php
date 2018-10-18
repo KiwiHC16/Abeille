@@ -1181,9 +1181,10 @@
             $nodeid = $Filter.'/'.$addr;
 
             $value = $message->payload;
+            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
+            if ( $value=="lumi.sens" ) { $value = "lumi.sensor_ht"; }
 
             $type = 'topic';         // type = topic car pas json
-
 
             // Si cmd Affichage
             if ( $Filter == "CmdAffichage") {
@@ -1191,7 +1192,6 @@
                 self::CmdAffichage( $cmdId );
                 return;
             }
-            
             
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Cherche l objet par sa ref short Address et la commande
@@ -1207,7 +1207,7 @@
                         "/^0000-[0-9A-F]*-*0010/",
                         $cmdId
                     )) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
-
+                
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 //remove lumi. from name as all xiaomi devices have a lumi. name
                 //remove all space in names for easier filename handling
@@ -1575,16 +1575,20 @@
 
                     return;
                 }
-
-                log::add(
-                    'Abeille',
-                    'debug',
-                    'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." => ".$value
-                );
-                message::add(
-                    "Abeille",
-                    "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)"
-                );
+                
+                // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
+                if (strlen($IEEE)>2) {
+                    log::add(
+                             'Abeille',
+                             'debug',
+                             'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." => ".$value
+                             );
+                    
+                    message::add(
+                                 "Abeille",
+                                 "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)"
+                                 );
+                }
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
 
                 return;

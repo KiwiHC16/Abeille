@@ -1936,7 +1936,7 @@
     
     function getNE( $short ) {
         
-        $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild'  );
+        $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery'  );
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
@@ -1955,7 +1955,7 @@
     
     function configureNE( $short ) {
         
-        $commandeConfiguration = array( 'BindShortToZigateEtat', 'BindShortToZigateLevel', 'setReportEtat', 'setReportLevel');
+        $commandeConfiguration = array( 'BindShortToZigateBatterie', 'BindShortToZigateEtat', 'BindShortToZigateLevel', 'setReportEtat', 'setReportLevel');
         
         // $tyty = new Abeille();
         

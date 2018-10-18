@@ -516,6 +516,7 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
+                $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                  "setColour" => "1",
                                  "address" => $address,
@@ -525,6 +526,7 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourOSRAM") {
+                $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                  "setColour" => "1",
                                  "address" => $address,

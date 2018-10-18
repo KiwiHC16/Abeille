@@ -2069,14 +2069,18 @@
                     deamonlog('debug',';Type; fct; processAnnonce, Switch default: WARNING should not exist '.$infos['state']);
             }
         }
-        if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce end, NE: '.json_encode($GLOBALS['NE'])); }
+        if ( $GLOBALS['debugArray']['processAnnonce'] ) {
+            if ( count($GLOBALS['NE'])>0 ) {
+                deamonlog('debug',';Type; fct; processAnnonce end, NE: '.json_encode($GLOBALS['NE']));
+            }
+        }
     }
     
     function cleanUpNE($NE, $mqtt, $qos) {
         if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
         foreach ( $NE as $short=>$infos ) {
             if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['time']+60).' - ' . time() ); }
-            if ( (($infos['time'])+60) < time() ) {
+            if ( ((($infos['time'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
                 if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
                 mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                 mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);

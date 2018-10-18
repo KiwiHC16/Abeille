@@ -8,11 +8,9 @@
      *
      */
 
-    $lib_phpMQTT = 0;
-
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
 
-    if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     require_once("lib/Tools.php");
     include("CmdToAbeille.php");  // contient processCmd()
 
@@ -29,6 +27,8 @@
     function procmsg($topic, $msg)
     {
         global $dest;
+        global $client;
+        global $qos;
 
         $msg =  preg_replace("/[^A-Za-z0-9&=]/",'',$msg);
 
@@ -413,7 +413,6 @@
                                  "Level" => intval($keywords[1] * 255 / 100),
                                  "duration" => $keywords[3],
                                  );
-
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColour") {
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -425,8 +424,79 @@
                                  "destinationEndPoint" => "01",
                                  );
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setRouge") {
+                $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
+                
+                $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
+                $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
+                $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                if ( $rouge=="" ) { $rouge = 1;   }
+                if ( $vert=="" )  { $vert = 1;    }
+                if ( $bleu=="" )  { $bleu = 1;    }
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                $client->publish('Abeille/'.$address.'/colorRouge', $msg, $qos);
+                
+                $Command = array(
+                                 "setColourRGB" => "1",
+                                 "address" => $address,
+                                 "R" => $msg/100*255,
+                                 "G" => $vert/100*255,
+                                 "B" => $bleu/100*255,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "setVert") {
+                $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
+                
+                $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
+                $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
+                $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                if ( $rouge=="" ) { $rouge = 1;   }
+                if ( $vert=="" )  { $vert = 1;    }
+                if ( $bleu=="" )  { $bleu = 1;    }
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                $client->publish('Abeille/'.$address.'/colorVert', $msg, $qos);
+                
+                $Command = array(
+                                 "setColourRGB" => "1",
+                                 "address" => $address,
+                                 "R" => $rouge/100*255,
+                                 "G" => $msg/100*255,
+                                 "B" => $bleu/100*255,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
+            } elseif ($action == "setBleu") {
+                $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
+                
+                $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
+                $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
+                $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                if ( $rouge=="" ) { $rouge = 1;   }
+                if ( $vert=="" )  { $vert = 1;    }
+                if ( $bleu=="" )  { $bleu = 1;    }
+                deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                
+                $client->publish('Abeille/'.$address.'/colorBleu', $msg, $qos);
+                
+                $Command = array(
+                                 "setColourRGB" => "1",
+                                 "address" => $address,
+                                 "R" => $rouge/100*255,
+                                 "G" => $vert/100*255,
+                                 "B" => $msg/100*255,
+                                 "destinationEndPoint" => "01",
+                                 );
+                //----------------------------------------------------------------------------
             } elseif ($action == "setColourHue") {
-                $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                  "setColour" => "1",
                                  "address" => $address,
@@ -436,7 +506,6 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourOSRAM") {
-                $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                  "setColour" => "1",
                                  "address" => $address,
@@ -905,89 +974,71 @@
     }
 
     deamonlog( 'info', 'Processing MQTT message from '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos.' with log level '.$requestedlevel );
-
-    if ($GLOBALS['lib_phpMQTT']) {
-        $mqtt = new phpMQTT($server, $port, $client_id);
-
-        if (!$mqtt->connect(true, null, $username, $password)) {
-            deamonlog( 'debug', 'Can t connect to mosquitto' );
-            exit(1);
-        }
-
-        $topics['CmdAbeille/#'] = array("qos" => $qos, "function" => "procmsg");
-
-        $mqtt->subscribe($topics, $qos);
-
-        while ($mqtt->proc()) {
-        }
-
-        $mqtt->close();
-
-    }
-    else {
-        deamonlog( 'debug', 'Create a MQTT Client');
-
-        // https://github.com/mgdm/Mosquitto-PHP
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html
-        $client = new Mosquitto\Client($client_id);
-
-        // var_dump( $client );
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-        $client->onConnect('connect');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-        $client->onDisconnect('disconnect');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-        $client->onSubscribe('subscribe');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-        $client->onMessage('message');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-        $client->onLog('logmq');
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-        $client->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $parameters_info['AbeilleQos'], 0);
-
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-        $client->setReconnectDelay(1, 120, 1);
-
-        // var_dump( $client );
-
-        try {
-            deamonlog('info', 'try part');
-
-            $client->setCredentials( $username, $password );
-            $client->connect( $server, $port, 60 );
-            $client->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
-
-            deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
-
-            // 1 to use loopForever et 0 to use while loop
-            if (1) {
-                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
-                deamonlog( 'debug', 'Let loop for ever' );
-                $client->loopForever();
-            } else {
-                while (true) {
-                    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                    $client->loop();
-                    //usleep(100);
-                }
+    
+    
+    deamonlog( 'debug', 'Create a MQTT Client');
+    
+    // https://github.com/mgdm/Mosquitto-PHP
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html
+    $client = new Mosquitto\Client($client_id);
+    
+    // var_dump( $client );
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+    $client->onConnect('connect');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+    $client->onDisconnect('disconnect');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+    $client->onSubscribe('subscribe');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+    $client->onMessage('message');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+    $client->onLog('logmq');
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+    $client->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $parameters_info['AbeilleQos'], 0);
+    
+    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+    $client->setReconnectDelay(1, 120, 1);
+    
+    // var_dump( $client );
+    
+    try {
+        deamonlog('info', 'try part');
+        
+        $client->setCredentials( $username, $password );
+        $client->connect( $server, $port, 60 );
+        $client->subscribe( $parameters_info['AbeilleTopic'], $qos ); // !auto: Subscribe to root topic
+        
+        deamonlog( 'debug', 'Subscribed to topic: '.$parameters_info['AbeilleTopic'] );
+        
+        // 1 to use loopForever et 0 to use while loop
+        if (1) {
+            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
+            deamonlog( 'debug', 'Let loop for ever' );
+            $client->loopForever();
+        } else {
+            while (true) {
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                $client->loop();
+                //usleep(100);
             }
-
-            $client->disconnect();
-            unset($client);
-
-        } catch (Exception $e) {
-            log::add('Abeille', 'error', $e->getMessage());
         }
+        
+        $client->disconnect();
+        unset($client);
+        
+    } catch (Exception $e) {
+        log::add('Abeille', 'error', $e->getMessage());
     }
-
-
-
+    
+    
+    
+    
     deamonlog('info', 'Fin du script');
 
 

@@ -1658,7 +1658,63 @@
             sendCmd( $dest, $cmd, $lenth, $data );
 
         }
+        
+        // Take RGB (0-255) convert to X, Y and send the color
+        if ( isset($Command['setColourRGB']) ) {
+            // The reverse transformation
+            // https://en.wikipedia.org/wiki/SRGB
+            
+            $R=$Command['R'];
+            $G=$Command['G'];
+            $B=$Command['B'];
+            
+            $a = 0.055;
+            
+            // are in the range 0 to 1. (A range of 0 to 255 can simply be divided by 255.0).
+            $Rsrgb = $R / 255;
+            $Gsrgb = $G / 255;
+            $Bsrgb = $B / 255;
+            
+            if ( $Rsrgb <= 0.04045 ) { $Rlin = $Rsrgb/12.92; } else { $Rlin = pow( ($Rsrgb+$a)/(1+$a), 2.4); }
+            if ( $Gsrgb <= 0.04045 ) { $Glin = $Gsrgb/12.92; } else { $Glin = pow( ($Gsrgb+$a)/(1+$a), 2.4); }
+            if ( $Bsrgb <= 0.04045 ) { $Blin = $Bsrgb/12.92; } else { $Blin = pow( ($Bsrgb+$a)/(1+$a), 2.4); }
+            
+            $X = 0.4124 * $Rlin + 0.3576 * $Glin + 0.1805 *$Blin;
+            $Y = 0.2126 * $Rlin + 0.7152 * $Glin + 0.0722 *$Blin;
+            $Z = 0.0193 * $Rlin + 0.1192 * $Glin + 0.9505 *$Blin;
+            
+            if ( ($X + $Y + $Z)!=0 ) {
+                $x = $X / ( $X + $Y + $Z );
+                $y = $Y / ( $X + $Y + $Z );
+            }
+            else {
+                echo "Can t do the convertion.";
+            }
+            
+            $x = $x*255*255;
+            $y = $y*255*255;
+            
+            // Meme commande que la commande du dessus
+            $cmd = "00B7";
+            // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
+            $lenth = "000B";
+            
+            $addressMode = "02";
+            $address = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = $Command['destinationEndPoint'];
+            $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
+            $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
+            $duration = "0001";
+            
+            deamonlog( 'debug', "colourX: ".$colourX." colourY: ".$colourY );
+            
+            $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
 
+        }
+        
         // Move to Colour Temperature
         if ( isset($Command['setTemperature']) && isset($Command['address']) && isset($Command['temperature']) && isset($Command['destinationEndPoint']) )
         {

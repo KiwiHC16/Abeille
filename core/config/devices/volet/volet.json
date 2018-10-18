@@ -3,7 +3,7 @@
     "nameJeedom": "Volet ProFalux",
     "timeout": "3600",
     "Categorie": {
-      "light": "1"
+      "automatism": "1"
     },
     "configuration": {
       "protocol": "Profalux",
@@ -214,7 +214,7 @@
         }
       },
       "Level Stop": {
-        "name": "setLevelStop",
+        "name": "Stop",
         "order": 15,
         "isHistorized": "0",
         "Type": "action",

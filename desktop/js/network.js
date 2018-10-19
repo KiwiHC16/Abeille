@@ -43,12 +43,16 @@ $("#nodeTo").off().change(function () {
 
 
 function updateZigBeeJsonCache() {
+    //show progress in AlertDiv
+    setTimeout(function () {
+        updateAlertFromZigBeeJsonLog(true);
+    }, 2000);
     $.ajax({
             url: "/plugins/Abeille/Network/AbeilleLQI.php",
             async: true,
             error: function (jqXHR, status, error) {
-                console.log("updateZigBeeJsonCache error status: " + status);
-                console.log("updateZigBeeJsonCache error msg: " + error);
+                //console.log("updateZigBeeJsonCache error status: " + status);
+                //console.log("updateZigBeeJsonCache error msg: " + error);
                 $('#table_routingTable tbody').empty()
                 $('#div_networkZigbeeAlert').showAlert({
                     message: 'Error, while processing zigbee network information, please see logs',
@@ -63,9 +67,7 @@ function updateZigBeeJsonCache() {
                 //console.log("updateZigBeeJsonCache success status: " + status);
                 //console.log("updateZigBeeJsonCache success msg: " + data);
                 // php file checks for write rights
-                if (data == 'init') {
-                    return
-                }
+
                 var levelAlert = "danger";
                 var timeAlert = 5000;
                 var messageAlert = data;
@@ -73,11 +75,8 @@ function updateZigBeeJsonCache() {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
                     network_links();
+                    updateAlertFromZigBeeJsonLog(false);
                 }
-                //Wait to second for ajx php to start processing
-                setTimeout(function () {
-                    updateAlertFromZigBeeJsonLog(true);
-                }, 2000);
                 $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
                 window.setTimeout(function () {
                     $('#div_networkZigbeeAlert').hide()
@@ -111,12 +110,12 @@ function getAbeilleLog(_autoUpdate, _log) {
             }
             if ($.isArray(data.result)) {
                 var aLog = data.result;
-                console.log(aLog.length);
-                console.log(aLog);
+                //console.log(aLog.length);
+                //console.log(aLog);
                 log = aLog.filter(function (val) {
                     return val.toLowerCase().indexOf("lqi") > -1;
                 });
-                console.log('last log LQI: ' + log.reverse()[0]);
+                //console.log('last log LQI: ' + log.reverse()[0]);
                 //log = data.result[data.result.length-1];
                 $('#div_networkZigbeeAlert').showAlert({
                     message: log.reverse()[0],
@@ -141,8 +140,8 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
         global: false,
         cache: false,
         error: function (request, status, error) {
-            console.log("updateAlertFromZigBeeJsonLog error status: " + status);
-            console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
+            //console.log("updateAlertFromZigBeeJsonLog error status: " + status);
+            //console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
             $('#div_networkZigbeeAlert').showAlert({
                 message: "Error, cannot read status file, please refresh cache.",
                 level: 'danger'
@@ -153,9 +152,13 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
             }, 5000);
         },
         success: function (data) {
-            console.log("updateAlertFromZigBeeJsonLog success data: " + data);
-            if (data.toLowerCase().indexOf("done") != -1) {
-                $('#div_networkZigbeeAlert').showAlert({message: data, level: 'success'});
+            //console.log("updateAlertFromZigBeeJsonLog success data: " + data);
+            //console.log("updateAlertFromZigBeeJsonLog success data includes oops: " + data.toLowerCase().includes("oops"));
+            //error in treatment
+            if (data.toLowerCase().includes("oops")) {
+                $('#div_networkZigbeeAlert').showAlert({
+                    message: "Error, cannot read status file, please refresh cache.",
+                    level: 'danger'});
                 _autoUpdate = 0;
                 setTimeout(function () {
                     $('#div_networkZigbeeAlert').hide();
@@ -163,13 +166,22 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
             }
             else {
                 $('#div_networkZigbeeAlert').showAlert({
-                    message: "Error, cannot read status file, please refresh cache.",
-                    level: 'danger'
+                    message: data ,
+                    level: 'success'
                 });
-                _autoUpdate = 0;
-                setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide();
-                }, 5000);
+                //if LQI log contains done, then loop display of log is disabled
+                _autoUpdate = data.toLowerCase().includes("done")?0:1;
+                if (_autoUpdate) {
+                    setTimeout(function () {
+                        updateAlertFromZigBeeJsonLog(_autoUpdate);
+                    }, 1000);
+                }
+                // when LQI request is done, alertDiv is hidden.
+                else {
+                    setTimeout(function () {
+                        $('#div_networkZigbeeAlert').hide();
+                    }, 5000);
+                }
             }
         }
     })
@@ -192,9 +204,9 @@ function network_display() {
     request.done(function (json) {
         //Sort objects to have list array sorted on Voisin values
         // empty array ?
-        console.log(json);
+        //console.log(json);
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
-            console.log('Fichier vide, rien a traiter.');
+            //console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
         }
         else {
@@ -219,7 +231,7 @@ function network_display() {
 
             for (var nodeFromJson in json.data) {
                 currentJsonNode = json.data[nodeFromJson];
-                console.log('Parsing: ' + currentJsonNode.NE_Name + '/' + currentJsonNode.Voisine_Name + ' * ' + currentJsonNode.Type); // this will show the info it in firebug console
+                //console.log('Parsing: ' + currentJsonNode.NE_Name + '/' + currentJsonNode.Voisine_Name + ' * ' + currentJsonNode.Type); // this will show the info it in firebug console
                 // Step 2. We add nodes and edges to the graph:
                 //Add node if not already existing
 
@@ -259,8 +271,8 @@ function network_display() {
 
             for (node in nodes) {
 
-                console.log('Adding node: name: ' + nodes[node].name + ' route: ' + nodes[node].route +
-                    ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
+                //console.log('Adding node: name: ' + nodes[node].name + ' route: ' + nodes[node].route +
+                //    ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
 
                 graph.addNode(node, {
                         name: nodes[node].name, route: nodes[node].route,
@@ -270,7 +282,7 @@ function network_display() {
                 for (link in nodes[node].links) {
 
                     if (nodes[node].name != null && nodes[node].links[link] != null) {
-                        console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                        //console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
                         graph.addLink(node, nodes[node].links[link]);
                     } else {
                         console.log('not adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
@@ -379,7 +391,7 @@ function network_links() {
     jqXHR.done(function (json, textStatus, jqXHR) {
         // empty array ?
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1 || json.data.includes('OOPS')) {
-            console.log('Fichier vide, rien a traiter.');
+            //console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
         }
         else {
@@ -408,7 +420,7 @@ function network_links() {
             var tbody = "";
             var nodesTo = new Object(), nodesFrom = new Object();
             var nodeJId, nodeJName;
-            console.log(nodes);
+            //console.log(nodes);
 
             for (var nodeFromJson in nodes) {
                 //Handle ZigBee name error
@@ -495,7 +507,7 @@ function network_links() {
 
             $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
-                console.log("eqType: " + eqTypeId);
+                //console.log("eqType: " + eqTypeId);
                 if (eqTypeId.indexOf('not found') >= 0) {
 
                     $('#div_networkZigbeeAlert').showAlert({
@@ -512,7 +524,7 @@ function network_links() {
 
             $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
-                console.log("eqType: " + eqTypeId);
+                //console.log("eqType: " + eqTypeId);
                 if (eqTypeId.indexOf('not found') >= 0) {
                     $('#div_networkZigbeeAlert').showAlert({
                         message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
@@ -535,7 +547,7 @@ function network_links() {
 
 
     jqXHR.fail(function (json, textStatus, jqXHR) {
-        console.log("network.js: network_links: fail: " + textStatus);
+        //console.log("network.js: network_links: fail: " + textStatus);
         var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         $('#table_routingTable tbody').empty()

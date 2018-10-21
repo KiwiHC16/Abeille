@@ -1,1 +1,250 @@
-{"ZLO-LTOSensor":{"nameJeedom":"ZLO-LTOSensor for Dev","Categorie":{"security":"1"},"configuration":{"icone":"ZLO-LTOSensor","battery_type":"1x3V CR2032"},"Commandes":{"0000-0001":{"isVisible":0,"name":"SW","order":0,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"Network"}},"0000-0005":{"isVisible":0,"name":"nom","order":1,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"Network"}},"0400-0000":{"isVisible":1,"name":"Luminosite","order":3,"isHistorized":"1","Type":"info","subType":"numeric","generic_type":"BRIGHTNESS","invertBinary":"0","template":"","units":"Lux","configuration":{"visibilityCategory":"All"}},"0402-0000":{"isVisible":1,"name":"Temperature","order":2,"isHistorized":"1","Type":"info","subType":"numeric","generic_type":"TEMPERATURE","invertBinary":"0","template":"tempIMG","configuration":{"calculValueOffset":"#value#\/100","historizeRound":"1","visibilityCategory":"All"},"units":"\u00b0C"},"0406-0000":{"isVisible":1,"name":"etat","order":2,"isHistorized":"1","Type":"info","subType":"binary","generic_type":"PRESENCE","invertBinary":"1","template":"presence","configuration":{"visibilityCategory":"All"}},"Batterie-Volt":{"isVisible":0,"name":"Batterie","order":3,"isHistorized":"1","Type":"info","subType":"numeric","invertBinary":"0","template":"vuMeter","configuration":{"calculValueOffset":"#value#\/1000","minValue":"0","maxValue":"3.3","visibilityCategory":"Network"}},"Batterie-Pourcent":{"isVisible":0,"name":"BatteriePourcent","order":3,"isHistorized":"1","Type":"info","subType":"numeric","generic_type":"BATTERY","invertBinary":"0","template":"vuMeter","configuration":{"calculValueOffset":"#value#","minValue":"0","maxValue":"100","historizeRound":"0","visibilityCategory":"Network"}},"0000-ff01":{"isVisible":0,"name":"Specific","order":4,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"additionalCommand"}},"Time-Time":{"isVisible":0,"name":"Time-Time","order":5,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"Time"}},"Time-TimeStamp":{"isVisible":0,"name":"Time-TimeStamp","order":6,"isHistorized":"0","Type":"info","subType":"numeric","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Time"}},"IEEE-Addr":{"isVisible":0,"name":"IEEE-Addr","order":7,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Short-Addr":{"isVisible":0,"name":"Short-Addr","order":8,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Link-Quality":{"isVisible":0,"name":"Link Quality","order":9,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Power-Source":{"isVisible":0,"display":{"showNameOndashboard":"0"},"name":"Power Source","order":10,"isHistorized":"0","Type":"info","subType":"binary","invertBinary":"0","template":"AbeillePower","configuration":{"visibilityCategory":"Network"}}}}}
+{
+  "ZLO-LTOSensor": {
+    "nameJeedom": "ZLO-LTOSensor for Dev",
+    "Categorie": {
+      "security": "1"
+    },
+    "configuration": {
+      "icone": "ZLO-LTOSensor",
+      "battery_type": "1x3V CR2032"
+    },
+    "Commandes": {
+      "0000-0001": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "0000-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "0400-0000": {
+        "isVisible": 1,
+        "name": "Luminosite",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "generic_type": "BRIGHTNESS",
+        "invertBinary": "0",
+        "template": "",
+        "units": "Lux",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "0402-0000": {
+        "isVisible": 1,
+        "name": "Temperature",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "generic_type": "TEMPERATURE",
+        "invertBinary": "0",
+        "template": "tempIMG",
+        "configuration": {
+          "calculValueOffset": "#value#/100",
+          "historizeRound": "1",
+          "visibilityCategory": "All"
+        },
+        "units": "°C"
+      },
+      "0406-0000": {
+        "isVisible": 1,
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "PRESENCE",
+        "invertBinary": "1",
+        "template": "presence",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "Batterie-Volt": {
+        "isVisible": 0,
+        "name": "Batterie",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "configuration": {
+          "calculValueOffset": "#value#/1000",
+          "minValue": "0",
+          "maxValue": "3.3",
+          "visibilityCategory": "Network"
+        }
+      },
+      "Batterie-Pourcent": {
+        "isVisible": 0,
+        "name": "BatteriePourcent",
+        "order": 3,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "configuration": {
+          "calculValueOffset": "#value#",
+          "minValue": "0",
+          "maxValue": "100",
+          "historizeRound": "0",
+          "visibilityCategory": "Network"
+        }
+      },
+      "0000-ff01": {
+        "isVisible": 0,
+        "name": "Specific",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "additionalCommand"
+        }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateTemperature",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0402&reportToAddress=#ZiGateIEEE#",
+          "visibilityCategory": "Network"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportTemperature",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "setReport",
+          "request": "ClusterId=0402&AttributeId=0000&AttributeType=29",
+          "visibilityCategory": "Network"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      }
+    }
+  }
+}

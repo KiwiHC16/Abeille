@@ -82,6 +82,13 @@ $eqLogics = eqLogic::byType('Abeille');
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph</center></span>
             </div>
+            <div class="cursor" id="bt_networkAbeilleNew"
+                style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+                <center>
+                    <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
+                </center>
+                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph New</center></span>
+            </div>
         </div>
 
 

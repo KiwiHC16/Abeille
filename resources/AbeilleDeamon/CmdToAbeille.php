@@ -406,7 +406,8 @@
         if ( stlen($manufacturerSpecific)>1 ) {
             $manufacturerSpecific = "00";
             $manufacturerId = "0000";
-        } else {
+        }
+        else {
             $manufacturerSpecific = "01";
             $manufacturerSpecific = $manufacturerSpecific;
         }

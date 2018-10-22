@@ -341,7 +341,7 @@
 
     }
 
-    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint)
+    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$manufacturerSpecific)
     {
         /*
          <address mode: uint8_t>
@@ -403,7 +403,13 @@
         //$ClusterId = "0006";
         $ClusterId = $clusterId;
         $Direction = "00";
-        $manufacturerSpecific = "00";
+        if ( stlen($manufacturerSpecific)>1 ) {
+            $manufacturerSpecific = "00";
+            $manufacturerId = "0000";
+        } else {
+            $manufacturerSpecific = "01";
+            $manufacturerSpecific = $manufacturerSpecific;
+        }
         $manufacturerId = "0000";
         $numberOfAttributes = "01";
         // $attributesList = "0000";
@@ -1367,7 +1373,7 @@
             // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
             // if ( $Command['ReadAttributeRequest']==1 )
             //{
-                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
+                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01", $Command['Proprio'] );
             //}
         }
 

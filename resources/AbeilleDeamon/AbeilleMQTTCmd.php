@@ -282,15 +282,17 @@
 
                //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
-                $keywords = preg_split("/[=&]+/", $msg);
-                deamonlog('debug', 'Msg Received: '.$msg);
-
-
+                // $keywords = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
-                                 "address" => $address,
-                                 "clusterId" => $keywords[1],
-                                 "attributeId" => $keywords[3],
+                                 "address"      => $address,
+                                 "clusterId"    => $parameters['ClusterId'],
+                                 "attributeId"  => $parameters['attributeId'],
+                                 "Proprio"      => $parameters['Proprio'],
                                  );
                 deamonlog('debug', 'Msg Received: '.$msg.' from NE');
 

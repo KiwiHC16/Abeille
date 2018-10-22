@@ -403,7 +403,7 @@
         //$ClusterId = "0006";
         $ClusterId = $clusterId;
         $Direction = "00";
-        if ( strlen($manufacturerId)>1 ) {
+        if ( strlen($manufacturerId)<1 ) {
             $manufacturerSpecific = "00";
             $manufacturerId = "0000";
         }

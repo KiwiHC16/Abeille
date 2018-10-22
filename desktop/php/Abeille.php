@@ -8,8 +8,6 @@ $eqLogics = eqLogic::byType('Abeille');
 
 ?>
 
-<div id="alert"><p style="color:black; background-color:MediumSeaGreen";><br>   Modification appliquée<br><br></p></div>
-
 <div class="row row-overflow">
     <div class="col-lg-2 col-sm-3 col-sm-4">
         <div class="bs-sidebar">
@@ -29,8 +27,11 @@ $eqLogics = eqLogic::byType('Abeille');
 
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay"
          style="border-left: solid 1px #EEE; padding-left: 25px;">
+
+
         <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
-        <div class="eqLogicThumbnailContainer">
+
+<div class="eqLogicThumbnailContainer">
 
             <div class="cursor changeIncludeState card" id="bt_include" data-mode="1" data-state="1" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 0px; top: 0px;">
                 <center>
@@ -84,8 +85,8 @@ $eqLogics = eqLogic::byType('Abeille');
         </div>
 
 
-
         <legend><i class="fa fa-table"></i> {{Affichage Commandes}}</legend>
+
         <div class="eqLogicThumbnailContainer">
             <div class="cursor" id="bt_toogleAffichageNetwork"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
@@ -113,9 +114,8 @@ $eqLogics = eqLogic::byType('Abeille');
         </div>
 
 
-
-        <legend><i class="fa fa-table"></i> {{Mes Abeilles}}
-        </legend>
+        <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
+        <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
         <div class="eqLogicThumbnailContainer">
 
             <?php
@@ -133,12 +133,27 @@ $eqLogics = eqLogic::byType('Abeille');
                 }
                 echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
                 echo "</center>";
-                echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
+                echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
+                echo '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" /><center>{{Select (na yet)}}</label></center></span>';
                 echo '</div>';
             }
             ?>
         </div>
+
+<div id="Set Group">
+Group setting to be developped here.
+<input class="form-control" placeholder="Group" style="margin-bottom:4px;" id="in_searchEqlogictytytytyttyty">
+</div>
+
     </div>
+
+
+
+
+
+
+
+
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogic"
          style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
         <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i>
@@ -340,4 +355,7 @@ $eqLogics = eqLogic::byType('Abeille');
         //$("#icon_visu").attr('src',text);
         document.icon_visu.src = text;
     });
+
+                                
+
 </script>

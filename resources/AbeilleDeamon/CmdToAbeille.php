@@ -341,7 +341,7 @@
 
     }
 
-    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$manufacturerSpecific)
+    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$manufacturerId)
     {
         /*
          <address mode: uint8_t>
@@ -403,19 +403,20 @@
         //$ClusterId = "0006";
         $ClusterId = $clusterId;
         $Direction = "00";
-        if ( strlen($manufacturerSpecific)>1 ) {
+        if ( strlen($manufacturerId)>1 ) {
             $manufacturerSpecific = "00";
             $manufacturerId = "0000";
         }
         else {
             $manufacturerSpecific = "01";
-            $manufacturerSpecific = $manufacturerSpecific;
+            $manufacturerId = $manufacturerId;
         }
         $manufacturerId = "0000";
         $numberOfAttributes = "01";
         // $attributesList = "0000";
         $attributesList = $attributeId;
-
+        
+        //      02             c60F       01                01                     0500         00           00                      00                0001                  fff1
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
         deamonlog('debug','data: '.$data);
         deamonlog('debug','len data: '.strlen($data));

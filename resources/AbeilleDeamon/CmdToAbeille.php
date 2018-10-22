@@ -411,12 +411,13 @@
             $manufacturerSpecific = "01";
             $manufacturerId = $manufacturerId;
         }
-        $manufacturerId = "0000";
+        // $manufacturerId = "0000";
         $numberOfAttributes = "01";
         // $attributesList = "0000";
         $attributesList = $attributeId;
         
         //      02             c60F       01                01                     0500         00           00                      00                0001                  fff1
+        //      02             c60F       01                01                     0500         00           01                      00                0001                  fff1
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
         deamonlog('debug','data: '.$data);
         deamonlog('debug','len data: '.strlen($data));

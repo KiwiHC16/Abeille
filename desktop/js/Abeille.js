@@ -15,10 +15,6 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
-function myTimer() {
-    document.getElementById("alert").style.display = 'none';
-}
-
 $("#table_cmd").delegate(".listEquipementInfo", 'click', function () {
     var el = $(this);
     jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function (result) {
@@ -30,6 +26,7 @@ $("#table_cmd").delegate(".listEquipementInfo", 'click', function () {
 $("#bt_addAbeilleAction").on('click', function(event) {
 	var _cmd = {type: 'action'};
 	addCmdToTable(_cmd);
+    $('#div_alert').showAlert({message: 'Affichage des commandes additionnelles mis en place', level: 'success'});
 });
 
 $('#bt_healthAbeille').on('click', function () {
@@ -64,6 +61,7 @@ $('#bt_include').on('click', function () {
                     
                     xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
                     xmlhttpMQTTSendInclude.send();
+                    $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
                     }
                     );
 
@@ -84,7 +82,8 @@ $('#bt_createTimer').on('click', function () {
                         
                         xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_Timer_0000-0005&payload=Timer", false); // False pour bloquer sur la recuperation du fichier
                         xmlhttpMQTTSendTimer.send();
-                        location.reload(true);
+                        // location.reload(true);
+                        $('#div_alert').showAlert({message: '{{Un nouveau Timer est en création.}}', level: 'success'});
                         }
                         );
 
@@ -100,8 +99,7 @@ $('#bt_toogleAffichageNetwork').on('click', function () {
                                    xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageNetwork&payload=bt_toogleAffichageNetwork", false); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
                                    
-                                   document.getElementById("alert").style.display = 'inline';
-                                   setTimeout(myTimer, 5000);
+                                   $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations réseau mis en place sur les widgets}}', level: 'success'});
                                    }
                                    );
 
@@ -117,7 +115,7 @@ $('#bt_toogleAffichageTime').on('click', function () {
                                 xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageTime&payload=bt_toogleAffichageTime", false); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
                                 
-                                document.getElementById("alert").style.display = 'inline';
+                                $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations Time mis en place sur les widgets}}', level: 'success'});
                                 setTimeout(myTimer, 5000);
                                 }
                                 );
@@ -134,8 +132,7 @@ $('#bt_toogleAffichageAdditionalCommand').on('click', function () {
                                              xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageAdditionalCommand&payload=bt_toogleAffichageAdditionalCommand", false); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
                                              
-                                             document.getElementById("alert").style.display = 'inline';
-                                             setTimeout(myTimer, 5000);
+                                             $('#div_alert').showAlert({message: '{{Affichage/Retrait des Commandes Additionnelles mis en place sur les widgets}}', level: 'success'});
                                              }
                                              );
 
@@ -220,7 +217,7 @@ function addCmdToTable(_cmd) {
 		tr +='</select></span>';
 		tr += '</td><td>';//6
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br> ';
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="retain" />{{Retain flag}}</label></span><br> ';
+		// tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="retain" />{{Retain flag}}</label></span><br> ';
 		tr += '</td>';
 		tr += '<td>';//7
 		if (is_numeric(_cmd.id)) {
@@ -248,4 +245,4 @@ function addCmdToTable(_cmd) {
 	}
 }
 
-document.getElementById("alert").style.display = 'none';
+

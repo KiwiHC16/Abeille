@@ -626,6 +626,16 @@ myJSON_AddMissing();
 
 setPosition("Auto");
 
+imageDeFond  = '<svg id="idDessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">';
+//imageDeFond += '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>';
+imageDeFond += '<g id="legend"></g>';
+imageDeFond += '<g id="lesVoisines"></g>';
+imageDeFond += '<g id="lesTextes"></g>';
+imageDeFond += '<g id="lesAbeillesText"></g>';
+imageDeFond += '<g id="lesAbeilles"></g>';
+imageDeFond += '</svg>';
+document.getElementById("imageDeFond").innerHTML = imageDeFond;
+
 document.getElementById("legend").innerHTML = dessineLaLegende("No");
 document.getElementById("lesVoisines").innerHTML = dessineLesVoisines(0,"No");
 document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");

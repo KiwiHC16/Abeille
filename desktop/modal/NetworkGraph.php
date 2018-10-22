@@ -7,16 +7,9 @@
 
 <p id="demo">Coucou</p>
 
-<svg id="idDessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
-    <image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>
-    <g id="legend"></g>
-    <g id="lesVoisines"></g>
-    <g id="lesTextes"></g>
-    <g id="lesAbeillesText"></g>
-    <g id="lesAbeilles"></g>
-</svg></br>
+<div id="imageDeFond">imageDeFond</div>
 
-<p id="idFiltre">idFiltre</p>
+<div id="idFiltre">idFiltre</div>
 
 <div id="idFeatures"><p>idFeatures</p></div>
 

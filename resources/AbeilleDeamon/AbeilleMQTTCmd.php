@@ -701,10 +701,11 @@
             }
 
             if ($action == "ReadAttributeRequest") {
-                $keywords = preg_split("/[=&]+/", $msg);
+                // $keywords = preg_split("/[=&]+/", $msg);
                 deamonlog('debug', 'Msg Received: '.$msg);
 
                 // Payload: address=7191&clusterId=0006&attributId=0000
+                /*
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
                                  "address" => $keywords[1],
@@ -712,6 +713,20 @@
                                  "attributeId" => $keywords[5],
                                  );
                 $address = $keywords[1];
+                */
+                
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                
+                $Command = array(
+                                 "ReadAttributeRequest" => "1",
+                                 "address"      => $parameters['address'],
+                                 "clusterId"    => $parameters['ClusterId'],
+                                 "attributeId"  => $parameters['attributeId'],
+                                 "Proprio"      => $parameters['Proprio'],
+                                 );
+                
                 deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
                 $done = 1;
             }

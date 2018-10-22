@@ -718,12 +718,12 @@
                 if (count($fields) > 1) {
                     $parameters = proper_parse_str( $msg );
                 }
-                
+                // clusterId=0500&attributId=fff1&Proprio=115f
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
                                  "address"      => $parameters['address'],
-                                 "clusterId"    => $parameters['ClusterId'],
-                                 "attributeId"  => $parameters['attributeId'],
+                                 "clusterId"    => $parameters['clusterId'],
+                                 "attributeId"  => $parameters['attributId'],
                                  "Proprio"      => $parameters['Proprio'],
                                  );
                 

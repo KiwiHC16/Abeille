@@ -395,7 +395,7 @@
         // sendCmd( $dest, "0100", "000E", $param );
         // sendCmd( $dest, "0100", "000E", "02B3280101000600000000010000");
         $cmd = "0100";
-        $lenth = "000E";
+        // $lenth = "000E";
         $addressMode = "02";
         // $address = $Command['address'];
         $sourceEndpoint = "01";
@@ -416,13 +416,14 @@
         // $attributesList = "0000";
         $attributesList = $attributeId;
         
-        //      02             c60F       01                01                     0500         00           00                      00                0001                  fff1
-        //      02             c60F       01                01                     0500         00           01                      00                0001                  fff1
+        //      02             c60F       01                01                     0500         00          01                       115f              01                   fff1
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
         deamonlog('debug','data: '.$data);
         deamonlog('debug','len data: '.strlen($data));
         //echo "Read Attribute command data: ".$data."\n";
 
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        
         sendCmd( $dest, $cmd, $lenth, $data );
     }
 

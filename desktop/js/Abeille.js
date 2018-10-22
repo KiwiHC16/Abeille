@@ -40,16 +40,18 @@ $('#bt_networkAbeilleList').on('click', function () {
     //window.open("plugins/Abeille/Network/AbeilleLQI_List.php");
 });
 
+/*
 $('#bt_networkAbeille').on('click', function () {
     window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.html");
 });
-/*
+ */
+
 $('#bt_networkAbeille').on('click', function () {
                                $('#md_modal').dialog({title: "{{Graph Abeille}}"});
-                               $('#md_modal').load('plugins/Abeille/Network/AbeilleLQI_List.php').dialog('open');
-                               //window.open("plugins/Abeille/Network/AbeilleLQI_List.php");
-                               });
-*/
+                               // $('#md_modal').load('plugins/Abeille/Network/TestSVG/NetworkGraph.html').dialog('open');
+                                  $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=NetworkGraph').dialog('open');
+                           });
+
 $('#bt_include').on('click', function () {
                     console.log("bt_include");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();

@@ -19,3 +19,8 @@ Les autres environnements ne sont pas testés par défaut mais nous vous aideron
 - Windows ne fonctionne pas, car pas Linux (Pas de support Jeedom)
 - Ubuntu fonctionne mais demande de mettre les mains dans le cambouis, l'installation même de Jeedom n'est pas immédiate
 - Odroid/HardKernel devrait fonctionner
+
+= Equipements
+
+La liste des équipements testés est consolidé dans le fichier excel: https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/documentsDeDev/AbeilleEquipmentFunctionSupported.xlsx?raw=true
+

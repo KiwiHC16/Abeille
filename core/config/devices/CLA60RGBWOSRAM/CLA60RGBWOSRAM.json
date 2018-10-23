@@ -436,10 +436,28 @@
           "visibilityCategory": "Network"
         }
       },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateEtat",
+        "order": 28,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&ClusterId=0006&reportToAddress=#ZiGateIEEE#",
+          "visibilityCategory": "Network"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
       "BindToZigateLevel": {
         "isVisible": 1,
         "name": "BindToZigateLevel",
-        "order": 28,
+        "order": 29,
         "isHistorized": "0",
         "Type": "action",
         "subType": "other",
@@ -451,24 +469,9 @@
           "visibilityCategory": "Network"
         }
       },
-      "setReportEtat": {
+      "BindShortToZigateLevel": {
         "isVisible": 1,
-        "name": "setReportEtat",
-        "order": 29,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10",
-          "visibilityCategory": "Network"
-        }
-      },
-      "setReportLevel": {
-        "isVisible": 1,
-        "name": "setReportLevel",
+        "name": "BindShortToZigateLevel",
         "order": 30,
         "isHistorized": "0",
         "Type": "action",
@@ -476,8 +479,41 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-          "topic": "CmdAbeille/Ruche/setReport",
-          "request": "address=#addr#&sourceEndpoint=01&targetEndpoint=03&ClusterId=0008&AttributeId=0000&AttributeType=20",
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&ClusterId=0008&reportToAddress=#ZiGateIEEE#",
+          "visibilityCategory": "Network"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 31,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "setReport",
+          "request": "sourceEndpoint=01&targetEndpoint=03&ClusterId=0006&AttributeId=0000&AttributeType=10",
+          "visibilityCategory": "Network"
+        }
+      },
+      "setReportLevel": {
+        "isVisible": 1,
+        "name": "setReportLevel",
+        "order": 32,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "setReport",
+          "request": "sourceEndpoint=01&targetEndpoint=03&ClusterId=0008&AttributeId=0000&AttributeType=20",
           "visibilityCategory": "Network"
         },
         "display": {
@@ -487,7 +523,7 @@
       "online": {
         "isVisible": 0,
         "name": "online",
-        "order": 31,
+        "order": 33,
         "isHistorized": "1",
         "Type": "info",
         "subType": "binary",

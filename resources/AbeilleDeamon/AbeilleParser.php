@@ -2024,7 +2024,15 @@
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande le Location de l equipement');
                         $mqtt->publish('CmdAbeille/Ruche/getLocation', 'address='.$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="modelIdentifier->location";
+                        $GLOBALS['NE'][$short]['time']=time();
                     }
+                    
+                    // Cela fait maintenant 5s que j attends la location et je ne l ai pas, on passe à la suite
+                    if ( (($infos['time'])+5) < time() ) {
+                        $GLOBALS['NE'][$short]['state'] = 'location';
+                        $GLOBALS['NE'][$short][$short]['action'] == "location->configuration";
+                    }
+                    
                     break;
                     
                 case 'location':

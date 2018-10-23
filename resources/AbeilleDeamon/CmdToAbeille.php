@@ -1755,9 +1755,10 @@
 
         if ( isset($Command['getLocation']) && isset($Command['address']) )
         {
-            deamonlog('debug','Get Location from: '.$Command['address']);
+            
             //echo "Get Name from: ".$Command['address']."\n";
             if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
             getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'] );
         }
 

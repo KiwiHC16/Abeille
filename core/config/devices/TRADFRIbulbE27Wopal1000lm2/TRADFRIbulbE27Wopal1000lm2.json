@@ -1,1 +1,346 @@
-{"TRADFRI bulb E27 W opal 1000lm 2":{"nameJeedom":"IKEA Ampoule TRADFRI bulb E27 opal 1000lm2","timeout":"3600","Categorie":{"light":"1"},"configuration":{"icone":"IkeaTradfriBulbE27WOpal1000lm2"},"Commandes":{"0000-0004":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"societe","order":0,"subType":"string","template":"","configuration":{"visibilityCategory":"Network"}},"0000-0005":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"nom","order":1,"subType":"string","template":"","configuration":{"visibilityCategory":"Network"}},"0000-4000":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"SW","order":2,"subType":"string","template":"","configuration":{"visibilityCategory":"Network"}},"0006-0000":{"isVisible":1,"Type":"info","subType":"binary","generic_type":"LIGHT_STATE","invertBinary":"0","isHistorized":"1","name":"etat","order":3,"template":"light","configuration":{"visibilityCategory":"All"}},"0008-0000":{"isVisible":1,"Type":"info","configuration":{"calculValueOffset":"#value#\/255*100","historizeRound":"0","maxValue":"100","minValue":"0","visibilityCategory":"All"},"invertBinary":"0","isHistorized":"1","name":"Level","order":4,"subType":"numeric","template":"","units":"%"},"IEEE-Addr":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"IEEE-Addr","order":5,"subType":"string","template":"badge","configuration":{"visibilityCategory":"Network"}},"Short-Addr":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"Short-Addr","order":6,"subType":"string","template":"badge","configuration":{"visibilityCategory":"Network"}},"Identify":{"isVisible":0,"Type":"action","configuration":{"request":"duration=0010","topic":"identifySend","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"Identify","order":7,"subType":"other","template":""},"Level":{"display":{"forceReturnLineAfter":"1"},"isVisible":1,"Type":"action","configuration":{"request":"Level=#slider#&duration=01","topic":"setLevel","visibilityCategory":"All"},"invertBinary":"0","isHistorized":"0","name":"setLevel","order":8,"subType":"slider","generic_type":"LIGHT_SLIDER","value":"Level","template":""},"Link-Quality":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"Link Quality","order":9,"subType":"string","template":"badge","configuration":{"visibilityCategory":"Network"}},"Off":{"display":[],"isVisible":1,"Type":"action","configuration":{"request":"Off","topic":"OnOff","visibilityCategory":"All"},"invertBinary":"0","isHistorized":"0","name":"Off","order":10,"subType":"other","generic_type":"LIGHT_OFF","template":""},"On":{"isVisible":1,"Type":"action","configuration":{"request":"On","topic":"OnOff","visibilityCategory":"All"},"invertBinary":"0","isHistorized":"0","name":"On","order":11,"subType":"other","generic_type":"LIGHT_ON","template":""},"Power-Source":{"isVisible":0,"display":{"showNameOndashboard":"0"},"Type":"info","invertBinary":"0","isHistorized":"0","name":"Power Source","order":12,"subType":"binary","template":"AbeillePower","configuration":{"visibilityCategory":"Network"}},"Time-Time":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"Time-Time","order":13,"subType":"string","template":"","configuration":{"visibilityCategory":"Time"}},"Time-TimeStamp":{"isVisible":0,"Type":"info","invertBinary":"0","isHistorized":"0","name":"Time-TimeStamp","order":14,"subType":"numeric","template":"badge","configuration":{"visibilityCategory":"Time"}},"Toggle":{"isVisible":1,"Type":"action","configuration":{"request":"Toggle","topic":"OnOff","visibilityCategory":"All"},"display":{"forceReturnLineAfter":"1"},"invertBinary":"0","isHistorized":"0","name":"Toggle","order":15,"subType":"other","generic_type":"LIGHT_TOGGLE","template":""},"getEtat":{"isVisible":0,"Type":"action","configuration":{"request":"clusterId=0006&attributeId=0000","topic":"ReadAttributeRequest","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"getEtat","order":16,"subType":"other","template":""},"getLevel":{"isVisible":0,"Type":"action","configuration":{"request":"clusterId=0008&attributeId=0000","topic":"ReadAttributeRequest","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"getLevel","order":17,"subType":"other","template":""},"getManufacturerName":{"isVisible":0,"Type":"action","configuration":{"request":"clusterId=0000&attributeId=0004","topic":"ReadAttributeRequest","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"getManufacturerName","order":18,"subType":"other","template":""},"getModelIdentifier":{"isVisible":0,"Type":"action","configuration":{"request":"clusterId=0000&attributeId=0005","topic":"ReadAttributeRequest","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"getModelIdentifier","order":19,"subType":"other","template":""},"getSWBuild":{"isVisible":0,"Type":"action","configuration":{"request":"clusterId=0000&attributeId=4000","topic":"ReadAttributeRequest","visibilityCategory":"additionalCommand"},"invertBinary":"0","isHistorized":"0","name":"getSWBuild","order":20,"subType":"other","template":""},"online":{"isVisible":0,"name":"online","order":21,"isHistorized":"1","Type":"info","subType":"binary","generic_type":"ONLINE","invertBinary":"0","template":"","configuration":{"returnStateValue":"0","returnStateTime":"60","visibilityCategory":"Network"}}}}}
+{
+  "TRADFRI bulb E27 W opal 1000lm 2": {
+    "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm2",
+    "timeout": "3600",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "icone": "IkeaTradfriBulbE27WOpal1000lm2"
+    },
+    "Commandes": {
+      "0000-0004": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "societe",
+        "order": 0,
+        "subType": "string",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "0000-0005": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "nom",
+        "order": 1,
+        "subType": "string",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "0000-4000": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "SW",
+        "order": 2,
+        "subType": "string",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "0006-0000": {
+        "isVisible": 1,
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE",
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "etat",
+        "order": 3,
+        "template": "light",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "0008-0000": {
+        "isVisible": 1,
+        "Type": "info",
+        "configuration": {
+          "calculValueOffset": "#value#/255*100",
+          "historizeRound": "0",
+          "maxValue": "100",
+          "minValue": "0",
+          "visibilityCategory": "All"
+        },
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Level",
+        "order": 4,
+        "subType": "numeric",
+        "template": "",
+        "units": "%"
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "IEEE-Addr",
+        "order": 5,
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Short-Addr",
+        "order": 6,
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Identify": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "duration=0010",
+          "topic": "identifySend",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Identify",
+        "order": 7,
+        "subType": "other",
+        "template": ""
+      },
+      "Level": {
+        "display": {
+          "forceReturnLineAfter": "1"
+        },
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "Level=#slider#&duration=01",
+          "topic": "setLevel",
+          "visibilityCategory": "All"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "setLevel",
+        "order": 8,
+        "subType": "slider",
+        "generic_type": "LIGHT_SLIDER",
+        "value": "Level",
+        "template": ""
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Link Quality",
+        "order": 9,
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Off": {
+        "display": [
+          
+        ],
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "Off",
+          "topic": "OnOff",
+          "visibilityCategory": "All"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Off",
+        "order": 10,
+        "subType": "other",
+        "generic_type": "LIGHT_OFF",
+        "template": ""
+      },
+      "On": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "On",
+          "topic": "OnOff",
+          "visibilityCategory": "All"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "On",
+        "order": 11,
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "template": ""
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Power Source",
+        "order": 12,
+        "subType": "binary",
+        "template": "AbeillePower",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-Time",
+        "order": 13,
+        "subType": "string",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Time-TimeStamp",
+        "order": 14,
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "Toggle": {
+        "isVisible": 1,
+        "Type": "action",
+        "configuration": {
+          "request": "Toggle",
+          "topic": "OnOff",
+          "visibilityCategory": "All"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "Toggle",
+        "order": 15,
+        "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
+        "template": ""
+      },
+      "getEtat": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0006&attributeId=0000",
+          "topic": "ReadAttributeRequest",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getEtat",
+        "order": 16,
+        "subType": "other",
+        "template": ""
+      },
+      "getLevel": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0008&attributeId=0000",
+          "topic": "ReadAttributeRequest",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getLevel",
+        "order": 17,
+        "subType": "other",
+        "template": ""
+      },
+      "getManufacturerName": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0000&attributeId=0004",
+          "topic": "ReadAttributeRequest",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getManufacturerName",
+        "order": 18,
+        "subType": "other",
+        "template": ""
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0000&attributeId=0005",
+          "topic": "ReadAttributeRequest",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getModelIdentifier",
+        "order": 19,
+        "subType": "other",
+        "template": ""
+      },
+      "getSWBuild": {
+        "isVisible": 0,
+        "Type": "action",
+        "configuration": {
+          "request": "clusterId=0000&attributeId=4000",
+          "topic": "ReadAttributeRequest",
+          "visibilityCategory": "additionalCommand"
+        },
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "getSWBuild",
+        "order": 20,
+        "subType": "other",
+        "template": ""
+      },
+      "online": {
+        "isVisible": 0,
+        "name": "online",
+        "order": 21,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "ONLINE",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "60",
+          "visibilityCategory": "Network"
+        }
+      }
+    }
+  }
+}

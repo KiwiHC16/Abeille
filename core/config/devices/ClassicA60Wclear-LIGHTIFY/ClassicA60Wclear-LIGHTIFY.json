@@ -1,1 +1,248 @@
-{"Classic A60 W clear - LIGHTIFY":{"nameJeedom":"OSRAM Classic A60 W clear - LIGHTIFY","timeout":"3600","Categorie":{"automatism":"1"},"configuration":{"icone":"OSRAMClassicA60Wclear-LIGHTIFY","protocol":"OSRAM"},"Commandes":{"0000-03-0001":{"isVisible":0,"name":"SW","order":0,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"All"}},"0000-03-0005":{"isVisible":0,"name":"nom","order":1,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"All"}},"0006-03-0000":{"isVisible":1,"name":"etat","order":2,"isHistorized":"1","Type":"info","subType":"binary","generic_type":"LIGHT_STATE","invertBinary":"0","template":"prise","configuration":{"visibilityCategory":"All"}},"Time-Time":{"isVisible":0,"name":"Time-Time","order":3,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"","configuration":{"visibilityCategory":"Time"}},"Time-TimeStamp":{"isVisible":0,"name":"Time-TimeStamp","order":4,"isHistorized":"0","Type":"info","subType":"numeric","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Time"}},"On":{"isVisible":1,"name":"On","order":5,"isHistorized":"0","Type":"action","subType":"other","generic_type":"LIGHT_ON","invertBinary":"0","template":"","configuration":{"topic":"OnOffOSRAM","request":"On","visibilityCategory":"All"}},"Off":{"isVisible":1,"name":"Off","order":6,"isHistorized":"0","Type":"action","subType":"other","generic_type":"LIGHT_OFF","invertBinary":"0","template":"","configuration":{"topic":"OnOffOSRAM","request":"Off","visibilityCategory":"All"}},"Toggle":{"isVisible":1,"name":"Toggle","order":7,"isHistorized":"0","Type":"action","subType":"other","generic_type":"LIGHT_TOGGLE","invertBinary":"0","template":"","configuration":{"topic":"OnOffOSRAM","request":"Toggle","visibilityCategory":"All"},"display":{"forceReturnLineAfter":"1"}},"getEtat":{"isVisible":0,"name":"getEtat","order":8,"isHistorized":"0","Type":"action","subType":"other","invertBinary":"0","template":"","configuration":{"topic":"ReadAttributeRequestOSRAM","request":"clusterId=0006&attributeId=0000","visibilityCategory":"additionalCommand"}},"getManufacturerName":{"isVisible":0,"name":"getManufacturerName","order":9,"isHistorized":"0","Type":"action","subType":"other","invertBinary":"0","template":"","configuration":{"topic":"ReadAttributeRequestOSRAM","request":"clusterId=0000&attributeId=0004","visibilityCategory":"additionalCommand"}},"getModelIdentifier":{"isVisible":0,"name":"getModelIdentifier","order":10,"isHistorized":"0","Type":"action","subType":"other","invertBinary":"0","template":"","configuration":{"topic":"ReadAttributeRequestOSRAM","request":"clusterId=0000&attributeId=0005","visibilityCategory":"additionalCommand"}},"IEEE-Addr":{"isVisible":0,"name":"IEEE-Addr","order":11,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Short-Addr":{"isVisible":0,"name":"Short-Addr","order":12,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Link-Quality":{"isVisible":0,"name":"Link Quality","order":13,"isHistorized":"0","Type":"info","subType":"string","invertBinary":"0","template":"badge","configuration":{"visibilityCategory":"Network"}},"Power-Source":{"isVisible":0,"display":{"showNameOndashboard":"0"},"name":"Power Source","order":14,"isHistorized":"0","Type":"info","subType":"binary","invertBinary":"0","template":"AbeillePower","configuration":{"visibilityCategory":"Network"}},"online":{"isVisible":0,"name":"online","order":15,"isHistorized":"1","Type":"info","subType":"binary","generic_type":"ONLINE","invertBinary":"0","template":"","configuration":{"returnStateValue":"0","returnStateTime":"60","visibilityCategory":"Network"}}}}}
+{
+  "Classic A60 W clear - LIGHTIFY": {
+    "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY",
+    "timeout": "3600",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
+      "protocol": "OSRAM"
+    },
+    "Commandes": {
+      "0000-03-0001": {
+        "isVisible": 0,
+        "name": "SW",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "0000-03-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 1,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "0006-03-0000": {
+        "isVisible": 1,
+        "name": "etat",
+        "order": 2,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE",
+        "invertBinary": "0",
+        "template": "prise",
+        "configuration": {
+          "visibilityCategory": "All"
+        }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 3,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 4,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "On": {
+        "isVisible": 1,
+        "name": "On",
+        "order": 5,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "OnOffOSRAM",
+          "request": "On",
+          "visibilityCategory": "All"
+        }
+      },
+      "Off": {
+        "isVisible": 1,
+        "name": "Off",
+        "order": 6,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "generic_type": "LIGHT_OFF",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "OnOffOSRAM",
+          "request": "Off",
+          "visibilityCategory": "All"
+        }
+      },
+      "Toggle": {
+        "isVisible": 1,
+        "name": "Toggle",
+        "order": 7,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "OnOffOSRAM",
+          "request": "Toggle",
+          "visibilityCategory": "All"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "order": 8,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequestOSRAM",
+          "request": "clusterId=0006&attributeId=0000",
+          "visibilityCategory": "additionalCommand"
+        }
+      },
+      "getManufacturerName": {
+        "isVisible": 0,
+        "name": "getManufacturerName",
+        "order": 9,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequestOSRAM",
+          "request": "clusterId=0000&attributeId=0004",
+          "visibilityCategory": "additionalCommand"
+        }
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequestOSRAM",
+          "request": "clusterId=0000&attributeId=0005",
+          "visibilityCategory": "additionalCommand"
+        }
+      },
+      "IEEE-Addr": {
+        "isVisible": 0,
+        "name": "IEEE-Addr",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Short-Addr": {
+        "isVisible": 0,
+        "name": "Short-Addr",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "Power-Source": {
+        "isVisible": 0,
+        "display": {
+          "showNameOndashboard": "0"
+        },
+        "name": "Power Source",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "AbeillePower",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "online": {
+        "isVisible": 0,
+        "name": "online",
+        "order": 15,
+        "isHistorized": "1",
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "ONLINE",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "returnStateValue": "0",
+          "returnStateTime": "60",
+          "visibilityCategory": "Network"
+        }
+      }
+    }
+  }
+}

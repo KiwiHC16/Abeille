@@ -282,7 +282,7 @@
 
                //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
-                // $keywords = preg_split("/[=&]+/", $msg);
+                $keywords = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = proper_parse_str( $msg );
                 }
@@ -701,24 +701,6 @@
             }
 
             if ($action == "ReadAttributeRequest") {
-                // $keywords = preg_split("/[=&]+/", $msg);
-                deamonlog('debug', 'Msg Received: '.$msg);
-
-                // Payload: address=7191&clusterId=0006&attributId=0000
-                /*
-                $Command = array(
-                                 "ReadAttributeRequest" => "1",
-                                 "address" => $keywords[1],
-                                 "clusterId" => $keywords[3],
-                                 "attributeId" => $keywords[5],
-                                 );
-                $address = $keywords[1];
-                */
-                
-                if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
-                }
-                // clusterId=0500&attributId=fff1&Proprio=115f
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
                                  "address"      => $parameters['address'],

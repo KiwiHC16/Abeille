@@ -153,7 +153,7 @@
         "subType": "other",
         "configuration": {
           "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04010000",
+          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04010000&repeat=3",
           "visibilityCategory": "Network"
         }
       },
@@ -166,7 +166,7 @@
         "subType": "other",
         "configuration": {
           "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04020000",
+          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04020000&repeat=3",
           "visibilityCategory": "Network"
         }
       },
@@ -179,7 +179,7 @@
         "subType": "other",
         "configuration": {
           "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04030000",
+          "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04030000&repeat=3",
           "visibilityCategory": "Network"
         },
         "display": {

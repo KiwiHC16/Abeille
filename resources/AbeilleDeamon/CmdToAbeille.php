@@ -341,7 +341,7 @@
 
     }
 
-    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$manufacturerId)
+    function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio)
     {
         /*
          <address mode: uint8_t>
@@ -403,27 +403,24 @@
         //$ClusterId = "0006";
         $ClusterId = $clusterId;
         $Direction = "00";
-        if ( strlen($manufacturerId)<1 ) {
+        if ( strlen($Proprio)<1 ) {
             $manufacturerSpecific = "00";
             $manufacturerId = "0000";
         }
         else {
             $manufacturerSpecific = "01";
-            $manufacturerId = $manufacturerId;
+            $manufacturerId = $Proprio;
         }
-        // $manufacturerId = "0000";
         $numberOfAttributes = "01";
-        // $attributesList = "0000";
         $attributesList = $attributeId;
-        
-        //      02             c60F       01                01                     0500         00          01                       115f              01                   fff1
+        //      02              B328        01              01                      0006            00          00                      0000            01                      0000
+        //      02              faec        01              01                      0500           00           01                      115f            01                      fff1
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
-        deamonlog('debug','data: '.$data);
-        deamonlog('debug','len data: '.strlen($data));
-        //echo "Read Attribute command data: ".$data."\n";
 
         $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-        
+
+        deamonlog('debug','data: '.$data.' length: '.$lenth);
+
         sendCmd( $dest, $cmd, $lenth, $data );
     }
 
@@ -1374,11 +1371,7 @@
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
         if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
         {
-            // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
-            // if ( $Command['ReadAttributeRequest']==1 )
-            //{
-                getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01", $Command['Proprio'] );
-            //}
+            getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01", $Command['Proprio'] );
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------

@@ -2014,14 +2014,6 @@
                 case 'EndPoint':
                     if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande le modelIdentifier de l equipement');
-                        // mqqtPublishAnnounce($mqtt, $short, $EP_table[$infos['EP']], $qos);
-                        
-                        // Abeille/Ruche/getName address=1500&destinationEndPoint=01
-                        // CmdAbeille/Ruche/getName address=&destinationEndPoint=
-
-                        // Ex from Ruche object
-                        // CmdAbeille/Ruche/getName address=1500&destinationEndPoint=
-                        
                         $mqtt->publish('CmdAbeille/Ruche/getName', 'address='.$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                     }
@@ -2030,7 +2022,6 @@
                 case 'modelIdentifier':
                     if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande le Location de l equipement');
-                        // mqqtPublishAnnounceProfalux($mqtt, $SrcAddr, $EP_table[$EP], $qos);
                         $mqtt->publish('CmdAbeille/Ruche/getLocation', 'address='.$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="modelIdentifier->location";
                     }
@@ -2039,7 +2030,9 @@
                 case 'location':
                     if ( $NE[$short]['action'] == "modelIdentifier->location" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande Configuration Equipement qui doit etre cree');
-                        // Call configuration, comment ?
+                        mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
+                        mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
+                        sleep(5);
                         configureNE($short);
                         $GLOBALS['NE'][$short]['action']="location->configuration";
                     }
@@ -2048,9 +2041,7 @@
                 case 'configuration':
                     if ( $NE[$short]['action'] == "location->configuration" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande Current State Equipement qui doit etre cree');
-                        // Call configuration, comment ?
                         getNE($short);
-                        // $GLOBALS['NE'][$short]['action']="location->configuration";
                         $GLOBALS['NE'][$short]['action']="configuration->currentState";
                     }
                     break;

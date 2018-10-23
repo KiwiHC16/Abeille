@@ -283,7 +283,9 @@
                //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
+                
+                deamonlog('debug', 'AbeilleMQTTCmd: Msg received: '.json_encode($msg).' from NE');
+                if (count($keywords) > 1) {
                     $parameters = proper_parse_str( $msg );
                 }
                 
@@ -294,7 +296,7 @@
                                  "attributeId"  => $parameters['attributeId'],
                                  "Proprio"      => $parameters['Proprio'],
                                  );
-                deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                deamonlog('debug', 'AbeilleMQTTCmd: Msg analysed: '.json_encode($Command).' from NE');
 
                 //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequestHue") {

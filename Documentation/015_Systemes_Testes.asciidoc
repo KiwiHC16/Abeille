@@ -23,4 +23,5 @@ Les autres environnements ne sont pas testés par défaut mais nous vous aideron
 = Equipements
 
 La liste des équipements testés est consolidé dans le fichier excel: https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/documentsDeDev/AbeilleEquipmentFunctionSupported.xlsx?raw=true
+(Le contenu du fichier est souvent en retard par rapport à la réalité)
 

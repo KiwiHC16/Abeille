@@ -50,6 +50,7 @@
         }
     }
     echo "La page va se rafraichir dans 5 secondes avec le graph du reseau.</br>";
+    echo "Il faudra peut etre faire un refresh.</br>";
     
-    header("Refresh:5; url=test.html");
+    header("Refresh:5; url=NetworkGraph.html");
     ?>

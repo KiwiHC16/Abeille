@@ -1492,17 +1492,21 @@
                     // message::add("Abeille", "Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
 
                     if (config::byKey('adresseCourteMode', 'Abeille', 'Automatique') == "Automatique") {
+                        
+                        $elogic = self::byLogicalId("Abeille/".$ShortFound, 'Abeille');
+                        
                         log::add(
                             'Abeille',
                             'debug',
-                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, on fait la mise a jour automatique"
+                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique"
                         );
+                        // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
                         message::add(
                             "Abeille",
-                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, on fait la mise a jour automatique"
+                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique"
                         );
+                    
 
-                        $elogic = self::byLogicalId("Abeille/".$ShortFound, 'Abeille');
 
                         // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
                         log::add(
@@ -1528,11 +1532,11 @@
                         log::add(
                             'Abeille',
                             'debug',
-                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, on ne fait pas la mise a jour car pas mode automatique."
+                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique."
                         );
                         message::add(
                             "Abeille",
-                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, on ne fait pas la mise a jour car pas mode automatique."
+                            "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique."
                         );
                     }
                 }

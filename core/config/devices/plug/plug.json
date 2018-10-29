@@ -257,12 +257,6 @@
       "tbd---puissance--": {
         "isVisible": 1,
         "Type": "info",
-        "configuration": {
-          "historizeRound": "0",
-          "maxValue": "2500",
-          "minValue": "0",
-          "visibilityCategory": "All"
-        },
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Puissance",
@@ -270,7 +264,13 @@
         "order": 17,
         "subType": "numeric",
         "generic_type": "POWER",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "historizeRound": "0",
+          "maxValue": "2500",
+          "minValue": "0",
+          "visibilityCategory": "All"
+        }
       },
       "online": {
         "isVisible": 0,
@@ -298,6 +298,24 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
+          "visibilityCategory": "additionalCommand"
+        }
+      },
+      "000C-02-0055": {
+        "isVisible": 0,
+        "Type": "info",
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Puissance Inst",
+        "units": "W",
+        "order": 20,
+        "subType": "numeric",
+        "generic_type": "POWER",
+        "template": "badge",
+        "configuration": {
+          "historizeRound": "0",
+          "maxValue": "2500",
+          "minValue": "0",
           "visibilityCategory": "additionalCommand"
         }
       }

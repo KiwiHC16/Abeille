@@ -1503,16 +1503,30 @@
             $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
         }
 
-        // Example Cube Xiaomi
-        // Sniffer dit Single Precision Floating Point
-        // b9 1e 38 c2 -> -46,03
         if ($dataType == "39") {
-            // $data = hexdec(substr($payload, 24, 4));
-            // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
-            $hexNumber = substr($payload, 24, 8);
-            $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-            $bin = pack('H*', $hexNumberOrder );
-            $data = unpack("f", $bin )[1];
+            if ( ($ClusterId=="000C") && ($AttributId="0055") && ($EPoint=="02") ) {
+                // Remontée puissance (instantannée) de la prise xiaomi.
+                // On va envoyer ca sur la meme variable que le champ decode ff01
+                $hexNumber = substr($payload, 24, 8);
+                $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                $bin = pack('H*', $hexNumberOrder );
+                $data = unpack("f", $bin )[1];
+                
+                $puissanceValue = $data;
+                mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+            
+            } else {
+                // Example Cube Xiaomi
+                // Sniffer dit Single Precision Floating Point
+                // b9 1e 38 c2 -> -46,03
+                
+                // $data = hexdec(substr($payload, 24, 4));
+                // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+                $hexNumber = substr($payload, 24, 8);
+                $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                $bin = pack('H*', $hexNumberOrder );
+                $data = unpack("f", $bin )[1];
+            }
         }
 
         if ($dataType == "42") {
@@ -1719,27 +1733,25 @@
 
             // Xiaomi Wall Plug
             elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
-                deamonlog('debug', ';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
+                $logMessage = "";
+                // deamonlog('debug', ';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
+                $logMessage .= ";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)";
+                
                 $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
-                deamonlog('debug', ';Type; 8102;Puissance: '.substr($payload, 24 + 8 * 2, 8));
+                
                 $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
                 $puissanceValue = $puissance[1];
-                deamonlog('debug', ';Type; 8102;Conso: '.substr($payload, 24 + 14 * 2, 8));
+                
                 $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
                 $consoValue = $conso[1];
 
-                deamonlog('debug', ';Type; 8102;OnOff: '.$onOff.';Puissance: '.$puissanceValue.'Consommation: '.$consoValue);
-
-                mqqtPublish(
-                            $mqtt,
-                            $SrcAddr,
-                            $ClusterId,
-                            $AttributId,
-                            'Decoded as OnOff-Puissance-Conso',$qos
-                            );
+                // mqqtPublish($mqtt,$SrcAddr,$ClusterId,$AttributId,'Decoded as OnOff-Puissance-Conso',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Xiaomi',  '0006-0000',        $onOff,             $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
+                
+                $logMessage .= ';OnOff: '.$onOff.';Puissance: '.$puissanceValue.';Consommation: '.$consoValue;
+                deamonlog('debug', $logMessage);
             }
 
 

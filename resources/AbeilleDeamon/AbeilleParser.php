@@ -1973,14 +1973,17 @@
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
-        foreach ( $commandeConfiguration as $config ) {
-            $cmd = $abeille->getCmd('action', $config);
-            if ($cmd) {
-                deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
-                $cmd->execCmd();
-                sleep(2);
+        if ($abeille) {
+            foreach ( $commandeConfiguration as $config ) {
+                $cmd = $abeille->getCmd('action', $config);
+                if ($cmd) {
+                    deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
+                    $cmd->execCmd();
+                    sleep(2);
+                }
             }
         }
+        
         $GLOBALS['NE'][$short]['state']='configuration';
     }
     

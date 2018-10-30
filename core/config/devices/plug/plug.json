@@ -266,6 +266,7 @@
         "generic_type": "POWER",
         "template": "badge",
         "configuration": {
+          "repeatEventManagement": "always",
           "historizeRound": "0",
           "maxValue": "2500",
           "minValue": "0",

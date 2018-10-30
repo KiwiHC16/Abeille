@@ -243,16 +243,17 @@
       "tbd---conso--": {
         "isVisible": 1,
         "Type": "info",
-        "configuration": {
-          "historizeRound": "3",
-          "visibilityCategory": "All"
-        },
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Conso",
+        "units": "kWh",
         "order": 16,
         "subType": "numeric",
-        "template": "badge"
+        "template": "badge",
+        "configuration": {
+          "historizeRound": "3",
+          "visibilityCategory": "All"
+        }
       },
       "tbd---puissance--": {
         "isVisible": 1,

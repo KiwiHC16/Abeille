@@ -52,7 +52,9 @@ class fifo {
     function read() {
         // reads a line from a fifo file
         $readers = array($this->fp);
-        if (stream_select($readers, $writers = null, $except = null, 0, 1500) == 1) {
+        $writers = null;
+        $except = null;
+        if (stream_select($readers, $writers, $except, 0, 1500) == 1) {
             $line = '';
             do
             {

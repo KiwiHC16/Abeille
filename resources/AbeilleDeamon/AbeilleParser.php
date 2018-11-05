@@ -1732,7 +1732,7 @@
 
 
             // Xiaomi Wall Plug
-            elseif (($AttributId == "ff01") && ($AttributSize == "0031")) {
+            elseif (($AttributId == "ff01") && (($AttributSize == "0031") || ($AttributSize == "002b") )) {
                 $logMessage = "";
                 // deamonlog('debug', ';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
                 $logMessage .= ";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)";

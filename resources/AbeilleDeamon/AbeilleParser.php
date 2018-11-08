@@ -1731,7 +1731,7 @@
             }
 
 
-            // Xiaomi Wall Plug
+            // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
             elseif (($AttributId == "ff01") && (($AttributSize == "0031") || ($AttributSize == "002b") )) {
                 $logMessage = "";
                 // deamonlog('debug', ';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');

@@ -191,6 +191,7 @@ Donc j'ajoute quelques lignes à /etc/rc.local pour Raspbian:
 [source,]
 ----
 docker start jeedomabeille
+(docker exec -u root jeedomabeille dpkg-reconfigure openssh-server)
 docker exec -u root jeedomabeille /etc/init.d/ssh start
 docker exec -u root jeedomabeille /etc/init.d/mysql start
 docker exec -u root jeedomabeille /etc/init.d/apache2 start

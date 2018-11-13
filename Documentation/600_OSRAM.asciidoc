@@ -2,9 +2,11 @@
 
 == Plug (Smart+)
 
-Mettre en Inclusion la zigate et brancher la prise OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Abeille.
+A) Prise neuve: Mettre en Inclusion la zigate et brancher la prise OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Abeille.
 
-Si la prise était déjà associé à un réseau, un appui long (> 20s)sur le bouton lateral doit provoquer l'association (Zigate en mode inclusion) et la création de l objet dans Abeille/Jeedom.
+B) Prise associée à un autre réseau: Si la prise était déjà associé à un réseau, un appui long (> 20s) sur le bouton lateral doit provoquer l'association (Zigate en mode inclusion) et la création de l objet dans Abeille/Jeedom.
+
+C) Prise associée à la zigate mais pas dobjet dans Abeille: voir méthode B).
 
 === Retour d etat
 

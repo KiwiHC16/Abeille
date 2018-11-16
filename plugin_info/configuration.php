@@ -161,9 +161,9 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate.">{{IP de Zigate Wifi : }}</label>
+<label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate (IP:Port(9999/23)).">{{IP (IP:Port) de Zigate Wifi : }}</label>
                 <div class="col-sm-4">
-                    <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1"/>
+                    <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
                 </div>
             </div>
 

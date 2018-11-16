@@ -46,8 +46,9 @@
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
 
         //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
-        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
+        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
 
         deamonlog('Info','Command: '.$cmd);
         shell_exec( $cmd );

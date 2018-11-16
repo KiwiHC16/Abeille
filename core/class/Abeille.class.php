@@ -1766,7 +1766,7 @@
             if ($parameters_info['AbeilleParentId'] > 0) {
                 $elogic->setObject_id($parameters_info['AbeilleParentId']);
             } else {
-                $elogic->setObject_id(null);
+                $elogic->setObject_id(object::rootObject()->getId());
             }
             $elogic->setEqType_name('Abeille');
             $elogic->setConfiguration('topic', "Abeille/Ruche");
@@ -2123,6 +2123,12 @@
                 //  toogleAffichageTime
                 //  toogleAffichageAdditionalCommand
                 Abeille::CmdAffichage( "toogleAffichageNetwork" );
+                break;
+                
+            case "10":
+                // $object = object::rootObject()->getId();
+                $object = object::all();
+                print_r($object);
                 break;
 
         } // switch

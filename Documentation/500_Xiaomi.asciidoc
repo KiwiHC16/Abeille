@@ -146,7 +146,7 @@ Remonte ff01 (len 31)
 === Appui court (<1s) sur bouton lateral
 
 Si sur le réseau: Remonte son nom
-Si hors réseau et Zigate pas en Inclusion: Un flash bleu unique
+Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
 Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu
 
 === Appui long (7s) sur bouton lateral

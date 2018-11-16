@@ -38,6 +38,13 @@
             $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
             $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
     }
+    
+    function mqqtPublishFct($mqtt, $SrcAddr, $fct, $data, $qos = 0)
+    {
+        // Abeille / short addr / Cluster ID - Attr ID -> data
+        // deamonlog("debug","mqttPublish with Qos: ".$qos);
+        $mqtt->publish("Abeille/".$SrcAddr."/".$fct,    $data,               $qos);
+    }
 
     function mqqtPublishLQI($mqtt, $Addr, $Index, $data, $qos = 0)
     {
@@ -423,6 +430,8 @@
         
         // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
+        
+        mqqtPublishFct($mqtt, $SrcAddr, "enable", "enable", $qos );
         
         // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
         mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
@@ -829,13 +838,7 @@
         // <start index: uint8_t>
         // <device list – data each entry is uint16_t>
 
-
-        // deamonlog('debug',';type: 8040: (Network Address response)(Decoded but Not Processed)'
-        //          . '; (Not processed*************************************************************)'
-        //           . '; Level: 0x'.substr($payload, 0, 2)
-        //          . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
-
-        deamonlog('debug',';type; 8041; (IEEE Address response)(Decoded but Not Processed)'
+        deamonlog('debug',';type; 8040; (IEEE Address response)(Decoded but Not Processed)'
                   . '; SQN : '                                    .substr($payload, 0, 2)
                   . '; Status : '                                 .substr($payload, 2, 2)
                   . '; IEEE address : '                           .substr($payload, 4,16)
@@ -845,11 +848,11 @@
                   );
 
         if ( substr($payload, 2, 2)!= "00" ) {
-            deamonlog('debug',';type; 8041; Don t use this data there is an error, comme info not known');
+            deamonlog('debug',';type; 8040; Don t use this data there is an error, comme info not known');
         }
 
         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
-            deamonlog('debug',';type; 8041;associated devices: '    .substr($payload, (28 + $i), 4) );
+            deamonlog('debug',';type; 8040;associated devices: '    .substr($payload, (28 + $i), 4) );
         }
 
     }
@@ -865,11 +868,6 @@
         // <number of associated devices: uint8_t>
         // <start index: uint8_t>
         // <device list – data each entry is uint16_t>
-
-        // deamonlog('debug',';type: 8041: (IEEE Address response)(Decoded but Not Processed)'
-        //          . '; (Not processed*************************************************************)'
-        //          . '; Level: 0x'.substr($payload, 0, 2)
-        //          . '; Message: '.substr($payload, 2, strlen($payload) - 2)   );
 
         deamonlog('debug',';type; 8041; (IEEE Address response)(Decoded but Not Processed)'
                   . '; SQN : '                                    .substr($payload, 0, 2)
@@ -994,6 +992,8 @@
         $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
 
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+        mqqtPublishFct($mqtt, $SrcAddr, "disable", "disable", $qos );
 
     }
 

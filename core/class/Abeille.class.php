@@ -1193,6 +1193,26 @@
                 return;
             }
             
+            // Si cmd activate/desactivate NE
+            if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
+                log::add('Abeille', 'debug', 'Entering enable/disable' );
+                $abeilles = self::byType('Abeille');
+                
+                foreach ($abeilles as $key=>$abeille) {
+                    if ($abeille->getLogicalId() == $nodeid ) {
+                        if ($cmdId=="enable") {
+                            $abeille->setIsEnable(1);
+                        }
+                        if ( $cmdId=="disable" ) {
+                            $abeille->setIsEnable(0);
+                        }
+                        $abeille->save();
+                        $abeille->refresh();
+                    }
+                }
+                return;
+            }
+            
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Cherche l objet par sa ref short Address et la commande
             $elogic = self::byLogicalId($nodeid, 'Abeille');

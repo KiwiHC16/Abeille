@@ -27,7 +27,7 @@ Elles ne sont pas forcement toutes visibles, a vous de choisir.
 
 == Creation d un Timers
 
-Pour créer un objet Timer, clic sur le bouton "Timer" sur l objet Ruche.
+Pour créer un objet Timer, clic sur le bouton "Timer" dans la configuration du plugin.
 
 Un message doit apparaitre pour annoncer la creation du Timer avec un Id Abeille-NombreAléatoire.
 

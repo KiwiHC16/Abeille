@@ -25,6 +25,7 @@
     <thead>
     <tr>
         <th>{{Module}}</th>
+        <th>{{Name}}</th>
         <th>{{ID}}</th>
         <th>{{Address}}</th>
         <th>{{Statut}}</th>
@@ -38,16 +39,16 @@
         foreach ($eqLogics as $eqLogic) {
 
             // Module
-            echo '<tr><td><a href="'.$eqLogic->getLinkToConfiguration(
-                ).'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
+            echo '<tr><td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
+            // Nom
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
+            
             // ID
-            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getId(
-                ).'</span></td>';
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getId().'</span></td>';
 
             // Short Address
-            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getLogicalId(
-                ).'</span></td>';
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.substr($eqLogic->getLogicalId(),8).'</span></td>';
 
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue
@@ -65,24 +66,18 @@
             echo '<td>'.$status.'</td>';
 
             // Derniere Comm
-            $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getStatus(
-                    'lastCommunication'
-                ).'</span>';
+            $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
             //if ($eqLogic->getStatus('state') == '-') { $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">-</span>'; }
             echo '<td>'.$lastComm.'</td>';
 
             // Depuis
-            $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.(floor(
-                    (time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600
-                )).'</span>';
+            $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
             //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">-</span>'; }
             echo '<td>'.$Depuis.'</td>';
 
 
             // Date Creation
-            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration(
-                    'createtime'
-                ).'</span></td></tr>';
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('createtime').'</span></td></tr>';
         }
     ?>
     </tbody>

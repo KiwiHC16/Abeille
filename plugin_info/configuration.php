@@ -124,6 +124,14 @@ Dev Master
                 </div>
             </div>
 
+
+	<div class="form-group">
+		<label class="col-lg-4 control-label">{{Options avancées}}</label>
+		<div class="col-lg-5">
+			<a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Configs modules}}</a>
+		</div>
+	</div>
+
 <legend><i class="fa fa-list-alt"></i> {{Messages MQTT - Brocker Mosquitto}}</legend>
 <p><I> Abeille utilise le protocol MQTT pour échanger des messages MQTT entre les parties logicielles d'Abeille. Par defaut le broker Mosquitto est installé. C'est lui qui gere la reception et distribution des messages MQTT. Vous pouvez utiliser celui qui est installé par défaut ou utiliser un autre. Si vous n'avez pas de broker MQTT spécifique alors laissez les parametres par défaut.</br>
     Tous les tests sont faits avec le broker mosquitto par defaut donc si vous voulez utiliser un autre broker vérifiez que tout fonctionne comme attendu.
@@ -190,8 +198,17 @@ placeholder="#"/>
 </div>
 </div>
 
-
-
          </fieldset>
     </div>
 </form>
+
+<script>
+    	$('#bt_syncconfigAbeille').on('click',function(){
+		bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {
+				if (result) {
+					$('#md_modal2').dialog({title: "{{Téléchargement des configurations}}"});
+					$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=syncconf.abeille').dialog('open');
+					}
+		});
+	});
+    </script>

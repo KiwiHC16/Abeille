@@ -41,6 +41,23 @@
 
             return $return;
         }
+        
+        public static function syncconfAbeille($_background = true) {
+            if ($GLOBALS['debugBEN']) echo "syncconfAbeille start\n";
+            log::add('Abeille', 'debug', 'Starting syncconfAbeille');
+            log::remove('Abeille_syncconf');
+            log::add('Abeille_syncconf', 'info', 'syncconfAbeille Start');
+            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
+            if ($_background) {
+                $cmd .= ' &';
+            }
+            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            log::add('Abeille_syncconf', 'info', $cmd);
+            shell_exec($cmd);
+            log::add('Abeille_syncconf', 'info', 'syncconfAbeille End');
+            if ($GLOBALS['debugBEN']) echo "syncconfAbeille end\n";
+        }
 
         public static function cronDaily()
         {
@@ -1979,7 +1996,7 @@
         $debugBEN = 0;
     }
     if ($debugBEN != 0) {
-        echo "Debut\n";
+        echo "Debut Abeille.class.php test mode\n";
         $message = new stdClass();
 
 
@@ -2130,10 +2147,14 @@
                 $object = object::all();
                 print_r($object);
                 break;
-
+                
+            case "11":
+                Abeille::syncconfAbeille(false);
+                break;
+                
         } // switch
 
-        echo "Fin\n";
+        echo "Fin Abeille.class.php test mode\n";
     }
 
 

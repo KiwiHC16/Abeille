@@ -1,7 +1,7 @@
 {
   "TRADFRIbulbE14Wopch400lm": {
     "nameJeedom": "TRADFRI bulb E14 W op ch 400lm",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

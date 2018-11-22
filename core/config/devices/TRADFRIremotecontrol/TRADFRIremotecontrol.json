@@ -1,7 +1,7 @@
 {
   "TRADFRI remote control": {
     "nameJeedom": "IKEA TRADFRI Rond 5 Boutons Remote Control",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

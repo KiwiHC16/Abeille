@@ -1,7 +1,7 @@
 {
   "TRADFRIbulbGU10WS400lm": {
     "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 White Spectre 400 lm",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

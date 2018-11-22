@@ -3,7 +3,7 @@
     "nameJeedom": "Xiaomi Bouton Aqara 2 Copy",
     "battery_type": "1xCR2032",
     "Comment": "Bouton Carré V2 qui remonte le nom remote.b1acn01 alors qu il a la meme reference que sensor_switch.aq2",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },

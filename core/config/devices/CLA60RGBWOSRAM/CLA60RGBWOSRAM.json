@@ -1,7 +1,7 @@
 {
   "CLA60RGBWOSRAM": {
     "nameJeedom": "CLA60RGBWOSRAM",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

@@ -1,7 +1,7 @@
 {
   "lumi.sensor_switch": {
     "nameJeedom": "Xiaomi Interrupteur simple",
-    "timeout": "3600",
+    "timeout": "60",
     "battery_type": "1xCR2032",
     "Categorie": {
       "automatism": "1"

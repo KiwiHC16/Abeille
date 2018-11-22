@@ -1,7 +1,7 @@
 {
   "lumi.sensor_natgas": {
     "nameJeedom": "Xiaomi Gaz Sensor",
-    "timeout": "3600",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },

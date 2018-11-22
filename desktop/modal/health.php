@@ -53,10 +53,10 @@
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue
             $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">{{OK}}</span>';
-            if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > $eqLogic->getTimeout() ) {
+            if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()) ) {
                  $status = '<span class="label label-warning" style="font-size : 1em; cursor : default;">Time Out Last Communication</span>';
             }
-            if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (($eqLogic->getTimeout())*2) ) {
+            if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())) ) {
                 $status = '<span class="label label-danger" style="font-size : 1em; cursor : default;">Time Out Last Communication</span>';
             }
 

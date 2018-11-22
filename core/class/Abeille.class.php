@@ -277,7 +277,7 @@
                     );
 
                     // Alerte sur TimeOut Defini
-                    if (($last + $eqLogic->getTimeout()) > time()) {
+                    if (($last + (60*$eqLogic->getTimeout())) > time()) {
                         // Ok
                         $eqLogic->setStatus('state', 'ok');
                         $eqLogic->setStatus('timeout', 0);

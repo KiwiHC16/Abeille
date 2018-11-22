@@ -114,6 +114,9 @@ Remonte son nom
 Remonet Appli Version
 Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
 
+=== Double flash bleu sans action de notre part
+
+Visiblement quand le sensor fait un rejoin apres avoir perdu le reseau par exemple, il fait un double flah bleu.
 
 == Capteur de Presence V2
 

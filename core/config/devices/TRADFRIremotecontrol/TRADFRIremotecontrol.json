@@ -205,7 +205,7 @@
         "template": "",
         "configuration": {
           "topic": "ReadAttributeRequest",
-          "request": "clusterId=0001&attributeId=0021",
+          "request": "ClusterId=0001&attributeId=0021",
           "visibilityCategory": "All"
         },
         "display": {

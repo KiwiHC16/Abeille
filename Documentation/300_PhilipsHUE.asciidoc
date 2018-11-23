@@ -49,16 +49,13 @@ Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ..
 
 == Association
 
-Appuie avec un trombone longtemps sur le bouton en face arriere avec la zigate en mode Inclusion.
+Appuie avec un trombone longtemps sur le bouton en face arriere "setup" avec la zigate en mode Inclusion. Un objet télécommande doit être créé dans Abeille.
 
-== Création de l objet dans Jeedom
-
-Vous devriez avoir dans AbeilleParser une ligne "Device Annouce" avec l'adresse de la télécommande.
-
-AbeilleParser 2018-06-18 22:33:54[DEBUG];type: 004d (Device announce)(Processed->MQTT); Src Addr : 69b5; IEEE : 90fd9ffffe69131d; MAC capa : 8e
-
-Faites un getName depuis la ruche sur cette adresse après avoir reveillé la télécommande par un appui de 4-5s sur le bouton 'I'.
 
 == Récupérer le groupe utilisé
 
-Approcher la telecommande d'une ampoule de test qui est sur le reseau. Faire un appui long 10S+ sur le I de la télécommande. Attendre le clignotement de l'ampoule. Ca doit être bon. Si vous appuyé sur I ou O, elle doit s'allumer et s'éteindre. Et les bouton lumière plus et moins doivent changer l'intensité. Ensuite vous pouvez récupérer le groupe en interrogeant l'ampouel depuis la ruche avec un getGroup. 
+Approcher la telecommande d'une ampoule de test qui est sur le reseau. Faire un appui long >10s sur le I de la télécommande. Attendre le clignotement de l'ampoule. Ca doit être bon. Si vous appuyé sur I ou O, elle doit s'allumer et s'éteindre. Et les bouton lumière plus et moins doivent changer l'intensité. Ensuite vous pouvez récupérer le groupe en interrogeant l'ampoule depuis la ruche avec un getGroupMembership. 
+
+== Reset d une ampoule
+
+Si vous appuyez, sur I et O en même temps à moins de quelques centimetres, l'ampoule doit faire un reset et essayer de joindre un réseau. Si la zigate est en mode inclusion alors vous devez récurerer votre ampoule. Ca marche sur des ampoules Hue et Ikea, probablement pour d autres aussi.

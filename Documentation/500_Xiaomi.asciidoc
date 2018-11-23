@@ -131,6 +131,10 @@ Appairage
 Remonte son nom et SW version
 Remonte FF01 (len 33)
 
+=== Comportement
+
+Il remonte une info a chaque detection de presence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d'elle même. Ce n'est pas un capteur de luminosité qui remonte l info périodiquement.
+
 == Capteur Temperature Rond (lumi.sensor_ht)
 
 === Appui court (<1s) sur bouton lateral

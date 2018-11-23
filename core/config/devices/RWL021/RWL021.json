@@ -66,6 +66,44 @@
           "forceReturnLineAfter": "1"
         }
       },
+      "DownGroup": {
+        "name": "Down",
+        "order": 3,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/DownGroup",
+          "request": "2B",
+          "visibilityCategory": "All"
+        },
+        "display": {
+          "forceReturnLineAfter": "0",
+          "icon": "<i class=\"icon jeedom2-idea13\"></i>"
+        }
+      },
+      "UpGroup": {
+        "name": "Up",
+        "order": 4,
+        "isVisible": 1,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "CmdAbeille/#addrGroup#/UpGroup",
+          "request": "2B",
+          "visibilityCategory": "All"
+        },
+        "display": {
+          "icon": "<i class=\"icon jeedom2-bright4\"></i>",
+          "forceReturnLineAfter": "1"
+        }
+      },
       "Level": {
         "name": "setLevel",
         "order": 5,
@@ -142,6 +180,65 @@
         "template": "badge",
         "configuration": {
           "visibilityCategory": "Network"
+        }
+      },
+      "BindShortToZigateEtat": {
+        "isVisible": 1,
+        "name": "BindShortToZigateBatterie",
+        "order": 10,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "bindShort",
+          "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
+          "visibilityCategory": "Network"
+        },
+        "display": {
+          "forceReturnLineAfter": "1"
+        }
+      },
+      "setReportEtat": {
+        "isVisible": 1,
+        "name": "setReportEtat",
+        "order": 11,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "setReport",
+          "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500",
+          "visibilityCategory": "Network"
+        }
+      },
+      "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "order": 12,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Time"
+        }
+      },
+      "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "order": 13,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+          "visibilityCategory": "Time"
         }
       }
     }

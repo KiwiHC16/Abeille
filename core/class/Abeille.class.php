@@ -1794,7 +1794,7 @@
             // eqReal_id
             $elogic->setIsEnable("1");
             // status
-            $elogic->setTimeout(300); // timeout
+            $elogic->setTimeout(15); // timeout en minutes
             // $elogic->setCategory();
             // display
             // order

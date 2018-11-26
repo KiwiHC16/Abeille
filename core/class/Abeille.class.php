@@ -639,7 +639,7 @@
             $php = "/usr/bin/php";
             $dirdeamon = dirname(__FILE__)."/../../resources/AbeilleDeamon/";
 
-            $parameters_info = self::getParameters();
+            // $parameters_info = self::getParameters();
 
             if ($parameters_info['onlyTimer'] != 'Y') {
                 $deamon1 = "AbeilleSerialRead.php";
@@ -702,8 +702,12 @@
             log::add('Abeille', 'debug', 'Start deamon Timer: '.$cmd);
             exec($cmd.' 2>&1 &');
 
-
-            $cmd = "";
+            // affichage Widget
+            self::CmdAffichage('affichageNetwork',  $parameters_info['affichageNetwork']);
+            self::CmdAffichage('affichageTime',     $parameters_info['affichageTime']   );
+            self::CmdAffichage('affichageCmdAdd',   $parameters_info['affichageCmdAdd'] );
+            
+            // $cmd = "";
             log::add('Abeille', 'debug', 'deamon start: OUT');
             message::removeAll('Abeille', 'unableStartDeamon');
 
@@ -822,6 +826,9 @@
             AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].',
             qos: '.$parameters_info['AbeilleQos'].',
             showAllCommands: '.$parameters_info['showAllCommands'].',
+            affichageNetwork: '.$parameters_info['affichageNetwork'].',
+            affichageTime: '.$parameters_info['affichageTime'].',
+            affichageCmdAdd: '.$parameters_info['affichageCmdAdd'].',
             ModeCreation: '.$parameters_info['creationObjectMode'].',
             adresseCourteMode: '.$parameters_info['adresseCourteMode'].',
             onlyTimer: '.$parameters_info['onlyTimer'].',
@@ -967,6 +974,9 @@
             $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
             $return['adresseCourteMode'] = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
             $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
+            $return['affichageNetwork'] = config::byKey('affichageNetwork', 'Abeille', 'N');
+            $return['affichageTime'] = config::byKey('affichageTime', 'Abeille', 'N');
+            $return['affichageCmdAdd'] = config::byKey('affichageCmdAdd', 'Abeille', 'N');
             $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate'] = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
 
@@ -1100,53 +1110,56 @@
             return -1;
         }
         
-        public static function CmdAffichage( $affichageType ) {
+        public static function CmdAffichage( $affichageType, $Visibility = "N" ) {
             // $affichageType could be:
-            //  toogleAffichageNetwork
-            //  toogleAffichageTime
-            //  toogleAffichageAdditionalCommand
+            //  affichageNetwork
+            //  affichageTime
+            //  affichageCmdAdd
+            // $Visibilty command could be
+            // Y
+            // N
+            // toggle
             
-            // On prend la premiere commande comme référence pour ne pas avoir des NE en anti-phase
-            $visibilityInitState = 0;
-            $visibilityInitStateKnown = 0;
+            $parameters_info = self::getParameters();
             
             $convert = array(
-                             "toogleAffichageNetwork"=>"Network",
-                             "toogleAffichageTime"=>"Time",
-                             "toogleAffichageAdditionalCommand"=>"additionalCommand"
+                             "affichageNetwork"=>"Network",
+                             "affichageTime"=>"Time",
+                             "affichageCmdAdd"=>"additionalCommand"
                              );
             
-            log::add('Abeille', 'debug', 'Entering CmdAffichage' );
+            log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility );
+            
+            switch ($Visibility) {
+                case 'Y':
+                    break;
+                case 'N':
+                    break;
+                case 'toggle':
+                    if ( $parameters_info[$affichageType] == 'Y' ) { $Visibility = 'N'; } else { $Visibility = 'Y'; }
+                    break;
+            }
+            config::save( $affichageType, $Visibility,   'Abeille');
             
             $abeilles = self::byType('Abeille');
             foreach ($abeilles as $key=>$abeille) {
                 $cmds = $abeille->getCmd();
                 foreach ( $cmds as $keyCmd=>$cmd ){
-                    // log::add('Abeille', 'debug', 'Boucle' );
-                    // log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
-                    
-                    // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
                     if ( $cmd->getConfiguration("visibilityCategory")==$convert[$affichageType] ) {
-                        log::add('Abeille', 'debug', "Name: ".$abeille->getName()."-".$cmd->getName()."-".$cmd->getConfiguration("visibilityCategory").'-'.$convert[$affichageType]."\n");
-                        
-                        if ($visibilityInitStateKnown==0)   { $visibilityInitState=$cmd->getIsVisible(); $visibilityInitStateKnown=1; }
-                        if ( $visibilityInitState==0 ) {
-                            $cmd->setIsVisible(1);
-                        }
-                        else {
-                            $cmd->setIsVisible(0);
+                        switch ($Visibility) {
+                            case 'Y':
+                                $cmd->setIsVisible(1);
+                                break;
+                            case 'N':
+                                $cmd->setIsVisible(0);
+                                break;
                         }
                     }
-                    // log::add('Abeille', 'debug', 'Cmd: Visible: '.$cmd->getIsVisible() );
-                    // $cmd->getConfiguration("visibilityCategory","All"); // All si l info n existe pas
-                    // $cmd->getConfiguration("visibiltyTemplate","All"); // All si l info n existe pas
                     $cmd->save();
                 }
                 $abeille->save();
                 $abeille->refresh();
             }
-            log::add('Abeille', 'debug',  "Type: ".$convert[$affichageType]."\n");
-            
             log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
             return;
         }
@@ -1206,7 +1219,7 @@
             // Si cmd Affichage
             if ( $Filter == "CmdAffichage") {
                 log::add('Abeille', 'debug', 'Call CmdAffichage' );
-                self::CmdAffichage( $cmdId );
+                self::CmdAffichage( $cmdId, 'toggle' );
                 return;
             }
             
@@ -2136,10 +2149,10 @@
                 
             case "9":
                 echo "Test Affichage\n";
-                //  toogleAffichageNetwork
-                //  toogleAffichageTime
-                //  toogleAffichageAdditionalCommand
-                Abeille::CmdAffichage( "toogleAffichageNetwork" );
+                //  toggleAffichageNetwork
+                //  toggleAffichageTime
+                //  toggleAffichageAdditionalCommand
+                Abeille::CmdAffichage( "affichageNetwork", "toggle" );
                 break;
                 
             case "10":

@@ -105,7 +105,7 @@ Dev Master
             </div>
 
             <div class="form-group">
-<label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage de toutes les commandes des équipements et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage mode dévelopeur}}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage de toutes les commandes des équipements et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage mode dévelopeur}}</label>
                 <div class="col-lg-4">
                     <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">
                         <option value="Y">{{Oui}}</option>
@@ -113,6 +113,37 @@ Dev Master
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations réseau sur les widgets. Par défaut c est desactivé car ces informations ne sont pas nécessaire pour l utilisateur.">{{Affichage Information Réseau}}</label>
+                <div class="col-lg-4">
+                    <select style="width:auto" class="configKey form-control" data-l1key="affichageNetwork">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N">{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations de temps sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage Information Time}}</label>
+                <div class="col-lg-4">
+                    <select style="width:auto" class="configKey form-control" data-l1key="affichageTime">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N">{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des commandes additionnelles sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage Commandes Additionnelles}}</label>
+                <div class="col-lg-4">
+                    <select style="width:auto" class="configKey form-control" data-l1key="affichageCmdAdd">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N">{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>

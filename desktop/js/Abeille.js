@@ -88,8 +88,8 @@ $('#bt_createTimer').on('click', function () {
                         }
                         );
 
-$('#bt_toogleAffichageNetwork').on('click', function () {
-                                   console.log("bt_toogleAffichageNetwork");
+$('#bt_toggleAffichageNetwork').on('click', function () {
+                                   console.log("bt_toggleAffichageNetwork");
                                    var xmlhttpMQTTAffichageNetwork = new XMLHttpRequest();
                                    xmlhttpMQTTAffichageNetwork.onreadystatechange = function() {
                                    if (this.readyState == 4 && this.status == 200) {
@@ -97,15 +97,18 @@ $('#bt_toogleAffichageNetwork').on('click', function () {
                                    }
                                    };
                                    
-                                   xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageNetwork&payload=bt_toogleAffichageNetwork", false); // False pour bloquer sur la recuperation du fichier
+                                   xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_affichageNetwork&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
                                    
-                                   $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations réseau mis en place sur les widgets}}', level: 'success'});
+                                   $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations réseau en cours de mise en place sur les widgets}}', level: 'success'});
+                                   setTimeout(function(){
+                                              location.reload();
+                                              }, 5000);
                                    }
                                    );
 
-$('#bt_toogleAffichageTime').on('click', function () {
-                                console.log("bt_toogleAffichageTime");
+$('#bt_toggleAffichageTime').on('click', function () {
+                                console.log("bt_toggleAffichageTime");
                                 var xmlhttpMQTTAffichageTime = new XMLHttpRequest();
                                 xmlhttpMQTTAffichageTime.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
@@ -113,16 +116,18 @@ $('#bt_toogleAffichageTime').on('click', function () {
                                 }
                                 };
                                 
-                                xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageTime&payload=bt_toogleAffichageTime", false); // False pour bloquer sur la recuperation du fichier
+                                xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_affichageTime&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
                                 
-                                $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations Time mis en place sur les widgets}}', level: 'success'});
-                                setTimeout(myTimer, 5000);
+                                $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations Time en cours de mise en place sur les widgets}}', level: 'success'});
+                                setTimeout(function(){
+                                           location.reload();
+                                           }, 5000);
                                 }
                                 );
 
-$('#bt_toogleAffichageAdditionalCommand').on('click', function () {
-                                             console.log("bt_toogleAffichageAdditionalCommand");
+$('#bt_toggleAffichageAdditionalCommand').on('click', function () {
+                                             console.log("bt_toggleAffichageAdditionalCommand");
                                              var xmlhttpMQTTAffichageAdditionalCommand = new XMLHttpRequest();
                                              xmlhttpMQTTAffichageAdditionalCommand.onreadystatechange = function() {
                                              if (this.readyState == 4 && this.status == 200) {
@@ -130,10 +135,13 @@ $('#bt_toogleAffichageAdditionalCommand').on('click', function () {
                                              }
                                              };
                                              
-                                             xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_toogleAffichageAdditionalCommand&payload=bt_toogleAffichageAdditionalCommand", false); // False pour bloquer sur la recuperation du fichier
+                                             xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAffichage_Ruche_affichageCmdAdd&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
                                              
-                                             $('#div_alert').showAlert({message: '{{Affichage/Retrait des Commandes Additionnelles mis en place sur les widgets}}', level: 'success'});
+                                             $('#div_alert').showAlert({message: '{{Affichage/Retrait des Commandes Additionnelles en cours de mise en place sur les widgets}}', level: 'success'});
+                                             setTimeout(function(){
+                                                        location.reload();
+                                                        }, 5000);
                                              }
                                              );
 

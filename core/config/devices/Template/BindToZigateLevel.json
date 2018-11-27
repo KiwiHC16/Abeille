@@ -1,6 +1,6 @@
 {
   "BindToZigateLevel": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "BindToZigateLevel",
     "order": 28,
     "isHistorized": "0",

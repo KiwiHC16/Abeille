@@ -90,6 +90,15 @@ class Tools
             return;
         }
 
+        // Basic Commands
+        $deviceCmds += self::getJSonConfigFilebyCmd("IEEE-Addr");
+        $deviceCmds += self::getJSonConfigFilebyCmd("Link-Quality");
+        $deviceCmds += self::getJSonConfigFilebyCmd("Time-Time");
+        $deviceCmds += self::getJSonConfigFilebyCmd("Time-TimeStamp");
+        $deviceCmds += self::getJSonConfigFilebyCmd("Power-Source");
+        $deviceCmds += self::getJSonConfigFilebyCmd("Short-Addr");
+        
+        
         // Recupere les templates Cmd instanciées
         foreach ( $deviceTemplate['GLEDOPTO']['Commandes'] as $cmd=>$file ) {
             if ( substr($cmd, 0, 7) == "include" ) {

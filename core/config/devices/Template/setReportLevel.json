@@ -1,6 +1,6 @@
 {
   "setReportLevel": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "setReportLevel",
     "order": 30,
     "isHistorized": "0",

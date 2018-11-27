@@ -13,6 +13,9 @@
       "topic": "OnOff",
       "request": "Action=Toggle&EP=#EP#",
       "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   }
 }

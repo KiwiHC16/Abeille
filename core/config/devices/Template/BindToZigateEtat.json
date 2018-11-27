@@ -1,6 +1,6 @@
 {
   "BindToZigateEtat": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "BindToZigateEtat",
     "order": 27,
     "isHistorized": "0",

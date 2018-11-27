@@ -1,6 +1,6 @@
 {
   "setReportEtat": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "setReportEtat",
     "order": 29,
     "isHistorized": "0",

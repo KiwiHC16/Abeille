@@ -9,17 +9,18 @@
       "icone": "GLEDOPTO"
     },
     "Commandes": {
-      "include6 IEEE-Addr": "IEEE-Addr",
-      "include11 Link-Quality": "Link-Quality",
-      "include1 Name": "0000-#EP#-0005",
-      "include2 getName": "getModelIdentifier",
-      "include9 etat": "0006-#EP#-0000",
-      "include10": "getEtat",
-      "include3 On": "On",
-      "include4 Toggle": "Toggle",
-      "include5 Off": "Off",
-      "include7 Level": "0008-#EP#-0000",
-      "include8 setLevel": "Level"
+      "include etat": "0006-#EP#-0000",
+      "include getEtat": "getEtat",
+      "include On": "On",
+      "include Toggle": "Toggle",
+      "include Off": "Off",
+      "include Level": "0008-#EP#-0000",
+      "include setLevel": "setLevel",
+      "include getLevel": "getLevel",
+      "include BindToZigateEtat": "BindToZigateEtat",
+      "include setReportEtat": "setReportEtat",
+      "include BindToZigateLevel": "BindToZigateLevel",
+      "include setReportLevel": "setReportLevel"
     }
   }
 }

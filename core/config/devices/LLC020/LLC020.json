@@ -270,19 +270,6 @@
           "visibilityCategory": "additionalCommand"
         }
       },
-      "IEEE-Addr": {
-        "isVisible": 0,
-        "name": "IEEE-Addr",
-        "order": 17,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
       "Short-Addr": {
         "isVisible": 0,
         "name": "Short-Addr",

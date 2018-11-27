@@ -98,22 +98,34 @@
                 }
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOff") {
-                if ($msg == "On") {
-                    $actionId = "01";
+                $convertOnOff = array(
+                                      "On"      => "01",
+                                      "Off"     => "00",
+                                      "Toggle"  => "02",
+                                      );
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                    $Command = array(
+                                     "onoff" => "1",
+                                     "addressMode" => "02",
+                                     "address" => $address,
+                                     "destinationEndpoint" => $parameters['EP'],
+                                     "action" => $convertOnOff[$parameters['Action']],
+                                     );
                 }
-                if ($msg == "Off") {
-                    $actionId = "00";
+                else {
+                    
+                    $actionId = $convertOnOff[$msg];
+                    
+                    $Command = array(
+                                     "onoff" => "1",
+                                     "addressMode" => "02",
+                                     "address" => $address,
+                                     "destinationEndpoint" => "01",
+                                     "action" => $actionId,
+                                     );
                 }
-                if ($msg == "Toggle") {
-                    $actionId = "02";
-                }
-                $Command = array(
-                                 "onoff" => "1",
-                                 "addressMode" => "02",
-                                 "address" => $address,
-                                 "destinationEndpoint" => "01",
-                                 "action" => $actionId,
-                                 );
                 //----------------------------------------------------------------------------
             } elseif ($action == "OnOff2") {
                 if ($msg == "On") {

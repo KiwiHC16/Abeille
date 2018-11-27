@@ -13,7 +13,8 @@
       "include2": "getModelIdentifier",
       "include3": "On",
       "include4": "Toggle",
-      "include5": "Off"
+      "include5": "Off",
+      "include6": "IEEE-Addr"
     }
   }
 }

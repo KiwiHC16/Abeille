@@ -10,7 +10,10 @@
     },
     "Commandes": {
       "include1": "0000-#EP#-0005",
-      "include2": "getModelIdentifier"
+      "include2": "getModelIdentifier",
+      "include3": "On",
+      "include4": "Toggle",
+      "include5": "Off"
     }
   }
 }

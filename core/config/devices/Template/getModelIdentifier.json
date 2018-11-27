@@ -9,7 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "topic": "ReadAttributeRequestGeneric",
+      "topic": "ReadAttributeRequest",
       "request": "clusterId=0000&attributeId=0005&EP=#EP#",
       "visibilityCategory": "additionalCommand"
     }

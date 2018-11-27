@@ -1,0 +1,15 @@
+{
+  "Colour": {
+    "name": "Colour",
+    "order": 22,
+    "isHistorized": "0",
+    "isVisible": "0",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "setColour",
+      "request": "EP=#EP#&X=#title#&Y=#message#",
+      "visibilityCategory": "All"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "Bleu": {
+    "name": "Bleu",
+    "order": 24,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "setColour",
+      "request": "EP=#EP#&X=228F&Y=228F",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "0"
+    }
+  }
+}

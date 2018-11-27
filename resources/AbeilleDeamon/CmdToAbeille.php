@@ -1369,9 +1369,9 @@
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-        if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
+        if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) )
         {
-            getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01", $Command['Proprio'] );
+            getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------

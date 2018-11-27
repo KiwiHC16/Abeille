@@ -295,17 +295,16 @@
                //----------------------------------------------------------------------------
             } elseif ($action == "ReadAttributeRequest") {
                 $keywords = preg_split("/[=&]+/", $msg);
-                
-                deamonlog('debug', 'AbeilleMQTTCmd: Msg received: '.json_encode($msg).' from NE');
                 if (count($keywords) > 1) {
                     $parameters = proper_parse_str( $msg );
                 }
-                
+                deamonlog('debug', 'AbeilleMQTTCmd: Msg received: '.json_encode($msg).' from NE');
                 $Command = array(
                                  "ReadAttributeRequest" => "1",
                                  "address"      => $address,
-                                 "clusterId"    => $parameters['ClusterId'],
+                                 "clusterId"    => $parameters['clusterId'],   // Don't change the speeling here but in the template
                                  "attributeId"  => $parameters['attributeId'],
+                                 "EP"           => $parameters['EP'],
                                  "Proprio"      => $parameters['Proprio'],
                                  );
                 deamonlog('debug', 'AbeilleMQTTCmd: Msg analysed: '.json_encode($Command).' from NE');
@@ -330,15 +329,21 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setLevel") {
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                 "setLevel" => "1",
-                                 "addressMode" => "02",
-                                 "address" => $address,
-                                 "destinationEndpoint" => "01",
-                                 "Level" => intval($keywords[1] * 255 / 100),
-                                 "duration" => $keywords[3],
-                                 );
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                    $Command = array(
+                                     "setLevel"             => "1",
+                                     "addressMode"          => "02",
+                                     "address"              => $address,
+                                     "destinationEndpoint"  => $parameters['EP'],
+                                     "Level"                => intval($parameters['Level'] * 255 / 100),
+                                     "duration"             => $parameters['duration'],
+                                     );
+                }
+                else {
+                    
+                }
                 //----------------------------------------------------------------------------
             } elseif ($action == "setLevelOSRAM") {
                 $keywords = preg_split("/[=&]+/", $msg);

@@ -1,0 +1,15 @@
+{
+  "Short-Addr": {
+    "isVisible": 0,
+    "name": "Short-Addr",
+    "order": 18,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "badge",
+    "configuration": {
+      "visibilityCategory": "Network"
+    }
+  }
+}

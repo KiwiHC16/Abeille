@@ -1268,11 +1268,18 @@
 
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
-
+                
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: '.$trimmedValue);
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
                 log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
                 
+                // On recupere le EP
+                $EP = substr($cmdId,5,2);
+                log::add('Abeille', 'debug', 'EP: '.$EP);
+                $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
+                $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);
+                $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
+                log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
 
                 //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
                 if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists(

@@ -45,6 +45,65 @@ class Tools
     }
 
     /**
+     * Needed for Template Generation
+     *
+     *
+     *
+     */
+    public static function getJSonConfigFilebyCmd($cmd)
+    {
+        
+        $cmdFilename = dirname(__FILE__) . '/../../../core/config/devices/Template/' . $cmd . '.json';
+        
+        if (!is_file($cmdFilename)) { return; }
+        
+        $content = file_get_contents($cmdFilename);
+        
+        $cmdJson = json_decode($content, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            return;
+        }
+        
+        return $cmdJson;
+    }
+    
+    /**
+     * Needed for Template Generation
+     *
+     *
+     *
+     */
+    public static function getJSonConfigFilebyDevicesTemplate($device = 'none')
+    {
+        $deviceCmds = array();
+        $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        
+        if (!is_file($deviceFilename)) { return; }
+        
+        $content = file_get_contents($deviceFilename);
+        
+        // Recupere le template master
+        $deviceTemplate = json_decode($content, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            return;
+        }
+
+        // Recupere les templates Cmd instanciées
+        foreach ( $deviceTemplate['GLEDOPTO']['Commandes'] as $cmd=>$file ) {
+            if ( substr($cmd, 0, 7) == "include" ) {
+                $deviceCmds += self::getJSonConfigFilebyCmd($file);
+            }
+        }
+        
+        // Ajoute les commandes au master
+        $deviceTemplate['GLEDOPTO']['Commandes'] = $deviceCmds;
+        
+        return $deviceTemplate;
+    }
+    
+    /**
      * return the config list from a file located in core/config directory
      *
      * @param null $jsonFile

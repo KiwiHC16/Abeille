@@ -1,0 +1,16 @@
+{
+  "GLEDOPTO": {
+    "nameJeedom": "GLEDOPTO",
+    "timeout": "60",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "icone": "GLEDOPTO"
+    },
+    "Commandes": {
+      "include1": "0000-#EP#-0005",
+      "include2": "getModelIdentifier"
+    }
+  }
+}

@@ -1270,7 +1270,9 @@
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: '.$trimmedValue);
-                $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices($trimmedValue, 'Abeille');
+                $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
+                log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+                
 
                 //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
                 if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists(

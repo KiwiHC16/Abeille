@@ -1,0 +1,42 @@
+{
+  "GLEDOPTO": {
+    "nameJeedom": "GLEDOPTO",
+    "timeout": "60",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "icone": "GLEDOPTO"
+    },
+    "Commandes": {
+      "0000-#EP#-0005": {
+        "isVisible": 0,
+        "name": "nom",
+        "order": 0,
+        "isHistorized": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "visibilityCategory": "Network"
+        }
+      },
+      "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "order": 14,
+        "isHistorized": "0",
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequestGeneric",
+          "request": "clusterId=0000&attributeId=0005&EP=#EP#",
+          "visibilityCategory": "additionalCommand"
+        }
+      }
+    }
+  }
+}

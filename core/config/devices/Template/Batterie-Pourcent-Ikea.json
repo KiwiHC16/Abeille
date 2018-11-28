@@ -1,0 +1,19 @@
+{
+  "0001-#EP#-0021": {
+    "isVisible": 0,
+    "name": "Batterie",
+    "order": 9,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "BATTERY",
+    "invertBinary": "0",
+    "template": "vuMeter",
+    "units": "%",
+    "configuration": {
+      "minValue": "0",
+      "maxValue": "100",
+      "visibilityCategory": "All"
+    }
+  }
+}

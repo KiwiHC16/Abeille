@@ -1,0 +1,56 @@
+{
+  "Sc1": {
+    "name": "Sc1",
+    "order": 6,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+      "request": "(MettreNumeroDeSceneIci)",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "0"
+    }
+  },
+  "Sc2": {
+    "name": "Sc2",
+    "order": 7,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+      "request": "(MettreNumeroDeSceneIci)",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "0"
+    }
+  },
+  "Sc3": {
+    "name": "Sc3",
+    "order": 8,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
+      "request": "(MettreNumeroDeSceneIci)",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

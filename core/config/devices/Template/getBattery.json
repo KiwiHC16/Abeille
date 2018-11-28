@@ -1,0 +1,20 @@
+{
+  "getBattery": {
+    "isVisible": 0,
+    "name": "get Battery",
+    "order": 10,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "ReadAttributeRequest",
+      "request": "ClusterId=0001&attributeId=0021",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

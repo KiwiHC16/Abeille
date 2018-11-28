@@ -1,0 +1,20 @@
+{
+  "Level": {
+    "name": "setLevel",
+    "order": 5,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "CmdAbeille/#addrGroup#/setLevelGroup",
+      "request": "Level=#slider#&duration=01",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

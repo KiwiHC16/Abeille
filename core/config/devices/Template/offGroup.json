@@ -1,0 +1,20 @@
+{
+  "offGroup": {
+    "name": "Off",
+    "order": 0,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
+      "request": "Off",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "icon": "<i class=\"icon jeedom-lumiere-off\"></i>"
+    }
+  }
+}

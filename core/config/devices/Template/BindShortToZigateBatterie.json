@@ -1,0 +1,20 @@
+{
+  "BindShortToZigateBattery": {
+    "isVisible": 0,
+    "name": "BindShortToZigateBatterie",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "bindShort",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

@@ -9,18 +9,22 @@
       "icone": "GLEDOPTO"
     },
     "Commandes": {
-      "include etat": "0006-#EP#-0000",
-      "include getEtat": "getEtat",
-      "include On": "On",
-      "include Toggle": "Toggle",
-      "include Off": "Off",
-      "include Level": "0008-#EP#-0000",
-      "include setLevel": "setLevel",
-      "include getLevel": "getLevel",
-      "include BindToZigateEtat": "BindToZigateEtat",
-      "include setReportEtat": "setReportEtat",
-      "include BindToZigateLevel": "BindToZigateLevel",
-      "include setReportLevel": "setReportLevel"
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include4": "etat",
+      "include5": "Level",
+      "include6": "On",
+      "include7": "Off",
+      "include8": "Toggle",
+      "include9": "Level",
+      "include11": "getEtat",
+      "include12": "getLevel",
+      "include13": "getManufacturerName",
+      "include14": "getModelIdentifier",
+      "include15": "getSWBuild",
+      "include16": "Identify",
+      "include26": "setLevel"
     }
   }
 }

@@ -97,17 +97,18 @@ class Tools
         $deviceCmds += self::getJSonConfigFilebyCmd("Time-TimeStamp");
         $deviceCmds += self::getJSonConfigFilebyCmd("Power-Source");
         $deviceCmds += self::getJSonConfigFilebyCmd("Short-Addr");
+        $deviceCmds += self::getJSonConfigFilebyCmd("online");
         
         
         // Recupere les templates Cmd instanciées
-        foreach ( $deviceTemplate['GLEDOPTO']['Commandes'] as $cmd=>$file ) {
+        foreach ( $deviceTemplate[$device]['Commandes'] as $cmd=>$file ) {
             if ( substr($cmd, 0, 7) == "include" ) {
                 $deviceCmds += self::getJSonConfigFilebyCmd($file);
             }
         }
         
         // Ajoute les commandes au master
-        $deviceTemplate['GLEDOPTO']['Commandes'] = $deviceCmds;
+        $deviceTemplate[$device]['Commandes'] = $deviceCmds;
         
         return $deviceTemplate;
     }
@@ -225,11 +226,32 @@ class Tools
     }
 }
 
-/*
-$items = Tools::getDeviceNameFromJson('test');
-log::add($logger, 'debug', 'test');
-log::add($logger, 'debug', 'items:' . implode('!', $items));
-echo 'items:';
-print_r($items);
-*/
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // La suite is Used for test
+    // en ligne de comande =>
+    // "php Tools.class.php 1"
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    if (isset($argv[1])) {
+        $debugBEN = $argv[1];
+    } else {
+        $debugBEN = 0;
+    }
+    if ($debugBEN != 0) {
+        echo "Debut Tools.php test mode\n";
+        $message = new stdClass();
+        
+        switch ($debugBEN) {
+            case "1":
+                $items = Tools::getJSonConfigFilebyDevicesTemplate('LLC020');
+                echo json_encode($items);
+                break;
+        } // switch
+    } // if debug
+                                                                   
+                                                                   
+                
+
+
 ?>

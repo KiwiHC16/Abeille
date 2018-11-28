@@ -1,47 +1,34 @@
 {
-  "GLEDOPTO": {
-    "nameJeedom": "GLEDOPTO",
+  "LLC020": {
+    "nameJeedom": "Hue Go beta LLC020",
     "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-      "icone": "GLEDOPTO"
+      "icone": "HueGo"
     },
     "Commandes": {
-      "include1 Name": "0000-#EP#-0005",
-      "include1 Name 2": "0000-#EP#-0004",
-      "include1 Name 2 2": "0000-#EP#-4000",
-      "include9 etat": "0006-#EP#-0000",
-      "include7 Level": "0008-#EP#-0000",
-      "include6 IEEE-Addr": "IEEE-Addr",
-      "include6  2": "Time-Time",
-      "include6  2 2": "Time-TimeStamp",
-      "include3 On": "On",
-      "include5 Off": "Off",
-      "include4 Toggle": "Toggle",
-      "include8 setLevel": "Level",
-      "include8 setLevel 2": "Level Stop",
-      "include11 Link-Quality": "Link-Quality",
-      "include10": "getEtat",
-      "include10 2": "getLevel",
-      "include2 getName": "getManufacturerName",
-      "include2 getName 2": "getModelIdentifier",
-      "include2 getName 2 2": "getSWBuild",
-      "include2 getName 2 2 2": "Short-Addr",
-      "include2 getName 2 2 2 2": "Link-Quality",
-      "include2 getName 2 2 2 2 2": "Power-Source",
-      "include2 getName 2 2 2 2 2 2": "Identify",
-      "include2 getName 2 2 2 2 2 2 2": "Colour",
-      "include2 getName 2 2 2 2 2 2 2 2": "Blanc",
-      "include2 getName 2 2 2 2 2 2 2 2 2": "Bleu",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2": "Rouge",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2": "Vert",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2 2": "BindToZigateEtat",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2 2 2": "BindToZigateLevel",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2 2 2 2": "setReportEtat",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2": "setReportLevel",
-      "include2 getName 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2": "online"
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include4": "etat",
+      "include5": "Level",
+      "include6": "On",
+      "include7": "Off",
+      "include8": "Toggle",
+      "include9": "Level",
+      "include11": "getEtat",
+      "include12": "getLevel",
+      "include13": "getManufacturerName",
+      "include14": "getModelIdentifier",
+      "include15": "getSWBuild",
+      "include16": "Identify",
+      "include17": "Colour",
+      "include18": "Blanc",
+      "include19": "Bleu",
+      "include20": "Rouge",
+      "include21": "Vert"
     }
   }
 }

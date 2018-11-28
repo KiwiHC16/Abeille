@@ -436,14 +436,20 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColour") {
-                $keywords = preg_split("/[=&]+/", $msg);
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
                 $Command = array(
                                  "setColour" => "1",
                                  "address" => $address,
-                                 "X" => $keywords[1],
-                                 "Y" => $keywords[3],
-                                 "destinationEndPoint" => "01",
+                                 "X" => $parameters['X'],
+                                 "Y" => $parameters['Y'],
+                                 "destinationEndPoint" => $parameters['EP'],
                                  );
+                }
+                else {
+                    
+                }
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourRGB") {
                 $rouge = hexdec(substr($msg,0,2));
@@ -638,12 +644,15 @@
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "identifySend") {
-                $keywords = preg_split("/[=&]+/", $msg);
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
                 $Command = array(
                                  "identifySend" => "1",
                                  "address" => $address,
-                                 "duration" => "0010", // $keywords[1]
-                                 "DestinationEndPoint" => "01",
+                                 "duration" => $parameters['duration'], // $keywords[1]
+                                 "DestinationEndPoint" => $parameters['EP'],
                                  );
             } elseif ($action == "identifySendHue") {
                 $keywords = preg_split("/[=&]+/", $msg);

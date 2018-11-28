@@ -20,6 +20,7 @@
       "include9": "Level",
       "include11": "getEtat",
       "include12": "getLevel",
+      "include22": "setLevel",
       "include13": "getManufacturerName",
       "include14": "getModelIdentifier",
       "include15": "getSWBuild",

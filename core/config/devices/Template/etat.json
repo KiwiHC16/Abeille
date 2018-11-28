@@ -10,6 +10,7 @@
     "invertBinary": "0",
     "template": "light",
     "configuration": {
+      "repeatEventManagement": "always",
       "visibilityCategory": "All"
     }
   }

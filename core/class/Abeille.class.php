@@ -231,13 +231,9 @@
         public static function cron()
         {
             // Cron tourne toutes les minutes
-            log::add(
-                'Abeille',
-                'debug',
-                '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------'
-            );
+            // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
 
-            log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
+            // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
             $parameters_info = self::getParameters();
             if ($parameters_info['onlyTimer'] == 'N') {
                 Abeille::publishMosquitto(null, "CmdAbeille/Ruche/getVersion", "Version", '0');
@@ -255,7 +251,7 @@
             /**
              * Refresh health information
              */
-            log::add('Abeille', 'debug', '----------- Refresh health information');
+            // log::add('Abeille', 'debug', '----------- Refresh health information');
             $eqLogics = self::byType('Abeille');
 
             foreach ($eqLogics as $eqLogic) {
@@ -267,14 +263,8 @@
                         $last = 0;
                     }
 
-                    log::add('Abeille', 'debug', '--');
-                    log::add(
-                        'Abeille',
-                        'debug',
-                        'Name: '.$eqLogic->getName().' Last: '.$last.' Timeout: '.$eqLogic->getTimeout(
-                        ).'s - Last+TimeOut: '.($last + $eqLogic->getTimeout()).' now: '.time().' Delta: '.(time(
-                            ) - ($last + $eqLogic->getTimeout()))
-                    );
+                    // log::add('Abeille', 'debug', '--');
+                    // log::add( 'Abeille', 'debug', 'Name: '.$eqLogic->getName().' Last: '.$last.' Timeout: '.$eqLogic->getTimeout( ).'s - Last+TimeOut: '.($last + $eqLogic->getTimeout()).' now: '.time().' Delta: '.(time( ) - ($last + $eqLogic->getTimeout())) );
 
                     // Alerte sur TimeOut Defini
                     if (($last + (60*$eqLogic->getTimeout())) > time()) {
@@ -289,15 +279,7 @@
 
                     // ===============================================================================================================================
 
-                    log::add(
-                        'Abeille',
-                        'debug',
-                        'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus(
-                            "lastCommunication"
-                        ).' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus(
-                            'timeout'
-                        ).' state: '.$eqLogic->getStatus('state')
-                    );
+                    // log::add( 'Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus( "lastCommunication" ).' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus( 'timeout' ).' state: '.$eqLogic->getStatus('state'));
 
                 } else {
                     $eqLogic->setStatus('state', '-');
@@ -307,17 +289,13 @@
 
             // Si Inclusion status est à 1 on demande un Refresh de l information
             if (self::checkInclusionStatus() == "01") {
-                log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
+                // log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
                 self::publishMosquitto(null, "CmdAbeille/Ruche/permitJoin", "Status", '0');
             } else {
-                log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
+                // log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
             }
 
-            log::add(
-                'Abeille',
-                'debug',
-                'Ending cron ------------------------------------------------------------------------------------------------------------------------'
-            );
+            // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
 
         }
 
@@ -1188,7 +1166,6 @@
                 // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
                 return;
             }
-            log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
 
 
             /*----------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1216,6 +1193,13 @@
 
             $type = 'topic';         // type = topic car pas json
 
+            if ( strpos("_".$cmdId, "Time")>0 ) {
+                log::add('Abeille', 'debug','-');
+            }
+            else {
+                log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+            }
+            
             // Si cmd Affichage
             if ( $Filter == "CmdAffichage") {
                 log::add('Abeille', 'debug', 'Call CmdAffichage' );
@@ -1223,23 +1207,25 @@
                 return;
             }
             
-            // Si cmd activate/desactivate NE
+            // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
             if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
-                log::add('Abeille', 'debug', 'Entering enable/disable' );
-                $abeilles = self::byType('Abeille');
-                
-                foreach ($abeilles as $key=>$abeille) {
-                    if ($abeille->getLogicalId() == $nodeid ) {
-                        if ($cmdId=="enable") {
+                log::add('Abeille', 'debug', 'Entering enable/disable: '.$cmdId );
+                $cmds = Cmd::byLogicalId('IEEE-Addr');
+                foreach( $cmds as $cmd ) {
+                    if ( $cmd->execCmd() == $value ) {
+                        $abeille = $cmd->getEqLogic();
+                        if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
                         }
-                        if ( $cmdId=="disable" ) {
+                        else {
                             $abeille->setIsEnable(0);
                         }
                         $abeille->save();
                         $abeille->refresh();
                     }
+                    echo "\n";
                 }
+                
                 return;
             }
             
@@ -2172,6 +2158,25 @@
                 
             case "11":
                 Abeille::syncconfAbeille(false);
+                break;
+            
+            case "12":
+                $cmds = Cmd::byLogicalId('IEEE-Addr');
+                foreach( $cmds as $cmd ) {
+                    if ( $cmd->execCmd() == '00158d0001a66ca3' ) {
+                        $abeille = $cmd->getEqLogic();
+                        $abeille->setIsEnable(0);
+                        $abeille->save();
+                        $abeille->refresh();
+                    }
+                    echo "\n";
+                }
+                break;
+                
+            case "13":
+                $message->topic = "Abeille/Ruche/Time-Time";
+                $message->payload = "2018-11-28 12:19:03";
+                Abeille::message($message);
                 break;
                 
         } // switch

@@ -424,14 +424,14 @@
                   . '; IEEE : '.substr($payload, 4, 16)
                   . '; MAC capa : '.substr($payload, 20, 2)   );
         
-        $SrcAddr = substr($payload, 0, 4);
-        $IEEE = substr($payload, 4, 16);
-        $capability = substr($payload, 20, 2);
+        $SrcAddr    = substr($payload,  0,  4);
+        $IEEE       = substr($payload,  4, 16);
+        $capability = substr($payload, 20,  2);
         
         // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
         mqqtPublish($mqtt, $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
         
-        mqqtPublishFct($mqtt, $SrcAddr, "enable", "enable", $qos );
+        mqqtPublishFct($mqtt, "Ruche", "enable", $IEEE, $qos = 0);
         
         // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
         mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
@@ -990,10 +990,12 @@
         $ClusterId = "joinLeave";
         $AttributId = "IEEE";
         $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
-
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
         
-        mqqtPublishFct($mqtt, $SrcAddr, "disable", "disable", $qos );
+        $SrcAddr = "Ruche";
+        $fct = "disable";
+        $extendedAddr = substr($payload, 0, 16);
+        mqqtPublishFct($mqtt, $SrcAddr, $fct, $extendedAddr, $qos = 0);
 
     }
 

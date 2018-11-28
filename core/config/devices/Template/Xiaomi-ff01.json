@@ -1,0 +1,15 @@
+{
+  "0000-#EP#-ff01": {
+    "isVisible": 0,
+    "name": "Specific",
+    "order": 5,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

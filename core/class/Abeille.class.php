@@ -1607,39 +1607,31 @@
             // e.g. Un NE renvoie son annonce
             if (is_object($elogic) && ($cmdId == "IEEE-Addr")) {
                 // Update IEEE cmd
-                $IEEE = $cmdlogic->execCmd();
-                if ($IEEE == $value) {
-                    log::add(
-                        'Abeille',
-                        'debug',
-                        'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.'
-                    );
-
+                if ( !is_object($cmdlogic) ){
+                    log::add('Abeille', 'debug', 'IEEE-Addr commande n existe pas' );
                     return;
                 }
-
+                
+                $IEEE = $cmdlogic->execCmd();
+                if ($IEEE == $value) {
+                    log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
+                    return;
+                }
+                
                 // Je ne sais pas pourquoi des fois on recoit des IEEE null
                 if ($value == "0000000000000000") {
                     log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
-
                     return;
                 }
                 
                 // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
                 if (strlen($IEEE)>2) {
-                    log::add(
-                             'Abeille',
-                             'debug',
-                             'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." => ".$value
-                             );
+                    log::add( 'Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." => ".$value );
                     
-                    message::add(
-                                 "Abeille",
-                                 "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)"
-                                 );
+                    message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE => $value)" );
                 }
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-
+                
                 return;
             }
 

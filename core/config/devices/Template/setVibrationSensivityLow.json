@@ -1,0 +1,16 @@
+{
+  "Sensivity Low": {
+    "isVisible": 1,
+    "name": "Low",
+    "order": 4,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "WriteAttributeRequestVibration",
+      "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15&repeat=3",
+      "repeatEventManagement": "always",
+      "visibilityCategory": "Network"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "0101-#EP#-0055": {
+    "isVisible": 1,
+    "name": "Evenement",
+    "Comment": "1: Vibration, 2: rotation, 3: chute",
+    "order": 2,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "configuration": {
+      "repeatEventManagement": "always",
+      "visibilityCategory": "All"
+    }
+  }
+}

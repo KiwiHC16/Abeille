@@ -1,5 +1,5 @@
 {
-  "lumi.vibration.aq1": {
+  "vibration.aq1": {
     "nameJeedom": "Xiaomi Vibration",
     "timeout": "60",
     "Categorie": {
@@ -10,238 +10,20 @@
       "battery_type": "1x3V CR2032"
     },
     "Commandes": {
-      "0000-0001": {
-        "isVisible": 0,
-        "name": "SW",
-        "order": 0,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "0000-0005": {
-        "isVisible": 0,
-        "name": "nom",
-        "order": 1,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "0101-0055": {
-        "isVisible": 1,
-        "name": "Evenement",
-        "Comment": "1: Vibration, 2: rotation, 3: chute",
-        "order": 2,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "configuration": {
-          "repeatEventManagement": "always",
-          "visibilityCategory": "All"
-        }
-      },
-      "0101-0503": {
-        "isVisible": 1,
-        "name": "Angle",
-        "order": 3,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "configuration": {
-          "repeatEventManagement": "always",
-          "visibilityCategory": "All"
-        },
-        "display": {
-          "forceReturnLineAfter": "1"
-        }
-      },
-      "Sensivity Low": {
-        "isVisible": 1,
-        "name": "Low",
-        "order": 4,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-          "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15&repeat=3",
-          "repeatEventManagement": "always",
-          "visibilityCategory": "Network"
-        }
-      },
-      "Sensivity Medium": {
-        "isVisible": 1,
-        "name": "Medium",
-        "order": 5,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-          "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=0b&repeat=3",
-          "repeatEventManagement": "always",
-          "visibilityCategory": "Network"
-        }
-      },
-      "Sensivity High": {
-        "isVisible": 1,
-        "name": "High",
-        "order": 6,
-        "isHistorized": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-          "topic": "WriteAttributeRequestVibration",
-          "request": "Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=01&repeat=3",
-          "repeatEventManagement": "always",
-          "visibilityCategory": "Network"
-        },
-        "display": {
-          "forceReturnLineAfter": "1"
-        }
-      },
-      "Batterie-Volt": {
-        "isVisible": 0,
-        "name": "Batterie",
-        "order": 7,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "invertBinary": "0",
-        "template": "vuMeter",
-        "units": "V",
-        "configuration": {
-          "calculValueOffset": "#value#/1000",
-          "minValue": "0",
-          "maxValue": "3.3",
-          "visibilityCategory": "Network"
-        }
-      },
-      "Batterie-Pourcent": {
-        "isVisible": 0,
-        "name": "BatteriePourcent",
-        "order": 8,
-        "isHistorized": "1",
-        "Type": "info",
-        "subType": "numeric",
-        "generic_type": "BATTERY",
-        "invertBinary": "0",
-        "template": "vuMeter",
-        "units": "%",
-        "configuration": {
-          "calculValueOffset": "#value#",
-          "minValue": "0",
-          "maxValue": "100",
-          "historizeRound": "0",
-          "visibilityCategory": "Network"
-        },
-        "display": {
-          "forceReturnLineAfter": "1"
-        }
-      },
-      "0000-ff01": {
-        "isVisible": 0,
-        "name": "Specific",
-        "order": 9,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "additionalCommand"
-        }
-      },
-      "Time-Time": {
-        "isVisible": 0,
-        "name": "Time-Time",
-        "order": 10,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "Time"
-        }
-      },
-      "Time-TimeStamp": {
-        "isVisible": 0,
-        "name": "Time-TimeStamp",
-        "order": 11,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "numeric",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Time"
-        }
-      },
-      "IEEE-Addr": {
-        "isVisible": 0,
-        "name": "IEEE-Addr",
-        "order": 12,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "Short-Addr": {
-        "isVisible": 0,
-        "name": "Short-Addr",
-        "order": 13,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "Link-Quality": {
-        "isVisible": 0,
-        "name": "Link Quality",
-        "order": 14,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "Power-Source": {
-        "isVisible": 0,
-        "display": {
-          "showNameOndashboard": "0"
-        },
-        "name": "Power Source",
-        "order": 15,
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "binary",
-        "invertBinary": "0",
-        "template": "AbeillePower",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      }
+      "include1": "SW",
+      "include2": "nom",
+      "include3": "vibrationType",
+      "include4": "vibrationAngle",
+      "include5": "setVibrationSensivityLow",
+      "include6": "setVibrationSensivityMedium",
+      "include7": "setVibrationSensivityHigh",
+      "include8": "Batterie-Volt",
+      "include9": "Batterie-Pourcent",
+      "include10": "Xiaomi-ff01",
+      "include11": "getSWBuild",
+      "include12": "getManufacturerName",
+      "include13": "societe",
+      "include14": "getModelIdentifier"
     }
   }
 }

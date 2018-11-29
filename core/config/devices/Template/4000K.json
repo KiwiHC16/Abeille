@@ -1,0 +1,20 @@
+{
+  "4000K": {
+    "isVisible": 1,
+    "name": "4000K",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setTemperature",
+      "request": "4000",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

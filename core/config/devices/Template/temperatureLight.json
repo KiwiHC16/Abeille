@@ -1,0 +1,20 @@
+{
+  "Temperature": {
+    "isVisible": 1,
+    "name": "Temperature",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setTemperatureSlider",
+      "request": "#slider#",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

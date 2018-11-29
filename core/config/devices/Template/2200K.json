@@ -1,0 +1,17 @@
+{
+  "2200K": {
+    "isVisible": 1,
+    "name": "2200K",
+    "order": 11,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setTemperature",
+      "request": "2200",
+      "visibilityCategory": "All"
+    }
+  }
+}

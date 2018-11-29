@@ -1,0 +1,22 @@
+{
+  "setBleu": {
+    "isVisible": 1,
+    "name": "setBleu",
+    "order": 45,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "generic_type": "LIGHT_SLIDER",
+    "value": "colorBleu",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setBleu",
+      "request": "#slider#",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

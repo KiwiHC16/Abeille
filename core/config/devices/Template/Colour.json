@@ -1,15 +1,20 @@
 {
   "Colour": {
+    "isVisible": 1,
     "name": "Colour",
-    "order": 22,
+    "order": 13,
     "isHistorized": "0",
-    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
       "topic": "setColour",
-      "request": "EP=#EP#&X=#title#&Y=#message#",
+      "request": "X=#title#&Y=#message#",
       "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "XXXX",
+      "message_placeholder": "YYYY"
     }
   }
 }

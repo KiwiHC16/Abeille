@@ -1,0 +1,22 @@
+{
+  "setVert": {
+    "isVisible": 1,
+    "name": "setVert",
+    "order": 43,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "generic_type": "LIGHT_SLIDER",
+    "value": "colorVert",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setVert",
+      "request": "#slider#",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

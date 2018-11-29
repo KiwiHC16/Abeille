@@ -1,0 +1,15 @@
+{
+  "0300-#EP#-0003": {
+    "isVisible": 1,
+    "name": "colorX",
+    "order": 5,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "template": "badge",
+    "units": "",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

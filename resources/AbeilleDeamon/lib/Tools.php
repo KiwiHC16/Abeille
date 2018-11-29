@@ -55,14 +55,17 @@ class Tools
         
         $cmdFilename = dirname(__FILE__) . '/../../../core/config/devices/Template/' . $cmd . '.json';
         
-        if (!is_file($cmdFilename)) { return; }
+        if (!is_file($cmdFilename)) {
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename );
+            return array();
+        }
         
         $content = file_get_contents($cmdFilename);
         
         $cmdJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
-            return;
+            return array();
         }
         
         return $cmdJson;
@@ -76,6 +79,8 @@ class Tools
      */
     public static function getJSonConfigFilebyDevicesTemplate($device = 'none')
     {
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
+        
         $deviceCmds = array();
         $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
         
@@ -110,6 +115,7 @@ class Tools
         // Ajoute les commandes au master
         $deviceTemplate[$device]['Commandes'] = $deviceCmds;
         
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate end');
         return $deviceTemplate;
     }
     

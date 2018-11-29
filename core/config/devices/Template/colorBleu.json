@@ -1,0 +1,18 @@
+{
+  "colorBleu": {
+    "isVisible": 1,
+    "name": "colorBleu",
+    "order": 44,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "template": "badge",
+    "units": "",
+    "display": {
+      "forceReturnLineAfter": "1"
+    },
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "0300-#EP#-0004": {
+    "isVisible": 1,
+    "name": "colorY",
+    "order": 6,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "template": "badge",
+    "units": "",
+    "display": {
+      "forceReturnLineAfter": "1"
+    },
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

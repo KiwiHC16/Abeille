@@ -1,0 +1,20 @@
+{
+  "Colour RGB": {
+    "isVisible": 1,
+    "name": "RGB",
+    "order": 39,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "setColourRGB",
+      "request": "#title#",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "RRGGBB",
+      "message_placeholder": "na"
+    }
+  }
+}

@@ -1297,10 +1297,7 @@
                     $nodeid = $nodeid."-".$index;
                 }
 
-                message::add(
-                    "Abeille",
-                    "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir."
-                );
+                message::add( "Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir." );
                 $elogic = new Abeille();
                 //id
                 if ($objetConnu) {
@@ -1320,6 +1317,7 @@
                 $elogic->setConfiguration('topic', $nodeid);
                 $elogic->setConfiguration('type', $type);
                 $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+                $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
                 $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
                 $elogic->setConfiguration('type', $type);
                 if (isset($objetConfiguration['battery_type'])) {

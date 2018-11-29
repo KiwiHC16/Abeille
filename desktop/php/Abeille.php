@@ -132,13 +132,17 @@ $eqLogics = eqLogic::byType('Abeille');
 
 
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
+        <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
         <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
+
         <div class="eqLogicThumbnailContainer">
+
             <?php
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+                echo '<div>';
                 echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
                 echo "<center>";
                 $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
@@ -150,16 +154,23 @@ $eqLogics = eqLogic::byType('Abeille');
                 echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
                 echo "</center>";
                 echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
-                echo '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" /><center>{{Select (na yet)}}</label></center></span>';
+                echo '</div>';
+                echo '<span><label class="checkbox-inline"><input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><center>{{Select (na yet)}}</label></center></span>';
                 echo '</div>';
             }
             ?>
-        </div>
 
-        <div id="Set Group">
-        Group setting to be developped here.
-        <input class="form-control" placeholder="Group" style="margin-bottom:4px;" id="in_searchEqlogictytytytyttyty">
+
         </div>
+        Group setting to be developped here.
+        <input type="text" name="group">
+
+        <input type="submit" name="submitButton" value="Set Group">
+        <input type="submit" name="submitButton" value="Set Group 2">
+
+
+        </div>
+        </form>
 
     </div>
 

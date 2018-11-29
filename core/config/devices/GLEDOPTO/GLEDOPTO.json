@@ -6,7 +6,8 @@
       "light": "1"
     },
     "configuration": {
-      "icone": "GLEDOPTO"
+      "icone": "GLEDOPTO",
+      "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "nom",
@@ -24,7 +25,8 @@
       "include14": "getModelIdentifier",
       "include15": "getSWBuild",
       "include16": "Identify",
-      "include26": "setLevel"
+      "include26": "setLevel",
+      "include27": "Group-Membership"
     }
   }
 }

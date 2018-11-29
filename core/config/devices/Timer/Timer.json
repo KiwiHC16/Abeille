@@ -11,32 +11,8 @@
       "lastCommunicationTimeOut": "-1"
     },
     "Commandes": {
-      "0000-0005": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "nom",
-        "order": 0,
-        "subType": "string",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "Network"
-        }
-      },
-      "0006-0000": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "1",
-        "name": "etat",
-        "order": 1,
-        "subType": "binary",
-        "template": "prise",
-        "configuration": {
-          "visibilityCategory": "All"
-        }
-      },
+      "include1": "nom",
+      "include2": "etat",
       "Var-Duration": {
         "isVisible": 1,
         "Type": "info",
@@ -121,32 +97,6 @@
         "order": 7,
         "subType": "other",
         "template": ""
-      },
-      "Time-Time": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Time-Time",
-        "order": 8,
-        "subType": "string",
-        "template": "",
-        "configuration": {
-          "visibilityCategory": "Time"
-        }
-      },
-      "Time-TimeStamp": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Time-TimeStamp",
-        "order": 9,
-        "subType": "numeric",
-        "template": "badge",
-        "configuration": {
-          "visibilityCategory": "Time"
-        }
       }
     }
   }

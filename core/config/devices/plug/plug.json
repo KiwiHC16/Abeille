@@ -5,7 +5,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "icone": "XiaomiPrise"
+      "icone": "XiaomiPrise",
+      "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "SW",

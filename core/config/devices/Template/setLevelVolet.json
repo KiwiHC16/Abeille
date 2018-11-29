@@ -1,0 +1,18 @@
+{
+  "Level": {
+    "isVisible": 1,
+    "name": "setLevel",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "value": "Level",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setLevelVolet",
+      "request": "Level=#slider#&duration=01",
+      "visibilityCategory": "All"
+    }
+  }
+}

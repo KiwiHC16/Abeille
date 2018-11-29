@@ -1,0 +1,15 @@
+{
+  "0403-0014": {
+    "isVisible": 0,
+    "name": "Scale",
+    "order": 6,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

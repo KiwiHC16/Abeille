@@ -1,0 +1,28 @@
+{
+  "0012-0055": {
+    "isVisible": 0,
+    "name": "Mouvement",
+    "order": 2,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  },
+  "000c-ff05": {
+    "isVisible": 1,
+    "name": "Rotation (?)",
+    "order": 3,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

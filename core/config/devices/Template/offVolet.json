@@ -1,0 +1,18 @@
+{
+  "Off": {
+    "isVisible": 1,
+    "name": "Descendre",
+    "order": 12,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "FLAP_DOWN",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "OnOff",
+      "request": "Off",
+      "visibilityCategory": "All"
+    }
+  }
+}

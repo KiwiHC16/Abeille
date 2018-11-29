@@ -1,0 +1,20 @@
+{
+  "Toggle": {
+    "isVisible": 1,
+    "name": "Toggle",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "OnOff",
+      "request": "Toggle",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

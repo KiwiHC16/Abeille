@@ -1,0 +1,15 @@
+{
+  "0000-#EP#-0000": {
+    "isVisible": 0,
+    "name": "ZCL Version",
+    "order": 2,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

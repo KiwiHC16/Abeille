@@ -6,7 +6,8 @@
       "light": "1"
     },
     "configuration": {
-      "icone": "HueGo"
+      "icone": "HueGo",
+      "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "nom",

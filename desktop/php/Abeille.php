@@ -37,21 +37,28 @@ $eqLogics = eqLogic::byType('Abeille');
                 <center>
                     <i class="fa fa-sign-in fa-rotate-90" style="font-size : 6em;color:#94ca02;"></i>
                 </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Mode inclusion}}</center></span>
+                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Inclusion}}</center></span>
             </div>
 
             <div class="cursor changeIncludeState card" id="bt_exclude" data-mode="0" data-state="1" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
                 <center>
                     <i class="fa fa-sign-out fa-rotate-90" style="font-size : 6em;color:#FA5858;"></i>
                 </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#FA5858"><center>{{Mode exclusion (not implemented yet)}}</center></span>
+                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#FA5858"><center>{{Exclusion (not implemented yet)}}</center></span>
             </div>
 
             <div class="cursor" id="bt_createTimer" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
                 <center>
                     <img src="plugins/Abeille/images/node_Timer.png" height="105" width="95">
                 </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Create Timer}}</center></span>
+                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Timer}}</center></span>
+            </div>
+
+            <div class="cursor" id="bt_createRemote" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
+                <center>
+                    <i class="fa fa-gamepad" style="font-size : 6em;color:#767676;"></i>
+                </center>
+                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Télécommande}}</center></span>
             </div>
 
             <div class="cursor eqLogicAction" data-action="gotoPluginConf"
@@ -61,6 +68,7 @@ $eqLogics = eqLogic::byType('Abeille');
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
             </div>
+
             <div class="cursor" id="bt_healthAbeille"
                  style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
@@ -68,6 +76,7 @@ $eqLogics = eqLogic::byType('Abeille');
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Santé}}</center></span>
             </div>
+
             <div class="cursor" id="bt_networkAbeilleList"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
@@ -75,6 +84,7 @@ $eqLogics = eqLogic::byType('Abeille');
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network List</center></span>
             </div>
+
             <div class="cursor" id="bt_networkAbeille"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
@@ -82,6 +92,7 @@ $eqLogics = eqLogic::byType('Abeille');
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph</center></span>
             </div>
+
             <div class="cursor" id="bt_networkAbeilleNew"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
@@ -143,6 +154,7 @@ $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
                 echo '<div>';
+                echo '<center><input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br></center>';
                 echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
                 echo "<center>";
                 $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
@@ -155,18 +167,19 @@ $eqLogics = eqLogic::byType('Abeille');
                 echo "</center>";
                 echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
                 echo '</div>';
-                echo '<span><label class="checkbox-inline"><input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><center>{{Select (na yet)}}</label></center></span>';
+                
                 echo '</div>';
             }
             ?>
 
 
         </div>
-        Group setting to be developped here.
+        <hr>
+        <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Groupe Id</label>
         <input type="text" name="group">
 
-        <input type="submit" name="submitButton" value="Set Group">
-        <input type="submit" name="submitButton" value="Set Group 2">
+        <input type="submit" name="submitButton" value="Add Group">
+        <input type="submit" name="submitButton" value="Remove Group">
 
 
         </div>
@@ -306,10 +319,9 @@ $eqLogics = eqLogic::byType('Abeille');
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">{{Icone du topic}}</label>
+                            <label class="col-sm-3 control-label">{{Icone}}</label>
                             <div class="col-sm-3">
-                                <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration"
-                                        data-l2key="icone">
+                                <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
                                     <option value="Abeille">{{Abeille}}</option>
                                     <option value="Ruche">{{Ruche}}</option>
                                     <?php

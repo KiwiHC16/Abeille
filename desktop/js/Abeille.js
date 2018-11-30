@@ -88,6 +88,22 @@ $('#bt_createTimer').on('click', function () {
                         }
                         );
 
+$('#bt_createRemote').on('click', function () {
+                         console.log("bt_createRemote");
+                         var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+                         xmlhttpMQTTSendTimer.onreadystatechange = function() {
+                         if (this.readyState == 4 && this.status == 200) {
+                         xmlhttpMQTTSendTimerResult = this.responseText;
+                         }
+                         };
+                         
+                         xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_TRADFRIremotecontrol_0000-0005&payload=TRADFRIremotecontrol", false); // False pour bloquer sur la recuperation du fichier
+                         xmlhttpMQTTSendTimer.send();
+                         // location.reload(true);
+                         $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+                         }
+                         );
+
 $('#bt_toggleAffichageNetwork').on('click', function () {
                                    console.log("bt_toggleAffichageNetwork");
                                    var xmlhttpMQTTAffichageNetwork = new XMLHttpRequest();

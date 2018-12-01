@@ -157,11 +157,18 @@ Dev Master
 
 
 	<div class="form-group">
-		<label class="col-lg-4 control-label">{{Options avancées}}</label>
+		<label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de recuperer les derniers modeles des objets.">{{Options avancées}}</label>
 		<div class="col-lg-5">
-			<a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Configs modules}}</a>
+			<a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Mise a jour des modèles}}</a>
 		</div>
 	</div>
+
+    <div class="form-group">
+        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet d appliquer les derniers modeles des objets sur les objets existants.">{{Options avancées}}</label>
+        <div class="col-lg-5">
+            <a class="btn btn-warning" id="bt_updateConfigAbeille"><i class="fa fa-refresh"></i> {{Appliquer nouveaux modèles}}</a>
+        </div>
+    </div>
 
 <legend><i class="fa fa-list-alt"></i> {{Messages MQTT - Brocker Mosquitto}}</legend>
 <p><I> Abeille utilise le protocol MQTT pour échanger des messages MQTT entre les parties logicielles d'Abeille. Par defaut le broker Mosquitto est installé. C'est lui qui gere la reception et distribution des messages MQTT. Vous pouvez utiliser celui qui est installé par défaut ou utiliser un autre. Si vous n'avez pas de broker MQTT spécifique alors laissez les parametres par défaut.</br>

@@ -249,4 +249,15 @@ placeholder="#"/>
 					}
 		});
 	});
+
+        $('#bt_updateConfigAbeille').on('click',function(){
+                              bootbox.confirm('{{Etes-vous sûr de vouloir mettre à jour les équipements avec les dernières configurations des modules ?<br>Si vous avez des modifications locales, il est possible qu elles seront perdues.}}', function (result) {
+                                              if (result) {
+                                              $('#md_modal2').dialog({title: "{{Application des configurations}}"});
+                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateConfig.abeille').dialog('open');
+                                              }
+                                              });
+                              });
+
+bt_updateConfigAbeille
     </script>

@@ -1,0 +1,24 @@
+{
+  "remote.b286acn01": {
+    "nameJeedom": "Xiaomi Interrupteur Mural Carré Double",
+    "timeout": "60",
+    "Commentaire": "Remonte le nom remote.b286acn01 apres association, equipement similaire a lumi.sensor_86sw2Un",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "XiaomiButtonSW861",
+      "battery_type": "1x3V CR2032",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etatSwitchDouble",
+      "include4 2": "Batterie-Volt",
+      "include5": "Batterie-Pourcent",
+      "include6": "Xiaomi-ff01"
+    }
+  }
+}

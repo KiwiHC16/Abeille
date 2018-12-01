@@ -1,0 +1,16 @@
+{
+  "0006-05-0000": {
+    "isVisible": 1,
+    "name": "etat switch 2",
+    "order": 7,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "generic_type": "LIGHT_STATE",
+    "invertBinary": "0",
+    "template": "light",
+    "configuration": {
+      "visibilityCategory": "All"
+    }
+  }
+}

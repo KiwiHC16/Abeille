@@ -1,6 +1,6 @@
 {
   "ctrl_neutral1": {
-    "nameJeedom": "Xiaomi Wall Switch w/o Neutral",
+    "nameJeedom": "Xiaomi Wall Switch w/o Neutral 1",
     "Categorie": {
       "automatism": "1"
     },
@@ -13,9 +13,6 @@
       "include2": "societe",
       "include3": "SW",
       "include3 2": "location",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",
@@ -24,7 +21,12 @@
       "include24": "Identify",
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
-      "include28": "setReportEtat"
+      "include28": "setReportEtat",
+      "include3 2 2": "etatCharge1",
+      "include3 2 2 2 2": "etatSW1",
+      "include3 2 2 2 2 2 2": "On1",
+      "include3 2 2 2 2 2 2 2": "Off1",
+      "include3 2 2 2 2 2 2 2 2": "Toggle1"
     }
   }
 }

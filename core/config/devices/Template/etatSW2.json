@@ -7,7 +7,7 @@
     "Type": "info",
     "subType": "binary",
     "generic_type": "LIGHT_STATE",
-    "invertBinary": "0",
+    "invertBinary": "1",
     "template": "light",
     "configuration": {
       "visibilityCategory": "All"

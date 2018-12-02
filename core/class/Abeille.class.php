@@ -62,9 +62,11 @@
         public static function updateConfigAbeille($_background = true) {
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
-            log::remove('updateConfigAbeille');
-            log::add('updateConfigAbeille', 'info', 'updateConfigAbeille Start');
-
+            // log::remove('updateConfigAbeille');
+            // log::add('Abeille_test', 'info', 'updateConfigAbeille Start');
+            $fp = fopen('/var/www/html/log/Abeille_updateConfig', 'w');
+            fwrite($fp, "Starting updateConfigAbeille\n");
+            
             $cmds = cmd::all();
             foreach ( $cmds as $cmdId=>$cmd ) {
                 if ( $cmd->getName() == "nom" ) {
@@ -123,7 +125,8 @@
                     $abeille->save();
 
                     if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated."\n";
-                    log::add('updateConfigAbeille', 'info', "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated );
+                    fwrite($fp, "-------------------\n");
+                    fwrite($fp, "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated."\n" );
                     
 
                     
@@ -182,62 +185,25 @@
                             // alert
                             
                             if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated."\n";
-                            log::add('updateConfigAbeille', 'info', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated );
+                            fwrite($fp, "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated."\n" );
                         }
                         else {
                             if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
-                            log::add('updateConfigAbeille', 'info', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template" );
+                            fwrite($fp, "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n" );
+                            log::add('Abeille', 'debug', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template");
                             // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
                         } // if (isset($templateCmd))
                     } // foreach ( $abeille->getCmd() as $cmdId=>$cmd ) {
                 } // if ( $cmd->getName() == "nom" ) {
             } // foreach ( $cmds as $cmdId=>$cmd ) {
             
-            /*
-             Etapes:
-            récupérer le nom dans la commande nom ou le nom du template dans la conf et utiliser ce template pour la mise a jour
-            mettre à jour les param globaux comme TimeOut et type de piles, ajouter dans la config le nom du template utilisé
-            Passer en revue les commandes une à une sur la base de la liste du template:
-            Cmd Action
-            Cmd Info
-            
-            mettre a jour en identifiant par le nom: topic, visibilityCategory, logicalId, Payload (cmd action), Type Generic, gestion des valeurs, min, max, calcul et arrondi, gestion des repetitions
-            Identifier les commandes qui ne sont pas dans le template et changer leur nom par un truc comme nom_not_in_template
-            */
-                
-            /*
-                recupere le template
-                TimeOut
-                piles
-                config 'templateUse'
-                foreach ( $cmds as $cmdId=>$cmd ) {
-                    if ( cmd nom in template ) {
-                    logicalId
-                    topic
-                    visibilityCategory
-                    Type Generic
-                    if (info) {
-                        gestion des valeurs
-                        min
-                        max
-                        calcul et arrondi
-                        gestion des repetitions
-                    }
-                    else {
-                        Payload
-                    }
-                    }
-                    else {
-                        change nom command, 'not_in_template_'.$nom
-                    }
-                }
-                         }
-             */
-
-            
-            
-            log::add('updateConfigAbeille', 'info', 'updateConfigAbeille End');
+            // log::add('updateConfigAbeille', 'info', 'updateConfigAbeille End');
+            fwrite($fp, "Ending updateConfigAbeille\n");
+            log::add('Abeille', 'debug', 'updateConfigAbeille end');
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille end\n";
+            
+            fclose($fp);
+            
         }
         
         public static function cronDaily()

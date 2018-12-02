@@ -59,6 +59,107 @@
             if ($GLOBALS['debugBEN']) echo "syncconfAbeille end\n";
         }
 
+        public static function updateConfigAbeille($_background = true) {
+            if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
+            log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
+            log::remove('updateConfigAbeille');
+            log::add('Abeille_syncconf', 'info', 'updateConfigAbeille Start');
+
+            $cmds = cmd::all();
+            foreach ( $cmds as $cmdId=>$cmd ) {
+                if ( $cmd->getName() == "nom" ) {
+                    echo $cmd->getName()."->".$cmd->execCmd()."->".$cmd->getEqLogic_id();
+                    $templateName = $cmd->execCmd();
+                    $templateName = str_replace("lumi.","",$templateName);
+                    $abeille = abeille::byId( $cmd->getEqLogic_id() );
+                    echo "->".$abeille->getName()."\n";
+                    
+                    $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
+                    // id
+                    // name: don't touch the name which could have been define by user
+                    // logicalId
+                    // generic_type
+                    // object_id
+                    // eqType_name
+                    // eqReal_id
+                    // isVisible
+                    // isEnable
+                    
+                    // configuration
+                        // topic
+                        // type
+                        // icone
+                        // battery_type
+                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); }
+                        // mainEP
+                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) { $abeille->setConfiguration( "mainEP", $template[$templateName]['configuration']["mainEP"] ); }
+                        // createtime
+                        // battery_type
+                        // positionX
+                        // positionY
+                        // updatetime
+                    
+                    // timeout
+                    if ( isset($template[$templateName]['timeout']) ) { $abeille->setTimeout( $template[$templateName]['timeout'] ); }
+                    
+                    // category
+                    // display
+                    // order
+                    // comment
+                    // status
+                    
+                    $abeille->save();
+                }
+                
+            }
+            
+            /*
+             Etapes:
+            récupérer le nom dans la commande nom ou le nom du template dans la conf et utiliser ce template pour la mise a jour
+            mettre à jour les param globaux comme TimeOut et type de piles, ajouter dans la config le nom du template utilisé
+            Passer en revue les commandes une à une sur la base de la liste du template:
+            Cmd Action
+            Cmd Info
+            
+            mettre a jour en identifiant par le nom: topic, visibilityCategory, logicalId, Payload (cmd action), Type Generic, gestion des valeurs, min, max, calcul et arrondi, gestion des repetitions
+            Identifier les commandes qui ne sont pas dans le template et changer leur nom par un truc comme nom_not_in_template
+            */
+                
+            /*
+                recupere le template
+                TimeOut
+                piles
+                config 'templateUse'
+                foreach ( $cmds as $cmdId=>$cmd ) {
+                    if ( cmd nom in template ) {
+                    logicalId
+                    topic
+                    visibilityCategory
+                    Type Generic
+                    if (info) {
+                        gestion des valeurs
+                        min
+                        max
+                        calcul et arrondi
+                        gestion des repetitions
+                    }
+                    else {
+                        Payload
+                    }
+                    }
+                    else {
+                        change nom command, 'not_in_template_'.$nom
+                    }
+                }
+                         }
+             */
+
+            
+            
+            log::add('Abeille_syncconf', 'info', 'updateConfigAbeille End');
+            if ($GLOBALS['debugBEN']) echo "updateConfigAbeille end\n";
+        }
+        
         public static function cronDaily()
         {
             log::add(
@@ -2168,6 +2269,11 @@
                 $message->payload = "2018-11-28 12:19:03";
                 Abeille::message($message);
                 break;
+                
+            case "14":
+                Abeille::updateConfigAbeille();
+                break;
+                
                 
         } // switch
 

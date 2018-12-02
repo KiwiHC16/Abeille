@@ -33,6 +33,11 @@ try {
 		abeille::syncconfAbeille(false);
 		ajax::success();
 	}
+    
+    if (init('action') == 'updateConfigAbeille') {
+        abeille::updateConfigAbeille(false);
+        ajax::success();
+    }
 
 	throw new Exception('Aucune methode correspondante');
 	/*     * *********Catch exeption*************** */

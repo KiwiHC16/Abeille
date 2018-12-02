@@ -63,18 +63,27 @@
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
             log::remove('updateConfigAbeille');
-            log::add('Abeille_syncconf', 'info', 'updateConfigAbeille Start');
+            log::add('updateConfigAbeille', 'info', 'updateConfigAbeille Start');
 
             $cmds = cmd::all();
             foreach ( $cmds as $cmdId=>$cmd ) {
                 if ( $cmd->getName() == "nom" ) {
-                    echo $cmd->getName()."->".$cmd->execCmd()."->".$cmd->getEqLogic_id();
+                    $abeilleUpdated = "No";
                     $templateName = $cmd->execCmd();
                     $templateName = str_replace("lumi.","",$templateName);
                     $abeille = abeille::byId( $cmd->getEqLogic_id() );
-                    echo "->".$abeille->getName()."\n";
-                    
                     $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
+                    $templateJSON = json_encode( $template );
+                    if ( isset($template[$templateName]['configuration']["defaultEP"]) ) {
+                        $templateJSON = str_replace("#EP#", $template[$templateName]['configuration']["defaultEP"], $templateJSON);
+                    }
+                    else {
+                        $templateJSON = str_replace("#EP#", "01", $templateJSON);
+                    }
+                    $template = json_decode( $templateJSON, true );
+                    
+                    // echo "defaultEP: ".$template[$templateName]['configuration']["defaultEP"]."\n";
+                    // var_dump( $template );
                     // id
                     // name: don't touch the name which could have been define by user
                     // logicalId
@@ -86,32 +95,103 @@
                     // isEnable
                     
                     // configuration
-                        // topic
-                        // type
-                        // icone
-                        // battery_type
-                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); }
-                        // mainEP
-                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) { $abeille->setConfiguration( "mainEP", $template[$templateName]['configuration']["mainEP"] ); }
-                        // createtime
-                        // battery_type
-                        // positionX
-                        // positionY
-                        // updatetime
+                    // topic
+                    // type
+                    // icone
+                    if ( isset($template[$templateName]['configuration']["icone"]) ) { $abeille->setConfiguration( "icone", $template[$templateName]['configuration']["icone"] ); $abeilleUpdated="Yes"; }
+                    // battery_type
+                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); $abeilleUpdated="Yes"; }
+                    // mainEP
+                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) { $abeille->setConfiguration( "mainEP", $template[$templateName]['configuration']["mainEP"] ); $abeilleUpdated="Yes"; }
+                    // createtime
+                    // battery_type
+                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); $abeilleUpdated="Yes"; }
+                    // positionX
+                    // positionY
+                    // updatetime
                     
                     // timeout
-                    if ( isset($template[$templateName]['timeout']) ) { $abeille->setTimeout( $template[$templateName]['timeout'] ); }
+                    if ( isset($template[$templateName]['timeout']) ) { $abeille->setTimeout( $template[$templateName]['timeout'] ); $abeilleUpdated="Yes"; }
                     
                     // category
                     // display
                     // order
+                    if ( isset($template[$templateName]['order']) ) { $abeille->setOrder( $template[$templateName]['order'] ); $abeilleUpdated="Yes"; }
                     // comment
                     // status
                     
                     $abeille->save();
-                }
-                
-            }
+
+                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated."\n";
+                    log::add('updateConfigAbeille', 'info', "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated );
+                    
+
+                    
+                    foreach ( $abeille->getCmd() as $cmdId=>$cmd ) {
+                        $nameCmd = $cmd->getName();
+                        foreach ($template[$templateName]["Commandes"] as $fileName=>$templateCmd) {
+                            if ( $nameCmd==$templateCmd['name'] ) { $templateCmd = $template[$templateName]["Commandes"][$cmd->getName()]; }
+                        }
+                        
+                        
+                        if (isset($templateCmd)) {
+                            $cmdUpdated = "No";
+                            // id
+                            // logicalId
+                            if ( isset($templateCmd['logicalId']) ) { $cmd->setLogicalId($templateCmd['logicalId']); $cmdUpdated="Yes"; }
+                            // generic_type: type for homebridge
+                            if ( isset($templateCmd['generic_type']) ) { $cmd->setGeneric_type($templateCmd['generic_type']); $cmdUpdated="Yes"; }
+                            // eqType: 'Abeille' so no change
+                            // name: comme c est le critere de comparaison, ca reste le meme.
+                            // order
+                            if ( isset($templateCmd['order']) ) { $cmd->setOrder($templateCmd['order']); $cmdUpdated="Yes"; }
+                            // type: on va considere que ca ne change pas
+                            // subType: on va considere que ca ne change pas
+                            // eqLogic_id: on va considere que ca ne change pas
+                            // isHistorized
+                            if ( isset($templateCmd['isHistorized']) ) { $cmd->setIsHistorized($templateCmd['isHistorized']); $cmdUpdated="Yes"; }
+                            // unite
+                            if ( isset($templateCmd['unite']) ) { $cmd->setUnite($templateCmd['isHistorized']); $cmdUpdated="Yes"; }
+                            // configuration
+                            // topic
+                            if ( isset($templateCmd['configuration']['topic']) ) { $cmd->setConfiguration('topic',$templateCmd['configuration']['topic']); $cmdUpdated="Yes"; }
+                            // AbeilleRejectValue
+                            if ( isset($templateCmd['configuration']['AbeilleRejectValue']) ) { $cmd->setConfiguration('AbeilleRejectValue',$templateCmd['configuration']['AbeilleRejectValue']);  $cmdUpdated="Yes"; }
+                            // returnStateValue
+                            if ( isset($templateCmd['configuration']['returnStateValue']) ) { $cmd->setConfiguration('returnStateValue',$templateCmd['configuration']['returnStateValue']); $cmdUpdated="Yes"; }
+                            // returnStateTime
+                            if ( isset($templateCmd['configuration']['returnStateTime']) ) { $cmd->setConfiguration('returnStateTime',$templateCmd['configuration']['returnStateTime']); $cmdUpdated="Yes"; }
+                            // repeatEventManagement
+                            if ( isset($templateCmd['configuration']['repeatEventManagement']) ) { $cmd->setConfiguration('repeatEventManagement',$templateCmd['configuration']['repeatEventManagement']); $cmdUpdated="Yes"; }
+                            // visibilityCategory
+                            if ( isset($templateCmd['configuration']['visibilityCategory']) ) { $cmd->setConfiguration('visibilityCategory',$templateCmd['configuration']['visibilityCategory']); $cmdUpdated="Yes"; }
+                            // visibiltyTemplate
+                            if ( isset($templateCmd['configuration']['visibiltyTemplate']) ) { $cmd->setConfiguration('visibiltyTemplate',$templateCmd['configuration']['visibiltyTemplate']); $cmdUpdated="Yes"; }
+                            // minValue
+                            if ( isset($templateCmd['configuration']['minValue']) ) { $cmd->setConfiguration('minValue',$templateCmd['configuration']['minValue']); $cmdUpdated="Yes"; }
+                            // maxValue
+                            if ( isset($templateCmd['configuration']['maxValue']) ) { $cmd->setConfiguration('unite',$templateCmd['configuration']['maxValue']); $cmdUpdated="Yes"; }
+                            // calculValueOffset
+                            if ( isset($templateCmd['configuration']['calculValueOffset']) ) { $cmd->setConfiguration('calculValueOffset',$templateCmd['configuration']['calculValueOffset']); $cmdUpdated="Yes"; }
+                            // template
+                            // display
+                            // html
+                            // value
+                            // isVisible
+                            if ( isset($templateCmd['isVisible']) ) { $cmd->setIsVisible($templateCmd['isVisible']); $cmdUpdated="Yes"; }
+                            // alert
+                            
+                            if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated."\n";
+                            log::add('updateConfigAbeille', 'info', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated );
+                        }
+                        else {
+                            if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
+                            log::add('updateConfigAbeille', 'info', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template" );
+                            // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
+                        } // if (isset($templateCmd))
+                    } // foreach ( $abeille->getCmd() as $cmdId=>$cmd ) {
+                } // if ( $cmd->getName() == "nom" ) {
+            } // foreach ( $cmds as $cmdId=>$cmd ) {
             
             /*
              Etapes:
@@ -156,7 +236,7 @@
 
             
             
-            log::add('Abeille_syncconf', 'info', 'updateConfigAbeille End');
+            log::add('updateConfigAbeille', 'info', 'updateConfigAbeille End');
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille end\n";
         }
         
@@ -2274,6 +2354,13 @@
                 Abeille::updateConfigAbeille();
                 break;
                 
+            case "15":
+                $abeilles = Abeille::all();
+                foreach ( $abeilles as $abeilleId=>$abeille) {
+                    var_dump($abeille->getCmd());
+                    return;
+                }
+                break;
                 
         } // switch
 

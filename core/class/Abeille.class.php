@@ -59,6 +59,24 @@
             if ($GLOBALS['debugBEN']) echo "syncconfAbeille end\n";
         }
 
+        public static function testUpdateCommand( $fp, $parameter, $template, $NE ) {
+            if ( isset($template) ) {
+                if ( $template==$NE ) {
+                    fwrite($fp, " - parameter identical, no change: \t\t\t'".$parameter."'\n" );
+                    return 0;
+                }
+                else {
+                    fwrite($fp, " ---------> parameter different, will be updated \t'".$parameter."': '".$NE."' -> '".$template. "'\n" );
+                    return 1;
+                }
+            }
+            else {
+                fwrite($fp, " - parameter is not in the template, no change : \t'".$parameter."'\n" );
+                return 0;
+            }
+            return 0;
+        }
+        
         public static function updateConfigAbeille($_background = true) {
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
@@ -70,7 +88,6 @@
             $cmds = cmd::all();
             foreach ( $cmds as $cmdId=>$cmd ) {
                 if ( $cmd->getName() == "nom" ) {
-                    $abeilleUpdated = "No";
                     $templateName = $cmd->execCmd();
                     $templateName = str_replace("lumi.","",$templateName);
                     $abeille = abeille::byId( $cmd->getEqLogic_id() );
@@ -83,9 +100,14 @@
                         $templateJSON = str_replace("#EP#", "01", $templateJSON);
                     }
                     $template = json_decode( $templateJSON, true );
+                    $templateMain = $template[$templateName]; // passe par une variable intermediaire pour simplifier l ecriture
+                    $templateMainConfig = $template[$templateName]['configuration']; // passe par une variable intermediaire pour simplifier l ecriture
                     
-                    // echo "defaultEP: ".$template[$templateName]['configuration']["defaultEP"]."\n";
-                    // var_dump( $template );
+                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n";
+                    fwrite($fp, "-------------------------------------------------------------------\n");
+                    fwrite($fp, "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
+                    
+                    
                     // id
                     // name: don't touch the name which could have been define by user
                     // logicalId
@@ -100,96 +122,103 @@
                     // topic
                     // type
                     // icone
-                    if ( isset($template[$templateName]['configuration']["icone"]) ) { $abeille->setConfiguration( "icone", $template[$templateName]['configuration']["icone"] ); $abeilleUpdated="Yes"; }
+                    if ( self::testUpdateCommand($fp, "icone", $templateMainConfig["icone"], $abeille->getConfiguration("icone") ) ) { $abeille->setConfiguration( "icone", $templateMainConfig["icone"] ); }
                     // battery_type
-                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); $abeilleUpdated="Yes"; }
+                    if ( self::testUpdateCommand($fp, "battery_type", $templateMainConfig["battery_type"], $abeille->getConfiguration("battery_type") ) ) { $abeille->setConfiguration( "battery_type", $templateMainConfig["battery_type"] ); }
                     // mainEP
-                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) { $abeille->setConfiguration( "mainEP", $template[$templateName]['configuration']["mainEP"] ); $abeilleUpdated="Yes"; }
+                    if ( self::testUpdateCommand($fp, "mainEP", $templateMainConfig["mainEP"], $abeille->getConfiguration("mainEP") ) ) { $abeille->setConfiguration( "mainEP", $templateMainConfig["mainEP"] ); }
+                    // defaultEP
+                    if ( self::testUpdateCommand($fp, "defaultEP", $templateMainConfig["defaultEP"], $abeille->getConfiguration("defaultEP") ) ) { $abeille->setConfiguration( "defaultEP", $templateMainConfig["defaultEP"] ); }
                     // createtime
-                    // battery_type
-                    if ( isset($template[$templateName]['configuration']["battery_type"]) ) { $abeille->setConfiguration( "battery_type", $template[$templateName]['configuration']["battery_type"] ); $abeilleUpdated="Yes"; }
                     // positionX
                     // positionY
                     // updatetime
                     
                     // timeout
-                    if ( isset($template[$templateName]['timeout']) ) { $abeille->setTimeout( $template[$templateName]['timeout'] ); $abeilleUpdated="Yes"; }
+                    if ( self::testUpdateCommand($fp, "timeout", $templateMain["timeout"], $abeille->getTimeout("timeout") ) ) { $abeille->setTimeout( $templateMain["timeout"] ); }
                     
                     // category
                     // display
                     // order
-                    if ( isset($template[$templateName]['order']) ) { $abeille->setOrder( $template[$templateName]['order'] ); $abeilleUpdated="Yes"; }
+                    // if ( self::testUpdateCommand($fp, "order", $templateMain["order"], $abeille->getOrder("order") ) ) { $abeille->setOrder( $templateMain["order"] ); }
                     // comment
                     // status
                     
                     $abeille->save();
-
-                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated."\n";
-                    fwrite($fp, "-------------------\n");
-                    fwrite($fp, "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName." - Updated: ".$abeilleUpdated."\n" );
-                    
-
-                    
-                    foreach ( $abeille->getCmd() as $cmdId=>$cmd ) {
-                        $nameCmd = $cmd->getName();
-                        foreach ($template[$templateName]["Commandes"] as $fileName=>$templateCmd) {
-                            if ( $nameCmd==$templateCmd['name'] ) { $templateCmd = $template[$templateName]["Commandes"][$cmd->getName()]; }
+                    // -----------------------------------------------------------------------------------------------------------------------
+                    foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
+                        // Je cherche la commande correspondante dans le template sur la base du nom donné à la commande
+                        unset($templateCmd);
+                        foreach ($template[$templateName]["Commandes"] as $cmdClusterFormat=>$templateCmdTmp) {
+                            if ( $cmd->getName()==$templateCmdTmp['name'] ) {
+                                $templateCmdId = $cmdClusterFormat;
+                                $templateCmd = $template[$templateName]["Commandes"][$cmdClusterFormat];
+                                $templateCmdConfig = $templateCmd['configuration'];
+                            }
                         }
                         
+                        if ($GLOBALS['debugBEN']) {
+                            echo "\n".$templateCmdId."\n";
+                            var_dump($templateCmd);
+                            var_dump($templateCmdConfig);
+                        }
                         
                         if (isset($templateCmd)) {
-                            $cmdUpdated = "No";
+                            // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()."\n";
+                            fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()."\n" );
                             // id
                             // logicalId
-                            if ( isset($templateCmd['logicalId']) ) { $cmd->setLogicalId($templateCmd['logicalId']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "logicalId",              $templateCmd['logicalId'],                      $cmd->getLogicalId() ) )                            { $cmd->setLogicalId($templateCmd['logicalId']);        }
                             // generic_type: type for homebridge
-                            if ( isset($templateCmd['generic_type']) ) { $cmd->setGeneric_type($templateCmd['generic_type']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "generic_type",           $templateCmd['generic_type'],                   $cmd->getGeneric_type() ) )                         { $cmd->setGeneric_type($templateCmd['generic_type']);  }
                             // eqType: 'Abeille' so no change
                             // name: comme c est le critere de comparaison, ca reste le meme.
                             // order
-                            if ( isset($templateCmd['order']) ) { $cmd->setOrder($templateCmd['order']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "order",                  $templateCmd['order'],                          $cmd->getOrder() ) )                                { $cmd->setOrder($templateCmd['order']);                }
                             // type: on va considere que ca ne change pas
                             // subType: on va considere que ca ne change pas
                             // eqLogic_id: on va considere que ca ne change pas
                             // isHistorized
-                            if ( isset($templateCmd['isHistorized']) ) { $cmd->setIsHistorized($templateCmd['isHistorized']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "isHistorized",           $templateCmd['isHistorized'],                   $cmd->getIsHistorized() ) )                         { $cmd->setIsHistorized($templateCmd['isHistorized']);  }
                             // unite
-                            if ( isset($templateCmd['unite']) ) { $cmd->setUnite($templateCmd['isHistorized']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "unite",                  $templateCmd['unite'],                          $cmd->getUnite() ) )                                { $cmd->setUnite($templateCmd['unite']);                }
                             // configuration
                             // topic
-                            if ( isset($templateCmd['configuration']['topic']) ) { $cmd->setConfiguration('topic',$templateCmd['configuration']['topic']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdConfig['topic'],                    $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']);                  }
                             // AbeilleRejectValue
-                            if ( isset($templateCmd['configuration']['AbeilleRejectValue']) ) { $cmd->setConfiguration('AbeilleRejectValue',$templateCmd['configuration']['AbeilleRejectValue']);  $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "AbeilleRejectValue",     $templateCmdConfig['AbeilleRejectValue'],       $cmd->getConfiguration('AbeilleRejectValue') ) )    { $cmd->setConfiguration( 'AbeilleRejectValue',     $templateCmdConfig['AbeilleRejectValue']);     }
                             // returnStateValue
-                            if ( isset($templateCmd['configuration']['returnStateValue']) ) { $cmd->setConfiguration('returnStateValue',$templateCmd['configuration']['returnStateValue']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "returnStateValue",       $templateCmdConfig['returnStateValue'],         $cmd->getConfiguration('returnStateValue') ) )      { $cmd->setConfiguration( 'returnStateValue',       $templateCmdConfig['returnStateValue']);       }
                             // returnStateTime
-                            if ( isset($templateCmd['configuration']['returnStateTime']) ) { $cmd->setConfiguration('returnStateTime',$templateCmd['configuration']['returnStateTime']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "returnStateTime",        $templateCmdConfig['returnStateTime'],          $cmd->getConfiguration('returnStateTime') ) )       { $cmd->setConfiguration( 'returnStateTime',        $templateCmdConfig['returnStateTime']);        }
                             // repeatEventManagement
-                            if ( isset($templateCmd['configuration']['repeatEventManagement']) ) { $cmd->setConfiguration('repeatEventManagement',$templateCmd['configuration']['repeatEventManagement']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "repeatEventManagement",  $templateCmdConfig['repeatEventManagement'],    $cmd->getConfiguration('repeatEventManagement') ) ) { $cmd->setConfiguration( 'repeatEventManagement',  $templateCmdConfig['repeatEventManagement']);  }
                             // visibilityCategory
-                            if ( isset($templateCmd['configuration']['visibilityCategory']) ) { $cmd->setConfiguration('visibilityCategory',$templateCmd['configuration']['visibilityCategory']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "visibilityCategory",     $templateCmdConfig['visibilityCategory'],       $cmd->getConfiguration('visibilityCategory') ) )    { $cmd->setConfiguration( 'visibilityCategory',     $templateCmdConfig['visibilityCategory']);     }
                             // visibiltyTemplate
-                            if ( isset($templateCmd['configuration']['visibiltyTemplate']) ) { $cmd->setConfiguration('visibiltyTemplate',$templateCmd['configuration']['visibiltyTemplate']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "visibiltyTemplate",      $templateCmdConfig['visibiltyTemplate'],        $cmd->getConfiguration('visibiltyTemplate') ) )     { $cmd->setConfiguration( 'visibiltyTemplate',      $templateCmdConfig['visibiltyTemplate']);      }
                             // minValue
-                            if ( isset($templateCmd['configuration']['minValue']) ) { $cmd->setConfiguration('minValue',$templateCmd['configuration']['minValue']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "minValue",               $templateCmdConfig['minValue'],                 $cmd->getConfiguration('minValue') ) )              { $cmd->setConfiguration( 'minValue',               $templateCmdConfig['minValue']);               }
                             // maxValue
-                            if ( isset($templateCmd['configuration']['maxValue']) ) { $cmd->setConfiguration('unite',$templateCmd['configuration']['maxValue']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "maxValue",               $templateCmdConfig['maxValue'],                 $cmd->getConfiguration('maxValue') ) )              { $cmd->setConfiguration( 'maxValue',               $templateCmdConfig['maxValue']);               }
                             // calculValueOffset
-                            if ( isset($templateCmd['configuration']['calculValueOffset']) ) { $cmd->setConfiguration('calculValueOffset',$templateCmd['configuration']['calculValueOffset']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "calculValueOffset",      $templateCmdConfig['calculValueOffset'],        $cmd->getConfiguration('calculValueOffset') ) )     { $cmd->setConfiguration( 'calculValueOffset',      $templateCmdConfig['calculValueOffset']);      }
                             // template
                             // display
                             // html
                             // value
                             // isVisible
-                            if ( isset($templateCmd['isVisible']) ) { $cmd->setIsVisible($templateCmd['isVisible']); $cmdUpdated="Yes"; }
+                            if ( self::testUpdateCommand($fp, "isVisible",              $templateCmd['isVisible'],                      $cmd->getIsVisible() ) )                            { $cmd->setIsVisible($templateCmd['isVisible']);        }
                             // alert
                             
-                            if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated."\n";
-                            fwrite($fp, "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." - Updated: ".$cmdUpdated."\n" );
+                            $cmd->save();
+                            // $elogic->checkAndUpdateCmd($cmd, $value);
+                            
+
                         }
                         else {
-                            if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
-                            fwrite($fp, "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
+                            // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
+                            fwrite($fp, " --- Cmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
                             log::add('Abeille', 'debug', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template");
                             // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
                         } // if (isset($templateCmd))
@@ -661,8 +690,6 @@
                         }
                     }
                 }
-                // echo $rowArray->topic."\n";
-                // var_dump( $rowArray );
 
                 if ($sqlRequest == 1) {
                     $restartNeeded = 1;
@@ -2044,13 +2071,6 @@
 
                     $NE_Id = $this->getEqLogic_id();
                     $NE = $Abeilles->byId($NE_Id);
-
-                    // ob_start();
-                    // var_dump($NE);
-                    // $result = ob_get_clean();
-                    // log::add('Abeille', 'Debug', $result);
-
-                    // log::add('Abeille', 'Debug', $this->getConfiguration('topic') );
 
                     if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
                         $topic = $this->getConfiguration('topic');

@@ -184,9 +184,9 @@
                             if ( self::testUpdateCommand($fp, "unite",                  $templateCmd['unite'],                          $cmd->getUnite() ) )                                { $cmd->setUnite($templateCmd['unite']);                }
                             // configuration
                             // topic
-                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdId,                                 $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']);
+                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdId,                                 $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdId);
                                                                                                                                                                                                                                                 $cmd->setLogicalId($templateCmdId);
-                            }
+                                                                                                                                                                                                                                                                                               }
                             // AbeilleRejectValue
                             if ( self::testUpdateCommand($fp, "AbeilleRejectValue",     $templateCmdConfig['AbeilleRejectValue'],       $cmd->getConfiguration('AbeilleRejectValue') ) )    { $cmd->setConfiguration( 'AbeilleRejectValue',     $templateCmdConfig['AbeilleRejectValue']);     }
                             // returnStateValue

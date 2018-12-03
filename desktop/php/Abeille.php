@@ -180,7 +180,10 @@ $eqLogics = eqLogic::byType('Abeille');
 
         <input type="submit" name="submitButton" value="Add Group">
         <input type="submit" name="submitButton" value="Remove Group">
+        <input type="submit" name="submitButton" value="Get Group">
+        <br>
 
+        <input type="submit" name="submitButton" value="Apply Template">
 
         </div>
         </form>

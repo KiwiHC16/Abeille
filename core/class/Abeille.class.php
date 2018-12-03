@@ -77,20 +77,100 @@
             return 0;
         }
         
-        public static function updateConfigAbeille($_background = true) {
+        public static function updateConfigAbeille($abeilleIdFilter = false) {
             if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
             // log::remove('updateConfigAbeille');
             // log::add('Abeille_test', 'info', 'updateConfigAbeille Start');
             $fp = fopen('/var/www/html/log/Abeille_updateConfig', 'w');
             fwrite($fp, "Starting updateConfigAbeille\n");
+            if ($abeilleId) {
+                fwrite($fp, "Device Id: ".$abeilleId."\n");
+            }
             
-            $cmds = cmd::all();
-            foreach ( $cmds as $cmdId=>$cmd ) {
-                if ( $cmd->getName() == "nom" ) {
-                    $templateName = $cmd->execCmd();
-                    $templateName = str_replace("lumi.","",$templateName);
-                    $abeille = abeille::byId( $cmd->getEqLogic_id() );
+            // $cmds = cmd::all();
+            // foreach ( $cmds as $cmdId=>$cmd ) {
+            $abeilles = Abeille::byType('Abeille');
+            foreach ( $abeilles as $abeilleNumber=>$abeille ) {
+                if ( (($abeilleIdFilter==false) || ($abeilleIdFilter==$abeille->getId())) && ($abeille->getName()!='Ruche') ) { // $cmd->getEqLogic_id()
+                    fwrite($fp, "Device Id en cours: ".$abeille->getId()."\n");
+                    // $templateName = $cmd->execCmd();
+                    // $templateName = str_replace("lumi.","",$templateName);
+                    unset( $templateName );
+                    /*
+                    if ( $abeille->getConfiguration('uniqueIdTemplate') ) {
+                        $templateName = $abeille->getConfiguration('uniqueIdTemplate');
+                    }
+                     */
+                    foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
+                        if ( $cmd->getName() == 'nom' ) {
+                            $templateName = $cmd->execCmd();
+                        }
+                    }
+                    if ( !isset($templateName)) {
+                        $iconeToTemplate = array (
+                                                  "CLA60RGBWOSRAM"=>"CLA60RGBWOSRAM",
+                                                  "OSRAMClassicA60RGBW"=>"ClassicA60RGBW",
+                                                  "OSRAMClassicA60Wclear-LIGHTIFY"=>"ClassicA60Wclear-LIGHTIFY",
+                                                  "Connectedoutlet"=>"Connectedoutlet",
+                                                  "ctrl_neutral1"=>"ctrl_neutral1",
+                                                  "ctrl_neutral2"=>"ctrl_neutral2",
+                                                  "Dimmerswitchwoneutral"=>"Dimmerswitchwoneutral",
+                                                  "GLEDOPTO"=>"GLEDOPTO",
+                                                  "GLEDOPTODualWhiteAndColor"=>"GL-S-004Z",
+                                                  "HueGo"=>"LLC020",
+                                                  "HueWhite"=>"LWB006",
+                                                  "HueWhite"=>"LWB010",
+                                                  "PAR1650TW"=>"PAR1650TW",
+                                                  "XiaomiPrise"=>"plug",
+                                                  "OsramLightify"=>"Plug01",
+                                                  "OsramLightifyplug01OutDoor"=>"plug01OutDoor",
+                                                  "XiaomiBouton"=>"remote.b1acn01",
+                                                  "XiaomiButtonSW861"=>"remote.b286acn01",
+                                                  "RWL021"=>"RWL021",
+                                                  "XiaomiButtonSW861"=>"sensor_86sw1",
+                                                  "XiaomiButtonSW861"=>"sensor_86sw2",
+                                                  "XiaomiButtonSW861"=>"sensor_86sw2Un",
+                                                  "sensor_cube"=>"sensor_cube",
+                                                  "sensor_cube"=>"sensor_cube.aqgl01",
+                                                  "XiaomiTemperatureRond"=>"sensor_ht",
+                                                  "XiaomiPorte1"=>"sensor_magnet",
+                                                  "XiaomiPorte"=>"sensor_magnet.aq2",
+                                                  "XiaomiInfraRouge"=>"sensor_motion",
+                                                  "XiaomiInfraRouge2"=>"sensor_motion.aq2",
+                                                  "XiaomiSensorGaz"=>"sensor_natgas",
+                                                  "XiaomiSensorSmoke"=>"sensor_smoke",
+                                                  "XiaomiBouton1"=>"sensor_switch",
+                                                  "XiaomiBouton"=>"sensor_switch.aq2",
+                                                  "Xiaomiwleak_aq1"=>"sensor_wleak.aq1",
+                                                  "Timer"=>"Timer",
+                                                  "TRADFRIbulbE14Wopch400lm"=>"TRADFRIbulbE14Wopch400lm",
+                                                  "IkeaTradfriBulbE14WSOpal400lm"=>"TRADFRIbulbE14WSopal400lm",
+                                                  "TRADFRIbulbE27CWSopal600lm"=>"TRADFRIbulbE27CWSopal600lm",
+                                                  "IkeaTradfriBulbE27Opal1000lm"=>"TRADFRIbulbE27opal1000lm",
+                                                  "IkeaTradfriBulbE27Opal1000lm"=>"TRADFRIbulbE27Wopal1000lm",
+                                                  "IkeaTradfriBulbE27WOpal1000lm2"=>"TRADFRIbulbE27Wopal1000lm2",
+                                                  "IkeaTRADFRIbulbE27WSopal980lm"=>"TRADFRIbulbE27WSopal980lm",
+                                                  "IkeaTradfriBulbGU10W400lm"=>"TRADFRIbulbGU10W400lm",
+                                                  "IkeaTRADFRIbulbGU10WS400lm"=>"TRADFRIbulbGU10WS400lm",
+                                                  "TRADFRIcontroloutlet"=>"TRADFRIcontroloutlet",
+                                                  "IkeaTradfriMotionSensor"=>"TRADFRImotionsensor",
+                                                  "IkeaTradfri5BtnRond"=>"TRADFRIremotecontrol",
+                                                  "TRADFRItransformer10W"=>"TRADFRItransformer10W",
+                                                  "TRADFRItransformer30W"=>"TRADFRItransformer30W",
+                                                  "IkeaTradfriDimmer"=>"TRADFRIwirelessdimmer",
+                                                  "XiaomiVibration"=>"vibration.aq1",
+                                                  "voletProFalux"=>"volet",
+                                                  "XiaomiTemperatureCarre"=>"weather",
+                                                  "ZLO-DimmableLight"=>"ZLO-DimmableLight",
+                                                  "ZLO-ExtendedColor"=>"ZLO-ExtendedColor",
+                                                  "ZLO-LTOSensor"=>"ZLO-LTOSensor",
+                                                  "ZLO-OccupancySensor"=>"ZLO-OccupancySensor"
+                                                  );
+                        $templateName = $iconeToTemplate[$abeille->getConfiguration( 'icone' )];
+                        
+                    }
+                    // $abeille = abeille::byId( $cmd->getEqLogic_id() );
                     $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
                     $templateJSON = json_encode( $template );
                     if ( isset($template[$templateName]['configuration']["defaultEP"]) ) {
@@ -103,9 +183,9 @@
                     $templateMain = $template[$templateName]; // passe par une variable intermediaire pour simplifier l ecriture
                     $templateMainConfig = $template[$templateName]['configuration']; // passe par une variable intermediaire pour simplifier l ecriture
                     
-                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n";
+                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n";
                     fwrite($fp, "-------------------------------------------------------------------\n");
-                    fwrite($fp, "Abeille Id: ".$cmd->getEqLogic_id()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
+                    fwrite($fp, "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
                     
                     
                     // id
@@ -2343,9 +2423,11 @@
                 break;
                 
             case "15":
-                $abeilles = Abeille::all();
+                $abeilles = Abeille::byType('Abeille');
                 foreach ( $abeilles as $abeilleId=>$abeille) {
-                    var_dump($abeille->getCmd());
+                    // var_dump($abeille->getCmd());
+                    // var_dump($abeille);
+                    echo $abeille->getId();
                     return;
                 }
                 break;

@@ -82,6 +82,38 @@
                 }
                 break;
             case 'Remove Group':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                    }
+                }
+                break;
+            case 'Get Group':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                    }
+                }
+                break;
+            case 'Apply Template':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        $deviceId = substr( $item, strpos($item,"-")+1 );
+                        // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        // $address = substr($device->getLogicalId(),8);
+                        // $EP = $device->getConfiguration('mainEP');
+                        // $client->publish('CmdAbeille/Ruche/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
+                        abeille::updateConfigAbeille( $deviceId );
+                        // abeille::updateConfigAbeille( );
+                    }
+                }
                 break;
         }
         

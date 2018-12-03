@@ -51,6 +51,6 @@ function updatelog(){
             });
 }
 
-setTimeout(updatelog,5000);
+setTimeout(updatelog,2000);
 
 </script>

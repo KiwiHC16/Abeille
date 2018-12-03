@@ -167,8 +167,8 @@
                             // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()."\n";
                             fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()."\n" );
                             // id
-                            // logicalId
-                            if ( self::testUpdateCommand($fp, "logicalId",              $templateCmd['logicalId'],                      $cmd->getLogicalId() ) )                            { $cmd->setLogicalId($templateCmd['logicalId']);        }
+                            // logicalId: sujet convert par les commande topic.
+                            // if ( self::testUpdateCommand($fp, "logicalId",              $templateCmd['logicalId'],                      $cmd->getLogicalId() ) )                            { $cmd->setLogicalId($templateCmd['logicalId']);        }
                             // generic_type: type for homebridge
                             if ( self::testUpdateCommand($fp, "generic_type",           $templateCmd['generic_type'],                   $cmd->getGeneric_type() ) )                         { $cmd->setGeneric_type($templateCmd['generic_type']);  }
                             // eqType: 'Abeille' so no change
@@ -184,7 +184,9 @@
                             if ( self::testUpdateCommand($fp, "unite",                  $templateCmd['unite'],                          $cmd->getUnite() ) )                                { $cmd->setUnite($templateCmd['unite']);                }
                             // configuration
                             // topic
-                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdConfig['topic'],                    $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']);                  }
+                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdId,                                 $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']);
+                                                                                                                                                                                                                                                $cmd->setLogicalId($templateCmdId);
+                            }
                             // AbeilleRejectValue
                             if ( self::testUpdateCommand($fp, "AbeilleRejectValue",     $templateCmdConfig['AbeilleRejectValue'],       $cmd->getConfiguration('AbeilleRejectValue') ) )    { $cmd->setConfiguration( 'AbeilleRejectValue',     $templateCmdConfig['AbeilleRejectValue']);     }
                             // returnStateValue

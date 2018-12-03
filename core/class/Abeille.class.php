@@ -107,6 +107,7 @@
                             $templateName = $cmd->execCmd();
                         }
                     }
+                    
                     if ( !isset($templateName)) {
                         $iconeToTemplate = array (
                                                   "CLA60RGBWOSRAM"=>"CLA60RGBWOSRAM",
@@ -170,6 +171,9 @@
                         $templateName = $iconeToTemplate[$abeille->getConfiguration( 'icone' )];
                         
                     }
+                    
+                    $templateName = str_replace("lumi.","",$templateName);
+                    
                     // $abeille = abeille::byId( $cmd->getEqLogic_id() );
                     $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
                     $templateJSON = json_encode( $template );

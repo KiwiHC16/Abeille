@@ -2,8 +2,9 @@
 
 == Version stable du 16/11/2018 (ou precedentes) => Version beta du xx/xx/xxxx
 
-Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suit une standardisation des templates doit être faite.
+Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suite une standardisation des templates doit être faite.
 Cela veut dire que tous les templates changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
+Prevoir du temps, avoir bien fait les backup, et prevoir d'avoir à faire quelques manipulations à la main.
 
 !!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!
 
@@ -20,6 +21,9 @@ Cela veut dire que tous les templates changent et que le objets dans Abeille/Jee
 === Solution pour les gros systèmes
 
 * Si la solution précédente demande trop de travail, on peut faire la mise à jour de la facon suivante. Attention, je ne peux pas tester toutes les combinaisons et des operations supplementaires seront certainement necessaires quand 90% aura ete fait automatiquement. 
+Il n'y a pas de moyen infaillible pour faire la correspondance entre une commande dans un modele et une commande dans jeedom. Le lien est fait soit par le nom dans la commande nom ou quand pas dispo par le nom de l'image utilisée pour le device. De meme pour les commande le nom est le moyen de faire le lien. Si vous avez fait des changements de nom, les commandes sortiront en erreur et cela demandera de mettre le nom de la commande dans le template le temp de la conversion. 
+Dans les versions suivantes, nous ne devrions plusa voir ce probleme car les commandes auront un Id unique et specifique.
+
 * Mettre à jour la plugin avec le market (ou github)
 * Vérifier la configuration du plugin et demarrer le plugin.
 * Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modeles"
@@ -28,5 +32,12 @@ Cela veut dire que tous les templates changent et que le objets dans Abeille/Jee
 * Si un équipement ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin->Protocol Domotique->Abeille selectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le details des operations faites et eventuellement voir ce qui n'est pas mis à jour.
 * vous allez trouver des messages: 
 - "parameter identical, no change" qui indique que rien n'a été fait sur ce parametre (deja à jour).
-- "parameter is not in the template, no change" qui indique que le parametre de l objet n'est pas trouvé dans le template. Soit il n'est plus necessaire et ne sera donc pas utilisé, soit vous l'avez changé et on le garde,...
-- "Cmd Name: nom ===================================> not found in template" qui indique qu'on ne trouve pas le template pour la commande et que donc la commande n'est pas mise à jour. Ca doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l objet et le recreer soit me joindre sur le forum. 
+- "parameter is not in the template, no change" qui indique que le parametre de l objet n'est pas trouvé dans le template. Soit il n'est plus necessaire et ne sera donc pas utilisé, soit vous l'avez changé et on le garde, soit jeedom a défini une valeur par defaut et c'est très bien ...
+- "Cmd Name: nom ===================================> not found in template" qui indique qu'on ne trouve pas le template pour la commande et que donc la commande n'est pas mise à jour. Ca doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l objet et le recreer soit me joindre sur le forum.
+* Equipements qui sont passés sans soucis sur ma prod:
+- Door Sensor V2 Xiaomi
+- 
+* Cas rencontrés:
+- plug xiaomi, une commande porte le nom "Manufacturer", doit être remplacé par "societe" et appliquer de nouveau "Apply Template"
+- interrupteurs muraux Xiaomi: si la mise a jour ne se fait, il faut malheuresement, supprimer et recréer.
+- door sensor xiaomi V2: une commande porte le nom "Last", doit être remplacé par "Time-Time"

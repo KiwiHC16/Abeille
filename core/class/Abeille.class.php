@@ -313,7 +313,7 @@
                         }
                         else {
                             // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
-                            fwrite($fp, " --- Cmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
+                            fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
                             log::add('Abeille', 'debug', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template");
                             // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
                         } // if (isset($templateCmd))

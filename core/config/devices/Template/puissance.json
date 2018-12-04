@@ -11,6 +11,7 @@
     "generic_type": "POWER",
     "template": "badge",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "historizeRound": "0",
       "maxValue": "2500",
       "minValue": "0",

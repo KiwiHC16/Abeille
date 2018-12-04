@@ -10,6 +10,7 @@
     "invertBinary": "1",
     "template": "presence",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "returnStateValue": "0",
       "returnStateTime": "1",
       "repeatEventManagement": "always",

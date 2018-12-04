@@ -9,6 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "identifySend",
       "request": "EP=#EP#&duration=0010",
       "visibilityCategory": "additionalCommand"

@@ -12,6 +12,7 @@
     "invertBinary": "0",
     "template": "AbeillePower",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "visibilityCategory": "Network"
     }
   }

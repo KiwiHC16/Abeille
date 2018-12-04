@@ -9,6 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "ReadAttributeRequest",
       "request": "EP=#EP#&clusterId=0008&attributeId=0000",
       "visibilityCategory": "additionalCommand"

@@ -11,6 +11,7 @@
     "template": "hydro3IMG",
     "units": "%",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "calculValueOffset": "#value#/100",
       "historizeRound": "0",
       "visibilityCategory": "All"

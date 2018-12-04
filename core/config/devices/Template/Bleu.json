@@ -7,6 +7,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "setColour",
       "request": "EP=#EP#&X=228F&Y=228F",
       "visibilityCategory": "All"

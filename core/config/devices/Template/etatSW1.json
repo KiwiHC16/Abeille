@@ -10,6 +10,7 @@
     "invertBinary": "1",
     "template": "light",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "visibilityCategory": "All"
     }
   }

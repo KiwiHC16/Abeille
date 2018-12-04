@@ -7,6 +7,7 @@
     "Type": "info",
     "subType": "numeric",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "repeatEventManagement": "always",
       "visibilityCategory": "All"
     },

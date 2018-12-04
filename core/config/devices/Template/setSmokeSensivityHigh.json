@@ -7,6 +7,7 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "WriteAttributeRequestVibration",
       "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04030000&repeat=3",
       "visibilityCategory": "Network"

@@ -11,6 +11,7 @@
     "template": "vuMeter",
     "units": "%",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "minValue": "0",
       "maxValue": "100",
       "historizeRound": "1",

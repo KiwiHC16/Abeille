@@ -9,6 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "setReport",
       "request": "targetEndpoint=#EP#&ClusterId=0006&AttributeId=0000&AttributeType=10",
       "visibilityCategory": "Network"

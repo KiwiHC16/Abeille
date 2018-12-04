@@ -6,6 +6,7 @@
       "automatism": "1"
     },
     "configuration": {
+	"uniqId": "5c065767c1829",
       "battery_type": "na",
       "icone": "Timer",
       "lastCommunicationTimeOut": "-1"
@@ -23,6 +24,7 @@
         "subType": "string",
         "template": "badge",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "visibilityCategory": "All"
         }
       },
@@ -36,6 +38,7 @@
         "subType": "string",
         "template": "badge",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "visibilityCategory": "All"
         }
       },
@@ -49,6 +52,7 @@
         "subType": "numeric",
         "template": "badge",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "historizeRound": "2",
           "visibilityCategory": "All"
         }
@@ -57,6 +61,7 @@
         "isVisible": 1,
         "Type": "action",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "request": "actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=60&RampDown=60&actionRamp=#put_the_cmd_here#",
           "topic": "CmdTimer/#addr#/TimerStart",
           "visibilityCategory": "All"
@@ -72,6 +77,7 @@
         "isVisible": 1,
         "Type": "action",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "request": "actionStop=#put_the_cmd_here#",
           "topic": "CmdTimer/#addr#/TimerStop",
           "visibilityCategory": "All"
@@ -87,6 +93,7 @@
         "isVisible": 1,
         "Type": "action",
         "configuration": {
+	"uniqId": "5c065767c1829",
           "request": "actionCancel=#put_the_cmd_here#",
           "topic": "CmdTimer/#addr#/TimerCancel",
           "visibilityCategory": "All"

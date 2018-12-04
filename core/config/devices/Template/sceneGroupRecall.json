@@ -9,6 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"
@@ -27,6 +28,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"
@@ -45,6 +47,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
+	"uniqId": "5c065767c1829",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"

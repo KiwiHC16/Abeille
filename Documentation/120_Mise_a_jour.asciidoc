@@ -25,3 +25,4 @@ Cela veut dire que tous les templates changent et que le objets dans Abeille/Jee
 * Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modeles"
 * 90% des objets devraient être à jour maintenant.
 
+* Si un équiepemtns ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin->Protocol Domotique->Abeille selectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le details de operations faites et eventuellement voir ce qui n'est pas mis à jour.

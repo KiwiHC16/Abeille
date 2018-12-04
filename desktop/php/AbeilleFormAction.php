@@ -126,6 +126,6 @@
         echo '<br>error: '.$e->getMessage();
     }
     echo "<br>Fin";
-    header ("location:http://abeille/index.php?v=d&m=Abeille&p=Abeille");
+    header ("location:/index.php?v=d&m=Abeille&p=Abeille");
     
     ?>

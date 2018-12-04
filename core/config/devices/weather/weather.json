@@ -1,12 +1,12 @@
 {
-  "lumi.weather": {
+  "weather": {
     "nameJeedom": "Xiaomi Temperature Carre",
     "timeout": "60",
     "Categorie": {
       "heating": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+      "uniqId": "5c065767c1829",
       "icone": "XiaomiTemperatureCarre",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"

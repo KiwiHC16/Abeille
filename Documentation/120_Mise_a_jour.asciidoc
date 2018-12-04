@@ -5,7 +5,9 @@
 Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suit une standardisation des templates doit être faite.
 Cela veut dire que tous les templates changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
 
-=== Premiere solution pour les petits systemes
+!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!
+
+=== Solution pour les petits systemes
 
 * Cela suppose que vous aller effacer (objets, historiques,...) toutes les données puis re-créer le réseau.
 * supprimer le plug in Abeille
@@ -14,3 +16,12 @@ Cela veut dire que tous les templates changent et que le objets dans Abeille/Jee
 * Demarrer le plugin
 * Mettre en mode inclusion
 * Appairer les devices.
+
+=== Solution pour les gros systèmes
+
+* Si la solution précédente demande trop de travail, on peut faire la mise à jour de la facon suivante. Attention, je ne peux pas tester toutes les combinaisons et des operations supplementaires seront certainement necessaires quand 90% aura ete fait automatiquement. 
+* Mettre à jour la plugin avec le market (ou github)
+* Vérifier la configuration du plugin et demarrer le plugin.
+* Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modeles"
+* 90% des objets devraient être à jour maintenant.
+

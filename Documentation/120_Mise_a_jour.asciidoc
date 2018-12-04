@@ -40,7 +40,8 @@ Dans les versions suivantes, nous ne devrions plusa voir ce probleme car les com
 - Telecommande Ikea 5 boutons
 - Xiaomi Presence V2
 - Xiaomi Bouton Carré V2
-- 
+- Xiaomi Temperature Carré
+
 
 * Cas rencontrés:
 - plug xiaomi, une commande porte le nom "Manufacturer", doit être remplacé par "societe" et appliquer de nouveau "Apply Template"

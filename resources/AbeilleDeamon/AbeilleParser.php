@@ -1791,7 +1791,7 @@
         }
 
         if (isset($data)) {
-            if ( $data=="lumi.sensor_86sw2Un" ) { $data=="lumi.sensor_86sw2" } // Verrue: getName = lumi.sensor_86sw2Un alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2
+            if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; } // Verrue: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
             mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
         }
         

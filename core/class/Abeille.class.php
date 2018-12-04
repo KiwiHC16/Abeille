@@ -97,10 +97,12 @@
                     // $templateName = $cmd->execCmd();
                     // $templateName = str_replace("lumi.","",$templateName);
                     unset( $templateName );
+                    
                     if ( $abeille->getConfiguration('uniqId') ) {
                         $templateId = $abeille->getConfiguration('uniqId');
                         // TODO : from $templateId identify $templateName
                     }
+                    
                     if ( !isset($templateName)) {
                         foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
                             if ( $cmd->getName() == 'nom' ) {
@@ -110,6 +112,9 @@
                             }
                         }
                     }
+
+                    if ( strpos($templateName, "sensor_86sw2")>2 ) { $templateName="lumi.sensor_86sw2"; }
+                    
                     if ( !isset($templateName)) {
                         $iconeToTemplate = array (
                                                   "CLA60RGBWOSRAM"=>"CLA60RGBWOSRAM",
@@ -129,11 +134,11 @@
                                                   "OsramLightify"=>"Plug01",
                                                   "OsramLightifyplug01OutDoor"=>"plug01OutDoor",
                                                   "XiaomiBouton"=>"remote.b1acn01",
-                                                  "XiaomiButtonSW861"=>"remote.b286acn01",
+                                                  // "XiaomiButtonSW861"=>"remote.b286acn01",
                                                   "RWL021"=>"RWL021",
                                                   // "XiaomiButtonSW861"=>"sensor_86sw1",
                                                   // "XiaomiButtonSW861"=>"sensor_86sw2",
-                                                  "XiaomiButtonSW861"=>"sensor_86sw2Un",
+                                                  "XiaomiButtonSW861"=>"sensor_86sw2",
                                                   "sensor_cube"=>"sensor_cube",
                                                   "sensor_cube"=>"sensor_cube.aqgl01",
                                                   "XiaomiTemperatureRond"=>"sensor_ht",
@@ -189,7 +194,7 @@
                     $templateMain = $template[$templateName]; // passe par une variable intermediaire pour simplifier l ecriture
                     $templateMainConfig = $template[$templateName]['configuration']; // passe par une variable intermediaire pour simplifier l ecriture
                     
-                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n";
+                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ->".$templateName."<-\n";
                     fwrite($fp, "-------------------------------------------------------------------\n");
                     fwrite($fp, "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
                     

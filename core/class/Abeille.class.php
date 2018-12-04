@@ -97,17 +97,19 @@
                     // $templateName = $cmd->execCmd();
                     // $templateName = str_replace("lumi.","",$templateName);
                     unset( $templateName );
-                    /*
-                    if ( $abeille->getConfiguration('uniqueIdTemplate') ) {
-                        $templateName = $abeille->getConfiguration('uniqueIdTemplate');
+                    if ( $abeille->getConfiguration('uniqId') ) {
+                        $templateId = $abeille->getConfiguration('uniqId');
+                        // TODO : from $templateId identify $templateName
                     }
-                     */
-                    foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
-                        if ( $cmd->getName() == 'nom' ) {
-                            $templateName = $cmd->execCmd();
+                    if ( !isset($templateName)) {
+                        foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
+                            if ( $cmd->getName() == 'nom' ) {
+                                if (strlen($cmd->execCmd())>1) {
+                                    $templateName = $cmd->execCmd();
+                                }
+                            }
                         }
                     }
-                    
                     if ( !isset($templateName)) {
                         $iconeToTemplate = array (
                                                   "CLA60RGBWOSRAM"=>"CLA60RGBWOSRAM",
@@ -129,8 +131,8 @@
                                                   "XiaomiBouton"=>"remote.b1acn01",
                                                   "XiaomiButtonSW861"=>"remote.b286acn01",
                                                   "RWL021"=>"RWL021",
-                                                  "XiaomiButtonSW861"=>"sensor_86sw1",
-                                                  "XiaomiButtonSW861"=>"sensor_86sw2",
+                                                  // "XiaomiButtonSW861"=>"sensor_86sw1",
+                                                  // "XiaomiButtonSW861"=>"sensor_86sw2",
                                                   "XiaomiButtonSW861"=>"sensor_86sw2Un",
                                                   "sensor_cube"=>"sensor_cube",
                                                   "sensor_cube"=>"sensor_cube.aqgl01",
@@ -205,6 +207,8 @@
                     // configuration
                     // topic
                     // type
+                    // uniqId
+                    if ( self::testUpdateCommand($fp, "uniqId", $templateMainConfig["uniqId"], $abeille->getConfiguration("uniqId") ) ) { $abeille->setConfiguration( "uniqId", $templateMainConfig["uniqId"] ); }
                     // icone
                     if ( self::testUpdateCommand($fp, "icone", $templateMainConfig["icone"], $abeille->getConfiguration("icone") ) ) { $abeille->setConfiguration( "icone", $templateMainConfig["icone"] ); }
                     // battery_type
@@ -1576,6 +1580,7 @@
                 $objetConfiguration = $objetDefSpecific["configuration"];
                 $elogic->setConfiguration('topic', $nodeid);
                 $elogic->setConfiguration('type', $type);
+                $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
                 $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
                 $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
                 $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);

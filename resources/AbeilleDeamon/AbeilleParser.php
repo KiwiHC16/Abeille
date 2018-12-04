@@ -1791,16 +1791,8 @@
         }
 
         if (isset($data)) {
-           /* if ( hexdec($EPoint) < 2 ) {
-                // deamonlog('debug', 'Data byte: '.$data);
-                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
-            }
-            else {
-            */
-                // Ceci est necessaire pour les Ep Src du Xiaomi Wall Plug
-                // Mais du coup il  faut changer les modeles de toutes les NE qui on un EP diff de 01.
-                mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
-            /*}*/
+            if ( $data=="lumi.sensor_86sw2Un" ) { $data=="lumi.sensor_86sw2" } // Verrue: getName = lumi.sensor_86sw2Un alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2
+            mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
         }
         
         // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE

@@ -25,4 +25,8 @@ Cela veut dire que tous les templates changent et que le objets dans Abeille/Jee
 * Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modeles"
 * 90% des objets devraient être à jour maintenant.
 
-* Si un équiepemtns ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin->Protocol Domotique->Abeille selectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le details de operations faites et eventuellement voir ce qui n'est pas mis à jour.
+* Si un équipement ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin->Protocol Domotique->Abeille selectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le details des operations faites et eventuellement voir ce qui n'est pas mis à jour.
+* vous allez trouver des messages: 
+- "parameter identical, no change" qui indique que rien n'a été fait sur ce parametre (deja à jour).
+- "parameter is not in the template, no change" qui indique que le parametre de l objet n'est pas trouvé dans le template. Soit il n'est plus necessaire et ne sera donc pas utilisé, soit vous l'avez changé et on le garde,...
+- "Cmd Name: nom ===================================> not found in template" qui indique qu'on ne trouve pas le template pour la commande et que donc la commande n'est pas mise à jour. Ca doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l objet et le recreer soit me joindre sur le forum. 

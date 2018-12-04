@@ -49,6 +49,8 @@ Mais attention car il y a un mais, tous les paramètres ne sont pas encore gér�
 
 == Editer JSON
 
+(Cette partie doit être mise à jour car les fichiers JSON ont beaucoup changés)
+
 Vous avez plusieurs façons pour éditer le fichier JSON.
 * La premiere est d'éditer le fichier sous format texte mais je ne vous le conseille pas car ce n'est pas facile à lire et à modifier (beaucoup de parentheses ouvrantes et fermantes qu'il faut absolument respecter)
 * Utiliser un éditeur JSON (il y en a plein sur internet).
@@ -68,6 +70,15 @@ Lorsqu'un objet est crée, une icône lui est associée. Lorsqu'un nouvel objet 
 Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire _plugins/Abeille/images/_ (500x500 px semble correct)
 
 image:images/Device_icone01.png[]
+
+== Mise a jour des fichiers JSON
+
+Vous pouvez mettre à jour les fichiers JSON depuis la page de configuration du plugin: menu->PLugin->Gestion des plugin->Abeille.
+Pour se faire, clic sur le bouton: "Mise a jour des modeles". Cela va télécharger les dernières versions sur votre systeme. Attention: si vous avez des JSON perso, ils seront effacés lors de cette opération. Les sauvegarder et les réinstallé après.
+
+Ensuite vous n'avez plus qu'a appliquer ces nouveau modèles en utilisant le bouton "Appliquer nouveaux modeles". 
+
+Vous pouvez aussi appliquer les nouveaux modeles que sur certains équipements en allant dans menu->plugin->Protocole domotique->Abeille, selectionnez les devices et clic qur "Apply Template".
 
 == Widget
 

@@ -180,6 +180,7 @@
                     }
                     
                     $templateName = str_replace("lumi.","",$templateName);
+                    $templateName = str_replace(" ","",$templateName);
                     
                     // $abeille = abeille::byId( $cmd->getEqLogic_id() );
                     $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );

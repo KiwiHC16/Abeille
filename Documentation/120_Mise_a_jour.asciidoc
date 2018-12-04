@@ -36,8 +36,17 @@ Dans les versions suivantes, nous ne devrions plusa voir ce probleme car les com
 - "Cmd Name: nom ===================================> not found in template" qui indique qu'on ne trouve pas le template pour la commande et que donc la commande n'est pas mise à jour. Ca doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l objet et le recreer soit me joindre sur le forum.
 * Equipements qui sont passés sans soucis sur ma prod:
 - Door Sensor V2 Xiaomi
+- Xiaomi Smoke
+- Telecommande Ikea 5 boutons
+- Xiaomi Presence V2
+- Xiaomi Bouton Carré V2
 - 
+
 * Cas rencontrés:
 - plug xiaomi, une commande porte le nom "Manufacturer", doit être remplacé par "societe" et appliquer de nouveau "Apply Template"
 - interrupteurs muraux Xiaomi: si la mise a jour ne se fait, il faut malheuresement, supprimer et recréer.
-- door sensor xiaomi V2: une commande porte le nom "Last", doit être remplacé par "Time-Time"
+- door sensor xiaomi V2 / xiaomi presence V1: une commande porte le nom "Last", doit être remplacé par "Time-Time", et "Last Stamp" par "Time-Stamp"
+
+
+- Temperature V2 Xiaomi y a du boulot !
+

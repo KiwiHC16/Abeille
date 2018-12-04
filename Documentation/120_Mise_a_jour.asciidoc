@@ -1,0 +1,16 @@
+= Mise a jour
+
+== Version stable du 16/11/2018 (ou precedentes) => Version beta du xx/xx/xxxx
+
+Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suit une standardisation des templates doit être faite.
+Cela veut dire que tous les templates changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
+
+=== Premiere solution pour les petits systemes
+
+* Cela suppose que vous aller effacer (objets, historiques,...) toutes les données puis re-créer le réseau.
+* supprimer le plug in Abeille
+* Installer le plug in Abeille depuis le market (ou github)
+* Activer et faire la configuration du plugin
+* Demarrer le plugin
+* Mettre en mode inclusion
+* Appairer les devices.

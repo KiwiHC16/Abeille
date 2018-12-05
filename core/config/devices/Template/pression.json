@@ -1,5 +1,5 @@
 {
-  "0403-0010": {
+  "0403-01-0010": {
     "isVisible": 1,
     "name": "Pression",
     "order": 5,
@@ -14,7 +14,7 @@
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-	"uniqId": "5c07c766247fc",
+      "uniqId": "5c07c766247fc",
       "calculValueOffset": "#value#/10",
       "historizeRound": "1",
       "visibilityCategory": "All"

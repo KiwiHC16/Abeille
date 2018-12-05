@@ -2,18 +2,15 @@
 
 (Version master en dev permanent).
 
-== Abeille pour Jeedom (Gateway ZiGate)
+== Plugin pour Jeedom (Gateway ZiGate)
 
 Plugin qui permet de piloter un réseau ZigBee depuis Jeedom par l'intermédiaire de la passerelle ZiGate.
 
 Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduction.adoc
 
-== Pour les développeurs, j'essaye de comprendre GitHub et je souhaite avoir le fonctionnement suivant:
+== Pour les développeurs
 
-* branche master : pour tous les développements en cours a condition que les pushs soient utilisables et "stabilisés" pour la phase de test.
-* branche beta: pour figer un développement et le mettre en test avant de passer en stable
-* branche stable: version stable
-* Dev en cours: autre branche
+Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/012_Dev.adoc
 
 == Systèmes Testés:
 

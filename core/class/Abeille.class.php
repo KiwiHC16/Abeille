@@ -219,6 +219,7 @@
                     if ( self::testUpdateCommand($fp, "icone", $templateMainConfig["icone"], $abeille->getConfiguration("icone") ) ) { $abeille->setConfiguration( "icone", $templateMainConfig["icone"] ); }
                     // battery_type
                     if ( self::testUpdateCommand($fp, "battery_type", $templateMainConfig["battery_type"], $abeille->getConfiguration("battery_type") ) ) { $abeille->setConfiguration( "battery_type", $templateMainConfig["battery_type"] ); }
+                    // Groupe
                     // mainEP
                     if ( self::testUpdateCommand($fp, "mainEP", $templateMainConfig["mainEP"], $abeille->getConfiguration("mainEP") ) ) { $abeille->setConfiguration( "mainEP", $templateMainConfig["mainEP"] ); }
                     // defaultEP
@@ -1594,6 +1595,9 @@
                 if (isset($objetConfiguration['battery_type'])) {
                     $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
                 }
+                if (isset($objetConfiguration['Groupe'])) {
+                    $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
+                }
                 if (isset($objetConfiguration['protocol'])) {
                     $elogic->setConfiguration('protocol', $objetConfiguration['protocol']);
                 }
@@ -2183,6 +2187,12 @@
 
                             }
                         }
+                    }
+                    
+                    /* ------------------------------ */
+                    // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn
+                    if ( strpos( $topic,"#addrGroup#" )>0 ) {
+                        $topic = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $topic );
                     }
 
                     /* ------------------------------ */

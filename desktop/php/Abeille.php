@@ -282,6 +282,15 @@ $eqLogics = eqLogic::byType('Abeille');
                             </div>
                         </div>
                                 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{Groupe}}</label>
+                            <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration"
+                                    data-l2key="Groupe"
+                                    placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
+                            </div>
+                        </div>
+                                
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>

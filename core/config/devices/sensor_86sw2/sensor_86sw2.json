@@ -7,16 +7,19 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662614e",
+      "uniqId": "5c07c7662614e",
       "icone": "XiaomiButtonSW861",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "SW",
-      "include2": "nom",
-      "include3": "etatSwitchDouble",
-      "include4": "Xiaomi-ff01"
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etatSwitchDouble",
+      "include4 2": "Batterie-Volt",
+      "include5": "Batterie-Pourcent",
+      "include6": "Xiaomi-ff01"
     }
   }
 }

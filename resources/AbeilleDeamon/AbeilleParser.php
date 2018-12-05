@@ -1964,7 +1964,7 @@
     
     function configureNE( $short ) {
         
-        $commandeConfiguration = array( 'BindShortToZigateBatterie', 'BindShortToZigateEtat', 'BindShortToZigateLevel', 'setReportEtat', 'setReportLevel');
+        $commandeConfiguration = array( 'BindToZigateBatterie', 'BindToZigateEtat', 'BindToZigateLevel', 'setReportEtat', 'setReportLevel');
         
         // $tyty = new Abeille();
         

@@ -282,6 +282,8 @@
                             if ( self::testUpdateCommand($fp, "topic",                  $templateCmdConfig['topic'],                                 $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']);
                                                                                                                                                                                                                                                 $cmd->setLogicalId($templateCmdId);
                                                                                                                                                                                                                                                                                                }
+                            // request
+                            if ( self::testUpdateCommand($fp, "request",                $templateCmdConfig['request'],                  $cmd->getConfiguration('request') ) )               { $cmd->setConfiguration( 'request',     $templateCmdConfig['request']);     }
                             // AbeilleRejectValue
                             if ( self::testUpdateCommand($fp, "AbeilleRejectValue",     $templateCmdConfig['AbeilleRejectValue'],       $cmd->getConfiguration('AbeilleRejectValue') ) )    { $cmd->setConfiguration( 'AbeilleRejectValue',     $templateCmdConfig['AbeilleRejectValue']);     }
                             // returnStateValue

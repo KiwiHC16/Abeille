@@ -29,6 +29,12 @@ $("#bt_addAbeilleAction").on('click', function(event) {
     $('#div_alert').showAlert({message: 'Affichage des commandes additionnelles mis en place', level: 'success'});
 });
 
+$("#bt_addAbeilleInfo").on('click', function(event) {
+                             var _cmd = {type: 'info'};
+                             addCmdToTable(_cmd);
+                             $('#div_alert').showAlert({message: 'Affichage des commandes additionnelles mis en place', level: 'success'});
+                             });
+
 $('#bt_healthAbeille').on('click', function () {
 	$('#md_modal').dialog({title: "{{Santé Abeille}}"});
 	$('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');

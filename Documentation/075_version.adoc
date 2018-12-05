@@ -6,6 +6,7 @@
 20181204
 
 - passage aux modeles standardisés (avec include)
+- les modeles standardisés permettent de modifier les equipement dans jeedom sans les effacer et donc sans perdre historque, scenarions associés,...
 - ajout des boutons pour appliquer de nouveau les modeles de device
 - introduction d'Id unique dans les template pour ne pas confondre les devices par la suite.
 

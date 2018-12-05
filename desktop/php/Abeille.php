@@ -103,7 +103,7 @@ $eqLogics = eqLogic::byType('Abeille');
         </div>
 
 
-        <legend><i class="fa fa-table"></i> {{Affichage Widget}}</legend>
+        <legend><i class="fa fa-commenting-o"></i> {{Affichage Widget}}</legend>
 
 <?php
     $parameters_info = Abeille::getParameters();
@@ -113,8 +113,8 @@ $eqLogics = eqLogic::byType('Abeille');
             <div class="cursor" id="bt_toggleAffichageNetwork" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
                     <?php
-                        if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 5em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 5em;color:#767676;"></i>'; }
+                        if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
                         ?>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network</center></span>
@@ -123,8 +123,8 @@ $eqLogics = eqLogic::byType('Abeille');
             <div class="cursor" id="bt_toggleAffichageTime" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
                     <?php
-                        if ($parameters_info["affichageTime"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 5em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 5em;color:#767676;"></i>'; }
+                        if ($parameters_info["affichageTime"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
                         ?>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Time</center></span>
@@ -133,8 +133,8 @@ $eqLogics = eqLogic::byType('Abeille');
             <div class="cursor" id="bt_toggleAffichageAdditionalCommand" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
                     <?php
-                        if ($parameters_info["affichageCmdAdd"] == 'Y') {  echo '<i class="fa fa-check-square-o" style="font-size : 5em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 5em;color:#767676;"></i>'; }
+                        if ($parameters_info["affichageCmdAdd"] == 'Y') {  echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
                         ?>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
@@ -143,6 +143,8 @@ $eqLogics = eqLogic::byType('Abeille');
 
 
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
+
+
         <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
         <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
 
@@ -154,7 +156,7 @@ $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
                 echo '<div>';
-                echo '<center><input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br></center>';
+                echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br>';
                 echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
                 echo "<center>";
                 $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
@@ -171,20 +173,53 @@ $eqLogics = eqLogic::byType('Abeille');
                 echo '</div>';
             }
             ?>
-
-
         </div>
-        <hr>
-        <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Groupe Id</label>
-        <input type="text" name="group">
 
-        <input type="submit" name="submitButton" value="Add Group">
-        <input type="submit" name="submitButton" value="Remove Group">
-        <input type="submit" name="submitButton" value="Get Group">
-        <br>
+        <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 
-        <input type="submit" name="submitButton" value="Apply Template">
 
+        <table>
+            <tr>
+                <td>
+                    Groupe
+                </td>
+            </tr><tr>
+                <td>
+                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
+                    <input type="text" name="group">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Add Group">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Remove Group">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Get Group">
+                </td>
+            </tr><tr>
+                <td>
+                    Modele
+                </td>
+            </tr><tr>
+                <td>
+                    <input type="submit" name="submitButton" value="Apply Template">
+                </td>
+            </tr>
+            </tr><tr>
+                <td>
+                    Widget Properties
+                </td>
+            </tr><tr>
+                <td>
+                    Dimension
+                </td><td>
+                    <input type="text" name="largeur">
+                </td><td>
+                <input type="text" name="hauteur">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Set Size">
+                </td>
+            </tr>
+
+        </table>
         </div>
         </form>
 

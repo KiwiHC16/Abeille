@@ -1,12 +1,12 @@
 {
-  "Classic A60 RGBW": {
+  "ClassicA60RGBW": {
     "nameJeedom": "Classic A60 RGB W",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c766205c5",
+      "uniqId": "5c07c766205c5",
       "icone": "OSRAMClassicA60RGBW",
       "mainEP": "#EP#"
     },

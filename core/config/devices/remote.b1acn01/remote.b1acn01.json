@@ -1,5 +1,5 @@
 {
-  "lumi.remote.b1acn01": {
+  "remote.b1acn01": {
     "nameJeedom": "Xiaomi Bouton Aqara 2 Copy",
     "battery_type": "1xCR2032",
     "Comment": "Bouton Carré V2 qui remonte le nom remote.b1acn01 alors qu il a la meme reference que sensor_switch.aq2",
@@ -8,7 +8,7 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625efb",
+      "uniqId": "5c07c76625efb",
       "icone": "XiaomiBouton",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"

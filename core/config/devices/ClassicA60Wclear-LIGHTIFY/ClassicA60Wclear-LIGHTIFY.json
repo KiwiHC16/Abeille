@@ -1,12 +1,12 @@
 {
-  "Classic A60 W clear - LIGHTIFY": {
+  "ClassicA60Wclear-LIGHTIFY": {
     "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620623",
+      "uniqId": "5c07c76620623",
       "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
       "mainEP": "#EP#"
     },

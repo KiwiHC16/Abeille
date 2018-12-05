@@ -6,7 +6,7 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+      "uniqId": "5c07c7662067c",
       "icone": "Connectedoutlet",
       "mainEP": "#EP#"
     },
@@ -26,7 +26,8 @@
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
       "include28": "setReportEtat",
-      "include11": "conso"
+      "include11": "conso",
+      "include11 2": "consobis"
     }
   }
 }

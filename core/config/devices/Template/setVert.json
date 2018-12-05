@@ -11,7 +11,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c766251f1",
       "topic": "setVert",
       "request": "#slider#",
       "visibilityCategory": "All"

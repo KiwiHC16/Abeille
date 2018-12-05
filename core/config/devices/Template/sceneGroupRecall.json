@@ -9,7 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624a3e",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"
@@ -28,7 +28,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624a3e",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"
@@ -47,7 +47,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624a3e",
       "topic": "CmdAbeille/#addrGroup#/sceneGroupRecall",
       "request": "(MettreNumeroDeSceneIci)",
       "visibilityCategory": "All"

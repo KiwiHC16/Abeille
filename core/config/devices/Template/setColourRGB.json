@@ -7,7 +7,7 @@
     "Type": "action",
     "subType": "message",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624c73",
       "topic": "setColourRGB",
       "request": "#title#",
       "visibilityCategory": "All"

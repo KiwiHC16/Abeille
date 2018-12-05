@@ -5,7 +5,7 @@
       "security": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76625b0a",
       "icone": "ZLO-OccupancySensor",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"

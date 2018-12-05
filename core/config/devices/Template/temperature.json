@@ -10,7 +10,7 @@
     "invertBinary": "0",
     "template": "tempIMG",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76625440",
       "calculValueOffset": "#value#/100",
       "historizeRound": "1",
       "visibilityCategory": "All"

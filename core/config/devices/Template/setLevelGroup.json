@@ -9,7 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624d5e",
       "topic": "CmdAbeille/#addrGroup#/setLevelGroup",
       "request": "Level=#slider#&duration=01",
       "visibilityCategory": "All"

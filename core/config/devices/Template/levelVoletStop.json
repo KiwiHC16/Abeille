@@ -13,7 +13,7 @@
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76624159",
       "topic": "setLevelStop",
       "request": "1",
       "visibilityCategory": "All"

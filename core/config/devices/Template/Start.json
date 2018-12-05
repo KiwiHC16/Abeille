@@ -3,7 +3,7 @@
     "isVisible": 1,
     "Type": "action",
     "configuration": {
-      "uniqId": "5c065767c1829",
+      "uniqId": "5c07c7662248b",
       "request": "actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=60&RampDown=60&actionRamp=#put_the_cmd_here#",
       "topic": "CmdTimer/#addr#/TimerStart",
       "visibilityCategory": "All"

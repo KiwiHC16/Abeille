@@ -11,7 +11,7 @@
     "template": "vuMeter",
     "units": "%",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c7662165e",
       "minValue": "0",
       "maxValue": "100",
       "visibilityCategory": "All"

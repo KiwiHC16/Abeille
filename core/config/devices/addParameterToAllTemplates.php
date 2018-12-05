@@ -40,22 +40,23 @@
     function processFiles( $folder, $textOrg, $textNew ) {
         global $fileList;
         
+        $extensionFilter = ".json";
+        
+        // Cleanup
         $textNew = str_replace( '\n', "\n", $textNew);
         $textNew = str_replace( '\t', "\t", $textNew);
-        $textNew = str_replace( 'UNIQUEID', uniqid(), $textNew);
-        // recursiveScan('/var/www/html/plugins/Abeille/core/config/devices');
+        
         recursiveScan( $folder );
-        // echo "\n\n";
-        // var_dump($fileList);
-        $extensionFilter = ".json";
+
         foreach ( $fileList as $file ) {
             if ( substr( $file, -strlen($extensionFilter)) == $extensionFilter ) {
                 echo $file."\n";
                 $templateJSON = file_get_contents($file);
                 
+                $textNewToUse = str_replace( 'UNIQUEID', uniqid(), $textNew);
                 echo str_replace( $textOrg, $textNew, $templateJSON );
                 
-                file_put_contents( $file.".new", str_replace( $textOrg, $textNew, $templateJSON ) );
+                file_put_contents( $file.".new", str_replace( $textOrg, $textNewToUse, $templateJSON ) );
             }
         }
     }

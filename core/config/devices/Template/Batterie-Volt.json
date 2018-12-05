@@ -10,7 +10,7 @@
     "template": "vuMeter",
     "unite": "V",
     "configuration": {
-	"uniqId": "5c065767c1829",
+	"uniqId": "5c07c76621771",
       "calculValueOffset": "#value#/1000",
       "minValue": "0",
       "maxValue": "3.3",

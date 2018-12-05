@@ -1,21 +1,22 @@
 {
-  "000C-02-0055": {
-    "isVisible": 0,
+  "tbd---puissance--": {
+    "isVisible": 1,
     "Type": "info",
     "invertBinary": "0",
     "isHistorized": "1",
-    "name": "Puissance Inst",
+    "name": "Puissance",
     "units": "W",
-    "order": 20,
+    "order": 17,
     "subType": "numeric",
     "generic_type": "POWER",
     "template": "badge",
     "configuration": {
-	"uniqId": "5c07c766249c9",
+      "uniqId": "5c065767c182a",
+      "repeatEventManagement": "always",
       "historizeRound": "0",
       "maxValue": "2500",
       "minValue": "0",
-      "visibilityCategory": "additionalCommand"
+      "visibilityCategory": "All"
     }
   }
 }

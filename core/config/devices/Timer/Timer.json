@@ -13,7 +13,7 @@
     },
     "Commandes": {
       "include1": "nom",
-      "include2": "etat",
+      "include2": "etatTimer",
       "include2 2": "Var-Duration",
       "include2 2 2": "Var-ExpiryTime",
       "include2 2 2 2": "Var-RampUpDown",

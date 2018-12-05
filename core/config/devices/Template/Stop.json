@@ -4,7 +4,7 @@
     "Type": "action",
     "configuration": {
       "uniqId": "5c07c76622510",
-      "request": "actionStop=#put_the_cmd_here#",
+      "request": "actionStop=#TimerActionStop#",
       "topic": "CmdTimer/#addr#/TimerStop",
       "visibilityCategory": "All"
     },

@@ -2010,7 +2010,7 @@
         public static function publishMosquitto($_id, $_subject, $_message, $_retain)
         {
             $parameters_info = self::getParameters();
-            log::add('Abeille', 'debug', 'Envoi du message '.$_message.' vers '.$_subject);
+            log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.$_subject);
             $publish = new Mosquitto\Client();
 
             $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
@@ -2196,14 +2196,60 @@
                     if ( strpos( $topic,"#addrGroup#" )>0 ) {
                         $topic = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $topic );
                     }
-
-                    /* ------------------------------ */
-                    // Je fais les remplacement dans les parametres
-
+                    
+                    // -------------------------------------------------------------------------
+                    // Process Request
+                    $request = $this->getConfiguration('request', '1');
                     // request: c'est le payload dans la page de configuration pour une commande
                     // C est les parametres de la commande pour la zigate
-                    $request = $this->getConfiguration('request', '1');
-
+                    
+                    /* ------------------------------ */
+                    // Je fais les remplacement pour le timer
+                    if ( strpos( $request,"#TimerActionStart#" )>0 ) {
+                        $request = str_replace( "#TimerActionStart#", $NE->getConfiguration("TimerActionStart"), $request );
+                    }
+                    
+                    if ( strpos( $request,"#TimerDuration#" )>0 ) {
+                        if ( $NE->getConfiguration("TimerDuration") ) {
+                            $request = str_replace( "#TimerDuration#", $NE->getConfiguration("TimerDuration"), $request );
+                        }
+                        else {
+                            $request = str_replace( "#TimerDuration#", "60", $request );
+                        }
+                    }
+                    
+                    if ( strpos( $request,"#TimerRampUp#" )>0 ) {
+                        if ( $NE->getConfiguration("TimerRampUp") ) {
+                            $request = str_replace( "#TimerRampUp#", $NE->getConfiguration("TimerRampUp"), $request );
+                        }
+                        else {
+                            $request = str_replace( "#TimerRampUp#", "1", $request  );
+                        }
+                    }
+                    
+                    if ( strpos( $request,"#TimerRampDown#" )>0 ) {
+                        if ( $NE->getConfiguration("TimerRampDown") ) {
+                            $request = str_replace( "#TimerRampDown#", $NE->getConfiguration("TimerRampDown"), $request );
+                        }
+                        else {
+                            $request = str_replace( "#TimerRampDown#", "1", $request );
+                        }
+                    }
+                    
+                    if ( strpos( $request,"#TimerActionRamp#" )>0 ) {
+                        $request = str_replace( "#TimerActionRamp#", $NE->getConfiguration("TimerActionRamp"), $request );
+                    }
+                    
+                    if ( strpos( $request,"#TimerActionStop#" )>0 ) {
+                        $request = str_replace( "#TimerActionStop#", $NE->getConfiguration("TimerActionStop"), $request );
+                    }
+                    
+                    if ( strpos( $request,"#TimerActionCancel#" )>0 ) {
+                        $request = str_replace( "#TimerActionCancel#", $NE->getConfiguration("TimerActionCancel"), $request );
+                    }
+                    
+                    /* ------------------------------ */
+                    // Je fais les remplacement dans les parametres
                     if (strpos($request, '#addrIEEE#') > 0) {
                         $ruche = new Abeille();
                         $commandIEEE = new AbeilleCmd();
@@ -2247,6 +2293,7 @@
                             $request = str_replace('#message#', $_options['message'], $request);
                             break;
                     }
+                    
                     $request = str_replace('\\', '', jeedom::evaluateExpression($request));
                     $request = cmd::cmdToValue($request);
                     Abeille::publishMosquitto($this->getId(), $topic, $request, $this->getConfiguration('retain', '0'));

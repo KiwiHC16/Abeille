@@ -1,4 +1,44 @@
-Version 20180119
+
+20181205
+
+- Ajout d un parametre Groupe dans la configuration des devices pour avoir la groupe a commander. Il n'est plus besoin de changer les commandes une à une.
+
+20181204
+
+- passage aux modeles standardisés (avec include)
+- ajout des boutons pour appliquer de nouveau les modeles de device
+- introduction d'Id unique dans les template pour ne pas confondre les devices par la suite.
+
+20180112
+
+- Ampoule GLEDOPTO White intégrée
+
+20181130
+
+- Prise Ikea intégrée
+- Ajout des groupes aux devices selectionnés
+
+20181126
+
+- Ikea Transformer 30W intégré
+
+20181124
+
+- Correction TimeOut (en min)
+
+20181116
+
+- Activation/Desactivation d'un équipement suivant qu'il joint le réseau ou le quitte.
+- Rafraichi les informations de la page Health à l ouverture.
+
+20181105
+
+- Ajout OSRAM GU10
+
+...
+
+20180119
+
 - first version posted on github
 - inclus la creation des objets IKEA Bulb et Xiaomi Plug, Temperature Carre/rond, bouton et InfraRouge
 

@@ -16,6 +16,9 @@ Toute la documentation est à : https://github.com/KiwiHC16/Abeille/blob/master/
 
 Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/012_Dev.adoc
 
+[red]#Grosses modifications en cours sur le Master, il n'est pas stable. A ne pas utiliser pour l instant.#
+
+
 == Systèmes Testés:
 
 Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/015_Systemes_Testes.adoc

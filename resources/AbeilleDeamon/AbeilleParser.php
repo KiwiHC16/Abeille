@@ -30,7 +30,7 @@
      + * @param $data
      + * @param int $qos
      + */
-    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $EP=01, $AttributId, $data, $qos = 0)
+    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);

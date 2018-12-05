@@ -4,9 +4,9 @@
 
 == Configuration  des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).
+Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).
 
-Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA.
+Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s'allonger.
 
 L'idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des informations: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc#creation-des-objets).
 
@@ -60,6 +60,8 @@ Une fois ouvert le fichier peut ressembler à quelque chose comme ca:
 image:images/Capture_d_ecran_2018_01_29_a_21_15_55.png[]
 
 Vous retrouvez les même informations que celles vues ci dessus. Comparez les différents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l'équipement dans Jeedom et provoquez l'envoie du nom par l'objet.
+
+Les fichiers JSON ont évolués et intègrent des include. Les fichiers JSON include sont dans le répertoire Template. Ces fichiers permettent de définir les commandes individuellement et de ne pas avoir à tout réécrire à chaque fois.
 
 PS: si vous supprimez un équipement, n'oubliez pas que cela supprime aussi l'historique des valeurs.
 

@@ -53,7 +53,7 @@ Dans les versions suivantes, nous ne devrions plus avoir ce problème car les co
 
 === Secours
 
-* Si rien n'y fait, aucune des deux solutions precedente ne resout le soucis, vous pouvez probablement executer la méthode suivante (je ne l'ai pas testée):
+* Si rien n'y fait, aucune des deux solutions précedentes ne résout le soucis, vous pouvez probablement executer la méthode suivante su r un équipement (je ne l'ai pas testée):
 - supprimer la commande IEEE-Addr de votre objet.
 - Zigate en mode inclusion et re-appariage de l'équipement
 - un nouvel objet doit être créé.

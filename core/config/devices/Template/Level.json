@@ -8,7 +8,7 @@
     "subType": "numeric",
     "invertBinary": "0",
     "template": "",
-    "units": "%",
+    "unite": "%",
     "configuration": {
 	"uniqId": "5c07c76621e11",
       "minValue": "0",

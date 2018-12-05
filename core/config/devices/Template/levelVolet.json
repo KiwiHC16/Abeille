@@ -9,7 +9,7 @@
     "generic_type": "FLAP_SLIDER",
     "invertBinary": "0",
     "template": "",
-    "units": "%",
+    "unite": "%",
     "configuration": {
 	"uniqId": "5c07c766240c1",
       "minValue": "0",

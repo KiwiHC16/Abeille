@@ -9,7 +9,7 @@
     "generic_type": "HUMIDITY",
     "invertBinary": "0",
     "template": "hydro3IMG",
-    "units": "%",
+    "unite": "%",
     "configuration": {
 	"uniqId": "5c07c76623fbe",
       "calculValueOffset": "#value#/100",

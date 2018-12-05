@@ -9,7 +9,7 @@
     "generic_type": "BATTERY",
     "invertBinary": "0",
     "template": "vuMeter",
-    "units": "%",
+    "unite": "%",
     "configuration": {
 	"uniqId": "5c07c7662165e",
       "minValue": "0",

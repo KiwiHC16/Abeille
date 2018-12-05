@@ -9,7 +9,7 @@
     "generic_type": "LIGHT_STATE",
     "invertBinary": "0",
     "template": "",
-    "units": "%",
+    "unite": "%",
     "configuration": {
 	"uniqId": "5c07c7662403e",
       "minValue": "0",

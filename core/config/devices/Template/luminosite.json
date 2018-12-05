@@ -9,7 +9,7 @@
     "generic_type": "BRIGHTNESS",
     "invertBinary": "0",
     "template": "",
-    "units": "Lux",
+    "unite": "Lux",
     "configuration": {
 	"uniqId": "5c07c766242b1",
       "visibilityCategory": "All"

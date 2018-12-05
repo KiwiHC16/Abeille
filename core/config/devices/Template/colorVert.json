@@ -7,7 +7,7 @@
     "Type": "info",
     "subType": "numeric",
     "template": "badge",
-    "units": "",
+    "unite": "",
     "display": {
       "forceReturnLineAfter": "1"
     },

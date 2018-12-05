@@ -7,7 +7,7 @@
     "Type": "info",
     "subType": "numeric",
     "template": "badge",
-    "units": "",
+    "unite": "",
     "configuration": {
 	"uniqId": "5c07c76622d4f",
       "visibilityCategory": "All"

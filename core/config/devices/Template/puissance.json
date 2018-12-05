@@ -5,7 +5,7 @@
     "invertBinary": "0",
     "isHistorized": "1",
     "name": "Puissance Inst",
-    "units": "W",
+    "unite": "W",
     "order": 20,
     "subType": "numeric",
     "generic_type": "POWER",

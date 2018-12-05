@@ -1,0 +1,18 @@
+{
+  "Cancel": {
+    "isVisible": 1,
+    "Type": "action",
+    "configuration": {
+      "uniqId": "5c065767c1829",
+      "request": "actionCancel=#put_the_cmd_here#",
+      "topic": "CmdTimer/#addr#/TimerCancel",
+      "visibilityCategory": "All"
+    },
+    "invertBinary": "0",
+    "isHistorized": "0",
+    "name": "Cancel",
+    "order": 7,
+    "subType": "other",
+    "template": ""
+  }
+}

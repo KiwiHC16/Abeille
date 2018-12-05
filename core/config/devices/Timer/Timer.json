@@ -6,7 +6,7 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+      "uniqId": "5c065767c1829",
       "battery_type": "na",
       "icone": "Timer",
       "lastCommunicationTimeOut": "-1"
@@ -14,97 +14,12 @@
     "Commandes": {
       "include1": "nom",
       "include2": "etat",
-      "Var-Duration": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Duration",
-        "order": 2,
-        "subType": "string",
-        "template": "badge",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "visibilityCategory": "All"
-        }
-      },
-      "Var-ExpiryTime": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "ExpiryTime",
-        "order": 3,
-        "subType": "string",
-        "template": "badge",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "visibilityCategory": "All"
-        }
-      },
-      "Var-RampUpDown": {
-        "isVisible": 1,
-        "Type": "info",
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "RampUpDown",
-        "order": 4,
-        "subType": "numeric",
-        "template": "badge",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "historizeRound": "2",
-          "visibilityCategory": "All"
-        }
-      },
-      "Start": {
-        "isVisible": 1,
-        "Type": "action",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "request": "actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=60&RampDown=60&actionRamp=#put_the_cmd_here#",
-          "topic": "CmdTimer/#addr#/TimerStart",
-          "visibilityCategory": "All"
-        },
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Start",
-        "order": 5,
-        "subType": "other",
-        "template": ""
-      },
-      "Stop": {
-        "isVisible": 1,
-        "Type": "action",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "request": "actionStop=#put_the_cmd_here#",
-          "topic": "CmdTimer/#addr#/TimerStop",
-          "visibilityCategory": "All"
-        },
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Stop",
-        "order": 6,
-        "subType": "other",
-        "template": ""
-      },
-      "Cancel": {
-        "isVisible": 1,
-        "Type": "action",
-        "configuration": {
-	"uniqId": "5c065767c1829",
-          "request": "actionCancel=#put_the_cmd_here#",
-          "topic": "CmdTimer/#addr#/TimerCancel",
-          "visibilityCategory": "All"
-        },
-        "invertBinary": "0",
-        "isHistorized": "0",
-        "name": "Cancel",
-        "order": 7,
-        "subType": "other",
-        "template": ""
-      }
+      "include2 2": "Var-Duration",
+      "include2 2 2": "Var-ExpiryTime",
+      "include2 2 2 2": "Var-RampUpDown",
+      "include2 2 2 2 2": "Start",
+      "include2 2 2 2 2 2": "Stop",
+      "include2 2 2 2 2 2 2": "Cancel"
     }
   }
 }

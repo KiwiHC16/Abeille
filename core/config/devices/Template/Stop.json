@@ -1,0 +1,18 @@
+{
+  "Stop": {
+    "isVisible": 1,
+    "Type": "action",
+    "configuration": {
+      "uniqId": "5c065767c1829",
+      "request": "actionStop=#put_the_cmd_here#",
+      "topic": "CmdTimer/#addr#/TimerStop",
+      "visibilityCategory": "All"
+    },
+    "invertBinary": "0",
+    "isHistorized": "0",
+    "name": "Stop",
+    "order": 6,
+    "subType": "other",
+    "template": ""
+  }
+}

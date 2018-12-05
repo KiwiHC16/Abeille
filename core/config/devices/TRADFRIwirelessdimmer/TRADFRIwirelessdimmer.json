@@ -1,12 +1,12 @@
 {
-  "TRADFRI wireless dimmer": {
+  "TRADFRIwirelessdimmer": {
     "nameJeedom": "IKEA TRADFRI Dimmer Jaune",
     "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+      "uniqId": "5c065767c1829",
       "icone": "IkeaTradfriDimmer",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",

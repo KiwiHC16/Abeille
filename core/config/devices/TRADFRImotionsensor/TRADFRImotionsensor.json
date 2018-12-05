@@ -1,12 +1,12 @@
 {
-  "TRADFRI motion sensor": {
+  "TRADFRImotionsensor": {
     "nameJeedom": "IKEA TRADFRI Detecteur Presence (Type: E1525)",
     "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c065767c1829",
+      "uniqId": "5c065767c1829",
       "icone": "IkeaTradfriMotionSensor",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",

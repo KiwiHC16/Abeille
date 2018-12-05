@@ -1,5 +1,5 @@
 {
-  "0403-0014": {
+  "0403-01-0014": {
     "isVisible": 0,
     "name": "Scale",
     "order": 6,
@@ -9,8 +9,9 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76624950",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c76624950",
+      "visibilityCategory": "All",
+      "topic": "0403-01-0014"
     }
   }
 }

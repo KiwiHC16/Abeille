@@ -6,6 +6,8 @@ if (!isConnect('admin')) {
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
+$parameters_info = Abeille::getParameters();
+
 ?>
 
 <div class="row row-overflow">
@@ -25,9 +27,7 @@ $eqLogics = eqLogic::byType('Abeille');
         </div>
     </div>
 
-    <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay"
-         style="border-left: solid 1px #EEE; padding-left: 25px;">
-
+    <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
 
         <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
 
@@ -103,43 +103,40 @@ $eqLogics = eqLogic::byType('Abeille');
         </div>
 
 
+
         <legend><i class="fa fa-commenting-o"></i> {{Affichage Widget}}</legend>
 
-<?php
-    $parameters_info = Abeille::getParameters();
-?>
+        <div class="eqLogicThumbnailContainer">
+                <div class="cursor" id="bt_toggleAffichageNetwork" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+                    <center>
+                        <?php
+                            if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            ?>
+                    </center>
+                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network</center></span>
+                </div>
 
-    <div class="eqLogicThumbnailContainer">
-            <div class="cursor" id="bt_toggleAffichageNetwork" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <?php
-                        if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        ?>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network</center></span>
-            </div>
+                <div class="cursor" id="bt_toggleAffichageTime" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+                    <center>
+                        <?php
+                            if ($parameters_info["affichageTime"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            ?>
+                    </center>
+                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Time</center></span>
+                </div>
 
-            <div class="cursor" id="bt_toggleAffichageTime" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <?php
-                        if ($parameters_info["affichageTime"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        ?>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Time</center></span>
+                <div class="cursor" id="bt_toggleAffichageAdditionalCommand" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+                    <center>
+                        <?php
+                            if ($parameters_info["affichageCmdAdd"] == 'Y') {  echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            ?>
+                    </center>
+                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
+                </div>
             </div>
-
-            <div class="cursor" id="bt_toggleAffichageAdditionalCommand" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <?php
-                        if ($parameters_info["affichageCmdAdd"] == 'Y') {  echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                        ?>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
-            </div>
-        </div>
 
 
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
@@ -156,19 +153,19 @@ $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
                 echo '<div>';
-                echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br>';
-                echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
-                echo "<center>";
-                $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                if (in_array($test, $files, 0)) {
-                    $path = 'node_' . $eqLogic->getConfiguration('icone');
-                } else {
-                    $path = 'Abeille_icon';
-                }
-                echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
-                echo "</center>";
-                echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
-                echo '</div>';
+                    echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br>';
+                    echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
+                    echo "<center>";
+                    $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+                    if (in_array($test, $files, 0)) {
+                        $path = 'node_' . $eqLogic->getConfiguration('icone');
+                    } else {
+                        $path = 'Abeille_icon';
+                    }
+                    echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
+                    echo "</center>";
+                    echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
+                    echo '</div>';
                 
                 echo '</div>';
             }
@@ -220,7 +217,7 @@ $eqLogics = eqLogic::byType('Abeille');
             </tr>
 
         </table>
-        </div>
+
         </form>
 
     </div>
@@ -232,24 +229,16 @@ $eqLogics = eqLogic::byType('Abeille');
 
 
 
-    <div class="col-lg-10 col-md-9 col-sm-8 eqLogic"
-         style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
-        <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i>
-            {{Sauvegarder}}</a>
-        <a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i>
-            {{Supprimer}}</a>
-        <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i>
-            {{Configuration avancée}}</a>
+    <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px; display: none;">
+        <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i>   {{Sauvegarder}}</a>
+        <a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i>  {{Supprimer}}</a>
+        <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i>      {{Configuration avancée}}</a>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab"
-                                       data-action="returnToThumbnailDisplay"><i
-                            class="fa fa-arrow-circle-left"></i></a></li>
-            <li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab"
-                                                      data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a>
-            </li>
-            <li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i
-                            class="fa fa-list-alt"></i> {{Commandes}}</a></li>
+            <li role="presentation"                 ><a href="#"            class="eqLogicAction"   aria-controls="home"    role="tab" data-toggle="tab"  data-action="returnToThumbnailDisplay">       <i class="fa fa-arrow-circle-left"></i>                 </a></li>
+            <li role="presentation" class="active"  ><a href="#eqlogictab"                          aria-controls="home"    role="tab" data-toggle="tab">                                               <i class="fa fa-tachometer"></i>        {{Equipement}}  </a></li>
+            <li role="presentation"                 ><a href="#commandtab"                          aria-controls="profile" role="tab" data-toggle="tab">                                               <i class="fa fa-list-alt"></i>          {{Commandes}}   </a></li>
         </ul>
+
         <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
             <div role="tabpanel" class="tab-pane active" id="eqlogictab">
                 <form class="form-horizontal">
@@ -257,16 +246,14 @@ $eqLogics = eqLogic::byType('Abeille');
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
                             <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr form-control" data-l1key="id"
-                                       style="display : none;"/>
-                                <input type="text" class="eqLogicAttr form-control" data-l1key="name"
-                                       placeholder="{{Nom de l'équipement Abeille}}"/>
+                                <input type="text" class="eqLogicAttr form-control" data-l1key="id"     style="display : none;"                                                     />
+                                <input type="text" class="eqLogicAttr form-control" data-l1key="name"                               placeholder="{{Nom de l'équipement Abeille}}"   />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Objet parent}}</label>
                             <div class="col-sm-3">
-                                <select class="eqLogicAttr form-control" data-l1key="object_id">
+                                <select class="eqLogicAttr form-control"            data-l1key="object_id">
                                     <option value="">{{Aucun}}</option>
                                     <?php
                                     foreach (object::all() as $object) {
@@ -276,6 +263,7 @@ $eqLogics = eqLogic::byType('Abeille');
                                 </select>
                             </div>
                         </div>
+                                
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Catégorie}}</label>
                             <div class="col-sm-8">
@@ -289,42 +277,93 @@ $eqLogics = eqLogic::byType('Abeille');
 
                             </div>
                         </div>
+                                
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-8">
-                                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr"
-                                                                      data-l1key="isEnable" checked/>{{Activer}}</label>
-                                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr"
-                                                                      data-l1key="isVisible"
-                                                                      checked/>{{Visible}}</label>
+                                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable"     checked/>{{Activer}}</label>
+                                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible"    checked/>{{Visible}}</label>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">{{Type de piles}}</label>
+                        <div class="form-group" >
+                            <label class="col-sm-3 control-label" >{{Type de piles}}</label>
                             <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration"
-                                       data-l2key="battery_type"
-                                       placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type"  placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>
                             </div>
                         </div>
                          
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
                             <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="timeout"
-                                placeholder="{{En minutes}}"/>
+                                <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
                             </div>
                         </div>
                                 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Groupe}}</label>
                             <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration"
-                                    data-l2key="Groupe"
-                                    placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
                             </div>
                         </div>
+                              
+                        <div id="timer" style="display : none;">
+                                <hr>
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Timer}}</label>
+                                </div>
+                                
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{action sur demarrage}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStart" placeholder="#cmd#"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Duration}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerDuration" placeholder="secondes"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Ramp Up duration}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerRampUp" placeholder="secondes"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Ramp Down duration}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerRampDown" placeholder="secondes"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Ramp Action}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionRamp" placeholder="#cmd#"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Action sur arret}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStop" placeholder="#cmd#"/>
+                                </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Action sur annulation}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionCancel" placeholder="#cmd#"/>
+                                </div>
+                                </div>
+                        </div>
+                                
                                 
                         <hr>
                         <div class="form-group">
@@ -398,6 +437,7 @@ $eqLogics = eqLogic::byType('Abeille');
                     </fieldset>
                 </form>
             </div>
+                                
             <div role="tabpanel" class="tab-pane" id="commandtab">
 
                 <form class="form-horizontal">

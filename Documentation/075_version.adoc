@@ -1,6 +1,8 @@
 
 20181205
 
+[red]#Pour les téméraires qui utilisent le master, pouvez vous remonter les soucis avec pour objectif de faire une beta, puis une version stable. Surtout bien lire le doc 120_Mise_a_jour.adoc#
+
 - Ajout d un parametre Groupe dans la configuration des devices pour avoir la groupe a commander. Il n'est plus besoin de changer les commandes une à une.
 
 20181204

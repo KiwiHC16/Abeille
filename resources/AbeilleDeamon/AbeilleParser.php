@@ -30,13 +30,13 @@
      + * @param $data
      + * @param int $qos
      + */
-    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
+    function mqqtPublish($mqtt, $SrcAddr, $ClusterId, $EP=01, $AttributId, $data, $qos = 0)
     {
         // Abeille / short addr / Cluster ID - Attr ID -> data
         // deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data,               $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time(),              $qos);
-            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"), $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $qos);
+            $mqtt->publish("Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $qos);
     }
     
     function mqqtPublishFct($mqtt, $SrcAddr, $fct, $data, $qos = 0)
@@ -1360,9 +1360,10 @@
         deamonlog('debug', 'Syze of Attribute: '.substr($payload, 20, 4));
         deamonlog('debug', 'Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
 
-        // short addr / Cluster ID / Attr ID -> data
-        $SrcAddr = substr($payload, 2, 4);
-        $ClusterId = substr($payload, 8, 4);
+        // short addr / Cluster ID / EP / Attr ID -> data
+        $SrcAddr    = substr($payload, 2, 4);
+        $ClusterId  = substr($payload, 8, 4);
+        $EP         = substr($payload, 6, 2);
         $AttributId = substr($payload, 12, 4);
 
         // valeur hexadécimale	- type -> function
@@ -1390,7 +1391,7 @@
         //deamonlog('Data byte: '.$data);
         deamonlog('debug','Type; 0x8100;Data byte: '.$data);
 
-        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data, $qos);
     }
 
     function decode8101($mqtt, $payload, $ln, $qos)
@@ -1583,12 +1584,12 @@
                 // deamonlog('debug', 'Temperature: '  .$temperature);
                 // deamonlog('debug', 'Humidity: '     .$humidity);
 
-                mqqtPublish($mqtt, $SrcAddr, $ClusterId,$AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos );
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
-                mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,$qos);
-                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,$qos);
+                mqqtPublish($mqtt, $SrcAddr, '0402', '01-0000', $temperature,$qos);
+                mqqtPublish($mqtt, $SrcAddr, '0405', '01-0000', $humidity,$qos);
 
             }
 
@@ -1606,7 +1607,7 @@
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
@@ -1631,7 +1632,7 @@
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
@@ -1656,12 +1657,12 @@
                 // deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
                 // deamonlog('debug', 'ff01/25: Pression: '     .$pression);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
-                mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
-                mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0402', '01-0000', $temperature,      $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0405', '01-0000', $humidity,         $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0403', '0010', $pression / 10,    $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0403', '0000', $pression / 100,   $qos);
 
@@ -1675,7 +1676,7 @@
 
                 deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
@@ -1696,7 +1697,7 @@
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
@@ -1721,7 +1722,7 @@
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
 
-                mqqtPublish($mqtt,$SrcAddr,$ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
@@ -1748,7 +1749,7 @@
                 $consoValue = $conso[1];
 
                 // mqqtPublish($mqtt,$SrcAddr,$ClusterId,$AttributId,'Decoded as OnOff-Puissance-Conso',$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Xiaomi',  '0006-00-0000',        $onOff,             $qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Xiaomi',  '0006-00-0000',     $onOff,             $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
                 mqqtPublish($mqtt, $SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
                 
@@ -1877,11 +1878,12 @@
 
         $SrcAddr    = substr($payload,10, 4);
         $ClusterId  = substr($payload, 4, 4);
+        $EP         = substr($payload, 2, 2);
         $AttributId = "0000";
         $data       = substr($payload,14, 4);
 
         // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
-        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data, $qos);
 
     }
 

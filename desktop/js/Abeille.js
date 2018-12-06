@@ -112,52 +112,55 @@ $('#bt_createRemote').on('click', function () {
 
 $('#bt_toggleAffichageNetwork').on('click', function () {
                                    console.log("bt_toggleAffichageNetwork");
-                                   $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations réseau en cours de mise en place sur les widgets}}', level: 'success'});
+                                   $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations réseau en cours de mise en place sur les widgets, merci de patienter.}}', level: 'danger'});
                                    var xmlhttpMQTTAffichageNetwork = new XMLHttpRequest();
                                    xmlhttpMQTTAffichageNetwork.onreadystatechange = function() {
                                    if (this.readyState == 4 && this.status == 200) {
                                    xmlhttpMQTTAffichageNetwork = this.responseText;
+                                   $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                    }
                                    };
                                    
                                    xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageNetwork&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
-                                
                                    $("i", this).toggleClass("fa-check-square-o fa-square-o");
+                                   
                                    }
                                    );
 
 $('#bt_toggleAffichageTime').on('click', function () {
                                 console.log("bt_toggleAffichageTime");
-                                $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations Time en cours de mise en place sur les widgets}}', level: 'success'});
+                                $('#div_alert').showAlert({message: '{{Affichage/Retrait des informations Time en cours de mise en place sur les widgets, merci de patienter.}}', level: 'danger'});
                                 var xmlhttpMQTTAffichageTime = new XMLHttpRequest();
                                 xmlhttpMQTTAffichageTime.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
                                 xmlhttpMQTTAffichageTime = this.responseText;
+                                $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                 }
                                 };
                                 
                                 xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageTime&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
-                                
                                 $("i", this).toggleClass("fa-check-square-o fa-square-o");
+                                
                                 }
                                 );
 
 $('#bt_toggleAffichageAdditionalCommand').on('click', function () {
                                              console.log("bt_toggleAffichageAdditionalCommand");
-                                             $('#div_alert').showAlert({message: '{{Affichage/Retrait des Commandes Additionnelles en cours de mise en place sur les widgets}}', level: 'success'});
+                                             $('#div_alert').showAlert({message: '{{Affichage/Retrait des Commandes Additionnelles en cours de mise en place sur les widgets, merci de patienter.}}', level: 'danger'});
                                              var xmlhttpMQTTAffichageAdditionalCommand = new XMLHttpRequest();
                                              xmlhttpMQTTAffichageAdditionalCommand.onreadystatechange = function() {
                                              if (this.readyState == 4 && this.status == 200) {
                                              xmlhttpMQTTAffichageAdditionalCommand = this.responseText;
+                                             $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                              }
                                              };
                                         
                                              xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageCmdAdd&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
-                                             
                                              $("i", this).toggleClass("fa-check-square-o fa-square-o");
+                                             
                                              }
                                              );
 

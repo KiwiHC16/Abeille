@@ -104,7 +104,7 @@ $parameters_info = Abeille::getParameters();
                     <center>
                         <?php
                             if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
+                            else { echo '<div affichageNetwork><i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i></div>'; }
                             ?>
                     </center>
                     <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network</center></span>

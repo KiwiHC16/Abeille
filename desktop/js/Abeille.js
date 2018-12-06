@@ -120,7 +120,7 @@ $('#bt_toggleAffichageNetwork').on('click', function () {
                                    }
                                    };
                                    
-                                   xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageNetwork&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
+                                   xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageNetwork&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
                                 
                                    $("i", this).toggleClass("fa-check-square-o fa-square-o");
@@ -137,7 +137,7 @@ $('#bt_toggleAffichageTime').on('click', function () {
                                 }
                                 };
                                 
-                                xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageTime&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
+                                xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageTime&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
                                 
                                 $("i", this).toggleClass("fa-check-square-o fa-square-o");
@@ -154,7 +154,7 @@ $('#bt_toggleAffichageAdditionalCommand').on('click', function () {
                                              }
                                              };
                                         
-                                             xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageCmdAdd&payload=toggle", false); // False pour bloquer sur la recuperation du fichier
+                                             xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageCmdAdd&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
                                              
                                              $("i", this).toggleClass("fa-check-square-o fa-square-o");

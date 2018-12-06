@@ -33,7 +33,7 @@
     // asciidoc version
     echo '[cols="a"]'."\n";
     echo "|======="."\n";;
-    foreach ( $resultIcone as $values ) echo '|'.$values['name'].'|image::../images/node_'.$values['icone'].'.png[]'."\n";
+    foreach ( $resultIcone as $values ) echo '|'.$values['name'].'|image::../images/node_'.$values['icone'].'.png[200,200]'."\n";
     echo "|======="."\n";;
     }
     

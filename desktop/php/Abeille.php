@@ -40,13 +40,6 @@ $parameters_info = Abeille::getParameters();
                 <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Inclusion}}</center></span>
             </div>
 
-            <div class="cursor changeIncludeState card" id="bt_exclude" data-mode="0" data-state="1" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
-                <center>
-                    <i class="fa fa-sign-out fa-rotate-90" style="font-size : 6em;color:#FA5858;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#FA5858"><center>{{Exclusion (not implemented yet)}}</center></span>
-            </div>
-
             <div class="cursor" id="bt_createTimer" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
                 <center>
                     <img src="plugins/Abeille/images/node_Timer.png" height="105" width="95">
@@ -136,7 +129,7 @@ $parameters_info = Abeille::getParameters();
                     </center>
                     <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
                 </div>
-            </div>
+        </div>
 
 
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
@@ -200,6 +193,11 @@ $parameters_info = Abeille::getParameters();
                     <input type="submit" name="submitButton" value="Apply Template">
                 </td>
             </tr>
+            </tr>
+            </table>
+            
+            <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
+            <table>
             </tr><tr>
                 <td>
                     Widget Properties
@@ -208,11 +206,23 @@ $parameters_info = Abeille::getParameters();
                 <td>
                     Dimension
                 </td><td>
-                    <input type="text" name="largeur">
+                    <label control-label" data-toggle="tooltip" title="Largeur par defaut du widget que vous souhaitez.">Largeur</label>
+                    <input type="text" name="Largeur">
                 </td><td>
-                <input type="text" name="hauteur">
+                    <label control-label" data-toggle="tooltip" title="Hauteur par defaut du widget que vous souhaitez.">Largeur</label>
+                    <input type="text" name="Hauteur">
                 </td><td>
                     <input type="submit" name="submitButton" value="Set Size">
+                </td>
+            </tr><tr>
+                </td><td>
+                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeSelect"><i class="fa fa-minus-circle"></i>  {{Supprime les objets sélectionnés}}</a>
+                </td><td>
+                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeAll"><i class="fa fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
+                </td>
+            </tr><tr>
+                <td>
+                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="exclusion"><i class="fa fa-sign-out"></i>  {{Exclusion}}</a>
                 </td>
             </tr>
 
@@ -240,10 +250,12 @@ $parameters_info = Abeille::getParameters();
             <div role="tabpanel" class="tab-pane active" id="eqlogictab">
                 <form class="form-horizontal">
                     <fieldset>
+
+                        <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
                             <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr form-control" data-l1key="id"     style="display : none;"                                                     />
+                                
                                 <input type="text" class="eqLogicAttr form-control" data-l1key="name"                               placeholder="{{Nom de l'équipement Abeille}}"   />
                             </div>
                         </div>
@@ -283,6 +295,13 @@ $parameters_info = Abeille::getParameters();
                             </div>
                         </div>
 
+                                <hr>
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
+                                </div>
+                                </div>
                                 
                         <hr>
                         <div class="form-group">
@@ -308,6 +327,12 @@ $parameters_info = Abeille::getParameters();
                         </div>
                                 
                         <hr>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{Id}}</label>
+                            <div class="col-sm-3">
+                                <span class="eqLogicAttr" data-l1key="id"></span>
+                            </div>
+                        </div>
                                 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Topic Abeille}}</label>
@@ -315,14 +340,9 @@ $parameters_info = Abeille::getParameters();
                                 <span class="eqLogicAttr" data-l1key="configuration" data-l2key="topic"></span>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">{{Commandes par topic ou json}}</label>
-                            <div class="col-sm-3">
-                                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="type"></span>
-                            </div>
-                        </div>
-
+                                
+                                
+                        <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Icone}}</label>
                             <div class="col-sm-3">
@@ -360,6 +380,13 @@ $parameters_info = Abeille::getParameters();
             <div role="tabpanel" class="tab-pane" id="paramtab">
                 <form class="form-horizontal">
                     <fieldset>
+                                <hr>
+                                Pour l'instant cette page consolide l'ensemble des parametres spécifiques à tous les équipments. L'idée est de ne faire apparaitre (dès que je trouve la solution) que les paragraphes en relation avec l'objet sélectionné. Par exemple si vous avez sélectionné une ampoule le paragraphe "Equipement sur piles" ne devrait pas apparaitre. (Si quelqu'un sait comment faire, je suis preneur).
+                                <hr>
+                                <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Equipements sur piles.}}</label>
+                                </div>
+                                
                                 <div class="form-group" >
                                 <label class="col-sm-3 control-label" >{{Type de piles}}</label>
                                 <div class="col-sm-3">
@@ -367,11 +394,10 @@ $parameters_info = Abeille::getParameters();
                                 </div>
                                 </div>
                                 
+                                
+                                <hr>
                                 <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
-                                <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
-                                </div>
+                                <label class="col-sm-3 control-label">{{Telecommande}}</label>
                                 </div>
 
                                 <div class="form-group">

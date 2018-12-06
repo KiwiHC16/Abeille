@@ -1411,6 +1411,7 @@
                 $abeille->save();
                 $abeille->refresh();
             }
+            
             log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
             return;
         }

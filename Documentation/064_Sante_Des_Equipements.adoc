@@ -77,7 +77,7 @@ par exemple ici, une alarme est envoyée sur mon tél.
 
 Vous aurez un widget comme celui ci:
 
-image::images/Capture_d_ecran_2018_03_27_a_10_05_02.png[]
+image::../Documentationn/images/Capture_d_ecran_2018_03_27_a_10_05_02.png[]
 
 qui vous permettra d'avoir une alarme sur le niveau de batterie et sur la remontée de message ainsi que la liste des équipements en défaut.
 

@@ -50,6 +50,9 @@ $('#bt_networkAbeille').on('click', function () {
                            window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.html");
                            });
 
+$('#bt_listeCompatibilite').on('click', function () {
+                           window.open("plugins/Abeille/core/config/devices/listeCompatibilite.php");
+                           });
 
 $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').dialog({title: "{{Graph Abeille}}"});

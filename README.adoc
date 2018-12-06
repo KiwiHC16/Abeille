@@ -12,6 +12,10 @@ Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduct
 
 Toute la documentation est à : https://github.com/KiwiHC16/Abeille/blob/master/Documentation/
 
+== Equipements supportés
+
+Voir: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc
+
 == Pour les développeurs
 
 Voir https://github.com/KiwiHC16/Abeille/blob/master/Documentation/012_Dev.adoc

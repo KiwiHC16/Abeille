@@ -1,6 +1,13 @@
 
 = Versions / Change Log
 
+2018-12-07
+
+- Couleur Ampoule Ikea avec Homebridge
+- Couleur Ampoule OSRAM avec Homebridge
+- Couleur Ampoule Hue Go avec Homebridge
+
+
 2018-12-05
 
 [red]#Pour les téméraires qui utilisent le master, pouvez vous remonter les soucis avec pour objectif de faire une beta, puis une version stable. Surtout bien lire le doc 120_Mise_a_jour.adoc#

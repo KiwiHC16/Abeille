@@ -60,6 +60,21 @@ $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=NetworkGraph').dialog('open');
                               });
 
+$('#bt_startZigbee').on('click', function () {
+                    console.log("bt_startZigbee");
+                    var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                    xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    xmlhttpMQTTSendIncludeResult = this.responseText;
+                    }
+                    };
+                    
+                    xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_startNetwork&payload=StartNetwork", true); // False pour bloquer sur la recuperation du fichier
+                    xmlhttpMQTTSendInclude.send();
+                    $('#div_alert').showAlert({message: '{{Démarrage du réseau zigbee demandé.}}', level: 'success'});
+                    }
+                    );
+
 $('#bt_include').on('click', function () {
                     console.log("bt_include");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();

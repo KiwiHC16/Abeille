@@ -729,7 +729,21 @@
             $restartNeeded = 0;
 
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
-
+            
+            // ******************************************************************************************************************
+            // Remove temporary files
+            $DataFile = dirname(__FILE__).'/../../AbeilleLQI_MapData.json';
+            $FileLock = $DataFile . ".lock";
+            
+            if (file_exists($FileLock)) {
+                $content = file_get_contents($FileLock);
+                log::add('Abeille', 'debug', $DataFile.' content: '.$content);
+                if (strpos("_".$content, "done") != 1) {
+                    unlink( $FileLock );
+                    log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+                }
+            }
+            
             // ******************************************************************************************************************
             // Suite à la modification permettant de mettre a jour les objets sur changement de short address, il faut modifier les configurations des commandes en base de données.
             log::add(

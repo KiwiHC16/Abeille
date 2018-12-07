@@ -1,11 +1,12 @@
 {
   "ctrl_neutral1": {
     "nameJeedom": "Xiaomi Wall Switch w/o Neutral 1",
+    "Comment": "Reference: QBKG04LM",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625bd6",
+      "uniqId": "5c07c76625bd6",
       "icone": "ctrl_neutral1",
       "mainEP": "#EP#"
     },

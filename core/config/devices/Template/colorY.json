@@ -1,6 +1,6 @@
 {
   "0300-#EP#-0004": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "colorY",
     "order": 6,
     "isHistorized": "0",
@@ -12,8 +12,8 @@
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76622dfe",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c76622dfe",
+      "visibilityCategory": "additionalCommand"
     }
   }
 }

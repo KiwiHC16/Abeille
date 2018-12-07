@@ -1,16 +1,16 @@
 {
   "Colour RGB": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "RGB",
     "order": 39,
     "isHistorized": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
-	"uniqId": "5c07c76624c73",
+      "uniqId": "5c07c76624c73",
       "topic": "setColourRGB",
       "request": "#title#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "additionalCommand"
     },
     "display": {
       "forceReturnLineAfter": "1",

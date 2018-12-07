@@ -1,16 +1,16 @@
 {
   "Colour": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "Colour",
     "order": 13,
     "isHistorized": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
-	"uniqId": "5c07c76621b07",
+      "uniqId": "5c07c76621b07",
       "topic": "setColour",
       "request": "X=#title#&Y=#message#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "additionalCommand"
     },
     "display": {
       "forceReturnLineAfter": "0",

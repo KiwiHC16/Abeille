@@ -43,7 +43,8 @@
             // deamonlog('warning','Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
             return;
         }
-
+        
+        deamonlog('info', '-----' );
         deamonlog('info', 'Msg Received: Topic: {'.$topic.'} => '.$msg);
 
         deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
@@ -456,14 +457,23 @@
                 }
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourRGB") {
+                
+                // Si message vient de Abeille alors le parametre est: RRVVBB
+                // Si le message vient de Homebridge: {"color":"#00FF11"}, j'extrais la partie interessante.
+                if ( strpos( $msg, "color" )>0 ) {
+                    $msg = substr( JSON_decode( $msg )->color, 1 );
+                }
+                
                 $rouge = hexdec(substr($msg,0,2));
                 $vert  = hexdec(substr($msg,2,2));
                 $bleu  = hexdec(substr($msg,4,2));
+                
                 deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
                 
                 $client->publish('Abeille/'.$address.'/colorRouge', $rouge*100/255, $qos);
-                $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255, $qos);
-                $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255, $qos);
+                $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255,  $qos);
+                $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255,  $qos);
+                $client->publish('Abeille/'.$address.'/ColourRGB',  $msg,           $qos);
                 
                 $Command = array(
                                  "setColourRGB" => "1",

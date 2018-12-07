@@ -2164,7 +2164,7 @@
     {
         public function execute($_options = null)
         {
-            // log::add('Abeille', 'Debug', 'execute function');
+            log::add('Abeille', 'Debug', 'execute function with ->'.json_encode($_options).'<-');
             switch ($this->getType()) {
                 case 'action' :
                     //

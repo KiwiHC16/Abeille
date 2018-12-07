@@ -1,6 +1,6 @@
 {
   "colorBleu": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "colorBleu",
     "order": 44,
     "isHistorized": "0",
@@ -12,8 +12,8 @@
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76622bac",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c76622bac",
+      "visibilityCategory": "additionalCommand"
     }
   }
 }

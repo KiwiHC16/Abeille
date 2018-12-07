@@ -1,18 +1,19 @@
 {
-  "colorRouge": {
+  "ColourRGB": {
     "isVisible": 0,
-    "name": "colorRouge",
+    "name": "ColourRGB",
     "order": 40,
     "isHistorized": "0",
+    "generic_type": "LIGHT_COLOR",
     "Type": "info",
-    "subType": "numeric",
+    "subType": "string",
     "template": "badge",
     "unite": "",
     "display": {
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-      "uniqId": "5c07c76622c51",
+      "uniqId": "5c07a76622c51",
       "visibilityCategory": "additionalCommand"
     }
   }

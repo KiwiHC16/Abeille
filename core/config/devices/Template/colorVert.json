@@ -1,6 +1,6 @@
 {
   "colorVert": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "colorVert",
     "order": 42,
     "isHistorized": "0",
@@ -12,8 +12,8 @@
       "forceReturnLineAfter": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76622ce0",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c76622ce0",
+      "visibilityCategory": "additionalCommand"
     }
   }
 }

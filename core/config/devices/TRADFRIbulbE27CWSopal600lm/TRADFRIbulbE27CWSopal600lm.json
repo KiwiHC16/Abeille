@@ -6,7 +6,7 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620ce7",
+      "uniqId": "5c07c76620ce7",
       "icone": "TRADFRIbulbE27CWSopal600lm",
       "mainEP": "#EP#"
     },
@@ -40,7 +40,9 @@
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
       "include29": "setReportLevel",
+      "include12 2": "ColourRGB",
       "include30": "setColourRGB",
+      "include30 2": "setRGB",
       "include31": "colorRouge",
       "include32": "setRouge",
       "include33": "colorVert",

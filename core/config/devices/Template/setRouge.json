@@ -1,20 +1,20 @@
 {
   "setRouge": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "setRouge",
     "order": 41,
     "isHistorized": "0",
     "Type": "action",
     "subType": "slider",
-    "generic_type": "LIGHT_SLIDER",
+    "generic_type": "DONT",
     "value": "colorRouge",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c7662504b",
+      "uniqId": "5c07c7662504b",
       "topic": "setRouge",
       "request": "#slider#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "additionalCommand"
     },
     "display": {
       "forceReturnLineAfter": "1"

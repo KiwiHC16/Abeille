@@ -211,7 +211,10 @@ $parameters_info = Abeille::getParameters();
             </tr>
             </tr>
             </table>
-            
+
+            <br>
+            <br>
+
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
             <table>
             </tr><tr>

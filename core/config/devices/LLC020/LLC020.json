@@ -6,9 +6,10 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c766208a7",
+      "uniqId": "5c07c766208a7",
       "icone": "HueGo",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "0B"
     },
     "Commandes": {
       "include1": "nom",

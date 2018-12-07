@@ -457,23 +457,29 @@
                 }
                 //----------------------------------------------------------------------------
             } elseif ($action == "setColourRGB") {
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
                 
                 // Si message vient de Abeille alors le parametre est: RRVVBB
                 // Si le message vient de Homebridge: {"color":"#00FF11"}, j'extrais la partie interessante.
+                /*
                 if ( strpos( $msg, "color" )>0 ) {
                     $msg = substr( JSON_decode( $msg )->color, 1 );
                 }
+                */
                 
-                $rouge = hexdec(substr($msg,0,2));
-                $vert  = hexdec(substr($msg,2,2));
-                $bleu  = hexdec(substr($msg,4,2));
+                $rouge = hexdec(substr($parameters['color'],0,2));
+                $vert  = hexdec(substr($parameters['color'],2,2));
+                $bleu  = hexdec(substr($parameters['color'],4,2));
                 
                 deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
                 
-                $client->publish('Abeille/'.$address.'/colorRouge', $rouge*100/255, $qos);
-                $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255,  $qos);
-                $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255,  $qos);
-                $client->publish('Abeille/'.$address.'/ColourRGB',  $msg,           $qos);
+                $client->publish('Abeille/'.$address.'/colorRouge', $rouge*100/255,         $qos);
+                $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255,          $qos);
+                $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255,          $qos);
+                $client->publish('Abeille/'.$address.'/ColourRGB',  $parameters['color'],   $qos);
                 
                 $Command = array(
                                  "setColourRGB" => "1",
@@ -481,7 +487,7 @@
                                  "R" => $rouge,
                                  "G" => $vert,
                                  "B" => $bleu,
-                                 "destinationEndPoint" => "01",
+                                 "destinationEndPoint" => $parameters['EP'],
                                  );
                 //----------------------------------------------------------------------------
             } elseif ($action == "setRouge") {

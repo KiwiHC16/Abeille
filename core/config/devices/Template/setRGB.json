@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "5cd7c76624c73",
       "topic": "setColourRGB",
-      "request": "#color#",
+      "request": "EP=#EP#&color=#color#",
       "visibilityCategory": "All"
     },
     "display": {

@@ -6,9 +6,10 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662053f",
+      "uniqId": "5c07c7662053f",
       "icone": "CLA60RGBWOSRAM",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "03"
     },
     "Commandes": {
       "include1": "nom",
@@ -16,6 +17,8 @@
       "include3": "SW",
       "include4": "etatLight",
       "include5": "levelLight",
+      "include6": "colorX",
+      "include7": "colorY",
       "include8": "On",
       "include9": "Off",
       "include10": "Toggle",
@@ -25,6 +28,8 @@
       "include14": "Bleu",
       "include15": "Rouge",
       "include16": "Vert",
+      "include17": "getColorX",
+      "include18": "getColorY",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",
@@ -36,7 +41,9 @@
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
       "include29": "setReportLevel",
+      "include12 2": "ColourRGB",
       "include30": "setColourRGB",
+      "include30 2": "setRGB",
       "include31": "colorRouge",
       "include32": "setRouge",
       "include33": "colorVert",

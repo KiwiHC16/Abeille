@@ -8,7 +8,8 @@
     "configuration": {
       "uniqId": "5c07c766205c5",
       "icone": "OSRAMClassicA60RGBW",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "03"
     },
     "Commandes": {
       "include1": "nom",

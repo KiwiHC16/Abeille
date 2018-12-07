@@ -8,7 +8,8 @@
     "configuration": {
       "uniqId": "5c07c76620623",
       "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "03"
     },
     "Commandes": {
       "include1": "nom",

@@ -5,9 +5,10 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620aa8",
+      "uniqId": "5c07c76620aa8",
       "icone": "OsramLightify",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "03"
     },
     "Commandes": {
       "include1": "SW",

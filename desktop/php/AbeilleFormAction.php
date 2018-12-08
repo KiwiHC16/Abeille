@@ -77,7 +77,9 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
-                        $client->publish('CmdAbeille/Ruche/addGroup', 'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
+                        $client->publish('CmdAbeille/Ruche/addGroup',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
+                        sleep(1);
+                        $client->publish('CmdAbeille/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP, 0);
                     }
                 }
                 break;
@@ -88,6 +90,9 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
+                        sleep(1);
+                        $client->publish('CmdAbeille/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP, 0);
                     }
                 }
                 break;
@@ -98,6 +103,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP, 0);
                     }
                 }
                 break;

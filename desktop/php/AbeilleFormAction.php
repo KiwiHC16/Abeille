@@ -70,6 +70,8 @@
         echo "Action: ".$_POST['submitButton']."<br>";
         
         switch ($_POST['submitButton']) {
+            
+            // Group
             case 'Add Group':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
@@ -107,6 +109,36 @@
                     }
                 }
                 break;
+            
+            // Scene
+            case 'Store Scene':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/storeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupID'].'&sceneID='.$_POST['sceneID'], 0);
+                        
+                    }
+                }
+                break;
+                                         
+            case 'Recall Scene':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/recallScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupID'].'&sceneID='.$_POST['sceneID'], 0);
+                        
+                    }
+                }
+                break;
+                
+                
+            // Template
             case 'Apply Template':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {

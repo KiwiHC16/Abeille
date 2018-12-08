@@ -1,6 +1,10 @@
 
 = Versions / Change Log
 
+2018-12-08
+
+- Couleur Ampoule GLEDOPTO GU10 Couleur/White GL-S-003Z avec hombridge
+
 2018-12-07
 
 - Couleur Ampoule Ikea avec Homebridge

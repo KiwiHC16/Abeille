@@ -202,6 +202,26 @@ $parameters_info = Abeille::getParameters();
                 </td>
             </tr><tr>
                 <td>
+                    Scene
+                </td>
+            </tr><tr>
+                <td>
+                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
+                    <input type="text" name="groupID">
+                    <input type="text" name="sceneID">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Add Scene">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Remove Scene">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Get Scene">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Store Scene">
+                </td><td>
+                    <input type="submit" name="submitButton" value="Recall Scene">
+                </td>
+            </tr><tr>
+                <td>
                     Modele
                 </td>
             </tr><tr>

@@ -192,7 +192,7 @@ $parameters_info = Abeille::getParameters();
             </tr><tr>
                 <td>
                     <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-                    <input type="text" name="group">
+                    <input type="text" value="XXXX" name="group">
                 </td><td>
                     <input type="submit" name="submitButton" value="Add Group">
                 </td><td>
@@ -206,15 +206,16 @@ $parameters_info = Abeille::getParameters();
                 </td>
             </tr><tr>
                 <td>
-                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-                    <input type="text" name="groupID">
-                    <input type="text" name="sceneID">
+                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
+                    <input type="text" value="XXXX" name="groupID">
+                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Scene Id</label>
+                    <input type="text" value="YY" name="sceneID">
                 </td><td>
-                    <input type="submit" name="submitButton" value="Add Scene">
+
                 </td><td>
-                    <input type="submit" name="submitButton" value="Remove Scene">
+
                 </td><td>
-                    <input type="submit" name="submitButton" value="Get Scene">
+                    <input type="submit" name="submitButton" value="View Scene">
                 </td><td>
                     <input type="submit" name="submitButton" value="Store Scene">
                 </td><td>
@@ -236,6 +237,8 @@ $parameters_info = Abeille::getParameters();
             <br>
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
+<input type="submit" name="submitButton" value="Add Scene">
+<input type="submit" name="submitButton" value="Remove Scene">
             <table>
             </tr><tr>
                 <td>

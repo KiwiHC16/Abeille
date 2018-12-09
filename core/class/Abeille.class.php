@@ -507,7 +507,8 @@
         {
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
-
+            $eqLogics = self::byType('Abeille');
+            
             // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
             $parameters_info = self::getParameters();
             if ($parameters_info['onlyTimer'] == 'N') {
@@ -523,11 +524,26 @@
                     '0'
                 ); // 2018-10-06 03:13:31
             }
+            
+            // Rafraichie l etat poll = 1
+            log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            foreach ($eqLogics as $eqLogic) {
+                $address = explode("/", $eqLogic->getLogicalId())[1];
+                if (strlen($address) == 4) {
+                    if ($eqLogic->getConfiguration("poll") == "1") {
+                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
+                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
+                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+                    }
+                    
+                }
+            }
+            
             /**
              * Refresh health information
              */
             // log::add('Abeille', 'debug', '----------- Refresh health information');
-            $eqLogics = self::byType('Abeille');
+            //$eqLogics = self::byType('Abeille');
 
             foreach ($eqLogics as $eqLogic) {
 

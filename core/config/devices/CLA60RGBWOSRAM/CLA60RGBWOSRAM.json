@@ -9,7 +9,8 @@
       "uniqId": "5c07c7662053f",
       "icone": "CLA60RGBWOSRAM",
       "mainEP": "#EP#",
-      "defaultEP": "03"
+      "defaultEP": "03",
+      "poll": "1"
     },
     "Commandes": {
       "include1": "nom",

@@ -436,10 +436,10 @@
         // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
         mqqtPublish($mqtt, "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
         
-        $GLOBALS['NE'][$SrcAddr]['IEEE']    = $IEEE;
-        $GLOBALS['NE'][$SrcAddr]['capa']    = $capability;
-        $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']    = time();
-        $GLOBALS['NE'][$SrcAddr]['state']   = 'annonceReceived';
+        $GLOBALS['NE'][$SrcAddr]['IEEE']                    = $IEEE;
+        $GLOBALS['NE'][$SrcAddr]['capa']                    = $capability;
+        $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']     = time();
+        $GLOBALS['NE'][$SrcAddr]['state']                   = 'annonceReceived';
 
     }
 
@@ -1949,10 +1949,10 @@
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
-        if ( isset($abeille) ) {
+        if ( $abeille ) {
             foreach ( $getStates as $getState ) {
                 $cmd = $abeille->getCmd('action', $getState);
-                if ( isset($cmd) ) {
+                if ( $cmd ) {
                     deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
                     $cmd->execCmd();
                     sleep(2);
@@ -1968,14 +1968,12 @@
         
         $commandeConfiguration = array( 'BindToZigateBatterie', 'BindToZigateEtat', 'BindToZigateLevel', 'setReportEtat', 'setReportLevel');
         
-        // $tyty = new Abeille();
-        
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
-        if (isset($abeille)) {
+        if ( $abeille) {
             foreach ( $commandeConfiguration as $config ) {
                 $cmd = $abeille->getCmd('action', $config);
-                if (isset($cmd)) {
+                if ( $cmd ) {
                     deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
                     $cmd->execCmd();
                     sleep(2);
@@ -2017,7 +2015,7 @@
                 case 'annonceReceived':
                     if (!isset($NE[$short]['action'])) {
                         if ( (($infos['timeAnnonceReceived'])+5) < time() ) { // on attend 5s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
-                            deamonlog('debug',';Type; fct; processAnnonce ; Demande le EP de l equipement');
+                            deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le EP de l equipement');
                             $mqtt->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
                             $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
                         }
@@ -2026,7 +2024,7 @@
 
                 case 'EndPoint':
                     if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; Demande le modelIdentifier de l equipement');
+                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le nom de l equipement');
                         $mqtt->publish("CmdAbeille/Ruche/getName",      "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $mqtt->publish("CmdAbeille/Ruche/getLocation",  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
@@ -2035,8 +2033,8 @@
                     
                 case 'modelIdentifier':
                     if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; Demande le Location de l equipement');
-                        $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->location";
+                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Configure NE');
+                        $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
                         mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                         mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
                         configureNE($short);
@@ -2062,7 +2060,7 @@
                     
                 case 'configuration':
                     if ( $NE[$short]['action'] == "modelIdentifierReceived->configuration" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; Demande Current State Equipement qui doit etre cree');
+                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande Current State Equipement');
                         $GLOBALS['NE'][$short]['action']="configuration->currentState";
                         getNE($short);
                     }
@@ -2092,8 +2090,8 @@
     function cleanUpNE($NE, $mqtt, $qos) {
         if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
         foreach ( $NE as $short=>$infos ) {
-            if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['time']+60).' - ' . time() ); }
-            if ( ((($infos['time'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
+            if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
+            if ( ((($infos['timeAnnonceReceived'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
                 if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
                 mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                 mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);

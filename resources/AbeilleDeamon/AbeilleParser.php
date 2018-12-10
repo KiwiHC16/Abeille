@@ -911,14 +911,92 @@
         // <Out cluster list: data each entry is uint16_t> -> 4
         // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
 
+        $profileTable = array (
+                               'c05e'=>'ZLL Application Profile',
+                               '0104'=>'ZigBee Home Automation (ZHA)',
+        );
+        
+        $deviceInfo = array (
+                             'c05e' => array(
+                                             // Lighting devices
+                                             '0000'=>'On/Off light',
+                                             '0010'=>'On/Off plug-in unit',
+                                             '0100'=>'Dimmable light',
+                                             '0110'=>'Dimmable plug-in unit',
+                                             '0200'=>'Color light',
+                                             '0210'=>'Extended color light',
+                                             '0220'=>'Color temperature light',
+                                             // Conroller devices
+                                             '0800'=>'Color controller',
+                                             '0810'=>'Color scene controller',
+                                             '0820'=>'Non-color controller',
+                                             '0830'=>'Non-color scene controller',
+                                             '0840'=>'Control bridge',
+                                             '0850'=>'On/Off sensor',
+                                             ),
+                             '0104' => array(
+                                             '0000'=>'On/Off Switch',
+                                             '0001'=>'Level Control Switch',
+                                             '0002'=>'On/Off Output',
+                                             '0003'=>'Level Controllable Output',
+                                             '0004'=>'Scene Selector',
+                                             '0005'=>'Configuration Tool',
+                                             '0006'=>'Remote Control',
+                                             '0007'=>'Combined Interface',
+                                             '0008'=>'Range Extender',
+                                             '0009'=>'Mains Power Outlet',
+                                             '000A'=>'Door Lock',
+                                             '000B'=>'Door Lock Controller',
+                                             '000C'=>'Simple Sensor',
+                                             '000D'=>'Consumption Awareness Device',
+                                             
+                                             '0050'=>'Home Gateway',
+                                             '0051'=>'Smart Plug',
+                                             '0052'=>'White Goods',
+                                             '0053'=>'Meter Interface',
+                                             
+                                             // Lighting
+                                             '0100'=>'On/Off Light',
+                                             '0101'=>'Dimmable Light',
+                                             '0102'=>'Color Dimmable Light',
+                                             '0103'=>'On/Off Light Switch',
+                                             '0104'=>'Dimmer Switch',
+                                             '0105'=>'Color Dimmer Switch',
+                                             '0106'=>'Light Sensor',
+                                             '0107'=>'Occupency Sensor',
+                                             
+                                             // Closures
+                                             '0200'=>'Shade',
+                                             '0201'=>'Shade Controller',
+                                             '0202'=>'Window Covering Device',
+                                             '0203'=>'Window Covering Controller',
+                                             
+                                             // HVAC
+                                             '0300'=>'Heating/Cooling Unit',
+                                             '0301'=>'Thermostat',
+                                             '0302'=>'Temperature Sensor',
+                                             '0303'=>'Pump',
+                                             '0304'=>'Pump Controller',
+                                             '0305'=>'Pressure Sensor',
+                                             '0306'=>'Flow Sensor',
+                                             '0307'=>'Mini Split AC',
+                                             
+                                             // Intruder Alarm Systems
+                                             '0400'=>'IAS Control and Indicating Equipment',
+                                             '0401'=>'IAs Ancillary Equipment',
+                                             '0402'=>'IAS Zone',
+                                             '0403'=>'IAS Warning Device',
+                                             ),
+                             );
+        
         deamonlog('debug',';type; 8043; (Simple Descriptor Response)(Not Processed)'
                   . '; SQN : '             .substr($payload, 0, 2)
                   . '; Status : '          .substr($payload, 2, 2)
                   . '; Short Address : '   .substr($payload, 4, 4)
                   . '; Length : '          .substr($payload, 8, 2)
                   . '; endpoint : '        .substr($payload,10, 2)
-                  . '; profile : '         .substr($payload,12, 4)
-                  . '; deviceId : '        .substr($payload,16, 4)
+                  . '; profile : '         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
+                  . '; deviceId : '        .substr($payload,16, 4) . ' (' . $deviceInfo[substr($payload,12, 4)][substr($payload,16, 4)] .')'
                   . '; bitField : '        .substr($payload,20, 2)
                   . '; InClusterCount : '  .substr($payload,22, 2)   );
 

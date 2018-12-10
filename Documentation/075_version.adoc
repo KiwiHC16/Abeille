@@ -1,6 +1,16 @@
 
 = Versions / Change Log
 
+
+2018-12-11
+
+- Ampoule Spectre Blanc Standard ZigBee
+- Blanche Ampoule GLEDOPTO GU10 Couleur/White GLEDOPTO avec hombridge
+- Spectre Blanc Ampoule GLEDOPTO GU10 GL-S-004Z avec hombridge
+- Retour des volets profalux en automatique
+- Poll Automatique
+- Ajout/Suppression/Get des groupes depuis l interface Abeille
+
 2018-12-08
 
 - Couleur Ampoule GLEDOPTO GU10 Couleur/White GL-S-003Z avec hombridge

@@ -1544,10 +1544,12 @@
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
-            if (!is_object($elogic) && (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match(
-                        "/^0000-[0-9A-F]*-*0010/",
-                        $cmdId
-                    )) && (config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel")) {
+            if ( !is_object($elogic)
+                && (    preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId)
+                    ||  preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId )
+                    ||  preg_match( "/^SimpleDesc-[0-9A-F]*-*DeviceDescription/", $cmdId )
+                    )
+                && ( config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel") ) {
                 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 //remove lumi. from name as all xiaomi devices have a lumi. name
@@ -1565,7 +1567,8 @@
                 log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
                 
                 // On recupere le EP
-                $EP = substr($cmdId,5,2);
+                // $EP = substr($cmdId,5,2);
+                $EP = explode('-', $cmdId)[1];
                 log::add('Abeille', 'debug', 'EP: '.$EP);
                 $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
                 $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);

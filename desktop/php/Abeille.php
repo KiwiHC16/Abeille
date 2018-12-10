@@ -239,6 +239,7 @@ $parameters_info = Abeille::getParameters();
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
 <input type="submit" name="submitButton" value="Add Scene">
 <input type="submit" name="submitButton" value="Remove Scene">
+<input type="submit" name="submitButton" value="Identify">
             <table>
             </tr><tr>
                 <td>

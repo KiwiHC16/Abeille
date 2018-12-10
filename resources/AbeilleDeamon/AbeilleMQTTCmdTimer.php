@@ -408,7 +408,7 @@
         $mqtt->onLog('logmq');
         
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-        $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+        $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmdTimer died :-(", $qos, 0);
         
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
         $mqtt->setReconnectDelay(1, 120, 1);

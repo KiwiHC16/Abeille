@@ -1,21 +1,21 @@
 {
-  "Temperature": {
+  "Temperature-Light": {
     "isVisible": 1,
-    "name": "Temperature",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
+    "name": "temperatureLight",
+    "order": 2,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "LIGHT_COLOR_TEMP",
     "invertBinary": "0",
-    "template": "",
+    "template": "badge",
+    "unite": "K",
     "configuration": {
-	"uniqId": "5c07c766254a4",
-      "topic": "setTemperatureSlider",
-      "request": "#slider#",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+      "uniqId": "5407c76625440",
+      "visibilityCategory": "All",
+      "minValue": "2200",
+      "maxValue": "4000",
+      "visibiltyTemplate": "1"
     }
   }
 }

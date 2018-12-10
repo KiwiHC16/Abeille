@@ -9,9 +9,9 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76621501",
+      "uniqId": "5c07c76621501",
       "topic": "setTemperature",
-      "request": "2200",
+      "request": "EP=#EP#&slider=2200",
       "visibilityCategory": "All"
     }
   }

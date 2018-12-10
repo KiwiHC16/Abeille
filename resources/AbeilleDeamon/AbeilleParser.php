@@ -438,7 +438,7 @@
         
         $GLOBALS['NE'][$SrcAddr]['IEEE']    = $IEEE;
         $GLOBALS['NE'][$SrcAddr]['capa']    = $capability;
-        $GLOBALS['NE'][$SrcAddr]['time']    = time();
+        $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']    = time();
         $GLOBALS['NE'][$SrcAddr]['state']   = 'annonceReceived';
 
     }
@@ -1799,14 +1799,14 @@
         // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
         if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
             if ( $GLOBALS['NE'][$SrcAddr]['action']=="ActiveEndPointReceived->modelIdentifier") {
-                if ( ($ClusterId=="0000") && ( $AttributId=="0005" ) ) {
+                if ( ($ClusterId=="0000") && ( $AttributId=="0005" ) && ( strlen($data)>1 ) ) {
                     $GLOBALS['NE'][$SrcAddr]['state'] = "modelIdentifier";
                     $GLOBALS['NE'][$SrcAddr]['modelIdentifier']=$data;
                 }
             }
-            if ($GLOBALS['NE'][$SrcAddr]['action']=="modelIdentifier->location") {
-                if ( ($ClusterId=="0000") && ( $AttributId=="0010" ) ) {
-                    $GLOBALS['NE'][$SrcAddr]['state'] = "location";
+            if ($GLOBALS['NE'][$SrcAddr]['action']=="modelIdentifierReceived->location") {
+                if ( ($ClusterId=="0000") && ( $AttributId=="0010" ) && ( strlen($data)>1 ) ) {
+                    $GLOBALS['NE'][$SrcAddr]['state'] = "modelIdentifier";
                     $GLOBALS['NE'][$SrcAddr]['location']=$data;
                 }
             }
@@ -1949,12 +1949,14 @@
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
-        foreach ( $getStates as $getState ) {
-            $cmd = $abeille->getCmd('action', $getState);
-            if ($cmd) {
-                deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
-                $cmd->execCmd();
-                sleep(2);
+        if ( isset($abeille) ) {
+            foreach ( $getStates as $getState ) {
+                $cmd = $abeille->getCmd('action', $getState);
+                if ( isset($cmd) ) {
+                    deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
+                    $cmd->execCmd();
+                    sleep(2);
+                }
             }
         }
 
@@ -1970,10 +1972,10 @@
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
-        if ($abeille) {
+        if (isset($abeille)) {
             foreach ( $commandeConfiguration as $config ) {
                 $cmd = $abeille->getCmd('action', $config);
-                if ($cmd) {
+                if (isset($cmd)) {
                     deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
                     $cmd->execCmd();
                     sleep(2);
@@ -1994,8 +1996,7 @@
         // Etat successifs
         // annonceReceived
         // ActiveEndPoint
-        // modelIdentifier
-        // location
+        // modelIdentifier || location: meme etat
         // configuration: bind, setReport
         // currentState : get etat: etat, level
         // done
@@ -2004,7 +2005,7 @@
         // none
         // annonceReceived->ActiveEndPoint
         // ActiveEndPointReceived->modelIdentifier
-        // modelIdentifier->location
+        // modelIdentifierReceived->location
         // location->configuration
         // configuration->currentState
         // done
@@ -2012,10 +2013,10 @@
 
         foreach ( $NE as $short=>$infos ) {
             switch ($infos['state']) {
+                    
                 case 'annonceReceived':
-
                     if (!isset($NE[$short]['action'])) {
-                        if ( (($infos['time'])+5) < time() ) {
+                        if ( (($infos['timeAnnonceReceived'])+5) < time() ) { // on attend 5s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
                             deamonlog('debug',';Type; fct; processAnnonce ; Demande le EP de l equipement');
                             $mqtt->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
                             $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
@@ -2026,7 +2027,8 @@
                 case 'EndPoint':
                     if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande le modelIdentifier de l equipement');
-                        $mqtt->publish('CmdAbeille/Ruche/getName', 'address='.$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                        $mqtt->publish("CmdAbeille/Ruche/getName",      "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                        $mqtt->publish("CmdAbeille/Ruche/getLocation",  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                     }
                     break;
@@ -2034,35 +2036,35 @@
                 case 'modelIdentifier':
                     if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande le Location de l equipement');
-                        $mqtt->publish('CmdAbeille/Ruche/getLocation', 'address='.$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-                        $GLOBALS['NE'][$short]['action']="modelIdentifier->location";
-                        $GLOBALS['NE'][$short]['time']=time();
+                        $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->location";
+                        mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
+                        mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
+                        configureNE($short);
                     }
                     
                     // Cela fait maintenant 5s que j attends la location et je ne l ai pas, on passe à la suite
-                    if ( (($infos['time'])+5) < time() ) {
+                    /*
+                    if ( (($infos['timeGetName'])+5) < time() ) {
                         $GLOBALS['NE'][$short]['state'] = 'location';
                         $GLOBALS['NE'][$short][$short]['action'] == "location->configuration";
                     }
-                    
+                    */
                     break;
-                    
+                  
+                /* J annule le step Location car Location = nom
                 case 'location':
                     if ( $NE[$short]['action'] == "modelIdentifier->location" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande Configuration Equipement qui doit etre cree');
-                        mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
-                        mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
-                        sleep(5);
-                        configureNE($short);
                         $GLOBALS['NE'][$short]['action']="location->configuration";
                     }
                     break;
+                */
                     
                 case 'configuration':
-                    if ( $NE[$short]['action'] == "location->configuration" ) {
+                    if ( $NE[$short]['action'] == "modelIdentifierReceived->configuration" ) {
                         deamonlog('debug',';Type; fct; processAnnonce ; Demande Current State Equipement qui doit etre cree');
-                        getNE($short);
                         $GLOBALS['NE'][$short]['action']="configuration->currentState";
+                        getNE($short);
                     }
                     break;
                     
@@ -2169,7 +2171,7 @@
     $mqtt->onLog('logmq');
     
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $mqtt->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+    $mqtt->setWill('/jeedom', "Client AbeilleParser died :-(", $qos, 0);
     
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
     $mqtt->setReconnectDelay(1, 120, 1);

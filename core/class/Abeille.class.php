@@ -999,7 +999,8 @@
         {
             log::add('Abeille', 'debug', 'deamon stop: IN');
             // Stop socat if exist
-            exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/tmp\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
             log::add('Abeille', 'debug', 'deamon stop: Killing deamons: '.implode($output, '!'));
             system::kill($output, true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
@@ -1716,7 +1717,7 @@
                         // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
 
                     }
-                    // On conserve l infoo du template pour la visibility
+                    // On conserve l info du template pour la visibility
                     $cmdlogic->setConfiguration( "visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
                     // template
@@ -1727,8 +1728,8 @@
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
                     $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
                     // unite
-                    if (isset($cmdValueDefaut["units"])) {
-                        $cmdlogic->setUnite($cmdValueDefaut["units"]);
+                    if (isset($cmdValueDefaut["unite"])) {
+                        $cmdlogic->setUnite($cmdValueDefaut["unite"]);
                     }
 
                     if (isset($cmdValueDefaut["invertBinary"])) {

@@ -2,6 +2,7 @@
   "GL-S-003Z": {
     "nameJeedom": "GLEDOPTO Couleur",
     "timeout": "60",
+    "Comment": "GLEDOPTO RGBW GU10 5W 300lm",
     "Categorie": {
       "light": "1"
     },
@@ -9,7 +10,8 @@
       "uniqId": "5c07c766278a7",
       "icone": "GL-S-003Z",
       "mainEP": "#EP#",
-      "defaultEP": "0C"
+      "defaultEP": "0C",
+      "poll": "1"
     },
     "Commandes": {
       "include1": "nom",

@@ -9,7 +9,8 @@
       "uniqId": "5c07c766205c5",
       "icone": "OSRAMClassicA60RGBW",
       "mainEP": "#EP#",
-      "defaultEP": "03"
+      "defaultEP": "03",
+      "poll": "1"
     },
     "Commandes": {
       "include1": "nom",

@@ -6,7 +6,7 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620b6b",
+      "uniqId": "5c07c76620b6b",
       "icone": "IkeaTradfriBulbE14WSOpal400lm",
       "mainEP": "#EP#"
     },
@@ -24,6 +24,7 @@
       "include38": "2700K",
       "include39": "4000K",
       "include40": "temperatureLight",
+      "include40 2 2": "setTemperatureLight",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",

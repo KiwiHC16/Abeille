@@ -1,8 +1,9 @@
-# Présentation 
-
+Présentation 
+============
 (Portage en cours de la documentation vers la doc jeedom, le texte que vous lisez est en cours d'écriture. La doc originale est toujours à [cet emplacement](https://github.com/KiwiHC16/Abeille)
 
-## Abeille
+Abeille
+-------
 ![Abeille Icone](../../images/Abeille_icon.png)
 
 *Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.
@@ -29,18 +30,22 @@ Ce plugin inclus les fonctions de base pour la gestions de équipements comme On
 * Fonctionne avec Homebridge
 -    …
 
-## Timer
+Timer
+-----
+
 ![Abeille Icone](../../images/node_Timer.png)
 
 J’ai aussi intégré un « sous-plugin » TIMER qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
 
-## Enjoy
+Enjoy
+-----
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 
-# Raccourcis
+Raccourcis
+----------
 
-[premiers pas](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduction.adoc)
+[Premiers pas](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduction.adoc)
 
 [Pour Tous](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/)
 

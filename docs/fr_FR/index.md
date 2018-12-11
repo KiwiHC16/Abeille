@@ -59,6 +59,38 @@ Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pou
 
 [links](900_Timers.md)
 
+
+# Plus de détails
+
+Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
+Il est en permanente évolution.
+
+## Il permet déjà:
+
+- de connecter les ampoules IKEA
+- de connecté toute la famille Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
+- de faire les inclusions des equipments zigbee depuis jeedom
+- d'avoir l'état de l ampoule IKEA, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
+- de commander les ampoules une par une (On/Off, niveau, couleur,...)
+- de commander les ampoules et autre par groupe (On/Off, niveau)
+- d'avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
+- d'avoir les temperatures, humidité, pression Xiaomi, son nom, tension batterie
+- d'avoir la remontée d'une presence (capteur infrarouge xiaomi)
+- d'avoir la remontée d'ouverture de porte
+- d'avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
+- de définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
+
+## Ce qu'on peut faire
+
+Exemples:
+- Si j’appuie sur l’interrupteur Xiaomi, avec un scenario Jeedom, j'allume l’ampoule IKEA.
+- Avec une télecommande Ikea je commande ampoule Ikea, Hue, OSRAM,... prise ... tout en même temps
+- Avec deux, trois, quatre,... télécommandes Ikea je fais un va et vient
+- Je contrôle chaque équipement depuis Jeedom.
+
+Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) car je vous confirme que les prises Xiaomi et les ampoules IKEA font le routage des messages ZigBee.
+
+
 # Timers
 
 Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.

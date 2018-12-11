@@ -1,4 +1,6 @@
 
+Equipements | Image
+---------------|---------
 CLA60RGBWOSRAM|image::../images/node_CLA60RGBWOSRAM.png[200,200]
 Classic A60 RGB W|image::../images/node_OSRAMClassicA60RGBW.png[200,200]
 OSRAM Classic A60 W clear -

@@ -142,38 +142,39 @@ Récupérez sont ID en sélectionnant "Vue d'ensemble"
 ----
 
 - Si vous allez directement avec git
-[source,]
-----
+```
 * git clone https://github.com/KiwiHC16/Abeille.git Abeille
-----
+```
 
 Et pour le développeurs, voici une info très utile:
-[source,]
-----
-Merci @lukebr 
+
+>Merci @lukebr 
 
 Pour une mise à jour à partir de github :
+```
 cd ../../var/www/html/plugins/Abeille
 sudo git pull https://github.com/KiwiHC16/Abeille
+```
 
 Et si il y a eu des bidouilles en local pour écraser avec dernière mise à jour :
+```
 cd /var/www/html/plugins/Abeille
 sudo git reset --hard HEAD
 sudo git pull https://github.com/KiwiHC16/Abeille
-----
+```
 
 - Et pour finir
-[source,]
-----
+```
 * chmod -R 777 /var/www/html/plugins/Abeille
 * chown -R www-data:www-data /var/www/html/plugins/Abeille
-----
+```
 
-[source,]
+
+
 Si vous voulez aller a un commit specifique:
-----
+```
 git reset --hard dd7fa0a
-----
+```
 
 ### Depuis le market
 

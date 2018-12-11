@@ -1916,8 +1916,15 @@
             // Si l objet exist et on recoie une IEEE
             // e.g. Un NE renvoie son annonce
             if (is_object($elogic) && ($cmdId == "IEEE-Addr")) {
+                
                 // Je rejete les valeur null (arrive avec les equipement xiaomi qui envoie leur nom spontanement alors que l IEEE n est pas recue.
                 if (strlen($value)<2) {
+                    log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": ".$IEEE." =>".$value."<=" );
+                    return;
+                }
+                
+                // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
+                if ($value="ffffffffffffffff") {
                     log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": ".$IEEE." =>".$value."<=" );
                     return;
                 }

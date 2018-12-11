@@ -246,13 +246,9 @@ A noter: Toute sauvegarde de la configuration provoque une relance du cron du pl
 *A noter: rafraichir la page si vous voyez pas de changement après une action, par exemple après l'ajout d'un équipement.*
 
 
+# Ikea
 
-
-# Equipements
-
-## Ikea
-
-### Ampoule
+# Ampoule
 
 #### Bouton Identify
 
@@ -468,7 +464,7 @@ Message Leave, puis Beacon Requets puis association si réseau en mode inclusion
 
 Voir la telecommande 5 boutons pour avoir plus de details sur le controle de groupe,...
 
-## Philips Hue
+# Philips Hue
 
 ###  Creation objet dans Abeille
 

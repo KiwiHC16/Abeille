@@ -125,6 +125,277 @@ Et la miracle toutes les commandes fonctionnent...
 
 
 
+# Xiaomi
+
+## Temperature Carré, Temperature Rond, Bouton Carré, Sensor Door, Presence IR
+
+### Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
+
+### Si deja associé
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
+
+### Prise
+
+#### Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une Inclusion doit provoquer la création de l'obet dans Abeille
+
+
+#### Si deja associé
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
+
+### Bouton Rond (lumi.sensor_switch)
+
+### Appui court (<1s) sur bouton arriere avec trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis son nom lumi.sensor_switch
+
+#### Fonctionnement
+
+Ce bouton envoie un message lors de l'appui mais aussi lors du relachement. L'état dans Abeille/Jeedom reflete l'état du bouton.
+
+#### Scenario
+
+Sur reception d'un changement l'état, un scénario peut être lancé et la valeur de l'état peut être testée lors du déroulement du scénario.
+
+### Bouton Carre (lumi.sensor_switch.aq2)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
+
+#### Fonctionnement
+
+##### Etat
+
+Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
+
+Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
+
+##### Multi
+
+Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par defaut l'objet créé demande à jeedom de faire un retour d'état à 0 apres une minute. Cela peut être enlevé dans les parametres de la commande.
+
+#### Scenario
+
+#### Etat
+
+Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
+
+Par défaut le bouton est configuré pour déclencher les scenariis à chaque appui (même si l'etat était déjà à 1). Mais Jeedom va aussi provoquer un evenement au bout d'une minute en passant la valeur à 0. 
+
+Lors de l'execution du scenario, si vous testé l'état du bouton est qu'il est à un vous avez recu un evenement appui bouton, si l'état est 0, vous avez recu un evenement retour à zero apres une minute. 
+
+Par exemple pour commander une ampoule Ikea:
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_49.png)
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_.36.png)
+
+#### Multi
+
+Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple. 
+Par defaut, en gros, le scenario se declenche et si vous testez la valeur multi > 1, c'est un evenement appui multiple et si valeur à 0 alors evenement jeedom de retour d etat.
+
+### Capteur Inondation (lumi.sensor_wleak.aq1)
+
+#### Appui court (<1s) sur le dessus
+
+Remonte son nom et attribut ff01 (longueur 34)
+
+### Capteur de Porte Ovale (lumi.sensor_magnet)
+
+#### Appui court (<1s) avec un trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis on son nom lumi.sensor_magnet
+
+### Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et ff01 (len 29)
+
+#### Appui Long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et Application Version
+Remonte ff01 (len 29)
+
+
+### Capteur Presence V1 (lumi.sensor_motion)
+
+#### Appui court (<1s) avec trombone
+
+#### Appui long (7s) avec trombone
+
+Appairage
+Remonte son nom
+Remonet Appli Version
+Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+
+#### Double flash bleu sans action de notre part
+
+Visiblement quand le sensor fait un rejoin apres avoir perdu le reseau par exemple, il fait un double flah bleu.
+
+### Capteur de Presence V2
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et FF01 de temps en temps.
+
+#### Appui long (7s) sur bouton lateral
+
+Leave message
+Appairage
+Remonte son nom et SW version
+Remonte FF01 (len 33)
+
+#### Comportement
+
+Il remonte une info a chaque detection de presence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d'elle même. Ce n'est pas un capteur de luminosité qui remonte l info périodiquement.
+
+### Capteur Temperature Rond (lumi.sensor_ht)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom
+
+#### Appui long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 31)
+
+
+### Capteur Temperature Carré (lumi.weather)
+
+#### Appui court (<1s) sur bouton lateral
+
+Si sur le réseau: Remonte son nom
+Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
+Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu
+
+#### Appui long (7s) sur bouton lateral
+
+Leave
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)
+
+#### Info
+
+Rapport:
+
+- petite variation de temperature ou humidité, rapport one fois par heure
+- Si variation de plus de 0,5°C ou de plus de 6% d'humidité aors rapport immédiat
+
+Précision (Source Appli IOS MI FAQ Xiaomi)
+
+- Temperature +-0,3°C
+- Humidité +-3%
+
+### Xiaomi Cube Aqara
+
+![](../images/Capture_d_ecran_2018_06_12_a_22_00_03.png)
+
+### Wall Switch Double Battery (lumi.sensor_86sw2)
+
+### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)
+
+#### getName
+
+Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de droite (7s) et pendant cette periode on fait un getName depuis la ruche.
+
+#### Appui Tres Long (>10s) sur bouton de gauche
+
+Leave
+
+
+### Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
+
+#### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+#### getName
+
+Il repond au getName sur EP 01 s.
+
+#### Appui Tres Long (>8s) sur bouton de gauche
+
+Leave
+
+### Capteur Vibration
+
+#### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+#### Attribute 0055
+
+Il semblerai qu'une valeur:
+
+* 1 indique une detection de vibration
+* 2 indique un rotation
+* 3 indique une chute
+
+#### Attribute 0503
+
+Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
+
+#### Attribut 0508
+
+Inconnu, est envoyé après attribut 0055.
+
+### Capteur Smoke
+
+#### 3 appuis sur le bouton de facade
+
+Après avoir mis la zigate en mode inclusion, 3 appuis sur le bouton en facade permet de joindre le réseau.
+
+La même action, 3 appuis, alors que la zigate n'est pas en mode inclusion permet de quitter le réseau.
+
+#### Sensibilité du capteur
+
+Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev).
+
+#### Test du capteur
+
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir entre 1 et 3 bips).
+
+#### Réveil
+
+Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.
+
+### Capteur Gaz
+
+#### Appairage
+
+#### Routeur
+
+Ce capteur est un router.
+
+#### Parametres
+
+Vous pouvez choisir le niveau de sensibilié: Low - Moyen - High
+
+#### Tester la bonne connection au réseau
+
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir 3 bips à 5s d'intervalles).
 
 
 

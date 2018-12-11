@@ -1,5 +1,5 @@
-Présentation Abeille
-===============
+# Présentation Abeille
+
 
 (Portage en cours vers la doc jeedom, premiere version pour test. la doc est toujours à https://github.com/KiwiHC16/Abeille)
 
@@ -18,14 +18,14 @@ https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.
 Mon réseau personnel fonctionne depuis plusieurs mois et possède actuellement 45 équipements et continue de grossir.
 
 Ce plugin inclus les fonctions de base pour la gestions de équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
--      Retour d'état des équipements
--    Santé (Dernière communication,…)
--    Niveau des batteries 
--    Graphe du réseau
--    Liste de tous les équipements du réseau
--    Informations radio sur les liaisons entre les équipements
--    En mode USB ou en mode Wifi
--      Fonctionne avec HomeBridge
+* Retour d'état des équipements,    
+* Santé (Dernière communication,…)
+* Niveau des batteries 
+* Graphe du réseau
+* Liste de tous les équipements du réseau
+* Informations radio sur les liaisons entre les équipements
+* En mode USB ou en mode Wifi
+* Fonctionne avec Homebridge
 -    …
 
 J’ai aussi intégré un « sous-plugin » TIMER qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
@@ -35,14 +35,16 @@ https://github.com/KiwiHC16/Abeille/tree/master/Documentation
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 
-Installation et activation du plugin Homebridge
-===================================
 
-Installation des dépendances
-----------------------------
+# Installation
 
-Fichiers LOG
-------------
+## Installation et activation du plugin Homebridge
+
+### Installation des dépendances
+
+
+### Fichiers LOG
+
 
 Les fichiers log permettent d'analyser pas à pas l'activité interne du processus et ses interactions avec son environnement.
 
@@ -57,13 +59,12 @@ Abeille_removal
 Abeille_updateConfig
 
 
-Configuration du plugin Homebridge
-=================================
+## Configuration du plugin Homebridge
 
-Troubleshooting
-=================
 
-Support
+# Troubleshooting
+
+# Support
 -------
-**Merci de passer par le forum, de créer *un* sujet par demande et de lire les autres sujets s'ils ressemblent au votre (ceux créés après la sortie de ce plugin, c'est logique :-))**
+Merci de passer par le forum, ...
 

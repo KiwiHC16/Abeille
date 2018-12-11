@@ -2298,7 +2298,143 @@ Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvl
 
 
 
+# Installation sur une VM Ubuntu
 
+== Installation de l'OS
+
+Fichier ISO: ubuntu-16.04.1-server-amd64.iso
+
+Installation classique de l'OS (Je ne détaille pas car cela dépend de votre envirroement de virtualisation).
+
+== Preparation de l'OS
+
+login: (user créé pendant l install avec son password associé).
+
+```
+sudo su -
+
+apt-get update
+apt-get upgrade
+apt-get autoremove
+````
+
+== Installation de la base mysql
+
+installation à la main de mysql (car l instanllation par jeedom ne fonctionne pas)
+
+````
+apt-get install mysql-server
+apt-get install mysql-client
+````
+
+== Installation de Jeedom
+
+````
+wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+chmod +x install.sh
+````
+
+Enlever le php7.0-ssh2 du fichier install.sh
+
+````
+./install.sh -m motDePasse
+````
+
+A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.
+
+== Installation du Plugin Abeille
+
+```
+./install.sh -m motDePasse
+
+cd /var/www/html/plugins/
+
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
+
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille
+```
+
+== Utilisation de Jeedom
+
+Il ne vous reste plus qu'à vous connecter à Jeedom...
+
+
+# Installation sur une machine Odroid XU4 avec Ubuntu
+
+== Installation de l'OS
+
+Fichier img: ubuntu-14.04lts-server-odroid-xu3-20150725.img
+que l on trouve sur le server odroid: https://odroid.in/ubuntu_14.04lts/
+
+Installation classique odroid de l'OS : https://wiki.odroid.com/odroid-xu4/odroid-xu4 
+
+== Preparation de l'OS
+
+login: (root/odroid).
+
+```
+apt-get update
+apt-get upgrade
+apt-get autoremove
+```
+
+== Installation de la base mysql
+
+installation à la main de mysql (car l instanllation par jeedom ne fonctionne pas)
+
+```
+apt-get install mysql-server
+apt-get install mysql-client
+```
+
+== Installation de Jeedom
+
+```
+wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+chmod +x install.sh
+```
+
+Enlever le php7.0-ssh2 du fichier install.sh
+
+```
+./install.sh -m motDePasse
+```
+
+A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.
+
+== Installation du Plugin Abeille
+
+```
+./install.sh -m motDePasse
+
+cd /var/www/html/plugins/
+
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
+
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille
+```
+
+== Utilisation de Jeedom
+
+Il ne vous reste plus qu'à vous connecter à Jeedom...
+
+# De-installation
+
+Le plugin Abeille utilise:
+- le code du plugin lui-même et
+- un broker MQTT mosquitto.
+
+Par défaut, lors de l'installation de Abeille, le code du plugin est installé depuis le market et le broker est installé lors de l installation des dépendances.
+
+Le broker MQTT peux être utilisé par d'autres logiciels comme par d'autres plugins.
+
+C'est pourquoi lors de la desinstallation d'Abeille, mosquitto n'est pas desintallé, ni sa configuration.
+
+Si vous souhaitez le desinstaller, vous avez le script "manual_remove_of_mosquito.sh" qui peut vous aider à enlever les déclaraitons faites dans apaches.
+
+Pour la désinstallation de mosquitto, cela depend de votre système et il y a plein de doc sur le net (je manque de temps pour faire la doc...).
 
 
 

@@ -242,4 +242,11 @@ Equipements
 La liste des équipements testés est consolidé dans le fichier excel: https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/documentsDeDev/AbeilleEquipmentFunctionSupported.xlsx?raw=true
 (Le contenu du fichier est souvent en retard par rapport à la réalité)
 
+# Developpement
 
+Grandes lignes
+
+* branche master : pour tous les développements en cours a condition que les pushs soient utilisables et "stabilisés" pour la phase de test.
+* branche beta: pour figer un développement et le mettre en test avant de passer en stable
+* branche stable: version stable
+* Dev en cours: autre branche

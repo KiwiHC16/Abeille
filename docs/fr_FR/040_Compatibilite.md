@@ -1,8 +1,10 @@
-[cols="a"]
-|=======
-|CLA60RGBWOSRAM|image::../images/node_CLA60RGBWOSRAM.png[200,200]
-|Classic A60 RGB W|image::../images/node_OSRAMClassicA60RGBW.png[200,200]
-|OSRAM Classic A60 W clear - LIGHTIFY|image::../images/node_OSRAMClassicA60Wclear-LIGHTIFY.png[200,200]
+
+CLA60RGBWOSRAM|image::../images/node_CLA60RGBWOSRAM.png[200,200]
+Classic A60 RGB W|image::../images/node_OSRAMClassicA60RGBW.png[200,200]
+OSRAM Classic A60 W clear -
+
+LIGHTIFY|image::../images/node_OSRAMClassicA60Wclear-LIGHTIFY.png[200,200]
+
 |Legrand Prise Connected Outlet|image::../images/node_Connectedoutlet.png[200,200]
 |Legrand Dimmer Switch w/o neutral|image::../images/node_Dimmerswitchwoneutral.png[200,200]
 |GLEDOPTO Dual White and Color|image::../images/node_GLEDOPTODualWhiteAndColor.png[200,200]
@@ -56,4 +58,3 @@
 |Xiaomi Vibration|image::../images/node_XiaomiVibration.png[200,200]
 |Volet ProFalux|image::../images/node_voletProFalux.png[200,200]
 |Xiaomi Temperature Carre|image::../images/node_XiaomiTemperatureCarre.png[200,200]
-|=======

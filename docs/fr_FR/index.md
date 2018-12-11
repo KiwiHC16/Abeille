@@ -1,8 +1,8 @@
-# Présentation Abeille
+# Présentation 
 
+(Portage en cours de la documentation vers la doc jeedom, le texte que vous lisez est en cours d'écriture. La doc originale est toujours à [cet emplacement](https://github.com/KiwiHC16/Abeille)
 
-(Portage en cours vers la doc jeedom, premiere version pour test. la doc est toujours à [cet emplacement](https://github.com/KiwiHC16/Abeille)
-
+## Abeille
 
 *Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.
 
@@ -28,48 +28,24 @@ Ce plugin inclus les fonctions de base pour la gestions de équipements comme On
 * Fonctionne avec Homebridge
 -    …
 
+## Timer
+
 J’ai aussi intégré un « sous-plugin » TIMER qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
 
-Je passe beaucoup de temps a formaliser les sujets dans une documentation que vous trouverez à : [Documentation](https://github.com/KiwiHC16/Abeille/tree/master/Documentation)
+## Enjoy
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 
-Essai d une table:
+# Raccourcis
 
-Col1 | Col2
------|-----
-A | B
-Images | ![Alt texte](../images/Capture_d_ecran_2018_01_21_a_11_07_27.png)
+[premiers pas](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduction.adoc)
 
-# Installation
+[Pour Tous](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/)
 
-## Installation et activation du plugin Homebridge
+[Equipements supportés](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
-### Installation des dépendances
+[Pour les développeurs](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/012_Dev.adoc)
 
+[Systèmes Testés](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/015_Systemes_Testes.adoc)
 
-### Fichiers LOG
-
-
-Les fichiers log permettent d'analyser pas à pas l'activité interne du processus et ses interactions avec son environnement.
-
-Ces fichiers peuvent être nécessaires en cas de dysfonctionnement du plugin.
-Abeille:
-AbeilleParser:
-AbeilleMQTTCmd
-AbeilleMQTTCmdTimer
-AbeilleSerialRead
-AbeilleSocat
-Abeille_removal
-Abeille_updateConfig
-
-
-## Configuration du plugin Homebridge
-
-
-# Troubleshooting
-
-# Support
--------
-Merci de passer par le forum, ...
-
+[Change Log](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/075_version.adoc)

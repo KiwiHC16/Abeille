@@ -40,9 +40,7 @@ Essai d une table:
 Col1 | Col2
 -----|-----
 A | B
-Images | TY
-
-![Alt texte](../images/Capture_d_ecran_2018_01_21_a_11_07_27.png)
+Images | ![Alt texte](../images/Capture_d_ecran_2018_01_21_a_11_07_27.png)
 
 # Installation
 

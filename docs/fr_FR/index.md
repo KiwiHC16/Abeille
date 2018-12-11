@@ -1386,6 +1386,61 @@ Commande Start Complete
 actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
 
+# Remplacement d'un équipement
+
+Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scenarios,...), voici la méthode à suivre.
+
+
+> Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.
+
+Prenons l'exemple du remplassement d'un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.
+
+![](../images/Capture_d_ecran_2018_03_01_a_16_53_29.png)
+
+Première opération, Inclure le nouveau bouton dans Abeille.
+
+![](../images/Capture_d_ecran_2018_03_01_a_16_48_35.png)
+
+Le nouveau bouton a pour adresse 8818.
+
+Renseigner les champs dans la commande "Replace Equipment" dans l'objet Ruche.
+Pour le champ Titre mettre l'adresse de l'ancien équipement.
+Pour le champ Message mettre l'adresse du nouvel équipement.
+
+![](../images/Capture_d_ecran_2018_03_01_a_16_57_02.png)
+Puis clic sur "Replace Equipement".
+
+Ouvrez l'ancien équipement qui porte toujours le nom "Abeille-21ce". 
+Vous devez voir le nouveau nom:
+
+![](../images/Capture_d_ecran_2018_03_01_a_17_01_04.png)
+
+Sauvegardez le nouvel objet.
+
+Vous devez avoir deux équipements:
+
+![](../images/Capture_d_ecran_2018_03_01_a_17_04_30.png)
+
+Il ne vous reste plus qu'a ouvrir l'objet "Abeille-8818" et à le supprimer.
+
+Vous pouvez maintenant changer le nom de l'objet "Abeille-8818-New" à la valeur que vous voulez.
+
+![](../images/Capture_d_ecran_2018_03_01_a_17_09_46.png)
+
+
+= Remplacement d'une commande
+
+Vous pouvez remplacer une commande A par une autre commande B à l'aide des boutons oranges:
+
+![](../images/Capture_d_ecran_2018_10_01_a_12_32_20.png)
+
+Cela permet de mettre à jour les scénarios, les autres objets,... faisant référence à cette commande. C'est très pratique et rapide.
+
+Mais car il y a un mais, ou plutôt n'oubliez pas qu'une commande est attachée à un objet, un historique et éventeullement un autre Jeedom par JeeLink. A vous de gérer ces aspects.
+
+Si vous aviez une mesure de temperature A que vous avez remplacé par une mesure B et que vous voulez aussi transferer l'historique de A vers B:
+
+![](../images/Capture_d_ecran_2018_10_01_a_12_31_57.png)
 
 
 
@@ -1438,6 +1493,48 @@ Grandes lignes
 * branche beta: pour figer un développement et le mettre en test avant de passer en stable
 * branche stable: version stable
 * Dev en cours: autre branche
+
+# Pour les curieux
+
+=== Vue générale de la solution
+
+![](../images/Capture_d_ecran_2018_01_21_a_13_13_26.png)
+
+                    +------------+
+                    |   Jeedom   |
+                    +------------+
+                    +------------+
+                    |  Abeille   |
+                    +-+-----+----+
+CmdAbeille/Addr/Action     |         ^               Abeille/#
+                                            v         |              CmdRuche/Ruche/CreateRuche
+                                            +-------+----+
+                                     +-----+ Mosquitto  + <----+
+cmdAbeille/#                 |        +-------------+           |   Abeille/Addr/xxxx
+                                        v                         |   CmdAbeille/Addr/xxx
+            +--------------+---+                +----+----------------+
+            |AbeilleMQTTCmd.php|                |AbeilleParser.php    |
+            |CmdToAbeille.php  |                |AbeilleSerialRead.php| 
+            +----+-------------+                +----+----------------+
+                    |                                                        ^
+                    |                   +--------------+             |
+                    +---------->  + /deb/ttyUSBX +------+
+                                        +--------------+
+                                        +-------------+
+                                        |   Zigate    |
+                                        X+-------------+X
+                                    X                            X
+                +---------+X                                X+---------+
+                | Abeille |                                      | Abeille |
+                |---------+X                                X+---------+
+                                    X                             X
+                                        X+------------+X
+                                        |   Abeille  |
+                                        +------------+
+
+
+
+
 
 # WIFI
 

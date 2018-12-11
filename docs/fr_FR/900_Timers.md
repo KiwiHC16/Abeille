@@ -108,13 +108,7 @@ Exemple d'application: allumage progressif d une ampoule, maintient allumé pend
 
 ## A prendre en compte
 
-[quote,]
-____
-Il est important de noter que chaque phase fait au minimum 1s.
-____
 
+> Il est important de noter que chaque phase fait au minimum 1s.
 
-[quote,]
-____
-La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.
-____
+> La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.

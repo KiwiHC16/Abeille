@@ -1,6 +1,6 @@
 {
   "id": "Abeille",
-  "name": "Abeille (ZigBee)",
+  "name": "Abeille",
   "description": "Plugin Abeille pour la passerelle Zigate (https://zigate.fr).",
   "usage": "Enjoy.",
   "licence": "AGPL",

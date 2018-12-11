@@ -133,13 +133,12 @@ Récupérez sont ID en sélectionnant "Vue d'ensemble"
 * cd /var/www/html/plugins/
 
 - si vous prenez le zip file
-[source,]
-----
+```
 * mkdir Abeille
 * cd Abeille
 * unzip le fichier téléchargé de GitHub dans le répertoire
 * cd ..
-----
+````
 
 - Si vous allez directement avec git
 ```
@@ -428,16 +427,14 @@ Mettre dans le champ:
 Attention a capture d'écran n'est pas à jour pour le deuxieme champs.
 
 Dans message mettre:
-[source,]
-----
+```
 targetExtendedAddress=XXXXXXXXXXXXXXXX&targetEndpoint=YY&ClusterId=ZZZZ&reportToAddress=AAAAAAAAAAAAAAAA
-----
+````
 
 Exemple avec tous les parametres:
-[source,]
-----
+````
 targetExtendedAddress=90fd9ffffe69131d&targetEndpoint=01&ClusterId=0006&reportToAddress=00158d00019a1b22
-----
+````
 
 
 Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 
@@ -458,14 +455,11 @@ Ensuite parametrer l'envoie de rapport:
 
 Attention a capture d'écran n'est pas à jour pour le deuxieme champs.
 
-[source,]
-----
-
+````
 targetEndpoint=01&ClusterId=0006&AttributeType=10&AttributeId=0000 pour retour d'état ampoule Ikea
 
 targetEndpoint=01&ClusterId=0008&AttributeType=20&AttributeId=0000 pour retour de niveau ampoule Ikea
-
-----
+````
 
 
 De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme: 

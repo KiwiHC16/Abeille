@@ -91,6 +91,157 @@ Exemples:
 Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) car je vous confirme que les prises Xiaomi et les ampoules IKEA font le routage des messages ZigBee.
 
 
+# Installation
+
+## ZiGate
+
+- La ZiGate est avec le bon firmware et connectée au port USB ou sur son module wifi (le firmware actuellement testé est la version 30e: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
+
+## Widget
+
+> Je vous propose d' installer des widgets avant d'installer Abeille pour avoir une interface graphique plus sympa mais ce n'ai pas obligatoire.
+
+- Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus joli.
+* baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
+* thermomètre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
+* humidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_30_2.png)
+
+=== Objet de référence
+
+- Créez un objet sur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
+
+![](../images/Capture_d_ecran_2018_01_21_a_10_53_59.png)
+
+![](../images/Capture_d_ecran_2018_01_21_a_10_54_13.png)
+
+Récupérez sont ID en sélectionnant "Vue d'ensemble"
+
+![](../images/Capture_d_ecran_2018_01_21_a_17_27_54.png)
+
+![](../images/Capture_d_ecran_2018_01_21_a_17_28_01.png)
+
+=== Installation du plugin
+
+==== Depuis Github
+
+- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers.
+* ssh sur votre jeedom
+* cd /var/www/html/plugins/
+
+- si vous prenez le zip file
+[source,]
+----
+* mkdir Abeille
+* cd Abeille
+* unzip le fichier téléchargé de GitHub dans le répertoire
+* cd ..
+----
+
+- Si vous allez directement avec git
+[source,]
+----
+* git clone https://github.com/KiwiHC16/Abeille.git Abeille
+----
+
+Et pour le développeurs, voici une info très utile:
+[source,]
+----
+Merci @lukebr 
+
+Pour une mise à jour à partir de github :
+cd ../../var/www/html/plugins/Abeille
+sudo git pull https://github.com/KiwiHC16/Abeille
+
+Et si il y a eu des bidouilles en local pour écraser avec dernière mise à jour :
+cd /var/www/html/plugins/Abeille
+sudo git reset --hard HEAD
+sudo git pull https://github.com/KiwiHC16/Abeille
+----
+
+- Et pour finir
+[source,]
+----
+* chmod -R 777 /var/www/html/plugins/Abeille
+* chown -R www-data:www-data /var/www/html/plugins/Abeille
+----
+
+[source,]
+Si vous voulez aller a un commit specifique:
+----
+git reset --hard dd7fa0a
+----
+
+==== Depuis le market
+
+* Rien de spécifique. Suivre la procédure classique. Pour l'instant il ne doit y avoir qu'une version en beta.
+
+==== Alternative : Installation du github depuis le market
+
+- Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github cocher activer . On enregistre.
+- Aller sur l'onglet plugin clic et gestion des plugin. Une fenetre s'ouvre que vous connaissez mais sur la gauche il y a une petite fleche pointant vers la droite (clic dessus)
+- Faire ajouter à partir d'une autre source et sélectionner GITHUB
+- Rentrer la paramètres suivants dans l'ordre :
+* ID logique du plugin: Abeille
+* Utilisateur ou organisateur: KiwiHC16
+* Nom du dépôt: Abeille
+* Branche: master
+
+=== Activation
+
+- Activation du plugin
+* Allez sur l'interface http Jeedom
+* Menu Plugin, Gestion des plugin
+* sélectionner Abeille
+
+![](../images/Capture_d_ecran_2018_01_21_a_10_53_37.png)
+
+* Activer
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_05_58.png)
+
+* Choisir le niveau de log et Sauvegarder
+* Lancer l'installation des dépendances, bouton Relancer et patienter (vous pouvez suivre l'avancement dans le fichier log: Abeille_dep)
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_06_33.png)
+
+* Quand le statut Dépendance passe à Ok en vert (Patientez 2 ou 3 minutes), définir l objet ID et le port serie puis Démarrer les Démons.
+
+[source,]
+----
+Si vous avez un zigate USB, choisissez le bon port /dev/ttyUSBx.
+Si vous avez une zigate Wifi, choisissez le port "WIFI" dans la liste et indiquer son adresse IP.
+----
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_07_14.png)
+
+* Si vous rafraîchissez la page vous devez voir les fichiers de logs.
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_07_38.png)
+
+A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration
+
+- Creation des objets
+* Allez dans la page de gestion des objets en sélectionnant le menu plugins, puis protocole domotique, puis Abeille
+* Vous devriez voir un premier objet "Ruche" (et éventuellement les objets abeille).
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_55_44.png)
+
+* Si vous allez sur le dashboard
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_07_55.png)
+
+* Tous les autres objets seront créés automatiquement dès détection.
+
+== Utilisation de Jeedom
+* Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si vous démarrez votre réseau ZigBee de zéro.
+* Le nom de l objet est "Abeille-" suivi de son adresse courte zigbee.
+
+*A noter: rafraichir la page si vous voyez pas de changement après une action, par exemple après l'ajout d'un équipement.*
+
+
+
 # Timers
 
 Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.

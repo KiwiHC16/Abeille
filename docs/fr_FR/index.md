@@ -35,7 +35,7 @@ Ce plugin inclus les fonctions de base pour la gestions de équipements comme On
 
 ![Timer Icone](../images/node_Timer.png)
 
-J’ai aussi intégré un « sous-plugin » TIMER qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
+J’ai aussi intégré un « sous-plugin » [TIMER](900_Timers.md) qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
 
 
 ## Enjoy

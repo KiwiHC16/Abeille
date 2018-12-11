@@ -59,7 +59,6 @@ Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pou
 
 [links](900_Timers.md)
 
-
 # Timers
 
 Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.
@@ -74,8 +73,11 @@ Maintenant vous pouvez même installar Abeille en n'utilisant que les Timers san
 Le timer possede 4 phases:
 
 T0->T1: RampUp de 0 a 100% => RampUp
+
 T1->T2: Stable a 100% => durationSeconde
+
 T2->T3: Ramp Down de 100% à 0% => RampDown
+
 T3-> : n existe plus
 
 Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulierement avec pour parametre la valeur en cours de RampUpDown.
@@ -180,5 +182,32 @@ Commande Start Complete
 actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
 
+# Système / Plateforme testées
+
+Jeedom fonctionne sur le systeme linux debian, de ce fait ce plugin est développé dans ce cadre. 
+
+Le focus est fait sur les configurations suivantes:
+
+- raspberry pi 3 (KiwiHC16 en prod)
+- Machine virtuelle sous debian 9 en x86 (KiwiHC16 en dev)
+- docker debian en x86 (edgd1er en dev)
+- raspberry Pi2 (edgd1er en prod) 
+
+Les autres envirronements
+
+Les autres environnements ne sont pas testés par défaut mais nous vous aiderons dans la mesure du possible.
+
+En retour d'experience sur le forum:
+
+- Windows ne fonctionne pas, car pas Linux (fichier fifo)
+- Ubuntu fonctionne mais demande de mettre les mains dans le cambouis, l'installation même de Jeedom n'est pas immédiate (https://github.com/KiwiHC16/Abeille/blob/master/Documentation/024_Installation_VM_Ubuntu.adoc @KiwiHC16)
+- Odroid/HardKernel devrait fonctionner
+-- U3 sous debian: install classique (@KiwiHC16)
+-- XU4 sous ubuntu: https://github.com/KiwiHC16/Abeille/blob/master/Documentation/026_Installation_Odroid_XU4_Ubuntu.adoc (@KiwiHC16)
+
+Equipements
+
+La liste des équipements testés est consolidé dans le fichier excel: https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/documentsDeDev/AbeilleEquipmentFunctionSupported.xlsx?raw=true
+(Le contenu du fichier est souvent en retard par rapport à la réalité)
 
 

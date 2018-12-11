@@ -108,7 +108,9 @@ Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) 
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_30_2.png)
 
-=== Objet de référence
+## Objet de référence
+
+> Afin de trouver rapidement les nouveaux équipements, il est nécessaire de créer une pièce (un objet jeedom) auquel seront rattachés par défaut.
 
 - Créez un objet sur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
 

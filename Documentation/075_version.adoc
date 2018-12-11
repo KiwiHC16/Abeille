@@ -1,6 +1,10 @@
 
 = Versions / Change Log
 
+2018-12-12
+
+- Ampoule Couleur Standard ZigBee
+- Ampoule Dimmable Standard ZigBee
 
 2018-12-11
 

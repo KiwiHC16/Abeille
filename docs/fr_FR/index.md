@@ -1195,7 +1195,15 @@ PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
 
 
 
+# Polling
 
+## Ping toutes les 15 minutes
+
+Par defaut le cron, toutes les 15 minutes, fait un ping des equipements qui n'ont pas de batterie definie. On suppose qu'ils sont sur secteur et que donc ils écoutent et qu'ils repondent à la réquete.
+
+## Etat toutes les minutes
+
+Récupère les infos que ne remonte pas par défaut toutes les minutes si défini dans l 'equipement.
 
 
 

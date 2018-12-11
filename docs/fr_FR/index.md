@@ -31,373 +31,6 @@ Ce plugin inclus les fonctions de base pour la gestions de équipements comme On
 * Fonctionne avec Homebridge
 -    …
 
-# Profalux
-
-## Inclusion d'un volet
-
-Comme pour tous modules ZigBee et pour bien comprendre la procédure, il faut savoir que :
-
-La ZiGate est un coordinateur ZigBee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule ZigBee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.
-
-N’ayant pas de boutons ou d’interfaces, un volet Profalux Zoé ne peux pas rentrer tout seul sur un réseau ZigBee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la ZiGate.
-
-- Étape 1:
-
-La première chose à faire est de remettre à zéro la télécommande maître. Pour cela, il faut:
-
-* Retourner l’appareil
-* A l’aide d’un trombone, appuyer 5 fois sur le bouton R
-
-La télécommande va clignoter rouge puis vert
-
-![](../images/profalux_inclusion_etape1.pn)
-
-- Étape 2 : Appairage du volet à la télécommande
-
-Suite à l’étape 1, le volet va faire un va et vient (attendre un petit moment).
-
-Dans la minute suivante, appuyer sur la touche STOP
-
-Le volet va faire un va et vient (signe que la commande a bien été reçue). Pour tester le bon fonctionnement, vous devriez pouvoir piloter le volet avec la télécommande.
-
-- Étape 3 : Mettre la ruche en mode inclusion
-
-Pour cela appuyer sur le bouton inclusion de votre ruche depuis le dashboard.
-
-![](../images/profalux_inclusion_etape3.pn)
-
-- Étape 4 : Appairer le volet à la ZiGate
-
-Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
-
-* Retourner votre télécommande
-* Appuyer 1 fois sur R
-* Appuyer ensuite sur la flèche du haut
-* Le moteur devrait faire un va et vient … c’est gagné !
-
-* Pour finir, appuyer sur la touche STOP de la télécommande.
-
-![](../images/profalux_inclusion_etape4.pn)
-
-Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre.
-
-
-
-### Résolution de problèmes:
-
-- Le volet ne répond plus à la télécommande.
-
-Si par une mauvaise manipulation votre volet ne répond plus à la télécommande, il est nécessaire de faire un reset de la télécommande et du volet.
-
-* Retourner l’appareil
-* A l’aide d’un trombone, appuyer 5 fois sur le bouton R
-
-image::images/profalux_inclusion_etape1.png[]
-
-* Couper l'alimentation électrique
-* Réunir les fils noir et marron puis les brancher sur la borne de phase
-
-![](../images/profalux_inclusion_reset_volet2.png)
-
-* Remettre l'alimentation électrique pendant 5 secondes. Le volet devrait faire un petit mouvement.
-* Couper l'alimentation électrique
-* Séparer les fils noir et marron. Brancher le fils marron sur la phase. Si votre fils noir était brancher avec le bleu aupparavant, rebrancher le avec le bleu sinon laisser le fils noir seul en pensant à l'isoler(capuchon noir)
-
-![](../images/profalux_inclusion_reset_volet3.pn)
-
-* Remmettre l'alimentation électrique et dans la minute appuyer sur le bouton stop
-
-![](../images/profalux_inclusion_reset_volet4.png)
-
-Le volet devrait faire des mouvement de va-et-vient puis s'arrêter
-* La télécommande devrait à nouveau fonctionner
-* Recommencer à nouveau la procédure d'inclusion
-
-### Retour expérience
-
-@MaxDak
-```
-Confronté au même problème à savoir: va et viens en guise de réponse à toutes les commandes (mes volets profalux sont récents moins d'un mois).
-J'ai enfin réussi à les piloter !
-J'ai suivi la procédure classique d'appairage à la seule différence que j'ai fermé totalement le volet avant de commencer la procédure.
-Et la miracle toutes les commandes fonctionnent...
-````
-
-
-
-# Xiaomi
-
-## Temperature Carré, Temperature Rond, Bouton Carré, Sensor Door, Presence IR
-
-### Creation objet
-
-Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
-
-### Si deja associé
-
-Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
-
-### Prise
-
-#### Creation objet
-
-Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une Inclusion doit provoquer la création de l'obet dans Abeille
-
-
-#### Si deja associé
-
-Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
-
-### Bouton Rond (lumi.sensor_switch)
-
-### Appui court (<1s) sur bouton arriere avec trombone
-
-Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
-Puis son nom lumi.sensor_switch
-
-#### Fonctionnement
-
-Ce bouton envoie un message lors de l'appui mais aussi lors du relachement. L'état dans Abeille/Jeedom reflete l'état du bouton.
-
-#### Scenario
-
-Sur reception d'un changement l'état, un scénario peut être lancé et la valeur de l'état peut être testée lors du déroulement du scénario.
-
-### Bouton Carre (lumi.sensor_switch.aq2)
-
-#### Appui court (<1s) sur bouton lateral
-
-Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
-
-#### Fonctionnement
-
-##### Etat
-
-Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
-
-Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
-
-##### Multi
-
-Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par defaut l'objet créé demande à jeedom de faire un retour d'état à 0 apres une minute. Cela peut être enlevé dans les parametres de la commande.
-
-#### Scenario
-
-#### Etat
-
-Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
-
-Par défaut le bouton est configuré pour déclencher les scenariis à chaque appui (même si l'etat était déjà à 1). Mais Jeedom va aussi provoquer un evenement au bout d'une minute en passant la valeur à 0. 
-
-Lors de l'execution du scenario, si vous testé l'état du bouton est qu'il est à un vous avez recu un evenement appui bouton, si l'état est 0, vous avez recu un evenement retour à zero apres une minute. 
-
-Par exemple pour commander une ampoule Ikea:
-
-![](../images/Capture_d_ecran_2018_09_04_a_13_05_49.png)
-
-![](../images/Capture_d_ecran_2018_09_04_a_13_05_.36.png)
-
-#### Multi
-
-Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple. 
-Par defaut, en gros, le scenario se declenche et si vous testez la valeur multi > 1, c'est un evenement appui multiple et si valeur à 0 alors evenement jeedom de retour d etat.
-
-### Capteur Inondation (lumi.sensor_wleak.aq1)
-
-#### Appui court (<1s) sur le dessus
-
-Remonte son nom et attribut ff01 (longueur 34)
-
-### Capteur de Porte Ovale (lumi.sensor_magnet)
-
-#### Appui court (<1s) avec un trombone
-
-Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
-Puis on son nom lumi.sensor_magnet
-
-### Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
-
-#### Appui court (<1s) sur bouton lateral
-
-Remonte son nom et ff01 (len 29)
-
-#### Appui Long (7s) sur bouton lateral
-
-Apparaige
-Remonte son nom et Application Version
-Remonte ff01 (len 29)
-
-
-### Capteur Presence V1 (lumi.sensor_motion)
-
-#### Appui court (<1s) avec trombone
-
-#### Appui long (7s) avec trombone
-
-Appairage
-Remonte son nom
-Remonet Appli Version
-Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
-
-#### Double flash bleu sans action de notre part
-
-Visiblement quand le sensor fait un rejoin apres avoir perdu le reseau par exemple, il fait un double flah bleu.
-
-### Capteur de Presence V2
-
-#### Appui court (<1s) sur bouton lateral
-
-Remonte son nom et FF01 de temps en temps.
-
-#### Appui long (7s) sur bouton lateral
-
-Leave message
-Appairage
-Remonte son nom et SW version
-Remonte FF01 (len 33)
-
-#### Comportement
-
-Il remonte une info a chaque detection de presence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d'elle même. Ce n'est pas un capteur de luminosité qui remonte l info périodiquement.
-
-### Capteur Temperature Rond (lumi.sensor_ht)
-
-#### Appui court (<1s) sur bouton lateral
-
-Remonte son nom
-
-#### Appui long (7s) sur bouton lateral
-
-Apparaige
-Remonte son nom et appli version
-Remonte ff01 (len 31)
-
-
-### Capteur Temperature Carré (lumi.weather)
-
-#### Appui court (<1s) sur bouton lateral
-
-Si sur le réseau: Remonte son nom
-Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
-Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu
-
-#### Appui long (7s) sur bouton lateral
-
-Leave
-Apparaige
-Remonte son nom et appli version
-Remonte ff01 (len 37)
-
-#### Info
-
-Rapport:
-
-- petite variation de temperature ou humidité, rapport one fois par heure
-- Si variation de plus de 0,5°C ou de plus de 6% d'humidité aors rapport immédiat
-
-Précision (Source Appli IOS MI FAQ Xiaomi)
-
-- Temperature +-0,3°C
-- Humidité +-3%
-
-### Xiaomi Cube Aqara
-
-![](../images/Capture_d_ecran_2018_06_12_a_22_00_03.png)
-
-### Wall Switch Double Battery (lumi.sensor_86sw2)
-
-### Appui long (7s) sur bouton de gauche
-
-Apparaige
-Remonte son nom et appli version
-Remonte ff01 (len 37)
-
-#### getName
-
-Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de droite (7s) et pendant cette periode on fait un getName depuis la ruche.
-
-#### Appui Tres Long (>10s) sur bouton de gauche
-
-Leave
-
-
-### Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
-
-#### Appui long (7s) sur bouton de gauche
-
-Apparaige
-Remonte son nom et appli version
-Remonte d autres trucs mais je ne sais plus ...
-
-#### getName
-
-Il repond au getName sur EP 01 s.
-
-#### Appui Tres Long (>8s) sur bouton de gauche
-
-Leave
-
-### Capteur Vibration
-
-#### Appui long (7s) sur bouton de gauche
-
-Apparaige
-Remonte son nom et appli version
-Remonte d autres trucs mais je ne sais plus ...
-
-#### Attribute 0055
-
-Il semblerai qu'une valeur:
-
-* 1 indique une detection de vibration
-* 2 indique un rotation
-* 3 indique une chute
-
-#### Attribute 0503
-
-Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
-
-#### Attribut 0508
-
-Inconnu, est envoyé après attribut 0055.
-
-### Capteur Smoke
-
-#### 3 appuis sur le bouton de facade
-
-Après avoir mis la zigate en mode inclusion, 3 appuis sur le bouton en facade permet de joindre le réseau.
-
-La même action, 3 appuis, alors que la zigate n'est pas en mode inclusion permet de quitter le réseau.
-
-#### Sensibilité du capteur
-
-Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev).
-
-#### Test du capteur
-
-Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir entre 1 et 3 bips).
-
-#### Réveil
-
-Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.
-
-### Capteur Gaz
-
-#### Appairage
-
-#### Routeur
-
-Ce capteur est un router.
-
-#### Parametres
-
-Vous pouvez choisir le niveau de sensibilié: Low - Moyen - High
-
-#### Tester la bonne connection au réseau
-
-Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir 3 bips à 5s d'intervalles).
-
-
 
 
 
@@ -894,6 +527,375 @@ Approcher la telecommande d'une ampoule de test qui est sur le reseau. Faire un 
 #### Reset d une ampoule
 
 Si vous appuyez, sur I et O en même temps à moins de quelques centimetres, l'ampoule doit faire un reset et essayer de joindre un réseau. Si la zigate est en mode inclusion alors vous devez récurerer votre ampoule. Ca marche sur des ampoules Hue et Ikea, probablement pour d autres aussi.
+
+
+# Profalux
+
+## Inclusion d'un volet
+
+Comme pour tous modules ZigBee et pour bien comprendre la procédure, il faut savoir que :
+
+La ZiGate est un coordinateur ZigBee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule ZigBee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.
+
+N’ayant pas de boutons ou d’interfaces, un volet Profalux Zoé ne peux pas rentrer tout seul sur un réseau ZigBee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la ZiGate.
+
+- Étape 1:
+
+La première chose à faire est de remettre à zéro la télécommande maître. Pour cela, il faut:
+
+* Retourner l’appareil
+* A l’aide d’un trombone, appuyer 5 fois sur le bouton R
+
+La télécommande va clignoter rouge puis vert
+
+![](../images/profalux_inclusion_etape1.png)
+
+- Étape 2 : Appairage du volet à la télécommande
+
+Suite à l’étape 1, le volet va faire un va et vient (attendre un petit moment).
+
+Dans la minute suivante, appuyer sur la touche STOP
+
+Le volet va faire un va et vient (signe que la commande a bien été reçue). Pour tester le bon fonctionnement, vous devriez pouvoir piloter le volet avec la télécommande.
+
+- Étape 3 : Mettre la ruche en mode inclusion
+
+Pour cela appuyer sur le bouton inclusion de votre ruche depuis le dashboard.
+
+![](../images/profalux_inclusion_etape3.png)
+
+- Étape 4 : Appairer le volet à la ZiGate
+
+Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
+
+* Retourner votre télécommande
+* Appuyer 1 fois sur R
+* Appuyer ensuite sur la flèche du haut
+* Le moteur devrait faire un va et vient … c’est gagné !
+
+* Pour finir, appuyer sur la touche STOP de la télécommande.
+
+![](../images/profalux_inclusion_etape4.png)
+
+Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre.
+
+
+
+### Résolution de problèmes:
+
+- Le volet ne répond plus à la télécommande.
+
+Si par une mauvaise manipulation votre volet ne répond plus à la télécommande, il est nécessaire de faire un reset de la télécommande et du volet.
+
+* Retourner l’appareil
+* A l’aide d’un trombone, appuyer 5 fois sur le bouton R
+
+image::images/profalux_inclusion_etape1.png[]
+
+* Couper l'alimentation électrique
+* Réunir les fils noir et marron puis les brancher sur la borne de phase
+
+![](../images/profalux_inclusion_reset_volet2.png)
+
+* Remettre l'alimentation électrique pendant 5 secondes. Le volet devrait faire un petit mouvement.
+* Couper l'alimentation électrique
+* Séparer les fils noir et marron. Brancher le fils marron sur la phase. Si votre fils noir était brancher avec le bleu aupparavant, rebrancher le avec le bleu sinon laisser le fils noir seul en pensant à l'isoler(capuchon noir)
+
+![](../images/profalux_inclusion_reset_volet3.pn)
+
+* Remmettre l'alimentation électrique et dans la minute appuyer sur le bouton stop
+
+![](../images/profalux_inclusion_reset_volet4.png)
+
+Le volet devrait faire des mouvement de va-et-vient puis s'arrêter
+* La télécommande devrait à nouveau fonctionner
+* Recommencer à nouveau la procédure d'inclusion
+
+### Retour expérience
+
+@MaxDak
+```
+Confronté au même problème à savoir: va et viens en guise de réponse à toutes les commandes (mes volets profalux sont récents moins d'un mois).
+J'ai enfin réussi à les piloter !
+J'ai suivi la procédure classique d'appairage à la seule différence que j'ai fermé totalement le volet avant de commencer la procédure.
+Et la miracle toutes les commandes fonctionnent...
+````
+
+
+
+# Xiaomi
+
+## Temperature Carré, Temperature Rond, Bouton Carré, Sensor Door, Presence IR
+
+### Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
+
+### Si deja associé
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
+
+### Prise
+
+#### Creation objet
+
+Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une Inclusion doit provoquer la création de l'obet dans Abeille
+
+
+#### Si deja associé
+
+Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
+
+### Bouton Rond (lumi.sensor_switch)
+
+### Appui court (<1s) sur bouton arriere avec trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis son nom lumi.sensor_switch
+
+#### Fonctionnement
+
+Ce bouton envoie un message lors de l'appui mais aussi lors du relachement. L'état dans Abeille/Jeedom reflete l'état du bouton.
+
+#### Scenario
+
+Sur reception d'un changement l'état, un scénario peut être lancé et la valeur de l'état peut être testée lors du déroulement du scénario.
+
+### Bouton Carre (lumi.sensor_switch.aq2)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
+
+#### Fonctionnement
+
+##### Etat
+
+Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
+
+Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
+
+##### Multi
+
+Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par defaut l'objet créé demande à jeedom de faire un retour d'état à 0 apres une minute. Cela peut être enlevé dans les parametres de la commande.
+
+#### Scenario
+
+#### Etat
+
+Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
+
+Par défaut le bouton est configuré pour déclencher les scenariis à chaque appui (même si l'etat était déjà à 1). Mais Jeedom va aussi provoquer un evenement au bout d'une minute en passant la valeur à 0. 
+
+Lors de l'execution du scenario, si vous testé l'état du bouton est qu'il est à un vous avez recu un evenement appui bouton, si l'état est 0, vous avez recu un evenement retour à zero apres une minute. 
+
+Par exemple pour commander une ampoule Ikea:
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_49.png)
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_.36.png)
+
+#### Multi
+
+Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple. 
+Par defaut, en gros, le scenario se declenche et si vous testez la valeur multi > 1, c'est un evenement appui multiple et si valeur à 0 alors evenement jeedom de retour d etat.
+
+### Capteur Inondation (lumi.sensor_wleak.aq1)
+
+#### Appui court (<1s) sur le dessus
+
+Remonte son nom et attribut ff01 (longueur 34)
+
+### Capteur de Porte Ovale (lumi.sensor_magnet)
+
+#### Appui court (<1s) avec un trombone
+
+Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+Puis on son nom lumi.sensor_magnet
+
+### Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et ff01 (len 29)
+
+#### Appui Long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et Application Version
+Remonte ff01 (len 29)
+
+
+### Capteur Presence V1 (lumi.sensor_motion)
+
+#### Appui court (<1s) avec trombone
+
+#### Appui long (7s) avec trombone
+
+Appairage
+Remonte son nom
+Remonet Appli Version
+Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
+
+#### Double flash bleu sans action de notre part
+
+Visiblement quand le sensor fait un rejoin apres avoir perdu le reseau par exemple, il fait un double flah bleu.
+
+### Capteur de Presence V2
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom et FF01 de temps en temps.
+
+#### Appui long (7s) sur bouton lateral
+
+Leave message
+Appairage
+Remonte son nom et SW version
+Remonte FF01 (len 33)
+
+#### Comportement
+
+Il remonte une info a chaque detection de presence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d'elle même. Ce n'est pas un capteur de luminosité qui remonte l info périodiquement.
+
+### Capteur Temperature Rond (lumi.sensor_ht)
+
+#### Appui court (<1s) sur bouton lateral
+
+Remonte son nom
+
+#### Appui long (7s) sur bouton lateral
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 31)
+
+
+### Capteur Temperature Carré (lumi.weather)
+
+#### Appui court (<1s) sur bouton lateral
+
+Si sur le réseau: Remonte son nom
+Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
+Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu
+
+#### Appui long (7s) sur bouton lateral
+
+Leave
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)
+
+#### Info
+
+Rapport:
+
+- petite variation de temperature ou humidité, rapport one fois par heure
+- Si variation de plus de 0,5°C ou de plus de 6% d'humidité aors rapport immédiat
+
+Précision (Source Appli IOS MI FAQ Xiaomi)
+
+- Temperature +-0,3°C
+- Humidité +-3%
+
+### Xiaomi Cube Aqara
+
+![](../images/Capture_d_ecran_2018_06_12_a_22_00_03.png)
+
+### Wall Switch Double Battery (lumi.sensor_86sw2)
+
+### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte ff01 (len 37)
+
+#### getName
+
+Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de droite (7s) et pendant cette periode on fait un getName depuis la ruche.
+
+#### Appui Tres Long (>10s) sur bouton de gauche
+
+Leave
+
+
+### Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
+
+#### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+#### getName
+
+Il repond au getName sur EP 01 s.
+
+#### Appui Tres Long (>8s) sur bouton de gauche
+
+Leave
+
+### Capteur Vibration
+
+#### Appui long (7s) sur bouton de gauche
+
+Apparaige
+Remonte son nom et appli version
+Remonte d autres trucs mais je ne sais plus ...
+
+#### Attribute 0055
+
+Il semblerai qu'une valeur:
+
+* 1 indique une detection de vibration
+* 2 indique un rotation
+* 3 indique une chute
+
+#### Attribute 0503
+
+Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
+
+#### Attribut 0508
+
+Inconnu, est envoyé après attribut 0055.
+
+### Capteur Smoke
+
+#### 3 appuis sur le bouton de facade
+
+Après avoir mis la zigate en mode inclusion, 3 appuis sur le bouton en facade permet de joindre le réseau.
+
+La même action, 3 appuis, alors que la zigate n'est pas en mode inclusion permet de quitter le réseau.
+
+#### Sensibilité du capteur
+
+Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev).
+
+#### Test du capteur
+
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir entre 1 et 3 bips).
+
+#### Réveil
+
+Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.
+
+### Capteur Gaz
+
+#### Appairage
+
+#### Routeur
+
+Ce capteur est un router.
+
+#### Parametres
+
+Vous pouvez choisir le niveau de sensibilié: Low - Moyen - High
+
+#### Tester la bonne connection au réseau
+
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir 3 bips à 5s d'intervalles).
+
+
 
 
 # Timers

@@ -46,24 +46,6 @@ J’ai aussi intégré un « sous-plugin » [TIMER](#tocAnchor-1-6) qui fonction
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 
-
-# Raccourcis
-
-[Premiers pas](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/010_Introduction.adoc)
-
-[Pour Tous](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/)
-
-[Equipements supportés](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
-
-[Pour les développeurs](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/012_Dev.adoc)
-
-[Systèmes Testés](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/015_Systemes_Testes.adoc)
-
-[Change Log](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/075_version.adoc)
-
-[links](900_Timers.md)
-
-
 # Plus de détails
 
 Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
@@ -508,11 +490,11 @@ avec "aaaa" le nom du groupe souhaité.
 
 ## Ampoule
 
-#### Bouton Identify
+### Bouton Identify
 
 Ce bouton est créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
 
-#### Creation objet
+### Creation objet
 
 - Si l'ampoule n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
 
@@ -521,7 +503,7 @@ Ce bouton est créé au moment de la création de l'objet. Celui ci permet de de
 * l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence (son nom) et la création par Abeille de l'objet associé. 
 * Vous pouvez aussi Utiliser la commande getName dans la ruche, mettre l’adresse courte dans le titre et rien dans le message. Puis rafraichir le dashboard et la l’ampoule doit être présente.
 
-#### Retour d'état
+### Retour d'état
 
 Pour que l'ampoule puisse remonter automatiquement son état à Jeedom, il faut mettre en place un "bind" et un "set report".
 
@@ -544,7 +526,7 @@ ur que cela fonctionne il est important que le champ IEEE soit rempli. Si tel n'
 > Y a encore du travail en cours pour simplifier cette partie.
 
 
-#### Bind specifique:
+### Bind specifique:
 
 Identifiez l'ampoule que vous voulez parametrer:
 
@@ -635,9 +617,9 @@ Le DestinatioEndPoint pour une ampoule Ikea est 01. Pour le groupe vous pouvez c
 ![](../images/Capture_d_ecran_2018_03_07_a_11_41_21.png)
 
 
-#### Telecommnande Ronde 5 boutons
+## Telecommnande Ronde 5 boutons
 
-#### Télécommande réelle
+### Télécommande réelle
 
 (Pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom, sur un appui bouton telecommande, la ZiGate ne transmet rien au plugin Abeille).
 
@@ -689,7 +671,7 @@ Avoir une télécommande et une ampoule Ikea sur le même réseau ZigBee. Attent
 >Il existe un bouton « link » à côté de la pile bouton de la télécommande. 4 clicks pour appairer la télécommande à la ZiGate. Un appuie long près de l’ampoule pour le touchlink.
 
 
-#### Télécommande Virtuelle
+### Télécommande Virtuelle
 
 La télécommande virtuelle est un objet Jeedom qui envoies les commandes ZigBee comme si c'était une vrai télécommande IKEA.
 
@@ -710,13 +692,13 @@ Vous avez maintenant une télécommande pour controler le groupe AAAA.
 ![](../images/Capture_d_ecran_2018_03_02_a_10_35_28.png)
 
 
-### Gradateur
+## Gradateur
 
-#### Un clic sur OO
+### Un clic sur OO
 
 Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il n'y a pas d'association (Probablement le cas si deja associé à una utre reseau).
 
-#### 4 clics sur OO
+### 4 clics sur OO
 
 Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un reveil du gradateur permet de recuperer le nom.
 
@@ -724,14 +706,14 @@ Voir la telecommande 5 boutons pour avoir plus de details sur le controle de gro
 
 # Philips Hue
 
-###  Creation objet dans Abeille
+##  Creation objet dans Abeille
 
-#### Association
+### Association
 
 - Ampoule neuve Hue White, Abeille en mode Inclusion, branchement de l'ampoule. L'ampoule s'associe et envoie des messages "annonce" mais pas son nom. Si vous faites un getName avec son adresse courte dans le champ Titre et 0B (destinationEndPoint) dans le champ Message, alors elle doit répondre avec son nom, ce qui va créer l'objet dans le dashboard (rafraichir).
 
 
-#### Si deja associé
+### Si deja associé
 
 - Si l’ampoule est déjà associée à la zigate, avec Abeille en mode Automatique,
 
@@ -739,15 +721,15 @@ Voir la telecommande 5 boutons pour avoir plus de details sur le controle de gro
 
 * Utiliser la commande getName dans la ruche, mettre l'adresse courte dans le titre et 03 (destinationndPoint) dans le message. Puis rafraichir le dashboard et la l'ampoule doit être présente.
 
-### Philips Hue Go
+## Philips Hue Go
 
-#### Association
+### Association
 
-#### Si deja associé
+### Si deja associé
 
 * tres long appui sur le bouton arriere de l ampoule plus de 40s probablement avec la zigate qui n'est pas en mode inclusion. La lampe se met a flasher. Elle s'est deconnectée du réseau. Mettre la zigate en Inclusion et la lampe envoie des messages "annonce" et elle doit se créer dans Abeille.
 
-#### Colour Control
+### Colour Control
 
 Sur un objet ampoule vous pourrez trouver la commande Colour:
 
@@ -761,7 +743,7 @@ Par exemple:
 * FFFF-0000 -> Rouge
 * 0000-FFFF -> Vert
 
-#### Group Control
+### Group Control
 
 ![](..//Capture-d_ecran_2018_02_14_a_11_15_18.png)
 
@@ -774,14 +756,17 @@ Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ..
 Appuie avec un trombone longtemps sur le bouton en face arriere "setup" avec la zigate en mode Inclusion. Un objet télécommande doit être créé dans Abeille.
 
 
-#### Récupérer le groupe utilisé
+### Récupérer le groupe utilisé
 
 Approcher la telecommande d'une ampoule de test qui est sur le reseau. Faire un appui long >10s sur le I de la télécommande. Attendre le clignotement de l'ampoule. Ca doit être bon. Si vous appuyé sur I ou O, elle doit s'allumer et s'éteindre. Et les bouton lumière plus et moins doivent changer l'intensité. Ensuite vous pouvez récupérer le groupe en interrogeant l'ampoule depuis la ruche avec un getGroupMembership. 
 
-#### Reset d une ampoule
+### Reset d une ampoule
 
 Si vous appuyez, sur I et O en même temps à moins de quelques centimetres, l'ampoule doit faire un reset et essayer de joindre un réseau. Si la zigate est en mode inclusion alors vous devez récurerer votre ampoule. Ca marche sur des ampoules Hue et Ikea, probablement pour d autres aussi.
 
+## Telecommande
+
+5 appuis sur bouton reset au dos avec un trombone et la télécommande s'appaire si la zigate en mode inclusion.
 
 # Profalux
 
@@ -889,53 +874,53 @@ Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automati
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui court sur le bouton latéral doit provoquer l'envoie d'un message pour signaler sa présence et la création par Abeille de l'objet associé.
 
-### Prise
+## Prise
 
-#### Creation objet
+### Creation objet
 
 Si l'équipement n'est pas associée à la zigate, avec Abeille en mode Automatique, une Inclusion doit provoquer la création de l'obet dans Abeille
 
 
-#### Si deja associé
+### Si deja associé
 
 Si l'équipement est déjà associée à la zigate, avec Abeille en mode Automatique, un appui long (7s) sur le bouton latéral doit provoquer l'envoie d'un message Leave (la prise se deconnecte du reseau) puis la prise envoie des messages "annonce" pour signaler sa présence. Mettre en mode Inclusion la Zigate et la création par Abeille de l'objet associé doit se faire.
 
-### Bouton Rond (lumi.sensor_switch)
+## Bouton Rond (lumi.sensor_switch)
 
 ### Appui court (<1s) sur bouton arriere avec trombone
 
 Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
 Puis son nom lumi.sensor_switch
 
-#### Fonctionnement
+### Fonctionnement
 
 Ce bouton envoie un message lors de l'appui mais aussi lors du relachement. L'état dans Abeille/Jeedom reflete l'état du bouton.
 
-#### Scenario
+### Scenario
 
 Sur reception d'un changement l'état, un scénario peut être lancé et la valeur de l'état peut être testée lors du déroulement du scénario.
 
-### Bouton Carre (lumi.sensor_switch.aq2)
+## Bouton Carre (lumi.sensor_switch.aq2)
 
-#### Appui court (<1s) sur bouton lateral
+### Appui court (<1s) sur bouton lateral
 
 Remonte son nom et attribut ff01 (longueur 26) qui est décodé par le parser.
 
-#### Fonctionnement
+### Fonctionnement
 
-##### Etat
+#### Etat
 
 Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
 
 Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la reception du message et jeedom attend 1 minute avant de le remettre à 0.
 
-##### Multi
+#### Multi
 
 Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par defaut l'objet créé demande à jeedom de faire un retour d'état à 0 apres une minute. Cela peut être enlevé dans les parametres de la commande.
 
-#### Scenario
+### Scenario
 
-#### Etat
+### Etat
 
 Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche evenement. De ce fait la gestion des scenariis est un peu differente du bouton rond. 
 
@@ -949,40 +934,40 @@ Par exemple pour commander une ampoule Ikea:
 
 ![](../images/Capture_d_ecran_2018_09_04_a_13_05_.36.png)
 
-#### Multi
+### Multi
 
 Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple. 
 Par defaut, en gros, le scenario se declenche et si vous testez la valeur multi > 1, c'est un evenement appui multiple et si valeur à 0 alors evenement jeedom de retour d etat.
 
-### Capteur Inondation (lumi.sensor_wleak.aq1)
+## Capteur Inondation (lumi.sensor_wleak.aq1)
 
-#### Appui court (<1s) sur le dessus
+### Appui court (<1s) sur le dessus
 
 Remonte son nom et attribut ff01 (longueur 34)
 
-### Capteur de Porte Ovale (lumi.sensor_magnet)
+## Capteur de Porte Ovale (lumi.sensor_magnet)
 
-#### Appui court (<1s) avec un trombone
+### Appui court (<1s) avec un trombone
 
 Remonte un champ ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor presence Xiaomi #141, devrait être dans ZiGate, Fixed in next version (3.0e) )
 Puis on son nom lumi.sensor_magnet
 
-### Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
+## Capteur Porte Rectangle (lumi.sensor_magnet.aq2)
 
-#### Appui court (<1s) sur bouton lateral
+### Appui court (<1s) sur bouton lateral
 
 Remonte son nom et ff01 (len 29)
 
-#### Appui Long (7s) sur bouton lateral
+### Appui Long (7s) sur bouton lateral
 
 Apparaige
 Remonte son nom et Application Version
 Remonte ff01 (len 29)
 
 
-### Capteur Presence V1 (lumi.sensor_motion)
+## Capteur Presence V1 (lumi.sensor_motion)
 
-#### Appui court (<1s) avec trombone
+### Appui court (<1s) avec trombone
 
 #### Appui long (7s) avec trombone
 
@@ -995,37 +980,37 @@ Remonte ff02 avec 6 elements (Pas recu par le parser, Remontée batterie sensor 
 
 Visiblement quand le sensor fait un rejoin apres avoir perdu le reseau par exemple, il fait un double flah bleu.
 
-### Capteur de Presence V2
+## Capteur de Presence V2
 
-#### Appui court (<1s) sur bouton lateral
+### Appui court (<1s) sur bouton lateral
 
 Remonte son nom et FF01 de temps en temps.
 
-#### Appui long (7s) sur bouton lateral
+### Appui long (7s) sur bouton lateral
 
 Leave message
 Appairage
 Remonte son nom et SW version
 Remonte FF01 (len 33)
 
-#### Comportement
+### Comportement
 
 Il remonte une info a chaque detection de presence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d'elle même. Ce n'est pas un capteur de luminosité qui remonte l info périodiquement.
 
-### Capteur Temperature Rond (lumi.sensor_ht)
+## Capteur Temperature Rond (lumi.sensor_ht)
 
-#### Appui court (<1s) sur bouton lateral
+### Appui court (<1s) sur bouton lateral
 
 Remonte son nom
 
-#### Appui long (7s) sur bouton lateral
+### Appui long (7s) sur bouton lateral
 
 Apparaige
 Remonte son nom et appli version
 Remonte ff01 (len 31)
 
 
-### Capteur Temperature Carré (lumi.weather)
+## Capteur Temperature Carré (lumi.weather)
 
 #### Appui court (<1s) sur bouton lateral
 
@@ -1033,14 +1018,14 @@ Si sur le réseau: Remonte son nom
 Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
 Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu
 
-#### Appui long (7s) sur bouton lateral
+### Appui long (7s) sur bouton lateral
 
 Leave
 Apparaige
 Remonte son nom et appli version
 Remonte ff01 (len 37)
 
-#### Info
+### Info
 
 Rapport:
 
@@ -1052,11 +1037,11 @@ Précision (Source Appli IOS MI FAQ Xiaomi)
 - Temperature +-0,3°C
 - Humidité +-3%
 
-### Xiaomi Cube Aqara
+## Xiaomi Cube Aqara
 
 ![](../images/Capture_d_ecran_2018_06_12_a_22_00_03.png)
 
-### Wall Switch Double Battery (lumi.sensor_86sw2)
+## Wall Switch Double Battery (lumi.sensor_86sw2)
 
 ### Appui long (7s) sur bouton de gauche
 
@@ -1064,40 +1049,40 @@ Apparaige
 Remonte son nom et appli version
 Remonte ff01 (len 37)
 
-#### getName
+### getName
 
 Il repond au getName sur EP 01 si on fait un appuie long sur l'interrupteur de droite (7s) et pendant cette periode on fait un getName depuis la ruche.
 
-#### Appui Tres Long (>10s) sur bouton de gauche
+### Appui Tres Long (>10s) sur bouton de gauche
 
 Leave
 
 
-### Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
+## Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)
 
-#### Appui long (7s) sur bouton de gauche
+### Appui long (7s) sur bouton de gauche
 
 Apparaige
 Remonte son nom et appli version
 Remonte d autres trucs mais je ne sais plus ...
 
-#### getName
+### getName
 
 Il repond au getName sur EP 01 s.
 
-#### Appui Tres Long (>8s) sur bouton de gauche
+### Appui Tres Long (>8s) sur bouton de gauche
 
 Leave
 
-### Capteur Vibration
+## Capteur Vibration
 
-#### Appui long (7s) sur bouton de gauche
+### Appui long (7s) sur bouton de gauche
 
 Apparaige
 Remonte son nom et appli version
 Remonte d autres trucs mais je ne sais plus ...
 
-#### Attribute 0055
+### Attribute 0055
 
 Il semblerai qu'une valeur:
 
@@ -1105,47 +1090,47 @@ Il semblerai qu'une valeur:
 * 2 indique un rotation
 * 3 indique une chute
 
-#### Attribute 0503
+### Attribute 0503
 
 Pourrait être la rotation apres l envoie de l'attribut 0055 à la valeur 2
 
-#### Attribut 0508
+### Attribut 0508
 
 Inconnu, est envoyé après attribut 0055.
 
-### Capteur Smoke
+## Capteur Smoke
 
-#### 3 appuis sur le bouton de facade
+### 3 appuis sur le bouton de facade
 
 Après avoir mis la zigate en mode inclusion, 3 appuis sur le bouton en facade permet de joindre le réseau.
 
 La même action, 3 appuis, alors que la zigate n'est pas en mode inclusion permet de quitter le réseau.
 
-#### Sensibilité du capteur
+### Sensibilité du capteur
 
 Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dev).
 
-#### Test du capteur
+### Test du capteur
 
 Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir entre 1 et 3 bips).
 
-#### Réveil
+### Réveil
 
 Le capteur se réveille toutes les 15s pour savoir si la zigate à des infos pour lui.
 
-### Capteur Gaz
+## Capteur Gaz
 
-#### Appairage
+### Appairage
 
-#### Routeur
+### Routeur
 
 Ce capteur est un router.
 
-#### Parametres
+### Parametres
 
 Vous pouvez choisir le niveau de sensibilié: Low - Moyen - High
 
-#### Tester la bonne connection au réseau
+### Tester la bonne connection au réseau
 
 Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonnore (3 messages envoyés par abeille, il doit y avoir 3 bips à 5s d'intervalles).
 
@@ -1175,7 +1160,7 @@ Ensuite utilisez de préférence "BindShortToZigateEtat" puis "setReportEtat". M
 > Le retour d'état ne remonte que si l'état change. Donc si l'icone n'est pas synchro avec la prise vous pouvez avoir l'impression que cela ne fonctionne pas. Ex: la prise est Off et l'icone est on. Vous faites Off et rien ne se passe. Pour éviter cela un double Toggle doit réaligner tout le monde.
 
 
-### Ampoule E27 CLA 60 RGBW OSRAM (Classic E27 Multicolor)
+## Ampoule E27 CLA 60 RGBW OSRAM (Classic E27 Multicolor)
 
 Ampoule Neuve:
 Mettre en Inclusion la zigate et brancher l'ampoule OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Abeille.

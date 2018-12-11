@@ -1,7 +1,7 @@
 # Présentation Abeille
 
 
-(Portage en cours vers la doc jeedom, premiere version pour test. la doc est toujours à https://github.com/KiwiHC16/Abeille)
+(Portage en cours vers la doc jeedom, premiere version pour test. la doc est toujours à [cet emplacement](https://github.com/KiwiHC16/Abeille)
 
 
 *Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.

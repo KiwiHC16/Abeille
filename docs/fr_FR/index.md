@@ -40,6 +40,7 @@ Essai d une table:
 Col1 | Col2
 -----|-----
 A | B
+Images | ![Tyty](../images/Capture_d_ecran_2018_01_21_a_ 11_07_27.png)
 
 # Installation
 

@@ -71,6 +71,24 @@ Maintenant vous pouvez même installar Abeille en n'utilisant que les Timers san
 
 ![i1](../images/Capture_d_ecran_2018_03_21_a_13_16_53.png)
 
+Le timer possede 4 phases:
+
+T0->T1: RampUp de 0 a 100% => RampUp
+T1->T2: Stable a 100% => durationSeconde
+T2->T3: Ramp Down de 100% à 0% => RampDown
+T3-> : n existe plus
+
+Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulierement avec pour parametre la valeur en cours de RampUpDown.
+
+Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
+
+## A prendre en compte
+
+
+> Il est important de noter que chaque phase fait au minimum 1s.
+
+> La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.
+
 ### Trois commandes "Start", "Cancel" et "Stop".
 
 * Start: permet d'executer une commande et de démarrer le Timer.
@@ -157,24 +175,10 @@ Un exemple avec les commandes et les scenarii.
 
 Et ici vous pouvez voir l'ID 3 du scenario utilisé.
 
-## Commande Start Complete
+Commande Start Complete
 
 actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
-Le timer possede 4 phases:
-
-T0->T1: RampUp de 0 a 100% => RampUp
-T1->T2: Stable a 100% => durationSeconde
-T2->T3: Ramp Down de 100% à 0% => RampDown
-T3-> : n existe plus
-
-Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulierement avec pour parametre la valeur en cours de RampUpDown.
-
-Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
-
-## A prendre en compte
 
 
-> Il est important de noter que chaque phase fait au minimum 1s.
 
-> La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.

@@ -52,7 +52,7 @@ image::images/Capture_d_ecran_2018_01_21_a_17_28_01.png[]
 * git clone https://github.com/KiwiHC16/Abeille.git Abeille
 ----
 
-Et pour le développeurs, voici une info que je n'ai pas testée mais peut être très utile:
+Et pour le développeurs, voici une info très utile:
 [source,]
 ----
 Merci @lukebr 
@@ -74,6 +74,11 @@ sudo git pull https://github.com/KiwiHC16/Abeille
 * chown -R www-data:www-data /var/www/html/plugins/Abeille
 ----
 
+[source,]
+Si vous voulez aller a un commit specifique:
+----
+git reset --hard dd7fa0a
+----
 
 ==== Depuis le market
 

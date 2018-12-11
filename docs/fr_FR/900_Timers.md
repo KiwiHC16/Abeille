@@ -1,21 +1,21 @@
-= Timers
+# Timers
 
 Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.
 Après plusieurs versions avec des scripts, des variables, des retours d'état automatique,... je me suis rendu compte que je pouvais sans trop de difficulté créer ces timers au seins d'Abeille.
 
-Maintenant vous pouvez même installar Abeille en n'utilsant que les Timers sans la partie ZigBee. Pour cela dans la configuration du plugin choisissez "Mode Timer seulement" à "Oui".
+Maintenant vous pouvez même installar Abeille en n'utilisant que les Timers sans la partie ZigBee. Pour cela dans la configuration du plugin choisissez "Mode Timer seulement" à "Oui".
 
-== Fonctionnement
+## Fonctionnement
 
-image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]
+![i1](../images/Capture_d_ecran_2018_03_21_a_13_16_53.png)
 
-=== Trois commandes "Start", "Cancel" et "Stop".
+### Trois commandes "Start", "Cancel" et "Stop".
 
 * Start: permet d'executer une commande et de démarrer le Timer.
 * Cancel: permet d'executer une commande et d'annuler le Timer.
 * Stop: permet d'executer une commande, d'annuler le Timer et cette commande qui est executée lors de l'expiration du Timer.
 
-=== Retour d'information
+### Retour d'information
 
 * Time-Time: Date de la derniere action sur le Timer
 * Time-TimeStamp: Heure systeme de la derniere action
@@ -25,27 +25,27 @@ image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]
 
 Elles ne sont pas forcement toutes visibles, a vous de choisir.
 
-== Creation d un Timers
+## Creation d un Timers
 
 Pour créer un objet Timer, clic sur le bouton "Timer" dans la configuration du plugin.
 
 Un message doit apparaitre pour annoncer la creation du Timer avec un Id Abeille-NombreAléatoire.
 
-image::images/Capture_d_ecran_2018_03_21_a_13_14_36.png[]
+![i2](../images/Capture_d_ecran_2018_03_21_a_13_14_36.png)
 
 Apres avoir rafraichi l'écran vous devriez avoir l objet:
 
-image::images/Capture_d_ecran_2018_03_21_a_13_16_53.png[]
+![i3](../images/Capture_d_ecran_2018_03_21_a_13_16_53.png)
 
-== Configuration du Timer
+## Configuration du Timer
 
 Comme pour tous les objets, dans l onglet Equipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
 
 Dans l'onglet Commandes, nous allons paramétrer les actions du Timer.
 
-image::images/Capture_d_ecran_2018_03_21_a_13_33_37.png[]
+![i4](../images/Capture_d_ecran_2018_03_21_a_13_33_37.png)
 
-=== Start 
+### Start 
 
 actionStart=\#put_the_cmd_here#&durationSeconde=300
 
@@ -55,13 +55,13 @@ Pour la commande il y a deux parametres.
 
 * actionStart doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][On]#.
 
-=== Cancel
+### Cancel
 
 actionCancel=\#put_the_cmd_here#
 
 * actionCancel doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
 
-=== Stop
+### Stop
 
 actionStop=\#put_the_cmd_here#
 
@@ -73,7 +73,7 @@ actionStop=\#[operation][SMS_Home][Telephone]#&message=Mettre votre message sms 
 
 
 
-== Commande ou Scenario
+## Commande ou Scenario
 
 Par defaut l'objet Timer est créé avec des commande Start, Stop, Cancel qui font reférence à l'execution d'une commande: actionStart=\#put_the_cmd_here#, actionCancel=\#put_the_cmd_here#, actionStop=\#put_the_cmd_here#. 
 
@@ -83,15 +83,15 @@ Cela vous permet beaucoup plus de flexibilité comme le lancement d'une série d
 
 La syntaxe: scenarioStart=Id,scenarioCancel=Id, scenarioStop=Id, en remplacant Id pour l'identifiant du scenario que vous trouvez dqns la definition du scenario.
 
-image::images/Capture_d_ecran_2018_03_27_a_12_52_53.png[]
+![i5](../images/Capture_d_ecran_2018_03_27_a_12_52_53.png)
 
 Un exemple avec les commandes et les scenarii.
 
-image::images/Capture_d_ecran_2018_03_27_a_12_55_27.png[]
+![i6](../images/Capture_d_ecran_2018_03_27_a_12_55_27.png)
 
 Et ici vous pouvez voir l'ID 3 du scenario utilisé.
 
-== Commande Start Complete
+## Commande Start Complete
 
 actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
@@ -106,7 +106,7 @@ Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulie
 
 Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
 
-== A prendre en compte
+## A prendre en compte
 
 [quote,]
 ____

@@ -14,7 +14,7 @@
   "languages": "french",
   "forum_link": "https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&p=575280&hilit=abeille#p575280",
   "compatibility": "docker, rpi, diy",
-  "hasDependency": "true",
-  "hasOwnDeamon": "true",
+  "hasDependency": "1",
+  "hasOwnDeamon": "1",
   "maxDependancyInstallTime": "45"
 }

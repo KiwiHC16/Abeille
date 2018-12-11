@@ -210,11 +210,10 @@ git reset --hard dd7fa0a
 
 * Quand le statut Dépendance passe à Ok en vert (Patientez 2 ou 3 minutes), définir l objet ID et le port serie puis Démarrer les Démons.
 
-[source,]
-----
-Si vous avez un zigate USB, choisissez le bon port /dev/ttyUSBx.
-Si vous avez une zigate Wifi, choisissez le port "WIFI" dans la liste et indiquer son adresse IP.
-----
+Puis:
+> Si vous avez un zigate USB, choisissez le bon port /dev/ttyUSBx.
+> Si vous avez une zigate Wifi, choisissez le port "WIFI" dans la liste et indiquer son adresse IP.
+
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_07_14.png)
 

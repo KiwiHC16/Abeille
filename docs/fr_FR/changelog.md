@@ -77,13 +77,16 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 
 # Changelog
 
+## 2018-12-11
 
-2018-12-12
+- Toute la doc sous le format Jeedom
+
+2018-12-10
 -------------
 - Ampoule Couleur Standard ZigBee
 - Ampoule Dimmable Standard ZigBee
 
-2018-12-11
+2018-12-09
 -------------
 - Ampoule Spectre Blanc Standard ZigBee
 - Blanche Ampoule GLEDOPTO GU10 Couleur/White GLEDOPTO avec hombridge

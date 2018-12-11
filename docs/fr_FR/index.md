@@ -65,7 +65,7 @@ Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pou
 Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate. 
 Il est en permanente évolution.
 
-## Il permet déjà:
+## Il permet
 
 - de connecter les ampoules IKEA
 - de connecté toute la famille Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).

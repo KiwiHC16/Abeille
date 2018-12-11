@@ -182,7 +182,7 @@ Commande Start Complete
 actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here#
 
 
-# Système / Plateforme testées
+# Systèmes / Plateforme testés
 
 Jeedom fonctionne sur le systeme linux debian, de ce fait ce plugin est développé dans ce cadre. 
 

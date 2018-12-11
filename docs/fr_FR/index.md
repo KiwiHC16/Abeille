@@ -1284,4 +1284,308 @@ Batterie est égale à:
 
 Vous trouverez le source et le bin à la page: https://github.com/KiwiHC16/Abeille/tree/master/WIfi_Module
 
+
+
+# Debug / Troubleshooting / Investigations
+
+Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.
+
+=== Forum
+
+* le forum: https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
+
+== Attention - Danger
+
+=== "retain" dans les objets
+
+* Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
+* Le plugin [underline]#n'utilise pas# ce mode de fonctionnement. 
+- [underline]#Il est fortement conseillé de ne pas choisir "retain"# si vous ne comprenez pas les conséquences. 
+- L'option reste accessible pour les pros de MQTT. Si jamais vous voulez l'utiliser alors allez voir https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages .
+- Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
+
+```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```
+
+== Problèmes / Issues
+
+Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
+
+Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en particulier:
+
+- Votre configuration Jeedom: 
+* Le HW sur lequel vous faite tourner le plugin, 
+* la Version de l'OS, 
+* la version de Jeedom
+
+- Votre configuration Gateway
+* Zigate et quel firmware
+* ...
+
+- Les logs
+* aussi nombreux que possibles
+- Description 
+* ce que vous cherchez à faire
+* les résultats
+
+== Evolution
+
+Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "enhancement": https://github.com/KiwiHC16/Abeille/issues
+
+
+== Debug
+
+=== Configuration 
+
+* Verifier la configuration réseau et en particulier /hostname, /etc/hosts
+* Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l'objet de rattachement de l'équipement Ruche n'est pas défini.
+````
+[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+````
+
+=== Connection avec la Zigate
+
+* Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
+
+* Tester la ZiGate en ligne de commande
+
+* Vérifiez bien que vous n'avez pas plusieurs Plugins essayant d'utiliser le même port série (/dev/ttyUSBx).
+
+** Jeedom vers ZiGate
+
+On envoie 
+```
+stty -F/dev/ttyUSB0 115200
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
+```
+(Cela peut être fait alors que le plugin est ZiGate fonctionnent).
+
+Cette commande demande à la ZiGate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:
+
+```
+AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message > 12 char
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00
+AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
+```
+
+PS: la configuration du port peu varier d'un système à l'autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.
+
+** ZiGate vers Jeedom
+
+Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):
+
+```
+cat /dev/ttyUSB0 | hexdump -vC
+```
+
+Dans un second terminal envoiyez la commande
+```
+stty -F/dev/ttyUSB0 115200
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
+```
+
+Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:
+```
+www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
+00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |........w.....I.|
+00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|
+```
+
+
+
+=== Mosquitto
+
+* Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.
+* mosquitto est installé sur la machine par défaut lors de l'installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+* La configuration générale du plugin propose les paramètres :
+- Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
+- Port du serveur Mosquitto (1883 par défaut)
+- Identifiant de Jeedom avec lequel il publiera sur le broker
+- Il est possible d'ajouter un compte et mot de passe si la connexion le requiert.
+- QoS à utiliser (par défaut 1).
+* Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
+- Faites un 'ps -ef | grep mosquitto' pour voir si le process tourne.
+- Lancez à la main mosquitto; Juste 'mosquitto' en ligne de commande.
+- Lancez à la main mosquitto avec votre fichier de configuration en ligne de commande: 'mosquitto -c /etc/mosquitto/mosquitto.conf' (Corrigez les erreurs si il y a).
+- Experience: après coupure de courant: 
+```
+mosquitto -c /etc/mosquitto/mosquitto.conf 
+1516788158: Error: Success.
+1516788158: Error: Couldn't open database.
+```
+
+la solution a été de supprimer la base de donnée et de réinstaller mosquitto:
+
+```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```
+
+* Debian 8 sur VM
+- Je viens d'installer le plugin Abeille sur une Debian 8 en VM x86 64. Impossible de lancer le demon.
+- Même un /etc/init.d/mosquitto start à la main ne fonctionne pas. 
+- Après des recherches infructueuse je suis passé par synaptic (ssh root@machine -Y) et fait "reinstallé" de tous les modules mosquitto. Et maintenant cela fonctionne. 
+
+
+
+=== Creation des objets
+
+* Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas défaut et ajouter de nouveaux modèles par exemple.
+
+* L'appareil Ruche contient une commande cachée par type d'objet (identifié das le fichier JSON). Chaque commande cachée permet la création d'objets fictifs pour vérifier la bonne création de l'objet dans jeedom. Pour avoir les commandes, il faut regénerer l'objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l'objet. 
+
+![](../images/Capture_d_ecran_2018_01_23_a_22_31_19.png)
+
+* Si vour rendez visible ces commandes cachées cela donne:
+
+![](../images/Capture_d_ecran_2018_01_23_a_22_31_43.png)
+
+* En cliquant sur l'un de ces boutons vous vérifier vous testez la bonne création des objets mais aussi que le chemin Jeedom->Mosquitto->Jeedom fonctionne.
+
+* Pas recommandé: Vous pouvez tester la création pure des objets en ligne de commande avec: "php Abeille.class.php 1" en ayant mis les bon paramètres en fin de fichier "Abeille.class.php" (A faire que par ceux qui comprennent ce qu'ils font)
+
+* L'objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:
+
+![](../images/Capture_d_ecran_2018_01_23_a_22_53_24.png[]
+
+* Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en reception radio) a été effacé de Jeedom vous pouvez l'interroger depuis la Ruche et cela devrait le recréer. Mettre dans le champ "Titre" de Get Name, l'adresse (ici example 7c54)  et faites Get Name. Rafraîchir la page et vous devriez avoir l'objet.
+
+![](../images/Capture_d_ecran_2018_01_25_a_14_59_34.png)
+![](../images/Capture_d_ecran_2018_01_25_a_14_59_43.png)
+
+* Pour un objet qui n'est pas un routeur, exemple Xiaomi IR Presence, qui donc s'endort 99% du temps, il n'est pas possible de l'interroger pour qu'il provoque la création de l objet dans Jeedom. Mais vous pouvez créer l objet en allant dans les commandes de la ruche.
+
+* Ouvrir la page commande de la ruche et trouver la commande "lumi.sensor_motion".
+
+image::images/Capture_d_ecran_2018_03_02_a_11_09_04.png)
+
+Remplacez "/lumi.sensor_motion/" l'adresse du groupe que vous voulez controler. Par exemple AAAA.
+
+image::images/Capture_d_ecran_2018_03_02_a_11_09_47.png)
+
+Sauvegardez et faites "Tester".
+
+Vous avez maintenant une capteur.
+
+image::images/Capture_d_ecran_2018_03_02_a_11_11_02.png)
+
+
+* Vous avez aussi la possibilité de lire des attributs de certains équipements en mettant l'adresse dans le titre et les paramètres de l attribut dans le Message comme dans la capture d'écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l'équipement soit à l'écoute):
+
+![](../images/Capture_d_ecran_2018_01_25_a_16_12_32.png)
+
+* Vous avez la possibilité de demander la liste des équipements dans la base interne de la Zigate. Pour ce faire vous avez le bouton "Liste Equipements" sur la ruche. Si vous êtes en mode automatique, les valeurs des objets existants vont se mettre à jour (IEEE, Link Quality et Power-Source). Si vous êtes en mode semi-automatique de même et si l'objet n'existe pas un objet "inconnu" sera créé avec les informations.
+
+![](../images/Capture_d_ecran_2018_01_26_a_10_46_04.png)
+![](../images/Capture_d_ecran_2018_01_26_a_10_46_13.png)
+
+* Il peut être nécessaire de faire la demande de la liste pour que les valeurs remontent dans les objets inconnus. Et en attendant un peu on peut avoir un objet avec une longue liste de paramètres (Voir objet 9156 ci dessous).
+
+![](../images/Capture_d_ecran_2018_01_26_a_10_52_58.png)
+
+* Avec la liste des équipements vous avez la liste connue par zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
+
+![](../images/Capture_d_ecran_2018_02_07_a_12_54_55.png)
+
+Nous pouvons voir que l objet ayant pour adresse complete IEEE: 00158d00016d8d4f s'est déconnecté (Leave) avec l'information 00 (Pas décodé pour l'instant).
+
+Si vous souhaitez avoir l'historique alors allez dans le menu:
+
+![](../images/Capture_d_ecran_2018_02_07_a_12_49_42.png)
+
+Puis choisissez Ruche-joinLeave:
+
+![](../images/Capture_d_ecran_2018_02_07_a_12_49_56.png)
+
+et là vous devez avoir toutes les informations:
+
+![](../images/Capture_d_ecran_2018_02_07_a_12_50_09.png)
+
+
+
+
+=== Investigate Equipements
+
+La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.
+
+image::images/Capture_d_ecran_2018_02_06_a_17_33_19.png[]
+
+Dans ActiveEndPoint mettre l'adresse de l'équipement dans le titre puis clic sur le bouton ActiveEndPoint.
+
+Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:
+```
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]SQN : da
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
+```
+
+Il y a donc une seul EndPoint à l'adresse "01" (Donné par les lignes suivant "Endpoint List".
+
+Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.
+
+```
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length: 5
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status: 00-(Success)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN: db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message > 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 quality: 93
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 (Simple Descriptor Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN : db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length : 20
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]endpoint : 01
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]profile : c05e
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]deviceId : 0100
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]bitField : 02
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]InClusterCount : 08
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0005 - General: Scenes
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0006 - General: On/Off
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0008 - General: Level Control
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0B05 - Misc: Diagnostics
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 1000 - ZLL: Commissioning
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
+```
+
+Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
+
+...
+
+
+== Monitorer les messages 
+
+mosquitto_sub -t "#" -v
+
+== Script de test et vérifications
+
+Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base.
+
+
+
 # Enjoy

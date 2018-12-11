@@ -1,14 +1,15 @@
 {
-  "Colortemperaturelight": {
-    "nameJeedom": "Template from ZigBee Standard",
+  "zigbeeColortemperaturelight": {
+    "nameJeedom": "Template for ZigBee - Color temperature light",
     "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
       "uniqId": "5c0ac72320b6b",
-      "icone": "Colortemperaturelight",
+      "icone": "zigbeeColortemperaturelight",
       "mainEP": "#EP#",
+      "defaultEP": "#EP#",
       "poll": "1"
     },
     "Commandes": {

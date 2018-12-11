@@ -27,6 +27,7 @@
                                          '0000'=>'On/Off light',
                                          '0010'=>'On/Off plug-in unit',
                                          '0100'=>'Dimmable light',
+                                         '010A'=>'Proprio Prise Ikea',   // Pas dans le standard mais remonté par prise Ikea
                                          '0110'=>'Dimmable plug-in unit',
                                          '0200'=>'Color light',
                                          '0210'=>'Extended color light',
@@ -1016,7 +1017,7 @@
             deamonlog('debug','Out cluster: '    .substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
         }
         
-        $data = $deviceInfo[$profile][$deviceId];
+        $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
         if ( strlen( $data) > 1 ) {
             mqqtPublish($mqtt, $SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data, $qos);
             // if ( isset($GLOBALS['NE'][$SrcAddr]) ) { $GLOBALS['NE'][$SrcAddr]['deviceId']=$deviceInfo[$profile][$deviceId]; }
@@ -1184,9 +1185,12 @@
         // <Cluster id: uint16_t>
 
         deamonlog('debug', 'Type; 8060; (Add a group response)(Decoded but Not Processed)'
-                  . '; SQN: '          .substr($payload, 0, 2)
-                  . '; endPoint: '     .substr($payload, 2, 2)
-                  . '; clusterId: '    .substr($payload, 4, 4) );
+                  . '; SQN: '           .substr($payload, 0, 2)
+                  . '; endPoint: '      .substr($payload, 2, 2)
+                  . '; clusterId: '     .substr($payload, 4, 4)
+                  . '; status: '        .substr($payload, 8, 2)
+                  . '; GroupID: '       .substr($payload,10, 4)
+                  );
     }
 
     function decode8062($mqtt, $payload, $ln, $qos)

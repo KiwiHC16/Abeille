@@ -124,9 +124,9 @@ Récupérez sont ID en sélectionnant "Vue d'ensemble"
 
 ![](../images/Capture_d_ecran_2018_01_21_a_17_28_01.png)
 
-=== Installation du plugin
+##  Installation du plugin
 
-==== Depuis Github
+### Depuis Github
 
 - Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers.
 * ssh sur votre jeedom
@@ -175,11 +175,11 @@ Si vous voulez aller a un commit specifique:
 git reset --hard dd7fa0a
 ----
 
-==== Depuis le market
+### Depuis le market
 
 * Rien de spécifique. Suivre la procédure classique. Pour l'instant il ne doit y avoir qu'une version en beta.
 
-==== Alternative : Installation du github depuis le market
+### Alternative : Installation du github depuis le market
 
 - Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github cocher activer . On enregistre.
 - Aller sur l'onglet plugin clic et gestion des plugin. Une fenetre s'ouvre que vous connaissez mais sur la gauche il y a une petite fleche pointant vers la droite (clic dessus)
@@ -190,7 +190,7 @@ git reset --hard dd7fa0a
 * Nom du dépôt: Abeille
 * Branche: master
 
-=== Activation
+## Activation
 
 - Activation du plugin
 * Allez sur l'interface http Jeedom
@@ -236,7 +236,7 @@ A noter: Toute sauvegarde de la configuration provoque une relance du cron du pl
 
 * Tous les autres objets seront créés automatiquement dès détection.
 
-== Utilisation de Jeedom
+## Utilisation de Jeedom
 * Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si vous démarrez votre réseau ZigBee de zéro.
 * Le nom de l objet est "Abeille-" suivi de son adresse courte zigbee.
 

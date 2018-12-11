@@ -13,7 +13,7 @@ Dixit son créateur.
 Ce plugin est né de besoins personnels : capteur de température radio distant avec un réseau sécurisé, mesh,… 
 
 Finalement, il intègre de plus en plus d’équipements :
-[GitHub](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
+[Compatibilité](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
 Mon réseau personnel fonctionne depuis plusieurs mois et possède actuellement 45 équipements et continue de grossir.
 

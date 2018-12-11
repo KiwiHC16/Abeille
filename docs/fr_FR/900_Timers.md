@@ -41,11 +41,13 @@ Apres avoir rafraichi l'écran vous devriez avoir l objet:
 
 Comme pour tous les objets, dans l onglet Equipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
 
+### Ancienne méthode
+
 Dans l'onglet Commandes, nous allons paramétrer les actions du Timer.
 
 ![i4](../images/Capture_d_ecran_2018_03_21_a_13_33_37.png)
 
-### Start 
+#### Start 
 
 actionStart=\#put_the_cmd_here#&durationSeconde=300
 
@@ -55,13 +57,13 @@ Pour la commande il y a deux parametres.
 
 * actionStart doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][On]#.
 
-### Cancel
+#### Cancel
 
 actionCancel=\#put_the_cmd_here#
 
 * actionCancel doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
 
-### Stop
+#### Stop
 
 actionStop=\#put_the_cmd_here#
 
@@ -71,7 +73,9 @@ Exemple plus spécifique: Envoie d'un SMS
 
 actionStop=\#[operation][SMS_Home][Telephone]#&message=Mettre votre message sms ici
 
+### Nouvelle méthode
 
+Allez dans la page configuration, tab Param du Timer et remplissez les champs.
 
 ## Commande ou Scenario
 

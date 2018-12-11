@@ -383,6 +383,125 @@ PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
 * et les boutons "Fleche Gauche", "Fleche Droite" de la télécommande physique.
 
 
+# Ajout d'équipement en général
+
+Cette page présente une introduction à l'ajout d'équipement. Sinon pour chaque équipement, aller voir la page dédiée.
+
+=== Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+
+* Mettre la gateway en inclusion (Bouton Inclusion), la Led bleue de la zigate doit clignoter,
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_07_55.png)
+
+puis:
+
+* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_13_44.png)
+
+* Capteur de porte, prise, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas déjà sur un réseau, si déjà sur réseau provoque un "leave" (a faire quand le réseau est fermé sinon juste après le leave l object refait une association et reste sur le réseau.).
+
+Porte
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_11_38.png)
+
+Temperature rond
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_12_43.png)
+
+Temperature Carre
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_12_15.png)
+
+Bouton
+
+![](../images/Capture_d_ecran_2018_01_21_a_11_13_15.png)
+
+Etat: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
+
+Capteur Presence InfraRouge
+
+![](../images/Capture_d_ecran_2018_01_21_a_12_45_22.png)
+
+* Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
+
+image::images/Capture_d_ecran_2018_01_21_a_12_49_06.png)
+
+=== Ajout d'équipements (S'ils sont déjà dans le réseau ZigBee)
+
+* Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l'ampoule et elle doit apparaître dans Jeedom.
+* Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latérale et il doit apparaître dans Jeedom.
+* Capteur InfraRouge Xiaomi: pas implémenté.
+
+
+
+# Integration d'un nouvel objet
+
+== Ikea
+
+=== Ampoule
+
+==== Nouvelle
+
+Faire un reset (6s On/Off-On ou reset avec télécommande Philips) de l'ampoule alors que la zigate est en mode inclusion. L'ampoule doit s'associer. Elle n'envoie pas son nom automatiquement et jeedom ne peut pas créer l'objet associé. Pour créer l'objet suivre le paragraphe "Déjà" associée.
+
+==== Deja associé
+
+Eteindre l'ampoule 15s puis la rallumer (Zigate en fonctionnement normale).
+
+=== Telecommande 5 boutons
+
+==== Nouvelle
+
+Plugin en mode semi-automatique, appui 4 fois sur bouton arrière télécommande et un objet "Type inconnu" est créé.
+
+==== Déjà associée
+
+Plugin en mode semi auto et "Liste Equipement" sur Ruche.
+
+== Philips Hue
+
+=== Hue Go
+
+Impossible de faire émettre le moindre message ZigBee par le Hue Go en utilisant le bouton à l'arrière. Seulement ce qui ressemble à un reset en appuyant très longtemps (>30s).
+
+==== Nouvelle
+
+a
+
+==== Déjà associée
+
+Utiliser la fonction "Get Name" de la Ruche. Mettre en Titre l'adresse de la Hue Go et en Message le EndPoint qui est "0B". Clic Get Name et la apres un refresh dashboard, l ampoule doit apparaitre.
+
+== Xiaomi
+
+=== Nouvel Equipement
+
+Zigate en mode inclusion, Plugin en automatique, appui long de 7s sur le bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
+
+=== Déjà associé
+
+Zigate en mode normal, plugin en mode automatique, un appui court sur le bouton du flanc de l'équipement et l'objet abeille doit être créé.
+
+== OSRAM (Prise Smart +)
+
+=== Nouvel Equipement
+
+Zigate en mode inclusion, Plugin en automatique, appui long sur le bouton du flanc de la prise, la prise switche rapidement On/Off, lâcher le bouton, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
+
+image::images/plug01_new.PNG[]
+
+=== Déjà associé
+
+non disponible actuellement - nouvelle inclusion à faire
+
+=== Ajout dans un groupe (avec Ampoules Hue ou Ikea par exemple)
+Utiliser la Fonction Add Group de la Ruche
+Titre : Adresse courte de la prise
+Message : DestinationEndPoint=03&groupAddress=aaaa
+avec "aaaa" le nom du groupe souhaité.
+
+image::images/plug01_addgroup.PNG[]
 
 
 # Ikea
@@ -1069,6 +1188,79 @@ https://www.youtube.com/watch?v=PaA0DV5BXH0
 
 Ne semble pas fonctionner avec la Télécommande Hue (Hue Dimmer Switch).
 
+
+# Groupes
+
+== Intro
+
+Les équipements peuvent être adressés par au moins deux façons:
+
+* Adresse Zigbee courte: Les adresses courtes permettent de contacter un équipement spécifiques.
+* Adresse Zigbee de groupe: Les adresses de groupes permettent de joindre un ensembles d'équipement en même temps.
+
+Les adresses de groupe sont typiquement utilisées pas les télécommandes zigbee: Hue, Ikea,...
+
+L'interêt est qu'un seul message sera envoyé sur le réseau zigbee, répété par tous les routeurs et tous les équipements ayant cette adresse de groupe réagiront donnant un impression d'execution simultanée.
+
+Astuce: Ca peut aussi vous sortir d'une situation ou la couverture radio n'est pas bonne et vous avez du mal a joindre un équipement. Si vous l'adressez avec son adresse courte, le mesage doit être routé jusqu'a sa destination par une route specifique. Si vous l'adressez avec une adresse de groupe, le message va être répété par tous les routeurs et vous augmentez la chance que l'équipement recoive l'information.
+
+Vous pouvez aussi utiliser un scenario dans jeedom pour adresser un groupe d'équipements, en envoyant à chacun d'eux une commande. Cette solution ne permet pas d'avoir l'impression d'instantanéité mais est très flexible si vous avez des produit zwave et zigbee par exemple.
+
+Les groupes Zigbee sont nécessaires pour la gestion des scenes.
+
+La gestion des groupes se fait depuis la ruche avec 3 commandes:
+
+* Ajout
+* Retrait
+* Consultation
+
+A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets abeille.
+
+Un équipement peut avoir plusieures adresses de groupes. Permet de répondre à plusieures télécommandes par exemple.
+
+== Ajout d un groupe à un équipement
+
+* Premier champ: adresse de l'équipement
+* Deuxieme champ: End Point de l'équipement
+* Troisiemen champ: l'adresse de groupe a ajouter
+
+== Retrait d un groupe à un équipement
+
+* Premier champ: adresse de l'équipement
+* Deuxieme champ: End Point de l'équipement
+* Troisiemen champ: l'adresse de groupe a retirer
+
+== Récupérer les groupes d'un équipement
+
+* Premier champ: adresse de l'équipement
+* Deuxieme champ: End Point de l'équipement
+
+L'information groupe doit remonter dans le champ groupe de l'équipement (peut etre invisible par defaut, le rendre visible).
+
+
+# Scenes
+
+== Intro
+
+Les scenes permettent d'envoyer un seul mesage zigbee et d'avoir multiple équipement qui se mette en position automatiquement.
+
+Une scene peut être: "Scéance TV", qui allumera la TV, fermera les volets et mettra une lumière tamisée en place. 
+
+Pour ce faire chaque équipement doit savoir ce qu'il doit faire lorsqu'il recoit la commande. Il doit donc avoir été paramétré avant.
+
+Pour l'instant tout le parametrage se fait depuis l'objet Ruche.
+
+== Ajout d une scene à un équipement
+
+* 
+
+== Retrait d une scene à un équipement
+
+* 
+
+== Récupérer les scenes d'un équipement
+
+* 
 
 
 # Timers

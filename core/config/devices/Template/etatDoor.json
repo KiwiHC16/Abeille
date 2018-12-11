@@ -10,8 +10,9 @@
     "invertBinary": "1",
     "template": "door",
     "configuration": {
-	"uniqId": "5c07c7662341a",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c7662341a",
+      "visibilityCategory": "All",
+      "topic": "0006-#EP#-0000"
     }
   }
 }

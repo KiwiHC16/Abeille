@@ -35,6 +35,11 @@ https://github.com/KiwiHC16/Abeille/tree/master/Documentation
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 
+Essai d une table:
+
+Col1 | Col2
+-----|-----
+A | B
 
 # Installation
 

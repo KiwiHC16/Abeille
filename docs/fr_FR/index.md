@@ -30,8 +30,7 @@ Ce plugin inclus les fonctions de base pour la gestions de équipements comme On
 
 J’ai aussi intégré un « sous-plugin » TIMER qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
 
-Je passe beaucoup de temps a formaliser les sujets dans une documentation que vous trouverez à : 
-https://github.com/KiwiHC16/Abeille/tree/master/Documentation
+Je passe beaucoup de temps a formaliser les sujets dans une documentation que vous trouverez à : [Documentation](https://github.com/KiwiHC16/Abeille/tree/master/Documentation)
 
 Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
 

@@ -3444,6 +3444,26 @@ Exemple avec l'upload d'une image en fond d'écran:
 
 Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.
 
+# Radio
 
+Sur la base de la collecte de ces informations, j'ai fait quelques graphes pour comprendre ce qu'on espérer en terme de couverture radio.
+
+Je n'ai pris que des routeurs dans cet exercice: prise xiaomi, prise ikea, ampoule ikea.
+Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,...), Distances définies à vue d'oeil,.. cela permet d'avoir une vue d'un réseau réel.
+
+Le premier graphe est le LQI rapporté par l'équipement en fonction du nombre de mur à traverser.
+Le deuxieme graphe est le LQI en fonction de la distance à vol d'oiseau.
+
+![](../images/Capture_d_ecran_2018_12_14_a_10_45_20.png)
+
+Si l'on considère qu'avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus. 
+
+Cela nous indique qu'en moyenne plus de 2 murs est très compliqué. Ce qui implique un routeur dans chaque pièce pour être tranquile.
+
+On peut voir des écarts très important dans le LQI alors que les équipements sont dans la meme piece (Colonne 0 des graphes LQI/Wall).
+
+Pour le LQI/m, on peut dire que jusqu'à 10m c'est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.
+
+Je suppose qu'en environnement ouvert on peut avoir des distances bien supérieures, avec des distances annoncées par les fabriquants jusqu'a 100m, mais ce type de situation sera des plus rares... 
 
 # Enjoy

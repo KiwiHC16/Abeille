@@ -8,7 +8,8 @@
     "configuration": {
       "uniqId": "5c0ac76620b6b",
       "icone": "GL-S-004Z",
-      "mainEP": "#EP#",
+      "mainEP": "0B",
+      "defaultEP": "0B",
       "poll": "1"
     },
     "Commandes": {

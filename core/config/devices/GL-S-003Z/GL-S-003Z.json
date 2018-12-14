@@ -9,7 +9,7 @@
     "configuration": {
       "uniqId": "5c07c766278a7",
       "icone": "GL-S-003Z",
-      "mainEP": "#EP#",
+      "mainEP": "0C",
       "defaultEP": "0C",
       "poll": "1"
     },

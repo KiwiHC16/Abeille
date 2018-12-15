@@ -14,7 +14,8 @@
 	"uniqId": "5c07c76623fbe",
       "calculValueOffset": "#value#/100",
       "historizeRound": "0",
-      "visibilityCategory": "All"
+      "visibilityCategory": "All",
+      "topic": "0405-#EP#-0000"
     },
     "display": {
       "forceReturnLineAfter": "1"

@@ -14,7 +14,8 @@
       "calculValueOffset": "#value#/1000",
       "minValue": "0",
       "maxValue": "3.3",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "topic": "Batterie-Volt"
     }
   }
 }

@@ -14,13 +14,13 @@
     echo '<body>';
     
     
-    
-    if ( isset( $_GET['NE']) )          { $NE       = $_GET['NE']; }              else { $NE        = "All"; }
-    if ( isset( $_GET['NE2']) )         { $NE2      = $_GET['NE2']; }             else { $NE2       = "None"; }
-    if ( isset( $_GET['Center']) )      { $Center   = $_GET['Center']; }          else { $Center    = "None"; }
-    if ( isset( $_GET['Cache']) )       { $Cache    = $_GET['Cache']; }           else { $Cache     = "Cache"; }
-    if ( isset( $_GET['Data']) )        { $Data     = $_GET['Data']; }            else { $Data      = "None"; }
-    if ( isset( $_GET['Hierarchy']) )   { $Hierarchy= $_GET['Hierarchy']; }       else { $Hierarchy = "All"; }
+    if ( isset( $_GET['GraphType']) )   { $GraphType    = $_GET['GraphType']; }       else { $NE        = "Default"; }
+    if ( isset( $_GET['NE']) )          { $NE           = $_GET['NE']; }              else { $NE        = "All"; }
+    if ( isset( $_GET['NE2']) )         { $NE2          = $_GET['NE2']; }             else { $NE2       = "None"; }
+    if ( isset( $_GET['Center']) )      { $Center       = $_GET['Center']; }          else { $Center    = "None"; }
+    if ( isset( $_GET['Cache']) )       { $Cache        = $_GET['Cache']; }           else { $Cache     = "Cache"; }
+    if ( isset( $_GET['Data']) )        { $Data         = $_GET['Data']; }            else { $Data      = "None"; }
+    if ( isset( $_GET['Hierarchy']) )   { $Hierarchy    = $_GET['Hierarchy']; }       else { $Hierarchy = "All"; }
     
     // $Data = "Relationship";
     // $Hierarchy = "All";
@@ -142,8 +142,13 @@
     echo "<h1>Abeille Network Graph</h1>";
     
     echo '<form method="get">';
-    echo '<select name="NE">';
     
+    echo '<select name="GraphType">';
+    if ( $GraphType=="Default" )    { $selected = " selected "; } else { $selected = " "; } echo '<option value="Default"'      .$selected.'>Default</option>'."\n";
+    if ( $GraphType=="LqiPerMeter" ){ $selected = " selected "; } else { $selected = " "; } echo '<option value="LqiPerMeter"'  .$selected.'>LqiPerMeter</option>'."\n";
+    echo '</select>';
+    
+    echo '<select name="NE">';
     if ( $NE=="All" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="All"'.$selected.'>All</option>'."\n";
     if ( $NE=="None" ) { $selected = " selected "; } else { $selected = " "; } echo '<option value="None"'.$selected.'>None</option>'."\n";
     foreach ($table as $shortAddress => $point) {
@@ -151,6 +156,7 @@
         echo '<option value="'.$shortAddress.'"'.$selected.'>'.$shortAddress.'-'.$table[$shortAddress]['name'].'</option>'."\n";
     }
     echo '</select>';
+    
     echo '<select name="NE2">';
     
     echo '<option value="None"'.$selected.'>None</option>'."\n";
@@ -217,79 +223,136 @@
     
     // Abeilles
     
-    // Dessine des points pour chaque equipement
-    foreach ( $table as $id => $point ) {
-        echo '<circle cx="'.$point['x'].'" cy="'.$point['y'].'" r="10" fill="'.$point['color'].'" />'."\n";
-        echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'.($point['x']+10).'" y="'.$point['y'].'" fill="red" style="font-size: 8px;">'.$point['name'].' ('.$id.')</text> </a>'."\n";
-    }
-    
-    // Dessine la legende
-    echo '<circle cx="100" cy="900" r="10" fill="green" />'."\n";
-    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>'."\n";
-    
-    echo '<circle cx="100" cy="925" r="10" fill="orange" />'."\n";
-    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>'."\n";
-    
-    echo '<circle cx="100" cy="950" r="10" fill="red" />'."\n";
-    echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>'."\n";
-    
-    echo "\n\n";
-    // echo "Liaisons Radio";
-    
-    // echo "M pour move to";
-    // echo "L pour Line to";
-    
-    // On reset $NE qui est utilisé pour different truc.
-    if ( $Cache == "Refresh Cache" ) {
-        $NE="All";
-    }
-    
-    $error = "Coucou";
-    $i=0;
-    
-    // $voisinesMap
-    foreach ( $LQI as $row => $voisineList ) {
-        $error = $error . "\n" .$i++ . ": ->". $voisineList['Relationship'] . "<- ";
+    if ( $GraphType == 'Default' ) {
+        // Dessine des points pour chaque equipement
+        foreach ( $table as $id => $point ) {
+            echo '<circle cx="'.$point['x'].'" cy="'.$point['y'].'" r="10" fill="'.$point['color'].'" />'."\n";
+            echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'.($point['x']+10).'" y="'.$point['y'].'" fill="red" style="font-size: 8px;">'.$point['name'].' ('.$id.')</text> </a>'."\n";
+        }
         
-        if ( ($Data!="Relationship") || ($Hierarchy=="All") || (($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship'])) )
-        /*
-        if (        ($Data!="Relationship")
-            ||      ($Hierarchy=="All")
-            ||  (   ($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship']) )
-            )
-         */
-        {
-            if ( ($NE==$voisineList['NE']) || ($NE=="All") || ($NE2==$voisineList['Voisine']) ) {
-                if ( isset($table[$voisineList['NE']]) && isset($table[$voisineList['Voisine']]) ) {
-                    $midX = ( $table[$voisineList['NE']]['x'] + $table[$voisineList['Voisine']]['x'] ) / 2;
-                    $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
-                    
-                    if ( $Data=="LinkQualityDec" ) {
-                        if ( $voisineList[$Data]<70 )                                   { $colorLine = "#FF0000"; }
-                        if ( ($voisineList[$Data]>=70) && ($voisineList[$Data]<150) )   { $colorLine = "#FF8C00"; }
-                        if ( $voisineList[$Data]>=150 )                                 { $colorLine = "#008000"; }
-                        echo "1";
-                    }
-                    else {
-                        $colorLine = "#00BFFF";
-                    }
-                    
-                    echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
-                    echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
-                }
-            }
-            
+        // Dessine la legende
+        echo '<circle cx="100" cy="900" r="10" fill="green" />'."\n";
+        echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="red" style="font-size: 8px;">Battery</text> </a>'."\n";
+        
+        echo '<circle cx="100" cy="925" r="10" fill="orange" />'."\n";
+        echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="red" style="font-size: 8px;">Routeur</a>'."\n";
+        
+        echo '<circle cx="100" cy="950" r="10" fill="red" />'."\n";
+        echo '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="red" style="font-size: 8px;">Inconnu par Jeedom</text> </a>'."\n";
+        
+        echo "\n\n";
+        // echo "Liaisons Radio";
+        
+        // echo "M pour move to";
+        // echo "L pour Line to";
+        
+        // On reset $NE qui est utilisé pour different truc.
+        if ( $Cache == "Refresh Cache" ) {
+            $NE="All";
         }
-        else {
-            $error = $error . " - " . $Data . "/" . $Hierarchy . "<br>";
+        
+        $error = "Message collector<br>";
+        $i=0;
+        
+        // $voisinesMap
+        foreach ( $LQI as $row => $voisineList ) {
+            $error = $error . "\n" .$i++ . ": ->". $voisineList['Relationship'] . "<- ";
+            
+            if ( ($Data!="Relationship") || ($Hierarchy=="All") || (($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship'])) )
+            /*
+             if (        ($Data!="Relationship")
+             ||      ($Hierarchy=="All")
+             ||  (   ($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship']) )
+             )
+             */
+            {
+                if ( ($NE==$voisineList['NE']) || ($NE=="All") || ($NE2==$voisineList['Voisine']) ) {
+                    if ( isset($table[$voisineList['NE']]) && isset($table[$voisineList['Voisine']]) ) {
+                        $midX = ( $table[$voisineList['NE']]['x'] + $table[$voisineList['Voisine']]['x'] ) / 2;
+                        $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
+                        
+                        if ( $Data=="LinkQualityDec" ) {
+                            if ( $voisineList[$Data]<70 )                                   { $colorLine = "#FF0000"; }
+                            if ( ($voisineList[$Data]>=70) && ($voisineList[$Data]<150) )   { $colorLine = "#FF8C00"; }
+                            if ( $voisineList[$Data]>=150 )                                 { $colorLine = "#008000"; }
+                            echo "1";
+                        }
+                        else {
+                            $colorLine = "#00BFFF";
+                        }
+                        
+                        echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+                        echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
+                    }
+                }
+                
+            }
+            else {
+                $error = $error . " - " . $Data . "/" . $Hierarchy . "<br>";
+            }
         }
     }
     
+    if ( $GraphType == 'LqiPerMeter' ) {
+        $error = "Message collector<br>";
+        $i=0;
+        
+        echo '<path d="M10,1000 L10,0" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+        echo '<text x="20" y="10" fill="Black" style="font-size: 12px;">LQI (0-250)</text>';
+        echo '<path d="M10,1000 L1000,1000" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+        echo '<text x="950" y="980" fill="Black" style="font-size: 12px;">Distance</text>';
+        echo '<path d="M10,333 L1000,333" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+        echo '<path d="M10,666 L1000,666" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+        
+        // $voisinesMap
+        foreach ( $LQI as $row => $voisineList ) {
+            // $error = $error . "\n" .$i++ . ": ->". $voisineList['Relationship'] . "<- ";
+            
+            if ( ($Data!="Relationship") || ($Hierarchy=="All") || (($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship'])) )
+            /*
+             if (        ($Data!="Relationship")
+             ||      ($Hierarchy=="All")
+             ||  (   ($Data=="Relationship") && ($Hierarchy==$voisineList['Relationship']) )
+             )
+             */
+            {
+                if ( ($NE==$voisineList['NE']) || ($NE=="All") || ($NE2==$voisineList['Voisine']) ) {
+                    if ( isset($table[$voisineList['NE']]) && isset($table[$voisineList['Voisine']]) ) {
+                        $midX = ( $table[$voisineList['NE']]['x'] + $table[$voisineList['Voisine']]['x'] ) / 2;
+                        $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
+                        $distance = sqrt( pow(table[$voisineList['NE']]['x'] - $table[$voisineList['Voisine']]['x'],2) + pow($table[$voisineList['NE']]['y'] - $table[$voisineList['Voisine']]['y'],2));
+                        // echo $distance.'<br>';
+                        $error = $error . $distance ."<br>";
+                        
+                        if ( $Data=="LinkQualityDec" ) {
+                            if ( $voisineList[$Data]<70 )                                   { $colorLine = "#FF0000"; }
+                            if ( ($voisineList[$Data]>=70) && ($voisineList[$Data]<150) )   { $colorLine = "#FF8C00"; }
+                            if ( $voisineList[$Data]>=150 )                                 { $colorLine = "#008000"; }
+                            // echo "1";
+                        }
+                        else {
+                            $colorLine = "#00BFFF";
+                        }
+                        
+                        // echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
+                        // echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
+                        echo '<circle cx="'.$distance.'" cy="'.(1000-($voisineList[$Data]*4)).'" r="10" fill="'.$colorLine.'" />'."\n";
+                        // echo '<circle cx="500" cy="100" r="10" fill="red" />'."\n";
+                    }
+                }
+                
+            }
+            else {
+                $error = $error . " - " . $Data . "/" . $Hierarchy . "<br>";
+            }
+        }
+
+    }
     
-    echo "\n\nSorry, your browser does not support inline SVG.\n";
+    echo "<br>Sorry, your browser does not support inline SVG.<br>";
     echo "</svg>\n";
     
-    echo "\n\n" . $error . "</br>\n\n";
+    echo "<br>" . $error . "</br>\n\n";
     
     echo "</body>\n";
     echo "</html>\n";

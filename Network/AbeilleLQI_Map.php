@@ -339,7 +339,7 @@
                         
                         // echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
                         // echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
-                        echo '<circle cx="'.$distance.'" cy="'.(1000-($voisineList[$Data]*4)).'" r="10" fill="'.$colorLine.'" />'."\n";
+                        echo '<circle cx="'.($distance+10).'" cy="'.(1000-($voisineList[$Data]*4)).'" r="10" fill="'.$colorLine.'" />'."\n";
                         // echo '<circle cx="500" cy="100" r="10" fill="red" />'."\n";
                     }
                 }

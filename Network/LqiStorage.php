@@ -96,10 +96,14 @@
             $LQI = $json['data'];
         }
         
+        $TimeStamp = time();
+        
         foreach ( $LQI as $row => $voisineList ) {
             echo $voisineList['NE_Name']."-".$voisineList['Voisine_Name']."\n";
-            $fields = "NE_Name, Voisine_Name";
-            $data = '"'.$voisineList['NE_Name'].'", "'.$voisineList['Voisine_Name'].'"';
+            $fields = 'TimeStamp, ExtendedPanId, IEEE_Address, Depth, LinkQuality, BitmapOfAttributes, NE, NE_Name, Voisine, Voisine_Name, Type, Relationship, Rx, LinkQualityDec';
+            
+            $data = '"'.$TimeStamp.'", "'.$voisineList['ExtendedPanId'].'", "'.$voisineList['IEEE_Address'].'", "'.$voisineList['Depth'].'", "'.$voisineList['LinkQuality'].'", "'.$voisineList['BitmapOfAttributes'].'", "'.$voisineList['NE'].'", "'.$voisineList['NE_Name'].'", "'.$voisineList['Voisine'].'", "'.$voisineList['Voisine_Name'].'", "'.$voisineList['Type'].'", "'.$voisineList['Relationship'].'", "'.$voisineList['Rx'].'", "'.$voisineList['LinkQualityDec'].'"';
+            
             insertData( $db, $fields, $data);
         }
     }
@@ -111,8 +115,8 @@
         echo "Opened database successfully\n";
     }
     
-    // createDB($db);
-    listData($db);
+    createDB($db);
+    // listData($db);
     getJson($db);
     
     $db->close();

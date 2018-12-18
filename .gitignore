@@ -38,4 +38,5 @@ atlassian-ide-plugin.xml
 **/._*
 .nfs*
 
+LqiStorage.db
 

@@ -50,6 +50,10 @@ $('#bt_networkAbeille').on('click', function () {
                            window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.html");
                            });
 
+$('#bt_graph').on('click', function () {
+                               window.open("plugins/Abeille/Network/AbeilleLQI_Map.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All");
+                               });
+
 $('#bt_listeCompatibilite').on('click', function () {
                            window.open("plugins/Abeille/core/config/devices/listeCompatibilite.php");
                            });

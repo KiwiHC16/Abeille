@@ -357,7 +357,7 @@
     echo "<br>Sorry, your browser does not support inline SVG.<br>";
     echo "</svg>\n";
     
-    echo "<br>" . $error . "</br>\n\n";
+    // echo "<br>" . $error . "</br>\n\n";
     
     echo "</body>\n";
     echo "</html>\n";

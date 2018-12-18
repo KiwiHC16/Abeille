@@ -294,7 +294,7 @@
     }
     
     if ( $GraphType == 'LqiPerMeter' ) {
-        $error = "Message collector<br>";
+        $error = "Message collector<br><table><tr><td>X1</td><td>Y1</td><td>X2</td><td>Y2</td><td>Distance</td><td>Valeur</td></tr>";
         $i=0;
         
         echo '<path d="M10,1000 L10,0" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
@@ -320,9 +320,12 @@
                     if ( isset($table[$voisineList['NE']]) && isset($table[$voisineList['Voisine']]) ) {
                         $midX = ( $table[$voisineList['NE']]['x'] + $table[$voisineList['Voisine']]['x'] ) / 2;
                         $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
-                        $distance = sqrt( pow(table[$voisineList['NE']]['x'] - $table[$voisineList['Voisine']]['x'],2) + pow($table[$voisineList['NE']]['y'] - $table[$voisineList['Voisine']]['y'],2));
+                        $dx = $table[$voisineList['NE']]['x'] - $table[$voisineList['Voisine']]['x'];
+                        $dy = $table[$voisineList['NE']]['y'] - $table[$voisineList['Voisine']]['y'];
+                        
+                        $distance = sqrt( pow(dx,2) + pow($dy,2));
                         // echo $distance.'<br>';
-                        $error = $error . $distance ."<br>";
+                        $error = $error . "<tr><td>".round($table[$voisineList['NE']]['x'])."</td><td>".round($table[$voisineList['NE']]['y'])."</td><td>".round($table[$voisineList['Voisine']]['x'])."</td><td>".round($table[$voisineList['Voisine']]['y'])."</td><td>".round($distance)."</td><td>".$voisineList[$Data]."</td></tr>";
                         
                         if ( $Data=="LinkQualityDec" ) {
                             if ( $voisineList[$Data]<70 )                                   { $colorLine = "#FF0000"; }
@@ -348,6 +351,7 @@
         }
 
     }
+    $error = $error . "</table>";
     
     echo "<br>Sorry, your browser does not support inline SVG.<br>";
     echo "</svg>\n";

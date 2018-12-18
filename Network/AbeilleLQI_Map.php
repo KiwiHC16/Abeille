@@ -301,6 +301,7 @@
         echo '<text x="20" y="10" fill="Black" style="font-size: 12px;">LQI (0-250)</text>';
         echo '<path d="M10,1000 L1000,1000" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
         echo '<text x="950" y="980" fill="Black" style="font-size: 12px;">Distance</text>';
+        
         echo '<path d="M10,333 L1000,333" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
         echo '<path d="M10,666 L1000,666" style="stroke: black; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
         
@@ -339,7 +340,7 @@
                         
                         // echo '<path d="M'.$table[$voisineList['NE']]['x'].','.$table[$voisineList['NE']]['y'].' L'.$table[$voisineList['Voisine']]['x'].','.$table[$voisineList['Voisine']]['y'].'" style="stroke: '.$colorLine.'; stroke-width: 1px; fill: none; marker-start: url(#markerCircle); marker-end: url(#markerArrow);" />'."\n";
                         // echo '<text x="'.$midX.'" y="'.$midY.'" fill="purple" style="font-size: 8px;">'.$voisineList[$Data].'</text>'."\n";
-                        echo '<circle cx="'.($distance+10).'" cy="'.(1000-($voisineList[$Data]*4)).'" r="10" fill="'.$colorLine.'" />'."\n";
+                        echo '<circle cx="'.($distance+10).'" cy="'.(1000-($voisineList[$Data]*3.9)).'" r="10" fill="'.$colorLine.'" />'."\n";
                         // echo '<circle cx="500" cy="100" r="10" fill="red" />'."\n";
                     }
                 }

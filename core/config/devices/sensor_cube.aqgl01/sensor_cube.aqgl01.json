@@ -6,10 +6,11 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662623b",
+      "uniqId": "5c07c7662623b",
       "icone": "sensor_cube",
       "battery_type": "1x3V CR2032 (?)",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "defaultEP": "01"
     },
     "Commandes": {
       "include1": "SW",

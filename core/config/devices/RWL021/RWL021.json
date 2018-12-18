@@ -5,7 +5,7 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620b0e",
+      "uniqId": "5c07c76620b0e",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
       "icone": "RWL021",
@@ -17,7 +17,8 @@
       "include3": "onGroup",
       "include4": "downGroup",
       "include5": "upGroup",
-      "include6": "setLevelGroup",
+      "include6": "boutonStateRWL021",
+      "include7": "BindToZigateButton",
       "include8 a tester": "Batterie-Pourcent-Ikea",
       "include9 a tester": "getBattery",
       "include10 a tester": "BindShortToZigateBatterie",

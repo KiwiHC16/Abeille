@@ -228,6 +228,8 @@
                     // positionX
                     // positionY
                     // updatetime
+                    // poll
+                    if ( self::testUpdateCommand($fp, "poll", $templateMainConfig["poll"], $abeille->getConfiguration("poll") ) ) { $abeille->setConfiguration( "poll", $templateMainConfig["poll"] ); }
                     
                     // timeout
                     if ( self::testUpdateCommand($fp, "timeout", $templateMain["timeout"], $abeille->getTimeout("timeout") ) ) { $abeille->setTimeout( $templateMain["timeout"] ); }
@@ -508,6 +510,9 @@
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
             $eqLogics = self::byType('Abeille');
+            
+            // Debug
+            Abeille::publishMosquitto(null, "CmdAbeille/Ruche/abeilleList", "abeilleListAll", '0');
             
             // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
             $parameters_info = self::getParameters();
@@ -1137,7 +1142,7 @@
             $client->onLog('Abeille::logmq');
 
             // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-            $client->setWill('/jeedom', "Client died :-(", $parameters_info['AbeilleQos'], 0);
+            $client->setWill('/jeedom', "Client Abeille died :-(", $parameters_info['AbeilleQos'], 0);
 
             // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
             $client->setReconnectDelay(1, 120, 1);
@@ -1638,6 +1643,9 @@
                 if (isset($objetConfiguration['protocol'])) {
                     $elogic->setConfiguration('protocol', $objetConfiguration['protocol']);
                 }
+                if (isset($objetConfiguration['poll'])) {
+                    $elogic->setConfiguration('poll', $objetConfiguration['poll']);
+                }
                 $elogic->setIsVisible("1");
 
 
@@ -1924,7 +1932,7 @@
                 }
                 
                 // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
-                if ($value="ffffffffffffffff") {
+                if ($value == "ffffffffffffffff") {
                     log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": ".$IEEE." =>".$value."<=" );
                     return;
                 }

@@ -1630,7 +1630,8 @@
         }
 
         if ($dataType == "42") {
-
+            
+            // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
             // Xiaomi Bouton Carré
             if (($AttributId == "ff01") && ($AttributSize == "001a")) {
                 deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
@@ -1883,8 +1884,24 @@
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
 
-            } else {
-                $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur.
+            }
+            // ------------------------------------------------------- Philips ----------------------------------------------------------
+            // Bouton Telecommande Philips Hue RWL021
+            elseif (($ClusterId == "fc00")) {
+                
+                // deamonlog("debug",";Type; 8102;Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                $buttonEvent = substr($payload, 24+2, 2 );
+                $buttonDuree = hexdec(substr($payload, 24+6, 2 ));
+                deamonlog("debug",";Type; 8102;Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".$buttonEvent."<- et duree ->".$duree."<-");
+                
+                
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Event", $buttonEvent, $qos);
+                mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Duree", $buttonDuree, $qos);
+                
+            }
+            // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
+            else {
+                $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
             }
         }
 
@@ -2063,7 +2080,9 @@
     
     function configureNE( $short ) {
         
-        $commandeConfiguration = array( 'BindToZigateBatterie', 'BindToZigateEtat', 'BindToZigateLevel', 'setReportEtat', 'setReportLevel');
+        deamonlog('debug',';Type; fct; ===> Configure NE Start');
+        
+        $commandeConfiguration = array( 'BindToZigateBatterie', 'BindToZigateEtat', 'BindToZigateLevel', 'setReportEtat', 'setReportLevel', 'BindToZigateButton' );
         
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
         
@@ -2071,14 +2090,19 @@
             foreach ( $commandeConfiguration as $config ) {
                 $cmd = $abeille->getCmd('action', $config);
                 if ( $cmd ) {
-                    deamonlog('debug',';Type; fct; configureNE cmd: '.$config);
+                    deamonlog('debug',';Type; fct; ===> Configure NE cmd: '.$config);
                     $cmd->execCmd();
                     sleep(2);
+                }
+                else {
+                    deamonlog('debug',';Type; fct; ===> Configure NE cmd: Cmd not found, probably not an issue, probably should not do it');
                 }
             }
         }
         
         $GLOBALS['NE'][$short]['state']='configuration';
+                  
+        deamonlog('debug',';Type; fct; ===> Configure NE End');
     }
     
     function processAnnonce( $NE, $mqtt, $qos ) {
@@ -2134,6 +2158,7 @@
                         $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
                         mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                         mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
+                        sleep(5); // time for the object to be created before configuring
                         configureNE($short);
                     }
                     

@@ -767,6 +767,16 @@ Si vous appuyez, sur I et O en même temps à moins de quelques centimetres, l'a
 ## Telecommande
 
 5 appuis sur bouton reset au dos avec un trombone et la télécommande s'appaire si la zigate en mode inclusion.
+Si attachée au réseau et un appui long sur "I", elle s'annonce et donc si elle n'existe pas dans abeille elle est crée.
+
+Dans l objet Abeille vous allez trouver:
+
+8 informations. 4 boutons x 2 infos (event, duree). Ce sont les informations qui remontent de a telecommande quand vous l'utilisez. Cela permet à Jeedom de savoir qu'un bouton a été utilisé et vous pouvez créer les scénario que vous voulez.
+* 4 Boutons: "I", "LumPlus", "LumMoins", "O".
+* 4 types events: "Appui Court = 0", "Appui Long = 1", "Relache appui court = 3", "Relache Appui Long = 4" 
+* Durée, indique le temps d'appui d'un bouton (Il n'y pas de temps de nom appui).
+
+5 icones (On,Off,Toggle,Lumiere plus, Lumiere moins) pour simuler la telecommande depuis Jeedom. C'est Jeedom qui envoie les commandes à la place de la telecommande. Pour se faire renseigner le champ "Groupe" dans la configuration.
 
 # Profalux
 

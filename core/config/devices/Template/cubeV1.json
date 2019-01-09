@@ -1,5 +1,5 @@
 {
-  "0012-0055": {
+  "0012-01-0055": {
     "isVisible": 0,
     "name": "Mouvement",
     "order": 2,
@@ -9,11 +9,11 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76623071",
+      "uniqId": "5c07c76623071",
       "visibilityCategory": "All"
     }
   },
-  "000c-ff05": {
+  "000c-01-ff05": {
     "isVisible": 1,
     "name": "Rotation (?)",
     "order": 3,
@@ -23,7 +23,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76623071",
+      "uniqId": "5c07c76623071",
       "visibilityCategory": "All"
     }
   }

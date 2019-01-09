@@ -16,8 +16,6 @@
       "include1": "offGroup",
       "include2": "toggleGroup",
       "include3": "onGroup",
-      "include4": "downGroup",
-      "include5": "upGroup",
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",

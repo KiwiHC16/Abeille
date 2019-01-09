@@ -2,7 +2,7 @@
 
 = Mise a jour
 
-== Version stable du 16/11/2018 (ou precedentes) => Version beta du 10/12/2018
+== Version stable du 16/11/2018 (ou precedentes) => Version beta et stable
 
 Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suite une standardisation des modèles doit être faite.
 Cela veut dire que tous les modèles changent et que le objets dans Abeille/Jeedom doivent être mis à jour.

@@ -2206,6 +2206,7 @@
     }
     
     function cleanUpNE($NE, $mqtt, $qos) {
+        if ( count($GLOBALS['NE'])<1 ) { return; }
         if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
         foreach ( $NE as $short=>$infos ) {
             if ( $GLOBALS['debugArray']['cleanUpNE'] ) { deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
@@ -2321,7 +2322,7 @@
                 usleep(1);
                 processAnnonce($NE, $mqtt, $qos);
                 cleanUpNE($NE, $mqtt, $qos);
-                sleep(0.5);
+                //sleep(0.5);
             }
         }
         

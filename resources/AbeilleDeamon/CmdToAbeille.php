@@ -1328,7 +1328,7 @@
             // sleep(1);
             // getParam($dest,$address, $Command['clusterId'], "0000" );
             //getParam($dest,$address, $Command['clusterId'], "0000" );
-            sleep(2);
+            // sleep(2);
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
             
@@ -1634,7 +1634,7 @@
             // Get the state of the equipement as IKEA Bulb don't send back their state.
             // $attribute = "0000";
             // getParam($dest,$address, $Command['clusterId'], $attribute);
-            sleep(2);
+            // sleep(2);
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
             

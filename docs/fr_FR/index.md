@@ -713,13 +713,17 @@ Voir la telecommande 5 boutons pour avoir plus de details sur le controle de gro
 - Ampoule neuve Hue White, Abeille en mode Inclusion, branchement de l'ampoule. L'ampoule s'associe et envoie des messages "annonce" mais pas son nom. Si vous faites un getName avec son adresse courte dans le champ Titre et 0B (destinationEndPoint) dans le champ Message, alors elle doit répondre avec son nom, ce qui va créer l'objet dans le dashboard (rafraichir).
 
 
-### Si deja associé
+### Si deja associé sur ce réseau
 
 - Si l’ampoule est déjà associée à la zigate, avec Abeille en mode Automatique,
 
 * l’extinction électrique pendant 15s puis allumage électrique doit provoquer l’envoie par l’ampoule de sa présence et la création par Abeille de l’objet associé.
 
 * Utiliser la commande getName dans la ruche, mettre l'adresse courte dans le titre et 03 (destinationndPoint) dans le message. Puis rafraichir le dashboard et la l'ampoule doit être présente.
+
+### Si déjà aassociée sur un autre réseau
+
+- Télécommande Hue, Bouton "I" et "0", pour reset factory new de  l'ampoule avec la zigate en mode inclusion. L'objet dans Abeille doit se créer tout seul.
 
 ## Philips Hue Go
 
@@ -749,11 +753,11 @@ Par exemple:
 
 Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ...
 
-### Telecommande / Philips Hue Dimmer Switch
+## Telecommande / Philips Hue Dimmer Switch
 
-#### Association
+### Association
 
-Appuie avec un trombone longtemps sur le bouton en face arriere "setup" avec la zigate en mode Inclusion. Un objet télécommande doit être créé dans Abeille.
+Appuie avec un trombone 5x sur le bouton "setup" en face arriere "setup" avec la zigate en mode Inclusion. Un objet télécommande doit être créé dans Abeille.
 
 
 ### Récupérer le groupe utilisé
@@ -764,9 +768,9 @@ Approcher la telecommande d'une ampoule de test qui est sur le reseau. Faire un 
 
 Si vous appuyez, sur I et O en même temps à moins de quelques centimetres, l'ampoule doit faire un reset et essayer de joindre un réseau. Si la zigate est en mode inclusion alors vous devez récurerer votre ampoule. Ca marche sur des ampoules Hue et Ikea, probablement pour d autres aussi.
 
-## Telecommande
+### Bouton de la telecommande dans Abeille
 
-5 appuis sur bouton reset au dos avec un trombone et la télécommande s'appaire si la zigate en mode inclusion.
+5 appuis sur bouton "setup" au dos avec un trombone et la télécommande s'appaire si la zigate en mode inclusion.
 Si attachée au réseau et un appui long sur "I", elle s'annonce et donc si elle n'existe pas dans abeille elle est crée.
 
 Dans l objet Abeille vous allez trouver:

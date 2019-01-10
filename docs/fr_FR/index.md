@@ -782,6 +782,11 @@ Dans l objet Abeille vous allez trouver:
 
 5 icones (On,Off,Toggle,Lumiere plus, Lumiere moins) pour simuler la telecommande depuis Jeedom. C'est Jeedom qui envoie les commandes à la place de la telecommande. Pour se faire renseigner le champ "Groupe" dans la configuration.
 
+#### Prise de controle d'une ampoule
+
+- Ampoule Hue White deja associé au reseau, idem pour la telecommande. Mettre la telecommande proche de l ampoule et appui sur "I" assez longtmeps. L ampoule clignote et est configurée. Apres l ampoule est pilotable par la telecommande. On peut recuperer le groupe utilisé sur l ampoule dans jeedom.
+- Ampoule Ikea. La configuration depuis la telecommande et le bouton 'I'ne semble pas fonctionner. L'ampoule clignote mais configuration ne se produit pas. Mais si on recupere le groupe comme indiqué au paragraphe preceent et qu'on defini ce groupe dans l ampoule Ikea, alors l ampoule repond aux commandes des la telecommande. J'ai un doute sur le fait que la telecommande est un groupe par defaut. J'ai l impression quelle a commence a utiliser un groupe quand elle a programmer la premiere ampoule Hue.
+
 # Profalux
 
 ## Inclusion d'un volet

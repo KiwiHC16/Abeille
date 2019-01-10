@@ -706,7 +706,7 @@ Voir la telecommande 5 boutons pour avoir plus de details sur le controle de gro
 
 # Philips Hue
 
-##  Creation objet dans Abeille
+##  Philips Hue White
 
 ### Association
 
@@ -733,7 +733,7 @@ Voir la telecommande 5 boutons pour avoir plus de details sur le controle de gro
 
 Sur un objet ampoule vous pourrez trouver la commande Colour:
 
-![](..//Capture_d_ecran_2018_02_13_a_23_07_50.png)
+![](../Capture_d_ecran_2018_02_13_a_23_07_50.png)
 
 Dans le premier champ indiquez la valeur X et dans le deuxième champ la valeur Y.
 
@@ -745,7 +745,7 @@ Par exemple:
 
 ### Group Control
 
-![](..//Capture-d_ecran_2018_02_14_a_11_15_18.png)
+![](../Capture-d_ecran_2018_02_14_a_11_15_18.png)
 
 Avec ca je commande la Philips Hue depuis télécommande Ikea ronde 5 boutons ...
 

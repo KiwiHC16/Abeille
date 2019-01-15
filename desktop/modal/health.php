@@ -28,6 +28,7 @@
         <th>{{Name}}</th>
         <th>{{ID}}</th>
         <th>{{Address}}</th>
+        <th>{{IEEE}}</th>
         <th>{{Statut}}</th>
         <th>{{Dernière communication}}</th>
         <th>{{Depuis (h)}}</th>
@@ -49,6 +50,19 @@
 
             // Short Address
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.substr($eqLogic->getLogicalId(),8).'</span></td>';
+            
+            // IEEE
+            $abeille = new Abeille();
+            $commandIEEE = new AbeilleCmd();
+            
+            // Recupere IEEE de la Ruche/ZiGate
+            $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+            // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+            
+            $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
+            // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
+            
+            echo '<td>'.$addrIEEE.'</td>';
 
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue

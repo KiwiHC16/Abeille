@@ -183,7 +183,7 @@ $parameters_info = Abeille::getParameters();
                     echo "</center>";
                     echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
                     echo '</div>';
-                
+
                 echo '</div>';
             }
             ?>
@@ -191,6 +191,42 @@ $parameters_info = Abeille::getParameters();
         </div>
 
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+
+        <table border="1">
+          <thead>
+            <tr>
+                <th>{{Module}}</th>
+                <th>{{Groupes}}</th>
+            </tr>
+          </thead>
+          <tbody>
+        <?php
+
+        $abeille = new Abeille();
+        $commandIEEE = new AbeilleCmd();
+
+        foreach ($eqLogics as $key => $eqLogic) {
+
+            echo '<tr>';
+
+              // Recupere IEEE de la Ruche/ZiGate
+              $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+
+              if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
+                if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
+                echo '<td>'.$eqLogic->getHumanName(true).'</td>';
+                echo '<td align="center">&nbsp;'.str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd()).' &nbsp;</td>';
+              }
+
+            }
+
+            echo '</tr>';
+
+        }
+
+        ?>
+          </tbody>
+        </table>
 
         <table>
             <tr>
@@ -200,7 +236,7 @@ $parameters_info = Abeille::getParameters();
             </tr><tr>
                 <td>
                     <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-                    <input type="text" value="XXXX" name="group">
+                    <input type="text" name="group" placeholder="XXXX">
                 </td><td>
                     <input type="submit" name="submitButton" value="Add Group">
                 </td><td>
@@ -215,9 +251,9 @@ $parameters_info = Abeille::getParameters();
             </tr><tr>
                 <td>
                     <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
-                    <input type="text" value="XXXX" name="groupID">
+                    <input type="text" name="groupID" placeholder="XXXX">
                     <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Scene Id</label>
-                    <input type="text" value="YY" name="sceneID">
+                    <input type="text" name="sceneID" placeholder="YY">
                 </td><td>
 
                 </td><td>
@@ -245,9 +281,10 @@ $parameters_info = Abeille::getParameters();
             <br>
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
-<input type="submit" name="submitButton" value="Add Scene">
-<input type="submit" name="submitButton" value="Remove Scene">
-<input type="submit" name="submitButton" value="Identify">
+            <input type="submit" name="submitButton" value="Add Scene">
+            <input type="submit" name="submitButton" value="Remove Scene">
+            <input type="submit" name="submitButton" value="Identify">
+
             <table>
             </tr><tr>
                 <td>
@@ -306,7 +343,7 @@ $parameters_info = Abeille::getParameters();
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
                             <div class="col-sm-3">
-                                
+
                                 <input type="text" class="eqLogicAttr form-control" data-l1key="name"                               placeholder="{{Nom de l'équipement Abeille}}"   />
                             </div>
                         </div>
@@ -323,7 +360,7 @@ $parameters_info = Abeille::getParameters();
                                 </select>
                             </div>
                         </div>
-                                
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Catégorie}}</label>
                             <div class="col-sm-8">
@@ -337,7 +374,7 @@ $parameters_info = Abeille::getParameters();
 
                             </div>
                         </div>
-                                
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-8">
@@ -353,12 +390,12 @@ $parameters_info = Abeille::getParameters();
                                 <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
                                 </div>
                                 </div>
-                                
+
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>
                         </div>
-                                
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position X}}</label>
                             <div class="col-sm-3">
@@ -367,7 +404,7 @@ $parameters_info = Abeille::getParameters();
                                 placeholder="{{Position sur l axe horizontal (0 à gauche - 1000 à droite)}}"/>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position Y}}</label>
                             <div class="col-sm-3">
@@ -376,7 +413,7 @@ $parameters_info = Abeille::getParameters();
                                 placeholder="{{Position sur l axe vertical (0 en haut - 1000 en bas)}}"/>
                             </div>
                         </div>
-                                
+
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Id}}</label>
@@ -384,15 +421,15 @@ $parameters_info = Abeille::getParameters();
                                 <span class="eqLogicAttr" data-l1key="id"></span>
                             </div>
                         </div>
-                                
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Topic Abeille}}</label>
                             <div class="col-sm-3">
                                 <span class="eqLogicAttr" data-l1key="configuration" data-l2key="topic"></span>
                             </div>
                         </div>
-                                
-                                
+
+
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Icone}}</label>
@@ -427,7 +464,7 @@ $parameters_info = Abeille::getParameters();
                     </fieldset>
                 </form>
             </div>
-            
+
             <div role="tabpanel" class="tab-pane" id="paramtab">
                 <form class="form-horizontal">
                     <fieldset>
@@ -437,15 +474,15 @@ $parameters_info = Abeille::getParameters();
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Equipements sur piles.}}</label>
                                 </div>
-                                
+
                                 <div class="form-group" >
                                 <label class="col-sm-3 control-label" >{{Type de piles}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type"  placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>
                                 </div>
                                 </div>
-                                
-                                
+
+
                                 <hr>
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Telecommande}}</label>
@@ -457,56 +494,56 @@ $parameters_info = Abeille::getParameters();
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
                                 </div>
                                 </div>
-                                
+
                                 <div id="timer">
                                 <hr>
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Timer}}</label>
                                 </div>
-                                
-                                
+
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{action sur demarrage}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStart" placeholder="#cmd#"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Duration}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerDuration" placeholder="secondes"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Ramp Up duration}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerRampUp" placeholder="secondes"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Ramp Down duration}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerRampDown" placeholder="secondes"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Ramp Action}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionRamp" placeholder="#cmd#"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Action sur arret}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStop" placeholder="#cmd#"/>
                                 </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Action sur annulation}}</label>
                                 <div class="col-sm-3">
@@ -517,7 +554,7 @@ $parameters_info = Abeille::getParameters();
                     </fieldset>
                 </form>
             </div>
-                                
+
             <div role="tabpanel" class="tab-pane" id="commandtab">
 
                 <form class="form-horizontal">
@@ -562,6 +599,6 @@ $parameters_info = Abeille::getParameters();
         document.icon_visu.src = text;
     });
 
-                                
+
 
 </script>

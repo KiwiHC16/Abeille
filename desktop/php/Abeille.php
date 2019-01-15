@@ -192,14 +192,35 @@ $parameters_info = Abeille::getParameters();
 
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 
-        <table border="1">
+<style>
+table.one {
+  border: 1px solid black;
+  color: black;
+}
+
+th.one {
+  padding: 10px;
+}
+
+td.one {
+  border: 1px solid black;
+  padding: 3px;
+}
+</style>
+
+<label>Groupes</label>
+<table><tr><td>
+
+        <table class="one">
           <thead>
             <tr>
-                <th>{{Module}}</th>
-                <th>{{Groupes}}</th>
+                <th class="one">{{Module}}</th>
+                <th class="one">{{Telecommande}}</th>
+                <th class="one">{{Membre}}</th>
             </tr>
           </thead>
           <tbody>
+
         <?php
 
         $abeille = new Abeille();
@@ -207,20 +228,29 @@ $parameters_info = Abeille::getParameters();
 
         foreach ($eqLogics as $key => $eqLogic) {
 
-            echo '<tr>';
+              $name= "";
+              $groupMember = "";
+              $groupTele = "";
+              $print=0;
 
-              // Recupere IEEE de la Ruche/ZiGate
               $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+
+              $name = $eqLogic->getHumanName(true);
 
               if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
                 if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-                echo '<td>'.$eqLogic->getHumanName(true).'</td>';
-                echo '<td align="center">&nbsp;'.str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd()).' &nbsp;</td>';
+
+                  $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
+                  $print = 1;
+                }
               }
 
-            }
+              if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
+                $groupTele = $eqLogic->getConfiguration('Groupe');
+                $print = 1;
+              }
 
-            echo '</tr>';
+            if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
 
         }
 
@@ -228,14 +258,12 @@ $parameters_info = Abeille::getParameters();
           </tbody>
         </table>
 
+</td><td class="one">
+
         <table>
-            <tr>
+          <tr>
                 <td>
-                    Groupe
-                </td>
-            </tr><tr>
-                <td>
-                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
+                    <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
                     <input type="text" name="group" placeholder="XXXX">
                 </td><td>
                     <input type="submit" name="submitButton" value="Add Group">
@@ -244,15 +272,29 @@ $parameters_info = Abeille::getParameters();
                 </td><td>
                     <input type="submit" name="submitButton" value="Get Group">
                 </td>
-            </tr><tr>
+            </tr>
+          </table>
+
+</td></tr></table>
+
+<hr>
+
+<label>Scenes</label>
+<table class="one"><tr><td>
+          <table>
+            <tr>
+              <td>
+                A venir la liste des scenes
+              </td>
+            </tr>
+          </table>
+      </td><td>
+          <table>
+            <tr>
                 <td>
-                    Scene
-                </td>
-            </tr><tr>
-                <td>
-                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
+                    <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
                     <input type="text" name="groupID" placeholder="XXXX">
-                    <label control-label" data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Scene Id</label>
+                    <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Scene Id</label>
                     <input type="text" name="sceneID" placeholder="YY">
                 </td><td>
 
@@ -265,20 +307,31 @@ $parameters_info = Abeille::getParameters();
                 </td><td>
                     <input type="submit" name="submitButton" value="Recall Scene">
                 </td>
-            </tr><tr>
-                <td>
-                    Modele
-                </td>
-            </tr><tr>
-                <td>
-                    <input type="submit" name="submitButton" value="Apply Template">
-                </td>
             </tr>
-            </tr>
-            </table>
+          </table>
 
-            <br>
-            <br>
+</td></tr></table>
+
+<hr>
+
+<table>
+<tr>
+    <td>
+        Modele
+    </td>
+</tr><tr>
+    <td>
+        <input type="submit" name="submitButton" value="Apply Template">
+    </td>
+</tr>
+</table>
+
+<hr>
+
+
+
+
+
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
             <input type="submit" name="submitButton" value="Add Scene">

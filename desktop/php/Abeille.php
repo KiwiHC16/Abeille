@@ -202,14 +202,22 @@ th.one {
   padding: 10px;
 }
 
+
+
 td.one {
   border: 1px solid black;
   padding: 3px;
 }
+
+td.two {
+    border: 1px solid black;
+    padding: 10px;
+}
+
 </style>
 
 <label>Groupes</label>
-<table><tr><td>
+<table><tr><td class="two">
 
         <table class="one">
           <thead>
@@ -258,19 +266,25 @@ td.one {
           </tbody>
         </table>
 
-</td><td class="one">
+</td><td class="two">
 
         <table>
+            <tr>
+                <td align="center">
+                    <input type="submit" name="submitButton" value="Get Group">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <hr>
+                </td>
+            </tr>
           <tr>
                 <td>
                     <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-                    <input type="text" name="group" placeholder="XXXX">
-                </td><td>
+                    <input type="text" name="group" placeholder="XXXX"><br>
                     <input type="submit" name="submitButton" value="Add Group">
-                </td><td>
                     <input type="submit" name="submitButton" value="Remove Group">
-                </td><td>
-                    <input type="submit" name="submitButton" value="Get Group">
                 </td>
             </tr>
           </table>
@@ -280,37 +294,93 @@ td.one {
 <hr>
 
 <label>Scenes</label>
-<table class="one"><tr><td>
-          <table>
+<table class="one"><tr><td class="two">
+
+            <table class="one">
+            <thead>
             <tr>
-              <td>
-                A venir la liste des scenes
-              </td>
+            <th class="one">{{Module}}</th>
+            <th class="one">{{Telecommande}}</th>
+            <th class="one">{{Membre}}</th>
             </tr>
-          </table>
-      </td><td>
-          <table>
+            </thead>
+            <tbody>
+
+            <?php
+                
+                $abeille = new Abeille();
+                $commandIEEE = new AbeilleCmd();
+                
+                foreach ($eqLogics as $key => $eqLogic) {
+                    
+                    $name= "";
+                    $sceneMember = "";
+                    $sceneTele = "";
+                    $print=0;
+                    
+                    $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+                    
+                    $name = $eqLogic->getHumanName(true);
+                    
+                    if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership') ) {
+                        if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd())>2 ) {
+                            
+                            $sceneMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd());
+                            $print = 1;
+                        }
+                    }
+                    
+                    if ( strlen($eqLogic->getConfiguration('Scene'))>3 ) {
+                        $sceneTele = $eqLogic->getConfiguration('Scene');
+                        $print = 1;
+                    }
+                    
+                    if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$sceneTele.'</td><td align="center" class="one">'.$sceneMember.'</td></tr>';
+                    
+                }
+                
+                ?>
+            </tbody>
+            </table>
+
+      </td><td class="two">
+          <table class="one">
             <tr>
-                <td>
+                <td class="one">
                     <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
-                    <input type="text" name="groupID" placeholder="XXXX">
-                    <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Scene Id</label>
-                    <input type="text" name="sceneID" placeholder="YY">
-                </td><td>
-
-                </td><td>
-
-                </td><td>
+                    <input type="text" name="groupIdScene1" placeholder="XXXX">
+                    <br>
+                    <input type="submit" name="submitButton" value="Get Scene Membership">
+                    <input type="submit" name="submitButton" value="Remove All Scene">
+                </td>
+            </tr><tr class="one">
+                </td><td class="one">
+                    <label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
+                    <label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
+                    <br>
                     <input type="submit" name="submitButton" value="View Scene">
-                </td><td>
+                    <input type="submit" name="submitButton" value="Add Scene">
+                    <input type="submit" name="submitButton" value="Remove Scene">
                     <input type="submit" name="submitButton" value="Store Scene">
-                </td><td>
                     <input type="submit" name="submitButton" value="Recall Scene">
+                    <input type="submit" name="submitButton" value="scene Group Recall">
                 </td>
             </tr>
           </table>
 
 </td></tr></table>
+<br>
+<ol>
+    <li>
+    "Get Scene Membership" interroge l équipement pour avoir les scenes associées à un groupe mais Abeille ne peut traiter la réponse incomplète. La modification est en cours de dev cote firmware zigate et ne fonctionnent pas a ce stade. Par contre en attendant vous pouvez voir passer la réponse dans le log AbeilleParser message "Scene Membership"
+    </li>
+    <li>
+    "View Scene" interroge l équipement pour avoir les détails d une scene mais Abeille ne peut traiter la réponse incomplète. La modification est en cours de dev cote firmware zigate et ne fonctionnent pas a ce stade. Par contre en attendant vous pouvez voir passer la réponse dans le log AbeilleParser message "Scene View"
+    </li>
+    <li>
+    "scene Group Recal" n est pas encore fonctionnelle.
+    </li>
+</ol>
 
 <hr>
 
@@ -334,8 +404,7 @@ td.one {
 
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
-            <input type="submit" name="submitButton" value="Add Scene">
-            <input type="submit" name="submitButton" value="Remove Scene">
+        
             <input type="submit" name="submitButton" value="Identify">
 
             <table>

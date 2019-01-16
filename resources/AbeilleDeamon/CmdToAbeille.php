@@ -536,7 +536,10 @@
 
         $GLOBALS['requestedlevel']=$_requestedlevel;
 
-        if (!isset($Command)) return;
+        if (!isset($Command)) {
+            deamonlog('debug',"processCmd Command not set return");
+            return;
+        }
 
         // print_r( $Command );
 
@@ -1110,6 +1113,47 @@
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             sendCmd( $dest, $cmd, $lenth, $data );
+        }
+        
+        if ( isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) )
+        {
+            
+            deamonlog('debug',"Specific Command to simulate Ikea Telecommand < and >");
+            
+            // Msg Type = 0x0530
+            $cmd = "0530";
+            
+            $addressMode = "02"; // 03 ne semble pas fonctionner
+            $targetShortAddress = $Command['address'];
+            $sourceEndpointBind = "01";
+            $destinationEndpointBind = "01";
+            $profileIDBind = "0104";
+            $clusterIDBind = "0005";
+            $securityMode = "02";
+            $radius = "30";
+            // $dataLength = "16";
+            
+            $FrameControlField = "05";  // 1
+            $manu = "7c11";
+            $SQN = "00";
+            $cmdIkea = "07";
+            $cmdIkeaParams = "00010D00";
+
+            $data2 = $FrameControlField . $manu . $SQN . $cmdIkea . $cmdIkeaParams;
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+            
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
+            
+            deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)) );
+            deamonlog('debug',"Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)) );
+            
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
         }
 
         if ( isset($Command['ActiveEndPoint']) )

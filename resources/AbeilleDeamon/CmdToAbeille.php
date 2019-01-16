@@ -1123,7 +1123,7 @@
             // Msg Type = 0x0530
             $cmd = "0530";
             
-            $addressMode = "02"; // 03 ne semble pas fonctionner
+            $addressMode = "01"; // 01 pour groupe 
             $targetShortAddress = $Command['address'];
             $sourceEndpointBind = "01";
             $destinationEndpointBind = "01";

@@ -471,7 +471,7 @@ Zigate en mode normal, plugin en mode automatique, un appui court sur le bouton 
 
 Zigate en mode inclusion, Plugin en automatique, appui long sur le bouton du flanc de la prise, la prise switche rapidement On/Off, lâcher le bouton, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
 
-![](..//plug01_new.png)
+![](../images/plug01_new.png)
 
 === Déjà associé
 
@@ -483,7 +483,12 @@ Titre : Adresse courte de la prise
 Message : DestinationEndPoint=03&groupAddress=aaaa
 avec "aaaa" le nom du groupe souhaité.
 
-![](..//plug01_addgroup.png)
+![](../images/plug01_addgroup.png)
+
+Video:
+
+![](../videos/GroupeAjoutSupprime.mov)
+
 
 
 # Ikea

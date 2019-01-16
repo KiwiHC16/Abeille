@@ -30,7 +30,8 @@
       "include15": "getSWBuild",
       "include16": "Identify",
       "include26": "setLevel",
-      "include27": "Group-Membership"
+      "include27": "Group-Membership",
+      "include27 2": "Scene-Membership"
     }
   }
 }

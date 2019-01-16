@@ -82,6 +82,7 @@
                         $client->publish('CmdAbeille/Ruche/addGroup',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
                         sleep(1);
                         $client->publish('CmdAbeille/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP, 0);
+                        sleep(1);
                     }
                 }
                 break;
@@ -95,6 +96,7 @@
                         $client->publish('CmdAbeille/Ruche/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'], 0);
                         sleep(1);
                         $client->publish('CmdAbeille/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP, 0);
+                        sleep(1);
                     }
                 }
                 break;
@@ -118,7 +120,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
-                        $client->publish('CmdAbeille/Ruche/viewScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupID'].'&sceneID='.$_POST['sceneID'], 0);
+                        $client->publish('CmdAbeille/Ruche/viewScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
                         
                     }
                 }
@@ -131,7 +133,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
-                        $client->publish('CmdAbeille/Ruche/storeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupID'].'&sceneID='.$_POST['sceneID'], 0);
+                        $client->publish('CmdAbeille/Ruche/storeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
                         
                     }
                 }
@@ -144,12 +146,70 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
-                        $client->publish('CmdAbeille/Ruche/recallScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupID'].'&sceneID='.$_POST['sceneID'], 0);
-                        
+                        $client->publish('CmdAbeille/Ruche/recallScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
                     }
                 }
                 break;
                 
+            case 'scene Group Recall':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/sceneGroupRecall',              'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
+                    }
+                }
+                break;
+                
+            case 'Add Scene':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/addScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'].'&sceneName=aa', 0);
+                    }
+                }
+                break;
+                
+            case 'Remove Scene':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/removeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
+                    }
+                }
+                break;
+                
+            case 'Get Scene Membership':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/getSceneMembership',     'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'], 0);
+                    }
+                }
+                break;
+                
+            case 'Remove All Scene':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/removeSceneAll',         'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'], 0);
+                    }
+                }
+                break;
                 
             // Template
             case 'Apply Template':
@@ -177,6 +237,7 @@
         echo '<br>error: '.$e->getMessage();
     }
     echo "<br>Fin";
+    sleep(3);
     header ("location:/index.php?v=d&m=Abeille&p=Abeille");
     
     ?>

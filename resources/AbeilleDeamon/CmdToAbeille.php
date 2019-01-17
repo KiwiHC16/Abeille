@@ -977,7 +977,7 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
 
-        if ( isset($Command['sceneGroupRecall']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
+        if ( isset($Command['sceneGroupRecall']) && isset($Command['groupID']) && isset($Command['sceneID']) )
         {
             $cmd = "00A5";
 
@@ -988,10 +988,10 @@
             // <group ID: uint16_t>
             // <scene ID: uint8_t>
 
-            $addressMode = "01";                                    // Short Address -> 2
-            $address = $Command['address'];                         // -> 4
+            $addressMode = "01";                                    // Group Address -> 1, Short Address -> 2
+            $address = $Command['groupID'];                         // -> 4
             $sourceEndpoint = "01";                                 // -> 2
-            $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
+            $destinationEndpoint = "02"; // -> 2
 
             $groupID = $Command['groupID'];
             $sceneID = $Command['sceneID'];

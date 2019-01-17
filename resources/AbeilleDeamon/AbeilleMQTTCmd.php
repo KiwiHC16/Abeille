@@ -613,16 +613,22 @@
                 
                 //----------------------------------------------------------------------------
             } elseif ($action == "sceneGroupRecall") {
-
+// a revoir completement
+                deamonlog( 'debug', 'sceneGroupRecall msg: ' . $msg );
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                
                 $Command = array(
                                  "sceneGroupRecall"         => "1",
-                                 "address"                  => $address,   // Ici c est l adresse du group.
+                                 // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                  // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                 "DestinationEndPoint"      => "ff",
+                                 // "DestinationEndPoint"      => "ff",
                                  // "groupID"                  => $parameters['groupID'],
-                                 "groupID"                  => $address,
-                                 "sceneID"                  => $msg,
+                                 "groupID"                  => $parameters['groupID'],
+                                 "sceneID"                  =>  $parameters['sceneID'],
                                  );
 
                 //----------------------------------------------------------------------------
@@ -826,19 +832,24 @@
 
             if ($action == "sceneGroupRecall") {
 
-                // if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                deamonlog( 'debug', 'sceneGroupRecall msg: ' . $msg );
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                }
+                
                 $Command = array(
                                  "sceneGroupRecall"         => "1",
-                                 "address"                  => $parameters['addressGroup'],   // Ici c est l adresse du group.
-
+                                 // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
+                                 
                                  // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                 "DestinationEndPoint"      => "ff",
+                                 // "DestinationEndPoint"      => "ff",
                                  // "groupID"                  => $parameters['groupID'],
-                                 "groupID"                  => $parameters['addressGroup'],
-                                 "sceneID"                  => $parameters['sceneID'],
+                                 "groupID"                  => $parameters['groupID'],
+                                 "sceneID"                  =>  $parameters['sceneID'],
                                  );
                 $done = 1;
-
+                
             }
 
             if ($action == "addScene") {

@@ -66,7 +66,7 @@
         $client->connect( "localhost", 1883, 60 );
         $client->subscribe( "#", 0 ); // !auto: Subscribe to root topic
         
-        echo "Group: ".$_POST['group']."<br>";
+        echo "Group: ".$_POST['groupID'].$_POST['groupIdScene1'].$_POST['groupIdScene2']."<br>";
         echo "Action: ".$_POST['submitButton']."<br>";
         
         switch ($_POST['submitButton']) {
@@ -152,14 +152,19 @@
                 break;
                 
             case 'scene Group Recall':
+                if (0) {
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
                         echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         $address = substr($device->getLogicalId(),8);
                         $EP = $device->getConfiguration('mainEP');
-                        $client->publish('CmdAbeille/Ruche/sceneGroupRecall',              'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
+                        $client->publish('CmdAbeille/Ruche/sceneGroupRecall',       'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
                     }
+                }
+                }
+                else {
+                    $client->publish('CmdAbeille/Ruche/sceneGroupRecall',       'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'], 0);
                 }
                 break;
                 
@@ -188,6 +193,7 @@
                 break;
                 
             case 'Get Scene Membership':
+                echo "Get Scene Membership<br>";
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
                         echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";

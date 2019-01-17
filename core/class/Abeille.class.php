@@ -2248,7 +2248,7 @@
                     }
                     
                     /* ------------------------------ */
-                    // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn
+                    // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                     if ( strpos( $topic,"#addrGroup#" )>0 ) {
                         $topic = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $topic );
                     }
@@ -2258,6 +2258,12 @@
                     $request = $this->getConfiguration('request', '1');
                     // request: c'est le payload dans la page de configuration pour une commande
                     // C est les parametres de la commande pour la zigate
+                    
+                    /* ------------------------------ */
+                    // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+                    if ( strpos( $request,"#addrGroup#" )>0 ) {
+                        $request = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $request );
+                    }
                     
                     /* ------------------------------ */
                     // Je fais les remplacement pour le timer

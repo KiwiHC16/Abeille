@@ -59,7 +59,17 @@
             $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
             // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
             
-            $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
+	    if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr') ) {
+		    $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
+	    }
+	    else {
+		    if ( $eqLogic->getConfiguration('icone') == "Timer" ) {
+			    $addrIEEE = "";
+		    }
+		    else {
+			    $addrIEEE = "inconnue";
+		    }
+	    }
             // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
             
             echo '<td>'.$addrIEEE.'</td>';

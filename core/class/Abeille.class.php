@@ -512,7 +512,7 @@
             $eqLogics = self::byType('Abeille');
             
             // Debug
-            Abeille::publishMosquitto(null, "CmdAbeille/Ruche/abeilleList", "abeilleListAll", '0');
+            // Abeille::publishMosquitto(null, "CmdAbeille/Ruche/abeilleList", "abeilleListAll", '0');
             
             // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
             $parameters_info = self::getParameters();

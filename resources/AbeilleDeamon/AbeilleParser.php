@@ -1201,9 +1201,12 @@
         // Answer format changed: https://github.com/fairecasoimeme/ZiGate/pull/97
         // Bizard je ne vois pas la nouvelle ligne dans le maaster zigate alors qu elle est dans GitHub
 
-        // <Sequence number: uint8_t>
-        // <endpoint: uint8_t>
-        // <Cluster id: uint16_t>
+        // <Sequence number:  uint8_t>
+        // <endpoint:         uint8_t>
+        // <Cluster id:       uint16_t>
+        // <status:           uint8_t>  (added only from 3.0f version)
+        // <Group id :        uint16_t> (added only from 3.0f version)
+        // <Src Addr:         uint16_t> (added only from 3.0f version)
 
         deamonlog('debug', 'Type; 8060; (Add a group response)(Decoded but Not Processed)'
                   . '; SQN: '           .substr($payload, 0, 2)
@@ -1211,6 +1214,7 @@
                   . '; clusterId: '     .substr($payload, 4, 4)
                   . '; status: '        .substr($payload, 8, 2)
                   . '; GroupID: '       .substr($payload,10, 4)
+                  . '; srcAddr: '       .substr($payload,14, 4)
                   );
     }
 

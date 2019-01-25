@@ -1926,11 +1926,17 @@
             // Bouton Telecommande Philips Hue RWL021
             elseif (($ClusterId == "fc00")) {
 
-                // deamonlog("debug",";Type; 8102;Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                $buttonEventTexte = array (
+                  '00' => 'appui',
+                  '01' => 'appui maintenu',
+                  '02' => 'relâche sur appui court',
+                  '03' => 'relâche sur appui long',
+                );
+                // deamonlog("debug",";Type; 8102; Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                $button = $AttributId;
                 $buttonEvent = substr($payload, 24+2, 2 );
                 $buttonDuree = hexdec(substr($payload, 24+6, 2 ));
-                deamonlog("debug",";Type; 8102;Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".$buttonEvent."<- et duree ->".$duree."<-");
-
+                deamonlog("debug",";Type; 8102; Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations, Bouton: ".$button." Event: ".$buttonEvent." Event Texte: ".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
 
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Event", $buttonEvent, $qos);
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Duree", $buttonDuree, $qos);
@@ -2280,7 +2286,7 @@
     $debugArray = array(
         '8000' => 1, // Status
 
-        '8009' => 0,
+        '8009' => 0, // Get Network Status
         '8010' => 0,
 
         'processAnnonce' => 1,

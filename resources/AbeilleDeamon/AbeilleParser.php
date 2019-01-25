@@ -807,6 +807,12 @@
         $Timestamp = substr($payload, 0, 8);
         deamonlog('debug','type; 8017; (Get Time server Response); Timestamp: '.hexdec($Timestamp) );
 
+        $SrcAddr = "Ruche";
+        $ClusterId = "ZiGate";
+        $AttributId = "Time";
+        $data = date( DATE_RFC2822, hexdec($Timestamp) );
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+
     }
 
     function decode8024($mqtt, $payload, $ln, $qos)

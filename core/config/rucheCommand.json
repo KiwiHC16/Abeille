@@ -734,9 +734,46 @@
       "request": "address=#title#&StartIndex=#message#"
     },
     "display": {
-      "forceReturnLineAfter": "0",
+      "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
       "message_placeholder": "Index - 2 digits"
+    }
+  },
+  "Set Time": {
+    "name": "Set Time",
+    "order": 51,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "setTimeServer",
+      "request": ""
+    }
+  },
+  "Get Time": {
+    "name": "Get Time",
+    "order": 52,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "getTimeServer",
+      "request": ""
+    }
+  },
+  "ZiGate-Time": {
+    "name": "ZiGate-Time",
+    "order": 53,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   }
 }

@@ -598,8 +598,11 @@
         }
 
         // Set Time server (v3.0f)
-        if ( isset($Command['setTimeServer']) && isset($Command['time']) )
+        if ( isset($Command['setTimeServer']) )
         {
+          if (!isset($Command['time']) ) {
+            $Command['time'] = time();
+          }
             deamonlog('debug',"setTimeServer");
             $cmd = "0016";
             $data = sprintf("%08s",dechex($Command['time']));

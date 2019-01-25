@@ -321,6 +321,10 @@
                 decode8015($mqtt, $payload, $ln, $qos);
                 break;
 
+            case "8017" :
+                decode8017($mqtt, $payload, $ln, $qos);
+                break;
+
             case "8024" :
                 decode8024($mqtt, $payload, $ln, $qos);
                 break;
@@ -796,6 +800,15 @@
         }
     }
 
+    function decode8017($mqtt, $payload, $ln, $qos)
+    {
+        // Get Time server Response (v3.0f)
+        // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
+        $Timestamp = substr($payload, 0, 8);
+        deamonlog('debug','type; 8017; (Get Time server Response); Timestamp: '.hexdec($Timestamp) );
+
+    }
+
     function decode8024($mqtt, $payload, $ln, $qos)
     {
         // Formed Msg Type = 0x8024
@@ -1179,6 +1192,8 @@
     //----------------------------------------------------------------------------------------------------------------
     function decode8060($mqtt, $payload, $ln, $qos)
     {
+        // Answer format changed: https://github.com/fairecasoimeme/ZiGate/pull/97
+        // Bizard je ne vois pas la nouvelle ligne dans le maaster zigate alors qu elle est dans GitHub
 
         // <Sequence number: uint8_t>
         // <endpoint: uint8_t>
@@ -1976,6 +1991,7 @@
 
     function decode8140($mqtt, $payload, $ln, $qos)
     {
+        // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
         deamonlog('debug', 'Type; 8140; (Configure Reporting response)(Not Processed)'
                   . '; (Not processed*************************************************************)'
                   . '; Level: 0x'.substr($payload, 0, 2)

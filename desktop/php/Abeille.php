@@ -121,7 +121,7 @@ $parameters_info = Abeille::getParameters();
 
 
 
-        <legend><i class="fa fa-commenting-o"></i> {{Affichage Widget}}</legend>
+        <legend><i class="fa fa-commenting-o"></i> {{Affichage Commandes dans les Widget}}</legend>
 
         <div class="eqLogicThumbnailContainer">
                 <div class="cursor" id="bt_toggleAffichageNetwork" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
@@ -433,6 +433,19 @@ td.two {
             </tr><tr>
                 <td>
                     <a class="btn btn-danger  eqLogicAction pull-right" data-action="exclusion"><i class="fa fa-sign-out"></i>  {{Exclusion}}</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div id="bt_setTimeServer">
+                        <a class="btn btn-success" data-action="setTimeServer"><i class="fa fa-sign-in"></i>{{Set Time}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div id="bt_getTimeServer">
+                        <a class="btn btn-success" data-action="getTimeServer"><i class="fa fa-sign-out"></i>{{Get Time}}</a>
+                    </div>
                 </td>
             </tr>
 

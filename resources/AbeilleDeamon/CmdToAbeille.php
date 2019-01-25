@@ -528,7 +528,7 @@
      * @param $Command command to send
      * @param $loglevel write info to log
      */
-    function processCmd( $dest, $Command,$_requestedlevel )
+    function processCmd( $dest, $Command, $_requestedlevel )
     // Dest: destination to send data in normal situation to /dev/ttyUSB0 or toto for debugging for example.
     // please keep command definition order by command Id, easier to match with documentation 1216
     {
@@ -597,6 +597,26 @@
             }
         }
 
+        // Set Time server (v3.0f)
+        if ( isset($Command['setTimeServer']) && isset($Command['time']) )
+        {
+            deamonlog('debug',"setTimeServer");
+            $cmd = "0016";
+            $data = sprintf("%08s",dechex($Command['time']));
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+
+        if ( isset($Command['getTimeServer'])  )
+        {
+            deamonlog('debug',"getTimeServer");
+            $cmd = "0017";
+            $data = "";
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
 
         if ( isset($Command["startNetwork"]) )
         {
@@ -1114,16 +1134,16 @@
 
             sendCmd( $dest, $cmd, $lenth, $data );
         }
-        
+
         if ( isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) )
         {
-            
+
             deamonlog('debug',"Specific Command to simulate Ikea Telecommand < and >");
-            
+
             // Msg Type = 0x0530
             $cmd = "0530";
-            
-            $addressMode = "01"; // 01 pour groupe 
+
+            $addressMode = "01"; // 01 pour groupe
             $targetShortAddress = $Command['address'];
             $sourceEndpointBind = "01";
             $destinationEndpointBind = "01";
@@ -1132,7 +1152,7 @@
             $securityMode = "02";
             $radius = "30";
             // $dataLength = "16";
-            
+
             $FrameControlField = "05";  // 1
             $manu = "7c11";
             $SQN = "00";
@@ -1141,19 +1161,19 @@
 
             $data2 = $FrameControlField . $manu . $SQN . $cmdIkea . $cmdIkeaParams;
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-            
+
             $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
-            
+
             deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)) );
             deamonlog('debug',"Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)) );
-            
+
             $data = $data1 . $data2;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-            
+
             deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
-            
+
             sendCmd( $dest, $cmd, $lenth, $data );
-            
+
         }
 
         if ( isset($Command['ActiveEndPoint']) )
@@ -1375,7 +1395,7 @@
             // sleep(2);
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
-            
+
 
         }
 
@@ -1681,7 +1701,7 @@
             // sleep(2);
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
             Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
-            
+
         }
 
         // Move to Colour
@@ -1712,31 +1732,31 @@
             sendCmd( $dest, $cmd, $lenth, $data );
 
         }
-        
+
         // Take RGB (0-255) convert to X, Y and send the color
         if ( isset($Command['setColourRGB']) ) {
             // The reverse transformation
             // https://en.wikipedia.org/wiki/SRGB
-            
+
             $R=$Command['R'];
             $G=$Command['G'];
             $B=$Command['B'];
-            
+
             $a = 0.055;
-            
+
             // are in the range 0 to 1. (A range of 0 to 255 can simply be divided by 255.0).
             $Rsrgb = $R / 255;
             $Gsrgb = $G / 255;
             $Bsrgb = $B / 255;
-            
+
             if ( $Rsrgb <= 0.04045 ) { $Rlin = $Rsrgb/12.92; } else { $Rlin = pow( ($Rsrgb+$a)/(1+$a), 2.4); }
             if ( $Gsrgb <= 0.04045 ) { $Glin = $Gsrgb/12.92; } else { $Glin = pow( ($Gsrgb+$a)/(1+$a), 2.4); }
             if ( $Bsrgb <= 0.04045 ) { $Blin = $Bsrgb/12.92; } else { $Blin = pow( ($Bsrgb+$a)/(1+$a), 2.4); }
-            
+
             $X = 0.4124 * $Rlin + 0.3576 * $Glin + 0.1805 *$Blin;
             $Y = 0.2126 * $Rlin + 0.7152 * $Glin + 0.0722 *$Blin;
             $Z = 0.0193 * $Rlin + 0.1192 * $Glin + 0.9505 *$Blin;
-            
+
             if ( ($X + $Y + $Z)!=0 ) {
                 $x = $X / ( $X + $Y + $Z );
                 $y = $Y / ( $X + $Y + $Z );
@@ -1744,15 +1764,15 @@
             else {
                 echo "Can t do the convertion.";
             }
-            
+
             $x = $x*255*255;
             $y = $y*255*255;
-            
+
             // Meme commande que la commande du dessus
             $cmd = "00B7";
             // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
             $lenth = "000B";
-            
+
             $addressMode = "02";
             $address = $Command['address'];
             $sourceEndpoint = "01";
@@ -1760,15 +1780,15 @@
             $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
             $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
             $duration = "0001";
-            
+
             deamonlog( 'debug', "colourX: ".$colourX." colourY: ".$colourY );
-            
+
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
-            
+
             sendCmd( $dest, $cmd, $lenth, $data );
 
         }
-        
+
         // Move to Colour Temperature
         if ( isset($Command['setTemperature']) && isset($Command['address']) && isset($Command['temperature']) && isset($Command['destinationEndPoint']) )
         {
@@ -1806,7 +1826,7 @@
 
         if ( isset($Command['getLocation']) && isset($Command['address']) )
         {
-            
+
             //echo "Get Name from: ".$Command['address']."\n";
             if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');

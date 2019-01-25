@@ -64,6 +64,39 @@ $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=NetworkGraph').dialog('open');
                               });
 
+$('#bt_setTimeServer').on('click', function () {
+                          console.log("bt_setTimeServer");
+                          var d = new Date();
+                          var n = Math.round(d.getTime()/1000);
+                          console.log(n);
+                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                          xmlhttpMQTTSendIncludeResult = this.responseText;
+                          }
+                          };
+                          
+                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setTimeServer&payload=time="+n, true); // False pour bloquer sur la recuperation du fichier
+                          xmlhttpMQTTSendInclude.send();
+                          $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
+                          });
+
+
+$('#bt_getTimeServer').on('click', function () {
+                          console.log("bt_getTimeServer");
+                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                          xmlhttpMQTTSendIncludeResult = this.responseText;
+                          }
+                          };
+                          
+                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_getTimeServer&payload=", true); // False pour bloquer sur la recuperation du fichier
+                          xmlhttpMQTTSendInclude.send();
+                          $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
+                          });
+
+
 $('#bt_startZigbee').on('click', function () {
                     console.log("bt_startZigbee");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();
@@ -185,7 +218,6 @@ $('#bt_toggleAffichageAdditionalCommand').on('click', function () {
                                              
                                              }
                                              );
-
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 

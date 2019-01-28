@@ -1397,7 +1397,7 @@
             return -1;
         }
         
-        public static function CmdAffichage( $affichageType, $Visibility = "N" ) {
+        public static function CmdAffichage( $affichageType, $Visibility = "na" ) {
             // $affichageType could be:
             //  affichageNetwork
             //  affichageTime
@@ -1406,6 +1406,11 @@
             // Y
             // N
             // toggle
+            // na
+            
+            if ($Visibility == "na") {
+                return;
+            }
             
             $parameters_info = self::getParameters();
             

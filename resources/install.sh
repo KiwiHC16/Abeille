@@ -136,6 +136,8 @@ echo
 echo "Avancement: 5% ---------------------------------------------------------------------------------------------------> Install lsb-release php-pear"
 echo
 
+apt-get -y install dpkg
+
 apt-get -y install lsb-release php-pear make locales
 [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de pear et lsb-release. Pb réseau ?"
 

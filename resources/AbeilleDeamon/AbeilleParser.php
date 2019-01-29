@@ -2130,7 +2130,11 @@
 
         deamonlog('debug',';Type; fct; ===> Configure NE Start');
 
-        $commandeConfiguration = array( 'BindToZigateBatterie', 'BindToZigateEtat', 'BindToZigateLevel', 'setReportEtat', 'setReportLevel', 'BindToZigateButton' );
+        $commandeConfiguration = array( 'BindShortToZigateBatterie',  'setReportBatterie',
+                                        'BindToZigateEtat',           'setReportEtat',
+                                        'BindToZigateLevel',          'setReportLevel',
+                                        'BindToZigateButton'
+                                       );
 
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
 
@@ -2143,7 +2147,7 @@
                     sleep(2);
                 }
                 else {
-                    deamonlog('debug',';Type; fct; ===> Configure NE cmd: Cmd not found, probably not an issue, probably should not do it');
+                    deamonlog('debug',';Type; fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it');
                 }
             }
         }

@@ -2039,6 +2039,11 @@
                     $elogic->setStatus('battery', ($value / 1000 - 2.7) / (3.1 - 2.7) * 100);
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
+                if ($cmdId == "0001-01-0021") {
+                    /* en % batterie example Ikea Remote */
+                    $elogic->setStatus('battery', $value);
+                    $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+                }
 
                 /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
                 // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {

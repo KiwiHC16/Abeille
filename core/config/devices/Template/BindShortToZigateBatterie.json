@@ -1,5 +1,5 @@
 {
-  "BindShortToZigateBattery": {
+  "BindShortToZigateBatterie": {
     "isVisible": 0,
     "name": "BindShortToZigateBatterie",
     "order": 13,
@@ -9,7 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76621802",
+      "uniqId": "5c07c76621802",
       "topic": "bindShort",
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
       "visibilityCategory": "Network"

@@ -404,7 +404,12 @@ td.two {
       <td>
         <input type="submit" name="submitButton" value="Get Infos from NE">
       </td>
-    </tr>
+  </tr><tr>
+    <td>
+      <label>Channel Mask</label>  <input type="text" name="channelMask"   placeholder="XXXX"><input type="submit" name="submitButton" value="Set Channel Mask">
+      <label>Extended PANID</label><input type="text" name="extendedPanId" placeholder="XXXX"><input type="submit" name="submitButton" value="Set Extended PANID">
+    </td>
+  </tr>
 </table>
 
 <hr>

@@ -58,6 +58,10 @@ $('#bt_listeCompatibilite').on('click', function () {
                            window.open("plugins/Abeille/core/config/devices/listeCompatibilite.php");
                            });
 
+$('#bt_Inconnu').on('click', function () {
+                          window.open("plugins/Abeille/resources/AbeilleDeamon/Debug/inconnu.php");
+                          });
+
 $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').dialog({title: "{{Graph Abeille}}"});
                               // $('#md_modal').load('plugins/Abeille/Network/TestSVG/NetworkGraph.html').dialog('open');
@@ -75,7 +79,7 @@ $('#bt_setTimeServer').on('click', function () {
                           xmlhttpMQTTSendIncludeResult = this.responseText;
                           }
                           };
-                          
+
                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setTimeServer&payload=time="+n, true); // False pour bloquer sur la recuperation du fichier
                           xmlhttpMQTTSendInclude.send();
                           $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
@@ -90,7 +94,7 @@ $('#bt_getTimeServer').on('click', function () {
                           xmlhttpMQTTSendIncludeResult = this.responseText;
                           }
                           };
-                          
+
                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_getTimeServer&payload=", true); // False pour bloquer sur la recuperation du fichier
                           xmlhttpMQTTSendInclude.send();
                           $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
@@ -105,7 +109,7 @@ $('#bt_startZigbee').on('click', function () {
                     xmlhttpMQTTSendIncludeResult = this.responseText;
                     }
                     };
-                    
+
                     xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_startNetwork&payload=StartNetwork", true); // False pour bloquer sur la recuperation du fichier
                     xmlhttpMQTTSendInclude.send();
                     $('#div_alert').showAlert({message: '{{Démarrage du réseau zigbee demandé.}}', level: 'success'});
@@ -120,7 +124,7 @@ $('#bt_include').on('click', function () {
                     xmlhttpMQTTSendIncludeResult = this.responseText;
                     }
                     };
-                    
+
                     xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
                     xmlhttpMQTTSendInclude.send();
                     $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
@@ -141,7 +145,7 @@ $('#bt_createTimer').on('click', function () {
                         xmlhttpMQTTSendTimerResult = this.responseText;
                         }
                         };
-                        
+
                         xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_Timer_0000-0005&payload=Timer", false); // False pour bloquer sur la recuperation du fichier
                         xmlhttpMQTTSendTimer.send();
                         // location.reload(true);
@@ -157,7 +161,7 @@ $('#bt_createRemote').on('click', function () {
                          xmlhttpMQTTSendTimerResult = this.responseText;
                          }
                          };
-                         
+
                          xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_TRADFRIremotecontrol_0000-0005&payload=TRADFRIremotecontrol", false); // False pour bloquer sur la recuperation du fichier
                          xmlhttpMQTTSendTimer.send();
                          // location.reload(true);
@@ -175,11 +179,11 @@ $('#bt_toggleAffichageNetwork').on('click', function () {
                                    $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                    }
                                    };
-                                   
+
                                    xmlhttpMQTTAffichageNetwork.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageNetwork&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                    xmlhttpMQTTAffichageNetwork.send();
                                    $("i", this).toggleClass("fa-check-square-o fa-square-o");
-                                   
+
                                    }
                                    );
 
@@ -193,11 +197,11 @@ $('#bt_toggleAffichageTime').on('click', function () {
                                 $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                 }
                                 };
-                                
+
                                 xmlhttpMQTTAffichageTime.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageTime&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                 xmlhttpMQTTAffichageTime.send();
                                 $("i", this).toggleClass("fa-check-square-o fa-square-o");
-                                
+
                                 }
                                 );
 
@@ -211,11 +215,11 @@ $('#bt_toggleAffichageAdditionalCommand').on('click', function () {
                                              $('#div_alert').showAlert({message: '{{Action executée.}}', level: 'success'});
                                              }
                                              };
-                                        
+
                                              xmlhttpMQTTAffichageAdditionalCommand.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpConfChange.php?topic=affichageCmdAdd&payload=toggle", true); // False pour bloquer sur la recuperation du fichier
                                              xmlhttpMQTTAffichageAdditionalCommand.send();
                                              $("i", this).toggleClass("fa-check-square-o fa-square-o");
-                                             
+
                                              }
                                              );
 
@@ -326,5 +330,3 @@ function addCmdToTable(_cmd) {
 		});
 	}
 }
-
-

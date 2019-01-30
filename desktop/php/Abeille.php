@@ -314,38 +314,38 @@ td.two {
             <tbody>
 
             <?php
-                
+
                 $abeille = new Abeille();
                 $commandIEEE = new AbeilleCmd();
-                
+
                 foreach ($eqLogics as $key => $eqLogic) {
-                    
+
                     $name= "";
                     $sceneMember = "";
                     $sceneTele = "";
                     $print=0;
-                    
+
                     $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-                    
+
                     $name = $eqLogic->getHumanName(true);
-                    
+
                     if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership') ) {
                         if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd())>2 ) {
-                            
+
                             $sceneMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd());
                             $print = 1;
                         }
                     }
-                    
+
                     if ( strlen($eqLogic->getConfiguration('Scene'))>3 ) {
                         $sceneTele = $eqLogic->getConfiguration('Scene');
                         $print = 1;
                     }
-                    
+
                     if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$sceneTele.'</td><td align="center" class="one">'.$sceneMember.'</td></tr>';
-                    
+
                 }
-                
+
                 ?>
             </tbody>
             </table>
@@ -400,7 +400,11 @@ td.two {
     <td>
         <input type="submit" name="submitButton" value="Apply Template">
     </td>
-</tr>
+  </tr><tr>
+      <td>
+        <input type="submit" name="submitButton" value="Get Infos from NE">
+      </td>
+    </tr>
 </table>
 
 <hr>
@@ -411,7 +415,7 @@ td.two {
 
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
-        
+
             <input type="submit" name="submitButton" value="Identify">
 
             <table>
@@ -453,6 +457,12 @@ td.two {
                     <div id="bt_getTimeServer">
                         <a class="btn btn-success" data-action="getTimeServer"><i class="fa fa-sign-out"></i>{{Get Time}}</a>
                     </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    xxxxx
                 </td>
             </tr>
 

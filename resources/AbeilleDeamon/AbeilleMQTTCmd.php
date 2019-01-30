@@ -350,6 +350,23 @@
 
                 }
                 //----------------------------------------------------------------------------
+            } elseif ($action == "setLevelRaw") {
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = proper_parse_str( $msg );
+                    $Command = array(
+                                     "setLevel"             => "1",
+                                     "addressMode"          => "02",
+                                     "address"              => $address,
+                                     "destinationEndpoint"  => $parameters['EP'],
+                                     "Level"                => $parameters['Level'],
+                                     "duration"             => $parameters['duration'],
+                                     );
+                }
+                else {
+                    
+                }
+                //----------------------------------------------------------------------------
             } elseif ($action == "setLevelOSRAM") {
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

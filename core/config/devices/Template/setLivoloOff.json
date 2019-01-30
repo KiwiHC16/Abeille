@@ -1,0 +1,22 @@
+{
+  "setLivoloOff": {
+    "name": "setLivoloOff",
+    "order": 10,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "LIGHT_OFF",
+    "invertBinary": "0",
+    "template": "",
+    "isVisible": 1,
+    "display": {
+      "forceReturnLineAfter": "0"
+    },
+    "configuration": {
+      "uniqId": "5c0df76624cf1",
+      "topic": "setLevelRaw",
+      "request": "EP=#EP#&Level=1&duration=01",
+      "visibilityCategory": "All"
+    }
+  }
+}

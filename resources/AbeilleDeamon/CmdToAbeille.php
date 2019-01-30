@@ -499,6 +499,8 @@
             fwrite($f,pack("H*","03"));
 
             fclose($f);
+            
+            sleep(0.3);
 
         }
 

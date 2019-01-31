@@ -2130,7 +2130,7 @@
             $elogic->setConfiguration('topic', "Abeille/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
-            $elogic->setIsVisible("1");
+            $elogic->setIsVisible("0");
             $elogic->setConfiguration('icone', "Ruche");
             // eqReal_id
             $elogic->setIsEnable("1");

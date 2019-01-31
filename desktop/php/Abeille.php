@@ -5,7 +5,11 @@ if (!isConnect('admin')) {
 }
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
-
+    
+$ruche = new Abeille();
+$commandIEEE = new AbeilleCmd();
+$rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
+    
 $parameters_info = Abeille::getParameters();
 
 ?>
@@ -415,9 +419,21 @@ td.two {
 <hr>
 
 
-
-
-
+            <legend><i class="fa fa-cog"></i> {{ZiGate}}</legend>
+            <table class="one">
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel')->execCmd();} ?></td></tr>
+            </table>
+            <br>
+            <br>
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
 

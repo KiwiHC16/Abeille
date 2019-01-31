@@ -1603,10 +1603,12 @@
         // 0x20	uint8	unsigned char   -> hexdec
         // 0x21	uint16                  -> hexdec
         // 0x22	uint32
+        // 0x24 ???
         // 0x25	uint48
         // 0x28	int8                    -> hexdec(2)
         // 0x29	int16                   -> unpack("s", pack("s", hexdec(
         // 0x2a	int32                   -> unpack("l", pack("l", hexdec(
+        // 0x2b ????32
         // 0x30	Enumeration : 8bit
         // 0x42	string                  -> hex2bin
 
@@ -1673,7 +1675,7 @@
         if ($dataType == "42") {
 
             // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
-            // Xiaomi Bouton Carré
+            // Xiaomi Bouton V2 Carré
             if (($AttributId == "ff01") && ($AttributSize == "001a")) {
                 deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
 
@@ -1692,26 +1694,32 @@
                 // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                $etat           = substr($payload, 80, 2);
 
                 deamonlog('debug', 'Voltage: '      .$voltage);
+                deamonlog('debug', 'Etat: '         .$etat);
 
+                mqqtPublish($mqtt, $SrcAddr, '0006',     '01-0000', $etat,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
             }
 
-            // Xiaomi Door Sensor
+            // Xiaomi Door Sensor V2
             elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
                 deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
 
                 $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                $etat           = substr($payload, 80, 2);
 
-                deamonlog('debug', 'Voltage: '      .$voltage);
+                deamonlog('debug', 'Door V2 Voltage: '   .$voltage);
+                deamonlog('debug', 'Door V2 Etat: '      .$etat);
 
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
+                mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)), $qos);
+                mqqtPublish($mqtt, $SrcAddr, '0006', '01-0000', $etat,  $qos);
             }
 
-            // Xiaomi capteur temperature rond / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
+            // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
             elseif (($AttributId == "ff01") && ($AttributSize == "001f")) {
                 deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond/Wall 2 Switch)');
 
@@ -1733,15 +1741,29 @@
             }
 
             // Xiaomi capteur Presence V2
+            // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
+            // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
+            // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
+            // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
+            // 03 28 15                                   /32
+            // 04 21 a801                                 /38
+            // 05 21 3300                                 /46
+            // 06 24 0000000000                           /54
+            // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
+            // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
+            // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
+
             elseif (($AttributId == 'ff01') && ($AttributSize == "0021")) {
                 deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)');
 
-                $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
+                $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
                 // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                 // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                 // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
                 deamonlog('debug', ';Type; 8102;Voltage; '      .$voltage);
+                deamonlog('debug', ';Type; 8102;Lux; '          .$lux);
                 // deamonlog('debug', 'Temperature: '  .$temperature);
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
@@ -1749,6 +1771,7 @@
                 mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId,'Decoded as Volt-Temperature-Humidity',$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                 mqqtPublish($mqtt, $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                mqqtPublish($mqtt, $SrcAddr, '0400', '01-0000', $lux,$qos); // Luminosite
 
                 // mqqtPublish($mqtt, $SrcAddr, '0402', '0000', $temperature,      $qos);
                 // mqqtPublish($mqtt, $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1765,8 +1788,10 @@
                 // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                 // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                 // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                $etat = substr($payload, 88, 2);
 
-                deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage);
+                deamonlog('debug', ';Type; 8102;Inondation Voltage: '      .$voltage);
+                deamonlog('debug', ';Type; 8102;Inondation Etat: '      .$etat);
                 // deamonlog('debug', 'Temperature: '  .$temperature);
                 // deamonlog('debug', 'Humidity: '     .$humidity);
                 // deamonlog('debug', 'Pression: '     .$pression);
@@ -1782,7 +1807,7 @@
 
             }
 
-            // Xiaomi capteur temperature carré
+            // Xiaomi capteur temperature carré V2
             elseif (($AttributId == 'ff01') && ($AttributSize == "0025")) {
                 deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');
 
@@ -1912,7 +1937,7 @@
 
             }
 
-            // Xiaomi Presence Infrarouge
+            // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
             elseif (($AttributId == "ff02")) {
                 // Non decodé a ce stade
                 // deamonlog("debug", "Champ 0xFF02 non decode a ce stade");

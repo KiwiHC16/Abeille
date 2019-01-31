@@ -431,7 +431,9 @@ td.two {
                 <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
                 <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();} ?></td></tr>
                 <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId) { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel')->execCmd();} ?></td></tr>
+<tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId) { if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
+            <i>Ce tableau n'est pas automatiquement rafraichi, il est mis à jour à l ouverture de la page.</i>
             <br>
             <br>
 

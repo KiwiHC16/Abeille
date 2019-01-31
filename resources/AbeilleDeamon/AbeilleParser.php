@@ -1102,7 +1102,17 @@
         $SrcAddr = "Ruche";
         $ClusterId = "joinLeave";
         $AttributId = "IEEE";
-        $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
+        
+        $IEEE = substr($payload, 0, 16);
+        $cmds = Cmd::byLogicalId('IEEE-Addr');
+        foreach( $cmds as $cmd ) {
+            if ( $cmd->execCmd() == $IEEE ) {
+                $abeille = $cmd->getEqLogic();
+                $name = $abeille->getName();
+            }
+        }
+        
+        $data = "Leave->".$name."->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
 
         $SrcAddr = "Ruche";

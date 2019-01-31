@@ -23,7 +23,9 @@
       "include24 2 2 2 2 2": "setLivoloOff2",
       "include24 2 2 2 2 2 3": "setLivoloOff",
       "include24 2 2 2 2 2 2": "setLivoloOn2",
-      "include24 2 2 2 2 2 2 2": "setLivoloOn"
+      "include24 2 2 2 2 2 2 2": "setLivoloOn",
+      "include4": "etatSwitchLivolo",
+      "include8": "getEtat"
     }
   }
 }

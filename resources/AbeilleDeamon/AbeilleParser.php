@@ -1102,7 +1102,7 @@
         $SrcAddr = "Ruche";
         $ClusterId = "joinLeave";
         $AttributId = "IEEE";
-        
+
         $IEEE = substr($payload, 0, 16);
         $cmds = Cmd::byLogicalId('IEEE-Addr');
         foreach( $cmds as $cmd ) {
@@ -1111,7 +1111,7 @@
                 $name = $abeille->getName();
             }
         }
-        
+
         $data = "Leave->".$name."->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
 
@@ -2234,7 +2234,8 @@
                         deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le nom de l equipement');
                         $mqtt->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $mqtt->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-                        $mqtt->publish("CmdAbeille/Ruche/SimpleDescriptorRequest",  "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+                        // TempoCmdAbeille/Ruche/getVersion -> time=123@msg=Version
+                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest",  "time=".(time()+3)."@msg=address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                     }
                     break;

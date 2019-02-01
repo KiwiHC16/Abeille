@@ -2398,19 +2398,21 @@
         } else {
             while (true) {
                 // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                $mqtt->loop();
-                //usleep(100);
+                $mqtt->loop(0);
+                
                 if (!file_exists($in)) {
                     deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
                     exit(1);
                 }
+                
                 //traitement de chaque trame;
                 $data = $fifoIN->read();
                 protocolDatas( $data, $mqtt, $qos, $clusterTab, $LQI );
-                usleep(1);
+                
                 processAnnonce($NE, $mqtt, $qos);
                 cleanUpNE($NE, $mqtt, $qos);
-                //sleep(0.5);
+                
+                time_nanosleep( 0, 10000000 ); // 1/100s
             }
         }
 

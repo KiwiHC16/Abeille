@@ -432,10 +432,9 @@
             } else {
                 while (true) {
                     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                    $mqtt->loop();
-                    //usleep(100);
-                    sleep(0.1);
+                    $mqtt->loop(0);
                     checkExparies();
+                    time_nanosleep( 0, 10000000 ); // 1/100s
                 }
             }
             

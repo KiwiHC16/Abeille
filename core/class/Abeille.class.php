@@ -1166,14 +1166,14 @@
                 log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
 
                 // 1 to use loopForever et 0 to use while loop
-                if (1) {
+                if (0) {
                     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
                     $client->loopForever();
                 } else {
                     while (true) {
                         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                        $client->loop();
-                        //usleep(100);
+                        $client->loop(0);
+                        time_nanosleep( 0, 10000000 ); // 1/100s
                     }
                 }
 

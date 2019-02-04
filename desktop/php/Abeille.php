@@ -485,9 +485,18 @@ td.two {
 
             <tr>
                 <td>
-                    xxxxx
+                    <div id="bt_setOnZigateLed">
+                    <a class="btn btn-success" data-action="setOnZigateLed"><i class="fa fa-sign-in"></i>{{Allume Led}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div id="bt_setOffZigateLed">
+                    <a class="btn btn-success" data-action="setOffZigateLed"><i class="fa fa-sign-out"></i>{{Eteint Led}}</a>
+                    </div>
                 </td>
             </tr>
+
+
 
         </table>
 

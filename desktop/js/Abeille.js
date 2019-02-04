@@ -100,6 +100,33 @@ $('#bt_getTimeServer').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
                           });
 
+$('#bt_setOnZigateLed').on('click', function () {
+                          console.log("bt_setOnZigateLed");
+                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                          xmlhttpMQTTSendIncludeResult = this.responseText;
+                          }
+                          };
+                          
+                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOnZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
+                          xmlhttpMQTTSendInclude.send();
+                          $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
+                          });
+
+$('#bt_setOffZigateLed').on('click', function () {
+                          console.log("bt_setOffZigateLed");
+                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                          xmlhttpMQTTSendIncludeResult = this.responseText;
+                          }
+                          };
+                          
+                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOffZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
+                          xmlhttpMQTTSendInclude.send();
+                          $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
+                          });
 
 $('#bt_startZigbee').on('click', function () {
                     console.log("bt_startZigbee");

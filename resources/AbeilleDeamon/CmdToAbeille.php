@@ -623,6 +623,26 @@
             sendCmd($dest,$cmd,$lenth,$data);
         }
 
+        if ( isset($Command['setOnZigateLed'])  )
+        {
+            deamonlog('debug',"setOnZigateLed");
+            $cmd = "0018";
+            $data = "01";
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        
+        if ( isset($Command['setOffZigateLed'])  )
+        {
+            deamonlog('debug',"setOffZigateLed");
+            $cmd = "0018";
+            $data = "00";
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        
         if ( isset($Command["startNetwork"]) )
         {
             if ($Command['startNetwork']=="StartNetwork")

@@ -1228,7 +1228,6 @@
                   );
     }
 
-    // Get Group Membership response
     function decode8062($mqtt, $payload, $ln, $qos)
     {
 
@@ -1239,9 +1238,7 @@
         // <capacity: uint8_t>                                      -> 2
         // <Group count: uint8_t>                                   -> 2
         // <List of Group id: list each data item uint16_t>         -> 4x
-        // <Src Addr: uint16_t> (added only from 3.0f version) new due to a change impacting many command but here already available above.
 
-        if (0) {
         deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
                   . '; SQN: '          .substr($payload, 0, 2)
                   . '; endPoint: '     .substr($payload, 2, 2)
@@ -1249,29 +1246,20 @@
                   . '; Address: '      .substr($payload, 8, 4)
                   . '; capacity: '     .substr($payload,12, 2)
                   . '; group count: '  .substr($payload,14, 2)  );
-        }
-        else {
-        deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
-                  . '; SQN: '          .substr($payload, 0, 2)
-                  . '; endPoint: '     .substr($payload, 2, 2)
-                  . '; clusterId: '    .substr($payload, 4, 4)
-                  . '; capacity: '     .substr($payload, 8, 2)
-                  . '; group count: '  .substr($payload,10, 2)  );
-        }
 
-        $groupCount = hexdec( substr($payload,10, 2) );
+        $groupCount = hexdec( substr($payload,14, 2) );
         $groupsId="";
         for ($i=0;$i<$groupCount;$i++)
         {
-            deamonlog('debug', ';Type; 8062;group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
-            $groupsId .= '-' . substr($payload,12+$i*4, 4);
+            deamonlog('debug', ';Type; 8062;group '.$i.'(addr:'.(16+$i*4).'): '  .substr($payload,16+$i*4, 4));
+            $groupsId .= '-' . substr($payload,16+$i*4, 4);
         }
         deamonlog('debug', ';Type; 8062;Groups: ->'.$groupsId."<-");
 
         // deamonlog('debug', ';Level: 0x'.substr($payload, strlen($payload)-2, 2));
 
         // Envoie Group-Membership
-        $SrcAddr = substr($payload, 12+$i*4, 4);
+        $SrcAddr = substr($payload, 8, 4);
         $ClusterId = "Group";
         $AttributId = "Membership";
         if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }

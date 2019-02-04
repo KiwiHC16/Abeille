@@ -128,6 +128,34 @@ $('#bt_setOffZigateLed').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
                           });
 
+$('#bt_setCertificationCE').on('click', function () {
+                           console.log("bt_setCertificationCE");
+                           var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                           xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                           if (this.readyState == 4 && this.status == 200) {
+                           xmlhttpMQTTSendIncludeResult = this.responseText;
+                           }
+                           };
+                           
+                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationCE&payload=", true); // False pour bloquer sur la recuperation du fichier
+                           xmlhttpMQTTSendInclude.send();
+                           $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
+                           });
+
+$('#bt_setCertificationFCC').on('click', function () {
+                            console.log("bt_setCertificationFCC");
+                            var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                            xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                            xmlhttpMQTTSendIncludeResult = this.responseText;
+                            }
+                            };
+                            
+                            xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationFCC&payload=", true); // False pour bloquer sur la recuperation du fichier
+                            xmlhttpMQTTSendInclude.send();
+                            $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
+                            });
+
 $('#bt_startZigbee').on('click', function () {
                     console.log("bt_startZigbee");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();

@@ -598,7 +598,7 @@
                 sendCmd($dest,"0015","0000","");
             }
         }
-
+        //----------------------------------------------------------------------
         // Set Time server (v3.0f)
         if ( isset($Command['setTimeServer']) )
         {
@@ -622,7 +622,7 @@
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
             sendCmd($dest,$cmd,$lenth,$data);
         }
-
+        //----------------------------------------------------------------------
         if ( isset($Command['setOnZigateLed'])  )
         {
             deamonlog('debug',"setOnZigateLed");
@@ -642,7 +642,27 @@
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
             sendCmd($dest,$cmd,$lenth,$data);
         }
+        //----------------------------------------------------------------------
+        if ( isset($Command['setCertificationCE'])  )
+        {
+            deamonlog('debug',"setCertificationCE");
+            $cmd = "0019";
+            $data = "01";
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
         
+        if ( isset($Command['setCertificationFCC'])  )
+        {
+            deamonlog('debug',"setCertificationFCC");
+            $cmd = "0019";
+            $data = "02";
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        //----------------------------------------------------------------------
         if ( isset($Command["startNetwork"]) )
         {
             if ($Command['startNetwork']=="StartNetwork")

@@ -486,17 +486,28 @@ td.two {
             <tr>
                 <td>
                     <div id="bt_setOnZigateLed">
-                    <a class="btn btn-success" data-action="setOnZigateLed"><i class="fa fa-sign-in"></i>{{Allume Led}}</a>
+                        <a class="btn btn-success" data-action="setOnZigateLed"><i class="fa fa-sign-in"></i>{{Allume Led}}</a>
                     </div>
                 </td>
                 <td>
                     <div id="bt_setOffZigateLed">
-                    <a class="btn btn-success" data-action="setOffZigateLed"><i class="fa fa-sign-out"></i>{{Eteint Led}}</a>
+                        <a class="btn btn-success" data-action="setOffZigateLed"><i class="fa fa-sign-out"></i>{{Eteint Led}}</a>
                     </div>
                 </td>
             </tr>
 
-
+            <tr>
+                <td>
+                    <div id="bt_setCertificationCE">
+                        <a class="btn btn-success" data-action="setCertificationCE"><i class="fa fa-sign-in"></i>{{Certification CE}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div id="bt_setCertificationFCC">
+                        <a class="btn btn-success" data-action="setCertificationFCC"><i class="fa fa-sign-out"></i>{{Certification FCC}}</a>
+                    </div>
+                </td>
+            </tr>
 
         </table>
 

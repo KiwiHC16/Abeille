@@ -400,6 +400,8 @@
             case "804e" :
                 decode804E($mqtt, $payload, $ln, $qos, $LQI);
                 break;
+                
+                
                 ##Reponse groupe
                 ##8060-8063
             case "8060" :
@@ -417,7 +419,15 @@
             case "8063" :
                 decode8063($mqtt, $payload, $ln, $qos);
                 break;
-
+            
+            case "8085" :
+                decode8085($mqtt, $payload, $ln, $qos);
+                break;
+                
+            case "8095" :
+                decode8095($mqtt, $payload, $ln, $qos);
+                break;
+                
                 #reponse scene
                 #80a0-80a6
             case "80a0" :
@@ -434,6 +444,10 @@
 
             case "80a6" :
                 decode80a6($mqtt, $payload, $ln, $qos);
+                break;
+                
+            case "80a7" :
+                decode80a7($mqtt, $payload, $ln, $qos);
                 break;
 
                 #Reponse Attributs
@@ -1297,6 +1311,86 @@
                   . '; sourceId: '     .substr($payload,14, 4)
                   );
     }
+    
+    // https://github.com/fairecasoimeme/ZiGate/issues/6
+    // Button   Pres-stype  Response  command       attr
+    // down     click       0x8085    0x02          None
+    // down     hold        0x8085    0x01          None
+    // down     release     0x8085    0x03          None
+    // up       click       0x8085    0x06          None
+    // up       hold        0x8085    0x05          None
+    // up       release     0x8085    0x07          None
+    // middle   click       0x8095    0x02          None
+    // left     click       0x80A7    0x07          direction: 1
+    // left     hold        0x80A7    0x08          direction: 1    => can t get that one
+    // right    click       0x80A7    0x07          direction: 0
+    // right    hold        0x80A7    0x08          direction: 0    => can t get that one
+    // left/right release   0x80A7    0x09          None            => can t get that one
+    //
+    // down = brightness down, up = brightness up,
+    // middle = Power button,
+    // left and right = when brightness up is up left is left and right is right.
+    // Holding down power button for ~10 sec will result multiple commands sent, but it wont send any hold command only release.
+    // Remote won't tell which button was released left or right, but it will be same button that was last hold.
+    // Remote is unable to send other button commands at least when left or right is hold down.
+    
+    
+    function decode8085($mqtt, $payload, $ln, $qos)
+    {
+        
+        // <Sequence number: uin8_t>    -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <Cluster id: uint16_t>       -> 4
+        // <address_mode: uint8_t>      -> 2
+        // <addr: uint16_t>             -> 4
+        // <cmd: uint8>                 -> 2
+        
+        // 2: 'click', 1: 'hold', 3: 'release'
+        
+        deamonlog('debug', ';Type; 8085; (Remote button pressed (ClickHoldRelease) a group response)(Decoded but Not Processed)'
+                  . '; SQN: '           .substr($payload, 0, 2)
+                  . '; endPoint: '      .substr($payload, 2, 2)
+                  . '; clusterId: '     .substr($payload, 4, 4)
+                  . '; address_mode: '  .substr($payload, 8, 2)
+                  . '; source addr: '   .substr($payload,10, 4)
+                  . '; cmd: '           .substr($payload,14, 2)
+                  );
+        
+        $source         = substr($payload,10, 4);
+        $ClusterId      = "Up";
+        $AttributId     = "Down";
+        $data           = substr($payload,14, 2);
+        
+        mqqtPublish($mqtt, $source, $ClusterId, $AttributId, $data, $qos);
+    }
+    
+    
+    function decode8095($mqtt, $payload, $ln, $qos)
+    {
+        
+        // <Sequence number: uin8_t>    -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <Cluster id: uint16_t>       -> 4
+        // <address_mode: uint8_t>      -> 2
+        // <source addr: uint16_t>      -> 4
+        // <cmd: uint8>                 -> 2
+        
+        deamonlog('debug', ';Type; 8095; (Remote button pressed (ONOFF_UPDATE) a group response)(Decoded but Not Processed)'
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; statusId: '     .substr($payload, 8, 2)
+                  . '; sourceAddr: '   .substr($payload,10, 4)
+                  . '; cmd: '          .substr($payload,14, 2)
+                  );
+        
+        $source         = substr($payload,10, 4);
+        $ClusterId      = "Click";
+        $AttributId     = "Middle";
+        $data           = substr($payload,14, 2);
+        
+        mqqtPublish($mqtt, $source, $ClusterId, $AttributId, $data, $qos);
+    }
     //----------------------------------------------------------------------------------------------------------------
     ##TODO
     #reponse scene
@@ -1514,6 +1608,61 @@
 
         }
 
+    }
+    
+    // Telecommande Ikea
+    // https://github.com/fairecasoimeme/ZiGate/issues/6
+    // Button   Pres-stype  Response  command       attr
+    // down     click       0x8085    0x02          None
+    // down     hold        0x8085    0x01          None
+    // down     release     0x8085    0x03          None
+    // up       click       0x8085    0x06          None
+    // up       hold        0x8085    0x05          None
+    // up       release     0x8085    0x07          None
+    // middle   click       0x8095    0x02          None
+    // left     click       0x80A7    0x07          direction: 1
+    // left     hold        0x80A7    0x08          direction: 1    => can t get that one
+    // right    click       0x80A7    0x07          direction: 0
+    // right    hold        0x80A7    0x08          direction: 0    => can t get that one
+    // left/right release   0x80A7    0x09          None            => can t get that one
+    //
+    // down = brightness down, up = brightness up,
+    // middle = Power button,
+    // left and right = when brightness up is up left is left and right is right.
+    // Holding down power button for ~10 sec will result multiple commands sent, but it wont send any hold command only release.
+    // Remote won't tell which button was released left or right, but it will be same button that was last hold.
+    // Remote is unable to send other button commands at least when left or right is hold down.
+    
+    function decode80a7($mqtt, $payload, $ln, $qos)
+    {
+        // <Sequence number: uin8_t>    -> 2
+        // <endpoint: uint8_t>          -> 2
+        // <Cluster id: uint16_t>       -> 4
+        // <address_mode: uint8_t>      -> 2
+        // <addr: uint16_t>             -> 4
+        // <cmd: uint8>                 -> 2
+        // <direction: uint8>           -> 2
+        
+        // directions = {0: 'right', 1: 'left', 2: 'middle'}
+        // {7: 'click', 8: 'hold', 9: 'release'}
+        
+        $seqNumber      = substr($payload, 0, 2);
+        $endpoint       = substr($payload, 2, 2);
+        $clusterId      = substr($payload, 4, 4);
+        $cmd            = substr($payload, 8, 2);
+        $direction      = substr($payload,10, 2);
+
+        
+        deamonlog('debug', ';Type; 80a7; (Remote button pressed (LEFT/RIGHT))(Processed->Decoded but not sent to MQTT)'
+                  . '; SQN: '          .$seqNumber
+                  . '; endPoint: '     .$endpoint
+                  . '; clusterId: '    .$clusterId
+                  . '; cmd: '          .$cmd
+                  . '; direction: '    .$direction
+                  );
+        
+        // Missing source
+        // mqqtPublish($mqtt, $source, $ClusterId, $AttributId, $data, $qos);
     }
     //----------------------------------------------------------------------------------------------------------------
 

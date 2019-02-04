@@ -2234,8 +2234,8 @@
                         deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le nom de l equipement');
                         $mqtt->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $mqtt->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-                        // TempoCmdAbeille/Ruche/getVersion -> time=123@msg=Version
-                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest",  "time=".(time()+3)."@msg=address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+                        // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
+                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+3), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                     }
                     break;

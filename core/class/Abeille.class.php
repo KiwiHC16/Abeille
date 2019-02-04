@@ -1601,9 +1601,10 @@
                     log::add(
                         'Abeille',
                         'info',
-                        'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre cree completement car je ne connais pas ce type d objet.'
+                        'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.'
                     );
                     log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
+                    return;
                 }
 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -2229,7 +2230,7 @@
     {
         public function execute($_options = null)
         {
-            log::add('Abeille', 'Debug', 'execute function with ->'.json_encode($_options).'<-');
+            log::add('Abeille', 'Debug', 'execute function with options ->'.json_encode($_options).'<-');
             switch ($this->getType()) {
                 case 'action' :
                     //

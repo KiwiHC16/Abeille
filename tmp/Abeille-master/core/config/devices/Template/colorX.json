@@ -1,0 +1,16 @@
+{
+  "0300-#EP#-0003": {
+    "isVisible": 0,
+    "name": "colorX",
+    "order": 5,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "template": "badge",
+    "unite": "",
+    "configuration": {
+      "uniqId": "5c07c76622d4f",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

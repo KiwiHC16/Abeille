@@ -1,0 +1,24 @@
+{
+  "sensor_cube": {
+    "nameJeedom": "Xiaomi Cube",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07c766261ad",
+      "icone": "sensor_cube",
+      "mainEP": "01",
+      "defaultEP": "01",
+      "battery_type": "1x3V CR2032 (?)"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "nom",
+      "include3": "cubeV1",
+      "include4": "Batterie-Volt",
+      "include5": "Batterie-Pourcent",
+      "include6": "Xiaomi-ff01"
+    }
+  }
+}

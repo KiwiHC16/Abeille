@@ -1,0 +1,25 @@
+{
+  "Timer": {
+    "nameJeedom": "Timer",
+    "timeout": "-1",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07c766257dd",
+      "battery_type": "na",
+      "icone": "Timer",
+      "lastCommunicationTimeOut": "-1"
+    },
+    "Commandes": {
+      "include1": "nom",
+      "include2": "etatTimer",
+      "include2 2": "Var-Duration",
+      "include2 2 2": "Var-ExpiryTime",
+      "include2 2 2 2": "Var-RampUpDown",
+      "include2 2 2 2 2": "Start",
+      "include2 2 2 2 2 2": "Stop",
+      "include2 2 2 2 2 2 2": "Cancel"
+    }
+  }
+}

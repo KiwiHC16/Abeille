@@ -1,0 +1,18 @@
+{
+  "getEtat": {
+    "isVisible": 0,
+    "name": "getEtat",
+    "order": 12,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "5c07c76623cd1",
+      "topic": "ReadAttributeRequest",
+      "request": "EP=#EP#&clusterId=0006&attributeId=0000",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

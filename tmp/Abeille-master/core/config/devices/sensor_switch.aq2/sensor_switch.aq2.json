@@ -1,0 +1,25 @@
+{
+  "sensor_switch.aq2": {
+    "nameJeedom": "Xiaomi Bouton Aqara 2",
+    "battery_type": "1xCR2032",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+	"uniqId": "5c07c76626685",
+      "icone": "XiaomiBouton",
+      "battery_type": "1x3V CR2032",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "nom",
+      "include3": "etatSwitchXiaomiCarre",
+      "include4": "multi",
+      "include5": "Batterie-Volt",
+      "include6": "Batterie-Pourcent",
+      "include7": "Xiaomi-ff01"
+    }
+  }
+}

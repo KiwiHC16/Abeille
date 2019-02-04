@@ -1,0 +1,20 @@
+{
+  "id": "Abeille",
+  "name": "Abeille",
+  "description": "Plugin Abeille pour la passerelle Zigate (https://zigate.fr).",
+  "usage": "Enjoy.",
+  "licence": "AGPL",
+  "author": "kiwihc16",
+  "require": "3.1.7",
+  "category": "automation protocol",
+  "mobile": "to  be defined : Si le plugin utilise un panel dédié sur la webApp Jeedom, il s’agit du nom du fichier principal de ce panel.",
+  "changelog": "https://kiwihc16.github.io/Abeille/#language#/changelog",
+  "documentation": "https://kiwihc16.github.io/Abeille/#language#/",
+  "video_link": "to be done",
+  "languages": "french",
+  "forum_link": "https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&p=575280&hilit=abeille#p575280",
+  "compatibility": "docker, rpi, diy",
+  "hasDependency": "1",
+  "hasOwnDeamon": "1",
+  "maxDependancyInstallTime": "45"
+}

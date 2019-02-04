@@ -1,0 +1,21 @@
+{
+  "getColorY": {
+    "isVisible": 0,
+    "name": "getColorY",
+    "order": 19,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "5c07c76623c26",
+      "topic": "ReadAttributeRequest",
+      "request": "clusterId=0300&attributeId=0004",
+      "visibilityCategory": "additionalCommand"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

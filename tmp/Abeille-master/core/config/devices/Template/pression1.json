@@ -1,0 +1,22 @@
+{
+  "0403-01-0000": {
+    "isVisible": 0,
+    "name": "Pression1",
+    "order": 4,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "WEATHER_PRESSURE",
+    "invertBinary": "0",
+    "template": "badge",
+    "unite": "hPa",
+    "display": {
+      "forceReturnLineAfter": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07c7662488c",
+      "visibilityCategory": "All",
+      "topic": "0403-01-0000"
+    }
+  }
+}

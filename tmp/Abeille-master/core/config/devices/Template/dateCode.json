@@ -1,0 +1,16 @@
+{
+  "0000-#EP#-0006": {
+    "isVisible": 0,
+    "name": "Date Code",
+    "order": 4,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "5c07c76623102",
+      "visibilityCategory": "All"
+    }
+  }
+}

@@ -1,0 +1,779 @@
+{
+  "Version": {
+    "name": "Version",
+    "order": 0,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "getVersion",
+      "request": "Version"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "Start Network": {
+    "name": "Start Network",
+    "order": 1,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "startNetwork",
+      "request": "StartNetwork"
+    }
+  },
+  "get Network Status": {
+    "name": "get Network Status",
+    "order": 2,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "getNetworkStatus",
+      "request": "getNetworkStatus"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "Inclusion": {
+    "name": "Inclusion",
+    "order": 3,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "SetPermit",
+      "request": "Inclusion"
+    }
+  },
+  "Inclusion Status": {
+    "name": "Inclusion Status",
+    "order": 4,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "permitJoin",
+      "request": "Status"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "permitJoin-Status": {
+    "name": "Permit Join Status",
+    "order": 5,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "binary",
+    "invertBinary": "0",
+    "template": "",
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "Mgt Leave": {
+    "name": "Mgt Leave",
+    "order": 6,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "MgtLeave",
+      "request": "address=#title#&IEEE=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Adresse IEEE de l equipement"
+    }
+  },
+  "Remove": {
+    "name": "Remove",
+    "order": 7,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "Remove",
+      "request": "IEEE=#title#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse IEEE de l equipement",
+      "message_placeholder": "na"
+    }
+  },
+  "addGroup": {
+    "name": "Add Group",
+    "order": 8,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "addGroup",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
+    }
+  },
+  "removeGroup": {
+    "name": "Remove Group",
+    "order": 9,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "removeGroup",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
+    }
+  },
+  "getGroupMemberShip": {
+    "name": "getGroupMemberShip",
+    "order": 10,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "getGroupMembership",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[DestinationEndPoint=XX]"
+    }
+  },
+  "storeScene": {
+    "name": "storeScene",
+    "order": 11,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "storeScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
+  "recallScene": {
+    "name": "recallScene",
+    "order": 12,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "recallScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
+  "sceneGroupRecall": {
+    "name": "sceneGroupRecall",
+    "order": 13,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "sceneGroupRecall",
+      "request": "addressGroup=#title#&sceneID=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse du Groupe",
+      "message_placeholder": "ZZ (sceneId)"
+    }
+  },
+  "addScene": {
+    "name": "Add Scene",
+    "order": 14,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "addScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Fonction pas complement implementée, ne pas utiliser pour l instant."
+    }
+  },
+  "removeScene": {
+    "name": "Remove Scene",
+    "order": 15,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "removeScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
+  "removeSceneAll": {
+    "name": "Remove Scene All",
+    "order": 16,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "removeSceneAll",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=YY&groupID=XXXX"
+    }
+  },
+  "viewScene": {
+    "name": "viewScene",
+    "order": 17,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "viewScene",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY&sceneID=ZZ"
+    }
+  },
+  "getSceneMemberShip": {
+    "name": "getSceneMemberShip",
+    "order": 18,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "getSceneMembership",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
+    }
+  },
+  "Bind": {
+    "name": "Bind",
+    "order": 19,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "bind",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse IEEE de l equipement",
+      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&reportToAddress=ZZZZZZZZZZZZZZZZ"
+    }
+  },
+  "BindShort": {
+    "name": "BindShort",
+    "order": 20,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "bindShort",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse IEEE de l equipement",
+      "message_placeholder": "targetExtendedAddress=XXXXXXXXXXXXXXXX&targetEndpoint=YY&ClusterId=ZZZZ&reportToAddress=AAAAAAAAAAAAAAAA"
+    }
+  },
+  "SetReport": {
+    "name": "setReport",
+    "order": 21,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "setReport",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&AttributeType=ZZ&AttributeId=xxxx"
+    }
+  },
+  "getName": {
+    "name": "Get Name",
+    "order": 22,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "getName",
+      "request": "address=#title#&destinationEndPoint=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[targetEndpoint(XX)]"
+    }
+  },
+  "getLocation": {
+    "name": "Get Location",
+    "order": 23,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "getLocation",
+      "request": "address=#title#&destinationEndPoint=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[targetEndpoint(XX)]"
+    }
+  },
+  "setLocation": {
+    "name": "Set Location",
+    "order": 24,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "setLocation",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "location=xxxxxx[&destinationEndPoint=(XX)]"
+    }
+  },
+  "WriteAttributeRequest": {
+    "name": "Write Attribut",
+    "order": 25,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "WriteAttributeRequest",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Proprio=ZZZZ&clusterId=XXXX&attributeId=YYYY"
+    }
+  },
+  "ReadAttributeRequest": {
+    "name": "Get Attribut",
+    "order": 26,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "ReadAttributeRequest",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "ClusterId=XXXX&attributeId=YYYY[&Proprio=ZZZZ]"
+    }
+  },
+  "AbeilleList": {
+    "name": "Liste Equipements",
+    "order": 27,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "abeilleList",
+      "request": "abeilleListAll"
+    }
+  },
+  "Time-Time": {
+    "name": "Last",
+    "order": 28,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Time-TimeStamp": {
+    "name": "Last Stamps",
+    "order": 29,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "SW-Application": {
+    "name": "SW",
+    "order": 30,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "SW-SDK": {
+    "name": "SDK",
+    "order": 31,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network-Status": {
+    "name": "Network Status",
+    "order": 32,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Short-Addr": {
+    "name": "Short Addr",
+    "order": 33,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "PAN-ID": {
+    "name": "PAN ID",
+    "order": 34,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Ext_PAN-ID": {
+    "name": "Ext PAN ID",
+    "order": 35,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "IEEE-Addr": {
+    "name": "IEEE Addr",
+    "order": 36,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network-Channel": {
+    "name": "Network Channel",
+    "order": 37,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network Status Request": {
+    "name": "Network Status Request (Not implemented)",
+    "order": 38,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "networkStatus",
+      "request": "Request"
+    }
+  },
+  "joinLeave-IEEE": {
+    "name": "joinLeave",
+    "order": 39,
+    "isHistorized": "1",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "ActiveEndPoint": {
+    "name": "ActiveEndPoint",
+    "order": 40,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "ActiveEndPoint",
+      "request": "address=#title#",
+      "retain": "0"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Laisser vide"
+    }
+  },
+  "SimpleDescriptorRequest": {
+    "name": "SimpleDescriptorRequest",
+    "order": 41,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "SimpleDescriptorRequest",
+      "request": "address=#title#&endPoint=#message#",
+      "retain": "0"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "[endPoint(XX)]"
+    }
+  },
+  "Reset": {
+    "name": "Reset",
+    "order": 42,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "reset",
+      "request": "reset"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "ErasePersistentData": {
+    "name": "Erase Persistent Data",
+    "order": 43,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "ErasePersistentData",
+      "request": "ErasePersistentData"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "Factory New Reset": {
+    "name": "Factory New Reset",
+    "order": 44,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "FactoryNewReset",
+      "request": "FactoryNewReset"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  },
+  "replaceEquipement": {
+    "name": "Replace Equipement",
+    "order": 45,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "replaceEquipement",
+      "request": "old=#title#&new=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l ancien equipement",
+      "message_placeholder": "Adresse courte du nouvel equipement"
+    }
+  },
+  "Network-Bind": {
+    "name": "Last Bind",
+    "order": 46,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "Network-Report": {
+    "name": "Last Report",
+    "order": 47,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
+  },
+  "IEEE_Address_request": {
+    "name": "IEEE Address Request",
+    "order": 48,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "IEEE_Address_request",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
+    }
+  },
+  "Network_Address_request": {
+    "name": "Network Address Request",
+    "order": 49,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "Network_Address_request",
+      "request": "address=#title#&#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
+    }
+  },
+  "LQI": {
+    "name": "LQI",
+    "order": 50,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "Management_LQI_request",
+      "request": "address=#title#&StartIndex=#message#"
+    },
+    "display": {
+      "forceReturnLineAfter": "1",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Index - 2 digits"
+    }
+  },
+  "Set Time": {
+    "name": "Set Time",
+    "order": 51,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "setTimeServer",
+      "request": ""
+    }
+  },
+  "Get Time": {
+    "name": "Get Time",
+    "order": 52,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "getTimeServer",
+      "request": ""
+    }
+  },
+  "ZiGate-Time": {
+    "name": "ZiGate-Time",
+    "order": 53,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

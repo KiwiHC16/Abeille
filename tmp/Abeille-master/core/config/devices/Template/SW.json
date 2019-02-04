@@ -1,0 +1,16 @@
+{
+  "0000-#EP#-4000": {
+    "isVisible": 0,
+    "name": "SW",
+    "order": 2,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "5c07c76622387",
+      "visibilityCategory": "Network"
+    }
+  }
+}

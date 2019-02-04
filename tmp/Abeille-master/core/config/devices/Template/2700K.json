@@ -1,0 +1,18 @@
+{
+  "2700K": {
+    "isVisible": 1,
+    "name": "2700K",
+    "order": 12,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c76621566",
+      "topic": "setTemperature",
+      "request": "EP=#EP#&slider=2700",
+      "visibilityCategory": "All"
+    }
+  }
+}

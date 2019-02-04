@@ -1,0 +1,19 @@
+{
+  "Power-Source": {
+    "isVisible": 0,
+    "display": {
+      "showNameOndashboard": "0"
+    },
+    "name": "Power Source",
+    "order": 20,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "binary",
+    "invertBinary": "0",
+    "template": "AbeillePower",
+    "configuration": {
+	"uniqId": "5c07c76622259",
+      "visibilityCategory": "Network"
+    }
+  }
+}

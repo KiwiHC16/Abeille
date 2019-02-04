@@ -1,0 +1,16 @@
+{
+  "0000-#EP#-0004": {
+    "isVisible": 0,
+    "name": "societe",
+    "order": 1,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "5c07c766253e6",
+      "visibilityCategory": "Network"
+    }
+  }
+}

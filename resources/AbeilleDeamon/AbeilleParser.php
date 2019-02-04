@@ -406,6 +406,10 @@
                 decode8060($mqtt, $payload, $ln, $qos);
                 break;
 
+            case "8061" :
+                decode8061($mqtt, $payload, $ln, $qos);
+                break;
+                
             case "8062" :
                 decode8062($mqtt, $payload, $ln, $qos);
                 break;
@@ -1227,6 +1231,12 @@
                   . '; srcAddr: '       .substr($payload,14, 4)
                   );
     }
+    
+    //----------------------------------------------------------------------------------------------------------------
+    function decode8061($mqtt, $payload, $ln, $qos)
+    {
+
+    }
 
     // Get Group Membership response
     function decode8062($mqtt, $payload, $ln, $qos)
@@ -1276,13 +1286,16 @@
         // <Cluster id: uint16_t>       -> 4
         // <status: uint8_t>            -> 2
         // <Group id: uint16_t>         -> 4
+        // <Src Addr: uint16_t> (added only from 3.0f version)
 
         deamonlog('debug', 'Type; 8063; (Remove a group response)(Decoded but Not Processed)'
                   . '; SQN: '          .substr($payload, 0, 2)
                   . '; endPoint: '     .substr($payload, 2, 2)
                   . '; clusterId: '    .substr($payload, 4, 4)
                   . '; statusId: '     .substr($payload, 8, 2)
-                  . '; groupId: '      .substr($payload,10, 4) );
+                  . '; groupId: '      .substr($payload,10, 4)
+                  . '; sourceId: '     .substr($payload,14, 4)
+                  );
     }
     //----------------------------------------------------------------------------------------------------------------
     ##TODO

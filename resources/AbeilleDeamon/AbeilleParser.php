@@ -1241,23 +1241,12 @@
         // <List of Group id: list each data item uint16_t>         -> 4x
         // <Src Addr: uint16_t> (added only from 3.0f version) new due to a change impacting many command but here already available above.
 
-        if (0) {
-        deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
-                  . '; SQN: '          .substr($payload, 0, 2)
-                  . '; endPoint: '     .substr($payload, 2, 2)
-                  . '; clusterId: '    .substr($payload, 4, 4)
-                  . '; Address: '      .substr($payload, 8, 4)
-                  . '; capacity: '     .substr($payload,12, 2)
-                  . '; group count: '  .substr($payload,14, 2)  );
-        }
-        else {
         deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
                   . '; SQN: '          .substr($payload, 0, 2)
                   . '; endPoint: '     .substr($payload, 2, 2)
                   . '; clusterId: '    .substr($payload, 4, 4)
                   . '; capacity: '     .substr($payload, 8, 2)
                   . '; group count: '  .substr($payload,10, 2)  );
-        }
 
         $groupCount = hexdec( substr($payload,10, 2) );
         $groupsId="";

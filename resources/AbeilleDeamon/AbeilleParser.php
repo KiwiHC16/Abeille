@@ -1612,6 +1612,7 @@
     
     // Telecommande Ikea
     // https://github.com/fairecasoimeme/ZiGate/issues/6
+    // https://github.com/fairecasoimeme/ZiGate/issues/64
     // Button   Pres-stype  Response  command       attr
     // down     click       0x8085    0x02          None
     // down     hold        0x8085    0x01          None

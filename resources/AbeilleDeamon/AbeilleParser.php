@@ -2059,6 +2059,7 @@
         // <Src address : uint16_t>
         // <Endpoint: uint8_t>
         // <Cluster id: uint16_t>
+        // <Attribute Enum: uint16_t> (add in v3.0f)
         // <Status: uint8_t>
 
         deamonlog('debug', ';type; 8120; (Configure Reporting response)(Decoded but not Processed)'
@@ -2066,13 +2067,14 @@
                   . '; Source address: '   .substr($payload, 2, 4)
                   . '; EndPoint: '         .substr($payload, 6, 2)
                   . '; Cluster Id: '       .substr($payload, 8, 4)
-                  . '; Status: '           .substr($payload,12, 2)  );
+                  . '; Attribute: '        .substr($payload,12, 4)
+                  . '; Status: '           .substr($payload,16, 2)  );
 
         // Envoie channel
         $SrcAddr = "Ruche";
         $ClusterId = "Network";
         $AttributId = "Report";
-        $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload,12, 2);
+        $data = date("Y-m-d H:i:s")." Attribut: ".substr($payload,12, 4)." Status (00: Ok, <>0: Error): ".substr($payload,16, 2);
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
 

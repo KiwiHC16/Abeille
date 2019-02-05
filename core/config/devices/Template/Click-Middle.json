@@ -7,11 +7,14 @@
     "Type": "info",
     "subType": "numeric",
     "invertBinary": "0",
-    "template": "",
+    "template": "badge",
     "configuration": {
       "repeatEventManagement": "always",
       "uniqId": "5c0ad76fa25aa",
       "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
     }
   }
 }

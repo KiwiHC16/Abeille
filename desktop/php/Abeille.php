@@ -410,9 +410,19 @@ td.two {
       </td>
   </tr><tr>
     <td>
-      <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXX"> <input type="submit" name="submitButton" value="Set Channel Mask">
-      <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXX"> <input type="submit" name="submitButton" value="Set Extended PANID">
-      <label>Tx Power</label>       <input type="text" name="TxPowerValue"  placeholder="XX">   <input type="submit" name="submitButton" value="TxPower">
+      <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXXXXXX"> <input type="submit" name="submitButton" value="Set Channel Mask"></br>
+        <i>Pour l instant le mask doit être défini à la main, je verrai comment faire une belle interface plus tard. Vous devez definir les canaux qui sont authorisés pour la zigate. Si 1 canal authorisé, si 0 canal pas authorisé.</br>
+        Au démarrage la zigate choisira parmi ces canaux en fonction de sa mesure d occupation du canal.</br>
+        Dans le zigbee vous avez les canaux 11 à 26 disponibles.</br>
+        Le mask couvre les canaux 0 à 31. De ce fait il faut positionner à 0 les canaux 0 à 10 et les canaux 27 à 31, on commence par canal 31 et on fini par canal 0 => 00000xxxxxxxxxxxxxxxx00000000000</br>
+        Les x étant les canaux 26 à 11. Si vous voulez tous les activer alors le mask vaut: 00000111111111111111100000000000 (en Hexa: 0x07FFF800)</br>
+        Si vous ne voulez que le canal 26 alors caa donne: 00000100000000000000000000000000 (en Hexa: 0x04000000)</br>
+        Dans le champ il faut mettre la valeur en hexa. Il faut bien 8 digit sans le 0x devant.</br>
+        Pour convertir le binaire en hexa vous avez: https://www.binaryhexconverter.com/binary-to-hex-converter</br>
+        </br>
+        </i>
+      <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXXXXXX"> <input type="submit" name="submitButton" value="Set Extended PANID"></br>
+      <label>Tx Power</label>       <input type="text" name="TxPowerValue"  placeholder="XX">   <input type="submit" name="submitButton" value="TxPower"></br>
     </td>
   </tr>
 </table>

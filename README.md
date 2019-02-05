@@ -2,7 +2,7 @@
 
 (Version master en dev permanent).
 
-## Cognotte pour acheter des équipment pour supporter le dev
+## Cagnotte pour acheter des équipment pour supporter le dev
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/KiwiHC16)
 

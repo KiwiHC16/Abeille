@@ -58,7 +58,7 @@
     }
     // https://github.com/mgdm/Mosquitto-PHP
     // http://mosquitto-php.readthedocs.io/en/latest/client.html
-    $client = new Mosquitto\Client($client_id);
+    $client = new Mosquitto\Client();
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
     $client->onConnect('connect');
@@ -76,7 +76,7 @@
     $client->onLog('logmq');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $client->setWill('/jeedom', "Client AbeilleFormAction finished the activities", $parameters_info['AbeilleQos'], 0);
+    $client->setWill('/jeedom', "Client AbeilleFormAction died !!!", $parameters_info['AbeilleQos'], 0);
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
     $client->setReconnectDelay(1, 120, 1);
@@ -273,10 +273,22 @@
                 echo "TxPower request processing";
                 $client->publish('CmdAbeille/Ruche/TxPower', $_POST['TxPowerValue'], 0);
                 break;
+                
+            case 'Set Channel Mask':
+                echo "Set Channel Mask request processing";
+                $client->publish('CmdAbeille/Ruche/setChannelMask', $_POST['channelMask'], 0);
+                break;
+                
+            case 'Set Extended PANID':
+                echo "Set Extended PANID request processing";
+                $client->publish('CmdAbeille/Ruche/setExtendedPANID', $_POST['extendedPanId'], 0);
+                break;
         }
 
         $client->loop();
-
+        sleep(1);
+        $client->loop();
+        
         $client->disconnect();
         unset($client);
 
@@ -284,7 +296,7 @@
         echo '<br>error: '.$e->getMessage();
     }
     echo "<br>Fin";
-    sleep(3);
-    // header ("location:/index.php?v=d&m=Abeille&p=Abeille");
+    sleep(1);
+    header ("location:/index.php?v=d&m=Abeille&p=Abeille");
 
     ?>

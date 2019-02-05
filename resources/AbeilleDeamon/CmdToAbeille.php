@@ -673,6 +673,26 @@
             sendCmd($dest,$cmd,$lenth,$data);
         }
         //----------------------------------------------------------------------
+        if ( isset($Command['setChannelMask'])  )
+        {
+            deamonlog('debug',"setChannelMask");
+            $cmd = "0021";
+            $data = $Command['setChannelMask'];
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        //----------------------------------------------------------------------
+        if ( isset($Command['setExtendedPANID'])  )
+        {
+            deamonlog('debug',"setExtendedPANID");
+            $cmd = "0020";
+            $data = $Command['setExtendedPANID'];
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        //----------------------------------------------------------------------
         if ( isset($Command["startNetwork"]) )
         {
             if ($Command['startNetwork']=="StartNetwork")

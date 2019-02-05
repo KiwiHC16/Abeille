@@ -5,10 +5,11 @@
     "order": 5,
     "isHistorized": "0",
     "Type": "info",
-    "subType": "string",
+    "subType": "numeric",
     "invertBinary": "0",
     "template": "",
     "configuration": {
+      "repeatEventManagement": "always",
       "uniqId": "5c0ad76fa25aa",
       "visibilityCategory": "All"
     }

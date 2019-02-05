@@ -1643,6 +1643,10 @@
         // <addr: uint16_t>             -> 4
         // <cmd: uint8>                 -> 2
         // <direction: uint8>           -> 2
+        // uint8 u8Attr1;
+        // uint8 u8Attr2;
+        // uint8 u8Attr3;
+        // source int16
         
         // directions = {0: 'right', 1: 'left', 2: 'middle'}
         // {7: 'click', 8: 'hold', 9: 'release'}
@@ -1652,6 +1656,10 @@
         $clusterId      = substr($payload, 4, 4);
         $cmd            = substr($payload, 8, 2);
         $direction      = substr($payload,10, 2);
+        $attr1          = substr($payload,12, 2);
+        $attr2          = substr($payload,14, 2);
+        $attr3          = substr($payload,16, 2);
+        $source         = substr($payload,18, 4);
 
         
         deamonlog('debug', ';Type; 80a7; (Remote button pressed (LEFT/RIGHT))(Processed->Decoded but not sent to MQTT)'
@@ -1660,10 +1668,22 @@
                   . '; clusterId: '    .$clusterId
                   . '; cmd: '          .$cmd
                   . '; direction: '    .$direction
+                  . '; u8Attr1: '      .$attr1
+                  . '; u8Attr2: '      .$attr2
+                  . '; u8Attr3: '      .$attr3
+                  . '; source: '       .$source
                   );
         
-        // Missing source
-        // mqqtPublish($mqtt, $source, $ClusterId, $AttributId, $data, $qos);
+        $clusterId = "80A7";
+        $AttributId = "Cmd";
+        $data = $cmd;
+        mqqtPublish($mqtt, $source, $clusterId, $AttributId, $data, $qos);
+        
+        $clusterId = "80A7";
+        $AttributId = "Direction";
+        $data = $direction;
+        mqqtPublish($mqtt, $source, $clusterId, $AttributId, $data, $qos);
+        
     }
     //----------------------------------------------------------------------------------------------------------------
 

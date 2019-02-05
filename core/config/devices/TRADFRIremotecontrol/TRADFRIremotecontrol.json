@@ -25,7 +25,9 @@
       "include10": "BindShortToZigateBatterie",
       "include11": "setReportBatterie",
       "include11 2": "Up-Down",
-      "include11 2 2": "Click-Middle"
+      "include11 2 2": "Click-Middle",
+      "include11 2 2 2": "Left-Right-Cmd",
+      "include11 2 2 2 2": "Left-Right-Direction"
     }
   }
 }

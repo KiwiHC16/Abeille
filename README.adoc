@@ -2,6 +2,11 @@
 
 (Version master en dev permanent).
 
+== Cognotte pour acheter des équipment pour supporter le dev
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/KiwiHC16)
+Le budget depuis le début est assez conséquent alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille.
+
 == Plugin pour Jeedom (Gateway ZiGate)
 
 Plugin qui permet de piloter un réseau ZigBee depuis Jeedom par l'intermédiaire de la passerelle ZiGate.

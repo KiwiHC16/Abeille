@@ -13,6 +13,8 @@ Cagnotte au 6/2/2019: 28,48€
 
 Dépense: aucune pour l'instant.
 
+Echanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
+
 ## Plugin pour Jeedom (Gateway ZiGate)
 
 Plugin qui permet de piloter un réseau ZigBee depuis Jeedom par l'intermédiaire de la passerelle ZiGate.

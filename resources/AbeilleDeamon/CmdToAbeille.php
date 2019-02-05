@@ -1468,8 +1468,8 @@
             // getParam($dest,$address, $Command['clusterId'], "0000" );
             //getParam($dest,$address, $Command['clusterId'], "0000" );
             // sleep(1);
-            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(now()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
-            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(now()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
+            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
+            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
 
 
         }
@@ -1774,8 +1774,8 @@
             // $attribute = "0000";
             // getParam($dest,$address, $Command['clusterId'], $attribute);
             // sleep(2);
-            Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
-            Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
+            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
+            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
 
         }
 

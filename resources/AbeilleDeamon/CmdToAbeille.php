@@ -663,6 +663,16 @@
             sendCmd($dest,$cmd,$lenth,$data);
         }
         //----------------------------------------------------------------------
+        if ( isset($Command['TxPower'])  )
+        {
+            deamonlog('debug',"TxPower");
+            $cmd = "0806";
+            $data = $Command['TxPower'];
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            sendCmd($dest,$cmd,$lenth,$data);
+        }
+        //----------------------------------------------------------------------
         if ( isset($Command["startNetwork"]) )
         {
             if ($Command['startNetwork']=="StartNetwork")

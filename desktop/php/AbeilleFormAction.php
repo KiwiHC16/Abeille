@@ -268,6 +268,11 @@
                     }
                 }
                 break;
+                
+            case 'TxPower':
+                echo "TxPower request processing";
+                $client->publish('CmdAbeille/Ruche/TxPower', $_POST['TxPowerValue'], 0);
+                break;
         }
 
         $client->loop();
@@ -280,6 +285,6 @@
     }
     echo "<br>Fin";
     sleep(3);
-    header ("location:/index.php?v=d&m=Abeille&p=Abeille");
+    // header ("location:/index.php?v=d&m=Abeille&p=Abeille");
 
     ?>

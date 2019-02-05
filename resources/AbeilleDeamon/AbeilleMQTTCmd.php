@@ -514,17 +514,19 @@
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                         $Command = array(
-                                         "setColour" => "1",
-                                         "address" => $address,
-                                         "X" => $parameters['X'],
-                                         "Y" => $parameters['Y'],
-                                         "destinationEndPoint" => $parameters['EP'],
+                                         "setColour"            => "1",
+                                         "addressMode"          => "02",
+                                         "address"              => $address,
+                                         "X"                    => $parameters['X'],
+                                         "Y"                    => $parameters['Y'],
+                                         "destinationEndPoint"  => $parameters['EP'],
                                          );
                     }
                     else {
                         
                     }
                     break;
+
                     //----------------------------------------------------------------------------
                 case "setColourRGB":
                     $fields = preg_split("/[=&]+/", $msg);
@@ -675,10 +677,42 @@
                     $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
                     deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
                     $Command = array(
-                                     "setTemperature" => "1",
-                                     "address" => $address,
-                                     "temperature" => $temperatureConsigne,
-                                     "destinationEndPoint" => $parameters['EP'],
+                                     "setTemperature"       => "1",
+                                     "addressMode"          => "02",
+                                     "address"              => $address,
+                                     "temperature"          => $temperatureConsigne,
+                                     "destinationEndPoint"  => $parameters['EP'],
+                                     );
+                    
+                    $client->publish('Abeille/'.$address.'/Temperature-Light', $temperatureK,         $qos);
+                    break;
+                    //----------------------------------------------------------------------------
+                case "setTemperatureGroup":
+                    // T°K   Hex sent  Dec eq
+                    // 2200     01C6       454
+                    // 2700     0172       370
+                    // 4000     00FA       250
+                    // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
+                    deamonlog( 'debug', 'msg: ' . $msg );
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    
+                    $temperatureK = $parameters['slider'];
+                    deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureK );
+                    $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
+                    deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                    $temperatureConsigne = dechex( $temperatureConsigne );
+                    deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                    $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
+                    deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                    $Command = array(
+                                     "setTemperature"       => "1",
+                                     "addressMode"          => "01",
+                                     "address"              => $address,
+                                     "temperature"          => $temperatureConsigne,
+                                     "destinationEndPoint"  => $parameters['EP'],
                                      );
                     
                     $client->publish('Abeille/'.$address.'/Temperature-Light', $temperatureK,         $qos);

@@ -19,6 +19,7 @@
       "include4": "downGroup",
       "include5": "upGroup",
       "include6": "setLevelGroup",
+      "include6 2": "setTemperatureLightGroup",
       "include7": "sceneGroupRecall",
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",

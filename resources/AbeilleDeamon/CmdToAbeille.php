@@ -1780,7 +1780,7 @@
         }
 
         // Move to Colour
-        if ( isset($Command['setColour']) && isset($Command['address']) && isset($Command['X']) && isset($Command['Y'])  && isset($Command['destinationEndPoint']) )
+        if ( isset($Command['setColour']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['X']) && isset($Command['Y'])  && isset($Command['destinationEndPoint']) )
         {
             // <address mode: uint8_t>              2
             // <target short address: uint16_t>     4
@@ -1794,13 +1794,13 @@
             // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
             $lenth = "000B";
 
-            $addressMode = "02";
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['destinationEndPoint'];
-            $colourX = $Command['X'];
-            $colourY = $Command['Y'];
-            $duration = "0001";
+            $addressMode            = $Command['address'];
+            $address                = $Command['addressMode'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['destinationEndPoint'];
+            $colourX                = $Command['X'];
+            $colourY                = $Command['Y'];
+            $duration               = "0001";
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
 
@@ -1878,7 +1878,7 @@
             // 2+4+2+2+4+4 = 18 /2 = 9 => 0x09
             $lenth = "0009";
 
-            $addressMode = "02";
+            $addressMode = $Command['addressMode'];
             $address = $Command['address'];
             $sourceEndpoint = "01";
             $destinationEndpoint = $Command['destinationEndPoint'];

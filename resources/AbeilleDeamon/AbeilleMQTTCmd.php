@@ -788,8 +788,8 @@
                     deamonlog('warning', 'AbeilleCommand unknown: '.$action );
                     break;
             } // switch
-        } // if
-        else {
+        } // if $address != "Ruche"
+        else { // $address == "Ruche"
             $done = 0;
             
             // Crée les variables dans la chaine et associe la valeur.
@@ -839,11 +839,36 @@
                     break;
                     
                 case "getGroupMembership":
-                    if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                     $Command = array(
                                      "getGroupMembership"       => "1",
                                      "address"                  => $parameters['address'],
                                      "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                     );
+                    $done = 1;
+                    break;
+                    
+                case "addGroup":
+                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                    $Command = array(
+                                     "addGroup"                 => "1",
+                                     "address"                  => $parameters['address'],
+                                     "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                     "groupAddress"             => $parameters['groupAddress'],
+                                     );
+                    $done = 1;
+                    break;
+                    
+                case "removeGroup":
+                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                    $Command = array(
+                                     "removeGroup"              => "1",
+                                     "address"                  => $parameters['address'],
+                                     "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                     "groupAddress"             => $parameters['groupAddress'],
                                      );
                     $done = 1;
                     break;

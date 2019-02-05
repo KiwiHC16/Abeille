@@ -972,7 +972,7 @@
         if ( isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
         {
                 $cmd = "0062";
-
+            
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -1541,7 +1541,7 @@
 
         if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
-            deamonlog('debug',"Add a group to an IKEA bulb");
+            deamonlog('debug',"Add a group to a device");
             //echo "Add a group to an IKEA bulb\n";
 
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -1633,7 +1633,7 @@
 
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
-            deamonlog('debug',"Remove a group to an IKEA bulb");
+            deamonlog('debug',"Remove a group to a device");
             //echo "Remove a group to an IKEA bulb\n";
 
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03

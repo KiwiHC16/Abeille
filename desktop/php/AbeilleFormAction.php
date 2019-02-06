@@ -107,6 +107,19 @@
                     }
                 }
                 break;
+                
+            case 'Set Group Remote':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        $address = substr($device->getLogicalId(),8);
+                        $EP = $device->getConfiguration('mainEP');
+                        $client->publish('CmdAbeille/Ruche/commissioningGroupAPS',           'address='.$address.'&groupId='.$_POST['group'], 0);
+                    }
+                }
+                break;
+                
             case 'Remove Group':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {

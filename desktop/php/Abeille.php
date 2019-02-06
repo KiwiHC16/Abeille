@@ -295,7 +295,8 @@ td.two {
                     <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
                     <input type="text" name="group" placeholder="XXXX"><br>
                     <input type="submit" name="submitButton" value="Add Group">
-                    <input type="submit" name="submitButton" value="Remove Group">
+                    <input type="submit" name="submitButton" value="Remove Group"></br>
+                    <input type="submit" name="submitButton" value="Set Group Remote">
                 </td>
             </tr>
           </table>

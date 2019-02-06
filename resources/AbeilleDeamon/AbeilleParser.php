@@ -1265,13 +1265,6 @@
         // <List of Group id: list each data item uint16_t>         -> 4x
         // <Src Addr: uint16_t> (added only from 3.0f version) new due to a change impacting many command but here already available above.
 
-        deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
-                  . '; SQN: '          .substr($payload, 0, 2)
-                  . '; endPoint: '     .substr($payload, 2, 2)
-                  . '; clusterId: '    .substr($payload, 4, 4)
-                  . '; capacity: '     .substr($payload, 8, 2)
-                  . '; group count: '  .substr($payload,10, 2)  );
-
         $groupCount = hexdec( substr($payload,10, 2) );
         $groupsId="";
         for ($i=0;$i<$groupCount;$i++)
@@ -1284,11 +1277,23 @@
         // deamonlog('debug', ';Level: 0x'.substr($payload, strlen($payload)-2, 2));
 
         // Envoie Group-Membership
-        $SrcAddr = substr($payload, 12+$i*4, 4);
+        $SrcAddr = substr($payload, 12+$groupCount*4, 4);
+        if ($SrcAddr == "0000" ) { $SrcAddr = "Ruche"; }
         $ClusterId = "Group";
         $AttributId = "Membership";
         if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }
+        
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+        
+        deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
+                  . '; SQN: '          .substr($payload, 0, 2)
+                  . '; endPoint: '     .substr($payload, 2, 2)
+                  . '; clusterId: '    .substr($payload, 4, 4)
+                  . '; capacity: '     .substr($payload, 8, 2)
+                  . '; group count: '  .substr($payload,10, 2)
+                  . '; groups: '       .$data
+                  . '; source: '       .$SrcAddr
+                  );
 
     }
 

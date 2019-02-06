@@ -969,6 +969,65 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
 
+        // CmdAbeille/Ruche/commissioningGroupAPS
+        // Commission group for Ikea Telecommande On/Off still interrupteur
+        if ( isset($Command['commissioningGroupAPS']) )
+        {
+            deamonlog('debug',"commissioningGroupAPS");
+
+            $cmd = "0530";
+            
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+            
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+            
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1
+            //                                                                                12 -> 0x0C
+            // <data: auint8_t>
+                // 01 ZCL SQN
+                // 41 Commad Id: Get Group Id Response
+                // 01 Total
+                // 00 Start Index
+                // 01 Count
+                // 00 Group Type
+                // 001B Group Id
+            
+            $addressMode = "02";
+            $targetShortAddress = $Command['address'];
+            $sourceEndpoint = "01";
+            $destinationEndpoint = "01";
+            $profileID = "0104";
+            $clusterID = "1000";
+            $securityMode = "02";
+            $radius = "1E";
+            
+            $zclControlField = "19"; // ZCL Control Field
+            $targetExtendedAddress = "01410100011C0000";
+            
+            $data2 = $zclControlField . $targetExtendedAddress;
+            
+            $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+            
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+            
+            deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+            deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+            
+            $data = $data1 . $data2;
+            deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+            
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            
+            sendCmd( $dest, $cmd, $lenth, $data );
+            
+        }
+        
         if ( isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
         {
                 $cmd = "0062";
@@ -1630,7 +1689,7 @@
             sendCmd( $dest, $cmd, $lenth, $data );
 
         }
-
+        
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
             deamonlog('debug',"Remove a group to a device");

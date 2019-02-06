@@ -2,16 +2,18 @@
 
 (Version master en dev permanent).
 
-## Cagnotte pour acheter des équipment pour supporter le dev
+## Cagnotte pour acheter des équipments pour supporter le dev
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/KiwiHC16)
 
 Le budget depuis le début est assez conséquent alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille.
 Je n'ai aucune idée de votre participation à cette cagnote mais comme tout est open source depuis le début, la cagnote sera aussi complètement transparente.
 
-Cagnotte au 6/2/2019: 9,41€
+Cagnotte au 6/2/2019: 28,48€
 
 Dépense: aucune pour l'instant.
+
+Echanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 
 ## Plugin pour Jeedom (Gateway ZiGate)
 

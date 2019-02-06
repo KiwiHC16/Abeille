@@ -969,7 +969,7 @@
             sendCmd( $dest, $cmd, $lenth, $data );
         }
 
-        // CmdAbeille/Ruche/commissioningGroupAPS
+        // CmdAbeille/Ruche/commissioningGroupAPS -> address=a048&groupId=AA00
         // Commission group for Ikea Telecommande On/Off still interrupteur
         if ( isset($Command['commissioningGroupAPS']) )
         {
@@ -990,6 +990,7 @@
             // <data length: uint8_t>               -> 1
             //                                                                                12 -> 0x0C
             // <data: auint8_t>
+                // 19 ZCL Control Field
                 // 01 ZCL SQN
                 // 41 Commad Id: Get Group Id Response
                 // 01 Total
@@ -998,19 +999,25 @@
                 // 00 Group Type
                 // 001B Group Id
             
-            $addressMode = "02";
-            $targetShortAddress = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = "01";
-            $profileID = "0104";
-            $clusterID = "1000";
-            $securityMode = "02";
-            $radius = "1E";
+            $addressMode            = "02";
+            $targetShortAddress     = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profileID              = "0104";
+            $clusterID              = "1000";
+            $securityMode           = "02";
+            $radius                 = "1E";
             
-            $zclControlField = "19"; // ZCL Control Field
-            $targetExtendedAddress = "01410100011C0000";
+            $zclControlField        = "19";
+            $transactionSequence    = "01";
+            $cmdId                  = "41";
+            $total                  = "01";
+            $startIndex             = "00";
+            $count                  = "01";
+            $groupId                = reverse_hex($Command['groupId']);
+            $groupType              = "00";
             
-            $data2 = $zclControlField . $targetExtendedAddress;
+            $data2 = $zclControlField . $transactionSequence . $cmdId . $total . $startIndex . $count . $groupId . $groupType;
             
             $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
             

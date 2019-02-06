@@ -1,7 +1,7 @@
 {
   "setLivoloOn": {
-    "name": "setLivoloOn",
-    "order": 10,
+    "name": "On 1",
+    "order": 8,
     "isHistorized": "0",
     "Type": "action",
     "subType": "other",
@@ -10,7 +10,7 @@
     "template": "",
     "isVisible": 1,
     "display": {
-      "forceReturnLineAfter": "1"
+      "forceReturnLineAfter": "0"
     },
     "configuration": {
       "uniqId": "5c0df65724cf1",

@@ -1,6 +1,6 @@
 {
   "setLivoloOff": {
-    "name": "setLivoloOff",
+    "name": "Off 1",
     "order": 10,
     "isHistorized": "0",
     "Type": "action",

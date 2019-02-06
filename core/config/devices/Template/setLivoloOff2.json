@@ -1,7 +1,7 @@
 {
   "setLivoloOff2": {
-    "name": "setLivoloOff2",
-    "order": 10,
+    "name": "Off 2",
+    "order": 11,
     "isHistorized": "0",
     "Type": "action",
     "subType": "other",
@@ -10,7 +10,7 @@
     "template": "",
     "isVisible": 1,
     "display": {
-      "forceReturnLineAfter": "0"
+      "forceReturnLineAfter": "1"
     },
     "configuration": {
       "uniqId": "5c0df76624cf1",

@@ -3,7 +3,7 @@
     "nameJeedom": "Livolo Switch TI0001",
     "Comment": "Reference: ",
     "Categorie": {
-      "automatism": "1"
+      "light": "1"
     },
     "configuration": {
       "uniqId": "5c07c76625baa",

@@ -23,6 +23,25 @@ $("#table_cmd").delegate(".listEquipementInfo", 'click', function () {
     });
 });
 
+$('#in_searchEqlogicB').off('keyup').keyup(function () {
+                                          var search = $(this).value();
+                                          if(search == ''){
+                                          $('.eqLogicDisplayCardB').show();
+                                          $('.eqLogicThumbnailContainer').packery();
+                                          return;
+                                          }
+                                          $('.eqLogicDisplayCardB').hide();
+                                          $('.eqLogicDisplayCardB .name').each(function(){
+                                                                              var text = $(this).text().toLowerCase();
+                                                                              if(text.indexOf(search.toLowerCase()) >= 0){
+                                                                              $(this)
+                                                                              $(this).closest('.eqLogicDisplayCardB').show();
+                                                                              }
+                                                                              });
+                                          $('.eqLogicThumbnailContainer').packery();
+                                          });
+
+
 $("#bt_addAbeilleAction").on('click', function(event) {
                              var _cmd = {type: 'action'};
                              addCmdToTable(_cmd);

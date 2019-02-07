@@ -19,8 +19,7 @@ $parameters_info = Abeille::getParameters();
         <div class="bs-sidebar">
             <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
 
-                <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm"
-                                                                      placeholder="{{Rechercher}}" style="width: 100%"/>
+                <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/>
                 </li>
                 <?php
                 foreach ($eqLogics as $eqLogic) {
@@ -171,7 +170,7 @@ $parameters_info = Abeille::getParameters();
 
 
         <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
-        <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
+        <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogicB" />
 
         <div class="eqLogicThumbnailContainer">
 
@@ -180,19 +179,20 @@ $parameters_info = Abeille::getParameters();
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-                echo '<div>';
-                    echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /><br>';
+                echo '<div class="eqLogicDisplayCardB">';
+                    echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /></br>';
+                
                     echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
-                    echo "<center>";
-                    $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                    if (in_array($test, $files, 0)) {
-                        $path = 'node_' . $eqLogic->getConfiguration('icone');
-                    } else {
-                        $path = 'Abeille_icon';
-                    }
-                    echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
-                    echo "</center>";
-                    echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
+                        echo "<center>";
+                        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+                        if (in_array($test, $files, 0)) {
+                            $path = 'node_' . $eqLogic->getConfiguration('icone');
+                        } else {
+                            $path = 'Abeille_icon';
+                        }
+                        echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
+                        echo "</center>";
+                        echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
                     echo '</div>';
 
                 echo '</div>';

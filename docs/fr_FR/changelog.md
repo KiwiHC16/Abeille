@@ -2,7 +2,22 @@
 
 = Mise a jour
 
-== Version stable du 16/11/2018 (ou precedentes) => Version beta et stable
+== Version stable Mi Janvier 2019 => Version beta et stable du mi Fevrier 2019
+
+Cette version est en ligne avec le firmware 3.0f
+Vous pouvez utiliser un firmware plus vieux mais tout ne fonctionera pas, Probalblement 98% fonctionnera
+
+Comment procéder:
+- Mettre à jour le plugin Abeille
+- Flasher la zigate avec le firmware 3.0f (bien faire un erase de l'EEPROM)
+- Connecter la zigate et demarrer le demon abeille
+- démarrer le réseau zigbee depuis abeille
+- mettre la zigate en inclusion
+- inclure vos routeurs en partant des plus proches au plus lointain
+- Vérifier que tout fonctionne 
+- Inclure les équipements sur piles (dans l'ordre que vous voulez)
+
+== Version stable du 16/11/2018 (ou precedentes) => Version beta et stable jusqu'a Mi Janvier 2019
 
 Cette mise à jour est importante et délicate. Pour facilité l'integration de nouveaux équipments par la suite une standardisation des modèles doit être faite.
 Cela veut dire que tous les modèles changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
@@ -77,14 +92,84 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 
 # Changelog
 
-## 2018-12-11
+
+2019-02-06
+-------------
+- Recuperation des groues dans la zigate
+- Configuration du groupe de la remote ikea On/off depuis abeille
+- Formatting of Livolo Switch
+- Groupe commande Chaleur ampoule
+- GUI to set group to zigate
+- TxPower Command
+- Channel setMask and setExtendedPANID added
+- Telecommande Ikea Bouton information to Abeille
+- Certification configuration
+- Led On/Off
+
+
+2019-02-04
+-------------
+- Get Group Membership response modification avec source address for 3.0.f
+- Fix Sur mise a jour des templates il manque la mise a jour des icônes
+- OSRAM Spot LED dimmable connecté Smart+ - Culot GU5.3
+- Now default zigbee object type could be used to create object in Abeille
+- TRADFRIbulbE27WSopal1000lm
+- MQTT loop improvement so Abeille should be more reactive
+- nom du NE qui fait un Leave dans le message envoyé à la ruche
+- Ampoule Hue Flame E14
+- Info move from Ruche to Config page
+- A bit more decoding of Xiaomi Fields
+- channel mak and ExtPAN setting
+- Ajout du Switch Livolo 2 boutons
+- Affichage Commande au demarrage
+- ClassiA60WClear second modele added
+- setTimeServer / getTimeServer
+
+
+2019-01-25
+-------------
+- Ajout commande scene
+- Deux petites videos pour les docs
+- Ajout des scenes et groupes de scenes
+- Ajout ampoule LWB004
+- Osram - flex led rgbw
+- Osram - garden led rgbw
+- GLEDOPTO Controller RGB+CCT
+- Ajout de gestion du time server (cluster)
+
+
+2019-01-15
+-------------
+- retrait de pause pour avoir un pluin plus reactif
+- LCT001 modele ajouté
+- LTW013 Philips Hue modele ajouté
+- Ajout modele lightstripe philips hue plus modele ajouté
+- doc telecommande Hue
+- Ajout LTW010 ampoule Hue White Spectre
+- Ajout de la liste des Abeille ayant un groupe avec leur groupe
+- LCT015 Bulb Added
+- Add Address IEEE in health table
+
+
+2018-12-15
+-------------
+- Graph LQI par distance
+- telecommande carré Ikea On/Off
+- fix temperature carré xiaomi
+- Telecommande Hue retour Boutons vers Abeille (scenario)
+
+
+2018-12-11
+-------------
 
 - Toute la doc sous le format Jeedom
+
 
 2018-12-10
 -------------
 - Ampoule Couleur Standard ZigBee
 - Ampoule Dimmable Standard ZigBee
+
 
 2018-12-09
 -------------
@@ -95,9 +180,11 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 - Poll Automatique
 - Ajout/Suppression/Get des groupes depuis l interface Abeille
 
+
 2018-12-08
 -------------
 - Couleur Ampoule GLEDOPTO GU10 Couleur/White GL-S-003Z avec hombridge
+
 
 2018-12-07
 -------------
@@ -112,6 +199,7 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 
 - Ajout d un parametre Groupe dans la configuration des devices pour avoir la groupe a commander. Il n'est plus besoin de changer les commandes une à une.
 
+
 2018-12-04
 -------------
 - passage aux modeles standardisés (avec include)
@@ -119,27 +207,33 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 - ajout des boutons pour appliquer de nouveau les modeles de device
 - introduction d'Id unique dans les template pour ne pas confondre les devices par la suite.
 
+
 2018-01-12
 -------------
 - Ampoule GLEDOPTO White intégrée
+
 
 2018-11-30
 -------------
 - Prise Ikea intégrée
 - Ajout des groupes aux devices selectionnés
 
+
 2018-11-26
 -------------
 - Ikea Transformer 30W intégré
+
 
 2018-11-24
 -------------
 - Correction TimeOut (en min)
 
+
 2018-11-16
 -------------
 - Activation/Desactivation d'un équipement suivant qu'il joint le réseau ou le quitte.
 - Rafraichi les informations de la page Health à l ouverture.
+
 
 2018-11-05
 -------------
@@ -153,27 +247,34 @@ Il est fort probable que des bugs soient découvers. Il y a tellement de changem
 - Ajout de la connectivité en Wifi.
 - Ajout des LQI remontant des trames zigate
 
+
 2018-06-12:
 -------------
 - Ajout du double interrupteur mural sur pile xiaomi.
 - Network modal (graph automatique du reseau)
 - Ajout aqara Cube
+
+
 -------------
 2018-06-11:
 -------------
 - Stop for Volet Profalux #253
 
+
 2018-06-01:
 -------------
 - Profalux Volets Calibration
+
 
 2018-05-30:
 -------------
 - Inclusion status dans le widget mis à jour en fonction de l’etat de la zigate
 
+
 2018-05-28:
 -------------
 - Ajout des equipements DIY
+
 
 2018-01-19
 -------------

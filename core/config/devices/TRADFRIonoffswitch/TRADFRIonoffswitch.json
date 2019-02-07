@@ -19,7 +19,9 @@
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie"
+      "include11": "setReportBatterie",
+      "include11 2": "Up-Down",
+      "include11 2 2": "Click-Middle"
     }
   }
 }

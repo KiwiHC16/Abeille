@@ -6,10 +6,10 @@
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/KiwiHC16)
 
-Le budget depuis le début est assez conséquent alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille.
+Le budget depuis le début est assez conséquent, surtout quand j'investi dans des équipments que je n'utiliserai pas moi même, alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille. L'idée est d'avoir au moins un exemplaire de ce que les utilisateur d'abeille utilisent.
 Je n'ai aucune idée de votre participation à cette cagnote mais comme tout est open source depuis le début, la cagnote sera aussi complètement transparente.
 
-Cagnotte au 6/2/2019: 28,48€
+Cagnotte au 7/2/2019: 76,53€ (80€ moins la com paypal)
 
 Dépense: aucune pour l'instant.
 

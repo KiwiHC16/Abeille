@@ -2356,16 +2356,19 @@
     function getNE( $short ) {
 
         $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery'  );
-
+        
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
-
+        
         if ( $abeille ) {
-            foreach ( $getStates as $getState ) {
-                $cmd = $abeille->getCmd('action', $getState);
-                if ( $cmd ) {
-                    deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
-                    $cmd->execCmd();
-                    sleep(2);
+            $arr = array(1, 2);
+            foreach ($arr as &$value) {
+                foreach ( $getStates as $getState ) {
+                    $cmd = $abeille->getCmd('action', $getState);
+                    if ( $cmd ) {
+                        deamonlog('debug',';Type; fct; getNE cmd: '.$getState);
+                        $cmd->execCmd();
+                        // sleep(0.5);
+                    }
                 }
             }
         }
@@ -2385,17 +2388,20 @@
                                        );
 
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');
-
+        
         if ( $abeille) {
-            foreach ( $commandeConfiguration as $config ) {
-                $cmd = $abeille->getCmd('action', $config);
-                if ( $cmd ) {
-                    deamonlog('debug',';Type; fct; ===> Configure NE cmd: '.$config);
-                    $cmd->execCmd();
-                    sleep(2);
-                }
-                else {
-                    deamonlog('debug',';Type; fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it');
+            $arr = array(1, 2);
+            foreach ($arr as &$value) {
+                foreach ( $commandeConfiguration as $config ) {
+                    $cmd = $abeille->getCmd('action', $config);
+                    if ( $cmd ) {
+                        deamonlog('debug',';Type; fct; ===> Configure NE cmd: '.$config);
+                        $cmd->execCmd();
+                        //sleep(0.5);
+                    }
+                    else {
+                        deamonlog('debug',';Type; fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it');
+                    }
                 }
             }
         }
@@ -2434,9 +2440,12 @@
 
                 case 'annonceReceived':
                     if (!isset($NE[$short]['action'])) {
-                        if ( (($infos['timeAnnonceReceived'])+5) < time() ) { // on attend 5s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
+                        if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
                             deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le EP de l equipement');
                             $mqtt->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
+                            $mqtt->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $qos);
+                            $mqtt->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $qos);
+                            $mqtt->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short, $qos);
                             $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
                         }
                     }
@@ -2447,8 +2456,13 @@
                         deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le nom de l equipement');
                         $mqtt->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $mqtt->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                        
+                        $mqtt->publish("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                        $mqtt->publish("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                        
                         // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
-                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+3), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+                        $mqtt->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
                         $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                     }
                     break;

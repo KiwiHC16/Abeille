@@ -840,7 +840,8 @@ Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
 * Retourner votre télécommande
 * Appuyer 1 fois sur R
 * Appuyer ensuite sur la flèche du haut
-Le moteur devrait faire plusieurs va et vient … c’est gagné !
+Le moteur devrait faire plusieurs va et vient … 
+Attendre que la télécommande ne clignotte plus !
 
 * Pour finir, appuyer sur la touche STOP de la télécommande.
 

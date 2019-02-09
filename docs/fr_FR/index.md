@@ -832,32 +832,40 @@ Comme pour tous modules ZigBee et pour bien comprendre la procédure, il faut sa
 
 La ZiGate est un coordinateur ZigBee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule ZigBee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.
 
-N’ayant pas de boutons ou d’interfaces, un volet Profalux Zoé ne peux pas rentrer tout seul sur un réseau ZigBee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la ZiGate.
+N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas rentrer tout seul sur un réseau ZigBee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la ZiGate.
 
-- Étape 1:
+A savoir tout au long de cette procédure : lorsque le volet fait un petit va et vient c'est le signe que la commande a bien été reçue.
 
-La première chose à faire est de remettre à zéro la télécommande maître. Pour cela, il faut:
+- Étape 1: Remise à zéro de la télécommande et du volet.
 
-* Retourner l’appareil
-* A l’aide d’un trombone, appuyer 5 fois sur le bouton R
+* Retourner la télécommande.
+* A l’aide d’un trombone, appuyer 5 fois sur le bouton R.
 
-La télécommande va clignoter rouge puis vert
+La télécommande va clignoter rouge puis vert.
 
 ![](../images/profalux_inclusion_etape1.png)
 
-- Étape 2 : Appairage du volet à la télécommande
+Le volet va faire un va et vient (attendre un petit moment).
 
-Suite à l’étape 1, le volet va faire un va et vient (attendre un petit moment).
+Attendre que la télécommande ne clignote plus.
 
-Dans la minute suivante, appuyer sur la touche STOP
+* Dans la minute qui suit, appuyer sur STOP.
 
-Le volet va faire un va et vient (signe que la commande a bien été reçue). Pour tester le bon fonctionnement, vous devriez pouvoir piloter le volet avec la télécommande.
+Le volet va faire un va et vient.
 
-- Étape 3 : Mettre la ruche en mode inclusion
+Pour tester le bon fonctionnement, vous devriez pouvoir piloter le volet avec la télécommande.
 
-Pour cela appuyer sur le bouton inclusion de votre ruche depuis le dashboard.
+Si jamais les commandes de votre volet sont inversées, il suffit à l'aide d'un trombone d'appuyer sur fois sur F et ensuite une fois sur STOP.
 
-![](../images/profalux_inclusion_etape3.png)
+* Fermer le volet complètement.
+
+- Étape 2 : Inclusion du volet
+
+* Mettre la ruche en mode inclusion (La Zigate doit clignoter bleue)
+
+Pour cela appuyer sur le bouton inclusion depuis le plugin abeille
+
+
 
 - Étape 4 : Appairer le volet à la ZiGate
 

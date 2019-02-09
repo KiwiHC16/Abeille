@@ -829,30 +829,30 @@ Si jamais les commandes de votre volet sont inversées, il suffit à l'aide d'un
 
 - Étape 2 : Inclusion du volet
 
-* Mettre la ruche en mode inclusion (La Zigate doit clignoter bleue)
+Mettre la ruche en mode inclusion
 
-Pour cela appuyer sur le bouton inclusion depuis le plugin abeille
+* Pour cela appuyer sur le bouton inclusion depuis le plugin Abeille (La Zigate doit clignoter bleue)
 
-
-
-- Étape 4 : Appairer le volet à la ZiGate
+![](../images/inclusion.png)
 
 Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
 
 * Retourner votre télécommande
 * Appuyer 1 fois sur R
 * Appuyer ensuite sur la flèche du haut
-* Le moteur devrait faire un va et vient … c’est gagné !
+Le moteur devrait faire plusieurs va et vient … c’est gagné !
 
 * Pour finir, appuyer sur la touche STOP de la télécommande.
 
-![](../images/profalux_inclusion_etape4.png)
+* Ouvrir et fermer votre volet complètement 2 fois.
+
+A la fin de la 2ème fermeture, le volet fera un petit va et vient. 
 
 Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre.
 
 
 
-### Résolution de problèmes:
+## Résolution de problèmes:
 
 - Le volet ne répond plus à la télécommande.
 
@@ -862,6 +862,8 @@ Si par une mauvaise manipulation votre volet ne répond plus à la télécommand
 * A l’aide d’un trombone, appuyer 5 fois sur le bouton R
 
 ![](..//profalux_inclusion_etape1.png)
+
+Attention c'est une manipulation dangereuse !
 
 * Couper l'alimentation électrique
 * Réunir les fils noir et marron puis les brancher sur la borne de phase
@@ -881,17 +883,6 @@ Si par une mauvaise manipulation votre volet ne répond plus à la télécommand
 Le volet devrait faire des mouvement de va-et-vient puis s'arrêter
 * La télécommande devrait à nouveau fonctionner
 * Recommencer à nouveau la procédure d'inclusion
-
-### Retour expérience
-
-@MaxDak
-```
-Confronté au même problème à savoir: va et viens en guise de réponse à toutes les commandes (mes volets profalux sont récents moins d'un mois).
-J'ai enfin réussi à les piloter !
-J'ai suivi la procédure classique d'appairage à la seule différence que j'ai fermé totalement le volet avant de commencer la procédure.
-Et la miracle toutes les commandes fonctionnent...
-````
-
 
 
 # Xiaomi

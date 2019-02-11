@@ -2433,7 +2433,7 @@
 
         if ( count($GLOBALS['NE'])<1 ) { return; }
 
-        if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce end, NE: '.json_encode($GLOBALS['NE'])); }
+        if ( $GLOBALS['debugArray']['processAnnonce'] ) { deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
 
         foreach ( $NE as $short=>$infos ) {
             switch ($infos['state']) {
@@ -2441,7 +2441,8 @@
                 case 'annonceReceived':
                     if (!isset($NE[$short]['action'])) {
                         if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
-                            deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le EP de l equipement');
+                            if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                            deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
                             $mqtt->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
                             $mqtt->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $qos);
                             $mqtt->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $qos);
@@ -2453,7 +2454,8 @@
 
                 case 'EndPoint':
                     if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande le nom de l equipement');
+                        if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                        deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
                         $mqtt->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         $mqtt->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
                         
@@ -2469,7 +2471,8 @@
 
                 case 'modelIdentifier':
                     if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Configure NE');
+                        if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                        deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
                         $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
                         mqqtPublish($mqtt, $short, "IEEE", "Addr", $infos['IEEE'], $qos);
                         mqqtPublish($mqtt, $short, "Short", "Addr", $short, $qos);
@@ -2489,7 +2492,7 @@
                 /* J annule le step Location car Location = nom
                 case 'location':
                     if ( $NE[$short]['action'] == "modelIdentifier->location" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; Demande Configuration Equipement qui doit etre cree');
+                        deamonlog('debug',';Type; fct; processAnnonceStageChg ; Demande Configuration Equipement qui doit etre cree');
                         $GLOBALS['NE'][$short]['action']="location->configuration";
                     }
                     break;
@@ -2497,7 +2500,8 @@
 
                 case 'configuration':
                     if ( $NE[$short]['action'] == "modelIdentifierReceived->configuration" ) {
-                        deamonlog('debug',';Type; fct; processAnnonce ; ===> Demande Current State Equipement');
+                        if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                        deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande Current State Equipement');
                         $GLOBALS['NE'][$short]['action']="configuration->currentState";
                         getNE($short);
                     }
@@ -2505,6 +2509,7 @@
 
                 case 'currentState':
                     if ( $NE[$short]['action'] == "configuration->currentState" ) {
+                        if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                         $GLOBALS['NE'][$short]['state']="done";
                         $GLOBALS['NE'][$short]['action']="done";
                     }
@@ -2560,7 +2565,8 @@
         '8009' => 0, // Get Network Status
         '8010' => 0,
 
-        'processAnnonce' => 1,
+        'processAnnonce' => 0,
+        'processAnnonceStageChg' => 1,
         'cleanUpNE' => 0,
                         );
 

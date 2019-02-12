@@ -839,7 +839,7 @@ N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas
 
 A savoir tout au long de cette procédure : lorsque le volet fait un petit va et vient c'est le signe que la commande a bien été reçue.
 
-- Étape 1: Remise à zéro de la télécommande et du volet.
+### Étape 1: Remise à zéro de la télécommande et du volet.
 
 * Retourner la télécommande.
 * A l’aide d’un trombone, appuyer 5 fois sur le bouton R.
@@ -862,13 +862,13 @@ Si jamais les commandes de votre volet sont inversées, il suffit à l'aide d'un
 
 * Fermer le volet complètement.
 
-- Étape 2 : Inclusion du volet
+### Étape 2 : Inclusion du volet
 
 Mettre la ruche en mode inclusion
 
 * Pour cela appuyer sur le bouton inclusion depuis le plugin Abeille (La Zigate doit clignoter bleue)
 
-![](../images/inclusion.png)
+![](../images/inclusion.PNG)
 
 Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
 
@@ -884,13 +884,13 @@ Attendre que la télécommande ne clignotte plus !
 
 A la fin de la 2ème fermeture, le volet fera un petit va et vient.
 
-Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre.
+Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre !!!
 
 
 
 ## Résolution de problèmes:
 
-- Le volet ne répond plus à la télécommande.
+### Le volet ne répond plus à la télécommande.
 
 Si par une mauvaise manipulation votre volet ne répond plus à la télécommande, il est nécessaire de faire un reset de la télécommande et du volet.
 

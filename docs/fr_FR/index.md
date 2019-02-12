@@ -1,4 +1,4 @@
-# Présentation
+# Présentation rapide
 
 ## Abeille
 
@@ -10,9 +10,6 @@ Le créateur de Zigate dit :
 > ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
 
 Ce plugin est né de besoins personnels : capteur de température radio distant avec un réseau sécurisé, mesh,…
-
-Finalement, il intègre de plus en plus d’équipements :
-[Compatibilité](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
 Ce plugin inclus les fonctions de base pour la gestion d'équipements comme On/Off/Toggle/Up/Down/Detection/…
 Il supporte aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
@@ -36,7 +33,7 @@ _Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendan
 ## Support
 
 Pour toute difficulté, deux possibilités :
-* un fil de discussion est présent sur le [forum de Jeedom](https://www.jeedom.com/forum/viewtopic.php?f=184&t=33573)
+* un fil de discussion sur le [forum de Jeedom](https://www.jeedom.com/forum/viewtopic.php?f=184&t=33573)
 * une « issue » dans github
 
 # Plus de détails
@@ -44,41 +41,37 @@ Pour toute difficulté, deux possibilités :
 Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate.
 Il est en permanente évolution.
 
-## Il permet
+## Périphériques compatibles
 
-- de connecter les ampoules IKEA
-- de connecté toute la famille Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte).
-- de faire les inclusions des equipments zigbee depuis jeedom
-- d'avoir l'état de l ampoule IKEA, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
-- de commander les ampoules une par une (On/Off, niveau, couleur,...)
-- de commander les ampoules et autre par groupe (On/Off, niveau)
-- d'avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
-- d'avoir les temperatures, humidité, pression Xiaomi, son nom, tension batterie
-- d'avoir la remontée d'une presence (capteur infrarouge xiaomi)
-- d'avoir la remontée d'ouverture de porte
-- d'avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
-- de définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
+* les ampoules Zigbee
+* toute la famille Xiaomi Zigbee (Sensor presence, prise, temperature, humidité, pression, interrupteur, porte)
+* les volets Profalux
+* de nombreux autres [périphériques Zigbee](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
-## Ce qu'on peut faire
+## Les possibilités (exemples)
 
-Exemples:
-- Si j’appuie sur l’interrupteur Xiaomi, avec un scenario Jeedom, j'allume l’ampoule IKEA.
-- Avec une télecommande Ikea je commande ampoule Ikea, Hue, OSRAM,... prise ... tout en même temps
-- Avec deux, trois, quatre,... télécommandes Ikea je fais un va et vient
-- Je contrôle chaque équipement depuis Jeedom.
-
-Et surtout, je profite du « mesh » ZigBee (des ampoules IKEA et prise Xiaomi) car je vous confirme que les prises Xiaomi et les ampoules IKEA font le routage des messages ZigBee.
-
+* inclure des équipments Zigbee depuis Jeedom
+* avoir l'état d'une ampoule Zigbee, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
+* commander les ampoules une par une (On/Off, niveau, couleur,...)
+* commander les ampoules et autre par groupe (On/Off, niveau)
+* avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
+* avoir les températures, humidité, pression Xiaomi, son nom, tension batterie
+* avoir la remontée d'une présence (capteur infrarouge xiaomi)
+* avoir la remontée d'ouverture de porte
+* avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
+* définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
+* définir des va et vient facilement entre des marques de télécommande et d'ampoules différentes
+* profiter du réseau "mesh" Zigbee étendu multi-marque
 
 # Installation
 
 ## ZiGate
 
-- La ZiGate est avec le bon firmware et connectée au port USB ou sur son module wifi (le firmware actuellement testé est la version 30e: https://github.com/fairecasoimeme/ZiGate/tree/master/Module%20Radio/Firmware )
+La Zigate peut être connectée au port USB ou par module Wifi.
+
+Le Firmware supporté est le 3.0E
 
 ## Widget
-
-> Je vous propose d' installer des widgets avant d'installer Abeille pour avoir une interface graphique plus sympa mais ce n'ai pas obligatoire.
 
 - Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus joli.
 * baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )

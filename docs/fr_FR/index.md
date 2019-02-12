@@ -14,9 +14,7 @@ Ce plugin est né de besoins personnels : capteur de température radio distant 
 Finalement, il intègre de plus en plus d’équipements :
 [Compatibilité](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
-Mon réseau personnel fonctionne depuis plusieurs mois et possède actuellement 45 équipements et continue de grossir.
-
-Ce plugin inclus les fonctions de base pour la gestions d'équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
+Ce plugin inclus les fonctions de base pour la gestion d'équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
 * Retour d'état des équipements,    
 * Santé (Dernière communication,…)
 * Niveau des batteries
@@ -25,11 +23,6 @@ Ce plugin inclus les fonctions de base pour la gestions d'équipements comme On/
 * Informations radio sur les liaisons entre les équipements
 * En mode USB ou en mode Wifi
 * Fonctionne avec Homebridge
--    …
-
-
-
-
 
 ## Timer
 

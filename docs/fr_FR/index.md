@@ -14,7 +14,8 @@ Ce plugin est né de besoins personnels : capteur de température radio distant 
 Finalement, il intègre de plus en plus d’équipements :
 [Compatibilité](https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.adoc)
 
-Ce plugin inclus les fonctions de base pour la gestion d'équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
+Ce plugin inclus les fonctions de base pour la gestion d'équipements comme On/Off/Toggle/Up/Down/Detection/…
+Il supporte aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
 * Retour d'état des équipements,    
 * Santé (Dernière communication,…)
 * Niveau des batteries
@@ -28,12 +29,15 @@ Ce plugin inclus les fonctions de base pour la gestion d'équipements comme On/O
 
 ![Timer Icone](../images/node_Timer.png)
 
-J’ai aussi intégré un « sous-plugin » [TIMER](#tocAnchor-1-6) qui fonctionne à la seconde dans ce plugin. Il faudra peut être que je fasse un plugin dédié et indépendant.
+Dans le plugin Abeille, il a été inclus "sous-plugin" [TIMER](#tocAnchor-1-6) qui fonctionne à la seconde.
+_Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendant._
 
 
-## Enjoy
+## Support
 
-Pour ceux qui utiliseront ce plugin, je vous souhaite une bonne expérience. Pour ceux qui auraient des soucis, vous pouvez aller sur le forum ou ouvrir une « issue » dans github (Je ferai de mon mieux pour vous aider).
+Pour toute difficulté, deux possibilités :
+* un fil de discussion est présent sur le [forum de Jeedom](https://www.jeedom.com/forum/viewtopic.php?f=184&t=33573)
+* une « issue » dans github
 
 # Plus de détails
 

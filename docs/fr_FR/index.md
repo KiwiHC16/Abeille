@@ -700,6 +700,12 @@ Vous avez maintenant une télécommande pour controler le groupe AAAA.
 
 Après avoir récupéré le groupe utilisé par la télécommande, vous pouvez ajouter la ZiGate à ce groupe ainsi abeille recevra les demandes de la télécommande. Attention la zigate est limitée à 5 groupes soit disons 5 télécommandes.
 
+Pour ce faire dans Abeille, ajouter les groupes à l'objet "Ruche" qui représente la zigate.
+
+Vous pouvez aussi forcer le groupe utilisé par la télécommande en selectionnant la télécommande ikea, en mettant le groupe dans le champ Id puis clic sur le bouton "Set Group Remote" et dans la seconde qui suis en appuyant sur un bouton de la télécommande pour la réveiller. Il peut être nécessaire de le faire plusieurs fois du fait du timing un peu spécifique.
+
+C'est aussi valide pour le bouton On/Off Ikea.
+
 https://github.com/fairecasoimeme/ZiGate/issues/6
 
 

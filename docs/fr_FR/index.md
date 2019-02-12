@@ -71,9 +71,9 @@ La Zigate peut être connectée au port USB ou par module Wifi.
 
 Le Firmware supporté est le 3.0E
 
-## Widget
+## Widget (non obligatoire)
 
-- Installer quelques widgets (plugin officiel) qui seront utilisés lors de la création des objets. Ce n'est pas obligatoire mais le résultat est plus joli.
+Vous pouvez installer quelques widgets (officiels) pour que le rendu soit plus sympa
 * baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
 * thermomètre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * humidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
@@ -82,9 +82,8 @@ Le Firmware supporté est le 3.0E
 
 ## Objet de référence
 
-> Afin de trouver rapidement les nouveaux équipements, il est nécessaire de créer une pièce (un objet jeedom) auquel seront rattachés par défaut.
-
-- Créez un objet sur lequel les nouveaux objets seront rattachés automatiquement. Menu Outils->Objet->"+ vert" (Objet Id=1, pour l'instant codé en dur).
+Afin de trouver rapidement les nouveaux équipements, il est nécessaire de créer une pièce (un objet Jeedom) auquel seront rattachés par défaut.
+Il faut donc créer un objet sur lequel les nouveaux objets seront rattachés automatiquement.
 
 ![](../images/Capture_d_ecran_2018_01_21_a_10_53_59.png)
 

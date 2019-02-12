@@ -82,77 +82,59 @@ Vous pouvez installer quelques widgets (officiels) pour que le rendu soit plus s
 
 ## Objet de référence
 
-Afin de trouver rapidement les nouveaux équipements, il est nécessaire de créer une pièce (un objet Jeedom) auquel seront rattachés par défaut.
-Il faut donc créer un objet sur lequel les nouveaux objets seront rattachés automatiquement.
+Créer un objet Jeedom pour retrouver rapidement et facilement les nouveaux équipements.
 
 ![](../images/Capture_d_ecran_2018_01_21_a_10_53_59.png)
 
 ![](../images/Capture_d_ecran_2018_01_21_a_10_54_13.png)
 
-Récupérez sont ID en sélectionnant "Vue d'ensemble"
-
-![](../images/Capture_d_ecran_2018_01_21_a_17_27_54.png)
-
-![](../images/Capture_d_ecran_2018_01_21_a_17_28_01.png)
-
 ##  Installation du plugin
 
 ### Depuis Github
 
-- Créer un répertoire Abeille dans le repertoire des plugins et installer les fichiers.
-* ssh sur votre jeedom
-* cd /var/www/html/plugins/
+Connecter vous par ssh sur votre Jeedom
 
-- si vous prenez le zip file
-```
-* mkdir Abeille
-* cd Abeille
-* unzip le fichier téléchargé de GitHub dans le répertoire
-* cd ..
+#### Avec le zip
+
+```shell
+cd /var/www/html/plugins/
+mkdir Abeille
+cd Abeille
+unzip le fichier téléchargé de GitHub dans le répertoire
+cd ..
 ````
 
-- Si vous allez directement avec git
-```
-* git clone https://github.com/KiwiHC16/Abeille.git Abeille
+#### Directement avec git (Le plus simple et le plus rapide)
+```shell
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
 ```
 
-Et pour le développeurs, voici une info très utile:
-
->Merci @lukebr
-
-Pour une mise à jour à partir de github :
-```
-cd ../../var/www/html/plugins/Abeille
+#### Mise à jour à partir de github
+```shell
+cd /var/www/html/plugins/Abeille
 sudo git pull https://github.com/KiwiHC16/Abeille
 ```
 
-Et si il y a eu des bidouilles en local pour écraser avec dernière mise à jour :
-```
+#### Pour écraser des "bidouilles" locales :
+```shell
 cd /var/www/html/plugins/Abeille
 sudo git reset --hard HEAD
 sudo git pull https://github.com/KiwiHC16/Abeille
 ```
 
-- Et pour finir
-```
-* chmod -R 777 /var/www/html/plugins/Abeille
-* chown -R www-data:www-data /var/www/html/plugins/Abeille
-```
-
-
-
-Si vous voulez aller a un commit specifique:
-```
-git reset --hard dd7fa0a
+#### Pour appliquer les bons droits :
+```shell
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille
 ```
 
 ### Depuis le market
 
-* Rien de spécifique. Suivre la procédure classique. Pour l'instant il ne doit y avoir qu'une version en beta.
+Rien de spécifique. Suivre la procédure classique.
 
-### Alternative : Installation du github depuis le market
+### Alternative : Installation du plugin Abeille avec github depuis le market
 
-- Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github cocher activer . On enregistre.
+- Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github et cocher activer . On enregistre.
 - Aller sur l'onglet plugin clic et gestion des plugin. Une fenetre s'ouvre que vous connaissez mais sur la gauche il y a une petite fleche pointant vers la droite (clic dessus)
 - Faire ajouter à partir d'une autre source et sélectionner GITHUB
 - Rentrer la paramètres suivants dans l'ordre :

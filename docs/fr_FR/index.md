@@ -701,19 +701,22 @@ Vous avez maintenant une télécommande pour controler le groupe AAAA.
 Après avoir récupéré le groupe utilisé par la télécommande, vous pouvez ajouter la ZiGate à ce groupe ainsi abeille recevra les demandes de la télécommande. Attention la zigate est limitée à 5 groupes soit disons 5 télécommandes.
 
 https://github.com/fairecasoimeme/ZiGate/issues/6
-Button   Pres-stype  Response  command       attr
-down     click       0x8085    0x02          None
-down     hold        0x8085    0x01          None
-down     release     0x8085    0x03          None
-up       click       0x8085    0x06          None
-up       hold        0x8085    0x05          None
-up       release     0x8085    0x07          None
-middle   click       0x8095    0x02          None
-left     click       0x80A7    0x07          direction: 1
-left     hold        0x80A7    0x08          direction: 1    => can t get that one
-right    click       0x80A7    0x07          direction: 0
-right    hold        0x80A7    0x08          direction: 0    => can t get that one
-left/right release   0x80A7    0x09          None            => can t get that one
+
+
+|Button   |Pres-stype  |Response  |command       |attr|
+|---------|------------|----------|--------------|---------------------------------------|
+|down     |click       |0x8085    |0x02          |None|
+|down     |hold        |0x8085    |0x01          |None|
+|down     |release     |0x8085    |0x03          |None|
+|up       |click       |0x8085    |0x06          |None|
+|up       |hold        |0x8085    |0x05          |None|
+|up       |release     |0x8085    |0x07          |None|
+|middle   |click       |0x8095    |0x02          |None|
+|left     |click       |0x80A7    |0x07          |direction: 1|
+|left     |hold        |0x80A7    |0x08          |direction: 1    => can t get that one|
+|right    |click       |0x80A7    |0x07          |direction: 0|
+|right    |hold        |0x80A7    |0x08          |direction: 0    => can t get that one|
+|left/right |release   |0x80A7    |0x09          |None            => can t get that one|
 
 down = brightness down, up = brightness up,
 middle = Power button,
@@ -872,14 +875,14 @@ Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
 * Retourner votre télécommande
 * Appuyer 1 fois sur R
 * Appuyer ensuite sur la flèche du haut
-Le moteur devrait faire plusieurs va et vient … 
+Le moteur devrait faire plusieurs va et vient …
 Attendre que la télécommande ne clignotte plus !
 
 * Pour finir, appuyer sur la touche STOP de la télécommande.
 
 * Ouvrir et fermer votre volet complètement 2 fois.
 
-A la fin de la 2ème fermeture, le volet fera un petit va et vient. 
+A la fin de la 2ème fermeture, le volet fera un petit va et vient.
 
 Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre.
 

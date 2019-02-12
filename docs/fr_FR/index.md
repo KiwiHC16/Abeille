@@ -1,17 +1,13 @@
 # Présentation
 
-(Portage en cours de la documentation vers le format officiel jeedom, le texte que vous lisez est en cours d'écriture. La doc originale est toujours à [cet emplacement](https://github.com/KiwiHC16/Abeille)
-
-
 ## Abeille
 
 ![Abeille Icone](../images/Abeille_icon.png)
 
 *Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.
 
-"ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
-"
-Dixit son créateur.
+Le créateur de Zigate dit :
+> ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
 
 Ce plugin est né de besoins personnels : capteur de température radio distant avec un réseau sécurisé, mesh,…
 
@@ -20,7 +16,7 @@ Finalement, il intègre de plus en plus d’équipements :
 
 Mon réseau personnel fonctionne depuis plusieurs mois et possède actuellement 45 équipements et continue de grossir.
 
-Ce plugin inclus les fonctions de base pour la gestions de équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
+Ce plugin inclus les fonctions de base pour la gestions d'équipements comme On/Off/Toggle/Up/Down/Detection/… mais aussi des fonctions avancées pour faciliter la gestion d’un gros réseau :
 * Retour d'état des équipements,    
 * Santé (Dernière communication,…)
 * Niveau des batteries

@@ -2,6 +2,8 @@
 
 ## Abeille
 
+Plugin en développement continu.
+
 ![Abeille Icone](../images/Abeille_icon.png)
 
 *Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.
@@ -134,202 +136,45 @@ Rien de spécifique. Suivre la procédure classique.
 
 ### Alternative : Installation du plugin Abeille avec github depuis le market
 
-- Aller sur configuration puis l'onglet mise à jour, selectionner en dessous l'onglet Github et cocher activer . On enregistre.
-- Aller sur l'onglet plugin clic et gestion des plugin. Une fenetre s'ouvre que vous connaissez mais sur la gauche il y a une petite fleche pointant vers la droite (clic dessus)
-- Faire ajouter à partir d'une autre source et sélectionner GITHUB
-- Rentrer la paramètres suivants dans l'ordre :
+* Aller sur Configuration (Roues crantées) puis Configuration
+* Dans l'onglet "Mise à jour", sélectionner en dessous l'onglet Github et cocher la case "Activer Github". Cliquer sur "Sauvegarder".
+* Aller sur "Plugins" et cliquer sur "Gestion des plugins". Cliquer sur "Sources"
+* Dans "Type de source", sélectionner Github
 * ID logique du plugin: Abeille
 * Utilisateur ou organisateur: KiwiHC16
 * Nom du dépôt: Abeille
 * Branche: master
+*Cliquer sur "Enregistrer"
 
 ## Activation
 
-- Activation du plugin
-* Allez sur l'interface http Jeedom
-* Menu Plugin, Gestion des plugin
-* sélectionner Abeille
-
-![](../images/Capture_d_ecran_2018_01_21_a_10_53_37.png)
-
-* Activer
+* Aller sur "Plugins" et cliquer sur "Gestion des plugins".
+* Cliquer sur "Abeille"
+* Cliquer sur "Activer"
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_05_58.png)
 
-* Choisir le niveau de log et Sauvegarder
-* Lancer l'installation des dépendances, bouton Relancer et patienter (vous pouvez suivre l'avancement dans le fichier log: Abeille_dep)
+* Choisir le niveau de log et cliquer sur "Sauvegarder"
+* Lancer l'installation des dépendances avec le bouton "Relancer" et patienter (vous pouvez suivre l'avancement dans le fichier de log: Abeille_dep)
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_06_33.png)
 
-* Quand le statut Dépendance passe à Ok en vert (Patientez 2 ou 3 minutes), définir l objet ID et le port serie puis Démarrer les Démons.
-
+* Patienter 2-3 minutes jusqu'à l'obtention du statut "OK"
 Puis:
-> Si vous avez un zigate USB, choisissez le bon port /dev/ttyUSBx.
-> Si vous avez une zigate Wifi, choisissez le port "WIFI" dans la liste et indiquer son adresse IP.
+  * Si vous avez un zigate USB, dans "Abeille Serial Port :" choisissez le bon port /dev/ttyUSBx.
+  * Si vous avez une zigate Wifi dans "IP (IP:Port) de Zigate Wifi :" indiquer son adresse IP.
+
+* Définir l'"Objet Parent" (C'est ici que les objets "Abeille" se créeront par défaut)
+* Démarrer les Démons en cliquant sur la flèche verte "(Re)Démarrer"
 
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_07_14.png)
 
-* Si vous rafraîchissez la page vous devez voir les fichiers de logs.
+A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.
 
-![](../images/Capture_d_ecran_2018_01_21_a_11_07_38.png)
+# Inclusion de nouveaux périphériques Zigbee
 
-A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration
 
-- Creation des objets
-* Allez dans la page de gestion des objets en sélectionnant le menu plugins, puis protocole domotique, puis Abeille
-* Vous devriez voir un premier objet "Ruche" (et éventuellement les objets abeille).
-
-![](../images/Capture_d_ecran_2018_01_21_a_11_55_44.png)
-
-* Si vous allez sur le dashboard
-
-![](../images/Capture_d_ecran_2018_01_21_a_11_07_55.png)
-
-* Tous les autres objets seront créés automatiquement dès détection.
-
-## Utilisation de Jeedom
-* Allez sur la page principale et vous devriez voir tous les objets détectés. A cette étape probablement uniquement l'objet Ruche si vous démarrez votre réseau ZigBee de zéro.
-* Le nom de l objet est "Abeille-" suivi de son adresse courte zigbee.
-
-*A noter: rafraichir la page si vous voyez pas de changement après une action, par exemple après l'ajout d'un équipement.*
-
-
-# Tuto
-
-## Presence->Ampoule
-
-Pilotage d une ampoule à partir d'un capteur de présence.
-
-### Inclusion Capteur presence
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre le capteur de presence Xiaomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_16_27.png)
-
-Rafraichissez la page pour voir votre capteur:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_18_23.png)
-
-Vous pouvez changer son nom, je vais lui donner comme nom "Presence" pour la suite.
-
-### Inclusion Ampoule Ikea
-
-Mettre sous tension votre ampoule. Elle doit être allumée pour commencer la manipulation.
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre le capteur de presence Xiomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
-
-En partant de l'ampoule allumée, l'éteindre et la rallumer 6 fois de suite. A la fin de cette opération l'ampoule doit être allumée. Puis elle doit se mettre à clignoter et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_27_35.png)
-
-Rafraichissez la page pour avoir votre ampoule:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_29_10.png)
-
-Vous pouvez changer son nom, je vais lui donner comme nom "Ampoule" pour la suite.
-
-### Pilotage de l ampoule
-
-Nous allons utiliser les scénarios:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_33_20.png)
-
-Créons un scénario "test" avec pour déclencheur "Presence".
-
-![](..//Capture_d_ecran_2018_10_30_a_10_38_29.png)
-
-Et les actions:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_40_48.png)
-
-Ici, quand une présence est détectée, on allume l ampoule et quand la présence n'est pas présente on eteint l ampoule.
-
-
-## Presence->Ampoule<-Telecommande
-
-Dans la configuration précedente, nous allons ajouter une télécommande pour controler l'ampoule.
-
-### Inclusion télécommande
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la télécommande. La télécommande doit se mettre à flasher rouge en face avant et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_58_53.png)
-
-Rafraichissez la page pour voir votre capteur:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_59_04.png)
-
-Je vais lui donner le nom "Tele" par la suite. A cette étape cet objet Tele dans Jeedom ne peut ête utilisé. Il faut executer les étapes de du chapitre "Simuler la télécommande".
-
-Continuons en configurant l ampoule depuis la Tele:
-
-* Allumer l'ampoule.
-* Approcher la télécommande à quelques centimetres de l ampoule
-* Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge sur la face avant de la télécommande doit clignoter et l ampoule doit se mettre à à clignoter.
-
-Ca y est la télécommande pilote l'ampoule et l'ampoule remonte son état à Jeedom.
-
-### Simuler la télécommande
-
-Cette opération est un peu délicate mais doit permettre de récupérer l'adresse de groupe utilisée par la télécommande suite aux opérations ci dessus. Dans le futur j'espere rendre cela automatique.
-
-Aller dans la page de configuration du plugin et clic sur "Network" icon pour faire apparaitre les parametres dans l'Ampoule:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_30_24.png)
-
-Sur l objet Ampoule vous devez vous le champ "Groups" apparaitre sans information:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_36_43.png)
-
-Recuperons l'adresse de l ampoule, en ouvrant la page de configuration de l ampoule:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_42_09.png)
-
-Le champ "Topic Abeille" coontient l adresse, ici "9252".
-
-Interrogeons maintenant l'ampoule, avec un getGroupMemberShip depuis l objet Ruche:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_45_23.png)
-
-indiquez l'adresse de l ampoule.
-
-Maintenant le champ "Groups" de l ampoule doit contenir l'adresse de groupe:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_47_24.png)
-
-ici le groupe utilisé par la télécommande est "f65d".
-
-Maintenant nous pouvons mettre à jour la télécommande dans jeedom. Ouvrez les commandes de la Telecommande:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_50_17.png)
-
-Dans le champ "Topic" des commandes vous pouvez voir le texte \#addrGroup# qu'il faut remplacer par la valeur du groupe, ici "f65d" et sauvegarder.
-
-Cela donne:
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_54_51.png)
-
-Mainteant vous pouvez commander votre ampoule depuis la Télécommande physique et depuis la Télécommande Jeedom.
-
-![](../images/Capture_d_ecran_2018_10_30_a_11_58_42.png)
-
-PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
-
-* Sc1, Sc2, SC3 sur la télécommande dans Jeedom,
-* et les boutons "Fleche Gauche", "Fleche Droite" de la télécommande physique.
 
 
 # Ajout d'équipement en général
@@ -1204,6 +1049,140 @@ Partir de l ampoule allumer, (Eteindre/Allumer) 5 fois toutes les 3 secondes et 
 https://www.youtube.com/watch?v=PaA0DV5BXH0
 
 Ne semble pas fonctionner avec la Télécommande Hue (Hue Dimmer Switch).
+
+## Presence->Ampoule
+
+Pilotage d une ampoule à partir d'un capteur de présence.
+
+### Inclusion Capteur presence
+
+Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
+
+Prendre le capteur de presence Xiaomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_16_27.png)
+
+Rafraichissez la page pour voir votre capteur:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_18_23.png)
+
+Vous pouvez changer son nom, je vais lui donner comme nom "Presence" pour la suite.
+
+### Inclusion Ampoule Ikea
+
+Mettre sous tension votre ampoule. Elle doit être allumée pour commencer la manipulation.
+
+Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
+
+Prendre le capteur de presence Xiomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
+
+En partant de l'ampoule allumée, l'éteindre et la rallumer 6 fois de suite. A la fin de cette opération l'ampoule doit être allumée. Puis elle doit se mettre à clignoter et un message d'information doit apparaitre dans jeedom:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_27_35.png)
+
+Rafraichissez la page pour avoir votre ampoule:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_29_10.png)
+
+Vous pouvez changer son nom, je vais lui donner comme nom "Ampoule" pour la suite.
+
+### Pilotage de l ampoule
+
+Nous allons utiliser les scénarios:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_33_20.png)
+
+Créons un scénario "test" avec pour déclencheur "Presence".
+
+![](..//Capture_d_ecran_2018_10_30_a_10_38_29.png)
+
+Et les actions:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_40_48.png)
+
+Ici, quand une présence est détectée, on allume l ampoule et quand la présence n'est pas présente on eteint l ampoule.
+
+
+## Presence->Ampoule<-Telecommande
+
+Dans la configuration précedente, nous allons ajouter une télécommande pour controler l'ampoule.
+
+### Inclusion télécommande
+
+Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
+
+Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la télécommande. La télécommande doit se mettre à flasher rouge en face avant et un message d'information doit apparaitre dans jeedom:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_58_53.png)
+
+Rafraichissez la page pour voir votre capteur:
+
+![](../images/Capture_d_ecran_2018_10_30_a_10_59_04.png)
+
+Je vais lui donner le nom "Tele" par la suite. A cette étape cet objet Tele dans Jeedom ne peut ête utilisé. Il faut executer les étapes de du chapitre "Simuler la télécommande".
+
+Continuons en configurant l ampoule depuis la Tele:
+
+* Allumer l'ampoule.
+* Approcher la télécommande à quelques centimetres de l ampoule
+* Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge sur la face avant de la télécommande doit clignoter et l ampoule doit se mettre à à clignoter.
+
+Ca y est la télécommande pilote l'ampoule et l'ampoule remonte son état à Jeedom.
+
+### Simuler la télécommande
+
+Cette opération est un peu délicate mais doit permettre de récupérer l'adresse de groupe utilisée par la télécommande suite aux opérations ci dessus. Dans le futur j'espere rendre cela automatique.
+
+Aller dans la page de configuration du plugin et clic sur "Network" icon pour faire apparaitre les parametres dans l'Ampoule:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_30_24.png)
+
+Sur l objet Ampoule vous devez vous le champ "Groups" apparaitre sans information:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_36_43.png)
+
+Recuperons l'adresse de l ampoule, en ouvrant la page de configuration de l ampoule:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_42_09.png)
+
+Le champ "Topic Abeille" coontient l adresse, ici "9252".
+
+Interrogeons maintenant l'ampoule, avec un getGroupMemberShip depuis l objet Ruche:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_45_23.png)
+
+indiquez l'adresse de l ampoule.
+
+Maintenant le champ "Groups" de l ampoule doit contenir l'adresse de groupe:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_47_24.png)
+
+ici le groupe utilisé par la télécommande est "f65d".
+
+Maintenant nous pouvons mettre à jour la télécommande dans jeedom. Ouvrez les commandes de la Telecommande:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_50_17.png)
+
+Dans le champ "Topic" des commandes vous pouvez voir le texte \#addrGroup# qu'il faut remplacer par la valeur du groupe, ici "f65d" et sauvegarder.
+
+Cela donne:
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_54_51.png)
+
+Mainteant vous pouvez commander votre ampoule depuis la Télécommande physique et depuis la Télécommande Jeedom.
+
+![](../images/Capture_d_ecran_2018_10_30_a_11_58_42.png)
+
+PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
+
+* Sc1, Sc2, SC3 sur la télécommande dans Jeedom,
+* et les boutons "Fleche Gauche", "Fleche Droite" de la télécommande physique.
 
 
 # Groupes

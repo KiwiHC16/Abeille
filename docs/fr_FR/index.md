@@ -6,7 +6,7 @@ Plugin en développement continu.
 
 ![Abeille Icone](../images/Abeille_icon.png)
 
-*Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle Zigate.
+*Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle [Zigate](https://zigate.fr/).
 
 Le créateur de Zigate dit :
 > ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
@@ -173,23 +173,12 @@ Puis:
 A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.
 
 # Inclusion de nouveaux périphériques Zigbee
+## Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
 
-
-
-
-# Ajout d'équipement en général
-
-Cette page présente une introduction à l'ajout d'équipement. Sinon pour chaque équipement, aller voir la page dédiée.
-
-=== Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
-
-* Mettre la gateway en inclusion (Bouton Inclusion), la Led bleue de la zigate doit clignoter,
-
-![](../images/Capture_d_ecran_2018_01_21_a_11_07_55.png)
-
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
 puis:
 
-* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumée. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
+* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_44.png)
 

@@ -4,9 +4,11 @@
 
 Plugin en développement continu.
 
+Le développement n'est pas terminé. De nombreux ajustements sont en cours ...
+
 ![Abeille Icone](../images/Abeille_icon.png)
 
-*Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédaire de la passerelle [Zigate](https://zigate.fr/).
+*Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédiaire de la passerelle [Zigate](https://zigate.fr/).
 
 Le créateur de Zigate dit :
 > ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
@@ -28,7 +30,7 @@ Il supporte aussi des fonctions avancées pour faciliter la gestion d’un gros 
 
 ![Timer Icone](../images/node_Timer.png)
 
-Dans le plugin Abeille, il a été inclus "sous-plugin" [TIMER](#tocAnchor-1-6) qui fonctionne à la seconde.
+Dans le plugin Abeille, il a été inclus un "sous-plugin" TIMER qui fonctionne à la seconde.
 _Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendant._
 
 
@@ -36,7 +38,7 @@ _Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendan
 
 Pour toute difficulté, deux possibilités :
 * un fil de discussion sur le [forum de Jeedom](https://www.jeedom.com/forum/viewtopic.php?f=184&t=33573)
-* une « issue » dans github
+* une « issue » dans Github
 
 # Plus de détails
 
@@ -52,13 +54,13 @@ Il est en permanente évolution.
 
 ## Les possibilités (exemples)
 
-* inclure des équipments Zigbee depuis Jeedom
+* inclure des équipements Zigbee depuis Jeedom
 * avoir l'état d'une ampoule Zigbee, son niveau de brillance, ses caractéristiques (nom, fabriquant, SW level).
 * commander les ampoules une par une (On/Off, niveau, couleur,...)
 * commander les ampoules et autre par groupe (On/Off, niveau)
 * avoir l'état de la prise Xiaomi avec la puissance et la consommation (Nom et Fabriquant)
 * avoir les températures, humidité, pression Xiaomi, son nom, tension batterie
-* avoir la remontée d'une présence (capteur infrarouge xiaomi)
+* avoir la remontée d'une présence (capteur infrarouge Xiaomi)
 * avoir la remontée d'ouverture de porte
 * avoir les clics sur les interrupteurs (1, 2, 3 ou 4 clics)
 * définir des groupes comprenant des ampoules IKEA et prise xiaomi (Je peux donc avoir un mix dans le même groupe qui est commandé par une télécommande IKEA par exemple, ou faire un va et vient sur des ampoules IKEA avec 2 télécommandes IKEA (ce qui n'est pas possible avec la solution pure IKEA),...)
@@ -71,7 +73,7 @@ Il est en permanente évolution.
 
 La Zigate peut être connectée au port USB ou par module Wifi.
 
-Le Firmware supporté est le 3.0E
+Le firmware supporté est le 3.0E
 
 ## Widget (non obligatoire)
 
@@ -173,26 +175,29 @@ Puis:
 A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.
 
 # Inclusion de nouveaux périphériques Zigbee
-## Ajout d'équipements (S'ils ne sont pas déjà dans le réseau ZigBee)
+## Exemple d'ajout d'équipements courants (S'ils ne sont pas déjà dans le réseau ZigBee)
 
 * Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+
+![](../images/inclusion.PNG)
+
 puis:
 
-* Ampoule IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après mainte tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
+* Ampoules IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton | + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_44.png)
 
-* Capteur de porte, prise, capteur de temperature rond/carre, bouton et capteur infrarouge Xiaomi, un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lacher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. Un appuie long provoque l'association/join network si l objet n est pas déjà sur un réseau, si déjà sur réseau provoque un "leave" (a faire quand le réseau est fermé sinon juste après le leave l object refait une association et reste sur le réseau.).
+* Xiomi : Capteur de porte, prise, capteur de température rond/carre, bouton et capteur infrarouge : un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lâcher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. 
 
 Porte
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_11_38.png)
 
-Temperature rond
+Température rond
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_43.png)
 
-Temperature Carre
+Température Carre
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_15.png)
 
@@ -200,9 +205,9 @@ Bouton
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_15.png)
 
-Etat: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
+État: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
 
-Capteur Presence InfraRouge
+Capteur Présence InfraRouge
 
 ![](../images/Capture_d_ecran_2018_01_21_a_12_45_22.png)
 
@@ -210,354 +215,71 @@ Capteur Presence InfraRouge
 
 ![](..//Capture_d_ecran_2018_01_21_a_12_49_06.png)
 
-=== Ajout d'équipements (S'ils sont déjà dans le réseau ZigBee)
+## Exemple d'ajout d'équipements courants (S'ils sont déjà dans le réseau ZigBee)
 
-* Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l'ampoule et elle doit apparaître dans Jeedom.
-* Capteur de porte, capteur de temperature rond/carre et bouton Xiaomi: un appuie rapide sur le bouton latérale et il doit apparaître dans Jeedom.
+* Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l'ampoule et elle doit réapparaître dans Jeedom.
+* Xiomi : Capteur de porte, capteur de température rond/carre et bouton : un appuie rapide sur le bouton latérale et il doit réapparaître dans Jeedom.
 * Capteur InfraRouge Xiaomi: pas implémenté.
 
+## Ikea
 
+### Ampoule
 
-# Integration d'un nouvel objet
+#### Nouvelle inclusion
 
-== Ikea
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton | + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
 
-=== Ampoule
+#### Déjà inclue préalablement
 
-==== Nouvelle
+* Zigate en fonctionnement normale
+* Éteindre l'ampoule 15s puis la rallumer
 
-Faire un reset (6s On/Off-On ou reset avec télécommande Philips) de l'ampoule alors que la zigate est en mode inclusion. L'ampoule doit s'associer. Elle n'envoie pas son nom automatiquement et jeedom ne peut pas créer l'objet associé. Pour créer l'objet suivre le paragraphe "Déjà" associée.
+### Prise
 
-==== Deja associé
+#### Nouvelle inclusion
 
-Eteindre l'ampoule 15s puis la rallumer (Zigate en fonctionnement normale).
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Faire un reset de la prise en insérant un petit trombone dans le trou pres de la led de la prise. Attendre 5s, la prise doit apparaitre dans Jeedom.
 
-=== Telecommande 5 boutons
+## Xiaomi
 
-==== Nouvelle
+### Tous les périphériques classiques
 
-Plugin en mode semi-automatique, appui 4 fois sur bouton arrière télécommande et un objet "Type inconnu" est créé.
+#### Nouvelle inclusion
 
-==== Déjà associée
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Appui long de 7s sur le bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaître dans Jeedom.
 
-Plugin en mode semi auto et "Liste Equipement" sur Ruche.
+#### Déjà inclue préalablement
 
-== Philips Hue
+* Zigate en fonctionnement normale
+* Appui court sur le bouton du flanc de l'équipement et l'objet Abeille doit être créé.
 
-=== Hue Go
+## OSRAM
 
-Impossible de faire émettre le moindre message ZigBee par le Hue Go en utilisant le bouton à l'arrière. Seulement ce qui ressemble à un reset en appuyant très longtemps (>30s).
+### Prise Smart +
 
-==== Nouvelle
+#### Nouvelle inclusion
 
-a
-
-==== Déjà associée
-
-Utiliser la fonction "Get Name" de la Ruche. Mettre en Titre l'adresse de la Hue Go et en Message le EndPoint qui est "0B". Clic Get Name et la apres un refresh dashboard, l ampoule doit apparaitre.
-
-== Xiaomi
-
-=== Nouvel Equipement
-
-Zigate en mode inclusion, Plugin en automatique, appui long de 7s sur le bouton du flanc de l'équipement, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
-
-=== Déjà associé
-
-Zigate en mode normal, plugin en mode automatique, un appui court sur le bouton du flanc de l'équipement et l'objet abeille doit être créé.
-
-== OSRAM (Prise Smart +)
-
-=== Nouvel Equipement
-
-Zigate en mode inclusion, Plugin en automatique, appui long sur le bouton du flanc de la prise, la prise switche rapidement On/Off, lâcher le bouton, l'équipement doit se connecter et un objet doit apparaître dans le dashboard.
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Appui long sur le bouton du flanc de la prise, la prise switche rapidement On/Off, lâcher le bouton, l'équipement doit se connecter et un objet doit apparaître dans Jeedom.
 
 ![](../images/plug01_new.png)
 
-=== Déjà associé
+#### Déjà inclue préalablement
 
-non disponible actuellement - nouvelle inclusion à faire
+* non disponible actuellement
+* nouvelle inclusion à faire
 
-=== Ajout dans un groupe (avec Ampoules Hue ou Ikea par exemple)
-Utiliser la Fonction Add Group de la Ruche
-Titre : Adresse courte de la prise
-Message : DestinationEndPoint=03&groupAddress=aaaa
-avec "aaaa" le nom du groupe souhaité.
+## Philips Hue
 
-![](../images/plug01_addgroup.png)
+### Ampoule Philips Hue White
 
-Video:
+#### Nouvelle inclusion
 
-![](../videos/GroupeAjoutSupprime.mov)
-
-
-
-# Ikea
-
-## Ampoule
-
-### Bouton Identify
-
-Ce bouton est créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
-
-### Creation objet
-
-- Si l'ampoule n'est pas associée à la zigate, avec Abeille en mode Automatique, une association doit provoquer la création de l'obet dans Abeille
-
-- Si l'ampoule est déjà associée à la zigate, avec Abeille en mode Automatique,
-* l'allumage électrique doit provoquer l'envoie par l'ampoule de sa présence (annonce) et la création par Abeille de l'objet associé.
-* l'extinction électrique pendant 15s puis allumage électrique doit provoquer l'envoie par l'ampoule de sa présence (son nom) et la création par Abeille de l'objet associé.
-* Vous pouvez aussi Utiliser la commande getName dans la ruche, mettre l’adresse courte dans le titre et rien dans le message. Puis rafraichir le dashboard et la l’ampoule doit être présente.
-
-### Retour d'état
-
-Pour que l'ampoule puisse remonter automatiquement son état à Jeedom, il faut mettre en place un "bind" et un "set report".
-
-Maintenant c'est automatique mais si cela ne fonctionnait pas il y a toujours la vieille methode.
-
-Pour se faire, il faut utiliser les commandes bind et setReport sur l'objet Ampoule.
-
-Le widget ampoule doit être plus ou moins comme cela:
-
-![](../images/Capture_d_ecran_2018_10_12_a_16_51_39.png)
-
-Il faut faire apparaite les commandes de configuration. Aller dans la page de configuration du plugin et selectionner "Network" dans le chapitre "Affichage Commandes". Maintenant le widget doit ressembler à:
-
-![](../images/Capture_d_ecran_2018_10_12_a_16_58_44.png)
-
-il suffit de faire un BindShortToZigateEtat, setReportEtat. Si votre ampoule supporte la variation d'intensité, faites un BindShortToZigateLevel, setReportLevel.
-
-ur que cela fonctionne il est important que le champ IEEE soit rempli. Si tel n'est pas le cas faites un Liste Equipement sur la ruche et si cela ne suffit pas faire un "Recalcul du Cache" dans Network List de la page de conf du plug in.
-
-> Y a encore du travail en cours pour simplifier cette partie.
-
-
-### Bind specifique:
-
-Identifiez l'ampoule que vous voulez parametrer:
-
-![](../images/Capture_d_ecran_2018-02_21_a_23_26_56.png)
-
-Récuperer son adresse IEEE, son adress courte (ici 6766).
-
-De même, dans l'objet Ruche récupérez l'adresse IEEE (Si l'info n'est pas dispo, un reset de la zigate depuis l objet ruche doit faire remonter l'information).
-
-Mettre dans le champ:
-
-- Titre, l'adresse IEEE de l'ampoule que vous voulez parametrer
-- Message, le cluster qui doit être rapporté, et l adresse IEEE de la zigate.
-
-![](../images/Capture_d_ecran_2018_02_21_a_23_26_49.png)
-
-Attention a capture d'écran n'est pas à jour pour le deuxieme champs.
-
-Dans message mettre:
-```
-targetExtendedAddress=XXXXXXXXXXXXXXXX&targetEndpoint=YY&ClusterId=ZZZZ&reportToAddress=AAAAAAAAAAAAAAAA
-````
-
-Exemple avec tous les parametres:
-````
-targetExtendedAddress=90fd9ffffe69131d&targetEndpoint=01&ClusterId=0006&reportToAddress=00158d00019a1b22
-````
-
-
-Après clic sur Bind, vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme:
-
-![](../images/Capture_d_ecran_2018_02_21_a_23_27_29.png)
-
-qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
-
-
-#### Rapport Manuel:
-
-Ensuite parametrer l'envoie de rapport:
-
-- Titre, l adresse courte de l'ampoule
-- Message, le cluster et le parametre dans le cluster
-
-![](../images/Capture_d_ecran_2018_02_21_a_23_29_11.png)
-
-Attention a capture d'écran n'est pas à jour pour le deuxieme champs.
-
-````
-targetEndpoint=01&ClusterId=0006&AttributeType=10&AttributeId=0000 pour retour d'état ampoule Ikea
-
-targetEndpoint=01&ClusterId=0008&AttributeType=20&AttributeId=0000 pour retour de niveau ampoule Ikea
-````
-
-
-De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme:
-
-![](../images/Capture_d_ecran_2018_02_21_a_23_29_49.png)
-
-qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
-
-Après sur un changement d'état l'ampoule doit remonter l'info vers Abeille, avec des messages comme:
-
-![](../images/Capture_d_ecran_2018_02_21_a_23_31_11.png)
-
-pour un retour Off de l'ampoule.
-
-=== Gestion des groupes
-
-Vous pouvez adresser un groupes d'ampoules (ou d'équipements) pour qu'ils agissent en même temps.
-
-Pour se faire sur l'objet ruche vous avez 3 commandes:
-
-![](../images/Capture_d_ecran_2018_03_07_a_11_32_21.png)
-
-* Add Group: permet d'ajouter un groupe à l'ampoule. Celle ci peut avoir plusieurs groupes et réagira si elle recoit un message sur l'un de ces groupes.
-
-![](../images/Capture_d_ecran_2018_03_07_a_11_38_19.png)
-
-Le DestinatioEndPoint pour une ampoule Ikea est 01. Pour le groupe vous pouvez choisir. Il faut 4 caractères hexa (0-9 et a-f).
-
-* Remove Group: permet d'enlever l'ampoule d'un groupe pour qu'elle ne réagisse plus à ces commandes.
-
-![](../images/Capture_d_ecran_2018_03_07_a_11_44_50.png)
-
-*getGroupMembership: permet d'avoir la liste des groupes pour lesquels l'ampoule réagira. Cette liste s'affiche au niveau de l'ampoule, exemple avec cette ampoule qui va repondre au groupe aaaa et au groupe bbbb.
-
-![](../images/Capture_d_ecran_2018_03_07_a_11_43_14.png)
-![](../images/Capture_d_ecran_2018_03_07_a_11_41_21.png)
-
-
-## Telecommnande Ronde 5 boutons
-
-### Télécommande réelle
-
-(Pour l'instant c'est aux équipements qui recevoient les demandes de la telecommande reelle de renvoyer leur etat vers jeedom, sur un appui bouton telecommande, la ZiGate ne transmet rien au plugin Abeille, à partir du firmware 3.0f on peut récupérer des appuis sur les boutons de la télécommande avec une configuration spécifique, voir ci dessous).
-
-Pour créer l'objet Abeille Automatiquement,
-
-[line-through]#- Premiere solution: faire une inclusion de la télécommande et un objet doit être créé.
-Ensuite paramétrer l'adresse du groupe comme indiqué ci dessous (voir deuxieme solution).#
-
-
-- Deuxieme solution, il faut connaitre l'adresse de la telecommande (voir mode semi automatique pour récupérer l'adresse).
-
-Puis dans la ruche demander son nom. Par exemple pour la telecommande à l'adress ec15
-
-![](../images/Capture_d_ecran_2018_02_28_a_13_59_31.png)
-
-et immédiatement apres appuyez sur un des boutons de la télécommande pour la réveiller (pas sur le bouton arriere).
-
-Et apres un rafraichissement de l'écran vous devez avoir un objet
-
-![](../images/Capture_d_ecran_2018_02_28_a_14_00_58.png)
-
-Il faut ensuite editer les commandes en remplacant l'adresse de la télécommande par le groupe que l on veut controler
-
-La configuration
-
-![](../images/Capture_d_ecran_2018_02_28_a_14_03_26.png)
-
-va devenir
-
-![](../images/Capture_d_ecran_2018_02_28_a_14_03_47.png)
-
-pour le groupe 5FBD.
-
-##### 4x sur bouton arriere provoque association
-
-Association
-Device annonce
-Mais rien d'autre ne remonte, il faut interroger le nom pour créer l objet.
-
-##### 4x sur bouton arriere provoque Leave
-
-Si la telecommande est associée, 4x sur bouton OO provoque un leave.
-
-##### Recuperer le group utilisé par une télécommande
-
-Avoir une télécommande et une ampoule Ikea sur le même réseau ZigBee. Attention l'ampoule va perdre sa configuration. Approcher à 2 cm la télécommande de l'ampoule et appuyez pendant 10s sur le bouton à l'arriere de la telecommande avec le symbole 'OO'. L'ampoule doit clignoter, et relacher le bouton. Voilà la télécommande à affecté son groupe à l'ampoule Il suffit maintenant de faire un getGroupMemberShip depuis la ruche sur l'ampoule pour récupérer le groupe. Merci a @rkhadro pour sa trouvaille.
-
-
->Il existe un bouton « link » à côté de la pile bouton de la télécommande. 4 clicks pour appairer la télécommande à la ZiGate. Un appuie long près de l’ampoule pour le touchlink.
-
-
-### Télécommande Virtuelle
-
-La télécommande virtuelle est un objet Jeedom qui envoies les commandes ZigBee comme si c'était une vrai télécommande IKEA.
-
-Utiliser les commandes cachées dans la ruche:
-
-* Ouvrir la page commande de la ruche et trouver la commande "TRADFRI remote control".
-
-![](../images/Capture_d_ecran_2018_03_02_a_10_34_40.png)
-
-Remplacez "/TRADFRI remote control/" l'adresse du groupe que vous voulez controler. Par exemple AAAA.
-
-![](../images/Capture_d_ecran_2018_03_02_a_10_35_08.png)
-
-Sauvegardez et faites "Tester".
-
-Vous avez maintenant une télécommande pour controler le groupe AAAA.
-
-![](../images/Capture_d_ecran_2018_03_02_a_10_35_28.png)
-
-### Récupération des appuis Télécommande Ikea dans Abeille
-
-Après avoir récupéré le groupe utilisé par la télécommande, vous pouvez ajouter la ZiGate à ce groupe ainsi abeille recevra les demandes de la télécommande. Attention la zigate est limitée à 5 groupes soit disons 5 télécommandes.
-
-Pour ce faire dans Abeille, ajouter les groupes à l'objet "Ruche" qui représente la zigate.
-
-Vous pouvez aussi forcer le groupe utilisé par la télécommande en selectionnant la télécommande ikea, en mettant le groupe dans le champ Id puis clic sur le bouton "Set Group Remote" et dans la seconde qui suis en appuyant sur un bouton de la télécommande pour la réveiller. Il peut être nécessaire de le faire plusieurs fois du fait du timing un peu spécifique.
-
-C'est aussi valide pour le bouton On/Off Ikea.
-
-https://github.com/fairecasoimeme/ZiGate/issues/6
-
-
-|Button   |Pres-stype  |Response  |command       |attr|
-|---------|------------|----------|--------------|---------------------------------------|
-|down     |click       |0x8085    |0x02          |None|
-|down     |hold        |0x8085    |0x01          |None|
-|down     |release     |0x8085    |0x03          |None|
-|up       |click       |0x8085    |0x06          |None|
-|up       |hold        |0x8085    |0x05          |None|
-|up       |release     |0x8085    |0x07          |None|
-|middle   |click       |0x8095    |0x02          |None|
-|left     |click       |0x80A7    |0x07          |direction: 1|
-|left     |hold        |0x80A7    |0x08          |direction: 1    => can t get that one|
-|right    |click       |0x80A7    |0x07          |direction: 0|
-|right    |hold        |0x80A7    |0x08          |direction: 0    => can t get that one|
-|left/right |release   |0x80A7    |0x09          |None            => can t get that one|
-
-down = brightness down, up = brightness up,
-middle = Power button,
-left and right = when brightness up is up left is left and right is right.
-Holding down power button for ~10 sec will result multiple commands sent, but it wont send any hold command only release.
-Remote won't tell which button was released left or right, but it will be same button that was last hold.
-Remote is unable to send other button commands at least when left or right is hold down.
-
-Reponse 0x8085 correspond à l'info Up-Down dans le widget.
-Reponse 0x8095 correspond à l'info Click-Middle dans le widget.
-Reponse 0x80A7 correspond à l'info Left-Right-Cmd et Left-Right-Direction dans le widget.
-
-A partir de la vous pouvez déclancher des scénarii dans Jeedom. Attention lors de l utiliation de la telecommande, la telecommande dans abeille sera mis a jour et vos scenarii déclanchés mais si vour avez des équiements zigbee sur ce groupe ils seront aussi activés. Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télecommande qui reagira aux demandes de la télécommande directement en zigbee (meme si jeedom est HS) et avoir un scenario qui se déclenche en même temps pour ouvrir les volets en zwave ou autre.
-
-
-## Gradateur
-
-### Un clic sur OO
-
-Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il n'y a pas d'association (Probablement le cas si deja associé à una utre reseau).
-
-### 4 clics sur OO
-
-Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un reveil du gradateur permet de recuperer le nom.
-
-Voir la telecommande 5 boutons pour avoir plus de details sur le controle de groupe,...
-
-# Philips Hue
-
-##  Philips Hue White
-
-### Association
-
-- Ampoule neuve Hue White, Abeille en mode Inclusion, branchement de l'ampoule. L'ampoule s'associe et envoie des messages "annonce" mais pas son nom. Si vous faites un getName avec son adresse courte dans le champ Titre et 0B (destinationEndPoint) dans le champ Message, alors elle doit répondre avec son nom, ce qui va créer l'objet dans le dashboard (rafraichir).
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Ampoule neuve Hue White, Abeille en mode Inclusion, branchement de l'ampoule. L'ampoule s'associe et envoie des messages "annonce" mais pas son nom. Si vous faites un getName avec son adresse courte dans le champ Titre et 0B (destinationEndPoint) dans le champ Message, alors elle doit répondre avec son nom, ce qui va créer l'objet dans le dashboard (rafraichir).
 
 
 ### Si deja associé sur ce réseau

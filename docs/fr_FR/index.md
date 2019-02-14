@@ -826,6 +826,11 @@ Dans l objet Abeille vous allez trouver:
 * 4 types events: "Appui Court = 0", "Appui Long = 1", "Relache appui court = 3", "Relache Appui Long = 4"
 * Durée, indique le temps d'appui d'un bouton (Il n'y pas de temps de nom appui).
 
+• 00 appui
+• 01 appui maintenu
+• 02 relâche sur appui court
+• 03 relâche sur appui long
+
 5 icones (On,Off,Toggle,Lumiere plus, Lumiere moins) pour simuler la telecommande depuis Jeedom. C'est Jeedom qui envoie les commandes à la place de la telecommande. Pour se faire renseigner le champ "Groupe" dans la configuration.
 
 #### Prise de controle d'une ampoule

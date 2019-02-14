@@ -11,7 +11,7 @@ Je n'ai aucune idée de votre participation à cette cagnote mais comme tout est
 
 Cagnotte au 14/2/2019: 263,15€ (275€ moins la com paypal)
 
-Dépense: aucune pour l'instant.
+Dépense: Capteur Motion Hue - 39,95€.
 
 Echanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 

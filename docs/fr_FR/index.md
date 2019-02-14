@@ -189,29 +189,29 @@ puis:
 
 * Xiomi : Capteur de porte, prise, capteur de température rond/carre, bouton et capteur infrarouge : un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lâcher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. 
 
-	* Porte
+  * Porte
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_11_38.png)
 
-	* Température rond
+  * Température rond
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_43.png)
 
-	* Température Carre
+  * Température Carre
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_15.png)
 
-	* Bouton
+  * Bouton
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_15.png)
 
 État: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
 
-	* Capteur Présence InfraRouge
+  * Capteur Présence InfraRouge
 
 ![](../images/Capture_d_ecran_2018_01_21_a_12_45_22.png)
 
-	* Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
+  * Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
 
 ![](..//Capture_d_ecran_2018_01_21_a_12_49_06.png)
 

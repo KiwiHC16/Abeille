@@ -838,6 +838,16 @@ Dans l objet Abeille vous allez trouver:
 - Ampoule Hue White deja associé au reseau, idem pour la telecommande. Mettre la telecommande proche de l ampoule et appui sur "I" assez longtmeps. L ampoule clignote et est configurée. Apres l ampoule est pilotable par la telecommande. On peut recuperer le groupe utilisé sur l ampoule dans jeedom.
 - Ampoule Ikea. La configuration depuis la telecommande et le bouton 'I'ne semble pas fonctionner. L'ampoule clignote mais configuration ne se produit pas. Mais si on recupere le groupe comme indiqué au paragraphe preceent et qu'on defini ce groupe dans l ampoule Ikea, alors l ampoule repond aux commandes des la telecommande. J'ai un doute sur le fait que la telecommande est un groupe par defaut. J'ai l impression quelle a commence a utiliser un groupe quand elle a programmer la premiere ampoule Hue.
 
+#### Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l'upgrade en 3.0F...
+
+1- On appuie sur ON + OFF ( 1 + 0) simultanément pendant 5 secondes à 50 cm de l’ampoule (sous tension bien entendu)
+2- On ouvre le réseau ZigBee de votre coordinateur (ZiGate par exemple)
+3- On éteint puis on remet sous tension l’ampoule qui s’appaire au coordinateur
+4- Pendant que le réseau est ouvert, on retourne la télécommande et à l’aide d’un trombone, on appuie sur le bouton setup pendant 5-10 secondes. 5- La télécommande joint à son tour le réseau ZigBee
+6- Si on le souhaite, on peut associer la télécommande et l’ampoule en maintenant le bouton ON (1) pendant 5 secondes à 50 cm de l’ampoule (toujours sous tension).
+
+Source : http://faire-ca-soi-meme.fr/zigate/2017 ... es-zigbee/
+
 # Profalux
 
 ## Inclusion d'un volet

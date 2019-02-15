@@ -1,5 +1,7 @@
 # Présentation rapide
 
+Cette documentation est en cours de "réécriture" ...
+
 ## Abeille
 
 Plugin en développement continu.
@@ -8,10 +10,10 @@ Le développement n'est pas terminé. De nombreux ajustements sont en cours ...
 
 ![Abeille Icone](../images/Abeille_icon.png)
 
-*Le plugin Abeille*  permet de mettre en place un réseau ZigBee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédiaire de la passerelle [Zigate](https://zigate.fr/).
+*Le plugin Abeille*  permet de mettre en place un réseau Zigbee avec des produits du marché et des réalisations personnelles (DIY) par l'intermédiaire de la passerelle [Zigate](https://Zigate.fr/).
 
 Le créateur de Zigate dit :
-> ZiGate est une passerelle universelle compatible avec énormément de matériels radios ZigBee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La ZiGate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
+> Zigate est une passerelle universelle compatible avec énormément de matériels radios Zigbee. Grâce à elle, vous offrez à votre domotique un large panel de possibilités. La Zigate est modulable , performante et ouverte pour qu'elle puisse évoluer selon vos besoins.
 
 Ce plugin est né de besoins personnels : capteur de température radio distant avec un réseau sécurisé, mesh,…
 
@@ -37,12 +39,12 @@ _Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendan
 ## Support
 
 Pour toute difficulté, deux possibilités :
-* un fil de discussion sur le [forum de Jeedom](https://www.jeedom.com/forum/viewtopic.php?f=184&t=33573)
+* un fil de discussion sur le [forum de Jeedom](https://www.Jeedom.com/forum/viewtopic.php?f=184&t=33573)
 * une « issue » dans Github
 
 # Plus de détails
 
-Ce plugin Jeedom permet de connecter un réseau ZigBee au travers de la passerelle ZiGate.
+Ce plugin Jeedom permet de connecter un réseau Zigbee au travers de la passerelle Zigate.
 Il est en permanente évolution.
 
 ## Périphériques compatibles
@@ -69,7 +71,7 @@ Il est en permanente évolution.
 
 # Installation
 
-## ZiGate
+## Zigate
 
 La Zigate peut être connectée au port USB ou par module Wifi.
 
@@ -163,8 +165,8 @@ Rien de spécifique. Suivre la procédure classique.
 
 * Patienter 2-3 minutes jusqu'à l'obtention du statut "OK"
 Puis:
-  * Si vous avez un zigate USB, dans "Abeille Serial Port :" choisissez le bon port /dev/ttyUSBx.
-  * Si vous avez une zigate Wifi dans "IP (IP:Port) de Zigate Wifi :" indiquer son adresse IP.
+  * Si vous avez un Zigate USB, dans "Abeille Serial Port :" choisissez le bon port /dev/ttyUSBx.
+  * Si vous avez une Zigate Wifi dans "IP (IP:Port) de Zigate Wifi :" indiquer son adresse IP.
 
 * Définir l'"Objet Parent" (C'est ici que les objets "Abeille" se créeront par défaut)
 * Démarrer les Démons en cliquant sur la flèche verte "(Re)Démarrer"
@@ -175,7 +177,7 @@ Puis:
 A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.
 
 # Inclusion de nouveaux périphériques Zigbee
-## Exemple d'ajout d'équipements courants (S'ils ne sont pas déjà dans le réseau ZigBee)
+## Exemple d'ajout d'équipements courants (S'ils ne sont pas déjà dans le réseau Zigbee)
 
 * Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
 
@@ -189,33 +191,33 @@ puis:
 
 * Xiomi : Capteur de porte, prise, capteur de température rond/carre, bouton et capteur infrarouge : un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lâcher) sur le bouton sur le côté. Et vous devriez récupérer l'objet dans Jeedom. 
 
-  * Porte
+	* Porte
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_11_38.png)
 
-  * Température rond
+	* Température rond
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_43.png)
 
-  * Température Carre
+	* Température Carre
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_12_15.png)
 
-  * Bouton
+	* Bouton
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_15.png)
 
 État: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.
 
-  * Capteur Présence InfraRouge
+	* Capteur Présence InfraRouge
 
 ![](../images/Capture_d_ecran_2018_01_21_a_12_45_22.png)
 
-  * Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
+	* Objet inconnu: Si le type d'objet n'est pas connu, Abeille va créer un objet vide.
 
 ![](..//Capture_d_ecran_2018_01_21_a_12_49_06.png)
 
-## Exemple d'ajout d'équipements courants (S'ils sont déjà dans le réseau ZigBee)
+## Exemple d'ajout d'équipements courants (S'ils sont déjà dans le réseau Zigbee)
 
 * Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l'ampoule et elle doit réapparaître dans Jeedom.
 * Xiomi : Capteur de porte, capteur de température rond/carre et bouton : un appuie rapide sur le bouton latérale et il doit réapparaître dans Jeedom.
@@ -235,12 +237,224 @@ puis:
 * Zigate en fonctionnement normale
 * Éteindre l'ampoule 15s puis la rallumer
 
+#### Compléments d'informations
+
+##### Bouton Identify
+
+Ce bouton est créé au moment de la création de l'objet. Celui ci permet de demander à l'ampoule de se manifester. Elle se met à changer d'intensité ce qui nous permet de la repérer dans une groupe d'ampoules par exemple.
+
+##### Bind spécifique:
+
+Identifiez l'ampoule que vous voulez paramétrer:
+
+![](../images/Capture_d_ecran_2018-02_21_a_23_26_56.png)
+
+Récupérer son adresse IEEE, son adresse courte (ici 6766).
+
+De même, dans l'objet Ruche récupérez l'adresse IEEE (Si l'info n'est pas dispo, un reset de la Zigate depuis l objet ruche doit faire remonter l'information).
+
+Mettre dans le champ:
+
+- Titre, l'adresse IEEE de l'ampoule que vous voulez paramétrer
+- Message, le cluster qui doit être rapporté, et l adresse IEEE de la Zigate.
+
+![](../images/Capture_d_ecran_2018_02_21_a_23_26_49.png)
+
+Attention la capture d'écran n'est pas à jour pour le deuxième champs.
+
+Dans message mettre:
+```
+targetExtendedAddress=XXXXXXXXXXXXXXXX&targetEndpoint=YY&ClusterId=ZZZZ&reportToAddress=AAAAAAAAAAAAAAAA
+````
+
+Exemple avec tous les paramètres:
+````
+targetExtendedAddress=90fd9ffffe69131d&targetEndpoint=01&ClusterId=0006&reportToAddress=00158d00019a1b22
+````
+
+
+Après clic sur Bind, vous devriez voir passer dans le log AbeilleParser (en mode debug) un message comme:
+
+![](../images/Capture_d_ecran_2018_02_21_a_23_27_29.png)
+
+qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
+
+
+##### Rapport Manuel:
+
+Ensuite paramétrer l'envoie de rapport:
+
+- Titre, l'adresse courte de l'ampoule
+- Message, le cluster et le paramètre dans le cluster
+
+![](../images/Capture_d_ecran_2018_02_21_a_23_29_11.png)
+
+Attention a capture d'écran n'est pas à jour pour le deuxième champs.
+
+````
+targetEndpoint=01&ClusterId=0006&AttributeType=10&AttributeId=0000 pour retour d'état ampoule Ikea
+
+targetEndpoint=01&ClusterId=0008&AttributeType=20&AttributeId=0000 pour retour de niveau ampoule Ikea
+````
+
+
+De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme:
+
+![](../images/Capture_d_ecran_2018_02_21_a_23_29_49.png)
+
+qui confirme la prise en compte par l'ampoule. Status 00 si Ok.
+
+Après sur un changement d'état l'ampoule doit remonter l'info vers Abeille, avec des messages comme:
+
+![](../images/Capture_d_ecran_2018_02_21_a_23_31_11.png)
+
+pour un retour Off de l'ampoule.
+
+
+### Télécommande Ronde 5 boutons
+
+#### Télécommande réelle
+
+(Pour l'instant c'est aux équipements qui reçoivent les demandes de la télécommande réelle de renvoyer leur état vers Jeedom, sur un appui bouton télécommande, la Zigate ne transmet rien au plugin Abeille, à partir du firmware 3.0f on peut récupérer des appuis sur les boutons de la télécommande avec une configuration spécifique, voir ci dessous).
+
+Pour créer l'objet Abeille Automatiquement,
+
+##### Première solution:
+Faire une inclusion de la télécommande et un objet doit être créé.
+Ensuite paramétrer l'adresse du groupe comme indiqué ci dessous (voir deuxième solution).#
+
+
+##### Deuxième solution:
+Il faut connaitre l'adresse de la télécommande (voir mode semi automatique pour récupérer l'adresse).
+
+Puis dans la ruche demander son nom. Par exemple pour la télécommande à l'adresse ec15
+
+![](../images/Capture_d_ecran_2018_02_28_a_13_59_31.png)
+
+et immédiatement après appuyez sur un des boutons de la télécommande pour la réveiller (pas sur le bouton arrière).
+
+Et après un rafraichissement de l'écran vous devez avoir un objet
+
+![](../images/Capture_d_ecran_2018_02_28_a_14_00_58.png)
+
+Il faut ensuite éditer les commandes en remplaçant l'adresse de la télécommande par le groupe que l'on veut contrôler
+
+La configuration
+
+![](../images/Capture_d_ecran_2018_02_28_a_14_03_26.png)
+
+va devenir
+
+![](../images/Capture_d_ecran_2018_02_28_a_14_03_47.png)
+
+pour le groupe 5FBD.
+
+#### Nouvelle inclusion
+
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* 4x sur bouton arrière
+
+Mais rien d'autre ne remonte, il faut interroger le nom pour créer l'objet.
+
+#### Leave
+
+* 4x sur bouton arrière
+
+#### Récupérer le groupe utilisé par une télécommande
+
+Avoir une télécommande et une ampoule Ikea sur le même réseau Zigbee. Attention l'ampoule va perdre sa configuration. Approcher à 2 cm la télécommande de l'ampoule et appuyez pendant 10s sur le bouton à l'arrière de la télécommande avec le symbole 'OO'. L'ampoule doit clignoter,  relâcher le bouton. Voilà la télécommande à affecté son groupe à l'ampoule Il suffit maintenant de faire un getGroupMemberShip depuis la ruche sur l'ampoule pour récupérer le groupe. Merci a @rkhadro pour sa trouvaille.
+
+Il existe un bouton « link » à côté de la pile bouton de la télécommande. 4 clicks pour appairer la télécommande à la Zigate. Un appuie long près de l’ampoule pour le touchlink.
+
+
+### Télécommande Virtuelle
+
+La télécommande virtuelle est un objet Jeedom qui envoies les commandes Zigbee comme si c'était une vrai télécommande IKEA.
+
+Utiliser les commandes cachées dans la ruche:
+
+* Ouvrir la page commande de la ruche et trouver la commande "TRADFRI remote control".
+
+![](../images/Capture_d_ecran_2018_03_02_a_10_34_40.png)
+
+Remplacez "/TRADFRI remote control/" l'adresse du groupe que vous voulez contrôler. Par exemple AAAA.
+
+![](../images/Capture_d_ecran_2018_03_02_a_10_35_08.png)
+
+Sauvegardez et faites "Tester".
+
+Vous avez maintenant une télécommande pour contrôler le groupe AAAA.
+
+![](../images/Capture_d_ecran_2018_03_02_a_10_35_28.png)
+
+### Récupération des appuis Télécommande Ikea dans Abeille
+
+Après avoir récupéré le groupe utilisé par la télécommande, vous pouvez ajouter la Zigate à ce groupe ainsi Abeille recevra les demandes de la télécommande. Attention la Zigate est limitée à 5 groupes soit disons 5 télécommandes.
+
+Pour ce faire dans Abeille, ajouter les groupes à l'objet "Ruche" qui représente la Zigate.
+
+Vous pouvez aussi forcer le groupe utilisé par la télécommande en sélectionnant la télécommande ikea, en mettant le groupe dans le champ Id puis clic sur le bouton "Set Group Remote" et dans la seconde qui suis en appuyant sur un bouton de la télécommande pour la réveiller. Il peut être nécessaire de le faire plusieurs fois du fait du timing un peu spécifique.
+
+C'est aussi valide pour le bouton On/Off Ikea.
+
+https://github.com/fairecasoimeme/Zigate/issues/6
+
+
+|Button   |Pres-stype  |Response  |command       |attr|
+|---------|------------|----------|--------------|---------------------------------------|
+|down     |click       |0x8085    |0x02          |None|
+|down     |hold        |0x8085    |0x01          |None|
+|down     |release     |0x8085    |0x03          |None|
+|up       |click       |0x8085    |0x06          |None|
+|up       |hold        |0x8085    |0x05          |None|
+|up       |release     |0x8085    |0x07          |None|
+|middle   |click       |0x8095    |0x02          |None|
+|left     |click       |0x80A7    |0x07          |direction: 1|
+|left     |hold        |0x80A7    |0x08          |direction: 1    => can t get that one|
+|right    |click       |0x80A7    |0x07          |direction: 0|
+|right    |hold        |0x80A7    |0x08          |direction: 0    => can t get that one|
+|left/right |release   |0x80A7    |0x09          |None            => can t get that one|
+
+down = brightness down, up = brightness up,
+middle = Power button,
+left and right = when brightness up is up left is left and right is right.
+Holding down power button for ~10 sec will result multiple commands sent, but it wont send any hold command only release.
+Remote won't tell which button was released left or right, but it will be same button that was last hold.
+Remote is unable to send other button commands at least when left or right is hold down.
+
+Reponse 0x8085 correspond à l'info Up-Down dans le widget.
+Reponse 0x8095 correspond à l'info Click-Middle dans le widget.
+Reponse 0x80A7 correspond à l'info Left-Right-Cmd et Left-Right-Direction dans le widget.
+
+A partir de la vous pouvez déclencher des scénarii dans Jeedom.
+Attention lors de l'utilisation de la télécommande, dans Abeille elle sera mis a jour et vos scénarii déclenchés mais si vous avez des équipements Zigbee sur ce groupe ils seront aussi activés.
+Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommande qui réagira aux demandes de la télécommande directement en Zigbee (même si Jeedom est HS) et avoir un scénario qui se déclenche en même temps pour ouvrir les volets en zwave ou autre.
+
+### Gradateur
+
+#### Un clic sur OO
+
+Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il n'y a pas d'association (Probablement le cas si déjà associé à un autre réseau).
+
+#### 4 clics sur OO
+
+Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un réveil du gradateur permet de récupérer le nom.
+
+Voir la télécommande 5 boutons pour avoir plus de détails sur le contrôle de groupe,...
+
 ### Prise
 
 #### Nouvelle inclusion
 
 * Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
 * Faire un reset de la prise en insérant un petit trombone dans le trou pres de la led de la prise. Attendre 5s, la prise doit apparaitre dans Jeedom.
+
+### Télécommande
+
+#### Nouvelle inclusion
+
+* Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
+* Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la télécommande. La télécommande doit se mettre à flasher rouge en face avant. La télécommande doit apparaitre dans Jeedom.
 
 ## Xiaomi
 
@@ -266,12 +480,28 @@ Ce bouton envoie un message lors de l'appui mais aussi lors du relâchement. L'�
 
 Contrairement au bouton rond ci dessus, le bouton carré n'envoie pas d'information sur l'appui. Il envoie l'information que sur la relache.
 
-Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la réception du message et jeedom attend 1 minute avant de le remettre à 0.
+Afin d'avoir le visuel sur le dashboard, l'état passe à 1 sur la réception du message et Jeedom attend 1 minute avant de le remettre à 0.
+
+##### Informations complémentaires
+
+Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d'état. Il faut avoir une approche événement. De ce fait la gestion des scénarii est un peu différente du bouton rond.
+
+Par défaut le bouton est configuré pour déclencher les scénarii à chaque appui (même si l'état était déjà à 1). Mais Jeedom va aussi provoquer un événement au bout d'une minute en passant la valeur à 0.
+
+Lors de l'exécution du scénario, si vous testé l'état du bouton est qu'il est à un vous avez reçu un événement appui bouton, si l'état est 0, vous avez reçu un événement retour à zéro après une minute.
+
+Par exemple pour commander une ampoule Ikea:
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_49.png)
+
+![](../images/Capture_d_ecran_2018_09_04_a_13_05_.36.png)
 
 #### Multi
 
 Pour l'information multi, celle ci remonte quand on fait plus d'un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n'envoie pas d'autre information et donc la valeur reste indéfiniment. Par défaut l'objet créé demande à Jeedom de faire un retour d'état à 0 après une minute. Cela peut être enlevé dans les paramètres de la commande.
 
+Le fonctionnement de base va provoquer 2 événements, un lors de l'appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d'état). Si vous enlevez de la commande le retour d'état alors vous n'aurez que l'événement appui multiple.
+Par défaut, en gros, le scénario se déclenche et si vous testez la valeur multi > 1, c'est un événement appui multiple et si valeur à 0 alors événement Jeedom de retour d'état.
 
 #### Capteur Inondation (lumi.sensor_wleak.aq1)
 
@@ -440,7 +670,7 @@ Il est possible de définir le seuil de détection du capteur: 3 niveaux (En dé
 
 * Test du capteur
 
-Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par abeille, il doit y avoir entre 1 et 3 bips).
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par Abeille, il doit y avoir entre 1 et 3 bips).
 
 * Réveil
 
@@ -456,9 +686,7 @@ Vous pouvez choisir le niveau de sensibilité: Low - Moyen - High
 
 * Tester la bonne connexion au réseau
 
-Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par abeille, il doit y avoir 3 bips à 5s d'intervalles).
-
-
+Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par Abeille, il doit y avoir 3 bips à 5s d'intervalles).
 
 ## OSRAM
 
@@ -562,7 +790,7 @@ https://www.youtube.com/watch?v=PaA0DV5BXH0
 
  * Appuyer sur | et O en même temps à moins de quelques centimètres d'une ampoule
  * L'ampoule doit faire un reset et essayer de joindre un réseau.
- * Si la zigate est en mode inclusion alors vous récupérez votre ampoule.
+ * Si la Zigate est en mode inclusion alors vous récupérez votre ampoule.
 
 #### Informations supplémentaires
 Dans l'objet Abeille vous allez trouver:
@@ -573,7 +801,10 @@ Dans l'objet Abeille vous allez trouver:
 * 4 Boutons: "|", "LumPlus", "LumMoins", "O".
 * 4 types events: "Appui Court = 0", "Appui Long = 1", "Relâche appui court = 3", "Relâche Appui Long = 4"
 * Durée, indique le temps d'appui d'un bouton (Il n'y pas de temps de nom appui).
-
+• 00 appui
+• 01 appui maintenu
+• 02 relâche sur appui court
+• 03 relâche sur appui long
 * 5 icônes (On,Off,Toggle,Lumière plus, Lumière moins) pour simuler la télécommande depuis Jeedom.
 C'est Jeedom qui envoie les commandes à la place de la télécommande. Pour se faire renseigner le champ "Groupe" dans la configuration.
 
@@ -593,11 +824,11 @@ C'est Jeedom qui envoie les commandes à la place de la télécommande. Pour se 
 
 ## Inclusion d'un volet
 
-Comme pour tous modules ZigBee et pour bien comprendre la procédure, il faut savoir que :
+Comme pour tous modules Zigbee et pour bien comprendre la procédure, il faut savoir que :
 
-La ZiGate est un coordinateur ZigBee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule ZigBee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.
+La Zigate est un coordinateur Zigbee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule Zigbee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.
 
-N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas rentrer tout seul sur un réseau ZigBee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la ZiGate.
+N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas rentrer tout seul sur un réseau Zigbee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la Zigate.
 
 A savoir tout au long de cette procédure : lorsque le volet fait un petit va et vient c'est le signe que la commande a bien été reçue.
 
@@ -632,7 +863,7 @@ Mettre la ruche en mode inclusion
 
 ![](../images/inclusion.PNG)
 
-Une fois le réseau de la ZiGate ouvert, il ne vous reste plus qu’à:
+Une fois le réseau de la Zigate ouvert, il ne vous reste plus qu’à:
 
 * Retourner votre télécommande
 * Appuyer 1 fois sur R
@@ -681,59 +912,21 @@ Le volet devrait faire des mouvement de va-et-vient puis s'arrêter
 * La télécommande devrait à nouveau fonctionner
 * Recommencer à nouveau la procédure d'inclusion
 
+# Exemple d'utilisation "croisée"
 
+## Pilotage d'une ampoule à partir d'un capteur de présence avec un scénario
 
-----------------------------------------------------------------------------------------------------------------------------------------
+### Pré-requis
 
-Ne semble pas fonctionner avec la Télécommande Hue (Hue Dimmer Switch).
-
-## Presence->Ampoule
-
-Pilotage d une ampoule à partir d'un capteur de présence.
-
-### Inclusion Capteur presence
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre le capteur de presence Xiaomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_16_27.png)
-
-Rafraichissez la page pour voir votre capteur:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_18_23.png)
-
-Vous pouvez changer son nom, je vais lui donner comme nom "Presence" pour la suite.
-
-### Inclusion Ampoule Ikea
-
-Mettre sous tension votre ampoule. Elle doit être allumée pour commencer la manipulation.
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre le capteur de presence Xiomi et faire un appui long (>6s) sur le bouton lateral. Le capteur doit se mettre à flasher et un message d'information doit apparaitre dans jeedom:
-
-En partant de l'ampoule allumée, l'éteindre et la rallumer 6 fois de suite. A la fin de cette opération l'ampoule doit être allumée. Puis elle doit se mettre à clignoter et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_27_35.png)
-
-Rafraichissez la page pour avoir votre ampoule:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_29_10.png)
-
-Vous pouvez changer son nom, je vais lui donner comme nom "Ampoule" pour la suite.
-
-### Pilotage de l ampoule
+* Ampoule IKEA incluse (Dans cette exemple : le nom de l'objet est "Ampoule")
+* Capteur de présence inclus (Dans cette exemple : le nom de l'objet est "Capteur")
+* Télécommande IKEA incluse (Dans cette exemple : le nom de l'objet est "Tele")
 
 Nous allons utiliser les scénarios:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_10_33_20.png)
 
-Créons un scénario "test" avec pour déclencheur "Presence".
+Créons un scénario "test" avec pour déclencheur "Présence".
 
 ![](..//Capture_d_ecran_2018_10_30_a_10_38_29.png)
 
@@ -741,46 +934,30 @@ Et les actions:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_10_40_48.png)
 
-Ici, quand une présence est détectée, on allume l ampoule et quand la présence n'est pas présente on eteint l ampoule.
+Ici, quand une présence est détectée, on allume l'ampoule et quand la présence n'est pas activée on éteint l'ampoule.
 
 
-## Presence->Ampoule<-Telecommande
+### Présence->Ampoule<-Télécommande
 
-Dans la configuration précedente, nous allons ajouter une télécommande pour controler l'ampoule.
+A cette étape cet objet "Tele" dans Jeedom ne peut être utilisé. Il faut exécuter les étapes de du chapitre "Simuler la télécommande" ci-dessous.
 
-### Inclusion télécommande
-
-Aller à la page de configuration du plugin Abeille et clic sur fleche verte pour l inclusion:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_09_21.png)
-
-Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la télécommande. La télécommande doit se mettre à flasher rouge en face avant et un message d'information doit apparaitre dans jeedom:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_58_53.png)
-
-Rafraichissez la page pour voir votre capteur:
-
-![](../images/Capture_d_ecran_2018_10_30_a_10_59_04.png)
-
-Je vais lui donner le nom "Tele" par la suite. A cette étape cet objet Tele dans Jeedom ne peut ête utilisé. Il faut executer les étapes de du chapitre "Simuler la télécommande".
-
-Continuons en configurant l ampoule depuis la Tele:
+Continuons en configurant l'ampoule depuis la "Tele":
 
 * Allumer l'ampoule.
-* Approcher la télécommande à quelques centimetres de l ampoule
-* Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge sur la face avant de la télécommande doit clignoter et l ampoule doit se mettre à à clignoter.
+* Approcher la télécommande à quelques centimètres de l'ampoule
+* Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge sur la face avant de la télécommande doit clignoter et l'ampoule doit se mettre à à clignoter.
 
-Ca y est la télécommande pilote l'ampoule et l'ampoule remonte son état à Jeedom.
+La télécommande pilote l'ampoule et l'ampoule remonte son état à Jeedom.
 
 ### Simuler la télécommande
 
-Cette opération est un peu délicate mais doit permettre de récupérer l'adresse de groupe utilisée par la télécommande suite aux opérations ci dessus. Dans le futur j'espere rendre cela automatique.
+Cette opération est un peu délicate mais doit permettre de récupérer l'adresse de groupe utilisée par la télécommande suite aux opérations ci dessus. Dans le futur ce devrait être automatique.
 
-Aller dans la page de configuration du plugin et clic sur "Network" icon pour faire apparaitre les parametres dans l'Ampoule:
+Aller dans la page de configuration du plugin et clic sur "Network" pour faire apparaitre les paramètres dans l'Ampoule:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_30_24.png)
 
-Sur l objet Ampoule vous devez vous le champ "Groups" apparaitre sans information:
+Sur l'objet Ampoule vous devez vous le champ "Groups" apparaitre sans information:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_36_43.png)
 
@@ -788,21 +965,21 @@ Recuperons l'adresse de l ampoule, en ouvrant la page de configuration de l ampo
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_42_09.png)
 
-Le champ "Topic Abeille" coontient l adresse, ici "9252".
+Le champ "Topic Abeille" contient l'adresse, ici "9252".
 
 Interrogeons maintenant l'ampoule, avec un getGroupMemberShip depuis l objet Ruche:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_45_23.png)
 
-indiquez l'adresse de l ampoule.
+Indiquez l'adresse de l ampoule.
 
-Maintenant le champ "Groups" de l ampoule doit contenir l'adresse de groupe:
+Maintenant le champ "Groups" de l'ampoule doit contenir l'adresse de groupe:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_47_24.png)
 
 ici le groupe utilisé par la télécommande est "f65d".
 
-Maintenant nous pouvons mettre à jour la télécommande dans jeedom. Ouvrez les commandes de la Telecommande:
+Maintenant nous pouvons mettre à jour la télécommande dans Jeedom. Ouvrez les commandes de la télécommande:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_50_17.png)
 
@@ -812,7 +989,7 @@ Cela donne:
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_54_51.png)
 
-Mainteant vous pouvez commander votre ampoule depuis la Télécommande physique et depuis la Télécommande Jeedom.
+Maintenant vous pouvez commander votre ampoule depuis la Télécommande physique et depuis la Télécommande Jeedom.
 
 ![](../images/Capture_d_ecran_2018_10_30_a_11_58_42.png)
 
@@ -824,22 +1001,22 @@ PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
 
 # Groupes
 
-== Intro
+## Intro
 
 Les équipements peuvent être adressés par au moins deux façons:
 
 * Adresse Zigbee courte: Les adresses courtes permettent de contacter un équipement spécifiques.
 * Adresse Zigbee de groupe: Les adresses de groupes permettent de joindre un ensembles d'équipement en même temps.
 
-Les adresses de groupe sont typiquement utilisées pas les télécommandes zigbee: Hue, Ikea,...
+Les adresses de groupe sont typiquement utilisées pas les télécommandes Zigbee: Hue, Ikea,...
 
-L'interêt est qu'un seul message sera envoyé sur le réseau zigbee, répété par tous les routeurs et tous les équipements ayant cette adresse de groupe réagiront donnant un impression d'execution simultanée.
+L'intérêt est qu'un seul message sera envoyé sur le réseau Zigbee, répété par tous les routeurs et tous les équipements ayant cette adresse de groupe réagiront donnant une impression d'exécution simultanée.
 
-Astuce: Ca peut aussi vous sortir d'une situation ou la couverture radio n'est pas bonne et vous avez du mal a joindre un équipement. Si vous l'adressez avec son adresse courte, le mesage doit être routé jusqu'a sa destination par une route specifique. Si vous l'adressez avec une adresse de groupe, le message va être répété par tous les routeurs et vous augmentez la chance que l'équipement recoive l'information.
+Astuce: Ça peut aussi vous sortir d'une situation ou la couverture radio n'est pas bonne et ou vous avez du mal à joindre un équipement. Si vous l'adressez avec son adresse courte, le message doit être routé jusqu'à sa destination par une route spécifique. Si vous l'adressez avec une adresse de groupe, le message va être répété par tous les routeurs et vous augmentez la chance que l'équipement reçoive l'information.
 
-Vous pouvez aussi utiliser un scenario dans jeedom pour adresser un groupe d'équipements, en envoyant à chacun d'eux une commande. Cette solution ne permet pas d'avoir l'impression d'instantanéité mais est très flexible si vous avez des produit zwave et zigbee par exemple.
+Vous pouvez aussi utiliser un scénario dans Jeedom pour adresser un groupe d'équipements, en envoyant à chacun d'eux une commande. Cette solution ne permet pas d'avoir l'impression d'instantanéité mais est très flexible si vous avez des produit zwave et Zigbee par exemple.
 
-Les groupes Zigbee sont nécessaires pour la gestion des scenes.
+Les groupes Zigbee sont nécessaires pour la gestion des scènes.
 
 La gestion des groupes se fait depuis la ruche avec 3 commandes:
 
@@ -847,108 +1024,102 @@ La gestion des groupes se fait depuis la ruche avec 3 commandes:
 * Retrait
 * Consultation
 
-A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets abeille.
+A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets Abeille.
 
-Un équipement peut avoir plusieures adresses de groupes. Permet de répondre à plusieures télécommandes par exemple.
+Un équipement peut avoir plusieurs adresses de groupes, cela permet donc de répondre à plusieurs télécommandes par exemple.
 
-== Ajout d un groupe à un équipement
 
-* Premier champ: adresse de l'équipement
-* Deuxieme champ: End Point de l'équipement
-* Troisiemen champ: l'adresse de groupe a ajouter
-
-== Retrait d un groupe à un équipement
+## Ajout d un groupe à un équipement
 
 * Premier champ: adresse de l'équipement
-* Deuxieme champ: End Point de l'équipement
-* Troisiemen champ: l'adresse de groupe a retirer
+* Deuxième champ: End Point de l'équipement
+* Troisième champ: l'adresse de groupe a ajouter
 
-== Récupérer les groupes d'un équipement
+## Retrait d un groupe à un équipement
 
 * Premier champ: adresse de l'équipement
-* Deuxieme champ: End Point de l'équipement
+* Deuxième champ: End Point de l'équipement
+* Troisième champ: l'adresse de groupe a retirer
 
-L'information groupe doit remonter dans le champ groupe de l'équipement (peut etre invisible par defaut, le rendre visible).
+## Récupérer les groupes d'un équipement
 
+* Premier champ: adresse de l'équipement
+* Deuxième champ: End Point de l'équipement
 
-# Scenes
+L'information groupe doit remonter dans le champ groupe de l'équipement (peut être invisible par défaut, le rendre visible).
 
-== Intro
+# Scènes
 
-Les scenes permettent d'envoyer un seul mesage zigbee et d'avoir multiple équipement qui se mette en position automatiquement.
+## Intro
 
-Une scene peut être: "Scéance TV", qui allumera la TV, fermera les volets et mettra une lumière tamisée en place.
+Les scènes permettent d'envoyer un seul message Zigbee et d'avoir multiple équipement qui se mette en position automatiquement.
 
-Pour ce faire chaque équipement doit savoir ce qu'il doit faire lorsqu'il recoit la commande. Il doit donc avoir été paramétré avant.
+Une scène peut être: "Séance TV", qui allumera la TV, fermera les volets et mettra une lumière tamisée en place.
 
-Pour l'instant tout le parametrage se fait depuis l'objet Ruche.
+Pour ce faire chaque équipement doit savoir ce qu'il doit faire lorsqu'il reçoit la commande. Il doit donc avoir été paramétré avant.
 
-== Ajout d une scene à un équipement
+Pour l'instant tout le paramétrage se fait depuis l'objet Ruche.
 
-*
+## Ajout d une scène à un équipement
 
-== Retrait d une scene à un équipement
+* en cours ...
 
-*
+## Retrait d une scène à un équipement
 
-== Récupérer les scenes d'un équipement
+* en cours ...
 
-*
+## Récupérer les scènes d'un équipement
+
+* en cours ...
 
 
 # Timers
-
-Depuis pas mal de temps je souhaitais avoir des objets Timers à la seconde dans Jeedom.
-Après plusieurs versions avec des scripts, des variables, des retours d'état automatique,... je me suis rendu compte que je pouvais sans trop de difficulté créer ces timers au seins d'Abeille.
-
-Maintenant vous pouvez même installar Abeille en n'utilisant que les Timers sans la partie ZigBee. Pour cela dans la configuration du plugin choisissez "Mode Timer seulement" à "Oui".
 
 ## Fonctionnement
 
 ![i1](../images/Capture_d_ecran_2018_03_21_a_13_16_53.png)
 
-Le timer possede 4 phases:
+Le timer possède 4 phases:
 
-T0->T1: RampUp de 0 a 100% => RampUp
+T0->T1: RampUp de 0 à 100% => RampUp
 
-T1->T2: Stable a 100% => durationSeconde
+T1->T2: Stable à 100% => durationSeconde
 
 T2->T3: Ramp Down de 100% à 0% => RampDown
 
 T3-> : n existe plus
 
-Dans les phase de ramp la commande actionRamp/scenarioRamp est executée regulierement avec pour parametre la valeur en cours de RampUpDown.
+Dans les phase de ramp la commande actionRamp/scenarioRamp est exécutée régulièrement avec pour paramètre la valeur en cours de RampUpDown.
 
 Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
 
 ## A prendre en compte
 
+Il est important de noter que chaque phase fait au minimum 1s.
 
-> Il est important de noter que chaque phase fait au minimum 1s.
-
-> La rafraischissement du widget se fait toutes les 5s mais la mise a jour des valeurs se fait toutes les secondes.
+Le rafraichissement du widget se fait toutes les 5s mais la mise à jour des valeurs se fait toutes les secondes.
 
 ### Trois commandes "Start", "Cancel" et "Stop".
 
-* Start: permet d'executer une commande et de démarrer le Timer.
-* Cancel: permet d'executer une commande et d'annuler le Timer.
-* Stop: permet d'executer une commande, d'annuler le Timer et cette commande qui est executée lors de l'expiration du Timer.
+* Start: permet d'exécuter une commande et de démarrer le Timer.
+* Cancel: permet d'exécuter une commande et d'annuler le Timer.
+* Stop: permet d'exécuter une commande, d'annuler le Timer et cette commande qui est exécutée lors de l'expiration du Timer.
 
 ### Retour d'information
 
-* Time-Time: Date de la derniere action sur le Timer
-* Time-TimeStamp: Heure systeme de la derniere action
+* Time-Time: Date de la dernière action sur le Timer
+* Time-TimeStamp: Heure système de la dernière action
 * Duration: Temps restant avant expiration du Timer en secondes
 * ExpiryTime: Heure d'expiration du Timer
 * RampUpDown: Pourcentage entre 0 et 100 (Ramp Up 0->100, Ramp Down 100->0)
 
-Elles ne sont pas forcement toutes visibles, a vous de choisir.
+Elles ne sont pas forcement toutes visibles, à vous de choisir.
 
 ## Creation d un Timers
 
 Pour créer un objet Timer, clic sur le bouton "Timer" dans la configuration du plugin.
 
-Un message doit apparaitre pour annoncer la creation du Timer avec un Id Abeille-NombreAléatoire.
+Un message doit apparaitre pour annoncer la création du Timer avec un Id Abeille-NombreAléatoire.
 
 ![i2](../images/Capture_d_ecran_2018_03_21_a_13_14_36.png)
 
@@ -958,61 +1129,27 @@ Apres avoir rafraichi l'écran vous devriez avoir l objet:
 
 ## Configuration du Timer
 
-Comme pour tous les objets, dans l onglet Equipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
+Comme pour tous les objets, dans l'onglet Équipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
 
-### Ancienne méthode
+Allez dans la page configuration dans l'onglet paramétrage du Timer et remplissez les champs.
 
-Dans l'onglet Commandes, nous allons paramétrer les actions du Timer.
+## Commande ou Scénario
 
-![i4](../images/Capture_d_ecran_2018_03_21_a_13_33_37.png)
+Par défaut l'objet Timer est créé avec des commande Start, Stop, Cancel qui font référence à l'exécution d'une commande: actionStart=\#put_the_cmd_here#, actionCancel=\#put_the_cmd_here#, actionStop=\#put_the_cmd_here#.
 
-#### Start
-
-actionStart=\#put_the_cmd_here#&durationSeconde=300
-
-Pour la commande il y a deux parametres.
-
-* durationSeconde: par exemple ici 300s soit 5min.
-
-* actionStart doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][On]#.
-
-#### Cancel
-
-actionCancel=\#put_the_cmd_here#
-
-* actionCancel doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
-
-#### Stop
-
-actionStop=\#put_the_cmd_here#
-
-* actionStop doit être de la forme \#[Objet Parent][Objet][Cmd]# par exemple: \#[Ruche][Abeille-89ff-AmpouleBureau][Off]#.
-
-Exemple plus spécifique: Envoie d'un SMS
-
-actionStop=\#[operation][SMS_Home][Telephone]#&message=Mettre votre message sms ici
-
-### Nouvelle méthode
-
-Allez dans la page configuration, tab Param du Timer et remplissez les champs.
-
-## Commande ou Scenario
-
-Par defaut l'objet Timer est créé avec des commande Start, Stop, Cancel qui font reférence à l'execution d'une commande: actionStart=\#put_the_cmd_here#, actionCancel=\#put_the_cmd_here#, actionStop=\#put_the_cmd_here#.
-
-Mais vous avez la possibilité d'appeler un scenario à la place d'une commande.
+Mais vous avez la possibilité d'appeler un scénario à la place d'une commande.
 
 Cela vous permet beaucoup plus de flexibilité comme le lancement d'une série de commandes.
 
-La syntaxe: scenarioStart=Id,scenarioCancel=Id, scenarioStop=Id, en remplacant Id pour l'identifiant du scenario que vous trouvez dqns la definition du scenario.
+La syntaxe: scenarioStart=Id,scenarioCancel=Id, scenarioStop=Id, en remplaçant Id pour l'identifiant du scénario que vous trouvez dans la définition du scénario.
 
 ![i5](../images/Capture_d_ecran_2018_03_27_a_12_52_53.png)
 
-Un exemple avec les commandes et les scenarii.
+Un exemple avec les commandes et les scénarii.
 
 ![i6](../images/Capture_d_ecran_2018_03_27_a_12_55_27.png)
 
-Et ici vous pouvez voir l'ID 3 du scenario utilisé.
+Et ici vous pouvez voir l'ID 3 du scénario utilisé.
 
 Commande Start Complete
 
@@ -1021,12 +1158,12 @@ actionStart=\#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&action
 
 # Remplacement d'un équipement
 
-Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scenarios,...), voici la méthode à suivre.
+Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scénarios,...), voici la méthode à suivre.
 
 
-> Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.
+*Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.*
 
-Prenons l'exemple du remplassement d'un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.
+Prenons l'exemple du remplacement d'un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.
 
 ![](../images/Capture_d_ecran_2018_03_01_a_16_53_29.png)
 
@@ -1061,7 +1198,7 @@ Vous pouvez maintenant changer le nom de l'objet "Abeille-8818-New" à la valeur
 ![](../images/Capture_d_ecran_2018_03_01_a_17_09_46.png)
 
 
-= Remplacement d'une commande
+# Remplacement d'une commande
 
 Vous pouvez remplacer une commande A par une autre commande B à l'aide des boutons oranges:
 
@@ -1069,11 +1206,14 @@ Vous pouvez remplacer une commande A par une autre commande B à l'aide des bout
 
 Cela permet de mettre à jour les scénarios, les autres objets,... faisant référence à cette commande. C'est très pratique et rapide.
 
-Mais car il y a un mais, ou plutôt n'oubliez pas qu'une commande est attachée à un objet, un historique et éventeullement un autre Jeedom par JeeLink. A vous de gérer ces aspects.
+Mais car il y a un mais, ou plutôt n'oubliez pas qu'une commande est attachée à un objet, un historique et éventuellement un autre Jeedom par JeeLink. A vous de gérer ces aspects.
 
-Si vous aviez une mesure de temperature A que vous avez remplacé par une mesure B et que vous voulez aussi transferer l'historique de A vers B:
+Si vous aviez une mesure de température A que vous avez remplacé par une mesure B et que vous voulez aussi transférer l'historique de A vers B:
 
 ![](../images/Capture_d_ecran_2018_10_01_a_12_31_57.png)
+
+
+----------------------------------------------------------------------------------------- Fin des modifs "utilisateurs"
 
 
 
@@ -1081,39 +1221,39 @@ Si vous aviez une mesure de temperature A que vous avez remplacé par une mesure
 
 ## Ping toutes les 15 minutes
 
-Par defaut le cron, toutes les 15 minutes, fait un ping des equipements qui n'ont pas de batterie definie. On suppose qu'ils sont sur secteur et que donc ils écoutent et qu'ils repondent à la réquete.
+Par défaut le cron, toutes les 15 minutes, fait un ping des équipements qui n'ont pas de batterie définie. On suppose qu'ils sont sur secteur et que donc ils écoutent et qu'ils répondent à la requête.
 
-## Etat toutes les minutes
+## État toutes les minutes
 
-Récupère les infos que ne remonte pas par défaut toutes les minutes si défini dans l 'equipement.
+Récupère les infos que ne remonte pas par défaut toutes les minutes si défini dans l'équipement.
 
 # Santé des équipements
 
-Il y a probablement deux informations qu'il est interessant de monitorer pour vérifier que tout fonctionne:
+Il y a probablement deux informations qu'il est intéressant de monitorer pour vérifier que tout fonctionne:
 
 * le niveau des batteries
-* et le fait que des messages sont echangés.
+* et le fait que des messages sont échangés.
 
 Je vous propose 2 méthodes.
 
-== Health
+## Health
 
-=== Communication
+### Communication
 
-==== Vue générale
+#### Vue générale
 
-Un cron tourne [underline]##toutes les minutes## (il faut donc attendre une minute et rafraichir la page) pour vérifier la date du dernier message recu pour chaque équipement. Pour visialiser le résultat ouvrir Plugins->Protocoles Domotique->Abeille et clic sur l'icone Santé. Vous devriez avoir un résultat comme:
+Un cron tourne ##toutes les minutes## (il faut donc attendre une minute et rafraichir la page) pour vérifier la date du dernier message reçu pour chaque équipement. Pour visualiser le résultat ouvrir Plugins->Protocoles Domotique->Abeille et clic sur l'icône Santé. Vous devriez avoir un résultat comme:
 
 ![](../images/Capture_d_ecran_2018_05_11_a_13_46_17.png)
 
 Actuellement il existe 4 statuts:
 
-- Un carré vert avec un "-": Pas de test fait. Par exemple Abeille ne recoit pas de message venant d'une telecommande Ikea.
-- Un carré vert avec Ok, soit l'équipement à un timeout de defini et le dernier message est arrivé dans cette période, soit il n'y en a pas et un message à été recu dans le 24 dernieres heures.
-- un carré orange, l'equipement n'a pas de time out defini et le dernier message est plus vieux que 24h et moins que 7 jours
+- Un carré vert avec un "-": Pas de test fait. Par exemple Abeille ne reçoit pas de message venant d'une télécommande Ikea.
+- Un carré vert avec Ok, soit l'équipement à un timeout de défini et le dernier message est arrivé dans cette période, soit il n'y en a pas et un message à été reçu dans le 24 dernières heures.
+- un carré orange, l'équipement n'a pas de time out défini et le dernier message est plus vieux que 24h et moins que 7 jours
 - un carré rouge, soit le capteur à un time out et le dernier message est plus vieux que ce time out, soit il n'a pas de time out et le dernier message est plus que 7 jours.
 
-==== Alerte sur communications
+#### Alerte sur communications
 
 Si un équipement possède un timeout défini alors des alertes peuvent être définies.
 
@@ -1130,7 +1270,7 @@ Il faut par exemple dans le fichier json d'avoir:
 
 Les 60 sont en minutes. Dans ce cas, l'équipement qui n'a pas eu de communications depuis plus de 60 générera des alarmes.
 
-Pour cela il faut aussi avoir selectionné le champ "Ajouter un message à chaque Timeout" (voir capture d'écran ci dessous).
+Pour cela il faut aussi avoir sélectionné le champ "Ajouter un message à chaque Timeout" (voir capture d'écran ci dessous).
 
 Vous pouvez aussi ajouter une action dans le champ "Commande sur Timeout".
 
@@ -1246,7 +1386,7 @@ En appuyant sur le bouton du widget, les équipements doivent être interrogé e
 
 == Configuration  des objets
 
-Losqu'un objet ZigBee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).
+Losqu'un objet Zigbee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).
 
 Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s'allonger.
 
@@ -1485,7 +1625,7 @@ Pour ceux qui connaissent Adafruit, il y a un module que j'avais en stock: https
 
 Ce montage possede un ESP8266, un étage de "puissance" avec batterie, un CP2104 USB-Serial, ... et est programmable facilement avec l'IDE Arduino.
 
-J'ai aussi ma zigate version bidouille:
+J'ai aussi ma Zigate version bidouille:
 
 ![](../images/IMG_6207.jpg)
 
@@ -1505,7 +1645,7 @@ Maintenant j'ai une Zigate autonome sur batterie en Wifi !!!
 
 Batterie est égale à:
 
-* Je peux mettre la zigate ou je veux
+* Je peux mettre la Zigate ou je veux
 * si le cable USB est branché sur un charger, je suis autonome en cas de coupure de courant
 
 Vous trouverez le source et le bin à la page: https://github.com/KiwiHC16/Abeille/tree/master/WIfi_Module
@@ -1518,7 +1658,7 @@ Je vais essayer de consolider ici tous les retours d'expériences et les vérifi
 
 === Forum
 
-* le forum: https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
+* le forum: https://www.Jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
 
 == Attention - Danger
 
@@ -1569,27 +1709,27 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 * Verifier la configuration réseau et en particulier /hostname, /etc/hosts
 * Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l'objet de rattachement de l'équipement Ruche n'est pas défini.
 ````
-[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
 ````
 
 === Connection avec la Zigate
 
 * Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
 
-* Tester la ZiGate en ligne de commande
+* Tester la Zigate en ligne de commande
 
 * Vérifiez bien que vous n'avez pas plusieurs Plugins essayant d'utiliser le même port série (/dev/ttyUSBx).
 
-** Jeedom vers ZiGate
+** Jeedom vers Zigate
 
 On envoie
 ```
 stty -F/dev/ttyUSB0 115200
 echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
 ```
-(Cela peut être fait alors que le plugin est ZiGate fonctionnent).
+(Cela peut être fait alors que le plugin est Zigate fonctionnent).
 
-Cette commande demande à la ZiGate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:
+Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:
 
 ```
 AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message > 12 char
@@ -1602,7 +1742,7 @@ AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
 
 PS: la configuration du port peu varier d'un système à l'autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.
 
-** ZiGate vers Jeedom
+** Zigate vers Jeedom
 
 Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):
 
@@ -1665,7 +1805,7 @@ apt-get install mosquitto
 
 * Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas défaut et ajouter de nouveaux modèles par exemple.
 
-* L'appareil Ruche contient une commande cachée par type d'objet (identifié das le fichier JSON). Chaque commande cachée permet la création d'objets fictifs pour vérifier la bonne création de l'objet dans jeedom. Pour avoir les commandes, il faut regénerer l'objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l'objet.
+* L'appareil Ruche contient une commande cachée par type d'objet (identifié das le fichier JSON). Chaque commande cachée permet la création d'objets fictifs pour vérifier la bonne création de l'objet dans Jeedom. Pour avoir les commandes, il faut regénerer l'objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l'objet.
 
 ![](../images/Capture_d_ecran_2018_01_23_a_22_31_19.png)
 
@@ -1716,7 +1856,7 @@ Vous avez maintenant une capteur.
 
 ![](../images/Capture_d_ecran_2018_01_26_a_10_52_58.png)
 
-* Avec la liste des équipements vous avez la liste connue par zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
+* Avec la liste des équipements vous avez la liste connue par Zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu'ils aient envoyé une commande "leave" à Zigate et qu'Abeille soit actif pour enregistrer l'information. Le dernier ayant quitté peut être visualisé sur l'objet ruche:
 
 ![](../images/Capture_d_ecran_2018_02_07_a_12_54_55.png)
 
@@ -1838,7 +1978,7 @@ apt-get upgrade
 ```
 === Jeedom
 
-La documentation Jeedom est à la page https://jeedom.github.io/documentation/installation/fr_FR/index
+La documentation Jeedom est à la page https://Jeedom.github.io/documentation/installation/fr_FR/index
 
 Perso j'utilise le dernier chapitre (Chapitre 10 - Autres) (Un gros 1/4 d'heure)
 
@@ -1846,7 +1986,7 @@ Connectez-vous en SSH à votre système et faites :
 
 ```
 su -
-wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ./install.sh
 ./install.sh -w /var/www/html  -m Jeedom
@@ -1855,13 +1995,13 @@ reboot
 
 === Web Browser
 
-Ouvrir la page de votre Jeedom: http://Mon_IP_JEEDOM
+Ouvrir la page de votre Jeedom: http://Mon_IP_Jeedom
 
 admin/admin
 
 Ne plus afficher et cloture fenetre du dessus.
 
-Creation d'un Objet Abeille pour accueillir tous les futures équipement zigbee:
+Creation d'un Objet Abeille pour accueillir tous les futures équipement Zigbee:
 
 Menu->Outils->Objets->'+', Sauvegarder et retour sur la page principale(Dashboard)
 
@@ -1891,7 +2031,7 @@ Une fois les dépendances installées, la date de derniere installation doit app
 
 Configuration:
 
-* Choisissez le port serie (on suppose que vous avez une zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
+* Choisissez le port serie (on suppose que vous avez une Zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
 * Choisissez l'Objet Parent: Abeille
 * Sauvegarder
 
@@ -1920,9 +2060,9 @@ En tout 1h pour faire une installation from scratch (et écrire cette doc).
 
 == Introduction
 
-Debian supporte nativement jeedom et le support est assuré par l'équipe de développement. Toute autre demande a propos d'une distribution est ignorée.   https://jeedom.github.io/documentation/installation/fr_FR/index
+Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande a propos d'une distribution est ignorée.   https://Jeedom.github.io/documentation/installation/fr_FR/index
 
-docker permet d'installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L'interet de docker est que n'est installé que le minimum nécéssaire au fonctionnement dans l'image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur jeedom sur un système Ubuntu, cependant ce n'est pas limité à ce système.
+docker permet d'installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L'interet de docker est que n'est installé que le minimum nécéssaire au fonctionnement dans l'image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n'est pas limité à ce système.
 
 == Prérequis
 
@@ -1935,21 +2075,21 @@ apt-get install docker docker.io
 
 == Fonctionnement
 
-Loïc, un des créateurs de jeedom maintient image jeedom. Cette image appelé jeedom-server utilise une image jeedom-mysql pour stocker les données dans une base de données mysql. Il faudra donc a chaque fois lancer le conteneur jeedom-mysql puis le jeedom-server. Les réglages restent d'une fois sur l'autre.
+Loïc, un des créateurs de Jeedom maintient image Jeedom. Cette image appelé Jeedom-server utilise une image Jeedom-mysql pour stocker les données dans une base de données mysql. Il faudra donc a chaque fois lancer le conteneur Jeedom-mysql puis le Jeedom-server. Les réglages restent d'une fois sur l'autre.
 
 == Récupération des images et Création des conteneurs
 
 Ces deux lignes vont récupérer les images, créer les conteneurs et les configurer. Le port USB est a adapter selon le besoin ( `ls /dev/ttyUSB*` pour avoir la liste )
 
 [source,bash]
-docker run --name jeedom-mysql -e MYSQL_ROOT_PASSWORD=Mjeedom96 -d mysql:latest
-docker run --name jeedom-server -e ROOT_PASSWORD=Mjeedom96 --link jeedom-mysql:mysql -p 9180:80 -p 9443:443 -p 9022:22 --device=/dev/ttyUSB0 jeedom/jeedom
+docker run --name Jeedom-mysql -e MYSQL_ROOT_PASSWORD=MJeedom96 -d mysql:latest
+docker run --name Jeedom-server -e ROOT_PASSWORD=MJeedom96 --link Jeedom-mysql:mysql -p 9180:80 -p 9443:443 -p 9022:22 --device=/dev/ttyUSB0 Jeedom/Jeedom
 
-A ce stade, l'installation de jeedom commence dans le conteneur jeedom-server. il faut compter 5 a 10 minutes selon la connexion et la puissance du système hôte.
+A ce stade, l'installation de Jeedom commence dans le conteneur Jeedom-server. il faut compter 5 a 10 minutes selon la connexion et la puissance du système hôte.
 
-jeedom sera disponible après quelques instants à l'adresse http://0.0.0.0:9180
+Jeedom sera disponible après quelques instants à l'adresse http://0.0.0.0:9180
 
-TIP: Le ssh est accessible via le port 9022. (root/Mjeedom96)
+TIP: Le ssh est accessible via le port 9022. (root/MJeedom96)
 
 == Configuration de Jeedom
 
@@ -1957,29 +2097,29 @@ Dans les champs indiqués entrer la valeur surlignée.
 
 [width="40%",frame="topbot",options="header,footer"]
 |==================================
-|Database hostname| jeedom-mysql
+|Database hostname| Jeedom-mysql
 |Database port    | 3306
 |Database username| root
-|Database password| Mjeedom96
-|Database name    | jeedom
+|Database password| MJeedom96
+|Database name    | Jeedom
 |Erase database   | checked
 |==================================
 
-Une fois, le texte `[END INSTALL SUCCESS]` affiché en bas. Aller à l 'adresse http://0.0.0.0:9180 la page de login de jeedom devrait apparaître. Les login et mot de passe sont admin admin.
+Une fois, le texte `[END INSTALL SUCCESS]` affiché en bas. Aller à l 'adresse http://0.0.0.0:9180 la page de login de Jeedom devrait apparaître. Les login et mot de passe sont admin admin.
 
 == start/stop des conteneurs
 
-les conteneurs peuvent être arrêtés et relancés à la demande en gardant l'ordre mysql jeedom au lancement, jeedom mysql à  l'arrêt.
+les conteneurs peuvent être arrêtés et relancés à la demande en gardant l'ordre mysql Jeedom au lancement, Jeedom mysql à  l'arrêt.
 
-Arrêt `docker stop jeedom-server && docker stop jeedom-mysql`
+Arrêt `docker stop Jeedom-server && docker stop Jeedom-mysql`
 
-Démarrage `docker start jeedom-mysql && docker start jeedom-server`
+Démarrage `docker start Jeedom-mysql && docker start Jeedom-server`
 
 == Repartir de zéro
 
-il est possible de supprimer les conteneurs et de repartir d'un jeedom tout neuf.
+il est possible de supprimer les conteneurs et de repartir d'un Jeedom tout neuf.
 
-`docker rm jeedom-server && docker rm jeedom-mysql`
+`docker rm Jeedom-server && docker rm Jeedom-mysql`
 
 puis aller vers link:[Récupération des images et Création des conteneurs]
 
@@ -2003,7 +2143,7 @@ voir la doc :)
 
 
 
-Installation d'abeille dans docker
+Installation d'Abeille dans docker
 (Il y a certainement plus simple mais je ne suis pas expert en Docker et cette méthode semble bien fonctionner).
 
 == Preparation du docker
@@ -2090,13 +2230,13 @@ echo 'CMD ["/bin/bash"]' >> Dockerfile
 
 Maintenant on lance la creation du docker:
 ```
-docker build -t jeedomabeille .
+docker build -t JeedomAbeille .
 ```
 Bien mettre le . a la fin de la ligne.
 
 Le résultat doit ressembler à:
 ```
-root@docker:~/DockerAbeille# docker build -t jeedomabeille .
+root@docker:~/DockerAbeille# docker build -t JeedomAbeille .
 Sending build context to Docker daemon 348.4 MB
 Step 0 : FROM scratch
 --->
@@ -2114,12 +2254,12 @@ Et si vous demandez les images:
 ```
 root@docker:~/DockerAbeille# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-jeedomabeille       latest              286ea5048dfd        12 minutes ago      900.9 MB
+JeedomAbeille       latest              286ea5048dfd        12 minutes ago      900.9 MB
 ```
 
 Démarrons le container:
 ```
-docker run -it jeedomabeille
+docker run -it JeedomAbeille
 ```
 
 Le shell vous donne la main dans le docker:
@@ -2130,7 +2270,7 @@ Vous pouvez arreter le docker depuis un shell sur le host:
 ```
 root@docker:~/DockerAbeille# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-52b658b7d8f8        jeedomabeille       "/bin/bash"         3 minutes ago       Up 3 minutes                            sad_stallman
+52b658b7d8f8        JeedomAbeille       "/bin/bash"         3 minutes ago       Up 3 minutes                            sad_stallman
 root@docker:~/DockerAbeille# docker stop 52b658b7d8f8
 52b658b7d8f8
 ```
@@ -2140,7 +2280,7 @@ Vous pouvez demarrer de docker depuis un shell sur le host:
 ----
 root@docker:~/DockerAbeille# docker ps -a
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                       PORTS               NAMES
-52b658b7d8f8        jeedomabeille       "/bin/bash"         7 minutes ago       Exited (127) 3 minutes ago                       sad_stallman
+52b658b7d8f8        JeedomAbeille       "/bin/bash"         7 minutes ago       Exited (127) 3 minutes ago                       sad_stallman
 root@docker:~/DockerAbeille# docker start 52b658b7d8f8
 52b658b7d8f8
 
@@ -2156,7 +2296,7 @@ root@52b658b7d8f8:/#
 Faites plusieur "enter" pour avoir le prompt.
 
 
-Maintenant que le docker fonctionne on va faire l installation de jeedom et abeille.
+Maintenant que le docker fonctionne on va faire l installation de Jeedom et Abeille.
 
 
 > To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the [underline]#*CTRL-p suivi de CTRL-q*# key sequence.
@@ -2169,12 +2309,12 @@ Les services ne demarrent pas tout seuls dans le docker, il aurait probablement 
 Donc j'ajoute quelques lignes à /etc/rc.local pour Raspbian:
 
 ```
-docker start jeedomabeille
-(docker exec -u root jeedomabeille dpkg-reconfigure openssh-server)
-docker exec -u root jeedomabeille /etc/init.d/ssh start
-docker exec -u root jeedomabeille /etc/init.d/mysql start
-docker exec -u root jeedomabeille /etc/init.d/apache2 start
-docker exec -u root jeedomabeille /etc/init.d/cron start
+docker start JeedomAbeille
+(docker exec -u root JeedomAbeille dpkg-reconfigure openssh-server)
+docker exec -u root JeedomAbeille /etc/init.d/ssh start
+docker exec -u root JeedomAbeille /etc/init.d/mysql start
+docker exec -u root JeedomAbeille /etc/init.d/apache2 start
+docker exec -u root JeedomAbeille /etc/init.d/cron start
 ```
 
 que je mets sur le host dans /root sous le nom startJeedomAbeileDocker.sh.
@@ -2210,16 +2350,16 @@ case "$1" in
 start)
 echo "Starting startDockers"
 # run application you want to start
-docker start jeedomgite
-docker exec -u root jeedomgite /etc/init.d/ssh start
-docker exec -u root jeedomgite /etc/init.d/mysql start
-docker exec -u root jeedomgite /etc/init.d/apache2 start
-docker exec -u root jeedomgite /etc/init.d/cron start
+docker start Jeedomgite
+docker exec -u root Jeedomgite /etc/init.d/ssh start
+docker exec -u root Jeedomgite /etc/init.d/mysql start
+docker exec -u root Jeedomgite /etc/init.d/apache2 start
+docker exec -u root Jeedomgite /etc/init.d/cron start
 ;;
 stop)
 echo "Stopping startDockers"
 # kill application you want to stop
-docker stop jeedomgite
+docker stop Jeedomgite
 ;;
 *)
 echo "Usage: /etc/init.d/startDockers {start|stop}"
@@ -2254,17 +2394,17 @@ Effaçons l'ancien container.
 docker rm 52b658b7d8f8
 ```
 
-Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0 (la zigate).
+Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0 (la Zigate).
 
 ```
-docker run --name=jeedomabeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomabeille
-docker run --name=jeedomgite --device=/dev/ttyACM0 -p 51826:51826 -p 5353:5353 -p 2222:22 -p 80:80 -p 3306:3306 -it jeedomgite
+docker run --name=JeedomAbeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it JeedomAbeille
+docker run --name=Jeedomgite --device=/dev/ttyACM0 -p 51826:51826 -p 5353:5353 -p 2222:22 -p 80:80 -p 3306:3306 -it Jeedomgite
 ```
 
 Si vous êtes sur hyprio et voulez exposer la machine completement, créé le Networks puis le Containers:
 ```
 docker network create -d macvlan --subnet=192.168.4.0/24 --gateway=192.168.4.2 -o parent=eth0 pub_net
-docker run --name=jeedomgite --device=/dev/ttyACM0 --network pub_net --ip=192.168.4.38 --hostname=jeedomgite -it jeedomgite /bin/bash
+docker run --name=Jeedomgite --device=/dev/ttyACM0 --network pub_net --ip=192.168.4.38 --hostname=Jeedomgite -it Jeedomgite /bin/bash
 ```
 
 > Attention de ne pas vous prendre les pieds dans le tapis entre les adresses du "HW" rpi et les addresses des containers.
@@ -2275,13 +2415,13 @@ J'ai mis un nom pour être plus sympas à gérer.
 
 Vous pourrez le demarrer/arreter par:
 ```
-docker stop jeedomabeille
-docker start jeedomabeille
+docker stop JeedomAbeille
+docker start JeedomAbeille
 ```
 
 Passons a l installation des services:
 ```
-docker attach jeedomabeille
+docker attach JeedomAbeille
 apt-get update
 apt-get upgrade
 apt-get install openssh-server
@@ -2291,11 +2431,11 @@ apt-get install mariadb-server
 apt-get install apache2
 ```
 
-Maintenant le systeme doit être prêt pour l installation de jeedom lui-meme.
-(https://jeedom.github.io/documentation/installation/fr_FR/index => Chap 10)
+Maintenant le systeme doit être prêt pour l installation de Jeedom lui-meme.
+(https://Jeedom.github.io/documentation/installation/fr_FR/index => Chap 10)
 
 ```
-wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ./install.sh -w /var/www/html -m Jeedom
 ```
@@ -2305,7 +2445,7 @@ L installation va se dérouler en 11 grandes étapes.
 
 
 ```
-étape 11 vérification de jeedom réussie
+étape 11 vérification de Jeedom réussie
 /!\ IMPORTANT /!\ Le mot de passe root MySQL est Jeedom
 Installation finie. Un redémarrage devrait être effectué
 ```
@@ -2319,9 +2459,9 @@ Sauf que cela ne fonctionne pas !! ->Mot de passe ou nom d'utilisateur incorrect
 Il demande un reboot donc allons y:
 
 ```
-docker stop jeedomabeille
-docker start jeedomabeille
-docker attach jeedomabeille
+docker stop JeedomAbeille
+docker start JeedomAbeille
+docker attach JeedomAbeille
 /etc/init.d/ssh start
 /etc/init.d/mysql start
 /etc/init.d/apache2 start
@@ -2329,7 +2469,7 @@ docker attach jeedomabeille
 
 On ne peut toujours pas se connecter, je ne sais pas pourquoi....
 
-Donc on va passer par une autre solution: https://jeedom.github.io/documentation/howto/fr_FR/reset.password
+Donc on va passer par une autre solution: https://Jeedom.github.io/documentation/howto/fr_FR/reset.password
 
 Problement de "Could not reliably determine the server's fully qualified domain name, using 172.17.0.14. Set the 'ServerName' directive globally to suppress this message":
 mettre en debut de fichier /etc/apache2/apache2.conf la line :
@@ -2360,14 +2500,14 @@ fe00::0    ip6-localnet
 ff00::0    ip6-mcastprefix
 ff02::1    ip6-allnodes
 ff02::2    ip6-allrouters
-172.17.0.14    2b8faafb19a4    jeedomabeille
-172.17.0.14    jeedomabeille.bridge
+172.17.0.14    2b8faafb19a4    JeedomAbeille
+172.17.0.14    JeedomAbeille.bridge
 ```
 
 ```
 cat /var/www/html/core/config/common.config.php
-mysql -ujeedom -p
-use jeedom;
+mysql -uJeedom -p
+use Jeedom;
 REPLACE INTO user SET `login`='adminTmp',password='c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec',profils='admin', enable='1';
 exit
 ```
@@ -2422,15 +2562,15 @@ Pour avoir les docker en stock:
 docker ps -a
 ```
 
-Créons un image du docker en prod: jeedomabeille et appelons cette image jeedomabeille_backup
+Créons un image du docker en prod: JeedomAbeille et appelons cette image JeedomAbeille_backup
 
 ```
-docker commit -p jeedomabeille jeedomabeille_backup
+docker commit -p JeedomAbeille JeedomAbeille_backup
 ```
 
-Attention: avec le -p le container est en pause donc jeedom ne fonctionne plus le temps de faire la capture.
+Attention: avec le -p le container est en pause donc Jeedom ne fonctionne plus le temps de faire la capture.
 
-Par exemple: faites cette operation avant de faire des opérations irréversibles qui risquent de planter votre jeedom.
+Par exemple: faites cette operation avant de faire des opérations irréversibles qui risquent de planter votre Jeedom.
 
 
 Pour voir les images crées et disponiqbles:
@@ -2440,8 +2580,8 @@ docker images
 
 === Save
 ```
-docker save -o ~/jeedomabeille_backup.tar jeedomabeille_backup
-ls -l ~/jeedomabeille_backup.tar
+docker save -o ~/JeedomAbeille_backup.tar JeedomAbeille_backup
+ls -l ~/JeedomAbeille_backup.tar
 ```
 
 soyez patient le tar fait 3G.
@@ -2452,7 +2592,7 @@ If we have transferred our "container1.tar" backup file to another docker host s
 
 
 ```
-docker load -i /root/jeedomabeille_backup.tar
+docker load -i /root/JeedomAbeille_backup.tar
 docker images
 ```
 
@@ -2480,7 +2620,7 @@ Plus besoin d'aller chercher les cartes SD dans les differents RPI3 pour en fair
 
 Vous pouvez effacer de vieilles images par:
 ```
-docker rmi jeedomabeille_backup
+docker rmi JeedomAbeille_backup
 ```
 
 = Docker GUI
@@ -2516,7 +2656,7 @@ Tout fonctionne bien mieux que sur la version raspbian.
 
 == Zwave
 
-Sur ma machine jeedomprorpi, le repertoire /tmp/jeedom/openzwave n'a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/jeedom/openzwave et tout est ok maintenant.
+Sur ma machine Jeedomprorpi, le repertoire /tmp/Jeedom/openzwave n'a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/Jeedom/openzwave et tout est ok maintenant.
 
 == homebridge
 
@@ -2546,7 +2686,7 @@ apt-get autoremove
 
 == Installation de la base mysql
 
-installation à la main de mysql (car l instanllation par jeedom ne fonctionne pas)
+installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)
 
 ````
 apt-get install mysql-server
@@ -2556,7 +2696,7 @@ apt-get install mysql-client
 == Installation de Jeedom
 
 ````
-wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ````
 
@@ -2607,7 +2747,7 @@ apt-get autoremove
 
 == Installation de la base mysql
 
-installation à la main de mysql (car l instanllation par jeedom ne fonctionne pas)
+installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)
 
 ```
 apt-get install mysql-server
@@ -2617,7 +2757,7 @@ apt-get install mysql-client
 == Installation de Jeedom
 
 ```
-wget https://raw.githubusercontent.com/jeedom/core/stable/install/install.sh
+wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
 chmod +x install.sh
 ```
 
@@ -2663,7 +2803,7 @@ Si vous souhaitez le desinstaller, vous avez le script "manual_remove_of_mosquit
 Pour la désinstallation de mosquitto, cela depend de votre système et il y a plein de doc sur le net (je manque de temps pour faire la doc...).
 
 
-# ZiGate Backup/Restore
+# Zigate Backup/Restore
 
 ```
 Info dans le doc JN-UG-3007 (confirmed in doc JN-SW -4141)
@@ -2676,9 +2816,9 @@ Tout se fait depuis NXP Beyond Studio
 
 == Backup
 
-Branchez la ZiGate sur le port USB en appuyant sur le bouton de la ZiGate puis relacher.
+Branchez la Zigate sur le port USB en appuyant sur le bouton de la Zigate puis relacher.
 
-Récupérer les informations de la ZiGate
+Récupérer les informations de la Zigate
 
 Menu -> Devices -> Device Info
 
@@ -2686,7 +2826,7 @@ Menu -> Devices -> Device Info
 
 Ensuite, faire un "Read" de la Flash et de l'EEPROM.
 
-> Le restore de la Flash ne fonctionne pas pour moi, alors bien noter la version de ZiGate utilisée pour re-installer le bin ZiGate et pas la copie de la flash. En esperant comprendre plus tard pourquoi cela ne fonctionne pas. Quelqu'un a une idée ?
+> Le restore de la Flash ne fonctionne pas pour moi, alors bien noter la version de Zigate utilisée pour re-installer le bin Zigate et pas la copie de la flash. En esperant comprendre plus tard pourquoi cela ne fonctionne pas. Quelqu'un a une idée ?
 
 
 ![](../images/Capture_d_ecran_2018_02_28_a_10_17_19.png)
@@ -2695,35 +2835,35 @@ Si tout se déroule comme prévu vous devez avoir une information de progression
 
 ![](..//Capture_d_ecran_2018_02_28_a_10_17_28.png)
 
-Voilà le backup est fait. Débranchez la ZiGate du port USB.
+Voilà le backup est fait. Débranchez la Zigate du port USB.
 
 == Restore
 
-Branchez la ZiGate (ou une nouvelle zigate) sur le port USB en appuyant sur le bouton de la ZiGate puis relacher.  
+Branchez la Zigate (ou une nouvelle Zigate) sur le port USB en appuyant sur le bouton de la Zigate puis relacher.  
 
-Vérifiez les informations de cette ZiGate depuis le menu "Menu -> Devices -> Device Info". Si c'est la même tout doit être identique, si c'est une nouvelle alors l'adresse MAC doit être différente.
+Vérifiez les informations de cette Zigate depuis le menu "Menu -> Devices -> Device Info". Si c'est la même tout doit être identique, si c'est une nouvelle alors l'adresse MAC doit être différente.
 
 Allez dans le menu "Menu -> Devices -> Program Device". Selectionner vos fichiers de Backup et mettez l'adresse MAC à la bonne valeur (MAC: cf note haut de page).
 
-> Le restore du backup de la Flash ne fonctionne pas dans mon cas. Je n'ai pas trouvé pourquoi. Donc je selectionne le bin de la ZiGate. De même le changement de la MAC ne fonctionne pas donc je garde celle en place. Ce qui revient à ne reprogrammer que l'EEPROM...
+> Le restore du backup de la Flash ne fonctionne pas dans mon cas. Je n'ai pas trouvé pourquoi. Donc je selectionne le bin de la Zigate. De même le changement de la MAC ne fonctionne pas donc je garde celle en place. Ce qui revient à ne reprogrammer que l'EEPROM...
 
 
 ![](../images/Capture_d_ecran_2018_02_28_a_10_32_14.png)
 
-Voilà le restore est fait. Débranchez la ZiGate du port USB.
+Voilà le restore est fait. Débranchez la Zigate du port USB.
 
-Vous avez une nouvelle ZiGate identique à l'originale (Sauf peut être l'adresse MAC). Si vous perdez la première (crash HW par exemple), il vous suffi de la remplacer par la nouvelle.
+Vous avez une nouvelle Zigate identique à l'originale (Sauf peut être l'adresse MAC). Si vous perdez la première (crash HW par exemple), il vous suffi de la remplacer par la nouvelle.
 
-= Remplacer la ZiGate
+= Remplacer la Zigate
 
-Si pour une raison ou une autre vous devez/voulez remplacer la ZiGate alors il faut faire les actions suivantes:
+Si pour une raison ou une autre vous devez/voulez remplacer la Zigate alors il faut faire les actions suivantes:
 (On part de l'hypotheses que Abeille/Jeedom est à jour).
 
-* Remplacer la ZiGate par une nouvelle vide
+* Remplacer la Zigate par une nouvelle vide
 
 * Redemarrer Abeille
 
-* Depuis la ruche démarrer le réseau zigbee (La ZiGate doit être prête)
+* Depuis la ruche démarrer le réseau Zigbee (La Zigate doit être prête)
 
 * Passer en mode inclusion
 
@@ -2741,7 +2881,7 @@ Si l'adresse MAC change, il y a certainement des conséquences. La première que
 
 Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:
 
-http://[jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
+http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
 
 Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages "Link Status".
 
@@ -2751,7 +2891,7 @@ Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON 
 
 ![](../images/Capture_d_ecran_2018_05_10_a_23_33_48.png)
 
-Une fois cela fait ouvrez la page: http://[jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
+Une fois cela fait ouvrez la page: http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
 
 Vous devriez avoir un résultat comme:
 
@@ -2793,7 +2933,7 @@ $Abeilles = array(
 
 Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:
 
-http://[adresse de votre jeedom]/plugins/Abeille/Network/AbeilleLQI_Map.php
+http://[adresse de votre Jeedom]/plugins/Abeille/Network/AbeilleLQI_Map.php
 
 Vous pouvez vérifier que l'execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):
 
@@ -2845,7 +2985,7 @@ La cinquième colonne contient le LQI (Link Quality Indicator), la qualité de l
 
 On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un "Sibling" qui est un routeur (Ampoule Ikea dans ce cas).
 
-On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (ZiGate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
+On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (Zigate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
 
 === Sur mon système de prod
 
@@ -2984,7 +3124,7 @@ $knownNE = array(
 "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
 ...
 
-définie la liste des équipements en mettant leur adresse ZigBee et leur nom.
+définie la liste des équipements en mettant leur adresse Zigbee et leur nom.
 
 Dans la deuxieme table vous definissez les positions des équipements et leur couleur:
 
@@ -3016,7 +3156,7 @@ Par exemple, je veux toutes les relations de voisinages alors dans le premier me
 
 Par exemple, je veux voir tous les équipements rapportant vori un équipement xxxx, je choisi none dans le premier menu et xxxx dans le second.
 
-Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l'ampoule bois bureau, alors que tous les autres équipements rapportent à la zigate en direct.
+Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l'ampoule bois bureau, alors que tous les autres équipements rapportent à la Zigate en direct.
 
 == Graphique (Nouvelle Version)
 
@@ -3028,7 +3168,7 @@ Juste un clic sur "Network Graph":
 
 ![](..//Capture_d_ecran_2018_10_04_a_02_39_04.png)
 
-Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les abeilles (clic, deplacement, relache).
+Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).
 
 ![](..//Capture_d_ecran_2018_10_04_a_02_24_10.png)
 
@@ -3038,7 +3178,7 @@ Juste ouvrir le graph et les abeilles seront disposées sur un grand cercle. Vou
 
 ![](..//Capture_d_ecran_2018_10_04_a_11_44_30.png)
 
-Les abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.
+Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.
 
 [quote,Kiwi]
 ____
@@ -3059,7 +3199,7 @@ ____
 
 Utilisation du filtre par l'exemple:
 
-* Je veux voir toutes les abeilles vues par la ruche (zigate). Je choisi Ruche dans la source et none dans destination.
+* Je veux voir toutes les Abeilles vues par la ruche (Zigate). Je choisi Ruche dans la source et none dans destination.
 
 * Je veux représenter qui voit la sonnette. Je choisi Sonnette dans la destination et none dans la source.
 
@@ -3078,7 +3218,7 @@ Exemple qu'avec les relations Child (Filter Child):
 
 ![](..//Capture_d_ecran_2018_10_04_a_02_23_37.png)
 
-On peut voir ici que j'ai 4 End Device sur la ruche(zigate), 5 sur la priseY,...
+On peut voir ici que j'ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,...
 
 Vue interressante car elle permet de voir quels sont le équipements terminaux rattachés à quels routeurs.
 
@@ -3090,7 +3230,7 @@ Exemple avec l'upload d'une image en fond d'écran:
 
 ![](..//Capture_d_ecran_2018_10_04_a_11_15_34.png)
 
-Vous pouvez aussi choisir votre fond d'écran pour positionner vos abeilles.
+Vous pouvez aussi choisir votre fond d'écran pour positionner vos Abeilles.
 
 # Radio
 
@@ -3110,7 +3250,7 @@ Cela nous indique qu'en moyenne plus de 2 murs est très compliqué. Ce qui impl
 
 On peut voir des écarts très important dans le LQI alors que les équipements sont dans la meme piece (Colonne 0 des graphes LQI/Wall).
 
-Pour le LQI/m, on peut dire que jusqu'à 10m c'est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.
+Pour le LQI/m, on peut dire que jusqu'à 10m c'est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la Zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.
 
 Je suppose qu'en environnement ouvert on peut avoir des distances bien supérieures, avec des distances annoncées par les fabriquants jusqu'a 100m, mais ce type de situation sera des plus rares...
 

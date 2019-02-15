@@ -1,6 +1,6 @@
 # Présentation rapide
 
-Cette documentation est en cours de "réécriture" ...
+Cette documentation est en cours de "réécriture"
 
 ## Abeille
 

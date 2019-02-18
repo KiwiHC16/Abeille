@@ -1,0 +1,41 @@
+<!--
+* This file is part of Plugin Abeille for jeedom.
+*
+* Plugin Abeille for jeedom is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Plugin Abeille for jeedom is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Plugin Abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div id="div_inclusionAlert" style="text-align: center;font-size: 2em;">
+</div>
+
+<div class="ui-grid-a">
+
+	<div class="ui-block-a">
+		<center>
+			<a id="bt_include" href="#" class="ui-btn ui-btn-raised clr-primary waves-effect waves-button changeIncludeState" data-mode="1" data-state="1" style="margin: 5px;">
+				<i class="fa fa-sign-in fa-rotate-90" style="font-size: 6em;"></i><br/>{{Inclusion}}
+			</a>
+		</center>
+	</div>
+
+	<div class="ui-block-b">
+		<center>
+			<a href="#" class="ui-btn ui-btn-raised clr-warning waves-effect waves-button changeIncludeState" data-mode="0" data-state="1" style="margin: 5px;">
+				<i class="fa fa-sign-out fa-rotate-90" style="font-size: 6em;"></i><br/>{{Not used yet}}
+			</a>
+		</center>
+	</div>
+
+</div>
+
+<script src="core/php/getJS.php?file=plugins/Abeille/desktop/js/Abeille.js"></script>

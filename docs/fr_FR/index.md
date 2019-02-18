@@ -522,6 +522,7 @@ Puis son nom lumi.sensor_magnet
 
 Remonte son nom et ff01 (len 29)
 
+
 * Appui Long (7s) sur bouton latéral
 
 Inclusion
@@ -529,7 +530,20 @@ Remonte son nom et Application Version
 Remonte ff01 (len 29)
 
 
-#### Capteur Présence V1 (lumi.sensor_motion)
+
+
+#### Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l'upgrade en 3.0F...
+
+1- On appuie sur ON + OFF ( 1 + 0) simultanément pendant 5 secondes à 50 cm de l’ampoule (sous tension bien entendu)
+2- On ouvre le réseau ZigBee de votre coordinateur (ZiGate par exemple)
+3- On éteint puis on remet sous tension l’ampoule qui s’appaire au coordinateur
+4- Pendant que le réseau est ouvert, on retourne la télécommande et à l’aide d’un trombone, on appuie sur le bouton setup pendant 5-10 secondes. 5- La télécommande joint à son tour le réseau ZigBee
+6- Si on le souhaite, on peut associer la télécommande et l’ampoule en maintenant le bouton ON (1) pendant 5 secondes à 50 cm de l’ampoule (toujours sous tension).
+
+Source : http://faire-ca-soi-meme.fr/zigate/2017 ... es-zigbee/
+
+# Profalux
+
 
 * Appui court (<1s) avec trombone
 

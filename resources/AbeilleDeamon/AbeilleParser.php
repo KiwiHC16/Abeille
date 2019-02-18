@@ -855,7 +855,8 @@
         $AttributId = "Status";
         if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
         if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
-        if( substr($payload, 0, 2) > "01" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
+        if( substr($payload, 0, 2) == "04" ) { $data = "BDB_E_ERROR_NODE_IS_ON_A_NWK: network already formed, not starting it again."; }
+        if( substr($payload, 0, 2) > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
         mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
 
         // Envoie Short Address

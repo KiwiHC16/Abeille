@@ -185,7 +185,7 @@ A noter: Toute sauvegarde de la configuration provoque une relance du cron du pl
 
 puis:
 
-* Ampoules IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton | + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
+* Ampoules IKEA: faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
 
 ![](../images/Capture_d_ecran_2018_01_21_a_11_13_44.png)
 
@@ -227,10 +227,19 @@ puis:
 
 ### Ampoule
 
+### Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l'upgrade en 3.0F...
+
+1. On appuie sur ON + OFF ( 1 + 0) simultanément pendant 5 secondes à 50 cm de l’ampoule (sous tension bien entendu)
+2. On ouvre le réseau ZigBee de votre coordinateur (ZiGate par exemple)
+3. On éteint puis on remet sous tension l’ampoule qui s’appaire au coordinateur
+4. Pendant que le réseau est ouvert, on retourne la télécommande et à l’aide d’un trombone, on appuie sur le bouton setup pendant 5-10 secondes.
+5. La télécommande joint à son tour le réseau ZigBee
+6. Si on le souhaite, on peut associer la télécommande et l’ampoule en maintenant le bouton ON (1) pendant 5 secondes à 50 cm de l’ampoule (toujours sous tension).
+
 #### Nouvelle inclusion
 
 * Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
-* Faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton | + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
+* Faire un reset de l'ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n'est pas facile d'avoir le reset... et après maintes tentatives, vous devriez récupérer l'ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d'avoir besoin d'éteindre, attendre 10 secondes et allumer.
 
 #### Déjà inclue préalablement
 
@@ -529,22 +538,6 @@ Inclusion
 Remonte son nom et Application Version
 Remonte ff01 (len 29)
 
-
-
-
-#### Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l'upgrade en 3.0F...
-
-1- On appuie sur ON + OFF ( 1 + 0) simultanément pendant 5 secondes à 50 cm de l’ampoule (sous tension bien entendu)
-2- On ouvre le réseau ZigBee de votre coordinateur (ZiGate par exemple)
-3- On éteint puis on remet sous tension l’ampoule qui s’appaire au coordinateur
-4- Pendant que le réseau est ouvert, on retourne la télécommande et à l’aide d’un trombone, on appuie sur le bouton setup pendant 5-10 secondes. 5- La télécommande joint à son tour le réseau ZigBee
-6- Si on le souhaite, on peut associer la télécommande et l’ampoule en maintenant le bouton ON (1) pendant 5 secondes à 50 cm de l’ampoule (toujours sous tension).
-
-Source : http://faire-ca-soi-meme.fr/zigate/2017 ... es-zigbee/
-
-# Profalux
-
-
 * Appui court (<1s) avec trombone
 
 * Appui long (7s) avec trombone
@@ -768,7 +761,7 @@ https://www.youtube.com/watch?v=PaA0DV5BXH0
 #### Déjà inclue préalablement sur un autre réseau Zigbee
 
 * Zigate en fonctionnement normale
-* Avec une Télécommande Hue, Bouton "|" et "0", pour remettre d'usine l'ampoule.
+* Avec une Télécommande Hue, Bouton "I" et "0", pour remettre d'usine l'ampoule.
 * Faire une inclusion standard.
 
 ### Philips Hue Go
@@ -794,15 +787,15 @@ https://www.youtube.com/watch?v=PaA0DV5BXH0
 #### Récupérer le groupe utilisé
 
 * Approcher la télécommande d'une ampoule de test qui est sur le réseau.
-* Faire un appui long >10s sur le | de la télécommande.
+* Faire un appui long >10s sur le I de la télécommande.
 * Attendre le clignotement de l'ampoule.
-* Si vous appuyez sur | ou O, elle doit s'allumer et s'éteindre.
+* Si vous appuyez sur I ou O, elle doit s'allumer et s'éteindre.
 * Et les bouton lumière plus et moins doivent changer l'intensité.
 * Ensuite vous pouvez récupérer le groupe en interrogeant l'ampoule depuis la ruche avec un getGroupMembership.
 
 #### Reset d une ampoule
 
- * Appuyer sur | et O en même temps à moins de quelques centimètres d'une ampoule
+ * Appuyer sur I et O en même temps à moins de quelques centimètres d'une ampoule
  * L'ampoule doit faire un reset et essayer de joindre un réseau.
  * Si la Zigate est en mode inclusion alors vous récupérez votre ampoule.
 
@@ -812,7 +805,7 @@ Dans l'objet Abeille vous allez trouver:
 * 8 informations. 4 boutons x 2 infos (événement, durée)
 	* Ce sont les informations qui remontent de la télécommande quand vous l'utilisez.
 	* Cela permet à Jeedom de savoir qu'un bouton a été utilisé et vous pouvez créer les scénario que vous voulez.
-* 4 Boutons: "|", "LumPlus", "LumMoins", "O".
+* 4 Boutons: "I", "LumPlus", "LumMoins", "O".
 * 4 types events: "Appui Court = 0", "Appui Long = 1", "Relâche appui court = 3", "Relâche Appui Long = 4"
 * Durée, indique le temps d'appui d'un bouton (Il n'y pas de temps de nom appui).
 • 00 appui
@@ -825,12 +818,12 @@ C'est Jeedom qui envoie les commandes à la place de la télécommande. Pour se 
 #### Prise de contrôle d'une ampoule
 
 * Ampoule Hue White et télécommande déjà associées au réseau :
-	* Mettre la télécommande proche de l ampoule et appuyer sur "|" assez longtemps.
+	* Mettre la télécommande proche de l ampoule et appuyer sur "I" assez longtemps.
 	* L'ampoule clignote et est configurée.
 	* Après l'ampoule est pilotable par la télécommande. On peut récupérer le groupe utilisé sur l'ampoule dans Jeedom.
 
 * Ampoule Ikea et télécommande déjà associées au réseau :
-	* La configuration depuis la télécommande et le bouton '|' ne fonctionne pas comme avec l'ampoule Hue.
+	* La configuration depuis la télécommande et le bouton 'I' ne fonctionne pas comme avec l'ampoule Hue.
 	* Mais si on récupère le groupe comme indiqué au paragraphe précédent et qu'on défini ce groupe dans l'ampoule Ikea, alors l'ampoule répond aux commandes de la télécommande.
 
 

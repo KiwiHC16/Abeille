@@ -93,6 +93,13 @@
         if ($address != "Ruche") {
             switch ($action) {
                     //----------------------------------------------------------------------------
+                case "managementNetworkUpdateRequest":
+                    $Command = array(
+                                     "managementNetworkUpdateRequest" => "1",
+                                     "address" => $address,
+                                     );
+                    break;
+                    //----------------------------------------------------------------------------
                 case "Annonce":
                     if ($msg == "Default") {
                         deamonlog('info', 'Preparation de la commande annonce pour default');

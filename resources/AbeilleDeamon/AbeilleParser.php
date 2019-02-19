@@ -1143,6 +1143,8 @@
 
     function decode804A($mqtt, $payload, $ln, $qos)
     {
+        // app_general_events_handler.c
+        // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
         deamonlog('debug', 'Type; 804A: (Management Network Update response)(Not Processed)'
                   . '; (Not processed*************************************************************)'
                   . '; Level: 0x'.substr($payload, 0, 2)

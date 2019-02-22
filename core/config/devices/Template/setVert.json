@@ -13,7 +13,7 @@
     "configuration": {
       "uniqId": "5c07c766251f1",
       "topic": "additionalCommand",
-      "request": "#slider#",
+      "request": "EP=#EP#&color=#slider#",
       "visibilityCategory": "All"
     },
     "display": {

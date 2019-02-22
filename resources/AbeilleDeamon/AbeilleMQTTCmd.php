@@ -581,13 +581,18 @@
                     
                     $client->publish('Abeille/'.$address.'/colorRouge', $msg, $qos);
                     
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    
                     $Command = array(
                                      "setColourRGB" => "1",
                                      "address" => $address,
-                                     "R" => $msg/100*255,
+                                     "R" => $parameters['color']/100*255,
                                      "G" => $vert/100*255,
                                      "B" => $bleu/100*255,
-                                     "destinationEndPoint" => "01",
+                                     "destinationEndPoint" => $parameters['EP'],
                                      );
                     break;
                     //----------------------------------------------------------------------------
@@ -606,13 +611,18 @@
                     
                     $client->publish('Abeille/'.$address.'/colorVert', $msg, $qos);
                     
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    
                     $Command = array(
                                      "setColourRGB" => "1",
                                      "address" => $address,
                                      "R" => $rouge/100*255,
-                                     "G" => $msg/100*255,
+                                     "G" => $parameters['color']/100*255,
                                      "B" => $bleu/100*255,
-                                     "destinationEndPoint" => "01",
+                                     "destinationEndPoint" => $parameters['EP'],
                                      );
                     break;
                     //----------------------------------------------------------------------------
@@ -631,13 +641,18 @@
                     
                     $client->publish('Abeille/'.$address.'/colorBleu', $msg, $qos);
                     
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    
                     $Command = array(
                                      "setColourRGB" => "1",
                                      "address" => $address,
                                      "R" => $rouge/100*255,
                                      "G" => $vert/100*255,
-                                     "B" => $msg/100*255,
-                                     "destinationEndPoint" => "01",
+                                     "B" => $parameters['color']/100*255,
+                                     "destinationEndPoint" => $parameters['EP'],
                                      );
                     break;
                     //----------------------------------------------------------------------------

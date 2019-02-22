@@ -13,7 +13,7 @@
     "configuration": {
       "uniqId": "5c07c76624be1",
       "topic": "setBleu",
-      "request": "#slider#",
+      "request": "EP=#EP#&color=#slider#",
       "visibilityCategory": "additionalCommand"
     },
     "display": {

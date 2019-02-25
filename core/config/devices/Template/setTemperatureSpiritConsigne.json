@@ -1,7 +1,7 @@
 {
-  "setTemperatureSpiritDegres": {
+  "setTemperatureSpiritConsigne": {
     "isVisible": 1,
-    "name": "setTemperatureSpiritDegres",
+    "name": "Set Consigne",
     "order": 14,
     "isHistorized": "0",
     "Type": "action",
@@ -11,10 +11,10 @@
     "template": "",
     "configuration": {
       "uniqId": "5c07c76325434",
-      "topic": "WriteAttributeRequest",
+      "topic": "WriteAttributeRequestTemperatureSpiritConsigne",
       "request": "clusterId=0201&attributeId=4003&EP=01&Proprio=1037&attributeType=29&value=#slider#",
-      "minValue": "2200",
-      "maxValue": "4000",
+      "minValue": "500",
+      "maxValue": "3000",
       "visibilityCategory": "All"
     },
     "display": {

@@ -1,7 +1,7 @@
 {
-  "0201-#EP#-0000": {
+  "0201-#EP#-4003": {
     "isVisible": 1,
-    "name": "Température",
+    "name": "Consigne",
     "order": 2,
     "isHistorized": "1",
     "Type": "info",
@@ -10,11 +10,11 @@
     "invertBinary": "0",
     "template": "tempIMG",
     "configuration": {
-      "uniqId": "5c07078886440",
+      "uniqId": "5c07c76666440",
       "calculValueOffset": "#value#/100",
       "historizeRound": "1",
       "visibilityCategory": "All",
-      "topic": "0201-#EP#-0000"
+      "topic": "0201-#EP#-4003"
     },
     "unite": "°C"
   }

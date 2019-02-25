@@ -1,0 +1,24 @@
+{
+  "setTemperatureSpiritDegres": {
+    "isVisible": 1,
+    "name": "setTemperatureSpiritDegres",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c76325434",
+      "topic": "WriteAttributeRequest",
+      "request": "clusterId=0201&attributeId=4003&EP=01&Proprio=1037&attributeType=29&value=#slider#",
+      "minValue": "2200",
+      "maxValue": "4000",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

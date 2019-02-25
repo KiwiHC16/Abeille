@@ -184,7 +184,7 @@
         sendCmd( $dest, $cmd, $lenth, $data );
     }
 
-    function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
+    function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio)
     {
         deamonlog('debug',"command setParam2");
         // Msg Type = 0x0530
@@ -227,7 +227,7 @@
         $commandWriteAttribute = "02";
 
         $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
-        $dataType = "42"; // string
+        // $dataType = "42"; // string
         // $Param = "53616C6F6E31202020202020202020";
         // $Param = "Salon2         ";
         $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
@@ -1601,7 +1601,7 @@
         // WriteAttributeRequest ------------------------------------------------------------------------------------
         if ( (isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
         {
-            setParam2( $dest, $Command );
+            setParam3( $dest, $Command );
         }
 
         // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
@@ -2016,7 +2016,7 @@
             if ( $Command['location'] == "" ) { $Command['location'] = "Not Def"; }
             if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
 
-            setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'] );
+            setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'], "42" );
         }
 
         if ( isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']) )

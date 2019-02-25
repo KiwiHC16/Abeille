@@ -314,6 +314,7 @@
                                      "attributeType" => $parameters['attributeType'],
                                      // "value" => $keywords[9],
                                      "value" => $parameters['value'],
+                                     "attributeType" => $parameters['attributeType'],
                                      
                                      );
                     deamonlog('debug', 'Msg Received: '.$msg.' from NE');

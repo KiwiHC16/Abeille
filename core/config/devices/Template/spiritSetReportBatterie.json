@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "5c07c76624ea4",
       "topic": "setReport",
-      "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MinInterval=300&MaxInterval=3500",
+      "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MinInterval=3300&MaxInterval=3500",
       "visibilityCategory": "Network"
     }
   }

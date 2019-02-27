@@ -990,7 +990,8 @@
             $AttributeId            = $Command['AttributeId'];    // "0000"
             //$AttributeId            = "0000";
 
-            $MinInterval            = "0000";
+            // $MinInterval            = "0000";
+            if ( strlen($Command['MinInterval'])>0 ) { $MinInterval = $Command['MinInterval']; } else { $MinInterval = "0000"; }
             if ( strlen($Command['MaxInterval'])>0 ) { $MaxInterval = $Command['MaxInterval']; } else { $MaxInterval = "0000"; }
             $Timeout                = "0000";
             $Change                 = "00";

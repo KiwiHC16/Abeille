@@ -32,7 +32,9 @@
       "include25 2 2 3 2 3": "spiritTrvModeGet",
       "include25 2 2 3 2 3 2": "spiritTrvModeSet",
       "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
-      "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve"
+      "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
+      "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
+      "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie"
     }
   }
 }

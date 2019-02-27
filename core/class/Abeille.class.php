@@ -405,21 +405,21 @@
                         "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE,
                         '0'
                     );
-                    sleep(5);
+                    // sleep(5);
                     Abeille::publishMosquitto(
                         null,
                         "CmdAbeille/Ruche/bindShort",
                         "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE,
                         '0'
                     );
-                    sleep(5);
+                    // sleep(5);
                     Abeille::publishMosquitto(
                         null,
                         "CmdAbeille/Ruche/setReport",
                         "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10",
                         '0'
                     );
-                    sleep(5);
+                    // sleep(5);
                     Abeille::publishMosquitto(
                         null,
                         "CmdAbeille/Ruche/setReport",
@@ -427,7 +427,7 @@
                         '0'
                     );
 
-                    sleep(5);
+                    // sleep(5);
                 }
             }
 
@@ -492,7 +492,7 @@
                             Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
                         }
 
-                        sleep(5);
+                        // sleep(5);
                     }
                 }
             }

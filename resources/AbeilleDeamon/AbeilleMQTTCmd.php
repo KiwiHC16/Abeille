@@ -378,6 +378,66 @@
                     deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
+                case "WriteAttributeRequestValveSpiritConsigne":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    // $keywords = preg_split("/[=&]+/", $msg);
+                    deamonlog('debug', 'Msg Received: '.$msg);
+                    
+                    $consigne = sprintf( "%02X", $parameters['value'] );
+                    $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
+                    
+                    $Command = array(
+                                     "WriteAttributeRequest" => "1",
+                                     "address" => $address,
+                                     // "Proprio" => $keywords[1],
+                                     "Proprio" => $parameters['Proprio'],
+                                     // "clusterId" => $keywords[3],
+                                     "clusterId" => $parameters['clusterId'],
+                                     // "attributeId" => $keywords[5],
+                                     "attributeId" => $parameters['attributeId'],
+                                     // "attributeType" => $keywords[7],
+                                     "attributeType" => $parameters['attributeType'],
+                                     // "value" => $keywords[9],
+                                     "value" => $consigneHex,
+                                     // "repeat" => $parameters['repeat'],
+                                     
+                                     );
+                    deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                    break;
+                    //----------------------------------------------------------------------------
+                case "WriteAttributeRequestTrvSpiritMode":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    // $keywords = preg_split("/[=&]+/", $msg);
+                    deamonlog('debug', 'Msg Received: '.$msg);
+                    
+                    $consigne = sprintf( "%02X", $parameters['value'] );
+                    $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
+                    
+                    $Command = array(
+                                     "WriteAttributeRequest" => "1",
+                                     "address" => $address,
+                                     // "Proprio" => $keywords[1],
+                                     "Proprio" => $parameters['Proprio'],
+                                     // "clusterId" => $keywords[3],
+                                     "clusterId" => $parameters['clusterId'],
+                                     // "attributeId" => $keywords[5],
+                                     "attributeId" => $parameters['attributeId'],
+                                     // "attributeType" => $keywords[7],
+                                     "attributeType" => $parameters['attributeType'],
+                                     // "value" => $keywords[9],
+                                     "value" => $consigneHex,
+                                     // "repeat" => $parameters['repeat'],
+                                     
+                                     );
+                    deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                    break;
+                    //----------------------------------------------------------------------------
                 case "ReadAttributeRequest":
                     $keywords = preg_split("/[=&]+/", $msg);
                     if (count($keywords) > 1) {

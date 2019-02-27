@@ -1,5 +1,5 @@
 {
-  "setTemperatureSpiritConsigne": {
+  "spiritSetTemperatureConsigne": {
     "isVisible": 1,
     "name": "Set Consigne",
     "order": 14,

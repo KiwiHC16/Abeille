@@ -2384,10 +2384,11 @@
 
         deamonlog('debug',';Type; fct; ===> Configure NE Start');
 
-        $commandeConfiguration = array( 'BindShortToZigateBatterie',  'setReportBatterie',
-                                        'BindToZigateEtat',           'setReportEtat',
-                                        'BindToZigateLevel',          'setReportLevel',
-                                        'BindToZigateButton'
+        $commandeConfiguration = array( 'BindShortToZigateBatterie',          'setReportBatterie', 'spiritSetReportBatterie',
+                                        'BindToZigateEtat',                   'setReportEtat',
+                                        'BindToZigateLevel',                  'setReportLevel',
+                                        'BindToZigateButton',
+                                        'spiritTemperatureBindShortToZigate', 'spiritTemperatureSetReport',
                                        );
 
         $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');

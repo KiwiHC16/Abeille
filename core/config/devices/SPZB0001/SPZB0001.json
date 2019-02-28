@@ -38,7 +38,14 @@
       "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
       "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
       "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
-      "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie"
+      "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie",
+      "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
+      "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
+      "include25 2 3": "spiritHostFlagsDisplayDownSet",
+      "include25 2 3 2": "spiritHostFlagsDefaultSet",
+      "include25 2 3 2 2": "spiritHostFlagsBoostSet",
+      "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
+      "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet"
     }
   }
 }

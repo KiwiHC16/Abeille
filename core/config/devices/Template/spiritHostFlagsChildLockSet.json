@@ -1,0 +1,22 @@
+{
+  "spiritHostFlagsChildLockSet": {
+    "isVisible": 1,
+    "name": "Child Lock",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07006eak434qsf",
+      "topic": "WriteAttributeRequestHostFlag",
+      "request": "clusterId=0201&attributeId=4008&EP=01&Proprio=1037&attributeType=22&value=000080",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

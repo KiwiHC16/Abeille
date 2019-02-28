@@ -257,9 +257,8 @@
     {
         // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
 
-        // isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value'])
         deamonlog('debug',"command setParam3");
-        // Msg Type = 0x0530
+
         $cmd = "0530";
 
         // <address mode: uint8_t>              -> 1
@@ -317,12 +316,13 @@
         // $dataType = "42"; // string
         $dataType = $Command['attributeType'];
 
-        $Param = $Command['value'];
+        // $Param = $Command['value'];
         // $lengthAttribut = sprintf("%02s",dechex(strlen( $Param )));
         // $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
         $attributValue = $Command['value'];
 
-        $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+        // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+        $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 

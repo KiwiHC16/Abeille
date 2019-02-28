@@ -1,6 +1,7 @@
 {
   "0201-#EP#-4001": {
-    "isVisible": 1,
+    "Comment": "Cette info ne remonte pas car elle est dans PiHeating, set invisible",
+    "isVisible": 0,
     "name": "Valve Position",
     "order": 2,
     "isHistorized": "1",

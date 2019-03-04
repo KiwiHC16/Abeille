@@ -1025,11 +1025,19 @@ Vous pouvez aussi utiliser un scénario dans Jeedom pour adresser un groupe d'é
 
 Les groupes Zigbee sont nécessaires pour la gestion des scènes.
 
-La gestion des groupes se fait depuis la ruche avec 3 commandes:
+La gestion des groupes se fait de deux façons 
+
+Option A: Soit depuis la ruche avec 3 commandes (Version initiale pour leles developpeurs):
 
 * Ajout
 * Retrait
 * Consultation
+
+Option B: Soit en utilisant la page de configuration du plug in (pour tous les utilisateurs):
+
+![](../images/Capture_d_ecran_2019_03_04_a_20_05_09.png)
+
+Je vous recommande grandement l l'option B.
 
 A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets Abeille.
 
@@ -1038,22 +1046,47 @@ Un équipement peut avoir plusieurs adresses de groupes, cela permet donc de ré
 
 ## Ajout d un groupe à un équipement
 
+Option A:
 * Premier champ: adresse de l'équipement
 * Deuxième champ: End Point de l'équipement
 * Troisième champ: l'adresse de groupe a ajouter
 
+Option B:
+Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones):
+
+![](../images/Capture_d_ecran_2019_03_04_a_20_08_28.png)
+
+Faites un "Get Group" pour récupérer les groupes de cette/ces ampoule(s).
+
+![](../images/Capture_d_ecran_2019_03_04_a_20_11_08.png)
+
+Selectionnez de nouveu l ampoule et saisissez l'identifiant de groupe que vous voulez lui attribuer dans le champ Id, puis utiliser le bouton "Add Group". Voila l 'ampoule doit avoir son groupe de défini.
+
+Maintenant si vous vouler piloter le groupe avec une télécommande Ikea, selectionner la télécommande, mettez l'identifiant (Hexa à 4 digit) dans le champ Id, utilisez le bouton "Set Group Remote", et immédiatement réveillez la télécommande en appuyant sur un des boutons physique de celle ci. Il est possible que cela ne fonctionne pas du premier coup alors faites le une ou deux fois de plus. Jusqu'a ce qque vous ampoules réagissent à un appui sur la bouton physique de la télécommande. Maintenant il vous reste à renseigné dans l objet Télécommande l'Id du groupe dans ses paramètres pour qu'Abeille pilote le groupe.
+
+![](../images/Capture_d_ecran_2019_03_04_a_20_22_04.png)
+
 ## Retrait d un groupe à un équipement
 
+Option A:
 * Premier champ: adresse de l'équipement
 * Deuxième champ: End Point de l'équipement
 * Troisième champ: l'adresse de groupe a retirer
 
+Option B:
+Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones), saisissez l'Id et utilisez les bouton "Remove Group".
+
+
 ## Récupérer les groupes d'un équipement
 
+Option A:
 * Premier champ: adresse de l'équipement
 * Deuxième champ: End Point de l'équipement
 
 L'information groupe doit remonter dans le champ groupe de l'équipement (peut être invisible par défaut, le rendre visible).
+
+Option B:
+Selectionnez l'équipement et utilisez le bouton"Get Group".
 
 # Scènes
 

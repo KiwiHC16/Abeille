@@ -39,6 +39,21 @@ try {
         ajax::success();
     }
 
+    if (init('action') == 'installGPIO') {
+        abeille::installGPIO(false);
+        ajax::success();
+    }
+    
+    if (init('action') == 'updateFirmwarePiZiGate') {
+        abeille::updateFirmwarePiZiGate(false);
+        ajax::success();
+    }
+    
+    if (init('action') == 'resetPiZiGate') {
+        abeille::resetPiZiGate(false);
+        ajax::success();
+    }
+    
 	throw new Exception('Aucune methode correspondante');
 	/*     * *********Catch exeption*************** */
 } catch (Exception $e) {

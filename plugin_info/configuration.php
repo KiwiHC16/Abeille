@@ -173,6 +173,31 @@ Dev Master
         </div>
     </div>
 
+
+    <div class="form-group">
+        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate en pilotant les PIN specifiques de la PiZiGate.">{{Installation de Wiring Pi}}</label>
+        <div class="col-lg-5">
+            <a class="btn btn-warning" id="bt_installGPIO"><i class="fa fa-refresh"></i> {{Installer}}</a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
+        <div class="col-lg-5">
+            <a class="btn btn-warning" id="bt_updateFrimware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
+        <div class="col-lg-5">
+            <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
+        </div>
+    </div>
+
+
+
+
 <legend><i class="fa fa-list-alt"></i> {{Messages MQTT - Brocker Mosquitto}}</legend>
 <p><I> Abeille utilise le protocol MQTT pour échanger des messages MQTT entre les parties logicielles d'Abeille. Par defaut le broker Mosquitto est installé. C'est lui qui gere la reception et distribution des messages MQTT. Vous pouvez utiliser celui qui est installé par défaut ou utiliser un autre. Si vous n'avez pas de broker MQTT spécifique alors laissez les parametres par défaut.</br>
     Tous les tests sont faits avec le broker mosquitto par defaut donc si vous voulez utiliser un autre broker vérifiez que tout fonctionne comme attendu.
@@ -262,5 +287,31 @@ placeholder="#"/>
                                               });
                               });
 
+$('#bt_installGPIO').on('click',function(){
+                           bootbox.confirm('{{Vous êtes sur le point d installer Wiring Pi (http://wiringpi.com), cela peut provoquer des conflits avec d autres gestionnaires des pin GPIO.<br> Voulez vous continuer ?}}', function (result) {
+                                           if (result) {
+                                           $('#md_modal2').dialog({title: "{{Installation Wiring Pi}}"});
+                                           $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installGPIO.abeille').dialog('open');
+                                           }
+                                           });
+                           })
+
+$('#bt_updateFrimware').on('click',function(){
+                              bootbox.confirm('{{Vous êtes sur le point de programmer la zigate.<br> Voulez vous continuer ?}}', function (result) {
+                                              if (result) {
+                                              $('#md_modal2').dialog({title: "{{Programmation de la zigate}}"});
+                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFrimware.abeille').dialog('open');
+                                              }
+                                              });
+                              })
+
+$('#bt_resetPiZigate').on('click',function(){
+                           bootbox.confirm('{{Vous êtes sur le point de reset (HW) la zigate.<br> Voulez vous continuer ?}}', function (result) {
+                                           if (result) {
+                                           $('#md_modal2').dialog({title: "{{Reset (HW) de la zigate}}"});
+                                           $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
+                                           }
+                                           });
+                           })
 
     </script>

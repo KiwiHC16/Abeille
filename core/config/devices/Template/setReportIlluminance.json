@@ -1,0 +1,18 @@
+{
+  "setReportIlluminance": {
+    "isVisible": 0,
+    "name": "setReportIlluminance",
+    "order": 29,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c0789GS8H624f46",
+      "topic": "setReport",
+      "request": "targetEndpoint=#EP#&ClusterId=0400&AttributeId=0000&AttributeType=21",
+      "visibilityCategory": "Network"
+    }
+  }
+}

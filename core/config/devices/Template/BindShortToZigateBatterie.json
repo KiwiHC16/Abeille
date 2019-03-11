@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "5c07c76621802",
       "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
       "visibilityCategory": "Network"
     },
     "display": {

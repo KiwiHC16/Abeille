@@ -173,6 +173,12 @@ Dev Master
         </div>
     </div>
 
+<legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
+
+<div>
+<p><I> La Pi-ZiGate peut être programmée directement depuis le raspberry alors qu elle est en place sur le slot GPIO. Pour se faire, deux PIN du GPIO doivent être pilotées. Il faut pour cela avoir le logiciel Wiring Pi installé (voir bouton ci dessous). Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.
+</i></p>
+</div>
 
     <div class="form-group">
         <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate en pilotant les PIN specifiques de la PiZiGate.">{{Installation de Wiring Pi}}</label>

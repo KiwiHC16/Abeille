@@ -31,15 +31,15 @@
 
 
 <legend><i class="fa fa-list-alt"></i> {{Documentation}}</legend>
-<div class="form-group">
+
     <div align="center">
-        <a class="btn btn-success href="/plugins/Abeille/docs/fr_FR/html/changelog.html" target="_blank">{{ChangeLog}}</a>
+        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/html/changelog.html" target="_blank">{{ChangeLog}}</a>
     </div>
     </br>
     <div align="center">
-        <a class="btn btn-success href="/plugins/Abeille/docs/fr_FR/html/index.html" target="_blank">{{Manuel utilisateur}}</a>
+        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/html/index.html" target="_blank">{{Manuel utilisateur}}</a>
     </div>
-</div>
+
 
 
 <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>

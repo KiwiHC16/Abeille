@@ -28,16 +28,31 @@
 <form class="form-horizontal">
     <div class="form-group">
         <fieldset>
-            <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
-<div>
-<p><i> En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.
-</i></p>
+
+
+<legend><i class="fa fa-list-alt"></i> {{Documentation}}</legend>
 <div class="form-group">
-<label class="col-lg-4 control-label" data-toggle="tooltip" title="Version Abeille.">{{Version Abeille : }}</label>
-<div class="col-sm-4">
-Dev Master
+    <div align="center">
+        <a class="btn btn-success href="/plugins/Abeille/docs/fr_FR/html/changelog.html" target="_blank">{{ChangeLog}}</a>
+    </div>
+    </br>
+    <div align="center">
+        <a class="btn btn-success href="/plugins/Abeille/docs/fr_FR/html/index.html" target="_blank">{{Manuel utilisateur}}</a>
+    </div>
 </div>
-</div>
+
+
+<legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
+    <div>
+        <p><i> En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.</i></p>
+        <div class="form-group">
+            <label class="col-lg-4 control-label" data-toggle="tooltip" title="Version Abeille.">{{Version Abeille : }}</label>
+            <div class="col-lg-4">
+                Dev Master
+            </div>
+        </div>
+    </div>
+
 
 
 <legend><i class="fa fa-list-alt"></i> {{Connection}}</legend>

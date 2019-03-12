@@ -1,0 +1,26 @@
+:toc2:
+
+= Manuel de l utilisateur
+
+Le manuel de l'utilisateur possède plusieurs chapitre.
+
+[red]#Cette documentation est en cours de "ré-écriture".#
+
+[red]#Plugin en développement continu. Le développement n'est pas terminé. De nombreux ajustements sont en cours ...#
+
+== Abeille
+
+Le chapitre link:presentation.html[Présentation] contient les premières informations nécessaires à l'utilisation du plugin Abeille.
+
+
+== Timer
+
+Le plugin contient une fonctionalité link:timer.html[Timer] qui peut être utilisé avec ou sans la zigate et le réseau zigbee associé.
+
+== Trucs et Astuces
+
+D'autres fonctions de Jeedom sont bien pratiques, par exemple si vous devez link:Remplacement.html#Remplacement-Equipement[remplacer des équipements par d'autres], ou link:Remplacement.html#Remplacement-Commande[des commandes par d'autres].
+
+== Changelog
+
+Afin de vous donner de la visibilité sur l'évolution du plugin vous trouverez des informations génériques dans link:changelog.html[ChangeLog].

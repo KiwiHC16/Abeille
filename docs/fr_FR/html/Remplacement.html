@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title>Mise a Jour - Bug - ChangeLog</title>
+<title>Fonctions Jeedom</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -767,7 +767,7 @@ asciidoc.install(2);
 </head>
 <body class="article">
 <div id="header">
-<h1>Mise a Jour - Bug - ChangeLog</h1>
+<h1>Fonctions Jeedom</h1>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
@@ -775,816 +775,71 @@ asciidoc.install(2);
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_mise_à_jour">Mise à jour</h2>
+<h2 id="Remplacement">Remplacement</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_01_2019_8658_02_2019">01/2019 &#8658; 02/2019</h3>
-<div class="paragraph"><p>Cette version est en ligne avec le firmware 3.0f de la Zigate
-Vous pouvez utiliser un firmware plus vieux mais tout ne fonctionnera pas. (98% fonctionnera)</p></div>
-<div class="paragraph"><p>Comment procéder:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Mettre à jour le plugin Abeille
-</p>
-</li>
-<li>
-<p>
-Flasher la Zigate avec le firmware 3.0f (<span class="underline">bien faire un erase de l&#8217;EEPROM</span>)
-</p>
-</li>
-<li>
-<p>
-Connecter la Zigate et démarrer le deamon abeille
-</p>
-</li>
-<li>
-<p>
-démarrer le réseau Zigbee depuis abeille
-</p>
-</li>
-<li>
-<p>
-mettre la Zigate en inclusion
-</p>
-</li>
-<li>
-<p>
-inclure vos routeurs en partant des plus proches au plus lointain
-</p>
-</li>
-<li>
-<p>
-Vérifier que tout fonctionne
-</p>
-</li>
-<li>
-<p>
-Inclure les équipements sur piles (dans l&#8217;ordre que vous voulez)
-</p>
-</li>
-</ul></div>
-<div class="paragraph"><p><span class="red">!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!</span></p></div>
+<h3 id="Remplacement-Equipement">Equipement</h3>
+<div class="paragraph"><p>Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scénarios,&#8230;), voici la méthode à suivre.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/tip.png" alt="Tip" />
+</td>
+<td class="content">Attention, cette manipulation n&#8217;est pas sans risque car je n&#8217;ai pas la maitrise de tout.</td>
+</tr></table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/note.png" alt="Note" />
+</td>
+<td class="content">Cette fonction était intéressante dans les premières versions d&#8217;Abeille car le changement d&#8217;adresse des équipements zigbee n'était pas géré. Maintenant c&#8217;est automatique et donc le remplacement manuelle non nécessaire. A n&#8217;utiliser que pour des besoins très spécifiques.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Prenons l&#8217;exemple du remplacement d&#8217;un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_16_53_29.png" alt="../images/Capture_d_ecran_2018_03_01_a_16_53_29.png" />
+</span></p></div>
+<div class="paragraph"><p>Première opération, Inclure le nouveau bouton dans Abeille.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_16_48_35.png" alt="../images/Capture_d_ecran_2018_03_01_a_16_48_35.png" />
+</span></p></div>
+<div class="paragraph"><p>Le nouveau bouton a pour adresse 8818.</p></div>
+<div class="paragraph"><p>Renseigner les champs dans la commande "Replace Equipment" dans l&#8217;objet Ruche.
+Pour le champ Titre mettre l&#8217;adresse de l&#8217;ancien équipement.
+Pour le champ Message mettre l&#8217;adresse du nouvel équipement.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_16_57_02.png" alt="../images/Capture_d_ecran_2018_03_01_a_16_57_02.png" />
+</span></p></div>
+<div class="paragraph"><p>Puis clic sur "Replace Equipement".</p></div>
+<div class="paragraph"><p>Ouvrez l&#8217;ancien équipement qui porte toujours le nom "Abeille-21ce".</p></div>
+<div class="paragraph"><p>Vous devez voir le nouveau nom:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_17_01_04.png" alt="../images/Capture_d_ecran_2018_03_01_a_17_01_04.png" />
+</span></p></div>
+<div class="paragraph"><p>Sauvegardez le nouvel objet.</p></div>
+<div class="paragraph"><p>Vous devez avoir deux équipements:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_17_04_30.png" alt="../images/Capture_d_ecran_2018_03_01_a_17_04_30.png" />
+</span></p></div>
+<div class="paragraph"><p>Il ne vous reste plus qu&#8217;a ouvrir l&#8217;objet "Abeille-8818" et à le supprimer.</p></div>
+<div class="paragraph"><p>Vous pouvez maintenant changer le nom de l&#8217;objet "Abeille-8818-New" à la valeur que vous voulez.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_03_01_a_17_09_46.png" alt="../images/Capture_d_ecran_2018_03_01_a_17_09_46.png" />
+</span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_11_2018_8658_01_2019">11/2018 &#8658; 01/2019</h3>
-<div class="paragraph"><p>Cette mise à jour est importante et délicate. Pour facilité l&#8217;intégration de nouveaux équipements par la suite une standardisation des modèles doit être faite.
-Cela veut dire que tous les modèles changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
-Prévoir du temps, avoir bien fait les backup, et prévoir d&#8217;avoir à faire quelques manipulations à la main. Les situations rencontrées vont dépendre de l&#8217;historique des équipements dans Jeedom.</p></div>
-<div class="paragraph"><p><span class="red">!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!</span></p></div>
-<div class="sect3">
-<h4 id="_solution_pour_les_petits_systèmes">Solution pour les petits systèmes</h4>
-<div class="ulist"><ul>
-<li>
-<p>
-Cela suppose que vous aller effacer (objets, historiques,&#8230;) toutes les données puis re-créer le réseau.
-</p>
-</li>
-<li>
-<p>
-supprimer le plug in Abeille
-</p>
-</li>
-<li>
-<p>
-Installer le plug in Abeille depuis le market (ou github)
-</p>
-</li>
-<li>
-<p>
-Activer et faire la configuration du plugin
-</p>
-</li>
-<li>
-<p>
-Démarrer le plugin
-</p>
-</li>
-<li>
-<p>
-Mettre en mode inclusion
-</p>
-</li>
-<li>
-<p>
-Appairer les devices.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect3">
-<h4 id="_solution_pour_les_gros_systèmes">Solution pour les gros systèmes</h4>
-<div class="paragraph"><p>Si la solution précédente demande trop de travail, on peut faire la mise à jour de la façon suivante. Attention, je ne peux pas tester toutes les combinaisons et des opérations supplémentaires seront certainement nécessaires. 90% aura été fait automatiquement.
-Il n&#8217;y a pas de moyen infaillible pour faire la correspondance entre une commande dans un modèle et une commande dans Jeedom. Le lien est fait soit par le nom dans la commande nom ou quand pas disponible par le nom de l&#8217;image utilisée pour le device. De même pour les commande le nom est le moyen de faire le lien. Si vous avez fait des changements de nom, les commandes sortiront en erreur et cela demandera de mettre le nom de la commande dans le modèle le temps de la conversion.
-Dans les versions suivantes, nous ne devrions plus avoir ce problème car les commandes auront un Id unique et spécifique.</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Mettre à jour la plugin avec le market (ou github)
-</p>
-</li>
-<li>
-<p>
-Vérifier la configuration du plugin et démarrer le plugin en mode debug.
-</p>
-</li>
-<li>
-<p>
-Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modèles"
-</p>
-</li>
-<li>
-<p>
-90% des objets devraient être à jour maintenant.
-</p>
-</li>
-<li>
-<p>
-Tester vos équipements.
-</p>
-</li>
-</ul></div>
-<div class="paragraph"><p>Si un équipement ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin&#8594;Protocol Domotique&#8594;Abeille, sélectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le détails des opérations faites et éventuellement voir ce qui n&#8217;est pas mis à jour.</p></div>
-<div class="paragraph"><p>vous allez trouver des messages:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-"parameter identical, no change" qui indique que rien n&#8217;a été fait sur ce paramètre (déjà à jour).
-</p>
-</li>
-<li>
-<p>
-"parameter is not in the template, no change" qui indique que le paramètre de l&#8217;objet n&#8217;est pas trouvé dans le template. Soit il n&#8217;est plus nécessaire et ne sera donc pas utilisé, soit vous l&#8217;avez changé et on le garde, soit Jeedom a défini une valeur par défaut et c&#8217;est très bien &#8230;
-</p>
-</li>
-<li>
-<p>
-"Cmd Name: nom ==================================&#8658; not found in template" qui indique qu&#8217;on ne trouve pas le template pour la commande et que donc la commande n&#8217;est pas mise à jour. Ça doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l&#8217;objet et le recréer soit me joindre sur le forum.
-</p>
-</li>
-</ul></div>
-<div class="paragraph"><p>Équipements qui sont passés sans soucis sur ma prod:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Door Sensor V2 Xiaomi
-</p>
-</li>
-<li>
-<p>
-Xiaomi Smoke
-</p>
-</li>
-<li>
-<p>
-Télécommande Ikea 5 boutons
-</p>
-</li>
-<li>
-<p>
-Xiaomi Présence V2
-</p>
-</li>
-<li>
-<p>
-Xiaomi Bouton Carré V2
-</p>
-</li>
-<li>
-<p>
-Xiaomi Température Carré
-</p>
-</li>
-<li>
-<p>
-&#8230;
-</p>
-</li>
-</ul></div>
-<div class="paragraph"><p>Cas rencontrés:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-plug xiaomi, une commande porte le nom "Manufacturer", doit être remplacé par "societe" et appliquer de nouveau "Apply Template"
-</p>
-</li>
-<li>
-<p>
-interrupteurs muraux Xiaomi: si la mise a jour ne se fait, il faut malheureusement, supprimer et recréer.
-</p>
-</li>
-<li>
-<p>
-door sensor xiaomi V2 / xiaomi presence V1: une commande porte le nom "Last", doit être remplacé par "Time-Time", et "Last Stamp" par "Time-Stamp"
-</p>
-</li>
-<li>
-<p>
-&#8230;
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect3">
-<h4 id="_secours">Secours</h4>
-<div class="ulist"><ul>
-<li>
-<p>
-Si rien n&#8217;y fait, aucune des deux solutions précédentes ne résout le soucis, vous pouvez probablement exécuter la méthode suivante sur un équipement (je ne l&#8217;ai pas testée):
-</p>
-</li>
-<li>
-<p>
-supprimer la commande IEEE-Addr de votre objet.
-</p>
-</li>
-<li>
-<p>
-Zigate en mode inclusion et re-appairage de l'équipement
-</p>
-</li>
-<li>
-<p>
-un nouvel objet doit être créé.
-</p>
-</li>
-<li>
-<p>
-Transférer les commandes de l&#8217;ancien objet vers le nouveau avec le bouton "Remplacer cette commande par la commande"
-</p>
-</li>
-<li>
-<p>
-Transférer l&#8217;historique des commandes avec le bouton "Copier l&#8217;historique de cette commande sur une autre commande"
-</p>
-</li>
-<li>
-<p>
-Vous testez le nouvel équipement
-</p>
-</li>
-<li>
-<p>
-si ok vous pouvez supprimer l&#8217;ancien.
-</p>
-</li>
-</ul></div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_bugs">Bugs</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Il est fort probable que des bugs soient découverts.
-Dans ce cas forum</p></div>
-<div class="paragraph"><p>(<a href="https://www.jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;p=575280&amp;hilit=abeille">https://www.jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;p=575280&amp;hilit=abeille</a>)</p></div>
-<div class="paragraph"><p>ou issue dans GitHub</p></div>
-<div class="paragraph"><p>(<a href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue</a>+) &#8230;</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_changelog">Changelog</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_2019_02_06">2019-02-06</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Récupération des groupes dans la Zigate
-</p>
-</li>
-<li>
-<p>
-Configuration du groupe de la remote ikea On/off depuis abeille
-</p>
-</li>
-<li>
-<p>
-Formatting of Livolo Switch
-</p>
-</li>
-<li>
-<p>
-Groupe commande Chaleur ampoule
-</p>
-</li>
-<li>
-<p>
-GUI to set group to Zigate
-</p>
-</li>
-<li>
-<p>
-TxPower Command
-</p>
-</li>
-<li>
-<p>
-Channel setMask and setExtendedPANID added
-</p>
-</li>
-<li>
-<p>
-Télécommande Ikea Bouton information to Abeille
-</p>
-</li>
-<li>
-<p>
-Certification configuration
-</p>
-</li>
-<li>
-<p>
-Led On/Off
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_02_04">2019-02-04</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Get Group Membership response modification avec source address for 3.0.f
-</p>
-</li>
-<li>
-<p>
-Fix Sur mise a jour des templates il manque la mise a jour des icônes
-</p>
-</li>
-<li>
-<p>
-OSRAM Spot LED dimmable connecté Smart+ - Culot GU5.3
-</p>
-</li>
-<li>
-<p>
-Now default Zigbee object type could be used to create object in Abeille
-</p>
-</li>
-<li>
-<p>
-TRADFRIbulbE27WSopal1000lm
-</p>
-</li>
-<li>
-<p>
-MQTT loop improvement so Abeille should be more reactive
-</p>
-</li>
-<li>
-<p>
-nom du NE qui fait un Leave dans le message envoyé à la ruche
-</p>
-</li>
-<li>
-<p>
-Ampoule Hue Flame E14
-</p>
-</li>
-<li>
-<p>
-Info move from Ruche to Config page
-</p>
-</li>
-<li>
-<p>
-A bit more decoding of Xiaomi Fields
-</p>
-</li>
-<li>
-<p>
-channel mak and ExtPAN setting
-</p>
-</li>
-<li>
-<p>
-Ajout du Switch Livolo 2 boutons
-</p>
-</li>
-<li>
-<p>
-Affichage Commande au démarrage
-</p>
-</li>
-<li>
-<p>
-ClassiA60WClear second modèle added
-</p>
-</li>
-<li>
-<p>
-setTimeServer / getTimeServer
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_01_25">2019-01-25</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout commande scene
-</p>
-</li>
-<li>
-<p>
-Deux petites vidéos pour les docs
-</p>
-</li>
-<li>
-<p>
-Ajout des scènes et groupes de scènes
-</p>
-</li>
-<li>
-<p>
-Ajout ampoule LWB004
-</p>
-</li>
-<li>
-<p>
-Osram - flex led rgbw
-</p>
-</li>
-<li>
-<p>
-Osram - garden led rgbw
-</p>
-</li>
-<li>
-<p>
-GLEDOPTO Controller RGB+CCT
-</p>
-</li>
-<li>
-<p>
-Ajout de gestion du time server (cluster)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_01_15">2019-01-15</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-retrait de pause pour avoir un plugin plus réactif
-</p>
-</li>
-<li>
-<p>
-LCT001 modèle ajouté
-</p>
-</li>
-<li>
-<p>
-LTW013 Philips Hue modèle ajouté
-</p>
-</li>
-<li>
-<p>
-Ajout modèle lightstripe philips hue plus modèle ajouté
-</p>
-</li>
-<li>
-<p>
-doc télécommande Hue
-</p>
-</li>
-<li>
-<p>
-Ajout LTW010 ampoule Hue White Spectre
-</p>
-</li>
-<li>
-<p>
-Ajout de la liste des Abeille ayant un groupe avec leur groupe
-</p>
-</li>
-<li>
-<p>
-LCT015 Bulb Added
-</p>
-</li>
-<li>
-<p>
-Add Address IEEE in health table
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_15">2018-12-15</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Graph LQI par distance
-</p>
-</li>
-<li>
-<p>
-télécommande carré Ikea On/Off
-</p>
-</li>
-<li>
-<p>
-fix température carré xiaomi
-</p>
-</li>
-<li>
-<p>
-Télécommande Hue retour Boutons vers Abeille (scénario)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_11">2018-12-11</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Toute la doc sous le format Jeedom
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_10">2018-12-10</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule Couleur Standard ZigBee
-</p>
-</li>
-<li>
-<p>
-Ampoule Dimmable Standard ZigBee
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_09">2018-12-09</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule Spectre Blanc Standard ZigBee
-</p>
-</li>
-<li>
-<p>
-Blanche Ampoule GLEDOPTO GU10 Couleur/White GLEDOPTO avec hombridge
-</p>
-</li>
-<li>
-<p>
-Spectre Blanc Ampoule GLEDOPTO GU10 GL-S-004Z avec hombridge
-</p>
-</li>
-<li>
-<p>
-Retour des volets profalux en automatique
-</p>
-</li>
-<li>
-<p>
-Poll Automatique
-</p>
-</li>
-<li>
-<p>
-Ajout/Suppression/Get des groupes depuis l interface Abeille
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_08">2018-12-08</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Couleur Ampoule GLEDOPTO GU10 Couleur/White GL-S-003Z avec hombridge
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_07">2018-12-07</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Couleur Ampoule Ikea avec Homebridge
-</p>
-</li>
-<li>
-<p>
-Couleur Ampoule OSRAM avec Homebridge
-</p>
-</li>
-<li>
-<p>
-Couleur Ampoule Hue Go avec Homebridge
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_05">2018-12-05</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout d un paramètre Groupe dans la configuration des devices pour avoir la groupe a commander. Il n&#8217;est plus besoin de changer les commandes une à une.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_04">2018-12-04</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-passage aux modèles standardisés (avec include)
-</p>
-</li>
-<li>
-<p>
-les modèles standardisés permettent de modifier les équipements dans Jeedom sans les effacer et donc sans perdre historique, scénarios associés,&#8230;
-</p>
-</li>
-<li>
-<p>
-ajout des boutons pour appliquer de nouveau les modèles de device
-</p>
-</li>
-<li>
-<p>
-introduction d&#8217;Id unique dans les template pour ne pas confondre les devices par la suite.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_01_12">2018-01-12</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule GLEDOPTO White intégrée
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_30">2018-11-30</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Prise Ikea intégrée
-</p>
-</li>
-<li>
-<p>
-Ajout des groupes aux devices sélectionnés
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_26">2018-11-26</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ikea Transformer 30W intégré
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_24">2018-11-24</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Correction TimeOut (en min)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_16">2018-11-16</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Activation/Désactivation d&#8217;un équipement suivant qu&#8217;il joint le réseau ou le quitte.
-</p>
-</li>
-<li>
-<p>
-Rafraichi les informations de la page Health à l&#8217;ouverture.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_05">2018-11-05</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout OSRAM GU10
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_14">2018-06-14</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout de la connectivité en Wifi.
-</p>
-</li>
-<li>
-<p>
-Ajout des LQI remontant des trames Zigate
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_12">2018-06-12</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout du double interrupteur mural sur pile xiaomi.
-</p>
-</li>
-<li>
-<p>
-Network modal (graph automatique du reseau)
-</p>
-</li>
-<li>
-<p>
-Ajout aqara Cube
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_11">2018-06-11</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Stop for Volet Profalux =253
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_01">2018-06-01</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Profalux Volets Calibration
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_05_30">2018-05-30</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Inclusion status dans le widget mis à jour en fonction de l’etat de la Zigate
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_05_28">2018-05-28</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout des equipements DIY
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_01_19">2018-01-19</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-first version posted on github
-</p>
-</li>
-<li>
-<p>
-inclus la création des objets IKEA Bulb et Xiaomi Plug, Température Carre/rond, bouton et InfraRouge
-</p>
-</li>
-</ul></div>
+<h3 id="Remplacement-Commande">Commande</h3>
+<div class="paragraph"><p>Vous pouvez remplacer une commande A par une autre commande B à l&#8217;aide des boutons oranges:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_01_a_12_32_20.png" alt="../images/Capture_d_ecran_2018_10_01_a_12_32_20.png" />
+</span></p></div>
+<div class="paragraph"><p>Cela permet de mettre à jour les scénarios, les autres objets,&#8230; faisant référence à cette commande. C&#8217;est très pratique et rapide.</p></div>
+<div class="paragraph"><p>Mais car il y a un mais, ou plutôt n&#8217;oubliez pas qu&#8217;une commande est attachée à un objet, un historique et éventuellement un autre Jeedom par JeeLink. A vous de gérer ces aspects.</p></div>
+<div class="paragraph"><p>Si vous aviez une mesure de température A que vous avez remplacé par une mesure B et que vous voulez aussi transférer l&#8217;historique de A vers B:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_01_a_12_31_57.png" alt="../images/Capture_d_ecran_2018_10_01_a_12_31_57.png" />
+</span></p></div>
 </div>
 </div>
 </div>
@@ -1593,7 +848,7 @@ inclus la création des objets IKEA Bulb et Xiaomi Plug, Température Carre/rond
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 12:43:26 CET
+ 2019-03-12 18:54:56 CET
 </div>
 </div>
 </body>

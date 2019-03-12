@@ -1,0 +1,1878 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title></title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_link_status">Link Status</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:</p></div>
+<div class="paragraph"><p><a href="http://">Jeedom</a>/plugins/Abeille/Network/RadioVoisinesMap.php</p></div>
+<div class="paragraph"><p>Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages "Link Status".</p></div>
+<div class="paragraph"><p>Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_32.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_33_32.png" />
+</span></p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_48.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_33_48.png" />
+</span></p></div>
+<div class="paragraph"><p>Une fois cela fait ouvrez la page: <a href="http://">Jeedom</a>/plugins/Abeille/Network/RadioVoisinesMap.php</p></div>
+<div class="paragraph"><p>Vous devriez avoir un résultat comme:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_43_31.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_43_31.png" />
+</span></p></div>
+<div class="paragraph"><p>Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l&#8217;adresse destination. Et enfin le dernier champ permet d&#8217;afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.</p></div>
+<div class="paragraph"><p>Evidement la configuration est celle de mon réseau de prod et de mon réseau de test donc il vous faut déclarer votre propre réseau dans le fichier NetworkDefinition.php.</p></div>
+<div class="paragraph"><p>Dans le tableau knowNE mettre l&#8217;adresse courte suiivie du nom de léquipement:</p></div>
+<div class="paragraph"><p>```
+$knownNE = array(
+"0000" &#8658; "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 &#8594; Production
+
+
+"dc15" &#8658; "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
+"1e8c" &#8658; "T2",
+"174f" &#8658; "T3",            // 00:0b:57:ff:fe:49:10:ea
+"6766" &#8658; "T4",</p></div>
+<div class="paragraph"><p>````</p></div>
+<div class="paragraph"><p>Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:</p></div>
+<div class="paragraph"><p>&#8216;```
+$Abeilles = array(
+<em>Ruche</em>    &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;700, <em>y</em>&#8658;520), <em>color</em>&#8658;'red&#8217;,),
+
+
+<em>T1</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;300, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
+<em>T2</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;400, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
+<em>T3</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;350), <em>color</em>&#8658;'orange',),
+<em>T4</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;250), <em>color</em>&#8658;'orange',),
+````</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lqi">LQI</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:</p></div>
+<div class="paragraph"><p><a href="http://">adresse de votre Jeedom</a>/plugins/Abeille/Network/AbeilleLQI_Map.php</p></div>
+<div class="paragraph"><p>Vous pouvez vérifier que l&#8217;execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):</p></div>
+<div class="paragraph"><p>```
+AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a
+````</p></div>
+<div class="paragraph"><p>Si cela ne fonctionne pas, vous pouvez faire la manip à la main:
+````
+cd /var/www/html/plugins/Abeille/Network
+php AbeilleLQI_Map.php
+````</p></div>
+<div class="paragraph"><p>C&#8217;est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tableau">Tableau</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le script va interroger tous les équipements qu&#8217;il détecte, un à un. Le procesus est assez long et pour l&#8217;instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.</p></div>
+<div class="paragraph"><p>Lors de la premiere execution un tableau est généré avec toutes les informations collectées (les exemples ci dessous ne contiennent pas toutes les colonnes car depuis certaines ont été ajoutées.</p></div>
+<div class="sect2">
+<h3 id="_sur_mon_systeme_de_test_après_40s_cela_donne">Sur mon systeme de test, après 40s, cela donne:</h3>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. LQI Systeme de test</caption>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<thead>
+<tr>
+<th align="left" valign="top">NE</th>
+<th align="left" valign="top">Voisine</th>
+<th align="left" valign="top">Relation</th>
+<th align="left" valign="top">Profondeur</th>
+<th align="left" valign="top">LQI</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td align="left" valign="top"><p class="table">d45e</p></td>
+<td align="left" valign="top"><p class="table">2389</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">255</p></td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">df33</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">152</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">a008</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">141</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">7bd5</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">169</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">dcd9</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">175</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">3950</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">167</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">5dea</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">144</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">4ebd</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">161</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">633e</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">219</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">c7c0</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">174</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">d45e</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">158</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">d45e</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">186</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>La première colonne contient l&#8217;adresse de l'équipement qui a été interrogé.
+La deuxieme colonne continet l&#8217;adresse de l'équipement voisin connu
+La troisieme colonne contient le type de relation entre les deux équipements.
+La quatrieme colonne contient la profondeur de l'équipement dans l&#8217;arborescence du réseau.
+La cinquième colonne contient le LQI (Link Quality Indicator), la qualité de la liaison radio.</p></div>
+<div class="paragraph"><p>On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un "Sibling" qui est un routeur (Ampoule Ikea dans ce cas).</p></div>
+<div class="paragraph"><p>On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (Zigate). Qu&#8217;il possède un équipement enfant qui est donc en 2ieme niveau.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_sur_mon_système_de_prod">Sur mon système de prod</h3>
+<div class="paragraph"><p>Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).</p></div>
+<div class="paragraph"><p>Petites interrogations/Observation:
+- des "Relation" sont "Unknown" : bug ou valeur remontée inconnue, uniquement sur ma HueGo actuellement.
+- des "Profondeur" ont des valeurs "0F" qu&#8217;il faut que je comprenne.
+- Aucun des routeurs ne possède de "Child".</p></div>
+<div class="paragraph"><p>Après 4 minutes, cela donne:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 2. LQI Systeme de production</caption>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<thead>
+<tr>
+<th align="left" valign="top">NE</th>
+<th align="left" valign="top">Voisine</th>
+<th align="left" valign="top">Relation</th>
+<th align="left" valign="top">Profondeur</th>
+<th align="left" valign="top">LQI</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">59</p></td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">1be0</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">189</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">5571</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">212</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">b774</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">146</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">873a</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">197</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">4260</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">48</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">d43e</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">151</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">6c0B</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">51</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">0F7e</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">194</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">f984</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">59</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">2349</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">81</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">345f</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">94</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">28f2</p></td>
+<td align="left" valign="top"><p class="table">Child</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">137</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">81</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">167</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">51</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">105</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">80</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">85</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">135</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">84</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">145</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">27</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">76</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">90</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">47</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">87</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">86</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">63</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Parent</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">171</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">59</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">169</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">110</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">146</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">97</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">1b7b</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">34</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">29</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">21</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">29</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">6766</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">26</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">45</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">8ffe</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">45</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">29</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">45</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">20</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">179</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">33</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">61</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">119</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">119</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">83</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">111</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">97</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">c551</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">22</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">145</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">68</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Parent</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">145</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">32</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">63</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">129</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">91</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">6766</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">16</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">31</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">8ffe</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">16</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">85</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">93</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">112</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">30</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">152</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">70</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">106</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">41</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">81</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">6766</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">17</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">46</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">91</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">63</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">50</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">db83</p></td>
+<td align="left" valign="top"><p class="table">Parent</p></td>
+<td align="left" valign="top"><p class="table">01</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">252</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">252</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">a728</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">c551</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">252</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">252</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">252</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">6766</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">238</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">247</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">1b7b</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">dc15</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">8ffe</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">8ffe</p></td>
+<td align="left" valign="top"><p class="table">Unknown</p></td>
+<td align="left" valign="top"><p class="table">02</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">0000</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">00</p></td>
+<td align="left" valign="top"><p class="table">152</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">41c0</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">106</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">174f</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">23</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">46d9</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">69</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">498d</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">80</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">60fb</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">31</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">7714</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">42</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">a0da</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">51</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">e4c0</p></td>
+<td align="left" valign="top"><p class="table">c551</p></td>
+<td align="left" valign="top"><p class="table">Sibling</p></td>
+<td align="left" valign="top"><p class="table">0F</p></td>
+<td align="left" valign="top"><p class="table">20</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_graphique_vieille_version">Graphique Vieille Version</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph"><p>Afin de visualiser les données, il vous faut modifier le fichier NetworkDefinition.php dans le repertoire Abeille/Network car celui-ci contient les équipements, leur nom et positions.</p></div>
+<div class="paragraph"><p>la premiere table:</p></div>
+<div class="paragraph"><p>$knownNE = array(
+"0000" &#8658; "Ruche",         // 00:15:8d:00:01:b2:2e:24
+
+"dc15" &#8658; "T1",
+"1e8c" &#8658; "T2",
+"174f" &#8658; "T3",            // 00:0b:57:ff:fe:49:10:ea
+&#8230;</p></div>
+<div class="paragraph"><p>définie la liste des équipements en mettant leur adresse Zigbee et leur nom.</p></div>
+<div class="paragraph"><p>Dans la deuxieme table vous definissez les positions des équipements et leur couleur:</p></div>
+<div class="paragraph"><p>$Abeilles = array(
+<em>Ruche</em>    &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;700, <em>y</em>&#8658;520), <em>color</em>&#8658;'red',),
+
+
+<em>T1</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;300, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
+<em>T2</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;400, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
+<em>T3</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;350), <em>color</em>&#8658;'orange',),</p></div>
+</div>
+<div class="sect2">
+<h3 id="_graphique_old_version">Graphique (Old Version)</h3>
+<div class="paragraph"><p>Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j&#8217;ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_04_30_a_23_45_51.png" alt="../images/Capture_d_ecran_2018_04_30_a_23_45_51.png" />
+</span></p></div>
+<div class="paragraph"><p>On peut voir toutes les voisines rapportées par les équipements.</p></div>
+<div class="paragraph"><p>Vous pouvez choisir ce qui est affiché à l'écran:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+premier menu permet de selectionner les équipements qui ont remontés des voisines.
+</p>
+</li>
+<li>
+<p>
+second menu permet de selectionner les équipements qui ont été mentionné comme étant un voisin d&#8217;un autre équipement
+</p>
+</li>
+<li>
+<p>
+le troisieme menu permet en mode cache d&#8217;utiliser les fichier json contenant les informations collectées, le mode refresh permet d&#8217;interroger le reseau
+</p>
+</li>
+<li>
+<p>
+le dernier menu permet de selectionner l information affiché sur les fleches
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Par exemple, je veux toutes les relations de voisinages alors dans le premier menu je choisi all.</p></div>
+<div class="paragraph"><p>Par exemple, je veux voir tous les équipements rapportant vori un équipement xxxx, je choisi none dans le premier menu et xxxx dans le second.</p></div>
+<div class="paragraph"><p>Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l&#8217;ampoule bois bureau, alors que tous les autres équipements rapportent à la Zigate en direct.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_graphique_nouvelle_version">Graphique (Nouvelle Version)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_configuration_2">Configuration</h3>
+<div class="paragraph"><p>Normalement après 24h les informations sont disponibles. Si vous n&#8217;avez pas les 24h ou souhaiter rafraichier les données, il faut avoir fait un "Recalcul du cache" (Network List&#8594;Table des noeuds&#8594;Recalcul du cache).</p></div>
+<div class="paragraph"><p>Juste un clic sur "Network Graph":</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_39_04.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_39_04.png" />
+</span></p></div>
+<div class="paragraph"><p>Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_10.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_24_10.png" />
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="_filtre">Filtre</h3>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_11_44_30.png" alt="../images/Capture_d_ecran_2018_10_04_a_11_44_30.png" />
+</span></p></div>
+<div class="paragraph"><p>Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.</p></div>
+<div class="quoteblock">
+<div class="content">
+<div class="paragraph"><p>Pour qu&#8217;une valeur soit prise en compte, clic sur le bouton Test associé en dessous.</p></div>
+</div>
+<div class="attribution">
+&#8212; Kiwi
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Source: La relation de voisinage qui a pour source la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
+</p>
+</li>
+<li>
+<p>
+Destination: La relation de voisinage qui a pour destination la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.
+</p>
+</li>
+<li>
+<p>
+Parametre: permet de selectionner la valeurs associée à la relation qui sera imprimer le long du lien. Si le parametre choisi est le LinkQualityDec alors le code couleur est vert LQI bon, orange LQI moyen , rouge LQI pas bon.
+</p>
+</li>
+<li>
+<p>
+Relation: permet de choisir les relations hirarchique que l&#8217;on veut afficher.
+</p>
+</li>
+<li>
+<p>
+Save: permet de sauvegarder en local sur le PC CLient un graph.
+</p>
+</li>
+<li>
+<p>
+Restore: permet de recupérer un graph sauvegardé
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Utilisation du filtre par l&#8217;exemple:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Je veux voir toutes les Abeilles vues par la ruche (Zigate). Je choisi Ruche dans la source et none dans destination.
+</p>
+</li>
+<li>
+<p>
+Je veux représenter qui voit la sonnette. Je choisi Sonnette dans la destination et none dans la source.
+</p>
+</li>
+<li>
+<p>
+Je veux voir toutes les relations Child. Je mets All dans Source et Destination, Child dans Relation.
+</p>
+</li>
+<li>
+<p>
+Je choisi la valeur affichée le long de la ligne avec le parametre. Le plus utilisé probablement est LinkQualityDec qui represente la qualité de la relation radio dans le sens Source - Destination. Le nombre est entre 0 et 250. Pour des équipments proches d&#8217;environ 20cm j&#8217;ai des valeurs autour de 180. Au dessus de 220, je me dis que la valeur est farfelue surtout quand elle vaut 255. Tous les équipements ne semblent pas remonter des infos pertinentes. En dessous de 50 la liaison est vraiment pas bonne, il faut probablement faire quelque chose comme ajouter un routeur.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_exemples">Exemples</h3>
+<div class="paragraph"><p>Exemple avec tout positionné à la main:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_17.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_23_17.png" />
+</span></p></div>
+<div class="paragraph"><p>Exemple qu&#8217;avec les relations Child (Filter Child):</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_37.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_23_37.png" />
+</span></p></div>
+<div class="paragraph"><p>On peut voir ici que j&#8217;ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,&#8230;</p></div>
+<div class="paragraph"><p>Vue interressante car elle permet de voir quels sont le équipements terminaux rattachés à quels routeurs.</p></div>
+<div class="paragraph"><p>Exemple en demandant la Ruche au centre:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_23.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_24_23.png" />
+</span></p></div>
+<div class="paragraph"><p>Exemple avec l&#8217;upload d&#8217;une image en fond d'écran:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_10_04_a_11_15_34.png" alt="../images/Capture_d_ecran_2018_10_04_a_11_15_34.png" />
+</span></p></div>
+<div class="paragraph"><p>Vous pouvez aussi choisir votre fond d'écran pour positionner vos Abeilles.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_radio">Radio</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Sur la base de la collecte de ces informations, j&#8217;ai fait quelques graphes pour comprendre ce qu&#8217;on espérer en terme de couverture radio.</p></div>
+<div class="paragraph"><p>Je n&#8217;ai pris que des routeurs dans cet exercice: prise xiaomi, prise ikea, ampoule ikea.
+Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,&#8230;), Distances définies à vue d&#8217;oeil,.. cela permet d&#8217;avoir une vue d&#8217;un réseau réel.</p></div>
+<div class="paragraph"><p>Le premier graphe est le LQI rapporté par l'équipement en fonction du nombre de mur à traverser.
+Le deuxieme graphe est le LQI en fonction de la distance à vol d&#8217;oiseau.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_12_14_a_10_45_20.png" alt="../images/Capture_d_ecran_2018_12_14_a_10_45_20.png" />
+</span></p></div>
+<div class="paragraph"><p>Si l&#8217;on considère qu&#8217;avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus.</p></div>
+<div class="paragraph"><p>Cela nous indique qu&#8217;en moyenne plus de 2 murs est très compliqué. Ce qui implique un routeur dans chaque pièce pour être tranquile.</p></div>
+<div class="paragraph"><p>On peut voir des écarts très important dans le LQI alors que les équipements sont dans la meme piece (Colonne 0 des graphes LQI/Wall).</p></div>
+<div class="paragraph"><p>Pour le LQI/m, on peut dire que jusqu'à 10m c&#8217;est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la Zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.</p></div>
+<div class="paragraph"><p>Je suppose qu&#8217;en environnement ouvert on peut avoir des distances bien supérieures, avec des distances annoncées par les fabriquants jusqu&#8217;a 100m, mais ce type de situation sera des plus rares&#8230;</p></div>
+<div class="paragraph"><p>Enjoy</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2019-03-12 21:22:04 CET
+</div>
+</div>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title>Mise a Jour - Bug - ChangeLog</title>
+<title></title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,40 +535,6 @@ body.manpage div.sectionbody {
 }
 
 
-@media screen {
-  body {
-    max-width: 50em; /* approximately 80 characters wide */
-    margin-left: 16em;
-  }
-
-  #toc {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 13em;
-    padding: 0.5em;
-    padding-bottom: 1.5em;
-    margin: 0;
-    overflow: auto;
-    border-right: 3px solid #f8f8f8;
-    background-color: white;
-  }
-
-  #toc .toclevel1 {
-    margin-top: 0.5em;
-  }
-
-  #toc .toclevel2 {
-    margin-top: 0.25em;
-    display: list-item;
-    color: #aaaaaa;
-  }
-
-  #toctitle {
-    margin-top: 0.5em;
-  }
-}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -761,198 +727,108 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(2);
+asciidoc.install();
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
-<h1>Mise a Jour - Bug - ChangeLog</h1>
-<div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
-</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_mise_à_jour">Mise à jour</h2>
+<h2 id="_debug_troubleshooting_investigations">Debug / Troubleshooting / Investigations</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Je vais essayer de consolider ici tous les retours d&#8217;expériences et les vérifications à faire pour résoudre un éventuel problème.</p></div>
+<div class="sect2">
+<h3 id="_forum">Forum</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+le forum: <a href="https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille">https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attention_danger">Attention - Danger</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_01_2019_8658_02_2019">01/2019 &#8658; 02/2019</h3>
-<div class="paragraph"><p>Cette version est en ligne avec le firmware 3.0f de la Zigate
-Vous pouvez utiliser un firmware plus vieux mais tout ne fonctionnera pas. (98% fonctionnera)</p></div>
-<div class="paragraph"><p>Comment procéder:</p></div>
+<h3 id="_retain_dans_les_objets">"retain" dans les objets</h3>
 <div class="ulist"><ul>
 <li>
 <p>
-Mettre à jour le plugin Abeille
+Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
 </p>
 </li>
 <li>
 <p>
-Flasher la Zigate avec le firmware 3.0f (<span class="underline">bien faire un erase de l&#8217;EEPROM</span>)
+Le plugin [underline]=n&#8217;utilise pas= ce mode de fonctionnement.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+[underline]=Il est fortement conseillé de ne pas choisir "retain"= si vous ne comprenez pas les conséquences.
 </p>
 </li>
 <li>
 <p>
-Connecter la Zigate et démarrer le deamon abeille
+L&#8217;option reste accessible pour les pros de MQTT. Si jamais vous voulez l&#8217;utiliser alors allez voir <a href="https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages">https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages</a> .
 </p>
 </li>
 <li>
 <p>
-démarrer le réseau Zigbee depuis abeille
-</p>
-</li>
-<li>
-<p>
-mettre la Zigate en inclusion
-</p>
-</li>
-<li>
-<p>
-inclure vos routeurs en partant des plus proches au plus lointain
-</p>
-</li>
-<li>
-<p>
-Vérifier que tout fonctionne
-</p>
-</li>
-<li>
-<p>
-Inclure les équipements sur piles (dans l&#8217;ordre que vous voulez)
+Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p><span class="red">!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!</span></p></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```</p></div>
 </div>
-<div class="sect2">
-<h3 id="_11_2018_8658_01_2019">11/2018 &#8658; 01/2019</h3>
-<div class="paragraph"><p>Cette mise à jour est importante et délicate. Pour facilité l&#8217;intégration de nouveaux équipements par la suite une standardisation des modèles doit être faite.
-Cela veut dire que tous les modèles changent et que le objets dans Abeille/Jeedom doivent être mis à jour.
-Prévoir du temps, avoir bien fait les backup, et prévoir d&#8217;avoir à faire quelques manipulations à la main. Les situations rencontrées vont dépendre de l&#8217;historique des équipements dans Jeedom.</p></div>
-<div class="paragraph"><p><span class="red">!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!</span></p></div>
-<div class="sect3">
-<h4 id="_solution_pour_les_petits_systèmes">Solution pour les petits systèmes</h4>
-<div class="ulist"><ul>
-<li>
-<p>
-Cela suppose que vous aller effacer (objets, historiques,&#8230;) toutes les données puis re-créer le réseau.
-</p>
-</li>
-<li>
-<p>
-supprimer le plug in Abeille
-</p>
-</li>
-<li>
-<p>
-Installer le plug in Abeille depuis le market (ou github)
-</p>
-</li>
-<li>
-<p>
-Activer et faire la configuration du plugin
-</p>
-</li>
-<li>
-<p>
-Démarrer le plugin
-</p>
-</li>
-<li>
-<p>
-Mettre en mode inclusion
-</p>
-</li>
-<li>
-<p>
-Appairer les devices.
-</p>
-</li>
-</ul></div>
 </div>
-<div class="sect3">
-<h4 id="_solution_pour_les_gros_systèmes">Solution pour les gros systèmes</h4>
-<div class="paragraph"><p>Si la solution précédente demande trop de travail, on peut faire la mise à jour de la façon suivante. Attention, je ne peux pas tester toutes les combinaisons et des opérations supplémentaires seront certainement nécessaires. 90% aura été fait automatiquement.
-Il n&#8217;y a pas de moyen infaillible pour faire la correspondance entre une commande dans un modèle et une commande dans Jeedom. Le lien est fait soit par le nom dans la commande nom ou quand pas disponible par le nom de l&#8217;image utilisée pour le device. De même pour les commande le nom est le moyen de faire le lien. Si vous avez fait des changements de nom, les commandes sortiront en erreur et cela demandera de mettre le nom de la commande dans le modèle le temps de la conversion.
-Dans les versions suivantes, nous ne devrions plus avoir ce problème car les commandes auront un Id unique et spécifique.</p></div>
+</div>
+<div class="sect1">
+<h2 id="_problèmes_issues">Problèmes / Issues</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l&#8217;adresse avec un "Labels" "Bug": <a href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p></div>
+<div class="paragraph"><p>Si vous ouvrez une "issue" merci de fournir le plus d&#8217;information possible et en particulier:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
-Mettre à jour la plugin avec le market (ou github)
+Votre configuration Jeedom:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Le HW sur lequel vous faite tourner le plugin,
 </p>
 </li>
 <li>
 <p>
-Vérifier la configuration du plugin et démarrer le plugin en mode debug.
+la Version de l&#8217;OS,
 </p>
 </li>
 <li>
 <p>
-Demander la mise à jour des objets depuis les templates, bouton: "Appliquer nouveaux modèles"
-</p>
-</li>
-<li>
-<p>
-90% des objets devraient être à jour maintenant.
-</p>
-</li>
-<li>
-<p>
-Tester vos équipements.
+la version de Jeedom
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Si un équipement ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin&#8594;Protocol Domotique&#8594;Abeille, sélectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le détails des opérations faites et éventuellement voir ce qui n&#8217;est pas mis à jour.</p></div>
-<div class="paragraph"><p>vous allez trouver des messages:</p></div>
+</li>
+<li>
+<p>
+Votre configuration Gateway
+</p>
 <div class="ulist"><ul>
 <li>
 <p>
-"parameter identical, no change" qui indique que rien n&#8217;a été fait sur ce paramètre (déjà à jour).
-</p>
-</li>
-<li>
-<p>
-"parameter is not in the template, no change" qui indique que le paramètre de l&#8217;objet n&#8217;est pas trouvé dans le template. Soit il n&#8217;est plus nécessaire et ne sera donc pas utilisé, soit vous l&#8217;avez changé et on le garde, soit Jeedom a défini une valeur par défaut et c&#8217;est très bien &#8230;
-</p>
-</li>
-<li>
-<p>
-"Cmd Name: nom ==================================&#8658; not found in template" qui indique qu&#8217;on ne trouve pas le template pour la commande et que donc la commande n&#8217;est pas mise à jour. Ça doit être les 10% à gérer manuellement. Dans ce cas, soit effacer l&#8217;objet et le recréer soit me joindre sur le forum.
-</p>
-</li>
-</ul></div>
-<div class="paragraph"><p>Équipements qui sont passés sans soucis sur ma prod:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Door Sensor V2 Xiaomi
-</p>
-</li>
-<li>
-<p>
-Xiaomi Smoke
-</p>
-</li>
-<li>
-<p>
-Télécommande Ikea 5 boutons
-</p>
-</li>
-<li>
-<p>
-Xiaomi Présence V2
-</p>
-</li>
-<li>
-<p>
-Xiaomi Bouton Carré V2
-</p>
-</li>
-<li>
-<p>
-Xiaomi Température Carré
+Zigate et quel firmware
 </p>
 </li>
 <li>
@@ -961,631 +837,312 @@ Xiaomi Température Carré
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Cas rencontrés:</p></div>
+</li>
+<li>
+<p>
+Les logs
+</p>
 <div class="ulist"><ul>
 <li>
 <p>
-plug xiaomi, une commande porte le nom "Manufacturer", doit être remplacé par "societe" et appliquer de nouveau "Apply Template"
+aussi nombreux que possibles
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Description
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+ce que vous cherchez à faire
 </p>
 </li>
 <li>
 <p>
-interrupteurs muraux Xiaomi: si la mise a jour ne se fait, il faut malheureusement, supprimer et recréer.
+les résultats
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_evolution">Evolution</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans GitHub à l&#8217;adresse avec un "Labels" "enhancement": <a href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_debug">Debug</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Verifier la configuration réseau et en particulier /hostname, /etc/hosts
 </p>
 </li>
 <li>
 <p>
-door sensor xiaomi V2 / xiaomi presence V1: une commande porte le nom "Last", doit être remplacé par "Time-Time", et "Last Stamp" par "Time-Stamp"
-</p>
-</li>
-<li>
-<p>
-&#8230;
+Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l&#8217;objet de rattachement de l'équipement Ruche n&#8217;est pas défini.
+````
+[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (<code>Jeedom</code>.<code>eqLogic</code>, CONSTRAINT <code>fk_eqLogic_object1</code> FOREIGN KEY (<code>object_id</code>) REFERENCES <code>object</code> (<code>id</code>) ON DELETE SET NULL ON UPDATE CASCADE)
+````
 </p>
 </li>
 </ul></div>
 </div>
-<div class="sect3">
-<h4 id="_secours">Secours</h4>
+<div class="sect2">
+<h3 id="_connection_avec_la_zigate">Connection avec la Zigate</h3>
 <div class="ulist"><ul>
 <li>
 <p>
-Si rien n&#8217;y fait, aucune des deux solutions précédentes ne résout le soucis, vous pouvez probablement exécuter la méthode suivante sur un équipement (je ne l&#8217;ai pas testée):
+Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
 </p>
 </li>
 <li>
 <p>
-supprimer la commande IEEE-Addr de votre objet.
+Tester la Zigate en ligne de commande
 </p>
 </li>
 <li>
 <p>
-Zigate en mode inclusion et re-appairage de l'équipement
+Vérifiez bien que vous n&#8217;avez pas plusieurs Plugins essayant d&#8217;utiliser le même port série (/dev/ttyUSBx).
 </p>
-</li>
+<div class="ulist"><ul>
 <li>
 <p>
-un nouvel objet doit être créé.
-</p>
-</li>
-<li>
-<p>
-Transférer les commandes de l&#8217;ancien objet vers le nouveau avec le bouton "Remplacer cette commande par la commande"
-</p>
-</li>
-<li>
-<p>
-Transférer l&#8217;historique des commandes avec le bouton "Copier l&#8217;historique de cette commande sur une autre commande"
-</p>
-</li>
-<li>
-<p>
-Vous testez le nouvel équipement
-</p>
-</li>
-<li>
-<p>
-si ok vous pouvez supprimer l&#8217;ancien.
+Jeedom vers Zigate
 </p>
 </li>
 </ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>On envoie
+```
+stty -F/dev/ttyUSB0 115200
+echo -ne <em>\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03</em> &gt; /dev/ttyUSB0
+```
+(Cela peut être fait alors que le plugin est Zigate fonctionnent).</p></div>
+<div class="paragraph"><p>Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:</p></div>
+<div class="paragraph"><p>```
+AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message &gt; 12 char
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00
+AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
+```</p></div>
+<div class="paragraph"><p>PS: la configuration du port peu varier d&#8217;un système à l&#8217;autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Zigate vers Jeedom
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):</p></div>
+<div class="paragraph"><p>```
+cat /dev/ttyUSB0 | hexdump -vC
+```</p></div>
+<div class="paragraph"><p>Dans un second terminal envoiyez la commande
+```
+stty -F/dev/ttyUSB0 115200
+echo -ne <em>\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03</em> &gt; /dev/ttyUSB0
+```</p></div>
+<div class="paragraph"><p>Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:
+```
+<a href="mailto:www-data@Abeille">www-data@Abeille</a>:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
+00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |&#8230;&#8230;..w&#8230;..I.|
+00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |&#8230;&#8230;&#8230;.p&#8230;..|
+```</p></div>
 </div>
+<div class="sect2">
+<h3 id="_mosquitto">Mosquitto</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.
+</p>
+</li>
+<li>
+<p>
+mosquitto est installé sur la machine par défaut lors de l&#8217;installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+</p>
+</li>
+<li>
+<p>
+La configuration générale du plugin propose les paramètres :
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
+</p>
+</li>
+<li>
+<p>
+Port du serveur Mosquitto (1883 par défaut)
+</p>
+</li>
+<li>
+<p>
+Identifiant de Jeedom avec lequel il publiera sur le broker
+</p>
+</li>
+<li>
+<p>
+Il est possible d&#8217;ajouter un compte et mot de passe si la connexion le requiert.
+</p>
+</li>
+<li>
+<p>
+QoS à utiliser (par défaut 1).
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Faites un <em>ps -ef | grep mosquitto</em> pour voir si le process tourne.
+</p>
+</li>
+<li>
+<p>
+Lancez à la main mosquitto; Juste <em>mosquitto</em> en ligne de commande.
+</p>
+</li>
+<li>
+<p>
+Lancez à la main mosquitto avec votre fichier de configuration en ligne de commande: <em>mosquitto -c /etc/mosquitto/mosquitto.conf</em> (Corrigez les erreurs si il y a).
+</p>
+</li>
+<li>
+<p>
+Experience: après coupure de courant:
+```
+mosquitto -c /etc/mosquitto/mosquitto.conf
+1516788158: Error: Success.
+1516788158: Error: Couldn&#8217;t open database.
+```
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>la solution a été de supprimer la base de donnée et de réinstaller mosquitto:</p></div>
+<div class="paragraph"><p>```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Debian 8 sur VM
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Je viens d&#8217;installer le plugin Abeille sur une Debian 8 en VM x86 64. Impossible de lancer le demon.
+</p>
+</li>
+<li>
+<p>
+Même un /etc/init.d/mosquitto start à la main ne fonctionne pas.
+</p>
+</li>
+<li>
+<p>
+Après des recherches infructueuse je suis passé par synaptic (ssh <a href="mailto:root@machine">root@machine</a> -Y) et fait "reinstallé" de tous les modules mosquitto. Et maintenant cela fonctionne.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_investigate_equipements">Investigate Equipements</h3>
+<div class="paragraph"><p>La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" alt="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" />
+</span></p></div>
+<div class="paragraph"><p>Dans ActiveEndPoint mettre l&#8217;adresse de l'équipement dans le titre puis clic sur le bouton ActiveEndPoint.</p></div>
+<div class="paragraph"><p>Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:
+```
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]message &gt; 12 char
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]SQN : da
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
+```</p></div>
+<div class="paragraph"><p>Il y a donc une seul EndPoint à l&#8217;adresse "01" (Donné par les lignes suivant "Endpoint List".</p></div>
+<div class="paragraph"><p>Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.</p></div>
+<div class="paragraph"><p>```
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length: 5
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status: 00-(Success)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN: db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 quality: 93
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 (Simple Descriptor Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN : db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length : 20
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]endpoint : 01
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]profile : c05e
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]deviceId : 0100
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]bitField : 02
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]InClusterCount : 08
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0005 - General: Scenes
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0006 - General: On/Off
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0008 - General: Level Control
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0B05 - Misc: Diagnostics
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 1000 - ZLL: Commissioning
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
+```</p></div>
+<div class="paragraph"><p>Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.</p></div>
+<div class="paragraph"><p>&#8230;</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_bugs">Bugs</h2>
+<h2 id="_monitorer_les_messages">Monitorer les messages</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Il est fort probable que des bugs soient découverts.
-Dans ce cas forum</p></div>
-<div class="paragraph"><p>(<a href="https://www.jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;p=575280&amp;hilit=abeille">https://www.jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;p=575280&amp;hilit=abeille</a>)</p></div>
-<div class="paragraph"><p>ou issue dans GitHub</p></div>
-<div class="paragraph"><p>(<a href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue</a>+) &#8230;</p></div>
+<div class="paragraph"><p>mosquitto_sub -t "=" -v</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_changelog">Changelog</h2>
+<h2 id="_script_de_test_et_vérifications">Script de test et vérifications</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_2019_02_06">2019-02-06</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Récupération des groupes dans la Zigate
-</p>
-</li>
-<li>
-<p>
-Configuration du groupe de la remote ikea On/off depuis abeille
-</p>
-</li>
-<li>
-<p>
-Formatting of Livolo Switch
-</p>
-</li>
-<li>
-<p>
-Groupe commande Chaleur ampoule
-</p>
-</li>
-<li>
-<p>
-GUI to set group to Zigate
-</p>
-</li>
-<li>
-<p>
-TxPower Command
-</p>
-</li>
-<li>
-<p>
-Channel setMask and setExtendedPANID added
-</p>
-</li>
-<li>
-<p>
-Télécommande Ikea Bouton information to Abeille
-</p>
-</li>
-<li>
-<p>
-Certification configuration
-</p>
-</li>
-<li>
-<p>
-Led On/Off
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_02_04">2019-02-04</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Get Group Membership response modification avec source address for 3.0.f
-</p>
-</li>
-<li>
-<p>
-Fix Sur mise a jour des templates il manque la mise a jour des icônes
-</p>
-</li>
-<li>
-<p>
-OSRAM Spot LED dimmable connecté Smart+ - Culot GU5.3
-</p>
-</li>
-<li>
-<p>
-Now default Zigbee object type could be used to create object in Abeille
-</p>
-</li>
-<li>
-<p>
-TRADFRIbulbE27WSopal1000lm
-</p>
-</li>
-<li>
-<p>
-MQTT loop improvement so Abeille should be more reactive
-</p>
-</li>
-<li>
-<p>
-nom du NE qui fait un Leave dans le message envoyé à la ruche
-</p>
-</li>
-<li>
-<p>
-Ampoule Hue Flame E14
-</p>
-</li>
-<li>
-<p>
-Info move from Ruche to Config page
-</p>
-</li>
-<li>
-<p>
-A bit more decoding of Xiaomi Fields
-</p>
-</li>
-<li>
-<p>
-channel mak and ExtPAN setting
-</p>
-</li>
-<li>
-<p>
-Ajout du Switch Livolo 2 boutons
-</p>
-</li>
-<li>
-<p>
-Affichage Commande au démarrage
-</p>
-</li>
-<li>
-<p>
-ClassiA60WClear second modèle added
-</p>
-</li>
-<li>
-<p>
-setTimeServer / getTimeServer
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_01_25">2019-01-25</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout commande scene
-</p>
-</li>
-<li>
-<p>
-Deux petites vidéos pour les docs
-</p>
-</li>
-<li>
-<p>
-Ajout des scènes et groupes de scènes
-</p>
-</li>
-<li>
-<p>
-Ajout ampoule LWB004
-</p>
-</li>
-<li>
-<p>
-Osram - flex led rgbw
-</p>
-</li>
-<li>
-<p>
-Osram - garden led rgbw
-</p>
-</li>
-<li>
-<p>
-GLEDOPTO Controller RGB+CCT
-</p>
-</li>
-<li>
-<p>
-Ajout de gestion du time server (cluster)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2019_01_15">2019-01-15</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-retrait de pause pour avoir un plugin plus réactif
-</p>
-</li>
-<li>
-<p>
-LCT001 modèle ajouté
-</p>
-</li>
-<li>
-<p>
-LTW013 Philips Hue modèle ajouté
-</p>
-</li>
-<li>
-<p>
-Ajout modèle lightstripe philips hue plus modèle ajouté
-</p>
-</li>
-<li>
-<p>
-doc télécommande Hue
-</p>
-</li>
-<li>
-<p>
-Ajout LTW010 ampoule Hue White Spectre
-</p>
-</li>
-<li>
-<p>
-Ajout de la liste des Abeille ayant un groupe avec leur groupe
-</p>
-</li>
-<li>
-<p>
-LCT015 Bulb Added
-</p>
-</li>
-<li>
-<p>
-Add Address IEEE in health table
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_15">2018-12-15</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Graph LQI par distance
-</p>
-</li>
-<li>
-<p>
-télécommande carré Ikea On/Off
-</p>
-</li>
-<li>
-<p>
-fix température carré xiaomi
-</p>
-</li>
-<li>
-<p>
-Télécommande Hue retour Boutons vers Abeille (scénario)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_11">2018-12-11</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Toute la doc sous le format Jeedom
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_10">2018-12-10</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule Couleur Standard ZigBee
-</p>
-</li>
-<li>
-<p>
-Ampoule Dimmable Standard ZigBee
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_09">2018-12-09</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule Spectre Blanc Standard ZigBee
-</p>
-</li>
-<li>
-<p>
-Blanche Ampoule GLEDOPTO GU10 Couleur/White GLEDOPTO avec hombridge
-</p>
-</li>
-<li>
-<p>
-Spectre Blanc Ampoule GLEDOPTO GU10 GL-S-004Z avec hombridge
-</p>
-</li>
-<li>
-<p>
-Retour des volets profalux en automatique
-</p>
-</li>
-<li>
-<p>
-Poll Automatique
-</p>
-</li>
-<li>
-<p>
-Ajout/Suppression/Get des groupes depuis l interface Abeille
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_08">2018-12-08</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Couleur Ampoule GLEDOPTO GU10 Couleur/White GL-S-003Z avec hombridge
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_07">2018-12-07</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Couleur Ampoule Ikea avec Homebridge
-</p>
-</li>
-<li>
-<p>
-Couleur Ampoule OSRAM avec Homebridge
-</p>
-</li>
-<li>
-<p>
-Couleur Ampoule Hue Go avec Homebridge
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_05">2018-12-05</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout d un paramètre Groupe dans la configuration des devices pour avoir la groupe a commander. Il n&#8217;est plus besoin de changer les commandes une à une.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_12_04">2018-12-04</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-passage aux modèles standardisés (avec include)
-</p>
-</li>
-<li>
-<p>
-les modèles standardisés permettent de modifier les équipements dans Jeedom sans les effacer et donc sans perdre historique, scénarios associés,&#8230;
-</p>
-</li>
-<li>
-<p>
-ajout des boutons pour appliquer de nouveau les modèles de device
-</p>
-</li>
-<li>
-<p>
-introduction d&#8217;Id unique dans les template pour ne pas confondre les devices par la suite.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_01_12">2018-01-12</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ampoule GLEDOPTO White intégrée
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_30">2018-11-30</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Prise Ikea intégrée
-</p>
-</li>
-<li>
-<p>
-Ajout des groupes aux devices sélectionnés
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_26">2018-11-26</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ikea Transformer 30W intégré
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_24">2018-11-24</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Correction TimeOut (en min)
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_16">2018-11-16</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Activation/Désactivation d&#8217;un équipement suivant qu&#8217;il joint le réseau ou le quitte.
-</p>
-</li>
-<li>
-<p>
-Rafraichi les informations de la page Health à l&#8217;ouverture.
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_11_05">2018-11-05</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout OSRAM GU10
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_14">2018-06-14</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout de la connectivité en Wifi.
-</p>
-</li>
-<li>
-<p>
-Ajout des LQI remontant des trames Zigate
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_12">2018-06-12</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout du double interrupteur mural sur pile xiaomi.
-</p>
-</li>
-<li>
-<p>
-Network modal (graph automatique du reseau)
-</p>
-</li>
-<li>
-<p>
-Ajout aqara Cube
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_11">2018-06-11</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Stop for Volet Profalux =253
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_06_01">2018-06-01</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Profalux Volets Calibration
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_05_30">2018-05-30</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Inclusion status dans le widget mis à jour en fonction de l’etat de la Zigate
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_05_28">2018-05-28</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-Ajout des equipements DIY
-</p>
-</li>
-</ul></div>
-</div>
-<div class="sect2">
-<h3 id="_2018_01_19">2018-01-19</h3>
-<div class="ulist"><ul>
-<li>
-<p>
-first version posted on github
-</p>
-</li>
-<li>
-<p>
-inclus la création des objets IKEA Bulb et Xiaomi Plug, Température Carre/rond, bouton et InfraRouge
-</p>
-</li>
-</ul></div>
-</div>
+<div class="paragraph"><p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base.</p></div>
 </div>
 </div>
 </div>
@@ -1593,7 +1150,7 @@ inclus la création des objets IKEA Bulb et Xiaomi Plug, Température Carre/rond
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 12:43:26 CET
+ 2019-03-12 21:18:36 CET
 </div>
 </div>
 </body>

@@ -1,3 +1,3 @@
-asciidoc -a data-uri -a icons -a toc -a max-width=55em changelog.adoc
-mv changelog.html html/
+for f in *.adoc; do echo "Processing $f file.."; asciidoc -a icons $f; done
+mv *.html html/
 

@@ -18,7 +18,7 @@
       "include3": "presence",
       "include4": "luminosite",
       "include4 3": "temperature",
-      "include4 3 2": "Batterie-Pourcent-Ikea",
+      "include4 3 2": "Batterie-Hue",
       "include4 2": "BindToZigateOccupancy",
       "include4 2 2": "BindToZigateIlluminance",
       "include4 2 2 2": "BindToZigateTemperature",

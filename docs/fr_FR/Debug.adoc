@@ -1,29 +1,19 @@
+:toc2:
 
-== Debug / Troubleshooting / Investigations
+= Debug / Troubleshooting / Investigations
 
 Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.
 
-=== Forum
+== Forum
 
 * le forum: https://www.Jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
 
-== Attention - Danger
+== Investigations
 
-=== "retain" dans les objets
+* Liste des sujets en investigations / Issues sous GitHub: https://github.com/KiwiHC16/Abeille/issues?utf8=✓&q=is%3Aissue
 
-* Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
-* Le plugin [underline]=n'utilise pas= ce mode de fonctionnement.
-- [underline]=Il est fortement conseillé de ne pas choisir "retain"= si vous ne comprenez pas les conséquences.
-- L'option reste accessible pour les pros de MQTT. Si jamais vous voulez l'utiliser alors allez voir https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages .
-- Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
 
-```
-rm /var/lib/mosquitto/mosquitto.db
-apt-get remove mosquitto
-apt-get install mosquitto
-```
-
-== Problèmes / Issues
+== Problèmes
 
 Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
 
@@ -33,16 +23,21 @@ Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en
 * Le HW sur lequel vous faite tourner le plugin,
 * la Version de l'OS,
 * la version de Jeedom
-
-- Votre configuration Gateway
-* Zigate et quel firmware
 * ...
-
-- Les logs
-* aussi nombreux que possibles
+- Votre configuration Gateway
+* Type de Zigate
+* quel firmware
+* ...
+- Les logs, aussi nombreux que possibles surtout
+* AbeilleParser
+* AbeilleMQTT
+* Abeille
+*...
 - Description
 * ce que vous cherchez à faire
 * les résultats
+* captures d'ecrans
+* ...
 
 == Evolution
 
@@ -50,6 +45,21 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 
 
 == Debug
+
+=== "retain" dans les objets
+
+* Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
+* Le plugin [underline]#n'utilise pas# ce mode de fonctionnement.
+* [underline]#Il est fortement conseillé de ne pas choisir "retain"# si vous ne comprenez pas les conséquences.
+* L'option reste accessible pour les pros de MQTT. Si jamais vous voulez l'utiliser alors allez voir https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages .
+* Normalement vous ne devriez pas avoir accès à cette propriété par défaut car je l'ai enlevé des commandes.
+* Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
+
+```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```
 
 === Configuration
 
@@ -59,15 +69,20 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 [MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
 ````
 
-=== Connection avec la Zigate
+=== Connection Zigate/Abeille
 
-* Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
+==== Premier test
 
-* Tester la Zigate en ligne de commande
+* Rendez l équipement Ruche Visible (Il est maintenant caché par défaut).
+* Dans l équipement ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois. Si les dates se mettent à jour c'est que le dialogue Abeille-Zigate fonctionne dans les deux sens.
+
+==== Deuxième test
 
 * Vérifiez bien que vous n'avez pas plusieurs Plugins essayant d'utiliser le même port série (/dev/ttyUSBx).
 
-** Jeedom vers Zigate
+==== Troisième test
+
+* Tester la Zigate en ligne de commande
 
 On envoie
 ```
@@ -87,9 +102,11 @@ AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
 AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
 ```
 
+Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.
+
 PS: la configuration du port peu varier d'un système à l'autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.
 
-** Zigate vers Jeedom
+==== Quatrième test
 
 Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):
 
@@ -110,18 +127,23 @@ www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
 00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|
 ```
 
-
+Cela confirme Zigate vers Jeedom
 
 === Mosquitto
 
 * Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.
 * mosquitto est installé sur la machine par défaut lors de l'installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
+
+==== Configuration
+
 * La configuration générale du plugin propose les paramètres :
 - Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)
 - Port du serveur Mosquitto (1883 par défaut)
 - Identifiant de Jeedom avec lequel il publiera sur le broker
 - Il est possible d'ajouter un compte et mot de passe si la connexion le requiert.
-- QoS à utiliser (par défaut 1).
+- QoS à utiliser (par défaut 0).
+
+==== Fonctionne
 * Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
 - Faites un 'ps -ef | grep mosquitto' pour voir si le process tourne.
 - Lancez à la main mosquitto; Juste 'mosquitto' en ligne de commande.
@@ -141,15 +163,21 @@ apt-get remove mosquitto
 apt-get install mosquitto
 ```
 
+==== Monitorer les messages
+
+mosquitto_sub -t "=" -v
+
+==== Re-Installation
 * Debian 8 sur VM
-- Je viens d'installer le plugin Abeille sur une Debian 8 en VM x86 64. Impossible de lancer le demon.
+- Je viens d'installer le plugin Abeille sur une Debian 8 en VM x86 64.
+- Impossible de lancer le demon.
 - Même un /etc/init.d/mosquitto start à la main ne fonctionne pas.
 - Après des recherches infructueuse je suis passé par synaptic (ssh root@machine -Y) et fait "reinstallé" de tous les modules mosquitto. Et maintenant cela fonctionne.
 
 
-=== Investigate Equipements
+=== Equipements ZigBee
 
-La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.
+La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.
 
 image:../images/Capture_d_ecran_2018_02_06_a_17_33_19.png[]
 
@@ -169,7 +197,7 @@ AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
 ```
 
-Il y a donc une seul EndPoint à l'adresse "01" (Donné par les lignes suivant "Endpoint List".
+Il y a, dans ce cas, une seul EndPoint à l'adresse "01" (Donné par les lignes suivant "Endpoint List").
 
 Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.
 
@@ -211,13 +239,10 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
 
 Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
-...
 
 
-== Monitorer les messages
 
-mosquitto_sub -t "=" -v
 
-== Script de test et vérifications
+==== Script de test et vérifications
 
-Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base.
+Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n'est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.

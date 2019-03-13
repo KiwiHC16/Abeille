@@ -1,5 +1,6 @@
+:toc2:
 
-== Developpement
+= Developpement
 
 Grandes lignes
 
@@ -23,25 +24,25 @@ image:../images/Capture_d_ecran_2018_01_21_a_13_13_26.png[]
 CmdAbeille/Addr/Action     |         ^               Abeille/=
                                             v         |              CmdRuche/Ruche/CreateRuche
                                             +-------+----+
-                                     +-----+ Mosquitto  + <----+
-cmdAbeille/=                 |        +-------------+           |   Abeille/Addr/xxxx
-                                        v                         |   CmdAbeille/Addr/xxx
+                          +-----+ Mosquitto  + <----+
+            cmdAbeille /=|        +-------------+           |   Abeille/Addr/xxxx
+                      v                         |   CmdAbeille/Addr/xxx
             +--------------+---+                +----+----------------+
             |AbeilleMQTTCmd.php|                |AbeilleParser.php    |
             |CmdToAbeille.php  |                |AbeilleSerialRead.php|
             +----+-------------+                +----+----------------+
-                    |                                                        ^
-                    |                   +--------------+             |
-                    +---------->  + /deb/ttyUSBX +------+
-                                        +--------------+
-                                        +-------------+
-                                        |   Zigate    |
-                                        X+-------------+X
-                                    X                            X
-                +---------+X                                X+---------+
-                | Abeille |                                      | Abeille |
-                |---------+X                                X+---------+
-                                    X                             X
-                                        X+------------+X
-                                        |   Abeille  |
-                                        +------------+
+                    |                                 ^
+                    |           +--------------+      |
+                    +---------->+ /deb/ttyUSBX +------+
+                                +--------------+
+                               +-------------+
+                               |   Zigate    |
+                              X+-------------+X
+                            X                   X
+                +---------+X                     X+----------+
+                | Abeille  |                      | Abeille  |
+                |---------+X                     X+----------+
+                            X                  X
+                              X+------------+X
+                              |   Abeille   |
+                              +-------------+

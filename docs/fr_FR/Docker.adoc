@@ -1,7 +1,10 @@
+:toc2:
 
-== Histore d une installation
+= Docker
 
-== Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07
+== VM OSX
+
+Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07
 
 === VM
 
@@ -91,7 +94,7 @@ Rafraichir la page et vérifier que le demon est passé au vert: Statut Ok et Co
 Et maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.
 
 
-=== Demarrage du reseau
+=== Demarrage du reseau zigbee
 
 Si vous selectionnez "Version" alors les champs 'Last', 'Last Stamps', 'SW', 'SDK' doivent se mettre à jour. Cela confirme que cela fonctionne.
 
@@ -103,28 +106,30 @@ Voilà l'installation d'Abeille dans Jeedom est finie. Vous pouvez intégrer vo 
 
 En tout 1h pour faire une installation from scratch (et écrire cette doc).
 
+
+
 == Installation dans un conteneur depuis Ubuntu
 
-== Introduction
+=== Introduction
 
-Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande a propos d'une distribution est ignorée.   https://Jeedom.github.io/documentation/installation/fr_FR/index
+Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande à propos d'une distribution est ignorée.   https://Jeedom.github.io/documentation/installation/fr_FR/index
 
-docker permet d'installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L'interet de docker est que n'est installé que le minimum nécéssaire au fonctionnement dans l'image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n'est pas limité à ce système.
+Docker permet d'installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L'interet de docker est que n'est installé que le minimum nécéssaire au fonctionnement dans l'image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n'est pas limité à ce système.
 
-== Prérequis
+=== Prérequis
 
 Avoir docker disponible dans les dépôts de la distribution.
 
 
-== Installation de docker
+=== Installation de docker
 
 apt-get install docker docker.io
 
-== Fonctionnement
+=== Fonctionnement
 
 Loïc, un des créateurs de Jeedom maintient image Jeedom. Cette image appelé Jeedom-server utilise une image Jeedom-mysql pour stocker les données dans une base de données mysql. Il faudra donc a chaque fois lancer le conteneur Jeedom-mysql puis le Jeedom-server. Les réglages restent d'une fois sur l'autre.
 
-== Récupération des images et Création des conteneurs
+=== Récupération des images et Création des conteneurs
 
 Ces deux lignes vont récupérer les images, créer les conteneurs et les configurer. Le port USB est a adapter selon le besoin ( `ls /dev/ttyUSB*` pour avoir la liste )
 
@@ -138,7 +143,7 @@ Jeedom sera disponible après quelques instants à l'adresse http://0.0.0.0:9180
 
 TIP: Le ssh est accessible via le port 9022. (root/MJeedom96)
 
-== Configuration de Jeedom
+=== Configuration de Jeedom
 
 Dans les champs indiqués entrer la valeur surlignée.
 
@@ -154,7 +159,7 @@ Dans les champs indiqués entrer la valeur surlignée.
 
 Une fois, le texte `[END INSTALL SUCCESS]` affiché en bas. Aller à l 'adresse http://0.0.0.0:9180 la page de login de Jeedom devrait apparaître. Les login et mot de passe sont admin admin.
 
-== start/stop des conteneurs
+=== start/stop des conteneurs
 
 les conteneurs peuvent être arrêtés et relancés à la demande en gardant l'ordre mysql Jeedom au lancement, Jeedom mysql à  l'arrêt.
 
@@ -162,7 +167,7 @@ Arrêt `docker stop Jeedom-server && docker stop Jeedom-mysql`
 
 Démarrage `docker start Jeedom-mysql && docker start Jeedom-server`
 
-== Repartir de zéro
+=== Repartir de zéro
 
 il est possible de supprimer les conteneurs et de repartir d'un Jeedom tout neuf.
 
@@ -181,9 +186,7 @@ docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.
 le site sera disponible à l'adresse http://0.0.0.0:9000
 
 
-== Installation du Plugin Abeille
 
-voir la doc :)
 
 
 == Docker
@@ -193,9 +196,9 @@ voir la doc :)
 Installation d'Abeille dans docker
 (Il y a certainement plus simple mais je ne suis pas expert en Docker et cette méthode semble bien fonctionner).
 
-== Preparation du docker
+=== Preparation du docker
 
-=== Preparation sous Raspbian
+==== Preparation sous Raspbian
 
 * installer 2018-06-27-raspbian-stretch-lite.zip sur une SD
 * demarrer le RPI3
@@ -238,7 +241,7 @@ docker ps
 
 Permet de voir que docker fonctionne.
 
-=== Preparation sous hypriot
+==== Preparation sous hypriot
 
 La version officielle raspbian est un peu vieille et nous n'avons pas toutes les nouveautés. Hypriot a une version bien plus recente et nous facilite la vie (pas de config manuelle tout est prêt). Elle permet aussi de faire tourner le plugin Homebridge (macvlan).
 http://blog.hypriot.com
@@ -247,7 +250,7 @@ Telecharger leur image à l adresse: http://blog.hypriot.com/downloads/
 
 On voit ici qu'il n'y a pas d'image, il faut en créer une.
 
-== Créons un system pour le docker.
+==== Créons un system pour le docker.
 
 http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/
 
@@ -279,7 +282,7 @@ Maintenant on lance la creation du docker:
 ```
 docker build -t JeedomAbeille .
 ```
-Bien mettre le . a la fin de la ligne.
+TIP: Bien mettre le . a la fin de la ligne.
 
 Le résultat doit ressembler à:
 ```
@@ -340,16 +343,16 @@ root@docker:~/DockerAbeille= docker attach 52b658b7d8f8
 root@52b658b7d8f8:/=
 
 ```
-Faites plusieur "enter" pour avoir le prompt.
+TIP: Faites plusieurs "enter" pour avoir le prompt.
 
 
 Maintenant que le docker fonctionne on va faire l installation de Jeedom et Abeille.
 
 
-To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the [underline]=*CTRL-p suivi de CTRL-q*= key sequence.
+TIP: To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the [underline]#CTRL-p suivi de CTRL-q# key sequence.
 
 
-== Service dans le docker
+==== Service dans le docker
 
 Les services ne demarrent pas tout seuls dans le docker, il aurait probablement du le faire dans Dockfile.
 
@@ -434,7 +437,7 @@ dans le cron root.
 
 Thanks to https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html
 
-== Installation Jeedom
+==== Installation Jeedom
 
 Dans le container precedent nous n'avons pas pris en compte les besoins réseaux et port série.
 Effaçons l'ancien container.
@@ -566,7 +569,7 @@ Aller dans la conf reseau et mettre l adresse du host dans les adresses http.
 
 Maintenant on peut se connecter en admin/admin donc on peut effacer l utilisateur adminTmp.
 
-== Installation du plugin Abeille
+==== Installation du plugin Abeille
 
 * Créer un objet Abeille.
 * Installer le plugin Abeille depuis le market.
@@ -588,17 +591,17 @@ Vous allez certainement avoir le message:
 Aller dans le "Moteur de taches" et lancer "Jeedom-cron".
 ____
 
-== Backup du Docker
+==== Backup du Docker
 
 Plusieures solutions s'offrent à nous. Il est interessant de comprende ce qui se passe. Un bon article à lire: https://tuhrig.de/difference-between-save-and-export-in-docker/
 
 Toutes les operations suivantes se font depuis le host.
 
-== Commit / Save / Load
+===== Commit / Save / Load
 
 Permet de garder tout l'historique.
 
-=== Commit
+===== Commit
 
 Pour avoir les docker en fonctionnement :
 ```
@@ -626,7 +629,7 @@ Pour voir les images crées et disponiqbles:
 docker images
 ```
 
-=== Save
+===== Save
 ```
 docker save -o ~/JeedomAbeille_backup.tar JeedomAbeille_backup
 ls -l ~/JeedomAbeille_backup.tar
@@ -634,7 +637,7 @@ ls -l ~/JeedomAbeille_backup.tar
 
 soyez patient le tar fait 3G.
 
-=== Load
+===== Load
 
 If we have transferred our "container1.tar" backup file to another docker host system we first need to load backed up tar file into a docker's local image repository:
 
@@ -644,24 +647,24 @@ docker load -i /root/JeedomAbeille_backup.tar
 docker images
 ```
 
-== Export / Import
+===== Export / Import
 
 Garde que la derniere version.
 
-=== Export
+===== Export
 
 ```
 docker ps -a
 docker export <CONTAINER ID> > /home/export.tar
 ```
 
-=== Import
+===== Import
 
 ```
 cat /home/export.tar | sudo docker import - NameYouWant:latest
 ```
 
-== Conclusion
+==== Conclusion
 
 Plus besoin d'aller chercher les cartes SD dans les differents RPI3 pour en faire de images. Tout va se faire à distance maintenant !!! YaaahhhOOOOUUU !!!!!
 
@@ -671,9 +674,9 @@ Vous pouvez effacer de vieilles images par:
 docker rmi JeedomAbeille_backup
 ```
 
-== Docker GUI
+===== Docker GUI
 
-== Sur la raspbian
+====== Sur la raspbian
 
 Thanks to:
 * http://blog.hypriot.com/post/new-docker-ui-portainer/
@@ -689,7 +692,7 @@ Tout ne fonctionne pas mais c'est plus sympas que la ligne de commande.
 
 Il semble que la version rpi par defaut est un peu ancienne et certaine feature comme volume ne sont pas dispo.
 
-== Sur la hypriot
+====== Sur la hypriot
 
 https://hub.docker.com/r/hypriot/rpi-portainer/
 
@@ -700,13 +703,13 @@ docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock hypriot/
 Puis se logger sur http://IP_Host:9000.
 Tout fonctionne bien mieux que sur la version raspbian.
 
-== Plugins
+==== Plugins
 
-== Zwave
+===== Zwave
 
 Sur ma machine Jeedomprorpi, le repertoire /tmp/Jeedom/openzwave n'a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/Jeedom/openzwave et tout est ok maintenant.
 
-== homebridge
+===== homebridge
 
 Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvlan et affecter une adresse spécifique.
 
@@ -714,17 +717,17 @@ Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvl
 
 == Installation sur une VM Ubuntu
 
-== Installation de l'OS
+=== Installation de l'OS
 
 Fichier ISO: ubuntu-16.04.1-server-amd64.iso
 
 Installation classique de l'OS (Je ne détaille pas car cela dépend de votre envirroement de virtualisation).
 
-== Preparation de l'OS
+=== Preparation de l'OS
 
 login: (user créé pendant l install avec son password associé).
 
-```
+````
 sudo su -
 
 apt-get update
@@ -732,31 +735,31 @@ apt-get upgrade
 apt-get autoremove
 ````
 
-== Installation de la base mysql
+=== Installation de la base mysql
 
 installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)
 
-````
+```
 apt-get install mysql-server
 apt-get install mysql-client
-````
+```
 
-== Installation de Jeedom
+=== Installation de Jeedom
 
-````
+```
 wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
 chmod +x install.sh
-````
+```
 
 Enlever le php7.0-ssh2 du fichier install.sh
 
-````
+```
 ./install.sh -m motDePasse
-````
+```
 
 A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.
 
-== Installation du Plugin Abeille
+=== Installation du Plugin Abeille
 
 ```
 ./install.sh -m motDePasse
@@ -769,21 +772,21 @@ chmod -R 777 /var/www/html/plugins/Abeille
 chown -R www-data:www-data /var/www/html/plugins/Abeille
 ```
 
-== Utilisation de Jeedom
+=== Utilisation de Jeedom
 
 Il ne vous reste plus qu'à vous connecter à Jeedom...
 
 
 == Installation sur une machine Odroid XU4 avec Ubuntu
 
-== Installation de l'OS
+=== Installation de l'OS
 
 Fichier img: ubuntu-14.04lts-server-odroid-xu3-20150725.img
 que l on trouve sur le server odroid: https://odroid.in/ubuntu_14.04lts/
 
 Installation classique odroid de l'OS : https://wiki.odroid.com/odroid-xu4/odroid-xu4
 
-== Preparation de l'OS
+=== Preparation de l'OS
 
 login: (root/odroid).
 
@@ -793,7 +796,7 @@ apt-get upgrade
 apt-get autoremove
 ```
 
-== Installation de la base mysql
+=== Installation de la base mysql
 
 installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)
 
@@ -802,7 +805,7 @@ apt-get install mysql-server
 apt-get install mysql-client
 ```
 
-== Installation de Jeedom
+=== Installation de Jeedom
 
 ```
 wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
@@ -817,7 +820,7 @@ Enlever le php7.0-ssh2 du fichier install.sh
 
 A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.
 
-== Installation du Plugin Abeille
+=== Installation du Plugin Abeille
 
 ```
 ./install.sh -m motDePasse
@@ -830,9 +833,11 @@ chmod -R 777 /var/www/html/plugins/Abeille
 chown -R www-data:www-data /var/www/html/plugins/Abeille
 ```
 
-== Utilisation de Jeedom
+=== Utilisation de Jeedom
 
 Il ne vous reste plus qu'à vous connecter à Jeedom...
+
+
 
 == De-installation
 

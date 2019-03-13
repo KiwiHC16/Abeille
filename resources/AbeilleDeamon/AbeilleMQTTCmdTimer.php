@@ -12,8 +12,9 @@
     $lib_phpMQTT = 0;
     
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    
-    require_once("lib/Tools.php");
+
+    require_once dirname(__FILE__).("/lib/Tools.php");
+
     // include("CmdToAbeille.php");  // contient processCmd()
     if ( $lib_phpMQTT ) {  include("lib/phpMQTT.php"); }
     include(dirname(__FILE__).'/includes/config.php');

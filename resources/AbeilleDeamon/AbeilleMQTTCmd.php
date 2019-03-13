@@ -10,8 +10,9 @@
     
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
-    
-    require_once("lib/Tools.php");
+
+    require_once dirname(__FILE__).("/lib/Tools.php");
+
     include("CmdToAbeille.php");  // contient processCmd()
     
     include(dirname(__FILE__).'/includes/config.php');

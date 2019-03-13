@@ -228,7 +228,7 @@ td.two {
 </style>
 
 <label>Groupes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://abeille/plugins/Abeille/docs/fr_FR_html/Groups.html"><i class="fas fa-book"></i>Documentation</a>
+<a class="btn btn-primary btn-xs" target="_blank" href="/plugins/Abeille/docs/fr_FR_html/Groups.html"><i class="fas fa-book"></i>Documentation</a>
 <table><tr><td class="two">
 
         <table class="one">
@@ -307,7 +307,7 @@ td.two {
 <hr>
 
 <label>Scenes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://abeille/plugins/Abeille/docs/fr_FR_html/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
+<a class="btn btn-primary btn-xs" target="_blank" href="/plugins/Abeille/docs/fr_FR_html/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
 <table class="one"><tr><td class="two">
 
             <table class="one">

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Modele et Fichier JSON</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,22 +761,29 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Modele et Fichier JSON</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_modele_et_fichier_json">Modele et Fichier JSON</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 <div class="paragraph"><p>(Cette partie doit être revue et mie a jour sur la base des dernieres evolutions)</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration_des_objets">Configuration  des objets</h2>
+<h2 id="_configuration_des_objets">2. Configuration  des objets</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Losqu&#8217;un objet Zigbee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).</p></div>
 <div class="paragraph"><p>Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s&#8217;allonger.</p></div>
@@ -750,31 +791,31 @@ asciidoc.install();
 </div>
 </div>
 <div class="sect1">
-<h2 id="_interface_jeedom">Interface Jeedom</h2>
+<h2 id="_interface_jeedom">3. Interface Jeedom</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Penons un exemple: Capteur de porte Xiaomi.</p></div>
 <div class="paragraph"><p>Dans Jeedom, il apparaîtra sous le widget:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_39_52.png" alt="../images/Screen_Shot_2018_01_29_at_19_39_52.png" />
+<img src="../images/Screen_Shot_2018_01_29_at_19_39_52.png" alt="Screen_Shot_2018_01_29_at_19_39_52.png" />
 </span></p></div>
 <div class="paragraph"><p>Son nom est pour l&#8217;occasion "lumi.sensor_magnet.aq2". C&#8217;est à partir de là que tout le reste a été déduit, par exemple le symbole de porte,&#8230;</p></div>
 <div class="paragraph"><p>Si vous sélectionnez, l&#8217;objet vous arrivez dans la page suivante:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_40_30.png" alt="../images/Screen_Shot_2018_01_29_at_19_40_30.png" />
+<img src="../images/Screen_Shot_2018_01_29_at_19_40_30.png" alt="Screen_Shot_2018_01_29_at_19_40_30.png" />
 </span></p></div>
 <div class="paragraph"><p>En sélectionnant "Configuration Avancée":</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_20_47_13.png" alt="../images/Screen_Shot_2018_01_29_at_20_47_13.png" />
+<img src="../images/Screen_Shot_2018_01_29_at_20_47_13.png" alt="Screen_Shot_2018_01_29_at_20_47_13.png" />
 </span></p></div>
 <div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d&#8217;exemple pour définir les paramètres de configuration à mettre dans le fichier JSON.</p></div>
 <div class="paragraph"><p>Attention tous les paramètres ne sont pas encore pris en compte.</p></div>
 <div class="paragraph"><p>Puis si vous sélectionnez "Commandes", puis une commande spécifique à l&#8217;aide du symbole engrenage:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_42_20.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_20.png" />
+<img src="../images/Screen_Shot_2018_01_29_at_19_42_20.png" alt="Screen_Shot_2018_01_29_at_19_42_20.png" />
 </span></p></div>
 <div class="paragraph"><p>Puis si vous sélectionnez une commande spécifique comme l'état:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_42_44.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_44.png" />
+<img src="../images/Screen_Shot_2018_01_29_at_19_42_44.png" alt="Screen_Shot_2018_01_29_at_19_42_44.png" />
 </span></p></div>
 <div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à une commande et vous en servir d&#8217;exemple pour définir les paramatres de configuration à mettre dans le fichier JSON.</p></div>
 <div class="paragraph"><p>Si vous modifiez à l&#8217;aide de Jeedom la présentation de la commande cela vous permet de savoir ce qu&#8217;il faut mettre dans le fichier de conf.</p></div>
@@ -782,7 +823,7 @@ asciidoc.install();
 </div>
 </div>
 <div class="sect1">
-<h2 id="_editer_json">Editer JSON</h2>
+<h2 id="_editer_json">4. Editer JSON</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>(Cette partie doit être mise à jour car les fichiers JSON ont beaucoup changés)</p></div>
 <div class="paragraph"><p>Vous avez plusieurs façons pour éditer le fichier JSON.
@@ -790,7 +831,7 @@ asciidoc.install();
 * Utiliser un éditeur JSON (il y en a plein sur internet).</p></div>
 <div class="paragraph"><p>Une fois ouvert le fichier peut ressembler à quelque chose comme ca:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_29_a_21_15_55.png" alt="../images/Capture_d_ecran_2018_01_29_a_21_15_55.png" />
+<img src="../images/Capture_d_ecran_2018_01_29_a_21_15_55.png" alt="Capture_d_ecran_2018_01_29_a_21_15_55.png" />
 </span></p></div>
 <div class="paragraph"><p>Vous retrouvez les même informations que celles vues ci dessus. Comparez les différents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l'équipement dans Jeedom et provoquez l&#8217;envoie du nom par l&#8217;objet.</p></div>
 <div class="paragraph"><p>Les fichiers JSON ont évolués et intègrent des include. Les fichiers JSON include sont dans le répertoire Template. Ces fichiers permettent de définir les commandes individuellement et de ne pas avoir à tout réécrire à chaque fois.</p></div>
@@ -798,24 +839,24 @@ asciidoc.install();
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ajout_des_icônes_pour_les_objets_crées">Ajout des icônes pour les objets crées</h2>
+<h2 id="_ajout_des_icônes_pour_les_objets_crées">5. Ajout des icônes pour les objets crées</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Lorsqu&#8217;un objet est crée, une icône lui est associée. Lorsqu&#8217;un nouvel objet est ajouté dans le fichier JSON <em>plugins/Abeille/core/class/devices/objet.json</em>, il est possible de lui attribuer une icône personnalisée. Le nom affichée est celui du champ nameJeedom, l&#8217;icone utilisée celle de configuration&#8594;icone</p></div>
 <div class="paragraph"><p>Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire <em>plugins/Abeille/images/</em> (500x500 px semble correct)</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Device_icone01.png" alt="../images/Device_icone01.png" />
+<img src="../images/Device_icone01.png" alt="Device_icone01.png" />
 </span></p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mise_a_jour_des_fichiers_json">Mise a jour des fichiers JSON</h2>
+<h2 id="_mise_a_jour_des_fichiers_json">6. Mise a jour des fichiers JSON</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Vous pouvez mettre à jour les fichiers JSON depuis la page de configuration du plugin: menu&#8594;PLugin&#8594;Gestion des plugin&#8594;Abeille.
 Pour se faire, clic sur le bouton: "Mise a jour des modeles". Cela va télécharger les dernières versions sur votre systeme. Attention: si vous avez des JSON perso, ils seront effacés lors de cette opération. Les sauvegarder et les réinstallé après.</p></div>
 <div class="paragraph"><p>Ensuite vous n&#8217;avez plus qu&#8217;a appliquer ces nouveau modèles en utilisant le bouton "Appliquer nouveaux modeles".</p></div>
 <div class="paragraph"><p>Vous pouvez aussi appliquer les nouveaux modeles que sur certains équipements en allant dans menu&#8594;plugin&#8594;Protocole domotique&#8594;Abeille, selectionnez les devices et clic qur "Apply Template".</p></div>
 <div class="sect2">
-<h3 id="_creation_des_objets">Creation des objets</h3>
+<h3 id="_creation_des_objets">6.1. Creation des objets</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -829,7 +870,7 @@ L&#8217;appareil Ruche contient une commande cachée par type d&#8217;objet (ide
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_23_a_22_31_19.png" alt="../images/Capture_d_ecran_2018_01_23_a_22_31_19.png" />
+<img src="../images/Capture_d_ecran_2018_01_23_a_22_31_19.png" alt="Capture_d_ecran_2018_01_23_a_22_31_19.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -839,7 +880,7 @@ Si vour rendez visible ces commandes cachées cela donne:
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_23_a_22_31_43.png" alt="../images/Capture_d_ecran_2018_01_23_a_22_31_43.png" />
+<img src="../images/Capture_d_ecran_2018_01_23_a_22_31_43.png" alt="Capture_d_ecran_2018_01_23_a_22_31_43.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -859,7 +900,7 @@ L&#8217;objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_23_a_22_53_24.png" alt="../images/Capture_d_ecran_2018_01_23_a_22_53_24.png" />
+<img src="../images/Capture_d_ecran_2018_01_23_a_22_53_24.png" alt="Capture_d_ecran_2018_01_23_a_22_53_24.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -869,10 +910,10 @@ Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en receptio
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_25_a_14_59_34.png" alt="../images/Capture_d_ecran_2018_01_25_a_14_59_34.png" />
+<img src="../images/Capture_d_ecran_2018_01_25_a_14_59_34.png" alt="Capture_d_ecran_2018_01_25_a_14_59_34.png" />
 </span>
 <span class="image">
-<img src="../images/Capture_d_ecran_2018_01_25_a_14_59_43.png" alt="../images/Capture_d_ecran_2018_01_25_a_14_59_43.png" />
+<img src="../images/Capture_d_ecran_2018_01_25_a_14_59_43.png" alt="Capture_d_ecran_2018_01_25_a_14_59_43.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -887,16 +928,16 @@ Ouvrir la page commande de la ruche et trouver la commande "lumi.sensor_motion".
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_11_09_04.png" alt="../images/Capture_d_ecran_2018_03_02_a_11_09_04.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_11_09_04.png" alt="Capture_d_ecran_2018_03_02_a_11_09_04.png" />
 </span></p></div>
 <div class="paragraph"><p>Remplacez "/lumi.sensor_motion/" l&#8217;adresse du groupe que vous voulez controler. Par exemple AAAA.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_11_09_47.png" alt="../images/Capture_d_ecran_2018_03_02_a_11_09_47.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_11_09_47.png" alt="Capture_d_ecran_2018_03_02_a_11_09_47.png" />
 </span></p></div>
 <div class="paragraph"><p>Sauvegardez et faites "Tester".</p></div>
 <div class="paragraph"><p>Vous avez maintenant une capteur.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_11_11_02.png" alt="../images/Capture_d_ecran_2018_03_02_a_11_11_02.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_11_11_02.png" alt="Capture_d_ecran_2018_03_02_a_11_11_02.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -906,7 +947,7 @@ Vous avez aussi la possibilité de lire des attributs de certains équipements e
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_25_a_16_12_32.png" alt="../images/Capture_d_ecran_2018_01_25_a_16_12_32.png" />
+<img src="../images/Capture_d_ecran_2018_01_25_a_16_12_32.png" alt="Capture_d_ecran_2018_01_25_a_16_12_32.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -916,10 +957,10 @@ Vous avez la possibilité de demander la liste des équipements dans la base int
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_26_a_10_46_04.png" alt="../images/Capture_d_ecran_2018_01_26_a_10_46_04.png" />
+<img src="../images/Capture_d_ecran_2018_01_26_a_10_46_04.png" alt="Capture_d_ecran_2018_01_26_a_10_46_04.png" />
 </span>
 <span class="image">
-<img src="../images/Capture_d_ecran_2018_01_26_a_10_46_13.png" alt="../images/Capture_d_ecran_2018_01_26_a_10_46_13.png" />
+<img src="../images/Capture_d_ecran_2018_01_26_a_10_46_13.png" alt="Capture_d_ecran_2018_01_26_a_10_46_13.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -929,7 +970,7 @@ Il peut être nécessaire de faire la demande de la liste pour que les valeurs r
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_26_a_10_52_58.png" alt="../images/Capture_d_ecran_2018_01_26_a_10_52_58.png" />
+<img src="../images/Capture_d_ecran_2018_01_26_a_10_52_58.png" alt="Capture_d_ecran_2018_01_26_a_10_52_58.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -939,20 +980,20 @@ Avec la liste des équipements vous avez la liste connue par Zigate dans sa base
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_07_a_12_54_55.png" alt="../images/Capture_d_ecran_2018_02_07_a_12_54_55.png" />
+<img src="../images/Capture_d_ecran_2018_02_07_a_12_54_55.png" alt="Capture_d_ecran_2018_02_07_a_12_54_55.png" />
 </span></p></div>
 <div class="paragraph"><p>Nous pouvons voir que l objet ayant pour adresse complete IEEE: 00158d00016d8d4f s&#8217;est déconnecté (Leave) avec l&#8217;information 00 (Pas décodé pour l&#8217;instant).</p></div>
 <div class="paragraph"><p>Si vous souhaitez avoir l&#8217;historique alors allez dans le menu:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_07_a_12_49_42.png" alt="../images/Capture_d_ecran_2018_02_07_a_12_49_42.png" />
+<img src="../images/Capture_d_ecran_2018_02_07_a_12_49_42.png" alt="Capture_d_ecran_2018_02_07_a_12_49_42.png" />
 </span></p></div>
 <div class="paragraph"><p>Puis choisissez Ruche-joinLeave:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_07_a_12_49_56.png" alt="../images/Capture_d_ecran_2018_02_07_a_12_49_56.png" />
+<img src="../images/Capture_d_ecran_2018_02_07_a_12_49_56.png" alt="Capture_d_ecran_2018_02_07_a_12_49_56.png" />
 </span></p></div>
 <div class="paragraph"><p>et là vous devez avoir toutes les informations:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_07_a_12_50_09.png" alt="../images/Capture_d_ecran_2018_02_07_a_12_50_09.png" />
+<img src="../images/Capture_d_ecran_2018_02_07_a_12_50_09.png" alt="Capture_d_ecran_2018_02_07_a_12_50_09.png" />
 </span></p></div>
 </div>
 </div>
@@ -962,7 +1003,7 @@ Avec la liste des équipements vous avez la liste connue par Zigate dans sa base
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 01:15:36 CET
+ 2019-03-13 18:29:28 CET
 </div>
 </div>
 </body>

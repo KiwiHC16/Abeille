@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Link Status</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,82 +761,99 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Link Status</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_link_status">Link Status</h2>
+<h2 id="_home">1. Home</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_link_status">2. Link Status</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:</p></div>
 <div class="paragraph"><p><a href="http://">Jeedom</a>/plugins/Abeille/Network/RadioVoisinesMap.php</p></div>
 <div class="paragraph"><p>Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages "Link Status".</p></div>
 <div class="paragraph"><p>Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_32.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_33_32.png" />
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_32.png" alt="Capture_d_ecran_2018_05_10_a_23_33_32.png" />
 </span></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_48.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_33_48.png" />
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_33_48.png" alt="Capture_d_ecran_2018_05_10_a_23_33_48.png" />
 </span></p></div>
 <div class="paragraph"><p>Une fois cela fait ouvrez la page: <a href="http://">Jeedom</a>/plugins/Abeille/Network/RadioVoisinesMap.php</p></div>
 <div class="paragraph"><p>Vous devriez avoir un résultat comme:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_10_a_23_43_31.png" alt="../images/Capture_d_ecran_2018_05_10_a_23_43_31.png" />
+<img src="../images/Capture_d_ecran_2018_05_10_a_23_43_31.png" alt="Capture_d_ecran_2018_05_10_a_23_43_31.png" />
 </span></p></div>
 <div class="paragraph"><p>Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l&#8217;adresse destination. Et enfin le dernier champ permet d&#8217;afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.</p></div>
 <div class="paragraph"><p>Evidement la configuration est celle de mon réseau de prod et de mon réseau de test donc il vous faut déclarer votre propre réseau dans le fichier NetworkDefinition.php.</p></div>
 <div class="paragraph"><p>Dans le tableau knowNE mettre l&#8217;adresse courte suiivie du nom de léquipement:</p></div>
-<div class="paragraph"><p>```
-$knownNE = array(
-"0000" &#8658; "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 &#8594; Production
-
-
-"dc15" &#8658; "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
-"1e8c" &#8658; "T2",
-"174f" &#8658; "T3",            // 00:0b:57:ff:fe:49:10:ea
-"6766" &#8658; "T4",</p></div>
-<div class="paragraph"><p>````</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$knownNE = array(
+"0000" =&gt; "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 -&gt; Production
+// 00:01:58:d0:00:19:1b:22 000158d000191b22 -&gt; Test
+// Abeille Prod JeedomZwave
+"dc15" =&gt; "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
+"1e8c" =&gt; "T2",
+"174f" =&gt; "T3",            // 00:0b:57:ff:fe:49:10:ea
+"6766" =&gt; "T4",</code></pre>
+</div></div>
 <div class="paragraph"><p>Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:</p></div>
-<div class="paragraph"><p>&#8216;```
-$Abeilles = array(
-<em>Ruche</em>    &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;700, <em>y</em>&#8658;520), <em>color</em>&#8658;'red&#8217;,),
-
-
-<em>T1</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;300, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
-<em>T2</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;400, <em>y</em>&#8658;450), <em>color</em>&#8658;'orange',),
-<em>T3</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;350), <em>color</em>&#8658;'orange',),
-<em>T4</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;250), <em>color</em>&#8658;'orange',),
-````</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$Abeilles = array(
+'Ruche'    =&gt; array('position' =&gt; array( 'x'=&gt;700, 'y'=&gt;520), 'color'=&gt;'red',),
+// Abeille Prod JeedomZwave
+// Terrasse
+'T1'       =&gt; array('position' =&gt; array( 'x'=&gt;300, 'y'=&gt;450), 'color'=&gt;'orange',),
+'T2'       =&gt; array('position' =&gt; array( 'x'=&gt;400, 'y'=&gt;450), 'color'=&gt;'orange',),
+'T3'       =&gt; array('position' =&gt; array( 'x'=&gt;450, 'y'=&gt;350), 'color'=&gt;'orange',),
+'T4'       =&gt; array('position' =&gt; array( 'x'=&gt;450, 'y'=&gt;250), 'color'=&gt;'orange',),</code></pre>
+</div></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_lqi">LQI</h2>
+<h2 id="_lqi">3. LQI</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:</p></div>
 <div class="paragraph"><p><a href="http://">adresse de votre Jeedom</a>/plugins/Abeille/Network/AbeilleLQI_Map.php</p></div>
 <div class="paragraph"><p>Vous pouvez vérifier que l&#8217;execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):</p></div>
-<div class="paragraph"><p>```
-AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a
-````</p></div>
-<div class="paragraph"><p>Si cela ne fonctionne pas, vous pouvez faire la manip à la main:
-````
-cd /var/www/html/plugins/Abeille/Network
-php AbeilleLQI_Map.php
-````</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a</code></pre>
+</div></div>
+<div class="paragraph"><p>Si cela ne fonctionne pas, vous pouvez faire la manip à la main:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cd /var/www/html/plugins/Abeille/Network
+php AbeilleLQI_Map.php</code></pre>
+</div></div>
 <div class="paragraph"><p>C&#8217;est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_tableau">Tableau</h2>
+<h2 id="_tableau">4. Tableau</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Le script va interroger tous les équipements qu&#8217;il détecte, un à un. Le procesus est assez long et pour l&#8217;instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.</p></div>
 <div class="paragraph"><p>Lors de la premiere execution un tableau est généré avec toutes les informations collectées (les exemples ci dessous ne contiennent pas toutes les colonnes car depuis certaines ont été ajoutées.</p></div>
 <div class="sect2">
-<h3 id="_sur_mon_systeme_de_test_après_40s_cela_donne">Sur mon systeme de test, après 40s, cela donne:</h3>
+<h3 id="_test">4.1. Test</h3>
+<div class="paragraph"><p>Sur mon systeme de test, après 40s, cela donne:</p></div>
 <div class="tableblock">
 <table rules="all"
 width="100%"
@@ -922,7 +973,8 @@ La cinquième colonne contient le LQI (Link Quality Indicator), la qualité de l
 <div class="paragraph"><p>On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (Zigate). Qu&#8217;il possède un équipement enfant qui est donc en 2ieme niveau.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_sur_mon_système_de_prod">Sur mon système de prod</h3>
+<h3 id="_production">4.2. Production</h3>
+<div class="paragraph"><p>Sur mon système de prod</p></div>
 <div class="paragraph"><p>Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).</p></div>
 <div class="paragraph"><p>Petites interrogations/Observation:
 - des "Relation" sont "Unknown" : bug ou valeur remontée inconnue, uniquement sur ma HueGo actuellement.
@@ -1680,10 +1732,11 @@ cellspacing="0" cellpadding="4">
 </div>
 </div>
 <div class="sect1">
-<h2 id="_graphique_vieille_version">Graphique Vieille Version</h2>
+<h2 id="_graphique_old">5. Graphique Old</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Graphique Vieille Version</p></div>
 <div class="sect2">
-<h3 id="_configuration">Configuration</h3>
+<h3 id="_configuration">5.1. Configuration</h3>
 <div class="paragraph"><p>Afin de visualiser les données, il vous faut modifier le fichier NetworkDefinition.php dans le repertoire Abeille/Network car celui-ci contient les équipements, leur nom et positions.</p></div>
 <div class="paragraph"><p>la premiere table:</p></div>
 <div class="paragraph"><p>$knownNE = array(
@@ -1704,10 +1757,10 @@ cellspacing="0" cellpadding="4">
 <em>T3</em>       &#8658; array(<em>position</em> &#8658; array( <em>x</em>&#8658;450, <em>y</em>&#8658;350), <em>color</em>&#8658;'orange',),</p></div>
 </div>
 <div class="sect2">
-<h3 id="_graphique_old_version">Graphique (Old Version)</h3>
+<h3 id="_graphique">5.2. Graphique</h3>
 <div class="paragraph"><p>Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j&#8217;ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_04_30_a_23_45_51.png" alt="../images/Capture_d_ecran_2018_04_30_a_23_45_51.png" />
+<img src="../images/Capture_d_ecran_2018_04_30_a_23_45_51.png" alt="Capture_d_ecran_2018_04_30_a_23_45_51.png" />
 </span></p></div>
 <div class="paragraph"><p>On peut voir toutes les voisines rapportées par les équipements.</p></div>
 <div class="paragraph"><p>Vous pouvez choisir ce qui est affiché à l'écran:</p></div>
@@ -1740,24 +1793,24 @@ le dernier menu permet de selectionner l information affiché sur les fleches
 </div>
 </div>
 <div class="sect1">
-<h2 id="_graphique_nouvelle_version">Graphique (Nouvelle Version)</h2>
+<h2 id="_graphique_new">6. Graphique New</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_configuration_2">Configuration</h3>
+<h3 id="_configuration_2">6.1. Configuration</h3>
 <div class="paragraph"><p>Normalement après 24h les informations sont disponibles. Si vous n&#8217;avez pas les 24h ou souhaiter rafraichier les données, il faut avoir fait un "Recalcul du cache" (Network List&#8594;Table des noeuds&#8594;Recalcul du cache).</p></div>
 <div class="paragraph"><p>Juste un clic sur "Network Graph":</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_02_39_04.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_39_04.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_39_04.png" alt="Capture_d_ecran_2018_10_04_a_02_39_04.png" />
 </span></p></div>
 <div class="paragraph"><p>Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_10.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_24_10.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_10.png" alt="Capture_d_ecran_2018_10_04_a_02_24_10.png" />
 </span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_filtre">Filtre</h3>
+<h3 id="_filtre">6.2. Filtre</h3>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_11_44_30.png" alt="../images/Capture_d_ecran_2018_10_04_a_11_44_30.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_11_44_30.png" alt="Capture_d_ecran_2018_10_04_a_11_44_30.png" />
 </span></p></div>
 <div class="paragraph"><p>Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.</p></div>
 <div class="quoteblock">
@@ -1824,31 +1877,31 @@ Je choisi la valeur affichée le long de la ligne avec le parametre. Le plus uti
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_exemples">Exemples</h3>
+<h3 id="_exemples">6.3. Exemples</h3>
 <div class="paragraph"><p>Exemple avec tout positionné à la main:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_17.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_23_17.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_17.png" alt="Capture_d_ecran_2018_10_04_a_02_23_17.png" />
 </span></p></div>
 <div class="paragraph"><p>Exemple qu&#8217;avec les relations Child (Filter Child):</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_37.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_23_37.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_23_37.png" alt="Capture_d_ecran_2018_10_04_a_02_23_37.png" />
 </span></p></div>
 <div class="paragraph"><p>On peut voir ici que j&#8217;ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,&#8230;</p></div>
 <div class="paragraph"><p>Vue interressante car elle permet de voir quels sont le équipements terminaux rattachés à quels routeurs.</p></div>
 <div class="paragraph"><p>Exemple en demandant la Ruche au centre:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_23.png" alt="../images/Capture_d_ecran_2018_10_04_a_02_24_23.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_02_24_23.png" alt="Capture_d_ecran_2018_10_04_a_02_24_23.png" />
 </span></p></div>
 <div class="paragraph"><p>Exemple avec l&#8217;upload d&#8217;une image en fond d'écran:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_04_a_11_15_34.png" alt="../images/Capture_d_ecran_2018_10_04_a_11_15_34.png" />
+<img src="../images/Capture_d_ecran_2018_10_04_a_11_15_34.png" alt="Capture_d_ecran_2018_10_04_a_11_15_34.png" />
 </span></p></div>
 <div class="paragraph"><p>Vous pouvez aussi choisir votre fond d'écran pour positionner vos Abeilles.</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_radio">Radio</h2>
+<h2 id="_radio">7. Radio</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Sur la base de la collecte de ces informations, j&#8217;ai fait quelques graphes pour comprendre ce qu&#8217;on espérer en terme de couverture radio.</p></div>
 <div class="paragraph"><p>Je n&#8217;ai pris que des routeurs dans cet exercice: prise xiaomi, prise ikea, ampoule ikea.
@@ -1856,7 +1909,7 @@ Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,
 <div class="paragraph"><p>Le premier graphe est le LQI rapporté par l'équipement en fonction du nombre de mur à traverser.
 Le deuxieme graphe est le LQI en fonction de la distance à vol d&#8217;oiseau.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_12_14_a_10_45_20.png" alt="../images/Capture_d_ecran_2018_12_14_a_10_45_20.png" />
+<img src="../images/Capture_d_ecran_2018_12_14_a_10_45_20.png" alt="Capture_d_ecran_2018_12_14_a_10_45_20.png" />
 </span></p></div>
 <div class="paragraph"><p>Si l&#8217;on considère qu&#8217;avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus.</p></div>
 <div class="paragraph"><p>Cela nous indique qu&#8217;en moyenne plus de 2 murs est très compliqué. Ce qui implique un routeur dans chaque pièce pour être tranquile.</p></div>
@@ -1871,7 +1924,7 @@ Le deuxieme graphe est le LQI en fonction de la distance à vol d&#8217;oiseau.<
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:22:04 CET
+ 2019-03-13 17:47:49 CET
 </div>
 </div>
 </body>

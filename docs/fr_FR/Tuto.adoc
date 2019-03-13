@@ -1,6 +1,19 @@
-== Exemple d'utilisation "croisée"
+= Tuto
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
 
-== Pilotage d'une ampoule à partir d'un capteur de présence avec un scénario
+== Home
+
+Retour au link:index.html[document principal].
+
+== Scénario 1
+
+Pilotage d'une ampoule à partir d'un capteur de présence avec un scénario
+
 
 === Pré-requis
 
@@ -8,22 +21,26 @@
 * Capteur de présence inclus (Dans cette exemple : le nom de l'objet est "Capteur")
 * Télécommande IKEA incluse (Dans cette exemple : le nom de l'objet est "Tele")
 
+=== Réalisation
+
 Nous allons utiliser les scénarios:
 
-image:../images/Capture_d_ecran_2018_10_30_a_10_33_20.png[]
+image:Capture_d_ecran_2018_10_30_a_10_33_20.png[]
 
 Créons un scénario "test" avec pour déclencheur "Présence".
 
-image:../images/Capture_d_ecran_2018_10_30_a_10_38_29.png[]
+image:Capture_d_ecran_2018_10_30_a_10_38_29.png[]
 
 Et les actions:
 
-image:../images/Capture_d_ecran_2018_10_30_a_10_40_48.png[]
+image:Capture_d_ecran_2018_10_30_a_10_40_48.png[]
 
 Ici, quand une présence est détectée, on allume l'ampoule et quand la présence n'est pas activée on éteint l'ampoule.
 
 
-=== Présence->Ampoule<-Télécommande
+== Scénario 2
+
+Présence->Ampoule<-Télécommande
 
 A cette étape cet objet "Tele" dans Jeedom ne peut être utilisé. Il faut exécuter les étapes de du chapitre "Simuler la télécommande" ci-dessous.
 

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Ikea</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,22 +761,35 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Ikea</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_ikea">Ikea</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_ampoule">Ampoule</h3>
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_un_petit_mémo_avec_la_télécommande_hue_à_20_pour_ceux_qui_comme_moi_vont_devoir_ré_inclure_toutes_leurs_ampoules_ikea_avec_l_8217_upgrade_en_3_0f_8230">Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l&#8217;upgrade en 3.0F&#8230;</h3>
+</div>
+<div class="sect1">
+<h2 id="_ampoule">2. Ampoule</h2>
+<div class="sectionbody">
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mémo">3. Mémo</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, vont devoir ré-inclure toutes leurs ampoules Ikea avec l&#8217;upgrade en 3.0F&#8230;</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
@@ -775,8 +822,8 @@ Si on le souhaite, on peut associer la télécommande et l’ampoule en maintena
 </p>
 </li>
 </ol></div>
-<div class="sect3">
-<h4 id="_nouvelle_inclusion">Nouvelle inclusion</h4>
+<div class="sect2">
+<h3 id="_nouvelle_inclusion">3.1. Nouvelle inclusion</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -790,8 +837,8 @@ Faire un reset de l&#8217;ampoule en partant de la position allumée, puis 6 foi
 </li>
 </ul></div>
 </div>
-<div class="sect3">
-<h4 id="_déjà_inclue_préalablement">Déjà inclue préalablement</h4>
+<div class="sect2">
+<h3 id="_déjà_inclue">3.2. Déjà inclue</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -805,17 +852,20 @@ Zigate en fonctionnement normale
 </li>
 </ul></div>
 </div>
+<div class="sect2">
+<h3 id="_compléments">3.3. Compléments</h3>
+<div class="paragraph"><p>Compléments d&#8217;informations</p></div>
 <div class="sect3">
-<h4 id="_compléments_d_8217_informations">Compléments d&#8217;informations</h4>
-<div class="sect4">
-<h5 id="_bouton_identify">Bouton Identify</h5>
+<h4 id="_identify">3.3.1. Identify</h4>
+<div class="paragraph"><p>Bouton Identify</p></div>
 <div class="paragraph"><p>Ce bouton est créé au moment de la création de l&#8217;objet. Celui ci permet de demander à l&#8217;ampoule de se manifester. Elle se met à changer d&#8217;intensité ce qui nous permet de la repérer dans une groupe d&#8217;ampoules par exemple.</p></div>
 </div>
-<div class="sect4">
-<h5 id="_bind_spécifique">Bind spécifique:</h5>
+<div class="sect3">
+<h4 id="_bind">3.3.2. Bind</h4>
+<div class="paragraph"><p>Bind spécifique:</p></div>
 <div class="paragraph"><p>Identifiez l&#8217;ampoule que vous voulez paramétrer:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018-02_21_a_23_26_56.png" alt="../images/Capture_d_ecran_2018-02_21_a_23_26_56.png" />
+<img src="../images/Capture_d_ecran_2018-02_21_a_23_26_56.png" alt="Capture_d_ecran_2018-02_21_a_23_26_56.png" />
 </span></p></div>
 <div class="paragraph"><p>Récupérer son adresse IEEE, son adresse courte (ici 6766).</p></div>
 <div class="paragraph"><p>De même, dans l&#8217;objet Ruche récupérez l&#8217;adresse IEEE (Si l&#8217;info n&#8217;est pas dispo, un reset de la Zigate depuis l objet ruche doit faire remonter l&#8217;information).</p></div>
@@ -833,25 +883,27 @@ Message, le cluster qui doit être rapporté, et l adresse IEEE de la Zigate.
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_21_a_23_26_49.png" alt="../images/Capture_d_ecran_2018_02_21_a_23_26_49.png" />
+<img src="../images/Capture_d_ecran_2018_02_21_a_23_26_49.png" alt="Capture_d_ecran_2018_02_21_a_23_26_49.png" />
 </span></p></div>
 <div class="paragraph"><p>Attention la capture d'écran n&#8217;est pas à jour pour le deuxième champs.</p></div>
-<div class="paragraph"><p>Dans message mettre:
-```
-targetExtendedAddress=XXXXXXXXXXXXXXXX&amp;targetEndpoint=YY&amp;ClusterId=ZZZZ&amp;reportToAddress=AAAAAAAAAAAAAAAA
-````</p></div>
-<div class="paragraph"><p>Exemple avec tous les paramètres:
-````
-targetExtendedAddress=90fd9ffffe69131d&amp;targetEndpoint=01&amp;ClusterId=0006&amp;reportToAddress=00158d00019a1b22
-````</p></div>
+<div class="paragraph"><p>Dans message mettre:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>targetExtendedAddress=XXXXXXXXXXXXXXXX&amp;targetEndpoint=YY&amp;ClusterId=ZZZZ&amp;reportToAddress=AAAAAAAAAAAAAAAA</code></pre>
+</div></div>
+<div class="paragraph"><p>Exemple avec tous les paramètres:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>targetExtendedAddress=90fd9ffffe69131d&amp;targetEndpoint=01&amp;ClusterId=0006&amp;reportToAddress=00158d00019a1b22</code></pre>
+</div></div>
 <div class="paragraph"><p>Après clic sur Bind, vous devriez voir passer dans le log AbeilleParser (en mode debug) un message comme:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_21_a_23_27_29.png" alt="../images/Capture_d_ecran_2018_02_21_a_23_27_29.png" />
+<img src="../images/Capture_d_ecran_2018_02_21_a_23_27_29.png" alt="Capture_d_ecran_2018_02_21_a_23_27_29.png" />
 </span></p></div>
 <div class="paragraph"><p>qui confirme la prise en compte par l&#8217;ampoule. Status 00 si Ok.</p></div>
 </div>
-<div class="sect4">
-<h5 id="_rapport_manuel">Rapport Manuel:</h5>
+<div class="sect3">
+<h4 id="_rapport_manuel">3.3.3. Rapport Manuel</h4>
 <div class="paragraph"><p>Ensuite paramétrer l&#8217;envoie de rapport:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -866,63 +918,70 @@ Message, le cluster et le paramètre dans le cluster
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_21_a_23_29_11.png" alt="../images/Capture_d_ecran_2018_02_21_a_23_29_11.png" />
+<img src="../images/Capture_d_ecran_2018_02_21_a_23_29_11.png" alt="Capture_d_ecran_2018_02_21_a_23_29_11.png" />
 </span></p></div>
 <div class="paragraph"><p>Attention a capture d'écran n&#8217;est pas à jour pour le deuxième champs.</p></div>
-<div class="paragraph"><p>````
-targetEndpoint=01&amp;ClusterId=0006&amp;AttributeType=10&amp;AttributeId=0000 pour retour d'état ampoule Ikea</p></div>
-<div class="paragraph"><p>targetEndpoint=01&amp;ClusterId=0008&amp;AttributeType=20&amp;AttributeId=0000 pour retour de niveau ampoule Ikea
-````</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>targetEndpoint=01&amp;ClusterId=0006&amp;AttributeType=10&amp;AttributeId=0000 pour retour d'état ampoule Ikea
+
+targetEndpoint=01&amp;ClusterId=0008&amp;AttributeType=20&amp;AttributeId=0000 pour retour de niveau ampoule Ikea</code></pre>
+</div></div>
 <div class="paragraph"><p>De même vous devriez voir passer dans le log AbeilleParse (en mode debug) un message comme:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_21_a_23_29_49.png" alt="../images/Capture_d_ecran_2018_02_21_a_23_29_49.png" />
+<img src="../images/Capture_d_ecran_2018_02_21_a_23_29_49.png" alt="Capture_d_ecran_2018_02_21_a_23_29_49.png" />
 </span></p></div>
 <div class="paragraph"><p>qui confirme la prise en compte par l&#8217;ampoule. Status 00 si Ok.</p></div>
 <div class="paragraph"><p>Après sur un changement d'état l&#8217;ampoule doit remonter l&#8217;info vers Abeille, avec des messages comme:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_21_a_23_31_11.png" alt="../images/Capture_d_ecran_2018_02_21_a_23_31_11.png" />
+<img src="../images/Capture_d_ecran_2018_02_21_a_23_31_11.png" alt="Capture_d_ecran_2018_02_21_a_23_31_11.png" />
 </span></p></div>
 <div class="paragraph"><p>pour un retour Off de l&#8217;ampoule.</p></div>
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_télécommande">4. Télécommande</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Télécommande Ronde 5 boutons</p></div>
 <div class="sect2">
-<h3 id="_télécommande_ronde_5_boutons">Télécommande Ronde 5 boutons</h3>
-<div class="sect3">
-<h4 id="_télécommande_réelle">Télécommande réelle</h4>
+<h3 id="_télécommande_réelle">4.1. Télécommande réelle</h3>
 <div class="paragraph"><p>(Pour l&#8217;instant c&#8217;est aux équipements qui reçoivent les demandes de la télécommande réelle de renvoyer leur état vers Jeedom, sur un appui bouton télécommande, la Zigate ne transmet rien au plugin Abeille, à partir du firmware 3.0f on peut récupérer des appuis sur les boutons de la télécommande avec une configuration spécifique, voir ci dessous).</p></div>
 <div class="paragraph"><p>Pour créer l&#8217;objet Abeille Automatiquement,</p></div>
-<div class="sect4">
-<h5 id="_première_solution">Première solution:</h5>
+<div class="sect3">
+<h4 id="_solution_1">4.1.1. Solution 1</h4>
+<div class="paragraph"><p>Première solution:</p></div>
 <div class="paragraph"><p>Faire une inclusion de la télécommande et un objet doit être créé.
 Ensuite paramétrer l&#8217;adresse du groupe comme indiqué ci dessous (voir deuxième solution).=</p></div>
 </div>
-<div class="sect4">
-<h5 id="_deuxième_solution">Deuxième solution:</h5>
+<div class="sect3">
+<h4 id="_solution_2">4.1.2. Solution 2</h4>
+<div class="paragraph"><p>Deuxième solution:</p></div>
 <div class="paragraph"><p>Il faut connaitre l&#8217;adresse de la télécommande (voir mode semi automatique pour récupérer l&#8217;adresse).</p></div>
 <div class="paragraph"><p>Puis dans la ruche demander son nom. Par exemple pour la télécommande à l&#8217;adresse ec15</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_28_a_13_59_31.png" alt="../images/Capture_d_ecran_2018_02_28_a_13_59_31.png" />
+<img src="../images/Capture_d_ecran_2018_02_28_a_13_59_31.png" alt="Capture_d_ecran_2018_02_28_a_13_59_31.png" />
 </span></p></div>
 <div class="paragraph"><p>et immédiatement après appuyez sur un des boutons de la télécommande pour la réveiller (pas sur le bouton arrière).</p></div>
 <div class="paragraph"><p>Et après un rafraichissement de l'écran vous devez avoir un objet</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_28_a_14_00_58.png" alt="../images/Capture_d_ecran_2018_02_28_a_14_00_58.png" />
+<img src="../images/Capture_d_ecran_2018_02_28_a_14_00_58.png" alt="Capture_d_ecran_2018_02_28_a_14_00_58.png" />
 </span></p></div>
 <div class="paragraph"><p>Il faut ensuite éditer les commandes en remplaçant l&#8217;adresse de la télécommande par le groupe que l&#8217;on veut contrôler</p></div>
 <div class="paragraph"><p>La configuration</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_28_a_14_03_26.png" alt="../images/Capture_d_ecran_2018_02_28_a_14_03_26.png" />
+<img src="../images/Capture_d_ecran_2018_02_28_a_14_03_26.png" alt="Capture_d_ecran_2018_02_28_a_14_03_26.png" />
 </span></p></div>
 <div class="paragraph"><p>va devenir</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_28_a_14_03_47.png" alt="../images/Capture_d_ecran_2018_02_28_a_14_03_47.png" />
+<img src="../images/Capture_d_ecran_2018_02_28_a_14_03_47.png" alt="Capture_d_ecran_2018_02_28_a_14_03_47.png" />
 </span></p></div>
 <div class="paragraph"><p>pour le groupe 5FBD.</p></div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_nouvelle_inclusion_2">Nouvelle inclusion</h4>
+<div class="sect2">
+<h3 id="_nouvelle_inclusion_2">4.2. Nouvelle inclusion</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -937,8 +996,8 @@ Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate
 </ul></div>
 <div class="paragraph"><p>Mais rien d&#8217;autre ne remonte, il faut interroger le nom pour créer l&#8217;objet.</p></div>
 </div>
-<div class="sect3">
-<h4 id="_leave">Leave</h4>
+<div class="sect2">
+<h3 id="_leave">4.3. Leave</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -947,14 +1006,18 @@ Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate
 </li>
 </ul></div>
 </div>
-<div class="sect3">
-<h4 id="_récupérer_le_groupe_utilisé_par_une_télécommande">Récupérer le groupe utilisé par une télécommande</h4>
+<div class="sect2">
+<h3 id="_groupes">4.4. Groupes</h3>
+<div class="paragraph"><p>Récupérer le groupe utilisé par une télécommande</p></div>
 <div class="paragraph"><p>Avoir une télécommande et une ampoule Ikea sur le même réseau Zigbee. Attention l&#8217;ampoule va perdre sa configuration. Approcher à 2 cm la télécommande de l&#8217;ampoule et appuyez pendant 10s sur le bouton à l&#8217;arrière de la télécommande avec le symbole <em>OO</em>. L&#8217;ampoule doit clignoter,  relâcher le bouton. Voilà la télécommande à affecté son groupe à l&#8217;ampoule Il suffit maintenant de faire un getGroupMemberShip depuis la ruche sur l&#8217;ampoule pour récupérer le groupe. Merci a @rkhadro pour sa trouvaille.</p></div>
 <div class="paragraph"><p>Il existe un bouton « link » à côté de la pile bouton de la télécommande. 4 clicks pour appairer la télécommande à la Zigate. Un appuie long près de l’ampoule pour le touchlink.</p></div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_télécommande_virtuelle">Télécommande Virtuelle</h3>
+</div>
+<div class="sect1">
+<h2 id="_virtuelle">5. Virtuelle</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Télécommande Virtuelle</p></div>
 <div class="paragraph"><p>La télécommande virtuelle est un objet Jeedom qui envoies les commandes Zigbee comme si c'était une vrai télécommande IKEA.</p></div>
 <div class="paragraph"><p>Utiliser les commandes cachées dans la ruche:</p></div>
 <div class="ulist"><ul>
@@ -965,20 +1028,20 @@ Ouvrir la page commande de la ruche et trouver la commande "TRADFRI remote contr
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_10_34_40.png" alt="../images/Capture_d_ecran_2018_03_02_a_10_34_40.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_10_34_40.png" alt="Capture_d_ecran_2018_03_02_a_10_34_40.png" />
 </span></p></div>
 <div class="paragraph"><p>Remplacez "/TRADFRI remote control/" l&#8217;adresse du groupe que vous voulez contrôler. Par exemple AAAA.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_10_35_08.png" alt="../images/Capture_d_ecran_2018_03_02_a_10_35_08.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_10_35_08.png" alt="Capture_d_ecran_2018_03_02_a_10_35_08.png" />
 </span></p></div>
 <div class="paragraph"><p>Sauvegardez et faites "Tester".</p></div>
 <div class="paragraph"><p>Vous avez maintenant une télécommande pour contrôler le groupe AAAA.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_02_a_10_35_28.png" alt="../images/Capture_d_ecran_2018_03_02_a_10_35_28.png" />
+<img src="../images/Capture_d_ecran_2018_03_02_a_10_35_28.png" alt="Capture_d_ecran_2018_03_02_a_10_35_28.png" />
 </span></p></div>
-</div>
 <div class="sect2">
-<h3 id="_récupération_des_appuis_télécommande_ikea_dans_abeille">Récupération des appuis Télécommande Ikea dans Abeille</h3>
+<h3 id="_récupération">5.1. Récupération</h3>
+<div class="paragraph"><p>Récupération des appuis Télécommande Ikea dans Abeille</p></div>
 <div class="paragraph"><p>Après avoir récupéré le groupe utilisé par la télécommande, vous pouvez ajouter la Zigate à ce groupe ainsi Abeille recevra les demandes de la télécommande. Attention la Zigate est limitée à 5 groupes soit disons 5 télécommandes.</p></div>
 <div class="paragraph"><p>Pour ce faire dans Abeille, ajouter les groupes à l&#8217;objet "Ruche" qui représente la Zigate.</p></div>
 <div class="paragraph"><p>Vous pouvez aussi forcer le groupe utilisé par la télécommande en sélectionnant la télécommande ikea, en mettant le groupe dans le champ Id puis clic sur le bouton "Set Group Remote" et dans la seconde qui suis en appuyant sur un bouton de la télécommande pour la réveiller. Il peut être nécessaire de le faire plusieurs fois du fait du timing un peu spécifique.</p></div>
@@ -1011,22 +1074,27 @@ Reponse 0x80A7 correspond à l&#8217;info Left-Right-Cmd et Left-Right-Direction
 Attention lors de l&#8217;utilisation de la télécommande, dans Abeille elle sera mis a jour et vos scénarii déclenchés mais si vous avez des équipements Zigbee sur ce groupe ils seront aussi activés.
 Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommande qui réagira aux demandes de la télécommande directement en Zigbee (même si Jeedom est HS) et avoir un scénario qui se déclenche en même temps pour ouvrir les volets en zwave ou autre.</p></div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gradateur">6. Gradateur</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_gradateur">Gradateur</h3>
-<div class="sect3">
-<h4 id="_un_clic_sur_oo">Un clic sur OO</h4>
+<h3 id="_un_clic_sur_oo">6.1. Un clic sur OO</h3>
 <div class="paragraph"><p>Un clic sur OO envoie un Beacon Request. Même si la zigate est en inclusion, il n&#8217;y a pas d&#8217;association (Probablement le cas si déjà associé à un autre réseau).</p></div>
 </div>
-<div class="sect3">
-<h4 id="_4_clics_sur_oo">4 clics sur OO</h4>
+<div class="sect2">
+<h3 id="_4_clics_sur_oo">6.2. 4 clics sur OO</h3>
 <div class="paragraph"><p>Message Leave, puis Beacon Requets puis association si réseau en mode inclusion. Une fois associé, un getName avec un réveil du gradateur permet de récupérer le nom.</p></div>
 <div class="paragraph"><p>Voir la télécommande 5 boutons pour avoir plus de détails sur le contrôle de groupe,&#8230;</p></div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_prise">7. Prise</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_prise">Prise</h3>
-<div class="sect3">
-<h4 id="_nouvelle_inclusion_3">Nouvelle inclusion</h4>
+<h3 id="_nouvelle_inclusion_3">7.1. Nouvelle inclusion</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1041,10 +1109,12 @@ Faire un reset de la prise en insérant un petit trombone dans le trou pres de l
 </ul></div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_télécommande_2">8. Télécommande</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_télécommande">Télécommande</h3>
-<div class="sect3">
-<h4 id="_nouvelle_inclusion_4">Nouvelle inclusion</h4>
+<h3 id="_nouvelle_inclusion_4">8.1. Nouvelle inclusion</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1059,44 +1129,46 @@ Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la té
 </ul></div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_simuler_la_télécommande">Simuler la télécommande</h3>
+</div>
+<div class="sect1">
+<h2 id="_simuler_la_télécommande">9. Simuler la télécommande</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>Cette opération est un peu délicate mais doit permettre de récupérer l&#8217;adresse de groupe utilisée par la télécommande suite aux opérations ci dessus. Dans le futur ce devrait être automatique.</p></div>
 <div class="paragraph"><p>Aller dans la page de configuration du plugin et clic sur "Network" pour faire apparaitre les paramètres dans l&#8217;Ampoule:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_30_24.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_30_24.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_30_24.png" alt="Capture_d_ecran_2018_10_30_a_11_30_24.png" />
 </span></p></div>
 <div class="paragraph"><p>Sur l&#8217;objet Ampoule vous devez vous le champ "Groups" apparaitre sans information:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_36_43.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_36_43.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_36_43.png" alt="Capture_d_ecran_2018_10_30_a_11_36_43.png" />
 </span></p></div>
 <div class="paragraph"><p>Recuperons l&#8217;adresse de l ampoule, en ouvrant la page de configuration de l ampoule:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_42_09.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_42_09.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_42_09.png" alt="Capture_d_ecran_2018_10_30_a_11_42_09.png" />
 </span></p></div>
 <div class="paragraph"><p>Le champ "Topic Abeille" contient l&#8217;adresse, ici "9252".</p></div>
 <div class="paragraph"><p>Interrogeons maintenant l&#8217;ampoule, avec un getGroupMemberShip depuis l objet Ruche:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_45_23.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_45_23.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_45_23.png" alt="Capture_d_ecran_2018_10_30_a_11_45_23.png" />
 </span></p></div>
 <div class="paragraph"><p>Indiquez l&#8217;adresse de l ampoule.</p></div>
 <div class="paragraph"><p>Maintenant le champ "Groups" de l&#8217;ampoule doit contenir l&#8217;adresse de groupe:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_47_24.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_47_24.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_47_24.png" alt="Capture_d_ecran_2018_10_30_a_11_47_24.png" />
 </span></p></div>
 <div class="paragraph"><p>ici le groupe utilisé par la télécommande est "f65d".</p></div>
 <div class="paragraph"><p>Maintenant nous pouvons mettre à jour la télécommande dans Jeedom. Ouvrez les commandes de la télécommande:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_50_17.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_50_17.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_50_17.png" alt="Capture_d_ecran_2018_10_30_a_11_50_17.png" />
 </span></p></div>
 <div class="paragraph"><p>Dans le champ "Topic" des commandes vous pouvez voir le texte \=addrGroup= qu&#8217;il faut remplacer par la valeur du groupe, ici "f65d" et sauvegarder.</p></div>
 <div class="paragraph"><p>Cela donne:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_54_51.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_54_51.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_54_51.png" alt="Capture_d_ecran_2018_10_30_a_11_54_51.png" />
 </span></p></div>
 <div class="paragraph"><p>Maintenant vous pouvez commander votre ampoule depuis la Télécommande physique et depuis la Télécommande Jeedom.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_11_58_42.png" alt="../images/Capture_d_ecran_2018_10_30_a_11_58_42.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_11_58_42.png" alt="Capture_d_ecran_2018_10_30_a_11_58_42.png" />
 </span></p></div>
 <div class="paragraph"><p>PS: Les scénarios ne sont pas implémentés pour l&#8217;instant (30/10/2018):</p></div>
 <div class="ulist"><ul>
@@ -1114,12 +1186,11 @@ et les boutons "Fleche Gauche", "Fleche Droite" de la télécommande physique.
 </div>
 </div>
 </div>
-</div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:09:45 CET
+ 2019-03-13 18:00:25 CET
 </div>
 </div>
 </body>

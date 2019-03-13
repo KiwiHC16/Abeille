@@ -1,6 +1,14 @@
-:toc2:
-
 = Mise a Jour - Bug - ChangeLog
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
 
 == Mise à jour
 
@@ -17,7 +25,7 @@ Comment procéder:
 * démarrer le réseau Zigbee depuis abeille
 * mettre la Zigate en inclusion
 * inclure vos routeurs en partant des plus proches au plus lointain
-* Vérifier que tout fonctionne 
+* Vérifier que tout fonctionne
 * Inclure les équipements sur piles (dans l'ordre que vous voulez)
 
 [red]#!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!#
@@ -30,7 +38,9 @@ Prévoir du temps, avoir bien fait les backup, et prévoir d'avoir à faire quel
 
 [red]#!!!! Ne pas faire ces manipulations sans avoir fait de backup !!!!#
 
-==== Solution pour les petits systèmes
+==== petits systèmes
+
+Solution pour les petits systèmes
 
 * Cela suppose que vous aller effacer (objets, historiques,...) toutes les données puis re-créer le réseau.
 * supprimer le plug in Abeille
@@ -40,10 +50,12 @@ Prévoir du temps, avoir bien fait les backup, et prévoir d'avoir à faire quel
 * Mettre en mode inclusion
 * Appairer les devices.
 
-==== Solution pour les gros systèmes
+==== gros systèmes
 
-Si la solution précédente demande trop de travail, on peut faire la mise à jour de la façon suivante. Attention, je ne peux pas tester toutes les combinaisons et des opérations supplémentaires seront certainement nécessaires. 90% aura été fait automatiquement. 
-Il n'y a pas de moyen infaillible pour faire la correspondance entre une commande dans un modèle et une commande dans Jeedom. Le lien est fait soit par le nom dans la commande nom ou quand pas disponible par le nom de l'image utilisée pour le device. De même pour les commande le nom est le moyen de faire le lien. Si vous avez fait des changements de nom, les commandes sortiront en erreur et cela demandera de mettre le nom de la commande dans le modèle le temps de la conversion. 
+Solution pour les gros systèmes
+
+Si la solution précédente demande trop de travail, on peut faire la mise à jour de la façon suivante. Attention, je ne peux pas tester toutes les combinaisons et des opérations supplémentaires seront certainement nécessaires. 90% aura été fait automatiquement.
+Il n'y a pas de moyen infaillible pour faire la correspondance entre une commande dans un modèle et une commande dans Jeedom. Le lien est fait soit par le nom dans la commande nom ou quand pas disponible par le nom de l'image utilisée pour le device. De même pour les commande le nom est le moyen de faire le lien. Si vous avez fait des changements de nom, les commandes sortiront en erreur et cela demandera de mettre le nom de la commande dans le modèle le temps de la conversion.
 Dans les versions suivantes, nous ne devrions plus avoir ce problème car les commandes auront un Id unique et spécifique.
 
 * Mettre à jour la plugin avec le market (ou github)
@@ -54,7 +66,7 @@ Dans les versions suivantes, nous ne devrions plus avoir ce problème car les co
 
 Si un équipement ne fonctionne pas, appliquer de nouveau la mise a jour sur cet équipements uniquement. Pour ce faire dans la page Plugin->Protocol Domotique->Abeille, sélectionnez le device et clic sur bouton: "Apply Template". Ensuite regarder le log "Abeille_updateConfig" pour avoir le détails des opérations faites et éventuellement voir ce qui n'est pas mis à jour.
 
-vous allez trouver des messages: 
+vous allez trouver des messages:
 
 * "parameter identical, no change" qui indique que rien n'a été fait sur ce paramètre (déjà à jour).
 * "parameter is not in the template, no change" qui indique que le paramètre de l'objet n'est pas trouvé dans le template. Soit il n'est plus nécessaire et ne sera donc pas utilisé, soit vous l'avez changé et on le garde, soit Jeedom a défini une valeur par défaut et c'est très bien ...
@@ -91,10 +103,10 @@ Cas rencontrés:
 
 == Bugs
 
-Il est fort probable que des bugs soient découverts. 
+Il est fort probable que des bugs soient découverts.
 Dans ce cas forum
 
-(https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&p=575280&hilit=abeille) 
+(https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&p=575280&hilit=abeille)
 
 ou issue dans GitHub
 
@@ -286,5 +298,3 @@ ou issue dans GitHub
 
 * first version posted on github
 * inclus la création des objets IKEA Bulb et Xiaomi Plug, Température Carre/rond, bouton et InfraRouge
-
-

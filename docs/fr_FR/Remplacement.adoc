@@ -1,8 +1,17 @@
-:toc2:
 = Fonctions Jeedom
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
 
 [[Remplacement]]
-== Remplacement 
+== Remplacement
 
 [[Remplacement-Equipement]]
 === Equipement
@@ -10,19 +19,19 @@
 Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scénarios,...), voici la méthode à suivre.
 
 
-[icon="../images/tip.png"]
-TIP: Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.
+[TIP]
+Attention, cette manipulation n'est pas sans risque car je n'ai pas la maitrise de tout.
 
-[icon="../images/note.png"]
-NOTE: Cette fonction était intéressante dans les premières versions d'Abeille car le changement d'adresse des équipements zigbee n'était pas géré. Maintenant c'est automatique et donc le remplacement manuelle non nécessaire. A n'utiliser que pour des besoins très spécifiques.
+[NOTE]
+Cette fonction était intéressante dans les premières versions d'Abeille car le changement d'adresse des équipements zigbee n'était pas géré. Maintenant c'est automatique et donc le remplacement manuelle non nécessaire. A n'utiliser que pour des besoins très spécifiques.
 
 Prenons l'exemple du remplacement d'un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.
 
-image:../images/Capture_d_ecran_2018_03_01_a_16_53_29.png[]
+image:Capture_d_ecran_2018_03_01_a_16_53_29.png[]
 
 Première opération, Inclure le nouveau bouton dans Abeille.
 
-image:../images/Capture_d_ecran_2018_03_01_a_16_48_35.png[]
+image:Capture_d_ecran_2018_03_01_a_16_48_35.png[]
 
 Le nouveau bouton a pour adresse 8818.
 
@@ -30,7 +39,7 @@ Renseigner les champs dans la commande "Replace Equipment" dans l'objet Ruche.
 Pour le champ Titre mettre l'adresse de l'ancien équipement.
 Pour le champ Message mettre l'adresse du nouvel équipement.
 
-image:../images/Capture_d_ecran_2018_03_01_a_16_57_02.png[]
+image:Capture_d_ecran_2018_03_01_a_16_57_02.png[]
 
 Puis clic sur "Replace Equipement".
 
@@ -38,26 +47,26 @@ Ouvrez l'ancien équipement qui porte toujours le nom "Abeille-21ce".
 
 Vous devez voir le nouveau nom:
 
-image:../images/Capture_d_ecran_2018_03_01_a_17_01_04.png[]
+image:Capture_d_ecran_2018_03_01_a_17_01_04.png[]
 
 Sauvegardez le nouvel objet.
 
 Vous devez avoir deux équipements:
 
-image:../images/Capture_d_ecran_2018_03_01_a_17_04_30.png[]
+image:Capture_d_ecran_2018_03_01_a_17_04_30.png[]
 
 Il ne vous reste plus qu'a ouvrir l'objet "Abeille-8818" et à le supprimer.
 
 Vous pouvez maintenant changer le nom de l'objet "Abeille-8818-New" à la valeur que vous voulez.
 
-image:../images/Capture_d_ecran_2018_03_01_a_17_09_46.png[]
+image:Capture_d_ecran_2018_03_01_a_17_09_46.png[]
 
 [[Remplacement-Commande]]
 === Commande
 
 Vous pouvez remplacer une commande A par une autre commande B à l'aide des boutons oranges:
 
-image:../images/Capture_d_ecran_2018_10_01_a_12_32_20.png[]
+image:Capture_d_ecran_2018_10_01_a_12_32_20.png[]
 
 Cela permet de mettre à jour les scénarios, les autres objets,... faisant référence à cette commande. C'est très pratique et rapide.
 
@@ -65,5 +74,4 @@ Mais car il y a un mais, ou plutôt n'oubliez pas qu'une commande est attachée 
 
 Si vous aviez une mesure de température A que vous avez remplacé par une mesure B et que vous voulez aussi transférer l'historique de A vers B:
 
-image:../images/Capture_d_ecran_2018_10_01_a_12_31_57.png[]
-
+image:Capture_d_ecran_2018_10_01_a_12_31_57.png[]

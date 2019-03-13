@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Polling</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,34 +761,44 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Polling</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_polling">Polling</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ping_toutes_les_15_minutes">Ping toutes les 15 minutes</h2>
+<h2 id="_ping">2. Ping</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Ping toutes les 15 minutes</p></div>
 <div class="paragraph"><p>Par défaut le cron, toutes les 15 minutes, fait un ping des équipements qui n&#8217;ont pas de batterie définie. On suppose qu&#8217;ils sont sur secteur et que donc ils écoutent et qu&#8217;ils répondent à la requête.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_état_toutes_les_minutes">État toutes les minutes</h2>
+<h2 id="_état">3. État</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>État toutes les minutes</p></div>
 <div class="paragraph"><p>Récupère les infos que ne remonte pas par défaut toutes les minutes si défini dans l'équipement.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_santé_des_équipements">Santé des équipements</h2>
+<h2 id="_santé">4. Santé</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Santé des équipements</p></div>
 <div class="paragraph"><p>Il y a probablement deux informations qu&#8217;il est intéressant de monitorer pour vérifier que tout fonctionne:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -776,7 +820,7 @@ et le fait que des messages sont échangés.
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:11:21 CET
+ 2019-03-13 17:40:35 CET
 </div>
 </div>
 </body>

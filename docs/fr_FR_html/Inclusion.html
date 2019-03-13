@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Inclusion</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,19 +761,33 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Inclusion</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_inclusion_de_nouveaux_périphériques_zigbee">Inclusion de nouveaux périphériques Zigbee</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inclusion">2. Inclusion</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Inclusion de nouveaux périphériques Zigbee</p></div>
 <div class="sect2">
-<h3 id="_exemple_d_8217_ajout_d_équipements_courants_s_8217_ils_ne_sont_pas_déjà_dans_le_réseau_zigbee">Exemple d&#8217;ajout d'équipements courants (S&#8217;ils ne sont pas déjà dans le réseau Zigbee)</h3>
+<h3 id="_exemple_1">2.1. Exemple 1</h3>
+<div class="paragraph"><p>Exemple d&#8217;ajout d'équipements courants (S&#8217;ils ne sont pas déjà dans le réseau Zigbee)</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -748,7 +796,7 @@ Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/inclusion.png" alt="../images/inclusion.png" />
+<img src="../images/inclusion.png" alt="inclusion.png" />
 </span></p></div>
 <div class="paragraph"><p>puis:</p></div>
 <div class="ulist"><ul>
@@ -759,7 +807,7 @@ Ampoules IKEA: faire un reset de l&#8217;ampoule en partant de la position allum
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_13_44.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_13_44.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_13_44.png" alt="Capture_d_ecran_2018_01_21_a_11_13_44.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -774,7 +822,7 @@ Porte
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_11_38.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_11_38.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_11_38.png" alt="Capture_d_ecran_2018_01_21_a_11_11_38.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -784,7 +832,7 @@ Température rond
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_12_43.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_12_43.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_12_43.png" alt="Capture_d_ecran_2018_01_21_a_11_12_43.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -794,7 +842,7 @@ Température Carre
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_12_15.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_12_15.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_12_15.png" alt="Capture_d_ecran_2018_01_21_a_11_12_15.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -804,7 +852,7 @@ Bouton
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_13_15.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_13_15.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_13_15.png" alt="Capture_d_ecran_2018_01_21_a_11_13_15.png" />
 </span></p></div>
 <div class="paragraph"><p>État: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.</p></div>
 <div class="ulist"><ul>
@@ -815,7 +863,7 @@ Capteur Présence InfraRouge
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_12_45_22.png" alt="../images/Capture_d_ecran_2018_01_21_a_12_45_22.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_12_45_22.png" alt="Capture_d_ecran_2018_01_21_a_12_45_22.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -825,11 +873,12 @@ Objet inconnu: Si le type d&#8217;objet n&#8217;est pas connu, Abeille va créer
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_12_49_06.png" alt="../images/Capture_d_ecran_2018_01_21_a_12_49_06.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_12_49_06.png" alt="Capture_d_ecran_2018_01_21_a_12_49_06.png" />
 </span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_exemple_d_8217_ajout_d_équipements_courants_s_8217_ils_sont_déjà_dans_le_réseau_zigbee">Exemple d&#8217;ajout d'équipements courants (S&#8217;ils sont déjà dans le réseau Zigbee)</h3>
+<h3 id="_exemple_2">2.2. Exemple 2</h3>
+<div class="paragraph"><p>Exemple d&#8217;ajout d'équipements courants (S&#8217;ils sont déjà dans le réseau Zigbee)</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -855,7 +904,7 @@ Capteur InfraRouge Xiaomi: pas implémenté.
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:03:41 CET
+ 2019-03-13 17:13:42 CET
 </div>
 </div>
 </body>

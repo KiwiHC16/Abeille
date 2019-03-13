@@ -761,27 +761,34 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(2);
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
 <h1>Health</h1>
+<span id="author">KiwiHC16</span><br />
 <div id="toc">
-  <div id="toctitle">Table of Contents</div>
+  <div id="toctitle">Table des matières</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_communication">Communication</h2>
+<h2 id="_home">1. Home</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_communication">2. Communication</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_vue_générale">Vue générale</h3>
+<h3 id="_vue_générale">2.1. Vue générale</h3>
 <div class="paragraph"><p>Un cron tourne <strong>toutes les minutes</strong> (il faut donc attendre une minute et rafraichir la page) pour vérifier la date du dernier message reçu pour chaque équipement. Pour visualiser le résultat ouvrir <strong>Plugins&#8594;Protocoles Domotique&#8594;Abeille</strong> et clic sur l&#8217;icône Santé. Vous devriez avoir un résultat comme:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_11_a_13_46_17.png" alt="../images/Capture_d_ecran_2018_05_11_a_13_46_17.png" />
+<img src="../images/Capture_d_ecran_2018_05_11_a_13_46_17.png" alt="Capture_d_ecran_2018_05_11_a_13_46_17.png" />
 </span></p></div>
 <div class="paragraph"><p>Actuellement il existe 4 statuts:</p></div>
 <div class="ulist"><ul>
@@ -808,107 +815,113 @@ un carré rouge, soit le capteur à un time out et le dernier message est plus v
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_alerte_sur_communications">Alerte sur communications</h3>
+<h3 id="_alerte">2.2. Alerte</h3>
+<div class="paragraph"><p>Alerte sur communications</p></div>
 <div class="paragraph"><p>Si un équipement possède un timeout défini alors des alertes peuvent être définies.</p></div>
-<div class="paragraph"><p>Il faut par exemple dans le fichier json d&#8217;avoir:
-```
-{
+<div class="paragraph"><p>Il faut par exemple dans le fichier json d&#8217;avoir:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>{
 "Classic A60 RGBW": {
 "nameJeedom": "Classic A60 RGB W",
 "timeout": "60",
 "Categorie": {
 "automatism": "1"
-},
-```</p></div>
+},</code></pre>
+</div></div>
 <div class="paragraph"><p>Les 60 sont en minutes. Dans ce cas, l'équipement qui n&#8217;a pas eu de communications depuis plus de 60 générera des alarmes.</p></div>
 <div class="paragraph"><p>Pour cela il faut aussi avoir sélectionné le champ "Ajouter un message à chaque Timeout" (voir capture d'écran ci dessous).</p></div>
 <div class="paragraph"><p>Vous pouvez aussi ajouter une action dans le champ "Commande sur Timeout".</p></div>
 <div class="paragraph"><p>La vérification est faite par le core de Jeedom toutes les 5 minutes.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_batterie">Batterie</h3>
+<h3 id="_batterie">2.3. Batterie</h3>
 <div class="paragraph"><p>En utilisant le menu Analyse&#8594;Equipements, vous trouverez l'état des batteries. Ici un exemple avec des objets Zwave et Abeille/Zigbee.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_11_a_15_47_55.png" alt="../images/Capture_d_ecran_2018_05_11_a_15_47_55.png" />
+<img src="../images/Capture_d_ecran_2018_05_11_a_15_47_55.png" alt="Capture_d_ecran_2018_05_11_a_15_47_55.png" />
 </span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_seuil_d_8217_alerte">Seuil d&#8217;alerte</h3>
+<h3 id="_seuil_d_8217_alerte">2.4. Seuil d&#8217;alerte</h3>
 <div class="paragraph"><p>Menu&#8594;Roues crantées&#8594;Configuration&#8594;Equipements.</p></div>
 <div class="paragraph"><p>Mettez les valeurs qui vous conviennent:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_07_16_a_11_28_07.png" alt="../images/Capture_d_ecran_2018_07_16_a_11_28_07.png" />
+<img src="../images/Capture_d_ecran_2018_07_16_a_11_28_07.png" alt="Capture_d_ecran_2018_07_16_a_11_28_07.png" />
 </span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_alerte">Alerte</h3>
+<h3 id="_alerte_2">2.5. Alerte</h3>
 <div class="paragraph"><p>Menu&#8594;Roues crantées&#8594;Configuration&#8594;Logs</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_07_16_a_11_29_52.png" alt="../images/Capture_d_ecran_2018_07_16_a_11_29_52.png" />
+<img src="../images/Capture_d_ecran_2018_07_16_a_11_29_52.png" alt="Capture_d_ecran_2018_07_16_a_11_29_52.png" />
 </span></p></div>
 <div class="paragraph"><p>par exemple ici, une alarme est envoyée sur mon tél.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_script_widget">Script / Widget</h3>
+<h3 id="_script_widget">2.6. Script / Widget</h3>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
-<img src="./images/icons/tip.png" alt="Tip" />
+<img src="../images/icons/tip.png" alt="Tip" />
 </td>
 <td class="content">Dans les premieres version d&#8217;abeille les timeout n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
 </tr></table>
 </div>
 <div class="paragraph"><p>Vous aurez un widget comme celui ci:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_10_05_02.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_05_02.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_10_05_02.png" alt="Capture_d_ecran_2018_03_27_a_10_05_02.png" />
 </span></p></div>
 <div class="paragraph"><p>qui vous permettra d&#8217;avoir une alarme sur le niveau de batterie et sur la remontée de message ainsi que la liste des équipements en défaut.</p></div>
 <div class="paragraph"><p>Pour se faire un script est en cours de dev et de test dont voici les détails.</p></div>
 <div class="paragraph"><p>Vous pouvez le faire tourner en manuellement en ssh ou l&#8217;intégré dans Jeedom à l&#8217;aide du plugin script (Solution présentée ci dessous).</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_09_42_11.png" alt="../images/Capture_d_ecran_2018_03_27_a_09_42_11.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_09_42_11.png" alt="Capture_d_ecran_2018_03_27_a_09_42_11.png" />
 </span></p></div>
 <div class="paragraph"><p>Vous créez un équipement avec une Auto-Actualisation à la fréquence que vous souhaitez, ici toutes les heures.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_09_44_59.png" alt="../images/Capture_d_ecran_2018_03_27_a_09_44_59.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_09_44_59.png" alt="Capture_d_ecran_2018_03_27_a_09_44_59.png" />
 </span></p></div>
 <div class="sect3">
-<h4 id="_script">Script</h4>
+<h4 id="_script">2.6.1. Script</h4>
 <div class="paragraph"><p>Le script dont vous aurez besoin est <a href="https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/CheckBattery.php">https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/CheckBattery.php</a></p></div>
 <div class="paragraph"><p>Faites un copy/paste dans le plugin script de Jeedom.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parametres_internes_au_script">Parametres internes au script</h4>
+<h4 id="_parametres">2.6.2. Parametres</h4>
+<div class="paragraph"><p>Parametres internes au script</p></div>
 <div class="paragraph"><p>Lorsque vous allez éditer le script dans les étapes suivantes, vous trouverez les lignes suivanted en début de script:</p></div>
-<div class="paragraph"><p>```
-$minBattery = 30; // Taux d&#8217;usage de la batterie pour générer une alarme.
-$maxTime    = 24 * 60 * 60; // temps en seconde, temps max depuis la derniere remontée d&#8217;info de cet équipement
-```</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$minBattery = 30; // Taux d'usage de la batterie pour générer une alarme.
+$maxTime    = 24 * 60 * 60; // temps en seconde, temps max depuis la derniere remontée d'info de cet équipement</code></pre>
+</div></div>
 <div class="paragraph"><p>A vous de mettre, les valeurs qui conviennent à votre systeme.</p></div>
 <div class="paragraph"><p>Juste après vous trouverez:</p></div>
-<div class="paragraph"><p>```
-
+<div class="listingblock">
+<div class="content">
+<pre><code>// Liste des équipements à ignorer
 $excludeEq = array(
-"[Abeille][Ruche]" &#8658; 1,
-"[Abeille][CheckEquipementsWithBatteries]" &#8658; 1,  // L objet du script lui-meme</p></div>
-<div class="paragraph"><p>);
-```</p></div>
+"[Abeille][Ruche]" =&gt; 1,
+"[Abeille][CheckEquipementsWithBatteries]" =&gt; 1,  // L objet du script lui-meme
+
+);</code></pre>
+</div></div>
 <div class="paragraph"><p>C&#8217;est le tableau qui contient la liste des Equipements qu&#8217;il ne faut pas prendre en compte. Par exemple ici l&#8217;objet ruche et l&#8217;objet script (c&#8217;est à dire lui-même).</p></div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_batterie_2">Batterie</h3>
+<h3 id="_batterie_2">2.7. Batterie</h3>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
-<img src="./images/icons/tip.png" alt="Tip" />
+<img src="../images/icons/tip.png" alt="Tip" />
 </td>
 <td class="content">Dans les premieres version d&#8217;abeille les batteries n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
 </tr></table>
 </div>
 <div class="paragraph"><p>Créez deux commandes scripts:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_10_00_01.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_00_01.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_10_00_01.png" alt="Capture_d_ecran_2018_03_27_a_10_00_01.png" />
 </span></p></div>
 <div class="paragraph"><p>Donnez un nom à la commande, faites Nouveau, donnez le nom du script "CheckBatteries.php", dans l'éditeur faites un paste du code, Enregistrer, ajoutez les parametres à la commande et sauvegardez.</p></div>
 <div class="paragraph"><p>Le premier parametre est "Batterie" car nous sommes dans le test des batteries.</p></div>
@@ -916,18 +929,19 @@ $excludeEq = array(
 <div class="paragraph"><p>Le second paramètre est "List" pour la seconde commande pour avoir la liste des équipements avec un niveau de Batterie inférieure au  niveau miniCheckBatteries.phpmum.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_messages_échangés">Messages échangés</h3>
+<h3 id="_messages">2.8. Messages</h3>
+<div class="paragraph"><p>Messages échangés</p></div>
 <div class="paragraph"><p>La même chose que pour Batterie avec pour paramètre Alive.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_10_15_40.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_15_40.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_10_15_40.png" alt="Capture_d_ecran_2018_03_27_a_10_15_40.png" />
 </span></p></div>
 </div>
 <div class="sect2">
-<h3 id="_ping">Ping</h3>
+<h3 id="_ping">2.9. Ping</h3>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
-<img src="./images/icons/tip.png" alt="Tip" />
+<img src="../images/icons/tip.png" alt="Tip" />
 </td>
 <td class="content">Dans les premieres version d&#8217;abeille les polling n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
 </tr></table>
@@ -936,7 +950,7 @@ $excludeEq = array(
 <div class="paragraph"><p>Pour l&#8217;instant elle fonctionne pour les ampoules Ikea.</p></div>
 <div class="paragraph"><p>Faites un commande:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_03_27_a_10_18_37.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_18_37.png" />
+<img src="../images/Capture_d_ecran_2018_03_27_a_10_18_37.png" alt="Capture_d_ecran_2018_03_27_a_10_18_37.png" />
 </span></p></div>
 <div class="paragraph"><p>En appuyant sur le bouton du widget, les équipements doivent être interrogé et repondre. Ensuite si vous faites un refresh du widget, ils ne doivent plus apparaitre dans la liste Alive s&#8217;ils y étaient.</p></div>
 </div>
@@ -947,7 +961,7 @@ $excludeEq = array(
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 01:15:25 CET
+ 2019-03-13 17:38:26 CET
 </div>
 </div>
 </body>

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Profalux</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,28 +761,36 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Profalux</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_profalux">Profalux</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_inclusion_d_8217_un_volet">Inclusion d&#8217;un volet</h2>
+<h2 id="_inclusion_d_8217_un_volet">2. Inclusion d&#8217;un volet</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Comme pour tous modules Zigbee et pour bien comprendre la procédure, il faut savoir que :</p></div>
 <div class="paragraph"><p>La Zigate est un coordinateur Zigbee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule Zigbee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.</p></div>
 <div class="paragraph"><p>N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas rentrer tout seul sur un réseau Zigbee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la Zigate.</p></div>
 <div class="paragraph"><p>A savoir tout au long de cette procédure : lorsque le volet fait un petit va et vient c&#8217;est le signe que la commande a bien été reçue.</p></div>
 <div class="sect2">
-<h3 id="_étape_1_remise_à_zéro_de_la_télécommande_et_du_volet">Étape 1: Remise à zéro de la télécommande et du volet.</h3>
+<h3 id="_etape_1">2.1. Etape 1</h3>
+<div class="paragraph"><p>Étape 1: Remise à zéro de la télécommande et du volet.</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -763,7 +805,7 @@ A l’aide d’un trombone, appuyer 5 fois sur le bouton R.
 </ul></div>
 <div class="paragraph"><p>La télécommande va clignoter rouge puis vert.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/profalux_inclusion_etape1.png" alt="../images/profalux_inclusion_etape1.png" />
+<img src="../images/profalux_inclusion_etape1.png" alt="profalux_inclusion_etape1.png" />
 </span></p></div>
 <div class="paragraph"><p>Le volet va faire un va et vient (attendre un petit moment).</p></div>
 <div class="paragraph"><p>Attendre que la télécommande ne clignote plus.</p></div>
@@ -786,7 +828,8 @@ Fermer le volet complètement.
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_étape_2_inclusion_du_volet">Étape 2 : Inclusion du volet</h3>
+<h3 id="_étape_2">2.2. Étape 2</h3>
+<div class="paragraph"><p>Inclusion du volet</p></div>
 <div class="paragraph"><p>Mettre la ruche en mode inclusion</p></div>
 <div class="ulist"><ul>
 <li>
@@ -796,7 +839,7 @@ Pour cela appuyer sur le bouton inclusion depuis le plugin Abeille (La Zigate do
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/inclusion.png" alt="../images/inclusion.png" />
+<img src="../images/inclusion.png" alt="inclusion.png" />
 </span></p></div>
 <div class="paragraph"><p>Une fois le réseau de la Zigate ouvert, il ne vous reste plus qu’à:</p></div>
 <div class="ulist"><ul>
@@ -813,10 +856,12 @@ Appuyer 1 fois sur R
 <li>
 <p>
 Appuyer ensuite sur la flèche du haut
-Le moteur devrait faire plusieurs va et vient …
-Attendre que la télécommande ne clignote plus !
 </p>
 </li>
+</ul></div>
+<div class="paragraph"><p>Le moteur devrait faire plusieurs va et vient …
+Attendre que la télécommande ne clignote plus !</p></div>
+<div class="ulist"><ul>
 <li>
 <p>
 Pour finir, appuyer sur la touche STOP de la télécommande.
@@ -834,10 +879,12 @@ Ouvrir et fermer votre volet complètement 2 fois.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_résolution_de_problèmes">Résolution de problèmes:</h2>
+<h2 id="_résolution">3. Résolution</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Résolution de problèmes</p></div>
 <div class="sect2">
-<h3 id="_le_volet_ne_répond_plus_à_la_télécommande">Le volet ne répond plus à la télécommande.</h3>
+<h3 id="_le_volet">3.1. Le volet</h3>
+<div class="paragraph"><p>Le volet ne répond plus à la télécommande.</p></div>
 <div class="paragraph"><p>Si par une mauvaise manipulation votre volet ne répond plus à la télécommande, il est nécessaire de faire un reset de la télécommande et du volet.</p></div>
 <div class="ulist"><ul>
 <li>
@@ -852,7 +899,7 @@ A l’aide d’un trombone, appuyer 5 fois sur le bouton R
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/profalux_inclusion_etape1.png" alt="../images/profalux_inclusion_etape1.png" />
+<img src="../images/profalux_inclusion_etape1.png" alt="profalux_inclusion_etape1.png" />
 </span></p></div>
 <div class="paragraph"><p>Attention c&#8217;est une manipulation dangereuse !</p></div>
 <div class="ulist"><ul>
@@ -868,7 +915,7 @@ Réunir les fils noir et marron puis les brancher sur la borne de phase
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/profalux_inclusion_reset_volet2.png" alt="../images/profalux_inclusion_reset_volet2.png" />
+<img src="../images/profalux_inclusion_reset_volet2.png" alt="profalux_inclusion_reset_volet2.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -887,7 +934,7 @@ Séparer les fils noir et marron. Brancher le fils marron sur la phase. Si votre
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>image:../images/profalux_inclusion_reset_volet3.pn)</p></div>
+<div class="paragraph"><p>image:profalux_inclusion_reset_volet3.pn)</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -896,7 +943,7 @@ Remettre l&#8217;alimentation électrique et dans la minute appuyer sur le bouto
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/profalux_inclusion_reset_volet4.png" alt="../images/profalux_inclusion_reset_volet4.png" />
+<img src="../images/profalux_inclusion_reset_volet4.png" alt="profalux_inclusion_reset_volet4.png" />
 </span></p></div>
 <div class="paragraph"><p>Le volet devrait faire des mouvement de va-et-vient puis s&#8217;arrêter
 * La télécommande devrait à nouveau fonctionner
@@ -909,7 +956,7 @@ Remettre l&#8217;alimentation électrique et dans la minute appuyer sur le bouto
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:07:43 CET
+ 2019-03-13 18:14:07 CET
 </div>
 </div>
 </body>

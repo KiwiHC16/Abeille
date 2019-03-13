@@ -1,21 +1,29 @@
-:toc2:
-
 = Debug / Troubleshooting / Investigations
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
 
 Je vais essayer de consolider ici tous les retours d'expériences et les vérifications à faire pour résoudre un éventuel problème.
 
 == Forum
 
-* le forum: https://www.Jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille
+* Liste des sujets en cours de discussions: link:https://www.Jeedom.com/forum/viewtopic.php?f=59&t=33573&hilit=Abeille[Forum]
 
 == Investigations
 
-* Liste des sujets en investigations / Issues sous GitHub: https://github.com/KiwiHC16/Abeille/issues?utf8=✓&q=is%3Aissue
+* Liste des sujets en investigations : link:https://github.com/KiwiHC16/Abeille/issues?utf8=✓&q=is%3Aissue[Issues sous GitHub]
 
 
 == Problèmes
 
-Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l'adresse avec un "Labels" "Bug": https://github.com/KiwiHC16/Abeille/issues
+Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir link:https://github.com/KiwiHC16/Abeille/issues[une "issue" dans GitHub]
 
 Si vous ouvrez une "issue" merci de fournir le plus d'information possible et en particulier:
 
@@ -55,21 +63,27 @@ Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans
 * Normalement vous ne devriez pas avoir accès à cette propriété par défaut car je l'ai enlevé des commandes.
 * Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
 
-```
-rm /var/lib/mosquitto/mosquitto.db
-apt-get remove mosquitto
-apt-get install mosquitto
-```
+----
+rm /var/lib/mosquitto/mosquitto.db <1>
+apt-get remove mosquitto <2>
+apt-get install mosquitto <3>
+----
+
+<1> Effacons la base de données contenant les informations relative aux messages "retain".
+<2> Enlevons mosquitto du systeme
+<3> Installons de nouveau mosquitto sur le systeme.
 
 === Configuration
 
 * Verifier la configuration réseau et en particulier /hostname, /etc/hosts
 * Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l'objet de rattachement de l'équipement Ruche n'est pas défini.
-````
-[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
-````
 
-=== Connection Zigate/Abeille
+
+----
+[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+----
+
+=== Connection
 
 ==== Premier test
 
@@ -85,22 +99,28 @@ apt-get install mosquitto
 * Tester la Zigate en ligne de commande
 
 On envoie
-```
-stty -F/dev/ttyUSB0 115200
-echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
-```
+
+----
+stty -F/dev/ttyUSB0 115200 <1>
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0 <2>
+----
+
+<1> On configure le port série
+<2> On demande à la zigate de se mettre en inclusion.
+
 (Cela peut être fait alors que le plugin est Zigate fonctionnent).
 
 Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:
 
-```
+
+----
 AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message > 12 char
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00
 AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
 AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
-```
+----
 
 Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.
 
@@ -110,22 +130,22 @@ PS: la configuration du port peu varier d'un système à l'autre donc il peut ê
 
 Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):
 
-```
+----
 cat /dev/ttyUSB0 | hexdump -vC
-```
+----
 
 Dans un second terminal envoiyez la commande
-```
+----
 stty -F/dev/ttyUSB0 115200
 echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' > /dev/ttyUSB0
-```
+----
 
 Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:
-```
+----
 www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
 00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |........w.....I.|
 00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|
-```
+----
 
 Cela confirme Zigate vers Jeedom
 
@@ -149,23 +169,26 @@ Cela confirme Zigate vers Jeedom
 - Lancez à la main mosquitto; Juste 'mosquitto' en ligne de commande.
 - Lancez à la main mosquitto avec votre fichier de configuration en ligne de commande: 'mosquitto -c /etc/mosquitto/mosquitto.conf' (Corrigez les erreurs si il y a).
 - Experience: après coupure de courant:
-```
+----
 mosquitto -c /etc/mosquitto/mosquitto.conf
 1516788158: Error: Success.
 1516788158: Error: Couldn't open database.
-```
+----
 
 la solution a été de supprimer la base de donnée et de réinstaller mosquitto:
 
-```
+----
 rm /var/lib/mosquitto/mosquitto.db
 apt-get remove mosquitto
 apt-get install mosquitto
-```
+----
 
-==== Monitorer les messages
+==== Monitorer
 
+Monitorer les messages
+----
 mosquitto_sub -t "=" -v
+----
 
 ==== Re-Installation
 * Debian 8 sur VM
@@ -179,12 +202,12 @@ mosquitto_sub -t "=" -v
 
 La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.
 
-image:../images/Capture_d_ecran_2018_02_06_a_17_33_19.png[]
+image:Capture_d_ecran_2018_02_06_a_17_33_19.png[]
 
 Dans ActiveEndPoint mettre l'adresse de l'équipement dans le titre puis clic sur le bouton ActiveEndPoint.
 
 Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:
-```
+----
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]message > 12 char
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
@@ -195,13 +218,13 @@ AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
-```
+----
 
 Il y a, dans ce cas, une seul EndPoint à l'adresse "01" (Donné par les lignes suivant "Endpoint List").
 
 Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.
 
-```
+----
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]message > 12 char
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
@@ -235,7 +258,7 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
-```
+----
 
 Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
@@ -243,6 +266,7 @@ Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.
 
 
 
-==== Script de test et vérifications
+=== Script
 
-Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n'est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.
+Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh.
+L'execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n'est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.

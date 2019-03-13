@@ -1,46 +1,58 @@
-:tac2:
+= Installation
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
 
-== Installation
+== Home
 
-=== Etape 1: Zigate
+Retour au link:index.html[document principal].
+
+== Etape 1: Zigate
 
 La Zigate peut être connectée au port USB, par module Wifi ou sur le port GPIO d'un Raspberry Pi.
 
 Le firmware supporté est le 3.0F
 
-=== Etape 2: Widget (option)
+== Etape 2: Widget
+
+Widget (option)
 
 Vous pouvez installer quelques widgets (officiels) pour que le rendu soit plus sympa
+
 * baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
 * thermomètre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
 * humidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
 
-image:../images/Capture_d_ecran_2018_01_21_a_11_30_2.png[]
+image:Capture_d_ecran_2018_01_21_a_11_30_2.png[]
 
-=== Etape 3: Objet de référence
+== Etape 3: Référence
 
 Créer un objet Jeedom pour retrouver rapidement et facilement les nouveaux équipements.
 
-image:../images/Capture_d_ecran_2018_01_21_a_10_53_59.png[]
+image:Capture_d_ecran_2018_01_21_a_10_53_59.png[]
 
-image:../images/Capture_d_ecran_2018_01_21_a_10_54_13.png[]
+image:Capture_d_ecran_2018_01_21_a_10_54_13.png[]
 
-=== Etape 4: Installation du plugin Depuis le market
+== Etape 4: Market
 
+Installation du plugin Depuis le market.
 Rien de spécifique. Suivre la procédure classique.
 
-=== Etape 5: Activation
+== Etape 5: Activation
 
 * Aller sur "Plugins" et cliquer sur "Gestion des plugins".
 * Cliquer sur "Abeille"
 * Cliquer sur "Activer"
 
-image:../images/Capture_d_ecran_2018_01_21_a_11_05_58.png[]
+image:Capture_d_ecran_2018_01_21_a_11_05_58.png[]
 
 * Choisir le niveau de log (debug si besoin) et cliquer sur "Sauvegarder"
 * Lancer l'installation des dépendances avec le bouton "Relancer" et patienter (vous pouvez suivre l'avancement dans le fichier de log: Abeille_dep)
 
-image:../images/Capture_d_ecran_2018_01_21_a_11_06_33.png[]
+image:Capture_d_ecran_2018_01_21_a_11_06_33.png[]
 
 * Patienter 2-3 minutes jusqu'à l'obtention du statut "OK"
 Puis:
@@ -52,32 +64,39 @@ Puis:
 * Démarrer les Démons en cliquant sur la flèche verte "(Re)Démarrer"
 
 
-image:../images/Capture_d_ecran_2018_01_21_a_11_07_14.png[]
+image:Capture_d_ecran_2018_01_21_a_11_07_14.png[]
 
 A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.
 
-== Installation pour les utilisateurs avancés
+== Avancés
+
+Installation pour les utilisateurs avancés
 
 === Depuis Github
 
 Connecter vous par ssh sur votre Jeedom
 
-==== Avec le zip
+==== Zip
 
-```shell
+----
 cd /var/www/html/plugins/
 mkdir Abeille
 cd Abeille
 unzip le fichier téléchargé de GitHub dans le répertoire
 cd ..
-````
+----
 
-==== Directement avec git (Le plus simple et le plus rapide)
-```shell
+==== Git
+
+Directement avec git (Le plus simple et le plus rapide)
+
+----
 git clone https://github.com/KiwiHC16/Abeille.git Abeille
-```
+----
 
-=== Alternative : Installation du plugin Abeille avec github depuis le market
+=== Alternative
+
+Alternative : Installation du plugin Abeille avec github depuis le market
 
 * Aller sur Configuration (Roues crantées) puis Configuration
 * Dans l'onglet "Mise à jour", sélectionner en dessous l'onglet Github et cocher la case "Activer Github". Cliquer sur "Sauvegarder".
@@ -89,32 +108,39 @@ git clone https://github.com/KiwiHC16/Abeille.git Abeille
 * Branche: master
 * Cliquer sur Enregistrer.
 
-== Mise a jour du plugin
+== Mise a jour
 
-=== Mise à jour à partir du market
+Mise a jour du plugin
 
+=== Market
+
+Mise à jour à partir du market
 Rien de particulier, suivre la méthode de base de Jeedom
 
-=== Mise à jour à partir de github
+=== Github
 
-```shell
+Mise à jour à partir de github
+
+----
 cd /var/www/html/plugins/Abeille
 sudo git pull https://github.com/KiwiHC16/Abeille
-```
+----
 
-==== Pour écraser des "bidouilles" locales :
-```shell
+== Bidouilles
+
+Pour écraser des "bidouilles" locales :
+
+----
 cd /var/www/html/plugins/Abeille
 sudo git reset --hard HEAD
 sudo git pull https://github.com/KiwiHC16/Abeille
-```
+----
 
-==== Pour appliquer les bons droits :
-```shell
+== Droits
+
+Pour appliquer les bons droits :
+
+----
 chmod -R 777 /var/www/html/plugins/Abeille
 chown -R www-data:www-data /var/www/html/plugins/Abeille
-```
-
-
-
-
+----

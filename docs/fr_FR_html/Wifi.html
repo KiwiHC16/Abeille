@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>WIFI</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,39 +761,50 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>WIFI</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_wifi">WIFI</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_adafruit">Adafruit</h2>
+<h2 id="_adafruit">2. Adafruit</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Comme je voulais avoir l&#8217;option Zigate Wifi dans Abeille et un petit soucis avec le module proposé par Akila, j&#8217;ai fait quelques investigations.</p></div>
 <div class="paragraph"><p>Pour ceux qui connaissent Adafruit, il y a un module que j&#8217;avais en stock: <a href="https://www.adafruit.com/product/3046">https://www.adafruit.com/product/3046</a></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_06_20_a_23_54_30.png" alt="../images/Capture_d_ecran_2018_06_20_a_23_54_30.png" />
+<img src="../images/Capture_d_ecran_2018_06_20_a_23_54_30.png" alt="Capture_d_ecran_2018_06_20_a_23_54_30.png" />
 </span></p></div>
 <div class="paragraph"><p>Ce montage possede un ESP8266, un étage de "puissance" avec batterie, un CP2104 USB-Serial, &#8230; et est programmable facilement avec l&#8217;IDE Arduino.</p></div>
 <div class="paragraph"><p>J&#8217;ai aussi ma Zigate version bidouille:</p></div>
-<div class="paragraph"><p>image:../images/IMG_6207.jpg)</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/IMG_6207.jpg" alt="IMG_6207.jpg" />
+</span></p></div>
 <div class="paragraph"><p>Restait à les connecter.</p></div>
 <div class="paragraph"><p>Voici un petit schéma du cablage:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_06_21_a_00_02_11.png" alt="../images/Capture_d_ecran_2018_06_21_a_00_02_11.png" />
+<img src="../images/Capture_d_ecran_2018_06_21_a_00_02_11.png" alt="Capture_d_ecran_2018_06_21_a_00_02_11.png" />
 </span></p></div>
 <div class="paragraph"><p>Restait que le SW à faire et à téléchargé dans l&#8217;ESP8266. Le soft: <a href="https://github.com/KiwiHC16/Abeille/blob/master/WIfi_Module/WIfi_Module.ino">https://github.com/KiwiHC16/Abeille/blob/master/WIfi_Module/WIfi_Module.ino</a></p></div>
 <div class="paragraph"><p>Pour télécharger, compiler avec l&#8217;IDE Arduino et télécharger avec le cable USB. Il est necessaire ne déconnecter le TX/RX de la Zigate.</p></div>
 <div class="paragraph"><p>Maintenant j&#8217;ai une Zigate autonome sur batterie en Wifi !!!</p></div>
-<div class="paragraph"><p>image:../images/IMG_6208.jpg)</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/IMG_6208.jpg" alt="IMG_6208.jpg" />
+</span></p></div>
 <div class="paragraph"><p>Batterie est égale à:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -781,7 +826,7 @@ si le cable USB est branché sur un charger, je suis autonome en cas de coupure 
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:15:27 CET
+ 2019-03-13 18:40:17 CET
 </div>
 </div>
 </body>

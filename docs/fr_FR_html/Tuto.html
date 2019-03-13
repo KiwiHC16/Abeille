@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Tuto</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,24 +761,32 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Tuto</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_exemple_d_8217_utilisation_croisée">Exemple d&#8217;utilisation "croisée"</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_pilotage_d_8217_une_ampoule_à_partir_d_8217_un_capteur_de_présence_avec_un_scénario">Pilotage d&#8217;une ampoule à partir d&#8217;un capteur de présence avec un scénario</h2>
+<h2 id="_scénario_1">2. Scénario 1</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Pilotage d&#8217;une ampoule à partir d&#8217;un capteur de présence avec un scénario</p></div>
 <div class="sect2">
-<h3 id="_pré_requis">Pré-requis</h3>
+<h3 id="_pré_requis">2.1. Pré-requis</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -762,22 +804,29 @@ Télécommande IKEA incluse (Dans cette exemple : le nom de l&#8217;objet est "T
 </p>
 </li>
 </ul></div>
+</div>
+<div class="sect2">
+<h3 id="_réalisation">2.2. Réalisation</h3>
 <div class="paragraph"><p>Nous allons utiliser les scénarios:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_10_33_20.png" alt="../images/Capture_d_ecran_2018_10_30_a_10_33_20.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_10_33_20.png" alt="Capture_d_ecran_2018_10_30_a_10_33_20.png" />
 </span></p></div>
 <div class="paragraph"><p>Créons un scénario "test" avec pour déclencheur "Présence".</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_10_38_29.png" alt="../images/Capture_d_ecran_2018_10_30_a_10_38_29.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_10_38_29.png" alt="Capture_d_ecran_2018_10_30_a_10_38_29.png" />
 </span></p></div>
 <div class="paragraph"><p>Et les actions:</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_10_30_a_10_40_48.png" alt="../images/Capture_d_ecran_2018_10_30_a_10_40_48.png" />
+<img src="../images/Capture_d_ecran_2018_10_30_a_10_40_48.png" alt="Capture_d_ecran_2018_10_30_a_10_40_48.png" />
 </span></p></div>
 <div class="paragraph"><p>Ici, quand une présence est détectée, on allume l&#8217;ampoule et quand la présence n&#8217;est pas activée on éteint l&#8217;ampoule.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_présence_8594_ampoule_8592_télécommande">Présence&#8594;Ampoule&#8592;Télécommande</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scénario_2">3. Scénario 2</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Présence&#8594;Ampoule&#8592;Télécommande</p></div>
 <div class="paragraph"><p>A cette étape cet objet "Tele" dans Jeedom ne peut être utilisé. Il faut exécuter les étapes de du chapitre "Simuler la télécommande" ci-dessous.</p></div>
 <div class="paragraph"><p>Continuons en configurant l&#8217;ampoule depuis la "Tele":</p></div>
 <div class="ulist"><ul>
@@ -801,12 +850,11 @@ Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge s
 </div>
 </div>
 </div>
-</div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:09:23 CET
+ 2019-03-13 17:51:23 CET
 </div>
 </div>
 </body>

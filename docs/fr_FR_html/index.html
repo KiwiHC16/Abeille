@@ -761,15 +761,16 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(2);
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
 <h1>Manuel de l utilisateur</h1>
+<span id="author">KiwiHC16</span><br />
 <div id="toc">
-  <div id="toctitle">Table of Contents</div>
+  <div id="toctitle">Table des matières</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
@@ -778,135 +779,155 @@ asciidoc.install(2);
 <div class="sectionbody">
 <div class="paragraph"><p>Le manuel de l&#8217;utilisateur possède plusieurs chapitre essayant de détailler chaque sujet.
 En tant qu&#8217;utilisateur final, le chapitre <a href="Tuto.html">tuto</a> vous sera probablement le plus intéressant, mais noubliez pas les autres surtout si vous débuteez avec Abeille et Zigate.</p></div>
-<div class="paragraph"><p><span class="red">Cette documentation est en cours de "ré-écriture".</span></p></div>
-<div class="paragraph"><p><span class="red">Plugin en développement continu. Le développement n&#8217;est pas terminé. De nombreux ajustements sont en cours &#8230;</span></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/note.png" alt="Note" />
+</td>
+<td class="content"><span class="red">Cette documentation est en cours de "ré-écriture".</span></td>
+</tr></table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/note.png" alt="Note" />
+</td>
+<td class="content"><span class="red">Plugin en développement continu. Le développement n&#8217;est pas terminé. De nombreux ajustements sont en cours &#8230;</span></td>
+</tr></table>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_abeille">Abeille</h2>
+<h2 id="_abeille">1. Abeille</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Le chapitre <a href="presentation.html">Présentation</a> contient les premières informations nécessaires à l&#8217;utilisation du plugin Abeille.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Abeille_icon.png" alt="Abeille_icon.png" />
+</span></p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_timer">Timer</h2>
+<h2 id="_timer">2. Timer</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Le plugin contient une fonctionalité <a href="timer.html">Timer</a> qui peut être utilisé avec ou sans la zigate et le réseau zigbee associé. Ces <a href="timer.html">timers</a> fonctionnent à la seconde ce qui n&#8217;existe pas à ma connaissance dans Jeedom.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/node_Timer.png" alt="node_Timer.png" />
+</span></p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_installation">Installation</h2>
+<h2 id="_installation">3. Installation</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_pre_requis">Pre-requis</h3>
+<h3 id="_pre_requis">3.1. Pre-requis</h3>
 <div class="paragraph"><p>Avant de vous lancer dans l&#8217;installation d&#8217;Abeille, vérifiez que vous avez un <a href="Systeme.html">systeme Jeedom</a> qui est dans le cadre de ce developpement.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_installation_2">Installation</h3>
+<h3 id="_installation_2">3.2. Installation</h3>
 <div class="paragraph"><p>La première étape est l&#8217;<a href="Installation.html">installation</a> du plugin dans Jeedom.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_parametrage">Parametrage</h3>
+<h3 id="_parametrage">3.3. Parametrage</h3>
 <div class="paragraph"><p>Une fois l&#8217;<a href="Installation.html">installation</a> faite, il est nécessaire de vérifier la configuration du plugin et de l&#8217;adapter à votre situation, pour se faire il est nécessaire de faire le <a href="Parametrage.html">parametrage</a> du plugin.</p></div>
 <div class="paragraph"><p>Quand tout est en place, vous allez ajouter des équipements. Afin d&#8217;avoir une interface graphique jolie dans Jeedom vous pouvez adapter les <a href="Widget.html">Widgets</a> qui seront utilisés. C&#8217;est optionel. C&#8217;est juste pour faire beau.</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_utilisation">Utilisation</h2>
+<h2 id="_utilisation">4. Utilisation</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_inclusion">Inclusion</h3>
+<h3 id="_inclusion">4.1. Inclusion</h3>
 <div class="paragraph"><p>La première étape pour pouvoir utiliser un équipement est de l&#8217;<a href="Inclusion.html">inclure</a> dans le réseau zigbee géré par la zigate. Il n&#8217;existe pas de méthode universelle car chaque fabriquant est libre de procéder de la façon qu&#8217;il souhaite. Le grand principe est de mettre la zigate en mode <a href="Inclusion.html">inclusion</a> et de faire des manipulations sur l'équipement pour qu&#8217;il s&#8217;<a href="Inclusion.html">inclus</a> et rejoigne le réseau.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_groups">Groups</h3>
+<h3 id="_groups">4.2. Groups</h3>
 <div class="paragraph"><p>Un fois l'équipement dans le réseau, la zigate lui attribue une adresse pour qu&#8217;il puisse dialoguer. La zigate peut lui envoyer des messages directement à cette adresse.
 Maintenant si la ZiGate souhaite envoyer un même message à plusieurs équipements en même temps, elle peut utiliser une adresse de <a href="Groups.html">groupe</a>. Cela permet d&#8217;avoir par exemple des équipements qui réagissent simultanément.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_scenes">Scenes</h3>
+<h3 id="_scenes">4.3. Scenes</h3>
 <div class="paragraph"><p>Le <a href="Groups.html">groupe</a> permet d&#8217;adresser des équipements en même temps pour une même action mais ne permet pas d&#8217;envoyer des demandes differentes. Ce point est résolu par les <a href="Scenes.html">scenes</a>. Vous pouvez preconfigurer une ensemble d'équipments dans des configurations spécifiques est les associer à des <a href="Scenes.html">scenes</a>. Ensuite il vous suffit de rappeler une <a href="Scenes.html">scene</a> pour remettre tout le monde dans la configuration désirée.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_santé">Santé</h3>
+<h3 id="_santé">4.4. Santé</h3>
 <div class="paragraph"><p>Le réseau est constitué de nombreux équipements qui vivent au rythme et aléa du réseau radio, des coupures de courant, etc. Afin de monitorer le réseau Abeille propose plusieurs outils: <a href="Health.html">Health</a></p></div>
 </div>
 <div class="sect2">
-<h3 id="_polling">Polling</h3>
+<h3 id="_polling">4.5. Polling</h3>
 <div class="paragraph"><p>Certains équipements communiquent naturellement et échangent des messages avec la Zigate, ce qui nous permet de s&#8217;assurer qu&#8217;ils sont en vie. D&#8217;autres restent silencieux et nous devons les interroger pour savoir s&#8217;ils sont toujours dans le réseau ou simplement connaitre leur état. Abeille contient une fonction de <a href="Polling.html">Polling</a> interrogeant régulièrement les équipements.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_radio">Radio</h3>
+<h3 id="_radio">4.6. Radio</h3>
 <div class="paragraph"><p>Le ZigBee fonctionne en <a href="Radio.html">Radio</a>. La <a href="Radio.html">radio</a> est sujette à divers problemes. Même si la norme Zigbee inclus plein de fonction pour nous faciliter la vie, il arrive que cela ne fonctionne pas aussi bien qu&#8217;attendu. Pour avoir une meilleur comprehension de ce qui se passe, Abeille inclus des informations, graphes representant les informations <a href="Radio.html">radio</a> récupérées par les équipements.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_tuto">Tuto</h3>
+<h3 id="_tuto">4.7. Tuto</h3>
 <div class="paragraph"><p>Dans la mesure ou Abeille à pour objectif d&#8217;exploité le réseau, je vous propose quelques <a href="Tuto.html">Tuto</a> permettant de mettre en application et répondre à vos besoins.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_trucs_et_astuces">Trucs et Astuces</h3>
+<h3 id="_trucs_et_astuces">4.8. Trucs et Astuces</h3>
 <div class="paragraph"><p>D&#8217;autres fonctions de Jeedom sont bien pratiques, par exemple si vous devez <a href="Remplacement.html#Remplacement-Equipement">remplacer des équipements par d&#8217;autres</a>, ou <a href="Remplacement.html#Remplacement-Commande">des commandes par d&#8217;autres</a>.</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_equipements">Equipements</h2>
+<h2 id="_equipements">5. Equipements</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_ikea">Ikea</h3>
+<h3 id="_ikea">5.1. Ikea</h3>
 <div class="paragraph"><p>Ce chapithre regroupe les informations sur les équipements <a href="Ikea.html">Ikea</a></p></div>
 </div>
 <div class="sect2">
-<h3 id="_osram">Osram</h3>
+<h3 id="_osram">5.2. Osram</h3>
 <div class="paragraph"><p>Ce chapithre regroupe les informations sur les équipements <a href="OSRAM.html">OSRAM</a></p></div>
 </div>
 <div class="sect2">
-<h3 id="_philips_hue">Philips Hue</h3>
+<h3 id="_philips_hue">5.3. Philips Hue</h3>
 <div class="paragraph"><p>Ce chapithre regroupe les informations sur les équipements <a href="PhilipsHue.html">Philips Hue</a></p></div>
 </div>
 <div class="sect2">
-<h3 id="_profalux">Profalux</h3>
+<h3 id="_profalux">5.4. Profalux</h3>
 <div class="paragraph"><p>Ce chapithre regroupe les informations sur les équipements <a href="Profalux.html">Profalux</a></p></div>
 </div>
 <div class="sect2">
-<h3 id="_xiaomi">Xiaomi</h3>
+<h3 id="_xiaomi">5.5. Xiaomi</h3>
 <div class="paragraph"><p>Ce chapithre regroupe les informations sur les équipements <a href="Xiaomi.html">Xiaomi</a></p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_changelog">Changelog</h2>
+<h2 id="_changelog">6. Changelog</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Afin de vous donner de la visibilité sur l'évolution du plugin vous trouverez des informations génériques dans <a href="changelog.html">ChangeLog</a>.
 Bien évidement pour les personnes qui savent développer toutes les informations sont disponibles dans <a href="https://github.com/KiwiHC16/Abeille/commits/master">Abeille GitHub</a></p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_avancé">Avancé</h2>
+<h2 id="_avancé">7. Avancé</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_debug">Debug</h3>
+<h3 id="_debug">7.1. Debug</h3>
 <div class="paragraph"><p>Si vous rencontrez des soucis, je vous propose ce chapitre <a href="Debug.html">Debug</a> vous donnant les méthodes à suivre pour vérifier les points de bon fonctionnement.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_developement">Developement</h3>
+<h3 id="_developement">7.2. Developement</h3>
 <div class="paragraph"><p>Si certains d&#8217;entre vous souhaitent comprendre ou modifier le code, vous des informations de base pour comprendre la structure de <a href="Developpement.html">developpement</a>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_modèles">Modèles</h3>
+<h3 id="_modèles">7.3. Modèles</h3>
 <div class="paragraph"><p>Les équipements ZigBee sont representés dans Abeille par des fichiers de configuration appelés: <a href="ModeleJson.html">Modeles Json</a>. Ces fichiers peuvent être modifiés et d&#8217;autres peuvent être créer pour ajouter de nouveau équipements.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_docker_vm">Docker / VM</h3>
+<h3 id="_docker_vm">7.4. Docker / VM</h3>
 <div class="paragraph"><p>Ce chapitre est très spécifique et pour les utilisateurs ayant de bonnes connaissances en informatique. Je partage ici mon installation <a href="Docker.html">docker/VM</a> qui me permet de s&#8217;implifier mon developpement et de faire des backup de mes Jeedom distant et difficilement accessibles.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_backup_restore">Backup/Restore</h3>
+<h3 id="_backup_restore">7.5. Backup/Restore</h3>
 <div class="paragraph"><p>Ce chapitre ne devrait être utilisé que pour les personnes qui developpe le firmware ZiGate et qui comprennent ce qu&#8217;ils font. Cela permet de faire un <a href="ZiGateBackupRestore.html">Backup-Restore</a> de l&#8217;EEPROM Zigate. Pour les autres SVP ne jouez pas avec cette méthode cela vous amenera plus de soucis de de biens.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_wifi">Wifi</h3>
+<h3 id="_wifi">7.6. Wifi</h3>
 <div class="paragraph"><p>J&#8217;ai developpé mon propre module <a href="Wifi.html">Wifi</a> du fait de petits soucis sur le premier module disponible. Finalement il fonctionne tellement bien et fourni une protection coupure electrique avec une batterie que je l&#8217;utilise dans toutes configuration et mêm avec mon sniffer ZigBee &#8230;</p></div>
 </div>
 </div>
@@ -916,7 +937,7 @@ Bien évidement pour les personnes qui savent développer toutes les information
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 10:02:48 CET
+ 2019-03-13 16:53:21 CET
 </div>
 </div>
 </body>

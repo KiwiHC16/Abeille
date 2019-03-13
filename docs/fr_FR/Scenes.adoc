@@ -1,5 +1,15 @@
+= Scènes
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
 
-== Scènes
+
+== Home
+
+Retour au link:index.html[document principal].
 
 == Intro
 
@@ -11,14 +21,20 @@ Pour ce faire chaque équipement doit savoir ce qu'il doit faire lorsqu'il reço
 
 Pour l'instant tout le paramétrage se fait depuis l'objet Ruche.
 
-== Ajout d une scène à un équipement
+== Ajout
+
+Ajout d une scène à un équipement
 
 * en cours ...
 
-== Retrait d une scène à un équipement
+== Retrait
+
+Retrait d une scène à un équipement
 
 * en cours ...
 
-== Récupérer les scènes d'un équipement
+== Récupérer
+
+Récupérer les scènes d'un équipement
 
 * en cours ...

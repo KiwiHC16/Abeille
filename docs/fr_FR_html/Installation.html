@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Installation</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,48 +761,82 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Installation</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_installation">Installation</h2>
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_etape_1_zigate">Etape 1: Zigate</h3>
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_etape_1_zigate">2. Etape 1: Zigate</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>La Zigate peut être connectée au port USB, par module Wifi ou sur le port GPIO d&#8217;un Raspberry Pi.</p></div>
 <div class="paragraph"><p>Le firmware supporté est le 3.0F</p></div>
 </div>
-<div class="sect2">
-<h3 id="_etape_2_widget_option">Etape 2: Widget (option)</h3>
-<div class="paragraph"><p>Vous pouvez installer quelques widgets (officiels) pour que le rendu soit plus sympa
-* baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
-* thermomètre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
-* humidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)</p></div>
+</div>
+<div class="sect1">
+<h2 id="_etape_2_widget">3. Etape 2: Widget</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Widget (option)</p></div>
+<div class="paragraph"><p>Vous pouvez installer quelques widgets (officiels) pour que le rendu soit plus sympa</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+baromètre pour le capteur Xiaomi Carré (dashboard.info.numeric.barometre )
+</p>
+</li>
+<li>
+<p>
+thermomètre pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.tempIMG)
+</p>
+</li>
+<li>
+<p>
+humidité pour les capteurs Xiaomi ronds et carrés (dashboard.info.numeric.hydro3IMG)
+</p>
+</li>
+</ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_30_2.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_30_2.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_30_2.png" alt="Capture_d_ecran_2018_01_21_a_11_30_2.png" />
 </span></p></div>
 </div>
-<div class="sect2">
-<h3 id="_etape_3_objet_de_référence">Etape 3: Objet de référence</h3>
+</div>
+<div class="sect1">
+<h2 id="_etape_3_référence">4. Etape 3: Référence</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>Créer un objet Jeedom pour retrouver rapidement et facilement les nouveaux équipements.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_10_53_59.png" alt="../images/Capture_d_ecran_2018_01_21_a_10_53_59.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_10_53_59.png" alt="Capture_d_ecran_2018_01_21_a_10_53_59.png" />
 </span></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_10_54_13.png" alt="../images/Capture_d_ecran_2018_01_21_a_10_54_13.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_10_54_13.png" alt="Capture_d_ecran_2018_01_21_a_10_54_13.png" />
 </span></p></div>
 </div>
-<div class="sect2">
-<h3 id="_etape_4_installation_du_plugin_depuis_le_market">Etape 4: Installation du plugin Depuis le market</h3>
-<div class="paragraph"><p>Rien de spécifique. Suivre la procédure classique.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_etape_5_activation">Etape 5: Activation</h3>
+<div class="sect1">
+<h2 id="_etape_4_market">5. Etape 4: Market</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Installation du plugin Depuis le market.
+Rien de spécifique. Suivre la procédure classique.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_etape_5_activation">6. Etape 5: Activation</h2>
+<div class="sectionbody">
 <div class="ulist"><ul>
 <li>
 <p>
@@ -787,7 +855,7 @@ Cliquer sur "Activer"
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_05_58.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_05_58.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_05_58.png" alt="Capture_d_ecran_2018_01_21_a_11_05_58.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -802,7 +870,7 @@ Lancer l&#8217;installation des dépendances avec le bouton "Relancer" et patien
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_06_33.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_06_33.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_06_33.png" alt="Capture_d_ecran_2018_01_21_a_11_06_33.png" />
 </span></p></div>
 <div class="ulist"><ul>
 <li>
@@ -838,37 +906,41 @@ Démarrer les Démons en cliquant sur la flèche verte "(Re)Démarrer"
 </li>
 </ul></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_01_21_a_11_07_14.png" alt="../images/Capture_d_ecran_2018_01_21_a_11_07_14.png" />
+<img src="../images/Capture_d_ecran_2018_01_21_a_11_07_14.png" alt="Capture_d_ecran_2018_01_21_a_11_07_14.png" />
 </span></p></div>
 <div class="paragraph"><p>A noter: Toute sauvegarde de la configuration provoque une relance du cron du plugin et donc un rechargement de la configuration.</p></div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_installation_pour_les_utilisateurs_avancés">Installation pour les utilisateurs avancés</h2>
+<h2 id="_avancés">7. Avancés</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Installation pour les utilisateurs avancés</p></div>
 <div class="sect2">
-<h3 id="_depuis_github">Depuis Github</h3>
+<h3 id="_depuis_github">7.1. Depuis Github</h3>
 <div class="paragraph"><p>Connecter vous par ssh sur votre Jeedom</p></div>
 <div class="sect3">
-<h4 id="_avec_le_zip">Avec le zip</h4>
-<div class="paragraph"><p>```shell
-cd /var/www/html/plugins/
+<h4 id="_zip">7.1.1. Zip</h4>
+<div class="listingblock">
+<div class="content">
+<pre><code>cd /var/www/html/plugins/
 mkdir Abeille
 cd Abeille
 unzip le fichier téléchargé de GitHub dans le répertoire
-cd ..
-````</p></div>
+cd ..</code></pre>
+</div></div>
 </div>
 <div class="sect3">
-<h4 id="_directement_avec_git_le_plus_simple_et_le_plus_rapide">Directement avec git (Le plus simple et le plus rapide)</h4>
-<div class="paragraph"><p>```shell
-git clone <a href="https://github.com/KiwiHC16/Abeille.git">https://github.com/KiwiHC16/Abeille.git</a> Abeille
-```</p></div>
+<h4 id="_git">7.1.2. Git</h4>
+<div class="paragraph"><p>Directement avec git (Le plus simple et le plus rapide)</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>git clone https://github.com/KiwiHC16/Abeille.git Abeille</code></pre>
+</div></div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_alternative_installation_du_plugin_abeille_avec_github_depuis_le_market">Alternative : Installation du plugin Abeille avec github depuis le market</h3>
+<h3 id="_alternative">7.2. Alternative</h3>
+<div class="paragraph"><p>Alternative : Installation du plugin Abeille avec github depuis le market</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -920,34 +992,46 @@ Cliquer sur Enregistrer.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mise_a_jour_du_plugin">Mise a jour du plugin</h2>
+<h2 id="_mise_a_jour">8. Mise a jour</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Mise a jour du plugin</p></div>
 <div class="sect2">
-<h3 id="_mise_à_jour_à_partir_du_market">Mise à jour à partir du market</h3>
-<div class="paragraph"><p>Rien de particulier, suivre la méthode de base de Jeedom</p></div>
+<h3 id="_market">8.1. Market</h3>
+<div class="paragraph"><p>Mise à jour à partir du market
+Rien de particulier, suivre la méthode de base de Jeedom</p></div>
 </div>
 <div class="sect2">
-<h3 id="_mise_à_jour_à_partir_de_github">Mise à jour à partir de github</h3>
-<div class="paragraph"><p>```shell
-cd /var/www/html/plugins/Abeille
-sudo git pull <a href="https://github.com/KiwiHC16/Abeille">https://github.com/KiwiHC16/Abeille</a>
-```</p></div>
-<div class="sect3">
-<h4 id="_pour_écraser_des_bidouilles_locales">Pour écraser des "bidouilles" locales :</h4>
-<div class="paragraph"><p>```shell
-cd /var/www/html/plugins/Abeille
+<h3 id="_github">8.2. Github</h3>
+<div class="paragraph"><p>Mise à jour à partir de github</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cd /var/www/html/plugins/Abeille
+sudo git pull https://github.com/KiwiHC16/Abeille</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bidouilles">9. Bidouilles</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour écraser des "bidouilles" locales :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cd /var/www/html/plugins/Abeille
 sudo git reset --hard HEAD
-sudo git pull <a href="https://github.com/KiwiHC16/Abeille">https://github.com/KiwiHC16/Abeille</a>
-```</p></div>
-</div>
-<div class="sect3">
-<h4 id="_pour_appliquer_les_bons_droits">Pour appliquer les bons droits :</h4>
-<div class="paragraph"><p>```shell
-chmod -R 777 /var/www/html/plugins/Abeille
-chown -R www-data:www-data /var/www/html/plugins/Abeille
-```</p></div>
+sudo git pull https://github.com/KiwiHC16/Abeille</code></pre>
+</div></div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_droits">10. Droits</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour appliquer les bons droits :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille</code></pre>
+</div></div>
 </div>
 </div>
 </div>
@@ -955,7 +1039,7 @@ chown -R www-data:www-data /var/www/html/plugins/Abeille
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 19:49:09 CET
+ 2019-03-13 17:04:16 CET
 </div>
 </div>
 </body>

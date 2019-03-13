@@ -761,21 +761,28 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(2);
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
 <h1>Groupes</h1>
+<span id="author">KiwiHC16</span><br />
 <div id="toc">
-  <div id="toctitle">Table of Contents</div>
+  <div id="toctitle">Table des matières</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_intro">Intro</h2>
+<h2 id="_home">1. Home</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_intro">2. Intro</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Les équipements peuvent être adressés par au moins deux façons:</p></div>
 <div class="ulist"><ul>
@@ -798,11 +805,11 @@ Adresse Zigbee de groupe: Les adresses de groupes permettent de joindre un ensem
 </div>
 </div>
 <div class="sect1">
-<h2 id="_gestion_des_groupes">Gestion des groupes</h2>
+<h2 id="_gestion_des_groupes">3. Gestion des groupes</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>La gestion des groupes se fait de deux façons</p></div>
 <div class="sect2">
-<h3 id="_option_a">Option A:</h3>
+<h3 id="_option_a">3.1. Option A:</h3>
 <div class="paragraph"><p>Soit depuis la ruche avec 3 commandes (Version initiale pour leles developpeurs):</p></div>
 <div class="ulist"><ul>
 <li>
@@ -823,10 +830,10 @@ Consultation
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_option_b">Option B:</h3>
+<h3 id="_option_b">3.2. Option B:</h3>
 <div class="paragraph"><p>Soit en utilisant la page de configuration du plug in (pour tous les utilisateurs):</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2019_03_04_a_20_05_09.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_05_09.png" />
+<img src="../images/Capture_d_ecran_2019_03_04_a_20_05_09.png" alt="Capture_d_ecran_2019_03_04_a_20_05_09.png" />
 </span></p></div>
 <div class="paragraph"><p>Je vous recommande grandement l&#8217;option B.</p></div>
 <div class="paragraph"><p>A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets Abeille.</p></div>
@@ -835,10 +842,10 @@ Consultation
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ajout_d_un_groupe_à_un_équipement">Ajout d un groupe à un équipement</h2>
+<h2 id="_ajout_d_un_groupe_à_un_équipement">4. Ajout d un groupe à un équipement</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_option_a_2">Option A:</h3>
+<h3 id="_option_a_2">4.1. Option A:</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -858,28 +865,28 @@ Troisième champ: l&#8217;adresse de groupe a ajouter
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_option_b_2">Option B:</h3>
+<h3 id="_option_b_2">4.2. Option B:</h3>
 <div class="paragraph"><p>Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones):</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2019_03_04_a_20_08_28.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_08_28.png" />
+<img src="../images/Capture_d_ecran_2019_03_04_a_20_08_28.png" alt="Capture_d_ecran_2019_03_04_a_20_08_28.png" />
 </span></p></div>
 <div class="paragraph"><p>Faites un "Get Group" pour récupérer les groupes de cette/ces ampoule(s).</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2019_03_04_a_20_11_08.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_11_08.png" />
+<img src="../images/Capture_d_ecran_2019_03_04_a_20_11_08.png" alt="Capture_d_ecran_2019_03_04_a_20_11_08.png" />
 </span></p></div>
 <div class="paragraph"><p>Selectionnez de nouveu l ampoule et saisissez l&#8217;identifiant de groupe que vous voulez lui attribuer dans le champ Id, puis utiliser le bouton "Add Group". Voila l 'ampoule doit avoir son groupe de défini.</p></div>
 <div class="paragraph"><p>Maintenant si vous vouler piloter le groupe avec une télécommande Ikea, selectionner la télécommande, mettez l&#8217;identifiant (Hexa à 4 digit) dans le champ Id, utilisez le bouton "Set Group Remote", et immédiatement réveillez la télécommande en appuyant sur un des boutons physique de celle ci. Il est possible que cela ne fonctionne pas du premier coup alors faites le une ou deux fois de plus. Jusqu&#8217;a ce qque vous ampoules réagissent à un appui sur la bouton physique de la télécommande. Maintenant il vous reste à renseigné dans l objet Télécommande l&#8217;Id du groupe dans ses paramètres pour qu&#8217;Abeille pilote le groupe.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2019_03_04_a_20_22_04.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_22_04.png" />
+<img src="../images/Capture_d_ecran_2019_03_04_a_20_22_04.png" alt="Capture_d_ecran_2019_03_04_a_20_22_04.png" />
 </span></p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_retrait_d_un_groupe_à_un_équipement">Retrait d un groupe à un équipement</h2>
+<h2 id="_retrait_d_un_groupe_à_un_équipement">5. Retrait d un groupe à un équipement</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_option_a_3">Option A:</h3>
+<h3 id="_option_a_3">5.1. Option A:</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -899,16 +906,16 @@ Troisième champ: l&#8217;adresse de groupe a retirer
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_option_b_3">Option B:</h3>
+<h3 id="_option_b_3">5.2. Option B:</h3>
 <div class="paragraph"><p>Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones), saisissez l&#8217;Id et utilisez les bouton "Remove Group".</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_récupérer_les_groupes_d_8217_un_équipement">Récupérer les groupes d&#8217;un équipement</h2>
+<h2 id="_récupérer_les_groupes_d_8217_un_équipement">6. Récupérer les groupes d&#8217;un équipement</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_option_a_4">Option A:</h3>
+<h3 id="_option_a_4">6.1. Option A:</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -924,7 +931,7 @@ Deuxième champ: End Point de l'équipement
 <div class="paragraph"><p>L&#8217;information groupe doit remonter dans le champ groupe de l'équipement (peut être invisible par défaut, le rendre visible).</p></div>
 </div>
 <div class="sect2">
-<h3 id="_option_b_4">Option B:</h3>
+<h3 id="_option_b_4">6.2. Option B:</h3>
 <div class="paragraph"><p>Selectionnez l'équipement et utilisez le bouton"Get Group".</p></div>
 </div>
 </div>
@@ -934,7 +941,7 @@ Deuxième champ: End Point de l'équipement
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 01:05:19 CET
+ 2019-03-13 17:33:11 CET
 </div>
 </div>
 </body>

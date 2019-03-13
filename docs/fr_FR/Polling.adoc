@@ -1,15 +1,31 @@
+= Polling
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
 
-== Polling
 
-== Ping toutes les 15 minutes
+== Home
+
+Retour au link:index.html[document principal].
+
+== Ping
+
+Ping toutes les 15 minutes
 
 Par défaut le cron, toutes les 15 minutes, fait un ping des équipements qui n'ont pas de batterie définie. On suppose qu'ils sont sur secteur et que donc ils écoutent et qu'ils répondent à la requête.
 
-== État toutes les minutes
+== État
+
+État toutes les minutes
 
 Récupère les infos que ne remonte pas par défaut toutes les minutes si défini dans l'équipement.
 
-== Santé des équipements
+== Santé
+
+Santé des équipements
 
 Il y a probablement deux informations qu'il est intéressant de monitorer pour vérifier que tout fonctionne:
 

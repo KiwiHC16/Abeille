@@ -1,3 +1,14 @@
+= Link Status
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
 
 == Link Status
 
@@ -9,15 +20,15 @@ Ce script va présenter graphiquement les informations échangées entre les rou
 
 Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:
 
-image:../images/Capture_d_ecran_2018_05_10_a_23_33_32.png[]
+image:Capture_d_ecran_2018_05_10_a_23_33_32.png[]
 
-image:../images/Capture_d_ecran_2018_05_10_a_23_33_48.png[]
+image:Capture_d_ecran_2018_05_10_a_23_33_48.png[]
 
 Une fois cela fait ouvrez la page: http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
 
 Vous devriez avoir un résultat comme:
 
-image:../images/Capture_d_ecran_2018_05_10_a_23_43_31.png[]
+image:Capture_d_ecran_2018_05_10_a_23_43_31.png[]
 
 Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l'adresse destination. Et enfin le dernier champ permet d'afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.
 
@@ -25,7 +36,7 @@ Evidement la configuration est celle de mon réseau de prod et de mon réseau de
 
 Dans le tableau knowNE mettre l'adresse courte suiivie du nom de léquipement:
 
-```
+----
 $knownNE = array(
 "0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 -> Production
 // 00:01:58:d0:00:19:1b:22 000158d000191b22 -> Test
@@ -34,12 +45,11 @@ $knownNE = array(
 "1e8c" => "T2",
 "174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
 "6766" => "T4",
-
-````
+----
 
 Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:
 
-````
+----
 $Abeilles = array(
 'Ruche'    => array('position' => array( 'x'=>700, 'y'=>520), 'color'=>'red',),
 // Abeille Prod JeedomZwave
@@ -48,7 +58,7 @@ $Abeilles = array(
 'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
 'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
 'T4'       => array('position' => array( 'x'=>450, 'y'=>250), 'color'=>'orange',),
-````
+----
 
 == LQI
 
@@ -59,15 +69,15 @@ http://[adresse de votre Jeedom]/plugins/Abeille/Network/AbeilleLQI_Map.php
 
 Vous pouvez vérifier que l'execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):
 
-```
+----
 AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a
-````
+----
 
 Si cela ne fonctionne pas, vous pouvez faire la manip à la main:
-````
+----
 cd /var/www/html/plugins/Abeille/Network
 php AbeilleLQI_Map.php
-````
+----
 
 
 C'est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.
@@ -79,7 +89,9 @@ Le script va interroger tous les équipements qu'il détecte, un à un. Le proce
 
 Lors de la premiere execution un tableau est généré avec toutes les informations collectées (les exemples ci dessous ne contiennent pas toutes les colonnes car depuis certaines ont été ajoutées.
 
-=== Sur mon systeme de test, après 40s, cela donne:
+=== Test
+
+Sur mon systeme de test, après 40s, cela donne:
 
 .LQI Systeme de test
 [width="100%",options="header,footer"]
@@ -109,7 +121,9 @@ On peut voir que le coordinateur "0000" a 9 enfants (des capteurs Xiaomi) et un 
 
 On peut y voir que le routeur d45e est "Sibling" avec le coordinateur (Zigate). Qu'il possède un équipement enfant qui est donc en 2ieme niveau.
 
-=== Sur mon système de prod
+=== Production
+
+Sur mon système de prod
 
 Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).
 
@@ -230,7 +244,9 @@ Après 4 minutes, cela donne:
 |e4c0|db83|Sibling|0F|59
 |====================
 
-== Graphique Vieille Version
+== Graphique Old
+
+Graphique Vieille Version
 
 === Configuration
 
@@ -259,11 +275,11 @@ $Abeilles = array(
 'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
 
 
-=== Graphique (Old Version)
+=== Graphique
 
 Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j'ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:
 
-image:../images/Capture_d_ecran_2018_04_30_a_23_45_51.png[]
+image:Capture_d_ecran_2018_04_30_a_23_45_51.png[]
 
 On peut voir toutes les voisines rapportées par les équipements.
 
@@ -280,7 +296,7 @@ Par exemple, je veux voir tous les équipements rapportant vori un équipement x
 
 Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l'ampoule bois bureau, alors que tous les autres équipements rapportent à la Zigate en direct.
 
-== Graphique (Nouvelle Version)
+== Graphique New
 
 === Configuration
 
@@ -288,17 +304,17 @@ Normalement après 24h les informations sont disponibles. Si vous n'avez pas les
 
 Juste un clic sur "Network Graph":
 
-image:../images/Capture_d_ecran_2018_10_04_a_02_39_04.png[]
+image:Capture_d_ecran_2018_10_04_a_02_39_04.png[]
 
 Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).
 
-image:../images/Capture_d_ecran_2018_10_04_a_02_24_10.png[]
+image:Capture_d_ecran_2018_10_04_a_02_24_10.png[]
 
 
 
 === Filtre
 
-image:../images/Capture_d_ecran_2018_10_04_a_11_44_30.png[]
+image:Capture_d_ecran_2018_10_04_a_11_44_30.png[]
 
 Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.
 
@@ -334,11 +350,11 @@ Utilisation du filtre par l'exemple:
 Exemple avec tout positionné à la main:
 
 
-image:../images/Capture_d_ecran_2018_10_04_a_02_23_17.png[]
+image:Capture_d_ecran_2018_10_04_a_02_23_17.png[]
 
 Exemple qu'avec les relations Child (Filter Child):
 
-image:../images/Capture_d_ecran_2018_10_04_a_02_23_37.png[]
+image:Capture_d_ecran_2018_10_04_a_02_23_37.png[]
 
 On peut voir ici que j'ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,...
 
@@ -346,11 +362,11 @@ Vue interressante car elle permet de voir quels sont le équipements terminaux r
 
 Exemple en demandant la Ruche au centre:
 
-image:../images/Capture_d_ecran_2018_10_04_a_02_24_23.png[]
+image:Capture_d_ecran_2018_10_04_a_02_24_23.png[]
 
 Exemple avec l'upload d'une image en fond d'écran:
 
-image:../images/Capture_d_ecran_2018_10_04_a_11_15_34.png[]
+image:Capture_d_ecran_2018_10_04_a_11_15_34.png[]
 
 Vous pouvez aussi choisir votre fond d'écran pour positionner vos Abeilles.
 
@@ -364,7 +380,7 @@ Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,
 Le premier graphe est le LQI rapporté par l'équipement en fonction du nombre de mur à traverser.
 Le deuxieme graphe est le LQI en fonction de la distance à vol d'oiseau.
 
-image:../images/Capture_d_ecran_2018_12_14_a_10_45_20.png[]
+image:Capture_d_ecran_2018_12_14_a_10_45_20.png[]
 
 Si l'on considère qu'avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus.
 

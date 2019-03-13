@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Parametrage des équipements</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,36 +761,57 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Parametrage des équipements</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_parametrage_des_équipements">Parametrage des équipements</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>Certains équipements possèdent des paramètres qu&#8217;il est possible de changer.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/note.png" alt="Note" />
+</td>
+<td class="content">La norme le permet mais très peu d'équipement le supportent.</td>
+</tr></table>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_location_lieux">Location / Lieux</h2>
+<h2 id="_home">1. Home</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lieux_location">2. Lieux (Location)</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_récupérer_le_champ_lieux_location">Récupérer le champ Lieux/Location</h3>
+<h3 id="_récupérer">2.1. Récupérer</h3>
+<div class="paragraph"><p>Récupérer le champ Lieux/Location</p></div>
 <div class="paragraph"><p>Depuis la ruche, utiliser la commande GetLocation</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_24_a_11_47_02.png" alt="../images/Capture_d_ecran_2018_05_24_a_11_47_02.png" />
+<img src="../images/../images/Capture_d_ecran_2018_05_24_a_11_47_02.png" alt="../images/Capture_d_ecran_2018_05_24_a_11_47_02.png" />
 </span></p></div>
 <div class="paragraph"><p>Mettre l&#8217;adresse de l objet dans le premier champ et laisser vide le second sauf cas particulier.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_définir_le_lieux_location">Définir le lieux/location</h3>
+<h3 id="_définir">2.2. Définir</h3>
+<div class="paragraph"><p>Définir le lieux/location</p></div>
 <div class="paragraph"><p>Depuis la ruche, utiliser la commande SetLocation</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_05_24_a_11_47_17.png" alt="../images/Capture_d_ecran_2018_05_24_a_11_47_17.png" />
+<img src="../images/../images/Capture_d_ecran_2018_05_24_a_11_47_17.png" alt="../images/Capture_d_ecran_2018_05_24_a_11_47_17.png" />
 </span></p></div>
 <div class="paragraph"><p>Mettre l&#8217;adresse de l&#8217;objet dans le premier champ et la nom du lieux que vous souhaitez dans le second.</p></div>
 </div>
@@ -767,7 +822,7 @@ asciidoc.install();
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:14:02 CET
+ 2019-03-13 17:08:17 CET
 </div>
 </div>
 </body>

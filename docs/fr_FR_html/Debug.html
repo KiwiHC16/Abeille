@@ -761,52 +761,55 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(2);
+asciidoc.install(4);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
 <h1>Debug / Troubleshooting / Investigations</h1>
+<span id="author">KiwiHC16</span><br />
 <div id="toc">
-  <div id="toctitle">Table of Contents</div>
+  <div id="toctitle">Table des matières</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_home">1. Home</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
 <div class="paragraph"><p>Je vais essayer de consolider ici tous les retours d&#8217;expériences et les vérifications à faire pour résoudre un éventuel problème.</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_forum">Forum</h2>
+<h2 id="_forum">2. Forum</h2>
 <div class="sectionbody">
 <div class="ulist"><ul>
 <li>
 <p>
-le forum: <a href="https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille">https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille</a>
+Liste des sujets en cours de discussions: <a href="https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille">Forum</a>
 </p>
 </li>
 </ul></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_investigations">Investigations</h2>
+<h2 id="_investigations">3. Investigations</h2>
 <div class="sectionbody">
 <div class="ulist"><ul>
 <li>
 <p>
-Liste des sujets en investigations / Issues sous GitHub: <a href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue</a>
+Liste des sujets en investigations : <a href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">Issues sous GitHub</a>
 </p>
 </li>
 </ul></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_problèmes">Problèmes</h2>
+<h2 id="_problèmes">4. Problèmes</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l&#8217;adresse avec un "Labels" "Bug": <a href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p></div>
+<div class="paragraph"><p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir <a href="https://github.com/KiwiHC16/Abeille/issues">une "issue" dans GitHub</a></p></div>
 <div class="paragraph"><p>Si vous ouvrez une "issue" merci de fournir le plus d&#8217;information possible et en particulier:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -912,16 +915,16 @@ captures d&#8217;ecrans
 </div>
 </div>
 <div class="sect1">
-<h2 id="_evolution">Evolution</h2>
+<h2 id="_evolution">5. Evolution</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Si vous souhaitez une évolution dans le plugin, merci d ouvrir une "issue" dans GitHub à l&#8217;adresse avec un "Labels" "enhancement": <a href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_debug">Debug</h2>
+<h2 id="_debug">6. Debug</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_retain_dans_les_objets">"retain" dans les objets</h3>
+<h3 id="_retain_dans_les_objets">6.1. "retain" dans les objets</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -954,14 +957,26 @@ Si vous avez par erreur activé un "retain" et que le comportement du plugin est
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>```
-rm /var/lib/mosquitto/mosquitto.db
-apt-get remove mosquitto
-apt-get install mosquitto
-```</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>rm /var/lib/mosquitto/mosquitto.db <img src="../images/icons/callouts/1.png" alt="1" />
+apt-get remove mosquitto <img src="../images/icons/callouts/2.png" alt="2" />
+apt-get install mosquitto <img src="../images/icons/callouts/3.png" alt="3" /></code></pre>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="../images/icons/callouts/1.png" alt="1" /></td><td>
+Effacons la base de données contenant les informations relative aux messages "retain".
+</td></tr>
+<tr><td><img src="../images/icons/callouts/2.png" alt="2" /></td><td>
+Enlevons mosquitto du systeme
+</td></tr>
+<tr><td><img src="../images/icons/callouts/3.png" alt="3" /></td><td>
+Installons de nouveau mosquitto sur le systeme.
+</td></tr>
+</table></div>
 </div>
 <div class="sect2">
-<h3 id="_configuration">Configuration</h3>
+<h3 id="_configuration">6.2. Configuration</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -971,17 +986,18 @@ Verifier la configuration réseau et en particulier /hostname, /etc/hosts
 <li>
 <p>
 Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l&#8217;objet de rattachement de l'équipement Ruche n&#8217;est pas défini.
-````
-[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (<code>Jeedom</code>.<code>eqLogic</code>, CONSTRAINT <code>fk_eqLogic_object1</code> FOREIGN KEY (<code>object_id</code>) REFERENCES <code>object</code> (<code>id</code>) ON DELETE SET NULL ON UPDATE CASCADE)
-````
 </p>
 </li>
 </ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)</code></pre>
+</div></div>
 </div>
 <div class="sect2">
-<h3 id="_connection_zigate_abeille">Connection Zigate/Abeille</h3>
+<h3 id="_connection">6.3. Connection</h3>
 <div class="sect3">
-<h4 id="_premier_test">Premier test</h4>
+<h4 id="_premier_test">6.3.1. Premier test</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -996,7 +1012,7 @@ Dans l équipement ruche, appuyez sur le bouton "Version", vous devez récupére
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_deuxième_test">Deuxième test</h4>
+<h4 id="_deuxième_test">6.3.2. Deuxième test</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1006,7 +1022,7 @@ Vérifiez bien que vous n&#8217;avez pas plusieurs Plugins essayant d&#8217;util
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_troisième_test">Troisième test</h4>
+<h4 id="_troisième_test">6.3.3. Troisième test</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1014,46 +1030,59 @@ Tester la Zigate en ligne de commande
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>On envoie
-```
-stty -F/dev/ttyUSB0 115200
-echo -ne <em>\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03</em> &gt; /dev/ttyUSB0
-```
-(Cela peut être fait alors que le plugin est Zigate fonctionnent).</p></div>
+<div class="paragraph"><p>On envoie</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>stty -F/dev/ttyUSB0 115200 <img src="../images/icons/callouts/1.png" alt="1" />
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' &gt; /dev/ttyUSB0 <img src="../images/icons/callouts/2.png" alt="2" /></code></pre>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="../images/icons/callouts/1.png" alt="1" /></td><td>
+On configure le port série
+</td></tr>
+<tr><td><img src="../images/icons/callouts/2.png" alt="2" /></td><td>
+On demande à la zigate de se mettre en inclusion.
+</td></tr>
+</table></div>
+<div class="paragraph"><p>(Cela peut être fait alors que le plugin est Zigate fonctionnent).</p></div>
 <div class="paragraph"><p>Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:</p></div>
-<div class="paragraph"><p>```
-AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message &gt; 12 char
+<div class="listingblock">
+<div class="content">
+<pre><code>AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message &gt; 12 char
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00
 AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
-AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
-```</p></div>
+AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8</code></pre>
+</div></div>
 <div class="paragraph"><p>Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.</p></div>
 <div class="paragraph"><p>PS: la configuration du port peu varier d&#8217;un système à l&#8217;autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_quatrième_test">Quatrième test</h4>
+<h4 id="_quatrième_test">6.3.4. Quatrième test</h4>
 <div class="paragraph"><p>Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):</p></div>
-<div class="paragraph"><p>```
-cat /dev/ttyUSB0 | hexdump -vC
-```</p></div>
-<div class="paragraph"><p>Dans un second terminal envoiyez la commande
-```
-stty -F/dev/ttyUSB0 115200
-echo -ne <em>\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03</em> &gt; /dev/ttyUSB0
-```</p></div>
-<div class="paragraph"><p>Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:
-```
-<a href="mailto:www-data@Abeille">www-data@Abeille</a>:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
-00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |&#8230;&#8230;..w&#8230;..I.|
-00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |&#8230;&#8230;&#8230;.p&#8230;..|
-```</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cat /dev/ttyUSB0 | hexdump -vC</code></pre>
+</div></div>
+<div class="paragraph"><p>Dans un second terminal envoiyez la commande</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>stty -F/dev/ttyUSB0 115200
+echo -ne '\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03' &gt; /dev/ttyUSB0</code></pre>
+</div></div>
+<div class="paragraph"><p>Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
+00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |........w.....I.|
+00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|</code></pre>
+</div></div>
 <div class="paragraph"><p>Cela confirme Zigate vers Jeedom</p></div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mosquitto">Mosquitto</h3>
+<h3 id="_mosquitto">6.4. Mosquitto</h3>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1067,7 +1096,7 @@ mosquitto est installé sur la machine par défaut lors de l&#8217;installation 
 </li>
 </ul></div>
 <div class="sect3">
-<h4 id="_configuration_2">Configuration</h4>
+<h4 id="_configuration_2">6.4.1. Configuration</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1104,7 +1133,7 @@ QoS à utiliser (par défaut 0).
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_fonctionne">Fonctionne</h4>
+<h4 id="_fonctionne">6.4.2. Fonctionne</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1129,29 +1158,35 @@ Lancez à la main mosquitto avec votre fichier de configuration en ligne de comm
 <li>
 <p>
 Experience: après coupure de courant:
-```
-mosquitto -c /etc/mosquitto/mosquitto.conf
-1516788158: Error: Success.
-1516788158: Error: Couldn&#8217;t open database.
-```
 </p>
 </li>
 </ul></div>
 </li>
 </ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mosquitto -c /etc/mosquitto/mosquitto.conf
+1516788158: Error: Success.
+1516788158: Error: Couldn't open database.</code></pre>
+</div></div>
 <div class="paragraph"><p>la solution a été de supprimer la base de donnée et de réinstaller mosquitto:</p></div>
-<div class="paragraph"><p>```
-rm /var/lib/mosquitto/mosquitto.db
+<div class="listingblock">
+<div class="content">
+<pre><code>rm /var/lib/mosquitto/mosquitto.db
 apt-get remove mosquitto
-apt-get install mosquitto
-```</p></div>
+apt-get install mosquitto</code></pre>
+</div></div>
 </div>
 <div class="sect3">
-<h4 id="_monitorer_les_messages">Monitorer les messages</h4>
-<div class="paragraph"><p>mosquitto_sub -t "=" -v</p></div>
+<h4 id="_monitorer">6.4.3. Monitorer</h4>
+<div class="paragraph"><p>Monitorer les messages</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mosquitto_sub -t "=" -v</code></pre>
+</div></div>
 </div>
 <div class="sect3">
-<h4 id="_re_installation">Re-Installation</h4>
+<h4 id="_re_installation">6.4.4. Re-Installation</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1184,15 +1219,16 @@ Après des recherches infructueuse je suis passé par synaptic (ssh <a href="mai
 </div>
 </div>
 <div class="sect2">
-<h3 id="_equipements_zigbee">Equipements ZigBee</h3>
+<h3 id="_equipements_zigbee">6.5. Equipements ZigBee</h3>
 <div class="paragraph"><p>La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" alt="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" />
+<img src="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" alt="Capture_d_ecran_2018_02_06_a_17_33_19.png" />
 </span></p></div>
 <div class="paragraph"><p>Dans ActiveEndPoint mettre l&#8217;adresse de l'équipement dans le titre puis clic sur le bouton ActiveEndPoint.</p></div>
-<div class="paragraph"><p>Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:
-```
-AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
+<div class="paragraph"><p>Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]message &gt; 12 char
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)
@@ -1201,12 +1237,13 @@ AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
-AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
-```</p></div>
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01</code></pre>
+</div></div>
 <div class="paragraph"><p>Il y a, dans ce cas, une seul EndPoint à l&#8217;adresse "01" (Donné par les lignes suivant "Endpoint List").</p></div>
 <div class="paragraph"><p>Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.</p></div>
-<div class="paragraph"><p>```
-AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
+<div class="listingblock">
+<div class="content">
+<pre><code>AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)
@@ -1238,13 +1275,14 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
-AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
-```</p></div>
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes</code></pre>
+</div></div>
 <div class="paragraph"><p>Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.</p></div>
-<div class="sect3">
-<h4 id="_script_de_test_et_vérifications">Script de test et vérifications</h4>
-<div class="paragraph"><p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n&#8217;est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.</p></div>
 </div>
+<div class="sect2">
+<h3 id="_script">6.6. Script</h3>
+<div class="paragraph"><p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh.
+L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n&#8217;est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.</p></div>
 </div>
 </div>
 </div>
@@ -1253,7 +1291,7 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 00:39:30 CET
+ 2019-03-13 18:42:25 CET
 </div>
 </div>
 </body>

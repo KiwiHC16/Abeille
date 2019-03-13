@@ -1,22 +1,31 @@
-:toc2:
-
 = Manuel de l utilisateur
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
 
 Le manuel de l'utilisateur possède plusieurs chapitre essayant de détailler chaque sujet.
 En tant qu'utilisateur final, le chapitre link:Tuto.html[tuto] vous sera probablement le plus intéressant, mais noubliez pas les autres surtout si vous débuteez avec Abeille et Zigate.
 
+[NOTE]
 [red]#Cette documentation est en cours de "ré-écriture".#
 
+[NOTE]
 [red]#Plugin en développement continu. Le développement n'est pas terminé. De nombreux ajustements sont en cours ...#
 
 == Abeille
 
 Le chapitre link:presentation.html[Présentation] contient les premières informations nécessaires à l'utilisation du plugin Abeille.
 
+image:Abeille_icon.png[]
+
 == Timer
 
 Le plugin contient une fonctionalité link:timer.html[Timer] qui peut être utilisé avec ou sans la zigate et le réseau zigbee associé. Ces link:timer.html[timers] fonctionnent à la seconde ce qui n'existe pas à ma connaissance dans Jeedom.
 
+image:node_Timer.png[]
 
 == Installation
 
@@ -128,4 +137,3 @@ Ce chapitre ne devrait être utilisé que pour les personnes qui developpe le fi
 === Wifi
 
 J'ai developpé mon propre module link:Wifi.html[Wifi] du fait de petits soucis sur le premier module disponible. Finalement il fonctionne tellement bien et fourni une protection coupure electrique avec une batterie que je l'utilise dans toutes configuration et mêm avec mon sniffer ZigBee ...
- 

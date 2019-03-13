@@ -1,6 +1,14 @@
-:toc2:
-
 = Groupes
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
 
 == Intro
 
@@ -36,7 +44,7 @@ Soit depuis la ruche avec 3 commandes (Version initiale pour leles developpeurs)
 
 Soit en utilisant la page de configuration du plug in (pour tous les utilisateurs):
 
-image:../images/Capture_d_ecran_2019_03_04_a_20_05_09.png[]
+image:Capture_d_ecran_2019_03_04_a_20_05_09.png[]
 
 Je vous recommande grandement l'option B.
 
@@ -55,17 +63,17 @@ Un équipement peut avoir plusieurs adresses de groupes, cela permet donc de ré
 === Option B:
 Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones):
 
-image:../images/Capture_d_ecran_2019_03_04_a_20_08_28.png[]
+image:Capture_d_ecran_2019_03_04_a_20_08_28.png[]
 
 Faites un "Get Group" pour récupérer les groupes de cette/ces ampoule(s).
 
-image:../images/Capture_d_ecran_2019_03_04_a_20_11_08.png[]
+image:Capture_d_ecran_2019_03_04_a_20_11_08.png[]
 
 Selectionnez de nouveu l ampoule et saisissez l'identifiant de groupe que vous voulez lui attribuer dans le champ Id, puis utiliser le bouton "Add Group". Voila l 'ampoule doit avoir son groupe de défini.
 
 Maintenant si vous vouler piloter le groupe avec une télécommande Ikea, selectionner la télécommande, mettez l'identifiant (Hexa à 4 digit) dans le champ Id, utilisez le bouton "Set Group Remote", et immédiatement réveillez la télécommande en appuyant sur un des boutons physique de celle ci. Il est possible que cela ne fonctionne pas du premier coup alors faites le une ou deux fois de plus. Jusqu'a ce qque vous ampoules réagissent à un appui sur la bouton physique de la télécommande. Maintenant il vous reste à renseigné dans l objet Télécommande l'Id du groupe dans ses paramètres pour qu'Abeille pilote le groupe.
 
-image:../images/Capture_d_ecran_2019_03_04_a_20_22_04.png[]
+image:Capture_d_ecran_2019_03_04_a_20_22_04.png[]
 
 == Retrait d un groupe à un équipement
 

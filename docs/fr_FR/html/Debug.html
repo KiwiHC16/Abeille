@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Debug / Troubleshooting / Investigations</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,20 +761,27 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(2);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Debug / Troubleshooting / Investigations</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_debug_troubleshooting_investigations">Debug / Troubleshooting / Investigations</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>Je vais essayer de consolider ici tous les retours d&#8217;expériences et les vérifications à faire pour résoudre un éventuel problème.</p></div>
-<div class="sect2">
-<h3 id="_forum">Forum</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_forum">Forum</h2>
+<div class="sectionbody">
 <div class="ulist"><ul>
 <li>
 <p>
@@ -750,51 +791,20 @@ le forum: <a href="https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&a
 </ul></div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_attention_danger">Attention - Danger</h2>
+<h2 id="_investigations">Investigations</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_retain_dans_les_objets">"retain" dans les objets</h3>
 <div class="ulist"><ul>
 <li>
 <p>
-Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
-</p>
-</li>
-<li>
-<p>
-Le plugin [underline]=n&#8217;utilise pas= ce mode de fonctionnement.
-</p>
-<div class="ulist"><ul>
-<li>
-<p>
-[underline]=Il est fortement conseillé de ne pas choisir "retain"= si vous ne comprenez pas les conséquences.
-</p>
-</li>
-<li>
-<p>
-L&#8217;option reste accessible pour les pros de MQTT. Si jamais vous voulez l&#8217;utiliser alors allez voir <a href="https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages">https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages</a> .
-</p>
-</li>
-<li>
-<p>
-Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
+Liste des sujets en investigations / Issues sous GitHub: <a href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue</a>
 </p>
 </li>
 </ul></div>
-</li>
-</ul></div>
-<div class="paragraph"><p>```
-rm /var/lib/mosquitto/mosquitto.db
-apt-get remove mosquitto
-apt-get install mosquitto
-```</p></div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_problèmes_issues">Problèmes / Issues</h2>
+<h2 id="_problèmes">Problèmes</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir une "issue" dans GitHub à l&#8217;adresse avec un "Labels" "Bug": <a href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p></div>
 <div class="paragraph"><p>Si vous ouvrez une "issue" merci de fournir le plus d&#8217;information possible et en particulier:</p></div>
@@ -819,6 +829,11 @@ la Version de l&#8217;OS,
 la version de Jeedom
 </p>
 </li>
+<li>
+<p>
+&#8230;
+</p>
+</li>
 </ul></div>
 </li>
 <li>
@@ -828,7 +843,12 @@ Votre configuration Gateway
 <div class="ulist"><ul>
 <li>
 <p>
-Zigate et quel firmware
+Type de Zigate
+</p>
+</li>
+<li>
+<p>
+quel firmware
 </p>
 </li>
 <li>
@@ -840,12 +860,23 @@ Zigate et quel firmware
 </li>
 <li>
 <p>
-Les logs
+Les logs, aussi nombreux que possibles surtout
 </p>
 <div class="ulist"><ul>
 <li>
 <p>
-aussi nombreux que possibles
+AbeilleParser
+</p>
+</li>
+<li>
+<p>
+AbeilleMQTT
+</p>
+</li>
+<li>
+<p>
+Abeille
+*&#8230;
 </p>
 </li>
 </ul></div>
@@ -865,6 +896,16 @@ ce que vous cherchez à faire
 les résultats
 </p>
 </li>
+<li>
+<p>
+captures d&#8217;ecrans
+</p>
+</li>
+<li>
+<p>
+&#8230;
+</p>
+</li>
 </ul></div>
 </li>
 </ul></div>
@@ -879,6 +920,46 @@ les résultats
 <div class="sect1">
 <h2 id="_debug">Debug</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_retain_dans_les_objets">"retain" dans les objets</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Ce plugin utilise un broker MQTT qui a une fonction spécifique "retain".
+</p>
+</li>
+<li>
+<p>
+Le plugin <span class="underline">n&#8217;utilise pas</span> ce mode de fonctionnement.
+</p>
+</li>
+<li>
+<p>
+<span class="underline">Il est fortement conseillé de ne pas choisir "retain"</span> si vous ne comprenez pas les conséquences.
+</p>
+</li>
+<li>
+<p>
+L&#8217;option reste accessible pour les pros de MQTT. Si jamais vous voulez l&#8217;utiliser alors allez voir <a href="https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages">https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages</a> .
+</p>
+</li>
+<li>
+<p>
+Normalement vous ne devriez pas avoir accès à cette propriété par défaut car je l&#8217;ai enlevé des commandes.
+</p>
+</li>
+<li>
+<p>
+Si vous avez par erreur activé un "retain" et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>```
+rm /var/lib/mosquitto/mosquitto.db
+apt-get remove mosquitto
+apt-get install mosquitto
+```</p></div>
+</div>
 <div class="sect2">
 <h3 id="_configuration">Configuration</h3>
 <div class="ulist"><ul>
@@ -898,29 +979,39 @@ Vérifier la configuration du plugin. Par exemple le message suivant indique tr�
 </ul></div>
 </div>
 <div class="sect2">
-<h3 id="_connection_avec_la_zigate">Connection avec la Zigate</h3>
+<h3 id="_connection_zigate_abeille">Connection Zigate/Abeille</h3>
+<div class="sect3">
+<h4 id="_premier_test">Premier test</h4>
 <div class="ulist"><ul>
 <li>
 <p>
-Dans l objet ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois.
+Rendez l équipement Ruche Visible (Il est maintenant caché par défaut).
 </p>
 </li>
 <li>
 <p>
-Tester la Zigate en ligne de commande
+Dans l équipement ruche, appuyez sur le bouton "Version", vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois. Si les dates se mettent à jour c&#8217;est que le dialogue Abeille-Zigate fonctionne dans les deux sens.
 </p>
 </li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_deuxième_test">Deuxième test</h4>
+<div class="ulist"><ul>
 <li>
 <p>
 Vérifiez bien que vous n&#8217;avez pas plusieurs Plugins essayant d&#8217;utiliser le même port série (/dev/ttyUSBx).
 </p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_troisième_test">Troisième test</h4>
 <div class="ulist"><ul>
 <li>
 <p>
-Jeedom vers Zigate
+Tester la Zigate en ligne de commande
 </p>
-</li>
-</ul></div>
 </li>
 </ul></div>
 <div class="paragraph"><p>On envoie
@@ -938,14 +1029,11 @@ AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
 AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
 AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
 ```</p></div>
+<div class="paragraph"><p>Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.</p></div>
 <div class="paragraph"><p>PS: la configuration du port peu varier d&#8217;un système à l&#8217;autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Zigate vers Jeedom
-</p>
-</li>
-</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_quatrième_test">Quatrième test</h4>
 <div class="paragraph"><p>Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):</p></div>
 <div class="paragraph"><p>```
 cat /dev/ttyUSB0 | hexdump -vC
@@ -961,6 +1049,8 @@ echo -ne <em>\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03</em> &
 00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |&#8230;&#8230;..w&#8230;..I.|
 00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |&#8230;&#8230;&#8230;.p&#8230;..|
 ```</p></div>
+<div class="paragraph"><p>Cela confirme Zigate vers Jeedom</p></div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_mosquitto">Mosquitto</h3>
@@ -975,6 +1065,10 @@ Abeille utilise un broker mosquitto pour échanger des messages entre les module
 mosquitto est installé sur la machine par défaut lors de l&#8217;installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)
 </p>
 </li>
+</ul></div>
+<div class="sect3">
+<h4 id="_configuration_2">Configuration</h4>
+<div class="ulist"><ul>
 <li>
 <p>
 La configuration générale du plugin propose les paramètres :
@@ -1002,11 +1096,16 @@ Il est possible d&#8217;ajouter un compte et mot de passe si la connexion le req
 </li>
 <li>
 <p>
-QoS à utiliser (par défaut 1).
+QoS à utiliser (par défaut 0).
 </p>
 </li>
 </ul></div>
 </li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_fonctionne">Fonctionne</h4>
+<div class="ulist"><ul>
 <li>
 <p>
 Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
@@ -1046,6 +1145,13 @@ rm /var/lib/mosquitto/mosquitto.db
 apt-get remove mosquitto
 apt-get install mosquitto
 ```</p></div>
+</div>
+<div class="sect3">
+<h4 id="_monitorer_les_messages">Monitorer les messages</h4>
+<div class="paragraph"><p>mosquitto_sub -t "=" -v</p></div>
+</div>
+<div class="sect3">
+<h4 id="_re_installation">Re-Installation</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1054,7 +1160,12 @@ Debian 8 sur VM
 <div class="ulist"><ul>
 <li>
 <p>
-Je viens d&#8217;installer le plugin Abeille sur une Debian 8 en VM x86 64. Impossible de lancer le demon.
+Je viens d&#8217;installer le plugin Abeille sur une Debian 8 en VM x86 64.
+</p>
+</li>
+<li>
+<p>
+Impossible de lancer le demon.
 </p>
 </li>
 <li>
@@ -1071,9 +1182,10 @@ Après des recherches infructueuse je suis passé par synaptic (ssh <a href="mai
 </li>
 </ul></div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_investigate_equipements">Investigate Equipements</h3>
-<div class="paragraph"><p>La ruche possede deux commandes pour interoger les objets: ActiveEndPoint et SingleDescriptorRequest.</p></div>
+<h3 id="_equipements_zigbee">Equipements ZigBee</h3>
+<div class="paragraph"><p>La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" alt="../images/Capture_d_ecran_2018_02_06_a_17_33_19.png" />
 </span></p></div>
@@ -1091,7 +1203,7 @@ AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
 AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
 ```</p></div>
-<div class="paragraph"><p>Il y a donc une seul EndPoint à l&#8217;adresse "01" (Donné par les lignes suivant "Endpoint List".</p></div>
+<div class="paragraph"><p>Il y a, dans ce cas, une seul EndPoint à l&#8217;adresse "01" (Donné par les lignes suivant "Endpoint List").</p></div>
 <div class="paragraph"><p>Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.</p></div>
 <div class="paragraph"><p>```
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData
@@ -1129,20 +1241,11 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
 AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
 ```</p></div>
 <div class="paragraph"><p>Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.</p></div>
-<div class="paragraph"><p>&#8230;</p></div>
+<div class="sect3">
+<h4 id="_script_de_test_et_vérifications">Script de test et vérifications</h4>
+<div class="paragraph"><p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n&#8217;est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.</p></div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_monitorer_les_messages">Monitorer les messages</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>mosquitto_sub -t "=" -v</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_script_de_test_et_vérifications">Script de test et vérifications</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh. L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base.</p></div>
 </div>
 </div>
 </div>
@@ -1150,7 +1253,7 @@ AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:18:36 CET
+ 2019-03-13 00:39:30 CET
 </div>
 </div>
 </body>

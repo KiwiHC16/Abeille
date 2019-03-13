@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Health</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,22 +761,25 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(2);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Health</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_health">Health</h2>
+<h2 id="_communication">Communication</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_communication">Communication</h3>
-<div class="sect3">
-<h4 id="_vue_générale">Vue générale</h4>
-<div class="paragraph"><p>Un cron tourne ==toutes les minutes== (il faut donc attendre une minute et rafraichir la page) pour vérifier la date du dernier message reçu pour chaque équipement. Pour visualiser le résultat ouvrir Plugins&#8594;Protocoles Domotique&#8594;Abeille et clic sur l&#8217;icône Santé. Vous devriez avoir un résultat comme:</p></div>
+<h3 id="_vue_générale">Vue générale</h3>
+<div class="paragraph"><p>Un cron tourne <strong>toutes les minutes</strong> (il faut donc attendre une minute et rafraichir la page) pour vérifier la date du dernier message reçu pour chaque équipement. Pour visualiser le résultat ouvrir <strong>Plugins&#8594;Protocoles Domotique&#8594;Abeille</strong> et clic sur l&#8217;icône Santé. Vous devriez avoir un résultat comme:</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_05_11_a_13_46_17.png" alt="../images/Capture_d_ecran_2018_05_11_a_13_46_17.png" />
 </span></p></div>
@@ -750,7 +787,7 @@ asciidoc.install();
 <div class="ulist"><ul>
 <li>
 <p>
-Un carré vert avec un "-": Pas de test fait. Par exemple Abeille ne reçoit pas de message venant d&#8217;une télécommande Ikea.
+Un carré vert avec un "-": Pas de test fait. Par exemple Abeille ne reçoit pas de message venant d&#8217;une télécommande Ikea n&#8217;ont paramétré spécifiquement, fonctionnement par défaut.
 </p>
 </li>
 <li>
@@ -760,7 +797,7 @@ Un carré vert avec Ok, soit l'équipement à un timeout de défini et le dernie
 </li>
 <li>
 <p>
-un carré orange, l'équipement n&#8217;a pas de time out défini et le dernier message est plus vieux que 24h et moins que 7 jours
+un carré orange, l'équipement n&#8217;a pas de time out défini et le dernier message est plus vieux que 24h et moins que 7 jours (Il faut que je vérifie les timing)
 </p>
 </li>
 <li>
@@ -770,8 +807,8 @@ un carré rouge, soit le capteur à un time out et le dernier message est plus v
 </li>
 </ul></div>
 </div>
-<div class="sect3">
-<h4 id="_alerte_sur_communications">Alerte sur communications</h4>
+<div class="sect2">
+<h3 id="_alerte_sur_communications">Alerte sur communications</h3>
 <div class="paragraph"><p>Si un équipement possède un timeout défini alors des alertes peuvent être définies.</p></div>
 <div class="paragraph"><p>Il faut par exemple dans le fichier json d&#8217;avoir:
 ```
@@ -782,12 +819,11 @@ un carré rouge, soit le capteur à un time out et le dernier message est plus v
 "Categorie": {
 "automatism": "1"
 },
-````</p></div>
+```</p></div>
 <div class="paragraph"><p>Les 60 sont en minutes. Dans ce cas, l'équipement qui n&#8217;a pas eu de communications depuis plus de 60 générera des alarmes.</p></div>
 <div class="paragraph"><p>Pour cela il faut aussi avoir sélectionné le champ "Ajouter un message à chaque Timeout" (voir capture d'écran ci dessous).</p></div>
 <div class="paragraph"><p>Vous pouvez aussi ajouter une action dans le champ "Commande sur Timeout".</p></div>
 <div class="paragraph"><p>La vérification est faite par le core de Jeedom toutes les 5 minutes.</p></div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_batterie">Batterie</h3>
@@ -795,28 +831,33 @@ un carré rouge, soit le capteur à un time out et le dernier message est plus v
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_05_11_a_15_47_55.png" alt="../images/Capture_d_ecran_2018_05_11_a_15_47_55.png" />
 </span></p></div>
-<div class="sect3">
-<h4 id="_seuil_d_8217_alerte">Seuil d&#8217;alerte</h4>
+</div>
+<div class="sect2">
+<h3 id="_seuil_d_8217_alerte">Seuil d&#8217;alerte</h3>
 <div class="paragraph"><p>Menu&#8594;Roues crantées&#8594;Configuration&#8594;Equipements.</p></div>
 <div class="paragraph"><p>Mettez les valeurs qui vous conviennent:</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_07_16_a_11_28_07.png" alt="../images/Capture_d_ecran_2018_07_16_a_11_28_07.png" />
 </span></p></div>
 </div>
-<div class="sect3">
-<h4 id="_alerte">Alerte</h4>
+<div class="sect2">
+<h3 id="_alerte">Alerte</h3>
 <div class="paragraph"><p>Menu&#8594;Roues crantées&#8594;Configuration&#8594;Logs</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_07_16_a_11_29_52.png" alt="../images/Capture_d_ecran_2018_07_16_a_11_29_52.png" />
 </span></p></div>
 <div class="paragraph"><p>par exemple ici, une alarme est envoyée sur mon tél.</p></div>
 </div>
+<div class="sect2">
+<h3 id="_script_widget">Script / Widget</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Dans les premieres version d&#8217;abeille les timeout n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
+</tr></table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_script_widget">Script / Widget</h2>
-<div class="sectionbody">
 <div class="paragraph"><p>Vous aurez un widget comme celui ci:</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_03_27_a_10_05_02.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_05_02.png" />
@@ -831,31 +872,40 @@ un carré rouge, soit le capteur à un time out et le dernier message est plus v
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_03_27_a_09_44_59.png" alt="../images/Capture_d_ecran_2018_03_27_a_09_44_59.png" />
 </span></p></div>
-<div class="sect2">
-<h3 id="_script">Script</h3>
+<div class="sect3">
+<h4 id="_script">Script</h4>
 <div class="paragraph"><p>Le script dont vous aurez besoin est <a href="https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/CheckBattery.php">https://github.com/KiwiHC16/Abeille/blob/master/resources/AbeilleDeamon/CheckBattery.php</a></p></div>
 <div class="paragraph"><p>Faites un copy/paste dans le plugin script de Jeedom.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_parametres_internes_au_script">Parametres internes au script</h3>
+<div class="sect3">
+<h4 id="_parametres_internes_au_script">Parametres internes au script</h4>
 <div class="paragraph"><p>Lorsque vous allez éditer le script dans les étapes suivantes, vous trouverez les lignes suivanted en début de script:</p></div>
 <div class="paragraph"><p>```
 $minBattery = 30; // Taux d&#8217;usage de la batterie pour générer une alarme.
 $maxTime    = 24 * 60 * 60; // temps en seconde, temps max depuis la derniere remontée d&#8217;info de cet équipement
-````</p></div>
+```</p></div>
 <div class="paragraph"><p>A vous de mettre, les valeurs qui conviennent à votre systeme.</p></div>
 <div class="paragraph"><p>Juste après vous trouverez:</p></div>
-<div class="paragraph"><p>````
+<div class="paragraph"><p>```
 
 $excludeEq = array(
 "[Abeille][Ruche]" &#8658; 1,
 "[Abeille][CheckEquipementsWithBatteries]" &#8658; 1,  // L objet du script lui-meme</p></div>
 <div class="paragraph"><p>);
-````</p></div>
+```</p></div>
 <div class="paragraph"><p>C&#8217;est le tableau qui contient la liste des Equipements qu&#8217;il ne faut pas prendre en compte. Par exemple ici l&#8217;objet ruche et l&#8217;objet script (c&#8217;est à dire lui-même).</p></div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_batterie_2">Batterie</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Dans les premieres version d&#8217;abeille les batteries n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>Créez deux commandes scripts:</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2018_03_27_a_10_00_01.png" alt="../images/Capture_d_ecran_2018_03_27_a_10_00_01.png" />
@@ -874,6 +924,14 @@ $excludeEq = array(
 </div>
 <div class="sect2">
 <h3 id="_ping">Ping</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Dans les premieres version d&#8217;abeille les polling n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n&#8217;est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>Certains équipements ne remontent pas forcement des informations de facon régulière, comme une ampoule qu&#8217;on allume une fois par semaine. Donc pour forcer l'échange de message et vérifier la présence d&#8217;un équipement, il y a une fonction "Ping".</p></div>
 <div class="paragraph"><p>Pour l&#8217;instant elle fonctionne pour les ampoules Ikea.</p></div>
 <div class="paragraph"><p>Faites un commande:</p></div>
@@ -884,58 +942,12 @@ $excludeEq = array(
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_modele_et_fichier_json">Modele et Fichier JSON</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>(Cette partie doit être revue et mie a jour sur la base des dernieres evolutions)</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_configuration_des_objets">Configuration  des objets</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Losqu&#8217;un objet Zigbee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).</p></div>
-<div class="paragraph"><p>Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s&#8217;allonger.</p></div>
-<div class="paragraph"><p>L&#8217;idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des informations: <a href="https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets">https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets</a>).</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_interface_jeedom">Interface Jeedom</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Penons un exemple: Capteur de porte Xiaomi.</p></div>
-<div class="paragraph"><p>Dans Jeedom, il apparaîtra sous le widget:</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_39_52.png" alt="../images/Screen_Shot_2018_01_29_at_19_39_52.png" />
-</span></p></div>
-<div class="paragraph"><p>Son nom est pour l&#8217;occasion "lumi.sensor_magnet.aq2". C&#8217;est à partir de là que tout le reste a été déduit, par exemple le symbole de porte,&#8230;</p></div>
-<div class="paragraph"><p>Si vous sélectionnez, l&#8217;objet vous arrivez dans la page suivante:</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_40_30.png" alt="../images/Screen_Shot_2018_01_29_at_19_40_30.png" />
-</span></p></div>
-<div class="paragraph"><p>En sélectionnant "Configuration Avancée":</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_20_47_13.png" alt="../images/Screen_Shot_2018_01_29_at_20_47_13.png" />
-</span></p></div>
-<div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d&#8217;exemple pour définir les paramètres de configuration à mettre dans le fichier JSON.</p></div>
-<div class="paragraph"><p>Attention tous les paramètres ne sont pas encore pris en compte.</p></div>
-<div class="paragraph"><p>Puis si vous sélectionnez "Commandes", puis une commande spécifique à l&#8217;aide du symbole engrenage:</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_42_20.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_20.png" />
-</span></p></div>
-<div class="paragraph"><p>Puis si vous sélectionnez une commande spécifique comme l'état:</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="../images/Screen_Shot_2018_01_29_at_19_42_44.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_44.png" />
-</span></p></div>
-<div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à une commande et vous en servir d&#8217;exemple pour définir les paramatres de configuration à mettre dans le fichier JSON.</p></div>
-<div class="paragraph"><p>Si vous modifiez à l&#8217;aide de Jeedom la présentation de la commande cela vous permet de savoir ce qu&#8217;il faut mettre dans le fichier de conf.</p></div>
-<div class="paragraph"><p>Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c&#8217;est prévu.</p></div>
-</div>
-</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:12:22 CET
+ 2019-03-13 01:15:25 CET
 </div>
 </div>
 </body>

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Docker</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,22 +761,23 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(2);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Docker</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_histore_d_une_installation">Histore d une installation</h2>
+<h2 id="_vm_osx">VM OSX</h2>
 <div class="sectionbody">
-</div>
-</div>
-<div class="sect1">
-<h2 id="_une_vm_sous_parallel_osx_debian_9_3_0_jeedom_3_1_7_abeille_2018_06_19_01_01_07">Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07</h2>
-<div class="sectionbody">
+<div class="paragraph"><p>Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07</p></div>
 <div class="sect2">
 <h3 id="_vm">VM</h3>
 <div class="paragraph"><p>Configuration: choisissez un réseau ponté pour avoir un IP à vous.</p></div>
@@ -819,7 +854,7 @@ Sauvegarder
 <div class="paragraph"><p>Et maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_demarrage_du_reseau">Demarrage du reseau</h3>
+<h3 id="_demarrage_du_reseau_zigbee">Demarrage du reseau zigbee</h3>
 <div class="paragraph"><p>Si vous selectionnez "Version" alors les champs <em>Last</em>, <em>Last Stamps</em>, <em>SW</em>, <em>SDK</em> doivent se mettre à jour. Cela confirme que cela fonctionne.</p></div>
 <div class="paragraph"><p>Vous pouvez démarrer le réseau "Start Network".</p></div>
 <div class="paragraph"><p>Et faire un "get Network Status", d&#8217;autres champs vont se mettre à jour.</p></div>
@@ -831,36 +866,25 @@ Sauvegarder
 <div class="sect1">
 <h2 id="_installation_dans_un_conteneur_depuis_ubuntu">Installation dans un conteneur depuis Ubuntu</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_introduction">Introduction</h3>
+<div class="paragraph"><p>Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande à propos d&#8217;une distribution est ignorée.   <a href="https://Jeedom.github.io/documentation/installation/fr_FR/index">https://Jeedom.github.io/documentation/installation/fr_FR/index</a></p></div>
+<div class="paragraph"><p>Docker permet d&#8217;installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L&#8217;interet de docker est que n&#8217;est installé que le minimum nécéssaire au fonctionnement dans l&#8217;image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n&#8217;est pas limité à ce système.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_introduction">Introduction</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande a propos d&#8217;une distribution est ignorée.   <a href="https://Jeedom.github.io/documentation/installation/fr_FR/index">https://Jeedom.github.io/documentation/installation/fr_FR/index</a></p></div>
-<div class="paragraph"><p>docker permet d&#8217;installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L&#8217;interet de docker est que n&#8217;est installé que le minimum nécéssaire au fonctionnement dans l&#8217;image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n&#8217;est pas limité à ce système.</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_prérequis">Prérequis</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prérequis">Prérequis</h3>
 <div class="paragraph"><p>Avoir docker disponible dans les dépôts de la distribution.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_docker">Installation de docker</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_docker">Installation de docker</h3>
 <div class="paragraph"><p>apt-get install docker docker.io</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_fonctionnement">Fonctionnement</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_fonctionnement">Fonctionnement</h3>
 <div class="paragraph"><p>Loïc, un des créateurs de Jeedom maintient image Jeedom. Cette image appelé Jeedom-server utilise une image Jeedom-mysql pour stocker les données dans une base de données mysql. Il faudra donc a chaque fois lancer le conteneur Jeedom-mysql puis le Jeedom-server. Les réglages restent d&#8217;une fois sur l&#8217;autre.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_récupération_des_images_et_création_des_conteneurs">Récupération des images et Création des conteneurs</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_récupération_des_images_et_création_des_conteneurs">Récupération des images et Création des conteneurs</h3>
 <div class="paragraph"><p>Ces deux lignes vont récupérer les images, créer les conteneurs et les configurer. Le port USB est a adapter selon le besoin ( <code>ls /dev/ttyUSB*</code> pour avoir la liste )</p></div>
 <div class="paragraph"><p>docker run --name Jeedom-mysql -e MYSQL_ROOT_PASSWORD=MJeedom96 -d mysql:latest
 docker run --name Jeedom-server -e ROOT_PASSWORD=MJeedom96 --link Jeedom-mysql:mysql -p 9180:80 -p 9443:443 -p 9022:22 --device=/dev/ttyUSB0 Jeedom/Jeedom</p></div>
@@ -875,10 +899,8 @@ docker run --name Jeedom-server -e ROOT_PASSWORD=MJeedom96 --link Jeedom-mysql:m
 </tr></table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_configuration_de_jeedom">Configuration de Jeedom</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_configuration_de_jeedom">Configuration de Jeedom</h3>
 <div class="paragraph"><p>Dans les champs indiqués entrer la valeur surlignée.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -921,21 +943,18 @@ cellspacing="0" cellpadding="4">
 </div>
 <div class="paragraph"><p>Une fois, le texte <code>[END INSTALL SUCCESS]</code> affiché en bas. Aller à l 'adresse <a href="http://0.0.0.0:9180">http://0.0.0.0:9180</a> la page de login de Jeedom devrait apparaître. Les login et mot de passe sont admin admin.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_start_stop_des_conteneurs">start/stop des conteneurs</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_start_stop_des_conteneurs">start/stop des conteneurs</h3>
 <div class="paragraph"><p>les conteneurs peuvent être arrêtés et relancés à la demande en gardant l&#8217;ordre mysql Jeedom au lancement, Jeedom mysql à  l&#8217;arrêt.</p></div>
 <div class="paragraph"><p>Arrêt <code>docker stop Jeedom-server &amp;&amp; docker stop Jeedom-mysql</code></p></div>
 <div class="paragraph"><p>Démarrage <code>docker start Jeedom-mysql &amp;&amp; docker start Jeedom-server</code></p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_repartir_de_zéro">Repartir de zéro</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_repartir_de_zéro">Repartir de zéro</h3>
 <div class="paragraph"><p>il est possible de supprimer les conteneurs et de repartir d&#8217;un Jeedom tout neuf.</p></div>
 <div class="paragraph"><p><code>docker rm Jeedom-server &amp;&amp; docker rm Jeedom-mysql</code></p></div>
 <div class="paragraph"><p>puis aller vers <a href="">Récupération des images et Création des conteneurs</a></p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -948,23 +967,14 @@ C&#8217;est un conteneur à démarrage automatique qui pourra relancer les conte
 </div>
 </div>
 <div class="sect1">
-<h2 id="_installation_du_plugin_abeille">Installation du Plugin Abeille</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>voir la doc :)</p></div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_docker">Docker</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Installation d&#8217;Abeille dans docker
 (Il y a certainement plus simple mais je ne suis pas expert en Docker et cette méthode semble bien fonctionner).</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_preparation_du_docker">Preparation du docker</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_preparation_sous_raspbian">Preparation sous Raspbian</h3>
+<h3 id="_preparation_du_docker">Preparation du docker</h3>
+<div class="sect3">
+<h4 id="_preparation_sous_raspbian">Preparation sous Raspbian</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1049,18 +1059,15 @@ docker ps
 ```</p></div>
 <div class="paragraph"><p>Permet de voir que docker fonctionne.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_preparation_sous_hypriot">Preparation sous hypriot</h3>
+<div class="sect3">
+<h4 id="_preparation_sous_hypriot">Preparation sous hypriot</h4>
 <div class="paragraph"><p>La version officielle raspbian est un peu vieille et nous n&#8217;avons pas toutes les nouveautés. Hypriot a une version bien plus recente et nous facilite la vie (pas de config manuelle tout est prêt). Elle permet aussi de faire tourner le plugin Homebridge (macvlan).
 <a href="http://blog.hypriot.com">http://blog.hypriot.com</a></p></div>
 <div class="paragraph"><p>Telecharger leur image à l adresse: <a href="http://blog.hypriot.com/downloads/">http://blog.hypriot.com/downloads/</a></p></div>
 <div class="paragraph"><p>On voit ici qu&#8217;il n&#8217;y a pas d&#8217;image, il faut en créer une.</p></div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_créons_un_system_pour_le_docker">Créons un system pour le docker.</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_créons_un_system_pour_le_docker">Créons un system pour le docker.</h4>
 <div class="paragraph"><p><a href="http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/">http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/</a></p></div>
 <div class="paragraph"><p>Ici je ne cherche pas à faire une image la plus petite possible mais la plus proche possible d&#8217;une install classique sur un HW RPI3. De ce fait l&#8217;image fait presque 1G.</p></div>
 <div class="paragraph"><p>```
@@ -1087,7 +1094,7 @@ echo <em>CMD ["/bin/bash"]</em> &gt;&gt; Dockerfile
 ```
 docker build -t JeedomAbeille .
 ```
-Bien mettre le . a la fin de la ligne.</p></div>
+TIP: Bien mettre le . a la fin de la ligne.</p></div>
 <div class="paragraph"><p>Le résultat doit ressembler à:
 ```
 <a href="mailto:root@docker">root@docker</a>:~/DockerAbeille= docker build -t JeedomAbeille .
@@ -1136,14 +1143,19 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 <a href="mailto:root@docker">root@docker</a>:~/DockerAbeille= docker attach 52b658b7d8f8</p></div>
 <div class="paragraph"><p><a href="mailto:root@52b658b7d8f8">root@52b658b7d8f8</a>:/=</p></div>
 <div class="paragraph"><p>```
-Faites plusieur "enter" pour avoir le prompt.</p></div>
+TIP: Faites plusieurs "enter" pour avoir le prompt.</p></div>
 <div class="paragraph"><p>Maintenant que le docker fonctionne on va faire l installation de Jeedom et Abeille.</p></div>
-<div class="paragraph"><p>To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the [underline]=<strong>CTRL-p suivi de CTRL-q</strong>= key sequence.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the <span class="underline">CTRL-p suivi de CTRL-q</span> key sequence.</td>
+</tr></table>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_service_dans_le_docker">Service dans le docker</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_service_dans_le_docker">Service dans le docker</h4>
 <div class="paragraph"><p>Les services ne demarrent pas tout seuls dans le docker, il aurait probablement du le faire dans Dockfile.</p></div>
 <div class="paragraph"><p>Donc j&#8217;ajoute quelques lignes à /etc/rc.local pour Raspbian:</p></div>
 <div class="paragraph"><p>```
@@ -1166,6 +1178,8 @@ vi startDockers
 <div class="paragraph"><p>```
 =! /bin/sh
 = /etc/init.d/startDockers</p></div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_begin_init_info">BEGIN INIT INFO</h3>
 </div>
@@ -1251,11 +1265,8 @@ update-rc.d startDockers defaults
 ```
 dans le cron root.</p></div>
 <div class="paragraph"><p>Thanks to <a href="https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html">https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html</a></p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_installation_jeedom">Installation Jeedom</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_installation_jeedom">Installation Jeedom</h4>
 <div class="paragraph"><p>Dans le container precedent nous n&#8217;avons pas pris en compte les besoins réseaux et port série.
 Effaçons l&#8217;ancien container.
 ```
@@ -1358,10 +1369,8 @@ exit
 <div class="paragraph"><p>Aller dans la conf reseau et mettre l adresse du host dans les adresses http.</p></div>
 <div class="paragraph"><p>Maintenant on peut se connecter en admin/admin donc on peut effacer l utilisateur adminTmp.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_du_plugin_abeille_2">Installation du plugin Abeille</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_installation_du_plugin_abeille">Installation du plugin Abeille</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1415,20 +1424,16 @@ un petit getVersion et vous devriez avoir le champ SW et SDK qui se mettent à j
 &#8212; Me
 </div></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_backup_du_docker">Backup du Docker</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_backup_du_docker">Backup du Docker</h4>
 <div class="paragraph"><p>Plusieures solutions s&#8217;offrent à nous. Il est interessant de comprende ce qui se passe. Un bon article à lire: <a href="https://tuhrig.de/difference-between-save-and-export-in-docker/">https://tuhrig.de/difference-between-save-and-export-in-docker/</a></p></div>
 <div class="paragraph"><p>Toutes les operations suivantes se font depuis le host.</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commit_save_load">Commit / Save / Load</h2>
-<div class="sectionbody">
+<div class="sect4">
+<h5 id="_commit_save_load">Commit / Save / Load</h5>
 <div class="paragraph"><p>Permet de garder tout l&#8217;historique.</p></div>
-<div class="sect2">
-<h3 id="_commit">Commit</h3>
+</div>
+<div class="sect4">
+<h5 id="_commit">Commit</h5>
 <div class="paragraph"><p>Pour avoir les docker en fonctionnement :
 ```
 docker ps
@@ -1448,61 +1453,50 @@ docker commit -p JeedomAbeille JeedomAbeille_backup
 docker images
 ```</p></div>
 </div>
-<div class="sect2">
-<h3 id="_save">Save</h3>
+<div class="sect4">
+<h5 id="_save">Save</h5>
 <div class="paragraph"><p>```
 docker save -o <sub>/JeedomAbeille_backup.tar JeedomAbeille_backup
 ls -l </sub>/JeedomAbeille_backup.tar
 ```</p></div>
 <div class="paragraph"><p>soyez patient le tar fait 3G.</p></div>
 </div>
-<div class="sect2">
-<h3 id="_load">Load</h3>
+<div class="sect4">
+<h5 id="_load">Load</h5>
 <div class="paragraph"><p>If we have transferred our "container1.tar" backup file to another docker host system we first need to load backed up tar file into a docker&#8217;s local image repository:</p></div>
 <div class="paragraph"><p>```
 docker load -i /root/JeedomAbeille_backup.tar
 docker images
 ```</p></div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_export_import">Export / Import</h2>
-<div class="sectionbody">
+<div class="sect4">
+<h5 id="_export_import">Export / Import</h5>
 <div class="paragraph"><p>Garde que la derniere version.</p></div>
-<div class="sect2">
-<h3 id="_export">Export</h3>
+</div>
+<div class="sect4">
+<h5 id="_export">Export</h5>
 <div class="paragraph"><p>```
 docker ps -a
 docker export &lt;CONTAINER ID&gt; &gt; /home/export.tar
 ```</p></div>
 </div>
-<div class="sect2">
-<h3 id="_import">Import</h3>
+<div class="sect4">
+<h5 id="_import">Import</h5>
 <div class="paragraph"><p>```
 cat /home/export.tar | sudo docker import - NameYouWant:latest
 ```</p></div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_conclusion">Conclusion</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_conclusion">Conclusion</h4>
 <div class="paragraph"><p>Plus besoin d&#8217;aller chercher les cartes SD dans les differents RPI3 pour en faire de images. Tout va se faire à distance maintenant !!! YaaahhhOOOOUUU !!!!!</p></div>
 <div class="paragraph"><p>Vous pouvez effacer de vieilles images par:
 ```
 docker rmi JeedomAbeille_backup
 ```</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_docker_gui">Docker GUI</h2>
-<div class="sectionbody">
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sur_la_raspbian">Sur la raspbian</h2>
-<div class="sectionbody">
+<div class="sect4">
+<h5 id="_docker_gui">Docker GUI</h5>
+<div class="paragraph"><p>====== Sur la raspbian</p></div>
 <div class="paragraph"><p>Thanks to:
 * <a href="http://blog.hypriot.com/post/new-docker-ui-portainer/">http://blog.hypriot.com/post/new-docker-ui-portainer/</a>
 * <a href="https://portainer.readthedocs.io/en/latest/deployment.html">https://portainer.readthedocs.io/en/latest/deployment.html</a></p></div>
@@ -1513,11 +1507,7 @@ docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.
 <div class="paragraph"><p>Puis se logger sur <a href="http://IP_Host:9000">http://IP_Host:9000</a>
 Tout ne fonctionne pas mais c&#8217;est plus sympas que la ligne de commande.</p></div>
 <div class="paragraph"><p>Il semble que la version rpi par defaut est un peu ancienne et certaine feature comme volume ne sont pas dispo.</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sur_la_hypriot">Sur la hypriot</h2>
-<div class="sectionbody">
+<div class="paragraph"><p>====== Sur la hypriot</p></div>
 <div class="paragraph"><p><a href="https://hub.docker.com/r/hypriot/rpi-portainer/">https://hub.docker.com/r/hypriot/rpi-portainer/</a></p></div>
 <div class="paragraph"><p>```
 docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock hypriot/rpi-portainer
@@ -1526,74 +1516,59 @@ docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock hypriot/
 Tout fonctionne bien mieux que sur la version raspbian.</p></div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_plugins">Plugins</h2>
-<div class="sectionbody">
-</div>
-</div>
-<div class="sect1">
-<h2 id="_zwave">Zwave</h2>
-<div class="sectionbody">
+<div class="sect3">
+<h4 id="_plugins">Plugins</h4>
+<div class="sect4">
+<h5 id="_zwave">Zwave</h5>
 <div class="paragraph"><p>Sur ma machine Jeedomprorpi, le repertoire /tmp/Jeedom/openzwave n&#8217;a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/Jeedom/openzwave et tout est ok maintenant.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_homebridge">homebridge</h2>
-<div class="sectionbody">
+<div class="sect4">
+<h5 id="_homebridge">homebridge</h5>
 <div class="paragraph"><p>Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvlan et affecter une adresse spécifique.</p></div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_installation_sur_une_vm_ubuntu">Installation sur une VM Ubuntu</h2>
 <div class="sectionbody">
-</div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_l_8217_os">Installation de l&#8217;OS</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_l_8217_os">Installation de l&#8217;OS</h3>
 <div class="paragraph"><p>Fichier ISO: ubuntu-16.04.1-server-amd64.iso</p></div>
 <div class="paragraph"><p>Installation classique de l&#8217;OS (Je ne détaille pas car cela dépend de votre envirroement de virtualisation).</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_preparation_de_l_8217_os">Preparation de l&#8217;OS</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_preparation_de_l_8217_os">Preparation de l&#8217;OS</h3>
 <div class="paragraph"><p>login: (user créé pendant l install avec son password associé).</p></div>
-<div class="paragraph"><p>```
+<div class="paragraph"><p>````
 sudo su -</p></div>
 <div class="paragraph"><p>apt-get update
 apt-get upgrade
 apt-get autoremove
 ````</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_la_base_mysql">Installation de la base mysql</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_la_base_mysql">Installation de la base mysql</h3>
 <div class="paragraph"><p>installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)</p></div>
-<div class="paragraph"><p>````
+<div class="paragraph"><p>```
 apt-get install mysql-server
 apt-get install mysql-client
-````</p></div>
+```</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_jeedom">Installation de Jeedom</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>````
+<div class="sect2">
+<h3 id="_installation_de_jeedom">Installation de Jeedom</h3>
+<div class="paragraph"><p>```
 wget <a href="https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh">https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh</a>
 chmod +x install.sh
-````</p></div>
+```</p></div>
 <div class="paragraph"><p>Enlever le php7.0-ssh2 du fichier install.sh</p></div>
-<div class="paragraph"><p>````
+<div class="paragraph"><p>```
 ./install.sh -m motDePasse
-````</p></div>
+```</p></div>
 <div class="paragraph"><p>A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_du_plugin_abeille_3">Installation du Plugin Abeille</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_du_plugin_abeille_2">Installation du Plugin Abeille</h3>
 <div class="paragraph"><p>```
 ./install.sh -m motDePasse</p></div>
 <div class="paragraph"><p>cd /var/www/html/plugins/</p></div>
@@ -1602,29 +1577,23 @@ chmod +x install.sh
 chown -R www-data:www-data /var/www/html/plugins/Abeille
 ```</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_utilisation_de_jeedom">Utilisation de Jeedom</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_utilisation_de_jeedom">Utilisation de Jeedom</h3>
 <div class="paragraph"><p>Il ne vous reste plus qu'à vous connecter à Jeedom&#8230;</p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_installation_sur_une_machine_odroid_xu4_avec_ubuntu">Installation sur une machine Odroid XU4 avec Ubuntu</h2>
 <div class="sectionbody">
-</div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_l_8217_os_2">Installation de l&#8217;OS</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_l_8217_os_2">Installation de l&#8217;OS</h3>
 <div class="paragraph"><p>Fichier img: ubuntu-14.04lts-server-odroid-xu3-20150725.img
 que l on trouve sur le server odroid: <a href="https://odroid.in/ubuntu_14.04lts/">https://odroid.in/ubuntu_14.04lts/</a></p></div>
 <div class="paragraph"><p>Installation classique odroid de l&#8217;OS : <a href="https://wiki.odroid.com/odroid-xu4/odroid-xu4">https://wiki.odroid.com/odroid-xu4/odroid-xu4</a></p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_preparation_de_l_8217_os_2">Preparation de l&#8217;OS</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_preparation_de_l_8217_os_2">Preparation de l&#8217;OS</h3>
 <div class="paragraph"><p>login: (root/odroid).</p></div>
 <div class="paragraph"><p>```
 apt-get update
@@ -1632,20 +1601,16 @@ apt-get upgrade
 apt-get autoremove
 ```</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_la_base_mysql_2">Installation de la base mysql</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_la_base_mysql_2">Installation de la base mysql</h3>
 <div class="paragraph"><p>installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)</p></div>
 <div class="paragraph"><p>```
 apt-get install mysql-server
 apt-get install mysql-client
 ```</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_de_jeedom_2">Installation de Jeedom</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_jeedom_2">Installation de Jeedom</h3>
 <div class="paragraph"><p>```
 wget <a href="https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh">https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh</a>
 chmod +x install.sh
@@ -1656,10 +1621,8 @@ chmod +x install.sh
 ```</p></div>
 <div class="paragraph"><p>A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_installation_du_plugin_abeille_4">Installation du Plugin Abeille</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_du_plugin_abeille_3">Installation du Plugin Abeille</h3>
 <div class="paragraph"><p>```
 ./install.sh -m motDePasse</p></div>
 <div class="paragraph"><p>cd /var/www/html/plugins/</p></div>
@@ -1668,11 +1631,10 @@ chmod +x install.sh
 chown -R www-data:www-data /var/www/html/plugins/Abeille
 ```</p></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_utilisation_de_jeedom_2">Utilisation de Jeedom</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_utilisation_de_jeedom_2">Utilisation de Jeedom</h3>
 <div class="paragraph"><p>Il ne vous reste plus qu'à vous connecter à Jeedom&#8230;</p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1693,7 +1655,7 @@ chown -R www-data:www-data /var/www/html/plugins/Abeille
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:20:41 CET
+ 2019-03-13 01:02:07 CET
 </div>
 </div>
 </body>

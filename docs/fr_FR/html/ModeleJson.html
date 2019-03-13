@@ -736,6 +736,52 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
+<h2 id="_modele_et_fichier_json">Modele et Fichier JSON</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>(Cette partie doit être revue et mie a jour sur la base des dernieres evolutions)</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_des_objets">Configuration  des objets</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Losqu&#8217;un objet Zigbee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d'équipement. Chaque type d'équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les "lumi" qui se repetent).</p></div>
+<div class="paragraph"><p>Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s&#8217;allonger.</p></div>
+<div class="paragraph"><p>L&#8217;idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des informations: <a href="https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets">https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets</a>).</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interface_jeedom">Interface Jeedom</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Penons un exemple: Capteur de porte Xiaomi.</p></div>
+<div class="paragraph"><p>Dans Jeedom, il apparaîtra sous le widget:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Screen_Shot_2018_01_29_at_19_39_52.png" alt="../images/Screen_Shot_2018_01_29_at_19_39_52.png" />
+</span></p></div>
+<div class="paragraph"><p>Son nom est pour l&#8217;occasion "lumi.sensor_magnet.aq2". C&#8217;est à partir de là que tout le reste a été déduit, par exemple le symbole de porte,&#8230;</p></div>
+<div class="paragraph"><p>Si vous sélectionnez, l&#8217;objet vous arrivez dans la page suivante:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Screen_Shot_2018_01_29_at_19_40_30.png" alt="../images/Screen_Shot_2018_01_29_at_19_40_30.png" />
+</span></p></div>
+<div class="paragraph"><p>En sélectionnant "Configuration Avancée":</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Screen_Shot_2018_01_29_at_20_47_13.png" alt="../images/Screen_Shot_2018_01_29_at_20_47_13.png" />
+</span></p></div>
+<div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à l'équipement et vous en servir d&#8217;exemple pour définir les paramètres de configuration à mettre dans le fichier JSON.</p></div>
+<div class="paragraph"><p>Attention tous les paramètres ne sont pas encore pris en compte.</p></div>
+<div class="paragraph"><p>Puis si vous sélectionnez "Commandes", puis une commande spécifique à l&#8217;aide du symbole engrenage:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Screen_Shot_2018_01_29_at_19_42_20.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_20.png" />
+</span></p></div>
+<div class="paragraph"><p>Puis si vous sélectionnez une commande spécifique comme l'état:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="../images/Screen_Shot_2018_01_29_at_19_42_44.png" alt="../images/Screen_Shot_2018_01_29_at_19_42_44.png" />
+</span></p></div>
+<div class="paragraph"><p>Vous pouvez voir tous les paramètres associés à une commande et vous en servir d&#8217;exemple pour définir les paramatres de configuration à mettre dans le fichier JSON.</p></div>
+<div class="paragraph"><p>Si vous modifiez à l&#8217;aide de Jeedom la présentation de la commande cela vous permet de savoir ce qu&#8217;il faut mettre dans le fichier de conf.</p></div>
+<div class="paragraph"><p>Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c&#8217;est prévu.</p></div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_editer_json">Editer JSON</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>(Cette partie doit être mise à jour car les fichiers JSON ont beaucoup changés)</p></div>
@@ -916,7 +962,7 @@ Avec la liste des équipements vous avez la liste connue par Zigate dans sa base
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:18:03 CET
+ 2019-03-13 01:15:36 CET
 </div>
 </div>
 </body>

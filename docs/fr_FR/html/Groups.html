@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Groupes</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -535,6 +535,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -727,19 +761,19 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(2);
 /*]]>*/
 </script>
 </head>
 <body class="article">
 <div id="header">
+<h1>Groupes</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_groupes">Groupes</h2>
-<div class="sectionbody">
-</div>
-</div>
 <div class="sect1">
 <h2 id="_intro">Intro</h2>
 <div class="sectionbody">
@@ -761,8 +795,15 @@ Adresse Zigbee de groupe: Les adresses de groupes permettent de joindre un ensem
 <div class="paragraph"><p>Astuce: Ça peut aussi vous sortir d&#8217;une situation ou la couverture radio n&#8217;est pas bonne et ou vous avez du mal à joindre un équipement. Si vous l&#8217;adressez avec son adresse courte, le message doit être routé jusqu'à sa destination par une route spécifique. Si vous l&#8217;adressez avec une adresse de groupe, le message va être répété par tous les routeurs et vous augmentez la chance que l'équipement reçoive l&#8217;information.</p></div>
 <div class="paragraph"><p>Vous pouvez aussi utiliser un scénario dans Jeedom pour adresser un groupe d'équipements, en envoyant à chacun d&#8217;eux une commande. Cette solution ne permet pas d&#8217;avoir l&#8217;impression d&#8217;instantanéité mais est très flexible si vous avez des produit zwave et Zigbee par exemple.</p></div>
 <div class="paragraph"><p>Les groupes Zigbee sont nécessaires pour la gestion des scènes.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gestion_des_groupes">Gestion des groupes</h2>
+<div class="sectionbody">
 <div class="paragraph"><p>La gestion des groupes se fait de deux façons</p></div>
-<div class="paragraph"><p>Option A: Soit depuis la ruche avec 3 commandes (Version initiale pour leles developpeurs):</p></div>
+<div class="sect2">
+<h3 id="_option_a">Option A:</h3>
+<div class="paragraph"><p>Soit depuis la ruche avec 3 commandes (Version initiale pour leles developpeurs):</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -780,24 +821,45 @@ Consultation
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Option B: Soit en utilisant la page de configuration du plug in (pour tous les utilisateurs):</p></div>
+</div>
+<div class="sect2">
+<h3 id="_option_b">Option B:</h3>
+<div class="paragraph"><p>Soit en utilisant la page de configuration du plug in (pour tous les utilisateurs):</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2019_03_04_a_20_05_09.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_05_09.png" />
 </span></p></div>
-<div class="paragraph"><p>Je vous recommande grandement l l&#8217;option B.</p></div>
+<div class="paragraph"><p>Je vous recommande grandement l&#8217;option B.</p></div>
 <div class="paragraph"><p>A chaque que fois que vous faites un ajout ou retrait, faites une Consultation pour mettre à jour les objets Abeille.</p></div>
 <div class="paragraph"><p>Un équipement peut avoir plusieurs adresses de groupes, cela permet donc de répondre à plusieurs télécommandes par exemple.</p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_ajout_d_un_groupe_à_un_équipement">Ajout d un groupe à un équipement</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Option A:
-* Premier champ: adresse de l'équipement
-* Deuxième champ: End Point de l'équipement
-* Troisième champ: l&#8217;adresse de groupe a ajouter</p></div>
-<div class="paragraph"><p>Option B:
-Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones):</p></div>
+<div class="sect2">
+<h3 id="_option_a_2">Option A:</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Premier champ: adresse de l'équipement
+</p>
+</li>
+<li>
+<p>
+Deuxième champ: End Point de l'équipement
+</p>
+</li>
+<li>
+<p>
+Troisième champ: l&#8217;adresse de groupe a ajouter
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_option_b_2">Option B:</h3>
+<div class="paragraph"><p>Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones):</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="../images/Capture_d_ecran_2019_03_04_a_20_08_28.png" alt="../images/Capture_d_ecran_2019_03_04_a_20_08_28.png" />
 </span></p></div>
@@ -812,26 +874,59 @@ Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case
 </span></p></div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="_retrait_d_un_groupe_à_un_équipement">Retrait d un groupe à un équipement</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Option A:
-* Premier champ: adresse de l'équipement
-* Deuxième champ: End Point de l'équipement
-* Troisième champ: l&#8217;adresse de groupe a retirer</p></div>
-<div class="paragraph"><p>Option B:
-Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones), saisissez l&#8217;Id et utilisez les bouton "Remove Group".</p></div>
+<div class="sect2">
+<h3 id="_option_a_3">Option A:</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Premier champ: adresse de l'équipement
+</p>
+</li>
+<li>
+<p>
+Deuxième champ: End Point de l'équipement
+</p>
+</li>
+<li>
+<p>
+Troisième champ: l&#8217;adresse de groupe a retirer
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_option_b_3">Option B:</h3>
+<div class="paragraph"><p>Sélectionnez la ou les ampoules qui doivent faire partie du groupe (petite case au dessus à gauche des icones), saisissez l&#8217;Id et utilisez les bouton "Remove Group".</p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_récupérer_les_groupes_d_8217_un_équipement">Récupérer les groupes d&#8217;un équipement</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Option A:
-* Premier champ: adresse de l'équipement
-* Deuxième champ: End Point de l'équipement</p></div>
+<div class="sect2">
+<h3 id="_option_a_4">Option A:</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Premier champ: adresse de l'équipement
+</p>
+</li>
+<li>
+<p>
+Deuxième champ: End Point de l'équipement
+</p>
+</li>
+</ul></div>
 <div class="paragraph"><p>L&#8217;information groupe doit remonter dans le champ groupe de l'équipement (peut être invisible par défaut, le rendre visible).</p></div>
-<div class="paragraph"><p>Option B:
-Selectionnez l'équipement et utilisez le bouton"Get Group".</p></div>
+</div>
+<div class="sect2">
+<h3 id="_option_b_4">Option B:</h3>
+<div class="paragraph"><p>Selectionnez l'équipement et utilisez le bouton"Get Group".</p></div>
+</div>
 </div>
 </div>
 </div>
@@ -839,7 +934,7 @@ Selectionnez l'équipement et utilisez le bouton"Get Group".</p></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-12 21:10:18 CET
+ 2019-03-13 01:05:19 CET
 </div>
 </div>
 </body>

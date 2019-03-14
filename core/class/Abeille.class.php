@@ -426,11 +426,13 @@
 
             // $eqLogics = Abeille::byType('Abeille');
             $eqLogics = Abeille::byType('Abeille');
+            $i=0;
             foreach ($eqLogics as $eqLogic) {
                 // log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
                 if (strpos("_".$eqLogic->getConfiguration("icone"), "IkeaTradfriBulb") > 0) {
                     $topicArray = explode("/", $eqLogic->getLogicalId());
                     $addr = $topicArray[1];
+                    $i=$i+1;
                     // log::add('Abeille', 'debug', 'Short: '.$addr);
 
                     /*
@@ -454,36 +456,37 @@
                     log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
                     Abeille::publishMosquitto(
                         null,
-                        "CmdAbeille/Ruche/bindShort",
+                        "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)),
                         "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE,
                         '0'
                     );
-                    // sleep(5);
+
                     Abeille::publishMosquitto(
                         null,
-                        "CmdAbeille/Ruche/bindShort",
+                        "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)),
                         "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE,
                         '0'
                     );
-                    // sleep(5);
+             
                     Abeille::publishMosquitto(
                         null,
-                        "CmdAbeille/Ruche/setReport",
+                        "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)),
                         "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10",
                         '0'
                     );
-                    // sleep(5);
+          
                     Abeille::publishMosquitto(
                         null,
-                        "CmdAbeille/Ruche/setReport",
+                        "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)),
                         "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20",
                         '0'
                     );
-
-                    // sleep(5);
                 }
             }
-
+            if ( ($i*33) > (3600) ) {
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure." );
+            }
+            
             log::add(
                 'Abeille',
                 'debug',
@@ -522,6 +525,7 @@
 
             log::add('Abeille', 'debug', 'Ping NE with 220V to check Online status');
             $eqLogics = Abeille::byType('Abeille');
+            $i=0;
             foreach ($eqLogics as $eqLogic) {
                 if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
                     $topicArray = explode("/", $eqLogic->getLogicalId());
@@ -529,39 +533,46 @@
                     if (strlen($addr) == 4) {
                         // echo "Short: " . $topicArray[1];
                         log::add('Abeille', 'debug', 'Ping: '.$addr);
+                        $i=$i+1;
                         if ($eqLogic->getConfiguration("protocol") == "") {
-                            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
                         }
                         if ($eqLogic->getConfiguration("protocol") == "Hue") {
-                            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Hue", '0');
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue", '0');
                         }
                         if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
-                            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "OSRAM", '0');
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM", '0');
                         }
                         if ($eqLogic->getConfiguration("protocol") == "Profalux") {
-                            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "AnnonceProfalux", '0');
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux", '0');
                         }
                         if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
-                            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
                         }
-
-                        // sleep(5);
                     }
                 }
             }
+            if ( ($i*23) > (60*15) ) {
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas A." );
+            }
             
             // Rafraichie l etat poll = 15
+            $i=0;
             log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
             foreach ($eqLogics as $eqLogic) {
                 $address = explode("/", $eqLogic->getLogicalId())[1];
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "15") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
-                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
-                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+                        $i=$i+1;
+                        Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
+                        Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
                     }
                     
                 }
+            }
+            if ( ($i*13) > (60*15) ) {
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B." );
             }
             
             log::add(
@@ -585,8 +596,8 @@
             // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
             $parameters_info = self::getParameters();
             if ($parameters_info['onlyTimer'] == 'N') {
-                Abeille::publishMosquitto(null, "CmdAbeille/Ruche/getVersion", "Version", '0');
-                Abeille::publishMosquitto(null, "CmdAbeille/Ruche/getNetworkStatus", "getNetworkStatus", '0');
+                Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version",          '0');
+                Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus", '0');
             } else {
                 Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode", '0');
                 Abeille::publishMosquitto(null, "Abeille/Ruche/Time-TimeStamp", time(), '0');         // TimeStamp
@@ -600,16 +611,20 @@
             
             // Rafraichie l etat poll = 1
             log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            $i = 0;
             foreach ($eqLogics as $eqLogic) {
                 $address = explode("/", $eqLogic->getLogicalId())[1];
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
-                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
-                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+                        $i=$i+1;
+                        Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
+                        Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
                     }
-                    
                 }
+            }
+            if ( ($i*3) > 60 ) {
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 minute." );
             }
             
             /**

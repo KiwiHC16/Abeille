@@ -133,7 +133,7 @@
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
             // log::remove('updateConfigAbeille');
             // log::add('Abeille_test', 'info', 'updateConfigAbeille Start');
-            $fp = fopen('/var/www/html/log/Abeille_updateConfig', 'w');
+            $fp = fopen(log::getPathToLog('Abeille_updateConfig'), 'w');
             fwrite($fp, "Starting updateConfigAbeille\n");
             if (isset($abeilleId)) {
                 fwrite($fp, "Device Id: ".$abeilleId."\n");
@@ -260,7 +260,7 @@
                     // eqReal_id
                     // isVisible
                     // isEnable
-                    
+
                     // configuration
                     // topic
                     // type
@@ -984,27 +984,27 @@
                 $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log1 = " > /var/www/html/log/".substr($deamon1, 0, (strrpos($deamon1, ".")));
+                $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
 
                 $deamon2 = "AbeilleParser.php";
                 $paramdeamon2 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                     ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log2 = " > /var/www/html/log/".substr($deamon2, 0, (strrpos($deamon2, ".")));
+                $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
 
                 $deamon3 = "AbeilleMQTTCmd.php";
                 $paramdeamon3 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                     ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log3 = " > /var/www/html/log/".substr($deamon3, 0, (strrpos($deamon3, ".")));
+                $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
 
                 $deamon5 = "AbeilleSocat.php";
                 $paramdeamon5 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     ).' '.$parameters_info['IpWifiZigate'];
-                $log5 = " > /var/www/html/log/".substr($deamon5, 0, (strrpos($deamon5, ".")));
+                $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
 
 
                 $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
@@ -1034,7 +1034,7 @@
                 ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                     log::getLogLevel('Abeille')
                 );
-            $log4 = " > /var/www/html/log/".substr($deamon4, 0, (strrpos($deamon4, ".")));
+            $log4 = " > ".log::getPathToLog(substr($deamon4, 0, (strrpos($deamon4, "."))));
 
             $cmd = $nohup." ".$php." ".$dirdeamon.$deamon4." ".$paramdeamon4.$log4;
             log::add('Abeille', 'debug', 'Start deamon Timer: '.$cmd);

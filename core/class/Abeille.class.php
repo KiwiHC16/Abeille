@@ -135,7 +135,7 @@
             // log::add('Abeille_test', 'info', 'updateConfigAbeille Start');
             $fp = fopen('/var/www/html/log/Abeille_updateConfig', 'w');
             fwrite($fp, "Starting updateConfigAbeille\n");
-            if ($abeilleId) {
+            if (isset($abeilleId)) {
                 fwrite($fp, "Device Id: ".$abeilleId."\n");
             }
             
@@ -438,6 +438,7 @@
                      log::add('Abeille', 'debug', 'IEEE: '.$addrIEEE);
                      */
 
+                    $abeille = new Abeille();
                     $abeille = new Abeille();
                     $commandIEEE = new AbeilleCmd();
 

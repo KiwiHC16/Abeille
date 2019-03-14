@@ -588,7 +588,7 @@
                 $address = explode("/", $eqLogic->getLogicalId())[1];
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
-                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
+                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
                         Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
                         Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
                     }

@@ -68,6 +68,10 @@ Le réseau est constitué de nombreux équipements qui vivent au rythme et aléa
 
 Certains équipements communiquent naturellement et échangent des messages avec la Zigate, ce qui nous permet de s'assurer qu'ils sont en vie. D'autres restent silencieux et nous devons les interroger pour savoir s'ils sont toujours dans le réseau ou simplement connaitre leur état. Abeille contient une fonction de link:Polling.html[Polling] interrogeant régulièrement les équipements.
 
+=== Cron
+
+Abeille de façon régulière fait link:cron.html[un certain nombre de taches] pour maintenir/monitorer le système.
+
 === Radio
 
 Le ZigBee fonctionne en link:Radio.html[Radio]. La link:Radio.html[radio] est sujette à divers problemes. Même si la norme Zigbee inclus plein de fonction pour nous faciliter la vie, il arrive que cela ne fonctionne pas aussi bien qu'attendu. Pour avoir une meilleur comprehension de ce qui se passe, Abeille inclus des informations, graphes representant les informations link:Radio.html[radio] récupérées par les équipements.

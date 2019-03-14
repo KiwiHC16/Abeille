@@ -25,6 +25,8 @@ Actuellement il existe 4 statuts:
 - un carré orange, l'équipement n'a pas de time out défini et le dernier message est plus vieux que 24h et moins que 7 jours (Il faut que je vérifie les timing)
 - un carré rouge, soit le capteur à un time out et le dernier message est plus vieux que ce time out, soit il n'a pas de time out et le dernier message est plus que 7 jours.
 
+Si l'équipement n'a pas de TimeOut defini ou est null alors il ne tombera pas en time out.
+
 === Alerte
 
 Alerte sur communications
@@ -76,7 +78,8 @@ par exemple ici, une alarme est envoyée sur mon tél.
 
 === Script / Widget
 
-TIP: Dans les premieres version d'abeille les timeout n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n'est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.
+[TIP]
+Dans les premieres version d'abeille les timeout n'étaient pas implémentés alors ce script permettait d avoir des alarmes. Il n'est plus nécessaire mais je le garde car il peut servir dans des cas spécifiques avec des petites modifications.
 
 Vous aurez un widget comme celui ci:
 

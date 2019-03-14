@@ -30,10 +30,24 @@
     }
     
     function equipementAdoc( $resultIcone, $resultRaw, $result) {
-    // asciidoc version
-    echo '[cols="a"]'."\n";
+    echo '= Compatibility'."\n";
+    echo 'KiwiHC16'."\n";
+    echo ':toc2:'."\n";
+    echo ':toclevels: 4'."\n";
+    echo ':toc-title: Table des matières'."\n";
+    echo ':imagesdir: ../../images'."\n";
+    echo ':iconsdir: ../images/icons'."\n";
+    echo "\n";
+    echo '== Home'."\n";
+    echo ''."\n";
+    echo 'Retour au link:index.html[document principal].'."\n";
+    echo ''."\n";
+    echo '== Liste'."\n";
+    echo ''."\n";
+        
+    echo '[cols="<,^"]'."\n";
     echo "|======="."\n";;
-    foreach ( $resultIcone as $values ) echo '|'.$values['name'].'|image::../images/node_'.$values['icone'].'.png[200,200]'."\n";
+    foreach ( $resultIcone as $values ) echo '| '.$values['name'].'| image:node_'.$values['icone'].'.png[height=200,width=200]'."\n";
     echo "|======="."\n";;
     }
     

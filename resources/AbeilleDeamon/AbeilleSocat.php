@@ -11,10 +11,11 @@
 
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    require_once dirname(__FILE__).('/lib/Tools.php');
 
     include("includes/config.php");
     include("includes/fifo.php");
-    include("lib/Tools.php");
+
 
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlog($loglevel,'AbeilleSocat',$message);

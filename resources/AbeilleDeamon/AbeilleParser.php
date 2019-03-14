@@ -12,7 +12,7 @@
 
     require_once dirname(__FILE__)."/../../../../core/php/core.inc.php";
     require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
-    require_once("lib/Tools.php");
+    require_once dirname(__FILE__).("/lib/Tools.php");
     require_once("includes/config.php");
     require_once("includes/fifo.php");
 

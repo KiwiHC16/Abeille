@@ -133,9 +133,9 @@
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
             // log::remove('updateConfigAbeille');
             // log::add('Abeille_test', 'info', 'updateConfigAbeille Start');
-            $fp = fopen('/var/www/html/log/Abeille_updateConfig', 'w');
+            $fp = fopen(log::getPathToLog('Abeille_updateConfig'), 'w');
             fwrite($fp, "Starting updateConfigAbeille\n");
-            if ($abeilleId) {
+            if (isset($abeilleId)) {
                 fwrite($fp, "Device Id: ".$abeilleId."\n");
             }
             
@@ -260,7 +260,7 @@
                     // eqReal_id
                     // isVisible
                     // isEnable
-                    
+
                     // configuration
                     // topic
                     // type
@@ -398,7 +398,8 @@
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
              */
             log::add('Abeille', 'debug', 'Launching AbeilleLQI.php');
-            $cmd = "cd /var/www/html/plugins/Abeille/Network/; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
+            $DOMROOT=(null!=NEXTDOM_ROOT)?NEXTDOM_ROOT:JEEDOM_ROOT;
+            $cmd = "cd $DOMROOT/plugins/Abeille/Network/; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
             log::add('Abeille', 'debug', $cmd);
             exec($cmd);
         }
@@ -438,6 +439,7 @@
                      log::add('Abeille', 'debug', 'IEEE: '.$addrIEEE);
                      */
 
+                    $abeille = new Abeille();
                     $abeille = new Abeille();
                     $commandIEEE = new AbeilleCmd();
 
@@ -602,7 +604,7 @@
                 $address = explode("/", $eqLogic->getLogicalId())[1];
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
-                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
+                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
                         Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
                         Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
                     }
@@ -998,27 +1000,27 @@
                 $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log1 = " > /var/www/html/log/".substr($deamon1, 0, (strrpos($deamon1, ".")));
+                $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
 
                 $deamon2 = "AbeilleParser.php";
                 $paramdeamon2 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                     ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log2 = " > /var/www/html/log/".substr($deamon2, 0, (strrpos($deamon2, ".")));
+                $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
 
                 $deamon3 = "AbeilleMQTTCmd.php";
                 $paramdeamon3 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
                     ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     );
-                $log3 = " > /var/www/html/log/".substr($deamon3, 0, (strrpos($deamon3, ".")));
+                $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
 
                 $deamon5 = "AbeilleSocat.php";
                 $paramdeamon5 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(
                         log::getLogLevel('Abeille')
                     ).' '.$parameters_info['IpWifiZigate'];
-                $log5 = " > /var/www/html/log/".substr($deamon5, 0, (strrpos($deamon5, ".")));
+                $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
 
 
                 $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
@@ -1048,7 +1050,7 @@
                 ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
                     log::getLogLevel('Abeille')
                 );
-            $log4 = " > /var/www/html/log/".substr($deamon4, 0, (strrpos($deamon4, ".")));
+            $log4 = " > ".log::getPathToLog(substr($deamon4, 0, (strrpos($deamon4, "."))));
 
             $cmd = $nohup." ".$php." ".$dirdeamon.$deamon4." ".$paramdeamon4.$log4;
             log::add('Abeille', 'debug', 'Start deamon Timer: '.$cmd);
@@ -1999,13 +2001,13 @@
                 
                 // Je rejete les valeur null (arrive avec les equipement xiaomi qui envoie leur nom spontanement alors que l IEEE n est pas recue.
                 if (strlen($value)<2) {
-                    log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": ".$IEEE." =>".$value."<=" );
+                    log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
                     return;
                 }
                 
                 // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
                 if ($value == "ffffffffffffffff") {
-                    log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": ".$IEEE." =>".$value."<=" );
+                    log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
                     return;
                 }
                 

@@ -1,6 +1,7 @@
 {
   "RWL021": {
     "nameJeedom": "Hue Telecommande RWL021",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

@@ -1,6 +1,7 @@
 {
   "ctrl_86plug.aq1": {
     "nameJeedom": "Xiaomi Prise Murale Encastrée",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },

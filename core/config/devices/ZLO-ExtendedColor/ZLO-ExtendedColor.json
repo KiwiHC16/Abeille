@@ -1,11 +1,12 @@
 {
   "ZLO-ExtendedColor": {
     "nameJeedom": "ZLO-ExtendedColor Test for Dev",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662590d",
+      "uniqId": "5c07c7662590d",
       "icone": "ZLO-ExtendedColor",
       "mainEP": "#EP#"
     },

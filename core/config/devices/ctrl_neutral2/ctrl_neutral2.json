@@ -1,11 +1,12 @@
 {
   "ctrl_neutral2": {
     "nameJeedom": "Xiaomi Wall Switch w/o Neutral 2",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625cbd",
+      "uniqId": "5c07c76625cbd",
       "icone": "ctrl_neutral2",
       "mainEP": "#EP#"
     },

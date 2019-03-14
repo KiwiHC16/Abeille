@@ -547,6 +547,21 @@
                     }
                 }
             }
+            
+            // Rafraichie l etat poll = 15
+            log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            foreach ($eqLogics as $eqLogic) {
+                $address = explode("/", $eqLogic->getLogicalId())[1];
+                if (strlen($address) == 4) {
+                    if ($eqLogic->getConfiguration("poll") == "15") {
+                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
+                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
+                        Abeille::publishMosquitto(null, "CmdAbeille/".$address."/ReadAttributeRequest", "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+                    }
+                    
+                }
+            }
+            
             log::add(
                 'Abeille',
                 'debug',

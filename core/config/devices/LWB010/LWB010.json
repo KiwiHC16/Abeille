@@ -1,6 +1,7 @@
 {
   "LWB010": {
     "nameJeedom": "Hue white beta LWB010",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

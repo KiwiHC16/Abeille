@@ -1,11 +1,12 @@
 {
   "plug": {
     "nameJeedom": "Xiaomi Prise",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625d94",
+      "uniqId": "5c07c76625d94",
       "icone": "XiaomiPrise",
       "mainEP": "#EP#"
     },

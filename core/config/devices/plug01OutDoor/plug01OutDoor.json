@@ -1,6 +1,7 @@
 {
   "plug01OutDoor": {
     "nameJeedom": "OSRAM Prise Lightify OutDoor",
+    "timeout": "60",
     "comment": "dummy version to be able to have the OutDoor version icone as plug 01",
     "Categorie": {
       "automatism": "1"

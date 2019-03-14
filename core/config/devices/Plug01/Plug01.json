@@ -1,6 +1,7 @@
 {
   "Plug01": {
     "nameJeedom": "OSRAM Prise Lightify",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },

@@ -1,11 +1,12 @@
 {
   "ZLO-DimmableLight": {
     "nameJeedom": "ZLO-DimmableLight",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625872",
+      "uniqId": "5c07c76625872",
       "icone": "ZLO-DimmableLight",
       "mainEP": "#EP#"
     },

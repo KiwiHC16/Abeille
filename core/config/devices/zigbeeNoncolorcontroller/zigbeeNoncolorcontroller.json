@@ -1,6 +1,7 @@
 {
   "zigbeeNoncolorcontroller": {
     "nameJeedom": "zigbee Non color controller",
+    "timeout": "60",
     "Categorie": {
       "light": "1"
     },

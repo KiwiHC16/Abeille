@@ -2,6 +2,7 @@
   "ctrl_neutral1": {
     "nameJeedom": "Xiaomi Wall Switch w/o Neutral 1",
     "Comment": "Reference: QBKG04LM",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },

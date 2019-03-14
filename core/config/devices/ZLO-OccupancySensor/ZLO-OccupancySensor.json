@@ -1,11 +1,12 @@
 {
   "ZLO-OccupancySensor": {
     "nameJeedom": "ZLO-OccupancySensor for Dev",
+    "timeout": "60",
     "Categorie": {
       "security": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76625b0a",
+      "uniqId": "5c07c76625b0a",
       "icone": "ZLO-OccupancySensor",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"

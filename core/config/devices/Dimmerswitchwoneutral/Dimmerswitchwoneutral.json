@@ -1,11 +1,12 @@
 {
   "Dimmerswitchwoneutral": {
     "nameJeedom": "Legrand Dimmer Switch w/o neutral",
+    "timeout": "60",
     "Categorie": {
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662071f",
+      "uniqId": "5c07c7662071f",
       "icone": "Dimmerswitchwoneutral",
       "mainEP": "#EP#"
     },

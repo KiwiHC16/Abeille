@@ -48,7 +48,7 @@
             // deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - 0: '.$mqttMessage[0] );
             if ($mqttMessage[0]<$now) {
                 $client->publish( $mqttMessage[1], $mqttMessage[2], $qos);
-                deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.json_encode($GLOBALS["mqttMessageQueue"][$key]) );
+                deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($GLOBALS["mqttMessageQueue"][$key]) );
                 unset($GLOBALS["mqttMessageQueue"][$key]);
                 deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - Rest: '.json_encode($GLOBALS["mqttMessageQueue"]) );
             }

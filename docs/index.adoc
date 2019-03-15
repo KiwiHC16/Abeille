@@ -1,0 +1,14 @@
+= Manuel de l utilisateur / User Guide
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+Bienvenue,
+
+Vous trouverez dans ces pages web la derniere version de la documentation Abeille (plugin pour Jeedom).
+
+link:fr_FR_html/index.html[Version Francaise.]
+

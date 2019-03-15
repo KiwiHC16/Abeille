@@ -52,6 +52,12 @@ Philips Hue Go
 
 Philips Hue Dimmer Switch (Télécommande)
 
+- Elle permet de faire une reset touchlink d'une ampoule Ikea
+- elle peut fonctionner seule avec une ampoule (TouchLink): On/Off/+/-
+- elle peut s'inclure dans le réseau zigate
+* Abeille peut la configurer pour qu'elle envoie l'information du bouton appuyé. Abeille peut utiliser cette info dans un scénario par exemple.
+* Je ne sais pas comment faire en sorte qu'elle commande une ampoule en direct
+
 === Nouvelle inclusion
 * Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...
 

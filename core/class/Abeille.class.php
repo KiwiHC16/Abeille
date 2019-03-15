@@ -534,20 +534,27 @@
                         // echo "Short: " . $topicArray[1];
                         log::add('Abeille', 'debug', 'Ping: '.$addr);
                         $i=$i+1;
-                        if ($eqLogic->getConfiguration("protocol") == "") {
+                        // Ca devrait être le fonctionnement normal
+                        if (strlen($eqLogic->getConfiguration("defaultEP"))>1) {
                             Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
                         }
-                        if ($eqLogic->getConfiguration("protocol") == "Hue") {
-                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue", '0');
-                        }
-                        if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
-                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM", '0');
-                        }
-                        if ($eqLogic->getConfiguration("protocol") == "Profalux") {
-                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux", '0');
-                        }
-                        if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
-                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
+                        // Cette partie devrait disparaitre, elle existe depuis le debut car je ne comprenais pas bien le fonctionnement
+                        else {
+                            if ($eqLogic->getConfiguration("protocol") == "") {
+                                Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
+                            }
+                            if ($eqLogic->getConfiguration("protocol") == "Hue") {
+                                Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue", '0');
+                            }
+                            if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
+                                Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM", '0');
+                            }
+                            if ($eqLogic->getConfiguration("protocol") == "Profalux") {
+                                Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux", '0');
+                            }
+                            if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
+                                Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
+                            }
                         }
                     }
                 }

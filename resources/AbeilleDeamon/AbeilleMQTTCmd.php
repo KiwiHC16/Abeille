@@ -102,35 +102,47 @@
                     break;
                     //----------------------------------------------------------------------------
                 case "Annonce":
-                    if ($msg == "Default") {
-                        deamonlog('info', 'Preparation de la commande annonce pour default');
+                    if ( strlen($msg) == 2 ) {
+                        deamonlog('info', 'Preparation de la commande annonce pour EP');
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
                                          "address" => $address,
                                          "clusterId" => "0000",
                                          "attributeId" => "0005",
-                                         "EP"=>"01",
+                                         "EP"=>$msg,
                                          );
                     }
-                    if ($msg == "Hue") {
-                        deamonlog('info', 'Preparation de la commande annonce pour Hue');
-                        $Command = array(
-                                         "ReadAttributeRequestHue" => "1",
-                                         "address" => $address,
-                                         "clusterId" => "0000",
-                                         "attributeId" => "0005",
-                                         "EP"=>"0B",
-                                         );
-                    }
-                    if ($msg == "OSRAM") {
-                        deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
-                        $Command = array(
-                                         "ReadAttributeRequestOSRAM" => "1",
-                                         "address" => $address,
-                                         "clusterId" => "0000",
-                                         "attributeId" => "0005",
-                                         "EP"=>"03",
-                                         );
+                    else {
+                        if ($msg == "Default") {
+                            deamonlog('info', 'Preparation de la commande annonce pour default');
+                            $Command = array(
+                                             "ReadAttributeRequest" => "1",
+                                             "address" => $address,
+                                             "clusterId" => "0000",
+                                             "attributeId" => "0005",
+                                             "EP"=>"01",
+                                             );
+                        }
+                        if ($msg == "Hue") {
+                            deamonlog('info', 'Preparation de la commande annonce pour Hue');
+                            $Command = array(
+                                             "ReadAttributeRequestHue" => "1",
+                                             "address" => $address,
+                                             "clusterId" => "0000",
+                                             "attributeId" => "0005",
+                                             "EP"=>"0B",
+                                             );
+                        }
+                        if ($msg == "OSRAM") {
+                            deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
+                            $Command = array(
+                                             "ReadAttributeRequestOSRAM" => "1",
+                                             "address" => $address,
+                                             "clusterId" => "0000",
+                                             "attributeId" => "0005",
+                                             "EP"=>"03",
+                                             );
+                        }
                     }
                     break;
                     //----------------------------------------------------------------------------

@@ -707,7 +707,7 @@
                 }
             }
             //deps ok ?
-            $dependancy_info = self::dependancy_info();
+            $dependancy_info = self::getDependencyInfo();
             if ($dependancy_info['state'] == 'ok') {
                 if ($debug_deamon_info) {
                     log::add('Abeille', 'debug', 'deamon_info: les dependances sont Ok');
@@ -1122,12 +1122,13 @@
             message::removeAll('Abeille', 'stopDeamon');
         }
 
-        public static function dependancy_info()
+        public static function getDependencyInfo()
         {
             $debug_dependancy_info = 0;
 
             $return = array();
             $return['state'] = 'nok';
+            $return['launchable'] = 'nok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependance';
             $cmd = "dpkg -l | grep mosquitto";
             exec($cmd, $output_dpkg, $return_var);
@@ -1139,6 +1140,7 @@
 
             if ($output_dpkg[0] != "" && $libphp) {
                 //$return['configuration'] = 'ok';
+                $return['launchable'] = 'ok';
                 $return['state'] = 'ok';
             } else {
                 if ($output_dpkg[0] == "") {

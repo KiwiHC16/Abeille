@@ -18,6 +18,17 @@ En tant qu'utilisateur final, le chapitre link:Tuto.html[tuto] vous sera probabl
 [NOTE]
 [red]#Cette documentation est la derniere version disponible. Elle ne dépend pas de la verion Abeille sur votre système. Cette doc peut d'écrire des fonctionalité pas encore disponibles dans votre système. Et inversement cette doc peut ne pas être à jour si des fonctions sont dans Abeille mais je n'ai pas fait la  doc.#
 
+== Cagnotte
+
+Cagnotte pour acheter des équipements pour supporter le développement
+
+image:Cagnote.png[] link:https://paypal.me/KiwiHC16[]
+
+Le budget depuis le début est assez conséquent, surtout quand j'investis dans des équipements que je n'utiliserai pas moi même.
+Alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille.
+L'idée est d'avoir au moins un exemplaire de ce que les utilisateur d'Abeille utilisent.
+Je n'ai aucune idée de votre participation à cette cagnotte mais comme tout est open source depuis le début, la cagnotte sera aussi complètement transparente link:https://github.com/KiwiHC16/Abeille/blob/master/README.md[(Tous les détails)].
+
 == Abeille
 
 Le chapitre link:presentation.html[Présentation] contient les premières informations nécessaires à l'utilisation du plugin Abeille.

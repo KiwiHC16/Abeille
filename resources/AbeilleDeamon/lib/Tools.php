@@ -208,7 +208,7 @@ class Tools
         $deviceDir = dirname(__FILE__) . '/../../../core/config/devices/';
         echo 'ddir: ' . $deviceDir;
         if ($dh = opendir($deviceDir)) {
-            while (($file = readdir($dh)) !== false) {
+            while ((($file = readdir($dh)) !== false) && (pathinfo($file,PATHINFO_EXTENSION)=="json")) {
 
                 try {
                     $content = file_get_contents($deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json');

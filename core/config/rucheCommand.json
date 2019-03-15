@@ -789,5 +789,15 @@
       "uniqId": "5c07c88621b88",
       "visibilityCategory": "Network"
     }
+  },
+  "Zigate-8702": {
+    "name": "APS Data Confirm Fail",
+    "order": 55,
+    "isHistorized": "1",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
   }
 }

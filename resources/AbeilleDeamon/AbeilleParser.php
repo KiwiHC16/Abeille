@@ -2310,13 +2310,23 @@
 
     function decode8702($mqtt, $payload, $ln, $qos)
     {
-        deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)(Decoded but Not Processed)'
+        deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
                   . '; Status : '.substr($payload, 0, 2)
                   . '; Source Endpoint : '.substr($payload, 2, 2)
                   . '; Destination Endpoint : '.substr($payload, 4, 2)
                   . '; Destination Mode : '.substr($payload, 6, 2)
                   . '; Destination Address : '.substr($payload, 8, 4)
                   . '; SQN: : '.substr($payload, 12, 2)   );
+        
+        // type; 8702; (APS Data Confirm Fail)(Decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
+        
+        // On envoie un message MQTT vers la ruche pour le processer dans Abeille
+        $SrcAddr    = "Ruche";
+        $ClusterId  = "Zigate";
+        $AttributId = "8702";
+        $data       = substr($payload, 8, 4);
+        
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
 
     // ***********************************************************************************************

@@ -10,5 +10,5 @@ Bienvenue,
 
 Vous trouverez dans ces pages web la derniere version de la documentation Abeille (plugin pour Jeedom).
 
-link:fr_FR_html/index.html[Version Francaise.]
+link:fr_FR/index.html[Version Francaise.]
 

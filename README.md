@@ -17,8 +17,8 @@ Recettes:
 
 Dépense: 
 
-* Capteur Motion Hue Indoor - 39,95€ - inclusion en cours, peut être testé depuis le master
-* Capteur Motion Hue Outdoor - 49,99€ - livraison en cours
+* Capteur Motion Hue Indoor - 39,95€ - Dans la version stable du 16/3/2019
+* Capteur Motion Hue Outdoor - 49,99€ - Sur mon bureau
 
 Reste:
 

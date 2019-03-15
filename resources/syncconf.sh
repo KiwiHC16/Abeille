@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo "Lancement du téléchargement des configurations"
 
 cd /var/www/html/plugins/Abeille/core/config/

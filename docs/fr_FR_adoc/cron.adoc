@@ -34,9 +34,13 @@ Le driver pl2303 sur les RPI qui controle le module TTL-USB n'est pas super stab
 
 Tous les équipements qui ont un champ "battery_type" vide vont recevoir un message auquel ils doivent répondre pour vérifier qui sont bien en vie.
 
+[[Poll15]]
 === Poll
 
-Les équipments qui ont une variable poll dans leur configuration à 15, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu'ils sont en vie.
+Les équipments qui ont une variable poll dans leur configuration à *_15_*, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu'ils sont en vie.
+
+Pour vérifier la valeur, dans ce cas c'est 1 par exemple.
+image:Capture_d_ecran_2019_03_15_a_11_46_00.png[width=900]
 
 == Minutes
 
@@ -44,9 +48,13 @@ Les équipments qui ont une variable poll dans leur configuration à 15, vont re
 
 Ping (getVersion) de la zigate pour être sûr qu'elle est présente et fonctionne.
 
+[[Poll1]]
 === Poll
 
-Les équipments qui ont une variable poll dans leur configuration à 1, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu'ils sont en vie.
+Les équipments qui ont une variable poll dans leur configuration à *_1_*, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu'ils sont en vie.
+
+Pour vérifier la valeur, dans ce cas c'est 1.
+image:Capture_d_ecran_2019_03_15_a_11_46_00.png[width=900]
 
 === Health
 

@@ -33,12 +33,18 @@
 <legend><i class="fa fa-list-alt"></i> {{Documentation}}</legend>
 
     <div align="center">
-        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/html/changelog.html" target="_blank">{{ChangeLog}}</a>
+        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/changelog.html" target="_blank">{{ChangeLog (Locale)}}</a>
+        <a class="btn btn-success" href="https://kiwihc16.github.io/Abeille/fr_FR/changelog.html" target="_blank">{{ChangeLog (Derniere)}}</a>
     </div>
     </br>
     <div align="center">
-        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/html/index.html" target="_blank">{{Manuel utilisateur}}</a>
+        <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/index.html" target="_blank">{{Manuel utilisateur (Locale)}}</a>
+        <a class="btn btn-success" href="https://kiwihc16.github.io/Abeille/fr_FR/index.html" target="_blank">{{Manuel utilisateur (Derniere)}}</a>
     </div>
+    <p><i>
+    (Locale) => Version Locale, sur votre système, associée à la verison Abeille de votre systeme<br>
+    (Derniere) => Derniere Version de la documentation disponible sur le net
+    </i></p>
 
 
 

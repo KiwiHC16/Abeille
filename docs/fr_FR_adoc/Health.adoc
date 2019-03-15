@@ -27,6 +27,7 @@ Actuellement il existe 4 statuts:
 
 Si l'équipement n'a pas de TimeOut defini ou est null alors il ne tombera pas en time out.
 
+[[Alerte]]
 === Alerte
 
 Alerte sur communications
@@ -52,6 +53,10 @@ Pour cela il faut aussi avoir sélectionné le champ "Ajouter un message à chaq
 Vous pouvez aussi ajouter une action dans le champ "Commande sur Timeout".
 
 La vérification est faite par le core de Jeedom toutes les 5 minutes.
+
+Le TimeOt peut être vérifié dans l'équipement:
+image:Capture_d_ecran_2019_03_15_a_11_46_00.png[width=900]
+
 
 === Batterie
 

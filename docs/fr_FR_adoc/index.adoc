@@ -15,6 +15,9 @@ En tant qu'utilisateur final, le chapitre link:Tuto.html[tuto] vous sera probabl
 [NOTE]
 [red]#Plugin en développement continu. Le développement n'est pas terminé. De nombreux ajustements sont en cours ...#
 
+[NOTE]
+[red]#Cette documentation est la derniere version disponible. Elle ne dépend pas de la verion Abeille sur votre système. Cette doc peut d'écrire des fonctionalité pas encore disponibles dans votre système. Et inversement cette doc peut ne pas être à jour si des fonctions sont dans Abeille mais je n'ai pas fait la  doc.#
+
 == Abeille
 
 Le chapitre link:presentation.html[Présentation] contient les premières informations nécessaires à l'utilisation du plugin Abeille.

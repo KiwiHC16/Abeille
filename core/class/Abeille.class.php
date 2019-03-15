@@ -937,7 +937,7 @@
             //
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Fin des modifications si nécessaire');
 
-            if (restartNeeded == 1) {
+            if ($restartNeeded == 1) {
                 // afficher un message utilisateur pour qu il reboot le bousain.
                 message::add(
                     "Abeille",
@@ -957,7 +957,7 @@
             $parameters_info = self::getParameters();
 
             //no need as it seems to be on cron
-            $deamon_info = self::deamon_info();
+            $deamon_info = self::getDependencyInfo();
             if ($deamon_info['launchable'] != 'ok') {
                 message::add("Abeille", "Vérifier la configuration, un parametre manque");
                 throw new Exception(__('Veuillez vérifier la configuration', __FILE__));

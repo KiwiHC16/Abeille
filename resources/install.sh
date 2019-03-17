@@ -147,7 +147,8 @@ echo "Avancement: 8% -----------------------------------------------------------
 echo
 
 # Test sur l archi mais en fait on fait la meme chose, je garde le test si on devait en avoir besoin.
-addMosquittoRepo `lscpu | grep Architecture | awk '{ print $2 }'` `lsb_release -i -s` `lsb_release -c -s`
+# normalement c est grep Architecture mais sur un systeme espagnol ca ne fonctionne pas alors je passe en Arc uniquement car c est le meme debut de mot.
+addMosquittoRepo `lscpu | grep Arc | awk '{ print $2 }'` `lsb_release -i -s` `lsb_release -c -s`
 
 echo 10 > ${PROGRESS_FILE}
 echo

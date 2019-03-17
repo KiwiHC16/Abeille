@@ -707,7 +707,7 @@
                 }
             }
             //deps ok ?
-            $dependancy_info = self::dependancy_info();
+            $dependancy_info = self::getDependencyInfo();
             if ($dependancy_info['state'] == 'ok') {
                 if ($debug_deamon_info) {
                     log::add('Abeille', 'debug', 'deamon_info: les dependances sont Ok');
@@ -937,7 +937,7 @@
             //
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Fin des modifications si nécessaire');
 
-            if (restartNeeded == 1) {
+            if ($restartNeeded == 1) {
                 // afficher un message utilisateur pour qu il reboot le bousain.
                 message::add(
                     "Abeille",
@@ -957,7 +957,7 @@
             $parameters_info = self::getParameters();
 
             //no need as it seems to be on cron
-            $deamon_info = self::deamon_info();
+            $deamon_info = self::getDependencyInfo();
             if ($deamon_info['launchable'] != 'ok') {
                 message::add("Abeille", "Vérifier la configuration, un parametre manque");
                 throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
@@ -1122,12 +1122,13 @@
             message::removeAll('Abeille', 'stopDeamon');
         }
 
-        public static function dependancy_info()
+        public static function getDependencyInfo()
         {
             $debug_dependancy_info = 0;
 
             $return = array();
             $return['state'] = 'nok';
+            $return['launchable'] = 'nok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependance';
             $cmd = "dpkg -l | grep mosquitto";
             exec($cmd, $output_dpkg, $return_var);
@@ -1139,6 +1140,7 @@
 
             if ($output_dpkg[0] != "" && $libphp) {
                 //$return['configuration'] = 'ok';
+                $return['launchable'] = 'ok';
                 $return['state'] = 'ok';
             } else {
                 if ($output_dpkg[0] == "") {

@@ -208,7 +208,7 @@ class Tools
         $deviceDir = dirname(__FILE__) . '/../../../core/config/devices/';
         echo 'ddir: ' . $deviceDir;
         if ($dh = opendir($deviceDir)) {
-            while (($file = readdir($dh)) !== false) {
+            while ((($file = readdir($dh)) !== false) && (pathinfo($file,PATHINFO_EXTENSION)=="json")) {
 
                 try {
                     $content = file_get_contents($deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json');
@@ -238,12 +238,11 @@ class Tools
     // en ligne de comande =>
     // "php Tools.class.php 1"
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+    $debugBEN = 0;
     if (isset($argv[1])) {
         $debugBEN = $argv[1];
-    } else {
-        $debugBEN = 0;
     }
+
     if ($debugBEN != 0) {
         echo "Debut Tools.php test mode\n";
         $message = new stdClass();
@@ -255,9 +254,5 @@ class Tools
                 break;
         } // switch
     } // if debug
-                                                                   
-                                                                   
-                
-
 
 ?>

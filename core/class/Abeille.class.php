@@ -535,8 +535,8 @@
                         log::add('Abeille', 'debug', 'Ping: '.$addr);
                         $i=$i+1;
                         // Ca devrait être le fonctionnement normal
-                        if (strlen($eqLogic->getConfiguration("defaultEP"))>1) {
-                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("defaultEP"), '0');
+                        if (strlen($eqLogic->getConfiguration("mainEP"))>1) {
+                            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP"), '0');
                         }
                         // Cette partie devrait disparaitre, elle existe depuis le debut car je ne comprenais pas bien le fonctionnement
                         else {

@@ -2679,6 +2679,10 @@
                 }
                 break;
 
+            case "16":
+                Abeille::cron15();
+                break;
+
         } // switch
 
         echo "Fin Abeille.class.php test mode\n";

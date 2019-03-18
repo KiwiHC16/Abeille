@@ -63,7 +63,7 @@
 
 <legend><i class="fa fa-list-alt"></i> {{Connection}}</legend>
             <div>
-<p><I> La ZiGate possede deux types possibles de modules pour etre connecté au système Jeedom. Un module USB ou un module Wifi. Si vous êtes en wifi choisissez WIFI ici et indiquez dans le champ IP:Port les informations du module WIFI. Si vous êtes en USB, choisissez le port USB du type ttyUSBx sur lequel la ZiGate est branchée.
+<p><I> La ZiGate possede trois types possibles de modules pour etre connecté au système Jeedom. Un module USB / PiZigate(GPIO) ou un module Wifi. Si vous êtes en wifi choisissez WIFI ici et indiquez dans le champ IP:Port les informations du module WIFI. Si vous êtes en USB, choisissez le port USB du type ttyUSBx sur lequel la ZiGate est branchée. Pour PiZiGate choisissez le port série /dev/ttyS0.
                 </i></p>
             </div>
 
@@ -94,7 +94,7 @@
 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Tous les objets crées seront des enfants de l'objet selectionné. Les objets sont définis dans le menu principal de Jeedom: Outils->Objets. Les objets representent les pieces de la maison par exemple.">{{Objet Parent}}</label>
                 <div class="col-lg-4">
                     <select class="configKey form-control" data-l1key="AbeilleParentId">
-                 
+
                             <?php
                                 foreach (object::all() as $object) {
                                     echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';

@@ -5,11 +5,11 @@ if (!isConnect('admin')) {
 }
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
-    
+
 $ruche = new Abeille();
 $commandIEEE = new AbeilleCmd();
 $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
-    
+
 $parameters_info = Abeille::getParameters();
 
 ?>
@@ -181,7 +181,7 @@ $parameters_info = Abeille::getParameters();
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
                 echo '<div class="eqLogicDisplayCardB">';
                     echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /></br>';
-                
+
                     echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
                         echo "<center>";
                         $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
@@ -649,6 +649,7 @@ td.two {
                                     <?php
                                     require_once dirname(__FILE__) . '/../../resources/AbeilleDeamon/lib/Tools.php';
                                     $items = Tools::getDeviceNameFromJson('Abeille');
+
                                     $selectBox = array();
                                     foreach ($items as $item) {
                                         $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');

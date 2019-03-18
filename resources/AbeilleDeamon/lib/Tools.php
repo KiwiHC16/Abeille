@@ -52,25 +52,25 @@ class Tools
      */
     public static function getJSonConfigFilebyCmd($cmd)
     {
-        
+
         $cmdFilename = dirname(__FILE__) . '/../../../core/config/devices/Template/' . $cmd . '.json';
-        
+
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename );
             return array();
         }
-        
+
         $content = file_get_contents($cmdFilename);
-        
+
         $cmdJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return array();
         }
-        
+
         return $cmdJson;
     }
-    
+
     /**
      * Needed for Template Generation
      *
@@ -80,14 +80,14 @@ class Tools
     public static function getJSonConfigFilebyDevicesTemplate($device = 'none')
     {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
-        
+
         $deviceCmds = array();
         $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
-        
+
         if (!is_file($deviceFilename)) { return; }
-        
+
         $content = file_get_contents($deviceFilename);
-        
+
         // Recupere le template master
         $deviceTemplate = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
@@ -103,22 +103,22 @@ class Tools
         $deviceCmds += self::getJSonConfigFilebyCmd("Power-Source");
         $deviceCmds += self::getJSonConfigFilebyCmd("Short-Addr");
         $deviceCmds += self::getJSonConfigFilebyCmd("online");
-        
-        
+
+
         // Recupere les templates Cmd instanciées
         foreach ( $deviceTemplate[$device]['Commandes'] as $cmd=>$file ) {
             if ( substr($cmd, 0, 7) == "include" ) {
                 $deviceCmds += self::getJSonConfigFilebyCmd($file);
             }
         }
-        
+
         // Ajoute les commandes au master
         $deviceTemplate[$device]['Commandes'] = $deviceCmds;
-        
+
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate end');
         return $deviceTemplate;
     }
-    
+
     /**
      * return the config list from a file located in core/config directory
      *
@@ -205,13 +205,14 @@ class Tools
     public function getDeviceNameFromJson($logger = 'Abeille')
     {
         $return = array();
-        $deviceDir = dirname(__FILE__) . '/../../../core/config/devices/';
-        echo 'ddir: ' . $deviceDir;
-        if ($dh = opendir($deviceDir)) {
-            while ((($file = readdir($dh)) !== false) && (pathinfo($file,PATHINFO_EXTENSION)=="json")) {
+        $devicesDir = dirname(__FILE__) . '/../../../core/config/devices/';
 
+        if ($dh = opendir($devicesDir)) {
+            while ( ($deviceDir = readdir($dh)) !== false) {
                 try {
-                    $content = file_get_contents($deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json');
+                    $file = $deviceDir.".json";
+
+                    $content = file_get_contents($devicesDir . $deviceDir . DIRECTORY_SEPARATOR . $file);
                     //echo("nomCourt : $file : type : " . filetype($deviceDir . $file) . " \n");
                     //echo("fullName: " . $deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json' . " \n");
                     $temp = explode(":", $content);
@@ -232,7 +233,7 @@ class Tools
     }
 }
 
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // La suite is Used for test
     // en ligne de comande =>
@@ -246,7 +247,7 @@ class Tools
     if ($debugBEN != 0) {
         echo "Debut Tools.php test mode\n";
         $message = new stdClass();
-        
+
         switch ($debugBEN) {
             case "1":
                 $items = Tools::getJSonConfigFilebyDevicesTemplate('LLC020');

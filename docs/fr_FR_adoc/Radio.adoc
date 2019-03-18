@@ -10,58 +10,39 @@ KiwiHC16
 
 Retour au link:index.html[document principal].
 
-== Link Status
 
-Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:
 
-http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
-
-Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages "Link Status".
-
-Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:
-
-image:Capture_d_ecran_2018_05_10_a_23_33_32.png[]
-
-image:Capture_d_ecran_2018_05_10_a_23_33_48.png[]
-
-Une fois cela fait ouvrez la page: http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
-
-Vous devriez avoir un résultat comme:
-
-image:Capture_d_ecran_2018_05_10_a_23_43_31.png[]
-
-Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l'adresse destination. Et enfin le dernier champ permet d'afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.
-
-Evidement la configuration est celle de mon réseau de prod et de mon réseau de test donc il vous faut déclarer votre propre réseau dans le fichier NetworkDefinition.php.
-
-Dans le tableau knowNE mettre l'adresse courte suiivie du nom de léquipement:
-
-----
-$knownNE = array(
-"0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 -> Production
-// 00:01:58:d0:00:19:1b:22 000158d000191b22 -> Test
-// Abeille Prod JeedomZwave
-"dc15" => "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
-"1e8c" => "T2",
-"174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
-"6766" => "T4",
-----
-
-Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:
-
-----
-$Abeilles = array(
-'Ruche'    => array('position' => array( 'x'=>700, 'y'=>520), 'color'=>'red',),
-// Abeille Prod JeedomZwave
-// Terrasse
-'T1'       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
-'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
-'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
-'T4'       => array('position' => array( 'x'=>450, 'y'=>250), 'color'=>'orange',),
-----
 
 == LQI
+[[NetworkList]]
+=== Network List
 
+Depuis le menu: Plugins->Protocole Domotique->Abeille->Network List vous allez arriver sur une page contenant 3 volets.
+
+==== Résumé
+
+Le résumé vous donne un appercu de l'état du plugin.
+
+==== Graphique
+
+Le graphique représente la situation de votre réseau
+
+==== Table
+
+La table contient les informations nécessaire à la representation du réseau plus des informations radios très iteressantes.
+
+Abeille demande toutes les nuits aux équipement de fournir les informations sur les équipements qu'ils ont dans leur entourage radio.
+Une ligne represente une relation radio entre l'équipement et un équipement voisin.
+Vous allez y trouver le type de relation, le LQI, etc.
+Le LQI est le "Link Quality Radio" qui represente la Qualité de la liaison radio entre les deux équipements. 2videment si cette qualité est mauvaise alors les mesages ne peuvent pas être échangés et le réseau ne fonctionne pas. Ou dison sle réseau ne peut utiliser ce lien. Pour des valeur inférieures à 50 (valeur empirique) il faut essayer d'améliorer les choses.
+
+
+image:Capture_d_ecran_2019_03_15_a_09_32_16.png[]
+
+
+=== Network List Old
+
+(Ce chapitre est maintenant bien plus integré dans Abeille et de ce fait la doc doit être mise à jour).
 
 Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:
 
@@ -279,7 +260,7 @@ $Abeilles = array(
 
 Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j'ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d'écran des données du réseau de test:
 
-image:Capture_d_ecran_2018_04_30_a_23_45_51.png[]
+image:Capture_d_ecran_2018_04_30_a_23_45_51.png[width=800]
 
 On peut voir toutes les voisines rapportées par les équipements.
 
@@ -308,13 +289,13 @@ image:Capture_d_ecran_2018_10_04_a_02_39_04.png[]
 
 Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).
 
-image:Capture_d_ecran_2018_10_04_a_02_24_10.png[]
+image:Capture_d_ecran_2018_10_04_a_02_24_10.png[width=800]
 
 
 
 === Filtre
 
-image:Capture_d_ecran_2018_10_04_a_11_44_30.png[]
+image:Capture_d_ecran_2018_10_04_a_11_44_30.png[width=800]
 
 Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.
 
@@ -350,11 +331,11 @@ Utilisation du filtre par l'exemple:
 Exemple avec tout positionné à la main:
 
 
-image:Capture_d_ecran_2018_10_04_a_02_23_17.png[]
+image:Capture_d_ecran_2018_10_04_a_02_23_17.png[width=800]
 
 Exemple qu'avec les relations Child (Filter Child):
 
-image:Capture_d_ecran_2018_10_04_a_02_23_37.png[]
+image:Capture_d_ecran_2018_10_04_a_02_23_37.png[width=800]
 
 On peut voir ici que j'ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,...
 
@@ -362,15 +343,15 @@ Vue interressante car elle permet de voir quels sont le équipements terminaux r
 
 Exemple en demandant la Ruche au centre:
 
-image:Capture_d_ecran_2018_10_04_a_02_24_23.png[]
+image:Capture_d_ecran_2018_10_04_a_02_24_23.png[width=800]
 
 Exemple avec l'upload d'une image en fond d'écran:
 
-image:Capture_d_ecran_2018_10_04_a_11_15_34.png[]
+image:Capture_d_ecran_2018_10_04_a_11_15_34.png[width=800]
 
 Vous pouvez aussi choisir votre fond d'écran pour positionner vos Abeilles.
 
-== Radio
+== Couverture
 
 Sur la base de la collecte de ces informations, j'ai fait quelques graphes pour comprendre ce qu'on espérer en terme de couverture radio.
 
@@ -380,7 +361,7 @@ Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,
 Le premier graphe est le LQI rapporté par l'équipement en fonction du nombre de mur à traverser.
 Le deuxieme graphe est le LQI en fonction de la distance à vol d'oiseau.
 
-image:Capture_d_ecran_2018_12_14_a_10_45_20.png[]
+image:Capture_d_ecran_2018_12_14_a_10_45_20.png[width=800]
 
 Si l'on considère qu'avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus.
 
@@ -391,5 +372,56 @@ On peut voir des écarts très important dans le LQI alors que les équipements 
 Pour le LQI/m, on peut dire que jusqu'à 10m c'est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la Zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.
 
 Je suppose qu'en environnement ouvert on peut avoir des distances bien supérieures, avec des distances annoncées par les fabriquants jusqu'a 100m, mais ce type de situation sera des plus rares...
+
+== Link Status
+
+Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:
+
+http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
+
+Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages "Link Status".
+
+Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:
+
+image:Capture_d_ecran_2018_05_10_a_23_33_32.png[width=800]
+
+image:Capture_d_ecran_2018_05_10_a_23_33_48.png[width=800]
+
+Une fois cela fait ouvrez la page: http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php
+
+Vous devriez avoir un résultat comme:
+
+image:Capture_d_ecran_2018_05_10_a_23_43_31.png[width=800]
+
+Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l'adresse destination. Et enfin le dernier champ permet d'afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.
+
+Evidement la configuration est celle de mon réseau de prod et de mon réseau de test donc il vous faut déclarer votre propre réseau dans le fichier NetworkDefinition.php.
+
+Dans le tableau knowNE mettre l'adresse courte suiivie du nom de léquipement:
+
+----
+$knownNE = array(
+"0000" => "Ruche",         // 00:15:8d:00:01:b2:2e:24 00158d0001b22e24 -> Production
+// 00:01:58:d0:00:19:1b:22 000158d000191b22 -> Test
+// Abeille Prod JeedomZwave
+"dc15" => "T1",            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
+"1e8c" => "T2",
+"174f" => "T3",            // 00:0b:57:ff:fe:49:10:ea
+"6766" => "T4",
+----
+
+Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:
+
+----
+$Abeilles = array(
+'Ruche'    => array('position' => array( 'x'=>700, 'y'=>520), 'color'=>'red',),
+// Abeille Prod JeedomZwave
+// Terrasse
+'T1'       => array('position' => array( 'x'=>300, 'y'=>450), 'color'=>'orange',),
+'T2'       => array('position' => array( 'x'=>400, 'y'=>450), 'color'=>'orange',),
+'T3'       => array('position' => array( 'x'=>450, 'y'=>350), 'color'=>'orange',),
+'T4'       => array('position' => array( 'x'=>450, 'y'=>250), 'color'=>'orange',),
+----
+
 
 Enjoy

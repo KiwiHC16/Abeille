@@ -116,3 +116,30 @@ Prise de contrôle d'une ampoule
 * Ampoule Ikea et télécommande déjà associées au réseau :
 	* La configuration depuis la télécommande et le bouton 'I' ne fonctionne pas comme avec l'ampoule Hue.
 	* Mais si on récupère le groupe comme indiqué au paragraphe précédent et qu'on défini ce groupe dans l'ampoule Ikea, alors l'ampoule répond aux commandes de la télécommande.
+
+=== Motion Sensor Indoor
+
+==== Inclusion
+
+Mettre la zigate en inclusion, puis un appui sur le bouton "setup" et l'objet doit se créer dans Abeille.
+
+==== Présence
+
+En cas de détection le capteur envoie l information à la zigate qui transmet à Abeille. A vous de faire les scénairii que vous souhaitez. Ce capteur ne permet pas de piloter en direct sans la zigate un autre équipement à ma connaisssance.
+
+==== Luminosité
+
+Le capteur remonte régulièrement la luminosité mesurée. Cela vous permet par exemple de faire de scénario en fonction du jour et de la nuit, vérifier que des lumières sont allumées dans une pièce,...
+Voir aussi https://en.wikipedia.org/wiki/Lux pour avoir une idée de l'intensité lumineuse, une table fournie des indications interessante.
+
+==== Température
+
+La température remonte régulièrement.
+
+==== Batterie
+
+(A tester)
+
+=== Motion Sensor Outdoor
+
+voir motion sensor indoor.

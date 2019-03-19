@@ -11,8 +11,10 @@
     "template": "",
     "unite": "Lux",
     "configuration": {
-	"uniqId": "5c07c766242b1",
-      "visibilityCategory": "All"
+      "uniqId": "5c07c766242b1",
+      "visibilityCategory": "All",
+      "calculValueOffset": "pow(10,#value#/10000+1/10000)",
+      "historizeRound": "0"
     },
     "display": {
       "forceReturnLineAfter": "1"

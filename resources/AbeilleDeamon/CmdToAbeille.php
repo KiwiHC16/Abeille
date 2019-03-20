@@ -478,6 +478,21 @@
         sendCmd( $dest, $cmd, $lenth, $data );
     }
 
+    function writeToDest( $f, $dest, $cmd,$len,$datas)
+    {
+        fwrite($f,pack("H*","01"));
+        fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
+        fwrite($f,pack("H*",transcode($len))); //LENGTH
+        if (!empty($datas))
+        {
+            fwrite($f,pack("H*",transcode(getChecksum($cmd,$len,$datas)))); //checksum
+            fwrite($f,pack("H*",transcode($datas))); //datas
+        }else{
+            fwrite($f,pack("H*",transcode(getChecksum($cmd,$len,"00")))); //checksum
+        }
+        fwrite($f,pack("H*","03"));
+    }
+    
     function sendCmd( $dest, $cmd,$len,$datas)
     {
         // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
@@ -486,39 +501,12 @@
         deamonlog('debug','Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
         if (0) {
             $f=fopen("/var/www/html/log/toto","w");
-            fwrite($f,pack("H*","01"));
-            fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
-            fwrite($f,pack("H*",transcode($len))); //LENGTH
-            if (!empty($datas))
-            {
-                fwrite($f,pack("H*",getChecksum($cmd,$len,$datas))); //checksum
-                fwrite($f,pack("H*",transcode($datas))); //datas
-            }else{
-                fwrite($f,pack("H*",getChecksum($cmd,$len,"00"))); //checksum
-            }
-            fwrite($f,pack("H*","03"));
-
+            writeToDest( $f, $dest, $cmd,$len,$datas);
             fclose($f);
-
-            sleep(0.3);
-
         }
-
 
         $f=fopen($dest,"w");
-
-        fwrite($f,pack("H*","01"));
-        fwrite($f,pack("H*",transcode($cmd))); //MSG TYPE
-        fwrite($f,pack("H*",transcode($len))); //LENGTH
-        if (!empty($datas))
-        {
-            fwrite($f,pack("H*",getChecksum($cmd,$len,$datas))); //checksum
-            fwrite($f,pack("H*",transcode($datas))); //datas
-        }else{
-            fwrite($f,pack("H*",getChecksum($cmd,$len,"00"))); //checksum
-        }
-        fwrite($f,pack("H*","03"));
-
+        writeToDest( $f, $dest, $cmd,$len,$datas);
         fclose($f);
     }
 
@@ -1897,8 +1885,8 @@
             // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
             $lenth = "000B";
 
-            $addressMode            = $Command['address'];
-            $address                = $Command['addressMode'];
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
             $sourceEndpoint         = "01";
             $destinationEndpoint    = $Command['destinationEndPoint'];
             $colourX                = $Command['X'];

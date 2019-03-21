@@ -547,14 +547,17 @@
     // Zigate Status
     function decode8000($mqtt, $payload, $ln, $qos)
     {
-        $status = substr($payload, 0, 2);
-        $SQN = substr($payload, 2, 2);
+        $status     = substr($payload, 0, 2);
+        $SQN        = substr($payload, 2, 2);
+        $PacketType = substr($payload, 4, 4);
 
         if ($GLOBALS['debugArray']['8000']) {
             deamonlog('debug',';type; 8000; (Status)(Not Processed)'
                       . '; Length: '.hexdec($ln)
                       . '; Status: '.displayStatus($status)
-                      . '; SQN: '.$SQN );
+                      . '; SQN: '.$SQN
+                      . '; PacketType: '.$PacketType
+                      );
 
             // if ( $SQN==0 ) { deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
         }

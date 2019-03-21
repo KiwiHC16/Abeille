@@ -16,7 +16,7 @@
       "include1": "SW",
       "include2": "nom",
       "include3": "presence",
-      "include4": "luminosite",
+      "include4": "luminositeHue",
       "include4 3": "temperature",
       "include4 3 2": "Batterie-Hue",
       "include4 2": "BindToZigateOccupancy",

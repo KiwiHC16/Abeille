@@ -70,7 +70,6 @@
                 else {
                     $addrIEEE = $commandIEEE->execCmd();
                     $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
-                    echo "->".$addrIEEE."<-";
                 }
             }
             else {

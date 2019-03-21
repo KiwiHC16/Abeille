@@ -15,9 +15,13 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
+    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
+    /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
     }
+     */
     $eqLogics = Abeille::byType('Abeille');
 ?>
 
@@ -37,10 +41,13 @@
     </thead>
     <tbody>
     <?php
+        // To identify duplicated objet with same IEEE
+        $IEEE_Table = array();
+        
         foreach ($eqLogics as $eqLogic) {
 
             // Module
-            echo '<tr><td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
+            echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
             // Nom
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
@@ -52,26 +59,23 @@
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.substr($eqLogic->getLogicalId(),8).'</span></td>';
             
             // IEEE
-            $abeille = new Abeille();
-            $commandIEEE = new AbeilleCmd();
             
             // Recupere IEEE de la Ruche/ZiGate
-            $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-            // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+            $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
             
-	    if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr') ) {
-		    $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
-	    }
-	    else {
-		    if ( $eqLogic->getConfiguration('icone') == "Timer" ) {
-			    $addrIEEE = "";
-		    }
-		    else {
-			    $addrIEEE = "inconnue";
-		    }
-	    }
-            // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
-            
+            if ( $commandIEEE ) {
+                if ( $eqLogic->getConfiguration('icone') == "Timer" ) {
+                    $addrIEEE = "na";
+                }
+                else {
+                    $addrIEEE = $commandIEEE->execCmd();
+                    $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
+                    echo "->".$addrIEEE."<-";
+                }
+            }
+            else {
+                $addrIEEE = "command missing";
+            }
             echo '<td>'.$addrIEEE.'</td>';
 
             // Status
@@ -106,3 +110,9 @@
     ?>
     </tbody>
 </table>
+
+<?php
+foreach ($IEEE_Table as $IEEE=>$IEEE_Device) {
+    if ($IEEE_Device>1) { echo "L'adresse $IEEE est dupliqué ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
+}
+    ?>

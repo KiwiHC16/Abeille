@@ -1485,12 +1485,14 @@
             // Return: Inclusion status or -1 if error
             $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
 
-            // echo "Join status collection\n";
-            $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
-            if ($cmdJoinStatus) {
-                return $cmdJoinStatus->execCmd();
+            if ( $ruche ) {)
+                // echo "Join status collection\n";
+                $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
+                if ($cmdJoinStatus) {
+                    return $cmdJoinStatus->execCmd();
+                }
             }
-
+            
             return -1;
         }
 

@@ -799,5 +799,15 @@
     "subType": "string",
     "invertBinary": "0",
     "template": ""
+  },
+  "Zigate-8000": {
+    "name": "Send Message Status",
+    "order": 56,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
   }
 }

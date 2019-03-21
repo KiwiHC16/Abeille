@@ -556,8 +556,16 @@
                       . '; Status: '.displayStatus($status)
                       . '; SQN: '.$SQN );
 
-            if ( $SQN==0 ) { deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
+            // if ( $SQN==0 ) { deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
         }
+        
+        // On envoie un message MQTT vers la ruche pour le processer dans Abeille
+        $SrcAddr    = "Ruche";
+        $ClusterId  = "Zigate";
+        $AttributId = "8000";
+        $data       = displayStatus($status);
+        
+        mqqtPublish($mqtt, $SrcAddr, $ClusterId, $AttributId, $data, $qos);
     }
 
     function decode8001($mqtt, $payload, $ln, $qos)

@@ -158,6 +158,13 @@ echo
 apt-get update
 [[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots via apt-get update. Pb réseau ?"
 
+echo 20 > ${PROGRESS_FILE}
+echo
+echo "Avancement: 20% ---------------------------------------------------------------------------------------------------> install mosquiito packages"
+echo
+
+apt-get -y install socat
+
 echo 30 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 30% ---------------------------------------------------------------------------------------------------> install mosquiito packages"

@@ -195,12 +195,12 @@
                 break;
             case "04":
             {
-                $return = "04-(Busy)";
+                $return = "04-(Busy (Node is carrying out a lengthy operation and is currently unable to handle the incoming command) )";
             }
                 break;
             case "05":
             {
-                $return = "05-(Stack Already Started)";
+                $return = "05-(Stack Already Started (no new configuration accepted) )";
             }
                 break;
             default:

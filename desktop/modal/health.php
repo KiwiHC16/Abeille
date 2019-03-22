@@ -73,7 +73,7 @@
                 }
             }
             else {
-                $addrIEEE = "command missing";
+                $addrIEEE = "-";
             }
             echo '<td>'.$addrIEEE.'</td>';
 

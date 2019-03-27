@@ -1235,6 +1235,20 @@
 
         //function mqqtPublishLQI($mqtt, $Addr, $Index, $data, $qos = 0)
         mqqtPublishLQI($mqtt, $NeighbourAddr, $index, $data, $qos);
+        
+        if ( strlen($NeighbourAddr) !=4 ) { return; }
+        
+        // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
+        // Ca ne va marcher que pour les équipements en eveil.
+        // CmdAbeille/Ruche/getName address=bbf5&destinationEndPoint=0B
+        if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
+            deamonlog('debug', ';Type; 804E; (Management LQI response)(Decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
+            $mqtt->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01",               $qos);
+            $mqtt->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03",               $qos);
+            $mqtt->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B",               $qos);
+
+        }
+        
     }
 
     //----------------------------------------------------------------------------------------------------------------

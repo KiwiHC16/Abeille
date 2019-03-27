@@ -1,5 +1,6 @@
 {
-  "0000-#EP#-ff01": {
+  "0000-#EP#-ff01-removed": {
+    "Comment": "changed ff01 to ff01removed to avoid homebridge to crash as Hex data are in this command info.",
     "isVisible": 0,
     "name": "Specific",
     "order": 5,

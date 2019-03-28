@@ -59,7 +59,7 @@
                 $alert = 0;
             }
             
-            if ($alert==0) { echo '<td>'                    .$status.'</td>'; }
+            if ($alert==0) { echo '<td bgcolor="green">'    .$status.'</td>'; }
             if ($alert==1) { echo '<td bgcolor="orange">'   .$status.'</td>'; }
             if ($alert==2) { echo '<td bgcolor="red">'      .$status.'</td>'; }
 

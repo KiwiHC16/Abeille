@@ -86,6 +86,7 @@
         global $lastWidgetUpdate;
         global $RefreshCmdRate;
         global $lastCmdUpdate;
+        global $qos;
         
         foreach ( $Timers as $address => $Timer ) {
             if ( $Timer != -1 ) {

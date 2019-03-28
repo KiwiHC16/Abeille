@@ -37,6 +37,7 @@
     <?php
         
         foreach ($eqLogics as $eqLogic) {
+            $alert = 0;
 
             // Module
             echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
@@ -46,15 +47,20 @@
             $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">{{OK}}</span>';
             if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()) ) {
                  $status = '<span class="label label-warning" style="font-size : 1em; cursor : default;">Time Out Last Communication</span>';
+                $alert = 1;
             }
             if ( (time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())) ) {
                 $status = '<span class="label label-danger" style="font-size : 1em; cursor : default;">Time Out Last Communication</span>';
+                $alert = 2;
             }
 
             if ($eqLogic->getStatus('state') == '-') {
                 $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">-</span>';
             }
-            echo '<td>'.$status.'</td>';
+            
+            if ($alert==0) { echo '<td>'                    .$status.'</td>'; }
+            if ($alert==1) { echo '<td bgcolor="orange">'   .$status.'</td>'; }
+            if ($alert==2) { echo '<td bgcolor="red">'      .$status.'</td>'; }
 
             // Depuis
             $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';

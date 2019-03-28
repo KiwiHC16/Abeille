@@ -56,6 +56,7 @@
 
             if ($eqLogic->getStatus('state') == '-') {
                 $status = '<span class="label label-success" style="font-size : 1em; cursor : default;">-</span>';
+                $alert = 0;
             }
             
             if ($alert==0) { echo '<td>'                    .$status.'</td>'; }

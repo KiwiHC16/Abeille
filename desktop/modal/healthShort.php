@@ -25,7 +25,7 @@
     $eqLogics = Abeille::byType('Abeille');
 ?>
 
-<table class="table table-condensed tablesorter" id="table_healthAbeille">
+<table border="1">
     <thead>
     <tr>
         <th>{{Module}}</th>

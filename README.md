@@ -13,16 +13,17 @@ Cagnotte au 12/3/2019:
 
 Recettes:
 
-* 332,67€ (348€ moins la com paypal)
+* 346,66,67€ (363€ moins la com paypal)
 
 Dépense: 
 
 * Capteur Motion Hue Indoor - 39,95€ - Dans la version stable du 16/3/2019
-* Capteur Motion Hue Outdoor - 49,99€ - Sur mon bureau
+* Capteur Motion Hue Outdoor - 49,99€ - Dans la version master
+* Ampoule Aqara Xiaomi / Prise en encastrée Aqara - 39,17€  - Livraison en cours
 
 Reste:
 
-* 242,73€
+* 217,55€
 
 Échanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 

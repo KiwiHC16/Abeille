@@ -402,7 +402,7 @@
                     // $keywords = preg_split("/[=&]+/", $msg);
                     deamonlog('debug', 'Msg Received: '.$msg);
                     
-                    $consigne = sprintf( "%04X", $parameters['value'] );
+                    $consigne = sprintf( "%04X", $parameters['value']*100 );
                     $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
                     
                     $Command = array(

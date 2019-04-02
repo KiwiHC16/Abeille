@@ -13,8 +13,8 @@
       "uniqId": "5c07c76325434",
       "topic": "WriteAttributeRequestTemperatureSpiritConsigne",
       "request": "clusterId=0201&attributeId=4003&EP=01&Proprio=1037&attributeType=29&value=#slider#",
-      "minValue": "500",
-      "maxValue": "3000",
+      "minValue": "5",
+      "maxValue": "30",
       "visibilityCategory": "All"
     },
     "display": {

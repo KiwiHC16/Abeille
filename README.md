@@ -9,20 +9,22 @@ Version master en développement permanent.
 Le budget depuis le début est assez conséquent, surtout quand j'investis dans des équipements que je n'utiliserai pas moi même, alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille. L'idée est d'avoir au moins un exemplaire de ce que les utilisateur d'Abeille utilisent.
 Je n'ai aucune idée de votre participation à cette cagnotte mais comme tout est open source depuis le début, la cagnotte sera aussi complètement transparente.
 
-Cagnotte au 12/3/2019: 
+Cagnotte au 28/3/2019: 
 
 Recettes:
 
-* 332,67€ (348€ moins la com paypal)
+* 539,617€ (563€ moins la com paypal)
 
 Dépense: 
 
 * Capteur Motion Hue Indoor - 39,95€ - Dans la version stable du 16/3/2019
-* Capteur Motion Hue Outdoor - 49,99€ - Sur mon bureau
+* Capteur Motion Hue Outdoor - 49,99€ - Dans la version master
+* Ampoule Aqara Xiaomi / Prise en encastrée Aqara - 39,17€  - Livraison en cours
+* Une prise et un micro module Legrand - 82,90€ - Livraison en cours.
 
 Reste:
 
-* 242,73€
+* 327,51€
 
 Échanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 

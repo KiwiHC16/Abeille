@@ -1,0 +1,27 @@
+= Installation PiZiGate
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
+
+== PiZiGate
+
+L'installation de la PiZiGate demande des actions un peu spécifiques.
+
+=== Port Serie
+
+Premièrement il faut rendre disponible le port série du RPI, suivre les instructions suivantes (Pas encore dans Abeille): https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/
+
+=== GPIO
+
+Ensuite il faut installé le software qui va piloter les GPIO. Pour se faire vous avez le bouton: "Installation de Wiring Pi"
+
+=== Lancement
+
+Une fois les deux étapes précédentes réalisées avec succes, il faut redemarrer le RPI si pas déjà fait apres l'étape "Port Série", choisir le port "/dev/ttyS0" dans la configuration Abeille et relancer le demon.

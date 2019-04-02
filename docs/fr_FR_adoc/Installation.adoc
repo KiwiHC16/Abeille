@@ -14,6 +14,8 @@ Retour au link:index.html[document principal].
 
 La Zigate peut être connectée au port USB, par module Wifi ou sur le port GPIO d'un Raspberry Pi.
 
+Pour la PiZiGate, des étapes spécifiques sont nécessaires, link:InstallationPiZiGate.html[visitez cette page].
+
 Le firmware supporté est le 3.0F
 
 == Etape 2: Widget

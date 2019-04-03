@@ -59,8 +59,8 @@ class debug {
 class MosquittoAbeille extends debug {
   public $client;
 
-  function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos) {
-    if ($this->debug["AbeilleMQTTCmdClass"]) $this->deamonlog("debug", "MosquittoAbeille constructor");
+  function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
+    if ($debug) $this->deamonlog("debug", "MosquittoAbeille constructor");
 
     // https://github.com/mgdm/Mosquitto-PHP
     // http://mosquitto-php.readthedocs.io/en/latest/client.html
@@ -92,16 +92,16 @@ class MosquittoAbeille extends debug {
     $this->client->publish( "/jeedom", "Client ". $client_id." is joining", $this->qos );
     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
 
-    $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
+    if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
   }
 }
 
 class AbeilleMQTTCmdQueue extends MosquittoAbeille {
   public $mqttMessageQueue = array();
 
-  function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos) {
-    parent::__construct($client_id, $username, $password, $server, $port, $topicRoot, $qos);
-    if ($this->debug["AbeilleMQTTCmdClass"]) $this->deamonlog("debug", "AbeilleMQTTCmdQueue constructor");
+  function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
+    parent::__construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug);
+    if ($debug) $this->deamonlog("debug", "AbeilleMQTTCmdQueue constructor");
   }
 
   function addTempoCmdAbeille($topic, $msg) {
@@ -154,8 +154,6 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     "AbeilleMQTTCmdClass" => 1, // Mise en place des class
    );
 
-
-
   public $parameters_info;
 
   function __construct($client_id) {
@@ -167,7 +165,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     $this->requestedlevel = $argv[7];
     $this->requestedlevel = '' ? 'none' : $argv[7];
 
-    parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"] );
+    parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleMQTTCmdClass"] );
 
   }
 
@@ -3364,11 +3362,6 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   }
 
 }
-
-
-// ***********************************************************************************************
-// MQTT
-// ***********************************************************************************************
 
 
 // ***********************************************************************************************

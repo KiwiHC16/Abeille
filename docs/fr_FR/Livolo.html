@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title>Installation PiZiGate</title>
+<title>Livolo</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -767,7 +767,7 @@ asciidoc.install(4);
 </head>
 <body class="article">
 <div id="header">
-<h1>Installation PiZiGate</h1>
+<h1>Livolo</h1>
 <span id="author">KiwiHC16</span><br />
 <div id="toc">
   <div id="toctitle">Table des matières</div>
@@ -782,21 +782,63 @@ asciidoc.install(4);
 </div>
 </div>
 <div class="sect1">
-<h2 id="_pizigate">2. PiZiGate</h2>
+<h2 id="_interrupteur_1_btn">2. Interrupteur 1 btn</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>L&#8217;installation de la PiZiGate demande des actions un peu spécifiques.</p></div>
 <div class="sect2">
-<h3 id="_port_serie">2.1. Port Serie</h3>
-<div class="paragraph"><p>Premièrement il faut rendre disponible le port série du RPI, suivre les instructions suivantes (Pas encore dans Abeille): <a href="https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/">https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/</a></p></div>
+<h3 id="_en_cours">2.1. En cours</h3>
+<div class="paragraph"><p>Fonctionne pendant  une minute puis ne répond plus. Je n&#8217;avais pas ce soucis avec le modèle 2 boutons&#8230;</p></div>
 </div>
 <div class="sect2">
-<h3 id="_gpio">2.2. GPIO</h3>
-<div class="paragraph"><p>Ensuite il faut installé le software qui va piloter les GPIO. Pour se faire vous avez le bouton: "Installation de Wiring Pi"</p></div>
+<h3 id="_inclure">2.2. Inclure</h3>
+<div class="paragraph"><p>Un appui long (&gt; 5s) sur le bouton central jusqu'à émission d&#8217;un bip doit provoquer l&#8217;association (Zigate en mode inclusion) l'équipement doit se connecter et un objet doit apparaître dans Jeedom.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_lancement">2.3. Lancement</h3>
-<div class="paragraph"><p>Une fois les deux étapes précédentes réalisées avec succes, il faut redemarrer le RPI si pas déjà fait apres l'étape "Port Série", choisir le port "/dev/ttyS0" dans la configuration Abeille et relancer le demon.</p></div>
+<h3 id="_caracteristiques">2.3. Caracteristiques</h3>
+<div class="paragraph"><p>EP: 6
+(Simple Descriptor Response)
+profile : 0104 (ZigBee Home Automation (ZHA)); deviceId : 0000 (On/Off Switch); bitField : 00;
+InClusterCount : 02
+In cluster: 0000 - General: Basic
+In cluster: 0003 - General: Identify
+OutClusterCount : 01
+Out cluster: 0006 - General: On/Off</p></div>
 </div>
+<div class="sect2">
+<h3 id="_retour_d_état">2.4. Retour d'état</h3>
+<div class="paragraph"><p>Abeille fait la demande après envoie d&#8217;une commande.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interrupteur_2_btn">3. Interrupteur 2 btn</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Un appui long (&gt; ?s) sur un bouton jusqu'à émission d&#8217;un bip doit provoquer l&#8217;association (Zigate en mode inclusion) l'équipement doit se connecter et un objet doit apparaître dans Jeedom.</p></div>
+<div class="sect2">
+<h3 id="_retour_d_état_2">3.1. Retour d'état</h3>
+<div class="paragraph"><p>Abeille fait la demande après envoie d&#8217;une commande.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remarques">4. Remarques</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+les deux interrupteurs s&#8217;annonce sous le même nom "TI0001".
+</p>
+</li>
+<li>
+<p>
+par defaut Abeille crée un modèle 2 boutons. Effacer les commandes On et Off pour le second boutons si vous avez un modèle 1 bouton.
+</p>
+</li>
+<li>
+<p>
+ils ne semblent pas aimer les commandes non supportées et se met en carafe et ne répond plus.
+</p>
+</li>
+</ul></div>
 </div>
 </div>
 </div>
@@ -804,7 +846,7 @@ asciidoc.install(4);
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-04-01 14:57:57 CEST
+ 2019-03-31 15:50:13 CEST
 </div>
 </div>
 </body>

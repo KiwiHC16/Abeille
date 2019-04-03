@@ -117,10 +117,17 @@ Ce chapithre regroupe les informations sur les équipements link:PhilipsHue.html
 
 Ce chapithre regroupe les informations sur les équipements link:Profalux.html[Profalux]
 
-
 === Xiaomi
 
 Ce chapithre regroupe les informations sur les équipements link:Xiaomi.html[Xiaomi]
+
+=== Eurotronics
+
+Ce chapithre regroupe les informations sur les équipements link:Eurotronics.html[Eurotronics]
+
+=== Livolo
+
+Ce chapithre regroupe les informations sur les équipements link:Livolo.html[Livolo]
 
 
 == Changelog

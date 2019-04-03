@@ -1,0 +1,54 @@
+= Livolo
+KiwiHC16
+:toc2:
+:toclevels: 4
+:toc-title: Table des matières
+:imagesdir: ../images
+:iconsdir: ../images/icons
+
+== Home
+
+Retour au link:index.html[document principal].
+
+== Interrupteur 1 btn
+
+=== En cours
+
+Fonctionne pendant  une minute puis ne répond plus. Je n'avais pas ce soucis avec le modèle 2 boutons...
+
+=== Inclure
+
+Un appui long (> 5s) sur le bouton central jusqu'à émission d'un bip doit provoquer l'association (Zigate en mode inclusion) l'équipement doit se connecter et un objet doit apparaître dans Jeedom.
+
+=== Caracteristiques
+
+EP: 6
+(Simple Descriptor Response) 
+profile : 0104 (ZigBee Home Automation (ZHA)); deviceId : 0000 (On/Off Switch); bitField : 00; 
+InClusterCount : 02
+In cluster: 0000 - General: Basic
+In cluster: 0003 - General: Identify
+OutClusterCount : 01
+Out cluster: 0006 - General: On/Off
+
+=== Retour d'état
+
+Abeille fait la demande après envoie d'une commande.
+
+
+
+== Interrupteur 2 btn
+
+Un appui long (> ?s) sur un bouton jusqu'à émission d'un bip doit provoquer l'association (Zigate en mode inclusion) l'équipement doit se connecter et un objet doit apparaître dans Jeedom.
+
+
+=== Retour d'état
+
+Abeille fait la demande après envoie d'une commande.
+
+== Remarques
+
+* les deux interrupteurs s'annonce sous le même nom "TI0001".
+* par defaut Abeille crée un modèle 2 boutons. Effacer les commandes On et Off pour le second boutons si vous avez un modèle 1 bouton.
+* ils ne semblent pas aimer les commandes non supportées et se met en carafe et ne répond plus.
+

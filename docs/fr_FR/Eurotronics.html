@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title>Installation PiZiGate</title>
+<title>Eurotronics</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -767,7 +767,7 @@ asciidoc.install(4);
 </head>
 <body class="article">
 <div id="header">
-<h1>Installation PiZiGate</h1>
+<h1>Eurotronics</h1>
 <span id="author">KiwiHC16</span><br />
 <div id="toc">
   <div id="toctitle">Table des matières</div>
@@ -782,20 +782,64 @@ asciidoc.install(4);
 </div>
 </div>
 <div class="sect1">
-<h2 id="_pizigate">2. PiZiGate</h2>
+<h2 id="_radiateur">2. Radiateur</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>L&#8217;installation de la PiZiGate demande des actions un peu spécifiques.</p></div>
 <div class="sect2">
-<h3 id="_port_serie">2.1. Port Serie</h3>
-<div class="paragraph"><p>Premièrement il faut rendre disponible le port série du RPI, suivre les instructions suivantes (Pas encore dans Abeille): <a href="https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/">https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/</a></p></div>
+<h3 id="_inclusion">2.1. Inclusion</h3>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph"><p>Traduction de la doc:</p></div>
+<div class="paragraph"><p>Une fois les piles insérées, PrP apparaît à l'écran et le Spirit ZigBee est prêt à être assemblé. Le Spirit ZigBee est réglé en usine en mode Add-in et affiche Jin en connexion avec une icône de radio clignotante sur l'écran LCD.
+Si le Spirit ZigBee a été ajouté avec succès, l’écran LCD affiche en permanence l’icône de la radio et le voyant clignote en vert.
+Pour continuer la mise en service, le bouton Boost doit maintenant être confirmé.
+Affiche l'écran LCD "InS", l&#8217;assemblage peut être effectué. Continuer avec "4.5 Montage sur le radiateur".</p></div>
+</div></div>
+<div class="paragraph"><p>Après un reset un appuis sur e bouton central provoque l&#8217;association et la creation dans Abeille de la vanne (Zigate en mode inclusion lors de la manipulation).</p></div>
 </div>
 <div class="sect2">
-<h3 id="_gpio">2.2. GPIO</h3>
-<div class="paragraph"><p>Ensuite il faut installé le software qui va piloter les GPIO. Pour se faire vous avez le bouton: "Installation de Wiring Pi"</p></div>
+<h3 id="_fonctionnement">2.2. Fonctionnement</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+La vanne envoie à Abeille la température de la pièce.
+</p>
+</li>
+<li>
+<p>
+La vanne envoie à Abeille son taux d&#8217;ouverture en cours.
+</p>
+</li>
+<li>
+<p>
+Le mode Boost permit d&#8217;ouvrir la vanne a fond (pendant 15 min (a verifier je ne suis plus sure au moment d écrire la doc.)).
+</p>
+</li>
+<li>
+<p>
+La vanne peut fonctionner en deux modes. Mode automatique, la vanne régule la température toute seule. Mode manuel, Abeille pilote le taux d&#8217;ouverture de la vanne (il n&#8217;y a pas de regulation de temperature fait par la vanne).
+</p>
+</li>
+<li>
+<p>
+La vanne demande au réseau toutes le 6s les commandes à executer. La vanne doit répondre dans les 6s aux demandes Abeille.
+</p>
+</li>
+<li>
+<p>
+Vous pouvez faire pivoter l affichage de haut en bas en fonction de la position de votre vanne pour faciliter la lecture.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>*</p></div>
 </div>
 <div class="sect2">
-<h3 id="_lancement">2.3. Lancement</h3>
-<div class="paragraph"><p>Une fois les deux étapes précédentes réalisées avec succes, il faut redemarrer le RPI si pas déjà fait apres l'étape "Port Série", choisir le port "/dev/ttyS0" dans la configuration Abeille et relancer le demon.</p></div>
+<h3 id="_reset">2.3. Reset</h3>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph"><p>Traduction de la doc:</p></div>
+<div class="paragraph"><p>Maintenez les touches boost, moins et plus enfoncées jusqu'à ce que le compteur de l'écran LCD atteigne 10. Ne relâchez le bouton que lorsque l'écran LCD affiche "rES". La réinitialisation est effectuée peu de temps après le relâchement du bouton. L’écran LCD affiche «PrP» et le poussoir de la vanne passe en position de montage.</p></div>
+</div></div>
+<div class="paragraph"><p>Quand on fait ca, l'écran fait un countdown et le reset se produit. Puis l'écran affiche Rst.</p></div>
 </div>
 </div>
 </div>
@@ -804,7 +848,7 @@ asciidoc.install(4);
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-04-01 14:57:57 CEST
+ 2019-04-01 11:11:58 CEST
 </div>
 </div>
 </body>

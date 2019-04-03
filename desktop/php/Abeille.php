@@ -714,7 +714,7 @@ td.two {
 
 
                                 <div class="form-group">
-                                <label class="col-sm-3 control-label">{{action sur demarrage}}</label>
+                                <label class="col-sm-3 control-label">{{Action sur demarrage}}</label>
                                 <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStart" placeholder="#cmd#"/>
                                 </div>

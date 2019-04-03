@@ -144,7 +144,7 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
 
 class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   public $debug = array(
-    "cli"                 => 1, // commande line mode or jeedom
+    "cli"                 => 0, // commande line mode or jeedom
     "Checksum"            => 1, // Debug checksum calculation
     "tempo"               => 0, // Debug tempo queue
     "procmsg"             => 1, // Debug fct procmsg

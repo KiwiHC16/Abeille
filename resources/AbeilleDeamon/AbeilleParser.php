@@ -208,9 +208,9 @@ class AbeilleParser extends MosquittoAbeille {
   {
     // Abeille / short addr / Cluster ID - Attr ID -> data
     // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-    $this->client->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $qos);
-    $this->client->publish("Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $qos);
-    $this->client->publish("Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $qos);
+    $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $qos);
+    $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $qos);
+    $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $qos);
   }
 
   function mqqtPublishFct( $SrcAddr, $fct, $data, $qos = 0)

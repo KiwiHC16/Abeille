@@ -135,7 +135,7 @@ class Tools
 
         $json = json_decode($content, true);
 
-        Tools::deamonlog("Tools: nb line " . strlen($content));
+        self::deamonlogFilter("Tools: nb line " . strlen($content));
 
         return $json;
     }

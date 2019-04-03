@@ -17,7 +17,7 @@
     include("includes/fifo.php");
 
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlog($loglevel,'AbeilleSerialRead',$message);
+        Tools::deamonlogFilter($loglevel,'AbeilleSerialRead',$message);
     }
 
     function _exec($cmd, &$out = null)

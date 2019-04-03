@@ -671,14 +671,21 @@ class Abeille extends eqLogic {
     'launchable'          => 'ok',
     'launchable_message'  => "", );
 
+/*
     // On verifie le cron
-    $cron = cron::byClassAndFunction('Abeille', 'deamon');
-    if (is_object($cron) && $cron->running()) {
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron missing');
+    if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
+      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron object missing');
       $return['configuration']      = 'nok';
       $return['launchable_message'] = 'Problème avec le cron';
       return $return;
     }
+    if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
+      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
+      $return['configuration']      = 'nok';
+      $return['launchable_message'] = 'Problème avec le cron running';
+      return $return;
+    }
+*/
 
     // deps ok ?
     if (self::getDependencyInfo()['state'] == 'nok') {
@@ -704,8 +711,8 @@ class Abeille extends eqLogic {
 
     // Nb de demon devant tourner
     //check running deamon /!\ if using sudo nbprocess x2
-    if ($parameters_info['onlyTimer'] == 'N') {
-      if ($parameters_info['AbeilleSerialPort'] == '/tmp/zigate') {
+    if (self::getParameters()['onlyTimer'] == 'N') {
+      if (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') {
         $nbProcessExpected = 5;
       } else {
         $nbProcessExpected = 4;
@@ -720,7 +727,7 @@ class Abeille extends eqLogic {
 
     if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output[0]);
 
-    if ( ($nbProcess < $nbProcessExpected) || ($nbProcess > $nbProcessExpected) ) {
+    if ( ($nbProcess != $nbProcessExpected) ) {
       if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
       $return['state'] = 'nok';
       $return['launchable_message'] = 'Nous n avons pas le bon nombre de demon qui tourne';
@@ -840,7 +847,7 @@ class Abeille extends eqLogic {
 
     self::deamon_stop();
     sleep(5);
-    $parameters_info = self::getParameters();
+    $param = self::getParameters();
 
     //no need as it seems to be on cron
     $deamon_info = self::getDependencyInfo();
@@ -849,13 +856,12 @@ class Abeille extends eqLogic {
       throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
     }
 
-    $cron = cron::byClassAndFunction('Abeille', 'deamon');
-    if (!is_object($cron)) {
+    if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
       log::add('Abeille', 'error', 'deamon_start: Tache cron introuvable');
       message::add("Abeille", "deamon_start: Tache cron introuvable");
       throw new Exception(__('Tache cron introuvable', __FILE__));
     }
-    $cron->run();
+    cron::byClassAndFunction('Abeille', 'deamon')->run();
 
     sleep(3);
 
@@ -863,38 +869,31 @@ class Abeille extends eqLogic {
 
     sleep(3);
 
-    $_subject = "CmdRuche/Ruche/CreateRuche";
-    $_message = "";
-    $_retain = 0;
     // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-
     log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
-    log::add('Abeille','debug','deamon_start: publish subject:'.$_subject.' message: '.$_message.'Qos: '.$parameters_info['AbeilleQos'].' retain: '.$_retain);
-
-    // $self->publishMosquitto( null, $_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
+    self::publishMosquitto( null, "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'], 0);
 
     // Start other deamons
     $nohup = "/usr/bin/nohup";
     $php = "/usr/bin/php";
     $dirdeamon = dirname(__FILE__)."/../../resources/AbeilleDeamon/";
 
-    if ($parameters_info['onlyTimer'] != 'Y') {
+    if ($param['onlyTimer'] != 'Y') {
       $deamon1 = "AbeilleSerialRead.php";
-      $paramdeamon1 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+      $paramdeamon1 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
       $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
 
       $deamon2 = "AbeilleParser.php";
-      $paramdeamon2 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+      $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
       $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
 
       $deamon3 = "AbeilleMQTTCmd.php";
-      $paramdeamon3 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+      $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
       $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
 
       $deamon5 = "AbeilleSocat.php";
-      $paramdeamon5 = $parameters_info['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$parameters_info['IpWifiZigate'];
+      $paramdeamon5 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
       $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
-
 
       $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
       log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
@@ -910,19 +909,14 @@ class Abeille extends eqLogic {
       log::add('Abeille', 'debug', 'Start deamon Parser: '.$cmd);
       exec($cmd.' 2>&1 &');
 
-
       $cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
       log::add('Abeille', 'debug', 'Start deamon MQTT: '.$cmd);
       exec($cmd.' 2>&1 &');
 
-
     }
 
     $deamon4 = "AbeilleMQTTCmdTimer.php";
-    $paramdeamon4 = $parameters_info['AbeilleSerialPort'].' '.$parameters_info['AbeilleAddress'].' '.$parameters_info['AbeillePort'].
-    ' '.$parameters_info['AbeilleUser'].' '.$parameters_info['AbeillePass'].' '.$parameters_info['AbeilleQos'].' '.log::convertLogLevel(
-      log::getLogLevel('Abeille')
-    );
+    $paramdeamon4 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort']. ' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel( log::getLogLevel('Abeille') );
     $log4 = " > ".log::getPathToLog(substr($deamon4, 0, (strrpos($deamon4, "."))));
 
     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon4." ".$paramdeamon4.$log4;
@@ -930,9 +924,9 @@ class Abeille extends eqLogic {
     exec($cmd.' 2>&1 &');
 
     // affichage Widget
-    self::CmdAffichage('affichageNetwork',  $parameters_info['affichageNetwork']);
-    self::CmdAffichage('affichageTime',     $parameters_info['affichageTime']   );
-    self::CmdAffichage('affichageCmdAdd',   $parameters_info['affichageCmdAdd'] );
+    self::CmdAffichage('affichageNetwork',  $param['affichageNetwork']);
+    self::CmdAffichage('affichageTime',     $param['affichageTime']   );
+    self::CmdAffichage('affichageCmdAdd',   $param['affichageCmdAdd'] );
 
     // $cmd = "";
     log::add('Abeille', 'debug', 'deamon start: OUT');
@@ -2470,6 +2464,8 @@ if ($debugBEN != 0) {
     case "17":
     // On verifie le cron
     var_dump( cron::byClassAndFunction('Abeille', 'deamon') );
+    echo "Is Object: ".is_object(cron::byClassAndFunction('Abeille', 'deamon'))."\n";
+    echo "running: ".cron::byClassAndFunction('Abeille', 'deamon')->running()."\n";
     break;
 
   } // switch

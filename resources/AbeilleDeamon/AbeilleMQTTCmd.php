@@ -38,14 +38,14 @@ function message($message) {
   $AbeilleMQTTCmd->procmsg( $message->topic, $message->payload );
 }
 
-class debug {
+class debug extends Tools {
   function deamonlog($loglevel = 'NONE', $message = "")
   {
     if ($this->debug["cli"] ) {
       echo $message."\n";
     }
     else {
-      Tools::deamonlog($loglevel,'AbeilleMQTTCmd',$message);
+      $this->deamonlogFilter($loglevel,'AbeilleMQTTCmd',$message);
     }
   }
 

@@ -11,8 +11,7 @@ class Tools
      * @param $loglevel
      * @return int
      */
-     public static function getNumberFromLevel($loglevel)
-     {
+     public static function getNumberFromLevel($loglevel) {
        $niveau = array(
          "NONE" => 0,
          "ERROR" => 1,
@@ -29,8 +28,7 @@ class Tools
      * @param string $loglevel
      * @param string $message
      */
-    public static function deamonlog($loglevel = 'NONE', $loggerName = 'Tools', $message = '')
-    {
+    public static function deamonlogFilter($loglevel = 'NONE', $loggerName = 'Tools', $message = '') {
         if (strlen($message) < 1) return;
         if (Tools::getNumberFromLevel($loglevel) <= Tools::getNumberFromLevel($GLOBALS['requestedlevel'])) {
             fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . strtoupper($GLOBALS['requestedlevel']) . ']' . $message . PHP_EOL);
@@ -43,8 +41,7 @@ class Tools
      *
      *
      */
-    public static function getJSonConfigFilebyCmd($cmd)
-    {
+    public static function getJSonConfigFilebyCmd($cmd) {
 
         $cmdFilename = dirname(__FILE__) . '/../../../core/config/devices/Template/' . $cmd . '.json';
 
@@ -70,8 +67,7 @@ class Tools
      *
      *
      */
-    public static function getJSonConfigFilebyDevicesTemplate($device = 'none')
-    {
+    public static function getJSonConfigFilebyDevicesTemplate($device = 'none') {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
 
         $deviceCmds = array();
@@ -118,8 +114,7 @@ class Tools
      * @param null $jsonFile
      * @return mixed|void
      */
-    public static function getJSonConfigFiles($jsonFile = null)
-    {
+    public static function getJSonConfigFiles($jsonFile = null) {
 
         $configDir = dirname(__FILE__) . '/../../../core/config/';
 
@@ -152,8 +147,7 @@ class Tools
      * @param Abeille logger name
      * @return bool|mixed|void
      */
-    public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
-    {
+    public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille') {
 
         $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename' . $deviceFilename);
@@ -180,8 +174,7 @@ class Tools
      * @param string $filename
      * @return mixed|string*
      */
-    public function getTrimmedValueForJsonFiles($filename = "")
-    {
+    public function getTrimmedValueForJsonFiles($filename = "") {
         //remove lumi. from name as all xiaomi devices have a lumi. name
         //remove all space in names for easier filename handling
         $trimmed = strlen($filename) > 1 ? str_replace(' ', '', str_replace('lumi.', '', $filename)) : "";
@@ -195,8 +188,7 @@ class Tools
      * @param string $logger
      * @return array of json devices name
      */
-    public function getDeviceNameFromJson($logger = 'Abeille')
-    {
+    public function getDeviceNameFromJson($logger = 'Abeille') {
         $return = array();
         $devicesDir = dirname(__FILE__) . '/../../../core/config/devices/';
 
@@ -227,26 +219,5 @@ class Tools
 }
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // La suite is Used for test
-    // en ligne de comande =>
-    // "php Tools.class.php 1"
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $debugBEN = 0;
-    if (isset($argv[1])) {
-        $debugBEN = $argv[1];
-    }
-
-    if ($debugBEN != 0) {
-        echo "Debut Tools.php test mode\n";
-        $message = new stdClass();
-
-        switch ($debugBEN) {
-            case "1":
-                $items = Tools::getJSonConfigFilebyDevicesTemplate('LLC020');
-                echo json_encode($items);
-                break;
-        } // switch
-    } // if debug
 
 ?>

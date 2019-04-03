@@ -23,8 +23,7 @@
     class Abeille extends eqLogic
     {
         // Is it the health of the plugin level menu Analyse->santé ? A verifier.
-        public static function health()
-        {
+        public static function health() {
             $return = array();
             $socket = socket_create(AF_INET, SOCK_STREAM, 0);
             $server = socket_connect(
@@ -387,8 +386,7 @@
 
         }
 
-        public static function cronDaily()
-        {
+        public static function cronDaily() {
             log::add(
                 'Abeille',
                 'debug',
@@ -404,8 +402,7 @@
             exec($cmd);
         }
 
-        public static function cronHourly()
-        {
+        public static function cronHourly() {
             log::add(
                 'Abeille',
                 'debug',
@@ -494,8 +491,7 @@
             );
         }
 
-        public static function cron15()
-        {
+        public static function cron15() {
             log::add(
                 'Abeille',
                 'debug',
@@ -591,8 +587,7 @@
             return;
         }
 
-        public static function cron()
-        {
+        public static function cron() {
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
             $eqLogics = self::byType('Abeille');
@@ -685,8 +680,7 @@
 
         }
 
-        public static function deamon_info()
-        {
+        public static function deamon_info() {
             $debug_deamon_info = 0;
             if ($debug_deamon_info) {
                 log::add('Abeille', 'debug', '-');
@@ -833,8 +827,7 @@
             return $return;
         }
 
-        public static function deamon_start_cleanup($message = null)
-        {
+        public static function deamon_start_cleanup($message = null) {
             // This function is used to run some cleanup before the demon start, or update the database du to data change needed.
             $debug = 0;
             $restartNeeded = 0;
@@ -948,8 +941,7 @@
             return;
         }
 
-        public static function deamon_start($_debug = false)
-        {
+        public static function deamon_start($_debug = false) {
             log::add('Abeille', 'debug', 'deamon_start: IN');
 
             self::deamon_stop();
@@ -1090,8 +1082,7 @@
             return true;
         }
 
-        public static function deamon_stop()
-        {
+        public static function deamon_stop() {
             log::add('Abeille', 'debug', 'deamon stop: IN');
             // Stop socat if exist
             // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '{print $1}' | tr  '\n' ' '", $output);
@@ -1122,13 +1113,11 @@
             message::removeAll('Abeille', 'stopDeamon');
         }
 
-        public static function dependancy_info()
-        {
+        public static function dependancy_info() {
           return self::getDependencyInfo();
         }
 
-        public static function getDependencyInfo()
-        {
+        public static function getDependencyInfo() {
             $debug_dependancy_info = 0;
 
             $return = array();
@@ -1171,8 +1160,7 @@
             return $return;
         }
 
-        public static function dependancy_install()
-        {
+        public static function dependancy_install() {
             log::add('Abeille', 'debug', 'Installation des dépendances: IN');
             message::add(
                 "Abeille",
@@ -1193,8 +1181,7 @@
             return $result;
         }
 
-        public static function deamon()
-        {
+        public static function deamon() {
             //use verified parameters
             $parameters_info = self::getParameters();
 
@@ -1492,7 +1479,7 @@
                     return $cmdJoinStatus->execCmd();
                 }
             }
-            
+
             return -1;
         }
 
@@ -1556,8 +1543,7 @@
             return;
         }
 
-        public static function message($message)
-        {
+        public static function message($message) {
 
             $parameters_info = self::getParameters();
 
@@ -1574,6 +1560,13 @@
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
+
+            if ( substr($message->topic, 0, strlen($parameters_info["AbeilleTopic"])-2) != substr($parameters_info["AbeilleTopic"],0, strlen($parameters_info["AbeilleTopic"])-2 ) ) {
+              echo "Message receive but is not for me, wrong delivery !!!\n";
+              return;
+            }
+            // On enleve AbeilleTopic
+            $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
 
             // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
             if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
@@ -2174,17 +2167,15 @@
             return; // function message
         }
 
-
-        public static function publishMosquitto($_id, $_subject, $_message, $_retain)
-        {
+        public static function publishMosquitto($_id, $_subject, $_message, $_retain) {
             $parameters_info = self::getParameters();
-            log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.$_subject);
+            log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
             $publish = new Mosquitto\Client();
 
             $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
 
             $publish->connect($parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60);
-            $publish->publish($_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
+            $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
             for ($i = 0; $i < 100; $i++) {
                 // Loop around to permit the library to do its work
                 $publish->loop(1);

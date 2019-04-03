@@ -12,32 +12,27 @@ require_once dirname(__FILE__).("/lib/Tools.php");
 include(dirname(__FILE__).'/includes/config.php');
 include(dirname(__FILE__).'/includes/function.php');
 
-function connect($r, $message)
-{
+function connect($r, $message) {
   log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
   // config::save('state', '1', 'Abeille');
 }
 
-function disconnect($r)
-{
+function disconnect($r) {
   log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
   // config::save('state', '0', 'Abeille');
 }
 
-function subscribe()
-{
+function subscribe() {
   log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
 }
 
-function logmq($code, $str)
-{
+function logmq($code, $str) {
   // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
   log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
   // }
 }
 
-function message($message)
-{
+function message($message) {
   global $AbeilleMQTTCmd;
   // var_dump( $message );
   $AbeilleMQTTCmd->procmsg( $message->topic, $message->payload );
@@ -82,14 +77,14 @@ class MosquittoAbeille extends debug {
     $this->client->onLog('logmq');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $this->client->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+    $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
     $this->client->setReconnectDelay(1, 120, 1);
 
     $this->client->setCredentials( $username, $password );
     $this->client->connect( $server, $port, 60 );
-    $this->client->publish( "/jeedom", "Client ". $client_id." is joining", $this->qos );
+    $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos );
     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
 
     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
@@ -113,28 +108,25 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
     list($timeTitle, $time) = explode('=', $param);
 
     $this->mqttMessageQueue[] = array( $time, $topic, $msg );
-    if ( $debug['tempo'] ) $this->deamonlog('debug', 'addTempoCmdAbeille - mqttMessageQueue: '.json_encode($this->mqttMessageQueues) );
+    if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'addTempoCmdAbeille - mqttMessageQueue: '.json_encode($this->mqttMessageQueues) );
 
     return;
   }
 
   function execTempoCmdAbeille($client,$qos) {
 
-
-    global $mqttMessageQueue;
-
     if ( count($this->mqttMessageQueue)<1 ) {
       return;
     }
 
     $now=time();
-    foreach ($GLOBALS["mqttMessageQueue"] as $key => $mqttMessage) {
+    foreach ($this->mqttMessageQueue as $key => $mqttMessage) {
       // deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - 0: '.$mqttMessage[0] );
       if ($mqttMessage[0]<$now) {
-        $this->client->publish( $mqttMessage[1], $mqttMessage[2], $mqttEnv['qos'] );
-        if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($GLOBALS["mqttMessageQueue"][$key]) );
+        $this->client->publish( substr($this->parameters_info["AbeilleTopic"],0,-1).$mqttMessage[1], $mqttMessage[2], $this->parameters_info["qos"] );
+        if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($this->mqttMessageQueue[$key]) );
         unset($this->mqttMessageQueue[$key]);
-        if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - Rest: '.json_encode($GLOBALS["mqttMessageQueue"]) );
+        if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - Rest: '.json_encode($this->mqttMessageQueue) );
       }
     }
 
@@ -146,7 +138,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   public $debug = array(
     "cli"                 => 0, // commande line mode or jeedom
     "Checksum"            => 1, // Debug checksum calculation
-    "tempo"               => 0, // Debug tempo queue
+    "tempo"               => 1, // Debug tempo queue
     "procmsg"             => 1, // Debug fct procmsg
     "processCmd"          => 1, // Debug fct processCmd
     "sendCmd"             => 1, // Debug fct sendCmd
@@ -164,14 +156,14 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
     $this->requestedlevel = $argv[7];
     $this->requestedlevel = '' ? 'none' : $argv[7];
+    $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
     parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleMQTTCmdClass"] );
 
   }
 
   // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
-  function setParamXiaomi($dest,$Command)
-  {
+  function setParamXiaomi($dest,$Command) {
     // Write Attribute request
     // Msg Type = 0x0110
 
@@ -224,8 +216,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   }
 
   // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
-  function setParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
-  {
+  function setParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param) {
     /*
     <address mode: uint8_t>
     <target short address: uint16_t>
@@ -266,8 +257,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     $this->sendCmd( $dest, $cmd, $lenth, $data );
   }
 
-  function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio)
-  {
+  function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio) {
     $this->deamonlog('debug',"command setParam2");
     // Msg Type = 0x0530
     $cmd = "0530";
@@ -335,8 +325,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
   }
 
-  function setParam3($dest,$Command)
-  {
+  function setParam3($dest,$Command) {
     // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
 
     $this->deamonlog('debug',"command setParam3");
@@ -423,8 +412,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
   }
 
-  function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio)
-  {
+  function getParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
     /*
     <address mode: uint8_t>
     <target short address: uint16_t>
@@ -507,8 +495,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   }
 
   // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
-  function getParamHue($dest,$address,$clusterId,$attributeId)
-  {
+  function getParamHue($dest,$address,$clusterId,$attributeId) {
     $this->deamonlog('debug','getParamHue');
 
     $cmd = "0100";
@@ -534,8 +521,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   }
 
   // getParamOSRAM: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
-  function getParamOSRAM($dest,$address,$clusterId,$attributeId)
-  {
+  function getParamOSRAM($dest,$address,$clusterId,$attributeId) {
     $this->deamonlog('debug','getParamOSRAM');
 
     $cmd = "0100";
@@ -560,8 +546,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     $this->sendCmd( $dest, $cmd, $lenth, $data );
   }
 
-  function getChecksum( $msgtype, $length, $datas)
-  {
+  function getChecksum( $msgtype, $length, $datas) {
     $temp = 0;
     $temp ^= hexdec($msgtype[0].$msgtype[1]) ;
     $temp ^= hexdec($msgtype[2].$msgtype[3]) ;
@@ -578,8 +563,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     return sprintf("%02X",$temp);
   }
 
-  function transcode($datas)
-  {
+  function transcode($datas) {
     if ( $this->debug['transcode'] ) $this->deamonlog('debug','transcode fct - transcode data: '.$datas);
     $mess="";
 
@@ -600,8 +584,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     return $mess;
   }
 
-  function writeToDest( $f, $dest, $cmd,$len,$datas)
-  {
+  function writeToDest( $f, $dest, $cmd,$len,$datas) {
     fwrite($f,pack("H*","01"));
     fwrite($f,pack("H*",$this->transcode($cmd))); //MSG TYPE
     fwrite($f,pack("H*",$this->transcode($len))); //LENGTH
@@ -615,8 +598,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     fwrite($f,pack("H*","03"));
   }
 
-  function sendCmd( $dest, $cmd, $len, $datas)
-  {
+  function sendCmd( $dest, $cmd, $len, $datas) {
     // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
     // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
 
@@ -632,8 +614,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     fclose($f);
   }
 
-  function processCmd($Command)
-  {
+  function processCmd($Command) {
     if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function");
 
     $dest = $this->parameters_info["AbeilleSerialPort"];
@@ -1706,7 +1687,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
     if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) )
     {
-      getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
+      $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
     }
 
     // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -1716,7 +1697,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
       // if ( $Command['ReadAttributeRequest']==1 )
       //{
-      getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
+      $this->getParamHue( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
       //}
     }
 
@@ -1728,7 +1709,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       // if ( $Command['ReadAttributeRequest']==1 )
       //{
       // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
-      getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03" );
+      $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03" );
       //}
     }
 
@@ -2090,7 +2071,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       $this->deamonlog('debug','Get Name from: '.$Command['address']);
       //echo "Get Name from: ".$Command['address']."\n";
       if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-      getParam( $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'] );
+      $this->getParam( $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'] );
     }
 
     if ( isset($Command['getLocation']) && isset($Command['address']) )
@@ -2098,7 +2079,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       //echo "Get Name from: ".$Command['address']."\n";
       if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
       $this->deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
-      getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'] );
+      $this->getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'] );
     }
 
     if ( isset($Command['setLocation']) && isset($Command['address']) )
@@ -2164,13 +2145,12 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
   }
 
-  function procmsg($topic, $msg)
-  {
+  function procmsg($topic, $msg) {
     //$msg =  preg_replace("/[^A-Za-z0-9&=]/",'',$msg);
     if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
     if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
     if ( substr($topic, 0, strlen($this->parameters_info["AbeilleTopic"])-2) != substr($this->parameters_info["AbeilleTopic"],0, strlen($this->parameters_info["AbeilleTopic"])-2 ) ) {
-      echo "Message receive but is not for me, wrong delivery !!!\n";
+      if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "Message receive but is not for me, wrong delivery !!!");
       return;
     }
 
@@ -2187,11 +2167,13 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     // deamonlog('debug', 'Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
     if ($type == "TempoCmdAbeille") {
-      addTempoCmdAbeille( $topic, $msg);
+      if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue.");
+      $this->addTempoCmdAbeille( $topic, $msg);
+      return;
     }
 
     if ($type != "CmdAbeille") {
-      $this->deamonlog('warning','procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg.' mais je ne sais pas quoi en faire, no action.');
+      if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg.' mais ce n est pas pour moi, no action.');
       return;
     }
 

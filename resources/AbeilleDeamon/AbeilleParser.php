@@ -164,14 +164,14 @@ class MosquittoAbeille extends debug {
     $this->client->onLog('logmq');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $this->client->setWill('/jeedom', "Client AbeilleMQTTCmd died :-(", $qos, 0);
+    $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
     $this->client->setReconnectDelay(1, 120, 1);
 
     $this->client->setCredentials( $username, $password );
     $this->client->connect( $server, $port, 60 );
-    $this->client->publish( "/jeedom", "Client ". $client_id." is joining", $this->qos );
+    $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos );
     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
 
     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );

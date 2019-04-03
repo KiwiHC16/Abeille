@@ -1269,8 +1269,7 @@
             }
         }
 
-        public static function serviceMosquittoStatus()
-        {
+        public static function serviceMosquittoStatus() {
             $debug_serviceMosquittoStatus = 0;
 
             $outputSvc = array();
@@ -1304,8 +1303,7 @@
             return $return;
         }
 
-        public static function serviceMosquittoStart()
-        {
+        public static function serviceMosquittoStart() {
             $outputSvc = array();
             $return = self::serviceMosquittoStatus();
             //try to start mosquitto service if not already started.
@@ -1326,8 +1324,7 @@
             return $return;
         }
 
-        public static function getParameters()
-        {
+        public static function getParameters() {
             $return = array();
             $return['state'] = 'nok';
 
@@ -1388,8 +1385,7 @@
             return $return;
         }
 
-        public static function postSave()
-        {
+        public static function postSave() {
             log::add('Abeille', 'debug', 'deamon_postSave: IN');
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (is_object($cron) && !$cron->running()) {
@@ -1399,32 +1395,27 @@
 
         }
 
-        public static function connect($r, $message)
-        {
+        public static function connect($r, $message) {
             log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code '.$r.' '.$message);
             config::save('state', '1', 'Abeille');
         }
 
-        public static function disconnect($r)
-        {
+        public static function disconnect($r) {
             log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code '.$r);
             config::save('state', '0', 'Abeille');
         }
 
-        public static function subscribe()
-        {
+        public static function subscribe() {
             log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
         }
 
-        public static function logmq($code, $str)
-        {
+        public static function logmq($code, $str) {
 
             // log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
 
         }
 
-        public static function fetchShortFromIEEE($IEEE, $checkShort)
-        {
+        public static function fetchShortFromIEEE($IEEE, $checkShort) {
             // Return:
             // 0 : Short Address is aligned with the one received
             // Short : Short Address is NOT aligned with the one received
@@ -1467,8 +1458,7 @@
             return -1;
         }
 
-        public static function checkInclusionStatus()
-        {
+        public static function checkInclusionStatus() {
             // Return: Inclusion status or -1 if error
             $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
 
@@ -2184,9 +2174,7 @@
             unset($publish);
         }
 
-
-        public function createRuche($message = null)
-        {
+        public function createRuche($message = null) {
             $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
             $parameters_info = self::getParameters();
 

@@ -667,7 +667,9 @@ class Abeille extends eqLogic {
     // On suppose que tout est bon et on cherche les problemes.
     $return = array( 'state'                => 'ok',  // On couvre le fait que le process tourne en tache de fond
     'launchable'                            => 'ok',  // On couvre la configuration de plugin
-    'launchable_message'                    => "trtr", );
+    'launchable_message'                    => "", );
+
+    return $return;
 
     // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
     if ( self::getParameters()['parameters'] != "ok" ) {
@@ -679,8 +681,8 @@ class Abeille extends eqLogic {
     if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
       if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
         if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
-        $return['state']              = 'nok';
-        $return['launchable_message'] = 'Problème avec le cron qui ne semble pas tourner';
+        $return['state'] = 'Problème avec le cron<br>qui ne semble pas tourner';
+        return $return;
       }
     }
 
@@ -704,8 +706,7 @@ class Abeille extends eqLogic {
     if ( ($nbProcess != $nbProcessExpected) ) {
       if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
       if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
-      $return['state'] = 'nok';
-      $return['launchable_message'] = 'Nous n avons pas le bon nombre de demon qui tourne';
+      $return['state'] = 'Nous n avons pas<br>le bon nombre de demon<br>qui tourne<br>(voir le log Abeille)';
       return $return;
     }
 
@@ -925,60 +926,63 @@ class Abeille extends eqLogic {
     exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
 
     // Stop main deamon
+    log::add('Abeille', 'debug', 'deamon stop: Stopping cron');
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
-    if (!is_object($cron)) {
-      log::add('Abeille', 'error', 'deamon stop: Abeille, Tache cron introuvable');
-      throw new Exception(__('Tache cron introuvable', __FILE__));
+    if (is_object($cron)) {
+      $cron->halt();
+      log::add('Abeille', 'error', 'deamon stop: demande d arret du cron faite');
     }
-    $cron->halt();
+    else {
+      log::add('Abeille', 'error', 'deamon stop: Abeille, Tache cron introuvable');
+    }
 
     log::add('Abeille', 'debug', 'deamon stop: OUT -------------------------------');
     message::removeAll('Abeille', 'stopDeamon');
   }
 
   public static function dependancy_info() {
+    log::add( 'Abeille', 'warning', '-------------------------------------> dependancy_info()' );
     return self::getDependencyInfo();
   }
 
   public static function getDependencyInfo() {
-    $debug_dependancy_info = 0;
+    // $dependancy_info['state']
+    // state = [ok / nok / in_progress (progression/duration)] / state
+    $debug_dependancy_info = 1;
+
+    log::add( 'Abeille', 'warning', '-------------------------------------> getDependencyInfo()' );
 
     $return = array();
-    $return['state'] = 'nok';
-    $return['launchable'] = 'nok';
+    $return['state'] = 'ok';
     $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependance';
+
+    // Check package mosquitto
     $cmd = "dpkg -l | grep mosquitto";
     exec($cmd, $output_dpkg, $return_var);
-    //lib PHP exist
-    $libphp = extension_loaded('mosquitto');
-
-    //Log debug only info
-    self::serviceMosquittoStatus();
-
-    if ($output_dpkg[0] != "" && $libphp) {
-      //$return['configuration'] = 'ok';
-      $return['launchable'] = 'ok';
-      $return['state'] = 'ok';
-    } else {
-      if ($output_dpkg[0] == "") {
-        log::add(
-          'Abeille',
-          'warning',
-          'Impossible de trouver le package mosquitto . Probleme d installation ?'
-        );
-      }
-      if (!$libphp) {
-        log::add(
-          'Abeille',
-          'warning',
-          'Impossible de trouver la lib php pour mosquitto.'
-        );
-      }
-
+    if ($output_dpkg[0] == "") {
+      log::add( 'Abeille', 'warning', 'Les packages mosquitto ne semblent pas être installés.' );
+      $return['state'] = 'Les packages mosquitto ne semblent pas être installés<a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_installation_manuelle">(doc)</a>.';
+      return $return;
     }
-    if ($debug_dependancy_info) {
-      log::add('Abeille', 'debug', 'dependancy_info: '.$return['state']);
+
+    //lib PHP exist for Jeedom
+    if ( !extension_loaded('mosquitto') ) {
+      log::add( 'Abeille', 'warning', 'je ne trouve pas la lib php pour me connecter à mosquitto.' );
+      $return['state'] = 'je ne trouve pas la lib php pour me connecter à mosquitto <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_installation_manuelle">(doc)</a>.';
+      return $return;
+    };
+
+    // Check que le service Mosquitto tourne
+    // $return['mosquitto'] = 'ok';
+    // $return['mosquitto_message'] = 'Service mosquitto is running.';
+    $moquittoStatus = self::serviceMosquittoStatus();
+    if ($moquittoStatus['mosquitto'] != 'ok') {
+      log::add( 'Abeille', 'warning', 'La verification de fonctionnement du service mosquitto renvoie: '. $moquittoStatus['mosquitto_message'] );
+      $return['state'] = 'La verification de fonctionnement du service mosquitto renvoie:<br>'. $moquittoStatus['mosquitto_message'] . ' <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_mosquitto">(doc)</a>.';
+      return $return;
     }
+
+    if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
 
     return $return;
   }

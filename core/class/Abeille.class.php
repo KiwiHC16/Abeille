@@ -665,69 +665,44 @@ class Abeille extends eqLogic {
     if ($debug_deamon_info) log::add('Abeille', 'debug', '**deamon info: IN**');
 
     // On suppose que tout est bon et on cherche les problemes.
-    $return = array( 'log'                 => 'Abeille_update',
-    'state'               => 'ok',
-    'configuration'       => 'ok',
-    'launchable'          => 'ok',
-    'launchable_message'  => "", );
+    $return = array( 'state'                => 'ok',  // On couvre le fait que le process tourne en tache de fond
+    'launchable'                            => 'ok',  // On couvre la configuration de plugin
+    'launchable_message'                    => "trtr", );
 
-/*
-    // On verifie le cron
-    if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron object missing');
-      $return['configuration']      = 'nok';
-      $return['launchable_message'] = 'Problème avec le cron';
-      return $return;
-    }
-    if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
-      $return['configuration']      = 'nok';
-      $return['launchable_message'] = 'Problème avec le cron running';
-      return $return;
-    }
-*/
-
-    // deps ok ?
-    if (self::getDependencyInfo()['state'] == 'nok') {
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to dependancies missing');
-      $return['launchable'] = 'nok';
-      $return['launchable_message'] = 'Dépendances non installées, (re)lancer l\'installation';
-      return $return;
+    // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
+    if ( self::getParameters()['parameters'] != "ok" ) {
+      $return['launchable'] = self::getParameters()['parameters'];
+      $return['launchable_message'] = self::getParameters()['launchable_message'];
     }
 
-    // Parameters OK
-    if (self::getParameters()['state'] == 'nok') {
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: deamon is not launchable due to parameters missing');
-      $return['launchable'] = 'nok';
-      $return['launchable_message'] = 'Probleme avec les parametres';
-      return $return;
+    // On verifie que le cron tourne
+    if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
+      if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
+        if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
+        $return['state']              = 'nok';
+        $return['launchable_message'] = 'Problème avec le cron qui ne semble pas tourner';
+      }
     }
 
-    // Check for running mosquitto service
-    if (self::serviceMosquittoStart()['mosquitto'] != 'ok') {
-      message::add("Abeille", "Le service mosquitto n'a pas pu être démarré.");
-      if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: mosquitto ne semble pas fonctionner sur ce systeme.');
-    }
-
-    // Nb de demon devant tourner
+    // Nb de demon devant tourner: mosquitto plus les demons
     //check running deamon /!\ if using sudo nbprocess x2
     if (self::getParameters()['onlyTimer'] == 'N') {
       if (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') {
-        $nbProcessExpected = 5;
+        $nbProcessExpected = 6;
       } else {
-        $nbProcessExpected = 4;
+        $nbProcessExpected = 5;
       }
     } else {
-      $nbProcessExpected = 1;
+      $nbProcessExpected = 2;
     }
 
     // Combien de demons tournent ?
-    exec("ps -e -o '%p;%a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output );
-    $nbProcess = $output[0];
-
-    if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output[0]);
+    exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output1 );
+    exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/mosquitto /' | cut -d ';'  -f 1 | wc -l", $output2 );
+    $nbProcess = $output1[0]+$output2[0];
 
     if ( ($nbProcess != $nbProcessExpected) ) {
+      if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
       if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
       $return['state'] = 'nok';
       $return['launchable_message'] = 'Nous n avons pas le bon nombre de demon qui tourne';
@@ -849,9 +824,7 @@ class Abeille extends eqLogic {
     sleep(5);
     $param = self::getParameters();
 
-    //no need as it seems to be on cron
-    $deamon_info = self::getDependencyInfo();
-    if ($deamon_info['launchable'] != 'ok') {
+    if (self::getDependencyInfo()['launchable'] != 'ok') {
       message::add("Abeille", "Vérifier la configuration, un parametre manque");
       throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
     }
@@ -936,22 +909,19 @@ class Abeille extends eqLogic {
   }
 
   public static function deamon_stop() {
-    log::add('Abeille', 'debug', 'deamon stop: IN');
+    log::add('Abeille', 'debug', 'deamon stop: IN -------------------------------');
     // Stop socat if exist
-    // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '{print $1}' | tr  '\n' ' '", $output);
     exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/tmp\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
-    log::add('Abeille', 'debug', 'deamon stop: Killing deamons: '.implode($output, '!'));
+    log::add('Abeille', 'debug', 'deamon stop: Killing deamons socat: '.implode($output, '!'));
     system::kill($output, true);
     exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
     exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
 
     // Stop other deamon
-    exec(
-      "ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | awk '{print $1}' | tr  '\n' ' '",
-      $output
-    );
+    exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
     log::add('Abeille', 'debug', 'deamon stop: Killing deamons: '.implode($output, '!'));
     system::kill($output, true);
+    exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
     exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
 
     // Stop main deamon
@@ -962,7 +932,7 @@ class Abeille extends eqLogic {
     }
     $cron->halt();
 
-    log::add('Abeille', 'debug', 'deamon stop: OUT');
+    log::add('Abeille', 'debug', 'deamon stop: OUT -------------------------------');
     message::removeAll('Abeille', 'stopDeamon');
   }
 
@@ -1020,12 +990,7 @@ class Abeille extends eqLogic {
       "L installation des dependances est en cours, n oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation"
     );
     log::remove(__CLASS__.'_update');
-    $result = array(
-      'script' => dirname(__FILE__).'/../../resources/install.sh '.jeedom::getTmpFolder(
-        'Abeille'
-      ).'/dependance',
-      'log' => log::getPathToLog(__CLASS__.'_update'),
-    );
+    $result = array( 'script' => dirname(__FILE__).'/../../resources/install.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance', 'log' => log::getPathToLog(__CLASS__.'_update'), );
     if ($result['state'] == 'ok') {
       $result['launchable'] = 'ok';
     }
@@ -1102,17 +1067,13 @@ class Abeille extends eqLogic {
 
       log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
 
-      // 1 to use loopForever et 0 to use while loop
-      if (0) {
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loopForever
-        $client->loopForever();
-      } else {
-        while (true) {
-          // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-          $client->loop(0);
-          time_nanosleep( 0, 10000000 ); // 1/100s
-        }
+
+      while (true) {
+        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+        $client->loop(0);
+        time_nanosleep( 0, 10000000 ); // 1/100s
       }
+
 
       $client->disconnect();
       unset($client);
@@ -1171,7 +1132,7 @@ class Abeille extends eqLogic {
 
   public static function getParameters() {
     $return = array();
-    $return['state'] = 'nok';
+    $return['parameters'] = 'ok';
 
     //Most Fields are defined with default values
     $return['AbeilleAddress'] = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
@@ -1195,28 +1156,25 @@ class Abeille extends eqLogic {
 
     // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
     if ($return['AbeilleSerialPort'] == "/tmp/zigate") {
-      $return['state'] = 'ok';
-
+      $return['parameters'] = 'ok';
       return $return;
     }
     if (($return['AbeilleSerialPort'] != 'none') ||  ($return['onlyTimer'] != "Y")) {
       $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
       if (@!file_exists($return['AbeilleSerialPort'])) {
         log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
+        $return['parameters']="nok";
         $return['launchable_message'] = __('Le port n\'est pas configuré ou zigate déconnectée', __FILE__);
-        throw new Exception(__('Le port n\'est pas configuré ou zigate déconnectée : '.$return['AbeilleSerialPort'],__FILE__));
+        return $return;
       } else {
         if (substr(decoct(fileperms($return['AbeilleSerialPort'])), -4) != "0777") {
           exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
         }
-        $return['state'] = 'ok';
+
       }
     } else {
       //if serialPort= none then nothing to check
-      $return['state'] = 'ok';
     }
-
-    $return['state'] = 'ok';
 
     return $return;
   }

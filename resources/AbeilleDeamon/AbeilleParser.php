@@ -217,28 +217,28 @@ class AbeilleParser extends MosquittoAbeille {
   {
     // Abeille / short addr / Cluster ID - Attr ID -> data
     // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-    $this->publish("Abeille/".$SrcAddr."/".$fct,    $data,               $qos);
+    $this->client->publish("Abeille/".$SrcAddr."/".$fct,    $data,               $qos);
   }
 
   function mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
   {
     // Abeille / short addr / Cluster ID - Attr ID -> data
     // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-    $this->publish("LQI/".$Addr."/".$Index, $data, $qos);
+    $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."LQI/".$Addr."/".$Index, $data, $qos);
   }
 
   function mqqtPublishAnnounce( $SrcAddr, $data, $qos = 0)
   {
     // Abeille / short addr / Annonce -> data
     // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-    $this->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
+    $this->client->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
   }
 
   function mqqtPublishAnnounceProfalux( $SrcAddr, $data, $qos = 0)
   {
     // Abeille / short addr / Annonce -> data
     // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-    $this->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
+    $this->client->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
   }
 
   function procmsg($topic, $payload)
@@ -351,239 +351,14 @@ class AbeilleParser extends MosquittoAbeille {
       $this->deamonlog('error',';CRC is not as expected ('.$crctmp.') is '.$crc.' ');
     }
 
-    // $this->deamonlog('debug',';type: '.$type.' quality: '.$quality);
-
     //Traitement PAYLOAD
-    switch ($type) {
-      #Device Announce
-      case "004d" :
-      $this->decode004d( $payload, $qos);
-      break;
-      #Reponses
-      case "8000" :
-      $this->decode8000( $payload, $ln, $qos);
-      break;
+    $param1 = "";
+    if ( ($type == "8003") || ($type == "8043")) $param1 = $clusterTab;
+    if ($type == "804e") $param1=$LQI;
+    if ($type == "8102") $param1=$quality;
 
-      case "8001" :
-      $this->decode8001( $payload, $ln, $qos);
-      break;
-
-      case "8002" :
-      $this->decode8002( $payload, $ln, $qos);
-      break;
-
-      case "8003" :
-      $this->decode8003( $payload, $ln, $qos, $clusterTab);
-      break;
-
-      case "8004" :
-      $this->decode8004( $payload, $ln, $qos);
-      break;
-
-      case "8005" :
-      $this->decode8005( $payload, $ln, $qos);
-      break;
-
-      case "8006" :
-      $this->decode8006( $payload, $ln, $qos);
-      break;
-
-      case "8007" :
-      $this->decode8007( $payload, $ln, $qos);
-      break;
-
-      case "8008" :
-      $this->decode8008( $payload, $ln, $qos);
-      break;
-
-      case "8009" :
-      $this->decode8009( $payload, $ln, $qos);
-      break;
-
-      case "8010" :
-      $this->decode8010( $payload, $ln, $qos);
-      break;
-
-      case "8014" :
-      $this->decode8014( $payload, $ln, $qos);
-      break;
-
-      case "8015" :
-      $this->decode8015( $payload, $ln, $qos);
-      break;
-
-      case "8017" :
-      $this->decode8017( $payload, $ln, $qos);
-      break;
-
-      case "8024" :
-      $this->decode8024( $payload, $ln, $qos);
-      break;
-
-      case "8028" :
-      $this->decode8028( $payload, $ln, $qos);
-      break;
-
-      case "802B" :
-      $this->decode802B( $payload, $ln, $qos);
-      break;
-
-      case "802C" :
-      $this->decode802C( $payload, $ln, $qos);
-      break;
-
-      case "8030" :
-      $this->decode8030( $payload, $ln, $qos);
-      break;
-
-      case "8031" :
-      $this->decode8031( $payload, $ln, $qos);
-      break;
-
-      case "8034" :
-      $this->decode8034( $payload, $ln, $qos);
-      break;
-
-      case "8040" :
-      $this->decode8040( $payload, $ln, $qos);
-      break;
-
-      case "8041" :
-      $this->decode8041( $payload, $ln, $qos);
-      break;
-
-      case "8042" :
-      $this->decode8042( $payload, $ln, $qos);
-      break;
-
-      case "8043" :
-      $this->decode8043( $payload, $ln, $qos, $clusterTab);
-      break;
-
-      case "8044" :
-      $this->decode8044( $payload, $ln, $qos);
-      break;
-
-      case "8045" :
-      $this->decode8045( $payload, $ln, $qos);
-      break;
-
-      case "8046" :
-      $this->decode8044( $payload, $ln, $qos);
-      break;
-
-      case "8047" :
-      $this->decode8044( $payload, $ln, $qos);
-      break;
-
-      case "8048":
-      $this->decode8048( $payload, $ln, $qos);
-      break;
-
-      case "804A" :
-      $this->decode804A( $payload, $ln, $qos);
-      break;
-
-      case "804B" :
-      $this->decode804B( $payload, $ln, $qos);
-      break;
-
-      case "804e" :
-      $this->decode804E( $payload, $ln, $qos, $LQI);
-      break;
-
-      ##Reponse groupe
-      ##8060-8063
-      case "8060" :
-      $this->decode8060( $payload, $ln, $qos);
-      break;
-
-      case "8061" :
-      $this->decode8061( $payload, $ln, $qos);
-      break;
-
-      case "8062" :
-      $this->decode8062( $payload, $ln, $qos);
-      break;
-
-      case "8063" :
-      $this->decode8063( $payload, $ln, $qos);
-      break;
-
-      case "8085" :
-      $this->decode8085( $payload, $ln, $qos);
-      break;
-
-      case "8095" :
-      $this->decode8095( $payload, $ln, $qos);
-      break;
-
-      #reponse scene
-      #80a0-80a6
-      case "80a0" :
-      $this->decode80a0( $payload, $ln, $qos);
-      break;
-
-      case "80a3" :
-      $this->decode80a3( $payload, $ln, $qos);
-      break;
-
-      case "80a4" :
-      $this->decode80a4( $payload, $ln, $qos);
-      break;
-
-      case "80a6" :
-      $this->decode80a6( $payload, $ln, $qos);
-      break;
-
-      case "80a7" :
-      $this->decode80a7( $payload, $ln, $qos);
-      break;
-
-      #Reponse Attributs
-      #8100-8140
-      case "8100":
-      $this->decode8100( $payload, $ln, $qos);
-      break;
-
-      case "8101" :
-      $this->decode8101( $payload, $ln, $qos);
-      break;
-
-      case "8102" :
-      $this->decode8102( $payload, $ln, $qos, $quality);
-      break;
-
-      case "8110" :
-      $this->decode8110( $payload, $ln, $qos);
-      break;
-
-      case "8120" :
-      $this->decode8120( $payload, $ln, $qos);
-      break;
-
-      case "8140" :
-      $this->decode8140( $payload, $ln, $qos);
-      break;
-
-      # IAS Zone Status Change notification
-      case "8401" :
-      $this->decode8401( $payload, $ln, $qos);
-      break;
-
-      #Route discover
-      case "8701" :
-      $this->decode8701( $payload, $ln, $qos);
-      break;
-      #Reponse APS
-      case "8702" :
-      $this->decode8702( $payload, $ln, $qos);
-      break;
-
-      default:
-      break;
-
-    }
+    $fct = "decode".$type;
+    $this->$fct($payload, $ln, $qos, $param1);
 
     return $tab;
   }
@@ -593,7 +368,7 @@ class AbeilleParser extends MosquittoAbeille {
   /*--------------------------------------------------------------------------------------------------*/
 
   // Device announce
-  function decode004d( $payload, $qos)
+  function decode004d( $payload, $ln, $qos, $dummy)
   {
 
     // < short address: uint16_t>
@@ -621,7 +396,7 @@ class AbeilleParser extends MosquittoAbeille {
     // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
     $this->mqqtPublish( $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
 
-    $this->$this->mqqtPublishFct( "Ruche", "enable", $IEEE, $qos = 0);
+    $this->mqqtPublishFct( "Ruche", "enable", $IEEE, $qos = 0);
 
     // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
     $this->mqqtPublish( "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
@@ -633,7 +408,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
   // Zigate Status
-  function decode8000( $payload, $ln, $qos)
+  function decode8000( $payload, $ln, $qos, $dummy)
   {
     $status     = substr($payload, 0, 2);
     $SQN        = substr($payload, 2, 2);
@@ -658,7 +433,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
   }
 
-  function decode8001( $payload, $ln, $qos)
+  function decode8001( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8001; (Log)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -666,7 +441,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8002( $payload, $ln, $qos)
+  function decode8002( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8002; (Data indication)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -689,7 +464,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8004( $payload, $ln, $qos)
+  function decode8004( $payload, $ln, $qos, $dummy)
   {
     // <source endpoint: uint8_t>
     // <profile ID: uint16_t>
@@ -706,7 +481,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8005( $payload, $ln, $qos)
+  function decode8005( $payload, $ln, $qos, $dummy)
   {
     // $this->deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)' );
 
@@ -725,7 +500,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8006( $payload, $ln, $qos)
+  function decode8006( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8006; (Non “Factory new” Restart)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -733,7 +508,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8007( $payload, $ln, $qos)
+  function decode8007( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8007; (“Factory New” Restart)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -741,7 +516,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8008( $payload, $ln, $qos)
+  function decode8008( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8008; (“Function inconnue pas dans la doc")(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -749,7 +524,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8009( $payload, $ln, $qos)
+  function decode8009( $payload, $ln, $qos, $dummy)
   {
     if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT)'); }
 
@@ -807,7 +582,7 @@ class AbeilleParser extends MosquittoAbeille {
     if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
   }
 
-  function decode8010( $payload, $ln, $qos)
+  function decode8010( $payload, $ln, $qos, $dummy)
   {
     if ($GLOBALS['debugArray']['8010']) {
       $this->deamonlog('debug',';type; 8010; (Version)(Processed->MQTT)'
@@ -829,7 +604,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
   }
 
-  function decode8014( $payload, $ln, $qos)
+  function decode8014( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8014; ( “Permit join” status response)(Processed->MQTT)'
     . '; Permit Join Status: '.substr($payload, 0, 2));
@@ -851,7 +626,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8015( $payload, $ln, $qos)
+  function decode8015( $payload, $ln, $qos, $dummy)
   {
     // <device list – data each entry is 13 bytes>
     // <ID: uint8_t>
@@ -909,7 +684,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8017( $payload, $ln, $qos)
+  function decode8017( $payload, $ln, $qos, $dummy)
   {
     // Get Time server Response (v3.0f)
     // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
@@ -924,7 +699,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8024( $payload, $ln, $qos)
+  function decode8024( $payload, $ln, $qos, $dummy)
   {
     // Formed Msg Type = 0x8024
     // Node->Host  Network Joined / Formed
@@ -975,7 +750,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8028( $payload, $ln, $qos)
+  function decode8028( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8028; (Authenticate response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -983,7 +758,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode802B( $payload, $ln, $qos)
+  function decode802B( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 802B; (	User Descriptor Notify)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -991,7 +766,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode802C( $payload, $ln, $qos)
+  function decode802C( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 802C; (User Descriptor Response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -999,7 +774,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8030( $payload, $ln, $qos)
+  function decode8030( $payload, $ln, $qos, $dummy)
   {
     // <Sequence number: uint8_t>
     // <status: uint8_t>
@@ -1017,7 +792,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8031( $payload, $ln, $qos)
+  function decode8031( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8031; (unBind response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1025,7 +800,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8034( $payload, $ln, $qos)
+  function decode8034( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8034; (Complex Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1033,7 +808,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8040( $payload, $ln, $qos)
+  function decode8040( $payload, $ln, $qos, $dummy)
   {
     // Network Address response
 
@@ -1063,7 +838,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8041( $payload, $ln, $qos)
+  function decode8041( $payload, $ln, $qos, $dummy)
   {
     // IEEE Address response
 
@@ -1092,7 +867,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8042( $payload, $ln, $qos)
+  function decode8042( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8042; (Node Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1152,7 +927,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8044( $payload, $ln, $qos)
+  function decode8044( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug',';type; 8044; (N	Power Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1161,7 +936,7 @@ class AbeilleParser extends MosquittoAbeille {
   }
 
   // Active Endpoints Response
-  function decode8045( $payload, $ln, $qos)
+  function decode8045( $payload, $ln, $qos, $dummy)
   {
     $SrcAddr = substr($payload, 4, 4);
     $EP = substr($payload, 10, 2);
@@ -1184,7 +959,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8046( $payload, $ln, $qos)
+  function decode8046( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', 'Type; 8046; (Match Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1192,7 +967,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
   }
 
-  function decode8047( $payload, $ln, $qos)
+  function decode8047( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', 'Type; 8047; (Management Leave response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1200,7 +975,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
   }
 
-  function decode8048( $payload, $ln, $qos)
+  function decode8048( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', ';Type; 8048; (Leave Indication)(Processed->Draft-MQTT)'
     . '; extended addr : '.substr($payload, 0, 16)
@@ -1225,11 +1000,11 @@ class AbeilleParser extends MosquittoAbeille {
     $SrcAddr = "Ruche";
     $fct = "disable";
     $extendedAddr = substr($payload, 0, 16);
-    $this->$this->mqqtPublishFct( $SrcAddr, $fct, $extendedAddr, $qos = 0);
+    $this->mqqtPublishFct( $SrcAddr, $fct, $extendedAddr, $qos = 0);
 
   }
 
-  function decode804A( $payload, $ln, $qos)
+  function decode804A( $payload, $ln, $qos, $dummy)
   {
     // app_general_events_handler.c
     // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
@@ -1239,7 +1014,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
   }
 
-  function decode804B( $payload, $ln, $qos)
+  function decode804B( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', 'Type; 804B; (	System Server Discovery response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -1309,8 +1084,8 @@ class AbeilleParser extends MosquittoAbeille {
     // $this->deamonlog('debug', 'Message: ');
     // $this->deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
 
-    //function $this->$this->mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
-    $this->$this->mqqtPublishLQI( $NeighbourAddr, $index, $data, $qos);
+    //function $this->mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
+    $this->mqqtPublishLQI( $NeighbourAddr, $index, $data, $qos);
 
     if ( strlen($NeighbourAddr) !=4 ) { return; }
 
@@ -1319,16 +1094,16 @@ class AbeilleParser extends MosquittoAbeille {
     // CmdAbeille/Ruche/getName address=bbf5&destinationEndPoint=0B
     if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
       $this->deamonlog('debug', ';Type; 804E; (Management LQI response)($mqtt->decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
-      $this->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01",               $qos);
-      $this->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03",               $qos);
-      $this->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B",               $qos);
+      $this->client->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01",               $qos);
+      $this->client->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03",               $qos);
+      $this->client->publish("CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B",               $qos);
 
     }
 
   }
 
   //----------------------------------------------------------------------------------------------------------------
-  function decode8060( $payload, $ln, $qos)
+  function decode8060( $payload, $ln, $qos, $dummy)
   {
     // Answer format changed: https://github.com/fairecasoimeme/ZiGate/pull/97
     // Bizard je ne vois pas la nouvelle ligne dans le maaster zigate alors qu elle est dans GitHub
@@ -1350,13 +1125,13 @@ class AbeilleParser extends MosquittoAbeille {
   }
 
   //----------------------------------------------------------------------------------------------------------------
-  function decode8061( $payload, $ln, $qos)
+  function decode8061( $payload, $ln, $qos, $dummy)
   {
 
   }
 
   // Get Group Membership response
-  function decode8062( $payload, $ln, $qos)
+  function decode8062( $payload, $ln, $qos, $dummy)
   {
 
     // <Sequence number: uint8_t>                               -> 2
@@ -1399,7 +1174,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode8063( $payload, $ln, $qos)
+  function decode8063( $payload, $ln, $qos, $dummy)
   {
 
     // <Sequence number: uin8_t>    -> 2
@@ -1441,7 +1216,7 @@ class AbeilleParser extends MosquittoAbeille {
   // Remote is unable to send other button commands at least when left or right is hold down.
 
 
-  function decode8085( $payload, $ln, $qos)
+  function decode8085( $payload, $ln, $qos, $dummy)
   {
 
     // <Sequence number: uin8_t>    -> 2
@@ -1470,7 +1245,7 @@ class AbeilleParser extends MosquittoAbeille {
   }
 
 
-  function decode8095( $payload, $ln, $qos)
+  function decode8095( $payload, $ln, $qos, $dummy)
   {
 
     // <Sequence number: uin8_t>    -> 2
@@ -1499,7 +1274,7 @@ class AbeilleParser extends MosquittoAbeille {
   ##TODO
   #reponse scene
   #80a0-80a6
-  function decode80a0( $payload, $ln, $qos)
+  function decode80a0( $payload, $ln, $qos, $dummy)
   {
     // <sequence number: uint8_t>                           -> 2
     // <endpoint : uint8_t>                                 -> 2
@@ -1540,17 +1315,17 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode80a1( $payload, $ln, $qos)
+  function decode80a1( $payload, $ln, $qos, $dummy)
   {
 
   }
 
-  function decode80a2( $payload, $ln, $qos)
+  function decode80a2( $payload, $ln, $qos, $dummy)
   {
 
   }
 
-  function decode80a3( $payload, $ln, $qos)
+  function decode80a3( $payload, $ln, $qos, $dummy)
   {
 
     // <sequence number: uint8_t>   -> 2
@@ -1571,7 +1346,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode80a4( $payload, $ln, $qos)
+  function decode80a4( $payload, $ln, $qos, $dummy)
   {
 
     // <sequence number: uint8_t>   -> 2
@@ -1594,7 +1369,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function decode80a6( $payload, $ln, $qos)
+  function decode80a6( $payload, $ln, $qos, $dummy)
   {
 
     // $this->deamonlog('debug', ';Type: 80A6: raw data: '.$payload );
@@ -1713,7 +1488,7 @@ class AbeilleParser extends MosquittoAbeille {
   // Remote won't tell which button was released left or right, but it will be same button that was last hold.
   // Remote is unable to send other button commands at least when left or right is hold down.
 
-  function decode80a7( $payload, $ln, $qos)
+  function decode80a7( $payload, $ln, $qos, $dummy)
   {
     // <Sequence number: uin8_t>    -> 2
     // <endpoint: uint8_t>          -> 2
@@ -1769,7 +1544,7 @@ class AbeilleParser extends MosquittoAbeille {
   #Reponse Attributs
   #8100-8140
 
-  function decode8100( $payload, $ln, $qos)
+  function decode8100( $payload, $ln, $qos, $dummy)
   {
     // "Type: 0x8100 (Read Attrib Response)"
     // 8100 000D0C0Cb32801000600000010000101
@@ -1826,7 +1601,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->mqqtPublish( $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data, $qos);
   }
 
-  function decode8101( $payload, $ln, $qos)
+  function decode8101( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', ';Type; 8101; (Default Response)(Not Processed)'
     . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
@@ -2293,7 +2068,7 @@ class AbeilleParser extends MosquittoAbeille {
     }
   }
 
-  function decode8110( $payload, $ln, $qos)
+  function decode8110( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', ';Type; 8110; (	Write Attribute Response)(Not Processed)'
     . '; (Not processed*************************************************************)'
@@ -2301,7 +2076,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
-  function decode8120( $payload, $ln, $qos)
+  function decode8120( $payload, $ln, $qos, $dummy)
   {
     // <Sequence number: uint8_t>
     // <Src address : uint16_t>
@@ -2326,7 +2101,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
   }
 
-  function decode8140( $payload, $ln, $qos)
+  function decode8140( $payload, $ln, $qos, $dummy)
   {
     // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
     $this->deamonlog('debug', 'Type; 8140; (Configure Reporting response)(Not Processed)'
@@ -2336,7 +2111,7 @@ class AbeilleParser extends MosquittoAbeille {
   }
 
   // Codé sur la base des messages Xiaomi Inondation
-  function decode8401( $payload, $ln, $qos)
+  function decode8401( $payload, $ln, $qos, $dummy)
   {
     // <sequence number: uint8_t>
     // <endpoint : uint8_t>
@@ -2371,14 +2146,14 @@ class AbeilleParser extends MosquittoAbeille {
   }
 
 
-  function decode8701( $payload, $ln, $qos)
+  function decode8701( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', ';type; 8701; (Route Discovery Confirm)($mqtt->decoded but Not Processed)'
     . '; Status : '.substr($payload, 0, 2)
     . '; Nwk Status : '.substr($payload, 2, 2)  );
   }
 
-  function decode8702( $payload, $ln, $qos)
+  function decode8702( $payload, $ln, $qos, $dummy)
   {
     $this->deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
     . '; Status : '.substr($payload, 0, 2)
@@ -2494,10 +2269,10 @@ class AbeilleParser extends MosquittoAbeille {
           if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
             if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
-            $this->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
-            $this->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $qos);
-            $this->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $qos);
-            $this->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short, $qos);
+            $this->client->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
+            $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $qos);
+            $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $qos);
+            $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short, $qos);
             $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
           }
         }
@@ -2507,28 +2282,28 @@ class AbeilleParser extends MosquittoAbeille {
         if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
           if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
           $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
-          $this->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-          $this->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+          $this->client->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+          $this->client->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
 
-          $this->publish("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-          $this->publish("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+          $this->client->publish("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+          $this->client->publish("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
 
           // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
-          $this->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
-          $this->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+          $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+          $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
           $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
         }
         break;
 
-        case 'BEN1': // modelIdentifier / BEN1
+        case 'modelIdentifier':
         if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
           if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) {
             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE']));
           }
           $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
           $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
-          $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
-          $this->mqqtPublish( $short, "Short", "Addr", $short, $qos);
+          $this->client->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
+          $this->client->mqqtPublish( $short, "Short", "Addr", $short, $qos);
           sleep(5); // time for the object to be created before configuring
           configureNE($short);
         }

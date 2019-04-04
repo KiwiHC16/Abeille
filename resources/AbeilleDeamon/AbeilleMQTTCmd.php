@@ -12,30 +12,12 @@ require_once dirname(__FILE__).("/lib/Tools.php");
 include(dirname(__FILE__).'/includes/config.php');
 include(dirname(__FILE__).'/includes/function.php');
 
-function connect($r, $message) {
-  log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
-  // config::save('state', '1', 'Abeille');
-}
 
-function disconnect($r) {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
-  // config::save('state', '0', 'Abeille');
-}
-
-function subscribe() {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
-}
-
-function logmq($code, $str) {
-  // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
-  // }
-}
 
 function message($message) {
   global $AbeilleMQTTCmd;
 
-  $AbeilleMQTTCmd->procmsg( $message->topic, $message->payload );
+  $AbeilleMQTTCmd->procmsg( $message );
 }
 
 class debug extends Tools {
@@ -54,6 +36,26 @@ class debug extends Tools {
 class MosquittoAbeille extends debug {
   public $client;
 
+  static function connect($r, $message) {
+    log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+    // config::save('state', '1', 'Abeille');
+  }
+
+  static function disconnect($r) {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+    // config::save('state', '0', 'Abeille');
+  }
+
+  static function subscribe() {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+  }
+
+  static function logmq($code, $str) {
+    // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+    // }
+  }
+
   function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
     if ($debug) $this->deamonlog("debug", "MosquittoAbeille constructor");
 
@@ -62,19 +64,19 @@ class MosquittoAbeille extends debug {
     $this->client = new Mosquitto\Client($client_id);
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-    $this->client->onConnect('connect');
+    $this->client->onConnect('MosquittoAbeille::connect');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-    $this->client->onDisconnect('disconnect');
+    $this->client->onDisconnect('MosquittoAbeille::disconnect');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-    $this->client->onSubscribe('subscribe');
+    $this->client->onSubscribe('MosquittoAbeille::subscribe');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
     $this->client->onMessage('message');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-    $this->client->onLog('logmq');
+    $this->client->onLog('MosquittoAbeille::logmq');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
     $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
@@ -2148,21 +2150,27 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
   }
 
-  function procmsg($topic, $msg) {
-    //$msg =  preg_replace("/[^A-Za-z0-9&=]/",'',$msg);
+  function procmsg( $message ) {
+
     if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
-    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
+    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $message->topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
+
+    $parameters_info = Abeille::getParameters();
 
     // On gere la root de mqtt
     if ( $parameters_info["AbeilleTopic"] != "#" ) {
       if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
-        log::add('Abeille', 'debug', "Message receive but is not for me, wrong delivery !!!");
+        $this->deamonlog('debug', "AbeilleMQTTCmd - Message receive but is not for me, wrong delivery !!!");
         return;
       }
       // On enleve AbeilleTopic
       $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
     }
-    
+    $this->deamonlog("debug", "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+
+    $topic = $message->topic;
+    $msg = $message->payload;
+
     $test = explode('/', $topic);
     if ( sizeof( $test ) !=3 ) {
       $this->deamonlog("debug", "Le format du message n est pas bon je ne le traite pas !!!");
@@ -2183,8 +2191,8 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       return;
     }
 
-    if ( $this->debug['procmsg'] ) $this->deamonlog('info', 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
-    if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
+    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
     // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
 
@@ -3358,9 +3366,9 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 // exemple d appel
 // php AbeilleMQTTCmd.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
 
-
+$AbeilleMQTTCmd = new AbeilleMQTTCmd("AbeilleMQTTCmd");
 try {
-  $AbeilleMQTTCmd = new AbeilleMQTTCmd("AbeilleMQTTCmd");
+
 
   if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) $AbeilleMQTTCmd->deamonlog("debug", json_encode( $AbeilleMQTTCmd ) );
 

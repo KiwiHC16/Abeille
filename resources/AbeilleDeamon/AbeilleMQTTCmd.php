@@ -84,10 +84,14 @@ class MosquittoAbeille extends debug {
 
     $this->client->setCredentials( $username, $password );
     $this->client->connect( $server, $port, 60 );
-    $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos );
+    $this->publishMosquitto( "/jeedom", "Client ".$client_id." is joining" );
     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
 
     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
+  }
+
+  public function publishMosquitto( $topic, $message ) {
+    $this->client->publish( $topic, $message, $this->qos, 0 );
   }
 }
 
@@ -123,7 +127,7 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
     foreach ($this->mqttMessageQueue as $key => $mqttMessage) {
       // deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - 0: '.$mqttMessage[0] );
       if ($mqttMessage[0]<$now) {
-        $this->client->publish( substr($this->parameters_info["AbeilleTopic"],0,-1).$mqttMessage[1], $mqttMessage[2], $this->parameters_info["qos"] );
+        $this->publishMosquitto( substr($this->parameters_info["AbeilleTopic"],0,-1).$mqttMessage[1], $mqttMessage[2]  );
         if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($this->mqttMessageQueue[$key]) );
         unset($this->mqttMessageQueue[$key]);
         if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - Rest: '.json_encode($this->mqttMessageQueue) );
@@ -818,7 +822,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         // $CommandAdditionelle['permitJoin'] = "permitJoin";
         // $CommandAdditionelle['permitJoin'] = "Status";
         // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-        Abeille::publishMosquitto(null, "CmdAbeille/Ruche/permitJoin", "Status", '0');
+        $this->publishMosquitto( "CmdAbeille/Ruche/permitJoin", "Status" );
       }
     }
 
@@ -1643,8 +1647,8 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       // getParam($dest,$address, $Command['clusterId'], "0000" );
       //getParam($dest,$address, $Command['clusterId'], "0000" );
       // sleep(1);
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
+      $this->publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+      $this->publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
     }
 
     // setLevelStop
@@ -1947,8 +1951,8 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       // $attribute = "0000";
       // getParam($dest,$address, $Command['clusterId'], $attribute);
       // sleep(2);
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000", '0');
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000", '0');
+      $this->publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+      $this->publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
 
     }
 
@@ -2772,10 +2776,10 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
         $this->deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
-        $client->publish('Abeille/'.$address.'/colorRouge', $rouge*100/255,         $qos);
-        $client->publish('Abeille/'.$address.'/colorVert',  $vert*100/255,          $qos);
-        $client->publish('Abeille/'.$address.'/colorBleu',  $bleu*100/255,          $qos);
-        $client->publish('Abeille/'.$address.'/ColourRGB',  $parameters['color'],   $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/colorRouge', $rouge*100/255      );
+        $this->publishMosquitto('Abeille/'.$address.'/colorVert',  $vert*100/255       );
+        $this->publishMosquitto('Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
+        $this->publishMosquitto('Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
         $Command = array(
           "setColourRGB" => "1",
@@ -2800,7 +2804,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         if ( $bleu=="" )  { $bleu = 1;    }
         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
-        $client->publish('Abeille/'.$address.'/colorRouge', $msg, $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/colorRouge', $msg );
 
         $fields = preg_split("/[=&]+/", $msg);
         if (count($fields) > 1) {
@@ -2830,7 +2834,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         if ( $bleu=="" )  { $bleu = 1;    }
         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
-        $client->publish('Abeille/'.$address.'/colorVert', $msg, $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/colorVert', $msg );
 
         $fields = preg_split("/[=&]+/", $msg);
         if (count($fields) > 1) {
@@ -2860,7 +2864,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         if ( $bleu=="" )  { $bleu = 1;    }
         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
-        $client->publish('Abeille/'.$address.'/colorBleu', $msg, $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/colorBleu', $msg );
 
         $fields = preg_split("/[=&]+/", $msg);
         if (count($fields) > 1) {
@@ -2927,7 +2931,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
           "destinationEndPoint"  => $parameters['EP'],
         );
 
-        $client->publish('Abeille/'.$address.'/Temperature-Light', $temperatureK,         $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/Temperature-Light', $temperatureK );
         break;
         //----------------------------------------------------------------------------
         case "setTemperatureGroup":
@@ -2958,7 +2962,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
           "destinationEndPoint"  => $parameters['EP'],
         );
 
-        $client->publish('Abeille/'.$address.'/Temperature-Light', $temperatureK,         $qos);
+        $this->publishMosquitto('Abeille/'.$address.'/Temperature-Light', $temperatureK );
         break;
         //----------------------------------------------------------------------------
         case "sceneGroupRecall":

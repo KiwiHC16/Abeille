@@ -430,13 +430,13 @@ class Abeille extends eqLogic {
 
 
         log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-        $this->publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
+        Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
 
-        $this->publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
+        Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
 
-        $this->publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10" );
+        Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10" );
 
-        $this->publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20" );
+        Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20" );
       }
     }
     if ( ($i*33) > (3600) ) {
@@ -546,7 +546,7 @@ class Abeille extends eqLogic {
     } else {
       Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode" );
       Abeille::publishMosquitto(null, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
-      $this->publishMosquitto( "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
+      Abeille::publishMosquitto( "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
     }
 
     // Rafraichie l etat poll = 1
@@ -725,7 +725,7 @@ class Abeille extends eqLogic {
 
     // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
     log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
-    $this->publishMosquitto( "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'] );
+    Abeille::publishMosquitto( "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'] );
 
     // Start other deamons
 
@@ -1622,7 +1622,7 @@ class Abeille extends eqLogic {
             $elogic->save();
 
             // Il faut aussi mettre a jour la commande short address
-            self::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr );
+            Abeille::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr );
           } else {
             log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
             message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
@@ -2077,7 +2077,7 @@ class Abeille extends eqLogic {
 
         $request = str_replace('\\', '', jeedom::evaluateExpression($request));
         $request = cmd::cmdToValue($request);
-        $this->publishMosquitto( $topic, $request );
+        Abeille::publishMosquitto( $topic, $request );
       }
 
       return true;
@@ -2224,7 +2224,7 @@ class Abeille extends eqLogic {
           $addr = $topicArray[1];
           if (strlen($addr) == 4) {
             echo "Short: ".$topicArray[1];
-            $this->publishMosquitto( "CmdAbeille/".$addr."/Annonce", "Default" );
+            Abeille::publishMosquitto( "CmdAbeille/".$addr."/Annonce", "Default" );
           }
 
         }

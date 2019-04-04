@@ -34,7 +34,7 @@ function logmq($code, $str) {
 
 function message($message) {
   global $AbeilleMQTTCmd;
-  // var_dump( $message );
+
   $AbeilleMQTTCmd->procmsg( $message->topic, $message->payload );
 }
 
@@ -2152,14 +2152,17 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     //$msg =  preg_replace("/[^A-Za-z0-9&=]/",'',$msg);
     if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
     if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
-    if ( substr($topic, 0, strlen($this->parameters_info["AbeilleTopic"])-2) != substr($this->parameters_info["AbeilleTopic"],0, strlen($this->parameters_info["AbeilleTopic"])-2 ) ) {
-      if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "Message receive but is not for me, wrong delivery !!!");
-      return;
+
+    // On gere la root de mqtt
+    if ( $parameters_info["AbeilleTopic"] != "#" ) {
+      if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
+        log::add('Abeille', 'debug', "Message receive but is not for me, wrong delivery !!!");
+        return;
+      }
+      // On enleve AbeilleTopic
+      $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
     }
-
-    // On enleve AbeilleTopic
-    $topic = substr( $topic, strlen($this->parameters_info["AbeilleTopic"])-1 );
-
+    
     $test = explode('/', $topic);
     if ( sizeof( $test ) !=3 ) {
       $this->deamonlog("debug", "Le format du message n est pas bon je ne le traite pas !!!");

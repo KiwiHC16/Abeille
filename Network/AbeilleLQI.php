@@ -17,6 +17,7 @@ require_once("../resources/AbeilleDeamon/includes/fifo.php");
 require_once("../resources/AbeilleDeamon/includes/function.php");
 
 $debugBen = 0;
+$abeilleParameters = Abeille::getParameters();
 
 function benLog($message = "")
 {
@@ -28,36 +29,27 @@ function benLog($message = "")
 
 function connect($r, $message)
 {
-    //lqiLog('debug', 'Connexion à Mosquitto avec code ' . $r . ' ' . $message);
-    // config::save('state', '1', 'Abeille');
 }
 
 function disconnect($r)
 {
-    //lqiLog('debug', 'Déconnexion de Mosquitto avec code ' . $r);
-    //config::save('state', '0', 'Abeille');
 }
 
 function subscribe()
 {
-    //lqiLog('debug', 'Subscribe to topics');
 }
 
 function logmq($code, $str)
 {
-    //if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-    // Example of messages in log if lqiLog uncommented
-    // AbeilleLQI 2018-04-12 12:39:15[DEBUG]16 : Client LQI_Connection sending PUBLISH (d0, q0, r0, m3, 'CmdAbeille/Ruche/Management_LQI_request', ... (26 bytes))
-    // AbeilleLQI 2018-04-12 12:39:17[DEBUG]16 : Client LQI_Connection received PUBLISH (d0, q0, r0, m0, 'LQI/df33/00', ... (139 bytes))
-    // lqiLog('debug', $code . ' : ' . $str);
-    //}
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
 function message($message)
 {
     global $qos;
-    
+    global $abeilleParameters;
+
     $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
     $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
 
@@ -151,7 +143,7 @@ function message($message)
     // Envoie de l'adresse IEEE a Abeille pour completer les objets.
     // e.g. Abeille/d45e/IEEE-Addr
     $mqtt = $GLOBALS['client'];
-    $mqtt->publish("Abeille/" . $parameters['Voisine'] . "/IEEE-Addr", $parameters['IEEE_Address'], $qos);
+    $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."Abeille/" . $parameters['Voisine'] . "/IEEE-Addr", $parameters['IEEE_Address'], $qos);
 
 }
 
@@ -163,7 +155,8 @@ function message($message)
  + */
 function mqqtPublishLQI($mqtt, $destAddr, $index, $qos = 0)
 {
-    $mqtt->publish("CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
+  global $abeilleParameters;
+  $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
 
 }
 
@@ -244,6 +237,8 @@ if (isset($argv[1])) {
 
 benLog('Start Main');
 
+echo json_encode($abeilleParameters)."\n";
+
 $DataFile = "AbeilleLQI_MapData.json";
 $FileLock = $DataFile . ".lock";
 $nbwritten = 0;
@@ -281,7 +276,7 @@ benLog("NE connus pas Abeille");
         var_dump($knownNE_FromAbeille);
         echo "----------------------------------\n";
     }
-    
+
 
 // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 
@@ -292,7 +287,7 @@ $LQI = array();
 
 // https://github.com/mgdm/Mosquitto-PHP
 // http://mosquitto-php.readthedocs.io/en/latest/client.html
-// $client = new Mosquitto\Client($parameters_info['AbeilleConId']);
+
 $client = new Mosquitto\Client("LQI_Connection");
 
 // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
@@ -317,16 +312,12 @@ $client->setReconnectDelay(1, 120, 1);
 
 
 $client->setCredentials(
-// $parameters_info['AbeilleUser'],
-// $parameters_info['AbeillePass']
     $username,
     $password
 );
 
 //lqiLog('debug', 'Connect to MQTT');
 $client->connect(
-// $parameters_info['AbeilleAddress'],
-// $parameters_info['AbeillePort'],
     $server,
     $port,
     60
@@ -334,35 +325,10 @@ $client->connect(
 
 sleep(2);
 
-//lqiLog('debug', 'Subscribe to topic ' . "LQI/#");
 $client->subscribe(
-// $parameters_info['AbeilleTopic'],
-// $parameters_info['AbeilleQos']
-    "LQI/#",
+    substr($abeilleParameters['AbeilleTopic'],0,-1)."LQI/#",
     $qos
 ); // !auto: Subscribe to root topic
-
-// $mqtt = new phpMQTT($server, $port, $client_id);
-// mqqtPublishLQI($mqtt, "d45e", "00", $qos = 0);
-
-// lqiLog('debug', 'Request data');
-// mqqtPublishLQI($client, "d45e", "00", $qos = 0);
-
-// topic : LQI/2389/02 (LQI/Neigbour Addr, Table Index)
-// NeighbourTableListCount=01&ExtendedPanId=28d07615bb019209&IEEE_Address=00158d0001b7b2a2&Depth=02&LinkQuality=ff&BitmapOfAttributes=12
-// lqiLog('debug', 'Starting parsing mqtt broker with log level '.$requestedlevel.' on '.$username.':'.$password.'@'.$server.':'.$port.' qos='.$qos );
-// $client->loop();
-// lqiLog('debug', 'Sleep 2');
-// sleep(2);
-
-// mqqtPublishLQI($client, "d45e", "01", $qos = 0);
-// sleep(2);
-// $client->loop();
-
-// mqqtPublishLQI($client, "d45e", "02", $qos = 0);
-// sleep(2);
-// $client->loop();
-
 
 // Let's start with the Coordinator
 if ($debugBen) {
@@ -391,7 +357,7 @@ while ($NE_All_continue) {
     foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
         benLog("=============================================================");
         benLog("Start Loop");
-        
+
         //-----------------------------------------------------------------------------
         // Estimation du travail restant et info dans le fichier lock
         $total = count($NE_All_BuildFromLQI);
@@ -404,7 +370,7 @@ while ($NE_All_continue) {
         benLog("AbeilleLQI main: " . $done . " of " . $total);
 
         //-----------------------------------------------------------------------------
-        
+
         // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
         $NE = $currentNeAddress;
 
@@ -419,7 +385,7 @@ while ($NE_All_continue) {
             echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
             exit;
         }
-        
+
         benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
         if ($debugBen) var_dump($NE_All_BuildFromLQI);
 
@@ -445,7 +411,7 @@ unset($client);
 //announce end of processing
 //file_put_contents($FileLock, "done");
 file_put_contents($FileLock, "done - ".date('l jS \of F Y h:i:s A'));
-    
+
 // encode array to json
 $json = json_encode(array('data' => $LQI));
 
@@ -481,6 +447,3 @@ if (0) {
 // print_r( $LQI );
 
 ?>
-
-
-

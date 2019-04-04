@@ -12,7 +12,7 @@
     $publish->setCredentials( $parameters_info['AbeilleUser'], $parameters_info['AbeillePass'] );
 
     $publish->connect( $parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60 );
-    $publish->publish( substr($parameters_info["AbeilleTopic"],0,-1).str_replace('_','/',$_GET['topic']), $_GET['payload'], 0, 0);
+    $publish->publish( substr($parameters_info["AbeilleTopic"],0,-1).str_replace('_','/',$_GET['topic']), $_GET['payload'], $parameters_info["AbeilleQos"], 0);
     for ($i = 0; $i < 100; $i++) {
         // Loop around to permit the library to do its work
         $publish->loop(1);

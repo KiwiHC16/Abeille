@@ -541,7 +541,7 @@ class Abeille extends eqLogic {
 
     $parameters_info = self::getParameters();
     if ($parameters_info['onlyTimer'] == 'N') {
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version",         );
+      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
       Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
     } else {
       Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode" );

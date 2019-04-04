@@ -19,8 +19,8 @@
 require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
 
-
 class Abeille extends eqLogic {
+
   // Is it the health of the plugin level menu Analyse->santé ? A verifier.
   public static function health() {
     $return = array();
@@ -660,7 +660,7 @@ class Abeille extends eqLogic {
   }
 
   public static function deamon_info() {
-    $debug_deamon_info = 1;
+    $debug_deamon_info = 0;
 
     if ($debug_deamon_info) log::add('Abeille', 'debug', '**deamon info: IN**');
 
@@ -669,20 +669,20 @@ class Abeille extends eqLogic {
     'launchable'                            => 'ok',  // On couvre la configuration de plugin
     'launchable_message'                    => "", );
 
-    return $return;
-
+    // On vérifie que le demon est demarable
     // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
-    if ( self::getParameters()['parameters'] != "ok" ) {
-      $return['launchable'] = self::getParameters()['parameters'];
-      $return['launchable_message'] = self::getParameters()['launchable_message'];
+    $parameters = self::getParameters();
+    if ( $parameters['parametersCheck'] != "ok" ) {
+      $return['launchable'] = $parameters['parametersCheck'];
+      $return['launchable_message'] = $parameters['parametersCheck_message'];
     }
 
+    // On regarde si tout tourne already
     // On verifie que le cron tourne
     if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
       if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
         if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
-        $return['state'] = 'Problème avec le cron<br>qui ne semble pas tourner';
-        return $return;
+        $return['state'] = "nok";
       }
     }
 
@@ -706,8 +706,7 @@ class Abeille extends eqLogic {
     if ( ($nbProcess != $nbProcessExpected) ) {
       if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
       if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
-      $return['state'] = 'Nous n avons pas<br>le bon nombre de demon<br>qui tourne<br>(voir le log Abeille)';
-      return $return;
+      $return['state'] = "nok";
     }
 
     if ($debug_deamon_info) log::add( 'Abeille', 'debug', '**deamon info: OUT**  deamon deamon_info: '.json_encode($return) );
@@ -718,15 +717,12 @@ class Abeille extends eqLogic {
   public static function deamon_start_cleanup($message = null) {
     // This function is used to run some cleanup before the demon start, or update the database du to data change needed.
     $debug = 0;
-    $restartNeeded = 0;
 
     log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
 
     // ******************************************************************************************************************
     // Remove temporary files
-    $DataFile = dirname(__FILE__).'/../../AbeilleLQI_MapData.json';
-    $FileLock = $DataFile . ".lock";
-
+    $FileLock = dirname(__FILE__).'/../../AbeilleLQI_MapData.json.lock';
     if (file_exists($FileLock)) {
       $content = file_get_contents($FileLock);
       log::add('Abeille', 'debug', $DataFile.' content: '.$content);
@@ -736,98 +732,23 @@ class Abeille extends eqLogic {
       }
     }
 
-    // ******************************************************************************************************************
-    // Suite à la modification permettant de mettre a jour les objets sur changement de short address, il faut modifier les configurations des commandes en base de données.
-    log::add( 'Abeille', 'debug', 'deamon_start_cleanup: mise a niveau pour la modification necessaire a la gestion des changements d adresse courte' );
-
-    $sql = "SELECT id, logicalId, type, configuration FROM `cmd` WHERE `eqType` = 'Abeille' AND `configuration` LIKE '%topic%'";
-    $rows = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-
-    foreach ($rows as $key => $row) {
-      $sqlRequest = 0;
-      if ($debug) {
-        echo "-------------------------------\n";
-        echo "row: \n";
-        var_dump($row);
-        echo "row id: ".$row['id']."\n";
-      }
-      // $rowArray = json_decode($row->configuration);
-      $rowArray = json_decode($row['configuration']);
-      if ($debug) {
-        echo "rowArray: \n";
-        var_dump($rowArray);
-        echo "Position: ".strpos("_".$rowArray->topic, "Abeille/")."\n";
-
-        if ($row['type'] == "info") {
-          echo "test1: ok\n";
-        }
-        if (strpos("_".$rowArray->topic, "Abeille/") == 1) {
-          echo "test2: ok\n";
-        }
-      }
-
-      if (($row['type'] == 'info') && (strpos("_".$rowArray->topic, "Abeille/") == 1)) {
-        $rowArray->topic = str_replace("Abeille/", "", $rowArray->topic);
-        $position = strpos($rowArray->topic, "/");
-        if ($position > 1) {
-          $rowArray->topic = substr($rowArray->topic, $position - strlen($rowArray->topic) + 1);
-        }
-        $sqlRequest = 1;
-      }
-
-      if ($row['type'] == 'action') {
-        if (strpos($rowArray->topic, "Ruche") > 1) {
-          // Je ne change pas
-        } elseif (strpos($rowArray->topic, "Group") > 1) {
-          // Je ne change pas
-        } else {
-          if (strpos("_".$rowArray->topic, "CmdAbeille/") == 1) {
-            $rowArray->topic = str_replace("CmdAbeille/", "", $rowArray->topic);
-            $position = strpos($rowArray->topic, "/");
-            if ($position > 1) {
-              $rowArray->topic = substr($rowArray->topic, $position - strlen($rowArray->topic) + 1);
-            }
-            $sqlRequest = 1;
-          }
-        }
-      }
-
-      if ($sqlRequest == 1) {
-        $restartNeeded = 1;
-        $sql = "update cmd set logicalId='".$rowArray->topic."', configuration='".json_encode( $rowArray )."' where id='".$row['id']."'";
-        log::add('Abeille', 'debug', 'deamon_start_cleanup: '.$sql);
-        if ($debug) echo $sql."\n";
-        // $rows = $db->fetchAll($sql);
-        $rows = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-      }
-    }
-
-
-    // ******************************************************************************************************************
-    // Espace pour les prochaines mise a niveau
-    //
-    //
-    //
-    log::add('Abeille', 'debug', 'deamon_start_cleanup: Fin des modifications si nécessaire');
-
-    if ($restartNeeded == 1) {
-      // afficher un message utilisateur pour qu il reboot le bousain.
-      message::add("Abeille","La base de données a ete mise a jour suite a la mise a jour, il faut faire un restart de jeedom.");
-    }
-
     return;
   }
 
   public static function deamon_start($_debug = false) {
-    log::add('Abeille', 'debug', 'deamon_start: IN');
+    // bt_startDeamon -> jeedom.plugin.deamonStart -> plugin.class.js: deamonStart -> ore/ajax/plugin.ajax.php(deamonStart) -> $plugin->deamon_start(init('forceRestart', 0))
+    log::add('Abeille', 'debug', 'deamon start: IN -----------Starting --------------------');
 
     self::deamon_stop();
-    sleep(5);
+
+    sleep(3);
+
     $param = self::getParameters();
 
-    if (self::getDependencyInfo()['launchable'] != 'ok') {
-      message::add("Abeille", "Vérifier la configuration, un parametre manque");
-      throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+    if (self::dependancy_info()['state'] != 'ok') {
+      message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances");
+      log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
+      return false;
     }
 
     if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
@@ -837,11 +758,11 @@ class Abeille extends eqLogic {
     }
     cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-    sleep(3);
+    // sleep(3);
 
     self::deamon_start_cleanup();
 
-    sleep(3);
+    // sleep(3);
 
     // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
     log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
@@ -902,15 +823,15 @@ class Abeille extends eqLogic {
     self::CmdAffichage('affichageTime',     $param['affichageTime']   );
     self::CmdAffichage('affichageCmdAdd',   $param['affichageCmdAdd'] );
 
-    // $cmd = "";
-    log::add('Abeille', 'debug', 'deamon start: OUT');
+    log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
+
     message::removeAll('Abeille', 'unableStartDeamon');
 
     return true;
   }
 
   public static function deamon_stop() {
-    log::add('Abeille', 'debug', 'deamon stop: IN -------------------------------');
+    log::add('Abeille', 'debug', 'deamon stop: IN -------------BEN------------------');
     // Stop socat if exist
     exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/tmp\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
     log::add('Abeille', 'debug', 'deamon stop: Killing deamons socat: '.implode($output, '!'));
@@ -941,16 +862,13 @@ class Abeille extends eqLogic {
   }
 
   public static function dependancy_info() {
-    log::add( 'Abeille', 'warning', '-------------------------------------> dependancy_info()' );
-    return self::getDependencyInfo();
-  }
 
-  public static function getDependencyInfo() {
-    // $dependancy_info['state']
+    log::add( 'Abeille', 'warning', '-------------------------------------> dependancy_info()' );
+
+    // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
+    // $dependancy_info['state'] pour affichage
     // state = [ok / nok / in_progress (progression/duration)] / state
     $debug_dependancy_info = 1;
-
-    log::add( 'Abeille', 'warning', '-------------------------------------> getDependencyInfo()' );
 
     $return = array();
     $return['state'] = 'ok';
@@ -1136,48 +1054,56 @@ class Abeille extends eqLogic {
 
   public static function getParameters() {
     $return = array();
-    $return['parameters'] = 'ok';
+    $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
+    $return['parametersCheck_message'] = "";
 
     //Most Fields are defined with default values
-    $return['AbeilleAddress'] = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
-    $return['AbeillePort'] = config::byKey('AbeillePort', 'Abeille', '1883');
-    $return['AbeilleConId'] = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
-    $return['AbeilleUser'] = config::byKey('mqttUser', 'Abeille', 'jeedom');
-    $return['AbeillePass'] = config::byKey('mqttPass', 'Abeille', 'jeedom');
-    $return['AbeilleTopic'] = config::byKey('mqttTopic', 'Abeille', '#');
-    $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
-    $return['AbeilleQos'] = config::byKey('mqttQos', 'Abeille', '0');
-    $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1');
-    $return['AbeilleSerialPort'] = config::byKey('AbeilleSerialPort', 'Abeille');
-    $return['creationObjectMode'] = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
-    $return['adresseCourteMode'] = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
-    $return['showAllCommands'] = config::byKey('showAllCommands', 'Abeille', 'N');
-    $return['affichageNetwork'] = config::byKey('affichageNetwork', 'Abeille', 'N');
-    $return['affichageTime'] = config::byKey('affichageTime', 'Abeille', 'N');
-    $return['affichageCmdAdd'] = config::byKey('affichageCmdAdd', 'Abeille', 'N');
-    $return['onlyTimer'] = config::byKey('onlyTimer', 'Abeille', 'N');
-    $return['IpWifiZigate'] = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
+    $return['AbeilleAddress']       = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
+    $return['AbeillePort']          = config::byKey('AbeillePort', 'Abeille', '1883');
+    $return['AbeilleConId']         = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
+    $return['AbeilleUser']          = config::byKey('mqttUser', 'Abeille', 'jeedom');
+    $return['AbeillePass']          = config::byKey('mqttPass', 'Abeille', 'jeedom');
+    $return['AbeilleTopic']         = config::byKey('mqttTopic', 'Abeille', '#');
+    $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
+    $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
+    $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
+    $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
+    $return['creationObjectMode']   = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
+    $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
+    $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
+    $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'N');
+    $return['affichageTime']        = config::byKey('affichageTime', 'Abeille', 'N');
+    $return['affichageCmdAdd']      = config::byKey('affichageCmdAdd', 'Abeille', 'N');
+    $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
+    $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
 
-    // log::add('Abeille', 'debug', 'serialPort value: ->' . $return['AbeilleSerialPort'] . '<-');
-    if ($return['AbeilleSerialPort'] == "/tmp/zigate") {
-      $return['parameters'] = 'ok';
+    // Testons la validité de la configuration
+    // Pas de port alors que je ne suis pas en mode timer only.
+    if ( ($return['AbeilleSerialPort'] == 'none') && ($return['onlyTimer'] != "Y") ) {
+      log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
+      $return['parametersCheck']="nok";
+      $return['parametersCheck_message'] = __('Le port n\'est pas configuré', __FILE__);
       return $return;
     }
-    if (($return['AbeilleSerialPort'] != 'none') ||  ($return['onlyTimer'] != "Y")) {
+
+    // Port Zigate en Wifi et pas en mode Timer
+    if ( ($return['AbeilleSerialPort'] == "/tmp/zigate") && ($return['onlyTimer'] != "Y") ) {
+      return $return;
+    }
+
+    // J ai un port et je ne suis pas en mode Timer
+    if ( ($return['AbeilleSerialPort'] != 'none') && ($return['onlyTimer'] != "Y") ) {
       $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
       if (@!file_exists($return['AbeilleSerialPort'])) {
-        log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
-        $return['parameters']="nok";
-        $return['launchable_message'] = __('Le port n\'est pas configuré ou zigate déconnectée', __FILE__);
+        log::add('Abeille','debug','getParameters: serialPort n\'existe pas. ->'.$return['AbeilleSerialPort'].'<-');
+        $return['parametersCheck']="nok";
+        $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
         return $return;
       } else {
         if (substr(decoct(fileperms($return['AbeilleSerialPort'])), -4) != "0777") {
           exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
         }
-
       }
-    } else {
-      //if serialPort= none then nothing to check
     }
 
     return $return;
@@ -2428,6 +2354,14 @@ if ($debugBEN != 0) {
     var_dump( cron::byClassAndFunction('Abeille', 'deamon') );
     echo "Is Object: ".is_object(cron::byClassAndFunction('Abeille', 'deamon'))."\n";
     echo "running: ".cron::byClassAndFunction('Abeille', 'deamon')->running()."\n";
+    break;
+
+    case "18":
+
+    break;
+
+    case "19":
+    Abeille::deamon_start();
     break;
 
   } // switch

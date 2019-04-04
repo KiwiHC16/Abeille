@@ -91,7 +91,7 @@ class MosquittoAbeille extends debug {
   }
 
   public function publishMosquitto( $topic, $message ) {
-    $this->client->publish( $topic, $message, $this->qos, 0 );
+    $this->client->publish( substr($this->parameters_info["AbeilleTopic"],0,-1).$topic, $message, $this->qos, 0 );
   }
 }
 
@@ -127,7 +127,7 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
     foreach ($this->mqttMessageQueue as $key => $mqttMessage) {
       // deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - 0: '.$mqttMessage[0] );
       if ($mqttMessage[0]<$now) {
-        $this->publishMosquitto( substr($this->parameters_info["AbeilleTopic"],0,-1).$mqttMessage[1], $mqttMessage[2]  );
+        $this->publishMosquitto( $mqttMessage[1], $mqttMessage[2]  );
         if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($this->mqttMessageQueue[$key]) );
         unset($this->mqttMessageQueue[$key]);
         if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - Rest: '.json_encode($this->mqttMessageQueue) );

@@ -15,30 +15,11 @@ require_once dirname(__FILE__).("/lib/Tools.php");
 include(dirname(__FILE__).'/includes/config.php');
 include(dirname(__FILE__).'/includes/function.php');
 
-function connect($r, $message) {
-  log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
-  // config::save('state', '1', 'Abeille');
-}
-
-function disconnect($r) {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
-  // config::save('state', '0', 'Abeille');
-}
-
-function subscribe() {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
-}
-
-function logmq($code, $str) {
-  // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-  log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
-  // }
-}
 
 function message($message) {
   global $AbeilleTimer;
   // var_dump( $message );
-  $AbeilleTimer->procmsg( $message->topic, $message->payload );
+  $AbeilleTimer->procmsg( $message );
 }
 
 class debug extends Tools {
@@ -55,6 +36,35 @@ class debug extends Tools {
 class MosquittoAbeille extends debug {
   public $client;
 
+  static function connect($r, $message) {
+    log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+    // config::save('state', '1', 'Abeille');
+  }
+
+  static function disconnect($r) {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+    // config::save('state', '0', 'Abeille');
+  }
+
+  static function subscribe() {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+  }
+
+  static function logmq($code, $str) {
+    // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
+    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+    // }
+  }
+
+  function publishTimer( $SrcAddr, $ClusterId, $AttributId, $data ) {
+    // Abeille / short addr / Cluster ID - Attr ID -> data
+
+    $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data              );
+    // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",                 time()             );
+    // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"));
+
+  }
+
   function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
     if ($debug) $this->deamonlog("debug", "MosquittoAbeille constructor");
 
@@ -63,19 +73,19 @@ class MosquittoAbeille extends debug {
     $this->client = new Mosquitto\Client($client_id);
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-    $this->client->onConnect('connect');
+    $this->client->onConnect('MosquittoAbeille::connect');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-    $this->client->onDisconnect('disconnect');
+    $this->client->onDisconnect('MosquittoAbeille::disconnect');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-    $this->client->onSubscribe('subscribe');
+    $this->client->onSubscribe('MosquittoAbeille::subscribe');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
     $this->client->onMessage('message');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-    $this->client->onLog('logmq');
+    $this->client->onLog('MosquittoAbeille::logmq');
 
     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
     $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
@@ -85,7 +95,7 @@ class MosquittoAbeille extends debug {
 
     $this->client->setCredentials( $username, $password );
     $this->client->connect( $server, $port, 60 );
-    $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos );
+    $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos, 0 );
     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
 
     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
@@ -98,12 +108,10 @@ class AbeilleTimer extends MosquittoAbeille {
   "procmsg" => 1, );
   public $parameters_info;
   public $Timers = array();
-
-  public $client;
-  public $RefreshWidgetRate;
   public $lastWidgetUpdate;
-  public $RefreshCmdRate;
   public $lastCmdUpdate;
+  public $RefreshWidgetRate;
+  public $RefreshCmdRate;
 
   function __construct($client_id) {
     global $argv;
@@ -124,14 +132,7 @@ class AbeilleTimer extends MosquittoAbeille {
 
   }
 
-  function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data ) {
-    // Abeille / short addr / Cluster ID - Attr ID -> data
 
-    $this->client->publish("Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data              );
-    $this->client->publish("Abeille/".$SrcAddr."/Time-TimeStamp",                 time()             );
-    $this->client->publish("Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"));
-
-  }
 
   function execCommandeTimer( $commande, $options ) {
     // echo "Commande: " . $commande . "\n";
@@ -154,77 +155,81 @@ class AbeilleTimer extends MosquittoAbeille {
   }
 
   function checkExparies() {
-    global $Timers;
-    global $mqtt;
-    global $RefreshWidgetRate;
-    global $lastWidgetUpdate;
-    global $RefreshCmdRate;
-    global $lastCmdUpdate;
-    global $qos;
 
-    foreach ( $Timers as $address => $Timer ) {
-      if ( $Timer != -1 ) {
-        if ( $Timer['T3'] <= time() ) {
-          echo $address . " expired\n";
+    foreach ( $this->Timers as $address => $Timer ) {
 
-          $eqLogicToFind = eqLogic::byLogicalId( "Abeille/".$address, "Abeille" );
-          // print_r( $eqLogicToFind ); echo "\n";
-          $eqLogicToFindId = $eqLogicToFind->getId();
-          // print_r( $eqLogicToFindId ); echo "\n";
-          $commandToFind = cmd::byEqLogicIdCmdName( $eqLogicToFindId, "Stop");
-          // print_r( $commandToFind ); echo "\n";
-          $commandToFind->execCmd();
+      if ( $Timer['T3'] <= time() ) {
+        // echo $address . " expired\n";
 
+        $eqLogicToFind = eqLogic::byLogicalId( "Abeille/".$address, "Abeille" );
+        // print_r( $eqLogicToFind ); echo "\n";
+        $eqLogicToFindId = $eqLogicToFind->getId();
+        // print_r( $eqLogicToFindId ); echo "\n";
+        $commandToFind = cmd::byEqLogicIdCmdName( $eqLogicToFindId, "Stop");
+        // print_r( $commandToFind ); echo "\n";
+        $commandToFind->execCmd();
+
+      }
+      else {
+        // echo $address . " running \n";
+        if ( (time()-$this->lastWidgetUpdate) > $this->RefreshWidgetRate ){
+          $this->publishTimer( $address, "Var", "Duration", $Timer['T3']-time() );
         }
-        else {
-          // echo $address . " running \n";
-          if ( (time()-$lastWidgetUpdate) > $RefreshWidgetRate ){
-            $this->client->mqqtPublish( $address, "Var", "Duration", $Timer['T3']-time() );
-            // print_r( $Timer ); echo "\n";
-          }
 
-          if ( (time()-$lastCmdUpdate) > $RefreshCmdRate ) {
-            $now = time();
-            if ( $now < $Timer['T0'] ) { $phase = '->T0'; $RampUpDown = 0; }
-            if ( ($Timer['T0'] <= $now) && ($now<$Timer['T1']) ) { $phase = 'T0->T1'; $RampUpDown = ($now-$Timer['T0'])/($Timer['T1']-$Timer['T0'])*100; }
-            if ( ($Timer['T1'] <= $now) && ($now<$Timer['T2']) ) { $phase = 'T1->T2'; $RampUpDown = 100; }
-            if ( ($Timer['T2'] <= $now) && ($now<$Timer['T3']) ) { $phase = 'T2->T3'; $RampUpDown = 100-($now-$Timer['T2'])/($Timer['T3']-$Timer['T2'])*100; }
-            if ( $Timer['T3'] < $now ) { $phase = 'T3->';$RampUpDown = 0; }
+        if ( (time()-$this->lastCmdUpdate) > $this->RefreshCmdRate ) {
+          $now = time();
+          if ( $now < $Timer['T0'] )                            { $phase = '->T0';    $RampUpDown = 0; }
+          if ( ($Timer['T0'] <= $now) && ($now<$Timer['T1']) )  { $phase = 'T0->T1';  $RampUpDown = ($now-$Timer['T0'])/($Timer['T1']-$Timer['T0'])*100; }
+          if ( ($Timer['T1'] <= $now) && ($now<$Timer['T2']) )  { $phase = 'T1->T2';  $RampUpDown = 100; }
+          if ( ($Timer['T2'] <= $now) && ($now<$Timer['T3']) )  { $phase = 'T2->T3';  $RampUpDown = 100-($now-$Timer['T2'])/($Timer['T3']-$Timer['T2'])*100; }
+          if ( $Timer['T3'] < $now )                            { $phase = 'T3->';    $RampUpDown = 0; }
 
-            $this->client->mqqtPublish( $address, "Var", "RampUpDown", $RampUpDown );
+          $this->publishTimer( $address, "Var", "RampUpDown", $RampUpDown );
 
-            // Si nous sommes dans une phase de ramp on enoie la commande, si on change de phase on envoi le derniere commande ramp pour etre sur d etre a 100% ou 0%
-            if ( ($phase == 'T0->T1') || ($phase == 'T2->T3') || ($phase != $Timer['state']) ) {
-              if ( isset($Timer["actionRamp"]) ) {
+          // Si nous sommes dans une phase de ramp on enoie la commande, si on change de phase on envoi le derniere commande ramp pour etre sur d etre a 100% ou 0%
+          if ( ($phase == 'T0->T1') || ($phase == 'T2->T3') || ($phase != $Timer['state']) ) {
+            if ( isset($Timer["actionRamp"]) ) {
+              if ( strlen($Timer["actionRamp"]) > 1 ) {
                 $options['slider'] = $RampUpDown;
-                execCommandeTimer( $Timer["actionRamp"], $options );
+                $this->execCommandeTimer( $Timer["actionRamp"], $options );
               }
-              if ( isset($Timer["scenarioRamp"]) ) {
-                execScenarioTimer( $Timer["scenarioRamp"], $options );
-              }
-              $Timers[$address]['state'] = $phase;
             }
-
+            if ( isset($Timer["scenarioRamp"]) ) {
+              execScenarioTimer( $Timer["scenarioRamp"], $options );
+            }
+            $this->Timers[$address]['state'] = $phase;
           }
+
         }
       }
+
     }
 
-    if ( (time()-$lastWidgetUpdate) > $RefreshWidgetRate ){ $lastWidgetUpdate = time(); }
-    if ( (time()-$lastCmdUpdate) > $RefreshCmdRate ){ $lastCmdUpdate = time(); }
+    if ( (time()-$this->lastWidgetUpdate) > $this->RefreshWidgetRate ){ $this->lastWidgetUpdate = time(); }
+    if ( (time()-$this->lastCmdUpdate) > $this->RefreshCmdRate ){ $this->lastCmdUpdate = time(); }
 
   }
 
-  function procmsg($topic, $msg) {
-    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
-    if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
-    if ( substr($topic, 0, strlen($this->parameters_info["AbeilleTopic"])-2) != substr($this->parameters_info["AbeilleTopic"],0, strlen($this->parameters_info["AbeilleTopic"])-2 ) ) {
-      if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - Message receive but is not for me, wrong delivery !!!");
-      return;
-    }
+  function procmsg($message) {
 
-    // On enleve AbeilleTopic
-    $topic = substr( $topic, strlen($this->parameters_info["AbeilleTopic"])-1 );
+    // if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
+    // if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: ". $message->topic . " len: " . strlen($this->parameters_info["AbeilleTopic"]) );
+
+    $parameters_info = Abeille::getParameters();
+
+    // On gere la root de mqtt
+    if ( $parameters_info["AbeilleTopic"] != "#" ) {
+      if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
+        $this->deamonlog('debug', "AbeilleMQTTCmdTimer - Message receive but is not for me, wrong delivery !!!");
+        return;
+      }
+      // On enleve AbeilleTopic
+      $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
+    }
+    // $this->deamonlog("debug", "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+
+    $topic = $message->topic;
+    $msg = $message->payload;
 
     $test = explode('/', $topic);
     if ( sizeof( $test ) !=3 ) {
@@ -235,17 +240,16 @@ class AbeilleTimer extends MosquittoAbeille {
     // Process only CmdTimer messages.
     list($type, $address, $action) = explode('/', $topic);
     if ($type != "CmdTimer") {
-      if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg.' mais ce n est pas pour moi, no action.');
+      // if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg.' mais ce n est pas pour moi, no action.');
       return;
     }
 
-    if ( $this->debug['procmsg'] ) $this->deamonlog('info', 'procmsg fct - ;Msg Received: Topic: {'.$topic.'} => '.$msg);
-
-    if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+    if ( $this->debug['procmsg'] ) $this->deamonlog('info', 'AbeilleMQTTCmdimer - procmsg fct - ;Msg Received: Topic: {'.$topic.'} => '.$msg);
+    // if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'AbeilleMQTTCmdimer - procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
     // Crée les variables dans la chaine et associe la valeur.
     $parameters = proper_parse_str( $msg );
-    if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'procmsg fct - Parametres: '.json_encode($parameters));
+    // if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'AbeilleMQTTCmdimer - procmsg fct - Parametres: '.json_encode($parameters));
 
     //----------------------------------------------------------------------------
     // actionStart=#put_the_cmd_here#&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=#put_the_cmd_here#
@@ -263,11 +267,7 @@ class AbeilleTimer extends MosquittoAbeille {
       if ( isset($parameters["durationSeconde"]) ) {
 
         // Passe l etat à 1.
-        $this->client->mqqtPublish( $address, "0006", "0000", "1" );
-
-        if ( isset($parameters["messageStart"]) ) {
-          $options['message'] = $parameters["messageStart"];
-        }
+        $this->publishTimer( $address, "0006", "0000", "1" );
 
         // On verifie les temps
         if ( isset($parameters['RampUp']) ) {
@@ -285,32 +285,35 @@ class AbeilleTimer extends MosquittoAbeille {
         }
         else { $parameters['RampDown'] = 1; }
 
+        // Necessaire par exemple pour la commande qui envoie un sms
+        if ( isset($parameters["message"]) ) {
+          $options['message'] = $parameters["message"];
+        }
+
         // On crée un Timer avec ses parametres
         $this->Timers[$address] = $parameters;
 
         // On calcule les points/temps de passages
         $now = time();
-        $Timers[$address]['T0'] = $now;
-        $Timers[$address]['T1'] = $now + $parameters['RampUp'];
-        $Timers[$address]['T2'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'];
-        $Timers[$address]['T3'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'] + $parameters['RampDown'];
-        $Timers[$address]['state'] = 'T0->T1';
+        $this->Timers[$address]['T0'] = $now;
+        $this->Timers[$address]['T1'] = $now + $parameters['RampUp'];
+        $this->Timers[$address]['T2'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'];
+        $this->Timers[$address]['T3'] = $now + $parameters['RampUp'] + $parameters['durationSeconde'] + $parameters['RampDown'];
+        $this->Timers[$address]['state'] = 'T0->T1';
 
-        // print_r( $Timers );
+        $this->publishTimer( $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $this->Timers[$address]['T3']) );
+        $this->publishTimer( $address, "Var", "Duration", $this->Timers[$address]['T3']-time() );
 
-        $this->client->mqqtPublish( $address, "Var", "ExpiryTime", date("Y-m-d H:i:s", $Timers[$address]['T3']) );
-        $this->client->mqqtPublish( $address, "Var", "Duration", $Timers[$address]['T3']-time() );
-        // print_r($Timers);
         if ( isset($parameters["actionStart"]) ) {
-          if (  $parameters["actionStart"] != "#put_the_cmd_here#" ) {
-            execCommandeTimer( $parameters["actionStart"], $options );
-          }
-          else { deamonlog('debug', "commande not set for TimerStart"); }
+          if ( strlen($parameters["actionStart"])<1 ) $this->deamonlog('debug', "Pas de commande start definie.");
+          elseif (  $parameters["actionStart"] == "#put_the_cmd_here#" ) $this->deamonlog('debug', "Valeur par defaut, Pas de commande start definie.");
+          else $this->execCommandeTimer( $parameters["actionStart"], $options );
         }
-        elseif ( isset($parameters["scenarioStart"]) ) {
-          execScenarioTimer( $parameters["scenarioStart"] );
+
+        if ( isset($parameters["scenarioStart"]) ) {
+          $this->execScenarioTimer( $parameters["scenarioStart"] );
         }
-        else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
+
       }
 
       //----------------------------------------------------------------------------
@@ -318,42 +321,37 @@ class AbeilleTimer extends MosquittoAbeille {
     } elseif ($action == "TimerCancel") {
       if ( $this->debug['procmsg'] ) $this->deamonlog('debug', 'procmsg fct - TimerCancel');
       // $keywords = preg_split("/[=&]+/", $msg);
-      $this->client->mqqtPublish($address, "0006", "0000", "0");
-      $this->client->mqqtPublish($address, "Var", "ExpiryTime", "-");
-      $this->client->mqqtPublish($address, "Var", "Duration", "-");
-      $Timers[$address] = -1;
+      $this->publishTimer($address, "0006", "0000", "0");
+      $this->publishTimer($address, "Var", "ExpiryTime", "-");
+      $this->publishTimer($address, "Var", "Duration", "-");
 
+      // Necessaire par exemple pour la commande qui envoie un sms
       if ( isset($parameters["message"]) ) {
         $options['message'] = $parameters["message"];
       }
 
       if ( isset($parameters["actionCancel"]) ) {
-        if ( $parameters["actionCancel"] != "#put_the_cmd_here#" ) {
-          execCommandeTimer( $parameters["actionCancel"], $options );
-
+        if ( strlen($parameters["actionCancel"])<1 ) $this->deamonlog('debug', "Pas de commande cancel definie.");
+        elseif ( $parameters["actionCancel"] == "#put_the_cmd_here#" ) $this->deamonlog('debug', "Valeur par defaut, Pas de commande cancel definie.");
+        else $this->execCommandeTimer( $parameters["actionCancel"], $options );
         }
-        else { deamonlog('debug', "commande not set for TimerCancel"); }
-      }
-      elseif ( $parameters["scenarioCancel"] ) {
-        execScenarioTimer( $parameters["scenarioCancel"] );
-      }
-      else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
 
-      unset( $Timers[$address] );
+      if ( $parameters["scenarioCancel"] ) {
+        $this->execScenarioTimer( $parameters["scenarioCancel"] );
+      }
+
+      unset( $this->Timers[$address] );
 
       //----------------------------------------------------------------------------
       // actionStop=#put_the_cmd_here#
     } elseif ($action == "TimerStop") {
-      deamonlog('debug', 'TimerStop');
+      $this->deamonlog('debug', 'TimerStop');
       // $keywords = preg_split("/[=&]+/", $msg);
 
-      $this->client->mqqtPublish($address, "0006", "0000", "-");
-      $this->client->mqqtPublish($address, "Var", "ExpiryTime", "-");
-      $this->client->mqqtPublish($address, "Var", "Duration", "-");
-      $this->client->mqqtPublish($address, "Var", "RampUpDown", "0");
-
-      // $Timers[$address] = -1;
-      // print_r($Timers);
+      $this->publishTimer($address, "0006", "0000", "-");
+      $this->publishTimer($address, "Var", "ExpiryTime", "-");
+      $this->publishTimer($address, "Var", "Duration", "-");
+      $this->publishTimer($address, "Var", "RampUpDown", "0");
 
       // Necessaire par exemple pour la commande qui envoie un sms
       if ( isset($parameters["message"]) ) {
@@ -361,22 +359,21 @@ class AbeilleTimer extends MosquittoAbeille {
       }
 
       if ( isset($parameters["actionStop"]) ) {
-        if ( $parameters["actionStop"] != "#put_the_cmd_here#" ) {
-          execCommandeTimer( $parameters["actionStop"], $options );
+        if ( strlen($parameters["actionStop"])<1 ) $this->deamonlog('debug', "Pas de commande stop definie.");
+        elseif ( $parameters["actionStop"] == "#put_the_cmd_here#" ) $this->deamonlog('debug', "Valeur par defaut, Pas de commande stop definie.");
+        else $this->execCommandeTimer( $parameters["actionStop"], $options );
         }
-        else { deamonlog('debug',"commande not set for TimerStop"); }
-      }
-      elseif ( isset($parameters["scenarioStop"]) ) {
-        execScenarioTimer( $parameters["scenarioStop"] );
-      }
-      else { deamonlog('debug', "Type de commande inconnue, vérifiez les parametres."); }
 
-      unset( $Timers[$address] );
+      if ( isset($parameters["scenarioStop"]) ) {
+        $this->execScenarioTimer( $parameters["scenarioStop"] );
+      }
+
+      unset( $this->Timers[$address] );
 
 
       //----------------------------------------------------------------------------
     } else {
-      deamonlog('debug', 'Command unknown, so not processed.');
+      $this->deamonlog('debug', 'Command unknown, so not processed.');
     }
 
     //----------------------------------------------------------------------------
@@ -392,13 +389,13 @@ class AbeilleTimer extends MosquittoAbeille {
 //                      1          2           3       4          5       6
 //$paramdeamon1 = $serialPort.' '.$address.' '.$port.' '.$user.' '.$pass.' '.$qos;
 
+$AbeilleTimer = new AbeilleTimer("AbeilleTimer");
+
 try {
-  $AbeilleTimer = new AbeilleTimer("AbeilleTimer");
 
   if ( $AbeilleTimer->debug['AbeilleTimerClass'] ) $AbeilleTimer->deamonlog("debug", json_encode( $AbeilleTimer ) );
 
   while (true) {
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
     $AbeilleTimer->client->loop(0);
     $AbeilleTimer->checkExparies();
     time_nanosleep( 0, 10000000 ); // 1/100s
@@ -413,6 +410,6 @@ catch (Exception $e) {
 }
 
 
-  unset($AbeilleTimer);
+unset($AbeilleTimer);
 
 ?>

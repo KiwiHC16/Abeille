@@ -18,7 +18,7 @@ if (config::byKey('active', 'Abeille', '0') == 1) {
 
 
 $neighbors = "";
-$color = (Abeille::serviceMosquittoStatus()['launchable'] == 'ok') ? "greeniconcolor" : "rediconcolor";
+$color = (Abeille::serviceMosquittoStatus()['mosquitto'] == 'ok') ? "greeniconcolor" : "rediconcolor";
 $mosquitto = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i>";
 $usbPath = config::byKey('AbeilleSerialPort', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');

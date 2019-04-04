@@ -53,8 +53,12 @@ function message($message)
     $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
     $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
 
-    //lqiLog('--- process a new message -----------------------');
-    //lqiLog('debug', $message->topic . ' => ' . $message->payload);
+    if ( substr($message->topic, 0, strlen($abeilleParameters["AbeilleTopic"])-2) != substr($abeilleParameters["AbeilleTopic"],0, strlen($abeilleParameters["AbeilleTopic"])-2 ) ) {
+      echo "Message receive but is not for me, wrong delivery !!!\n";
+      return;
+    }
+    // On enleve AbeilleTopic
+    $message->topic = substr( $message->topic, strlen($abeilleParameters["AbeilleTopic"])-1 );
 
     // Crée les variables dans la chaine et associe la valeur.
     $parameters = proper_parse_str($message->payload);
@@ -182,7 +186,6 @@ function collectInformation($client, $NE)
 
     while ($GLOBALS['NE_continue']) {
         // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-        //lqiLog('debug', 'collectInformation: ' . $NE . ' - ' . sprintf("%'.02x", $indexTable));
         mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
 
         $indexTable++;

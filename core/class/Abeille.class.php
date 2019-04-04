@@ -972,30 +972,16 @@ class Abeille extends eqLogic {
       $client->setReconnectDelay(1, 120, 1);
 
       try {
-        $client->setCredentials(
-          $parameters_info['AbeilleUser'],
-          $parameters_info['AbeillePass']
-        );
-
-        $client->connect(
-          $parameters_info['AbeilleAddress'],
-          $parameters_info['AbeillePort'],
-          60
-        );
-        $client->subscribe(
-          $parameters_info['AbeilleTopic'],
-          $parameters_info['AbeilleQos']
-        ); // !auto: Subscribe to root topic
+        $client->setCredentials(  $parameters_info['AbeilleUser'], $parameters_info['AbeillePass'] );
+        $client->connect( $parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60 );
+        $client->subscribe( $parameters_info['AbeilleTopic'], $parameters_info['AbeilleQos'] ); // !auto: Subscribe to root topic
 
         log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
 
-
         while (true) {
-          // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
           $client->loop(0);
           time_nanosleep( 0, 10000000 ); // 1/100s
         }
-
 
         $client->disconnect();
         unset($client);

@@ -430,13 +430,13 @@ class Abeille extends eqLogic {
 
 
         log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE, '0' );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
 
-        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE, '0' );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
 
-        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10", '0' );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10" );
 
-        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20", '0' );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20" );
       }
     }
     if ( ($i*33) > (3600) ) {
@@ -479,24 +479,24 @@ class Abeille extends eqLogic {
           $i=$i+1;
           // Ca devrait être le fonctionnement normal
           if (strlen($eqLogic->getConfiguration("mainEP"))>1) {
-            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP"), '0');
+            Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP") );
           }
           // Cette partie devrait disparaitre, elle existe depuis le debut car je ne comprenais pas bien le fonctionnement
           else {
             if ($eqLogic->getConfiguration("protocol") == "") {
-              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
+              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
             }
             if ($eqLogic->getConfiguration("protocol") == "Hue") {
-              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue", '0');
+              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue" );
             }
             if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
-              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM", '0');
+              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM" );
             }
             if ($eqLogic->getConfiguration("protocol") == "Profalux") {
-              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux", '0');
+              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux" );
             }
             if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
-              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default", '0');
+              Abeille::publishMosquitto(null, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
             }
           }
         }
@@ -515,8 +515,8 @@ class Abeille extends eqLogic {
         if ($eqLogic->getConfiguration("poll") == "15") {
           log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
           $i=$i+1;
-          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
-          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
         }
 
       }
@@ -541,12 +541,12 @@ class Abeille extends eqLogic {
 
     $parameters_info = self::getParameters();
     if ($parameters_info['onlyTimer'] == 'N') {
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version",          '0');
-      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus", '0');
+      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version",         );
+      Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
     } else {
-      Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode", '0');
-      Abeille::publishMosquitto(null, "Abeille/Ruche/Time-TimeStamp", time(), '0');         // TimeStamp
-      Abeille::publishMosquitto( null, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s"), '0' ); // 2018-10-06 03:13:31
+      Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode" );
+      Abeille::publishMosquitto(null, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
+      Abeille::publishMosquitto( null, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
     }
 
     // Rafraichie l etat poll = 1
@@ -558,8 +558,8 @@ class Abeille extends eqLogic {
         if ($eqLogic->getConfiguration("poll") == "1") {
           log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
           $i=$i+1;
-          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000", '0');
-          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000", '0');
+          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+          Abeille::publishMosquitto(null, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
         }
       }
     }
@@ -609,7 +609,7 @@ class Abeille extends eqLogic {
     // Si Inclusion status est à 1 on demande un Refresh de l information
     if (self::checkInclusionStatus() == "01") {
       // log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
-      self::publishMosquitto(null, "CmdAbeille/Ruche/permitJoin", "Status", '0');
+      self::publishMosquitto(null, "CmdAbeille/Ruche/permitJoin", "Status" );
     } else {
       // log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
     }
@@ -725,7 +725,7 @@ class Abeille extends eqLogic {
 
     // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
     log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
-    self::publishMosquitto( null, "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'], 0);
+    self::publishMosquitto( null, "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'] );
 
     // Start other deamons
 
@@ -1622,7 +1622,7 @@ class Abeille extends eqLogic {
             $elogic->save();
 
             // Il faut aussi mettre a jour la commande short address
-            self::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr, '0');
+            self::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr );
           } else {
             log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
             message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
@@ -1790,7 +1790,7 @@ class Abeille extends eqLogic {
       return; // function message
     }
 
-    public static function publishMosquitto($_id, $_subject, $_message, $_retain) {
+    public static function publishMosquitto($_id, $_subject, $_message ) {
       $parameters_info = self::getParameters();
       log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
       $publish = new Mosquitto\Client();
@@ -1798,7 +1798,7 @@ class Abeille extends eqLogic {
       $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
 
       $publish->connect($parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60);
-      $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
+      $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], 0);
       for ($i = 0; $i < 100; $i++) {
         // Loop around to permit the library to do its work
         $publish->loop(1);
@@ -2077,7 +2077,7 @@ class Abeille extends eqLogic {
 
         $request = str_replace('\\', '', jeedom::evaluateExpression($request));
         $request = cmd::cmdToValue($request);
-        Abeille::publishMosquitto($this->getId(), $topic, $request, $this->getConfiguration('retain', '0'));
+        Abeille::publishMosquitto($this->getId(), $topic, $request );
       }
 
       return true;
@@ -2224,7 +2224,7 @@ class Abeille extends eqLogic {
           $addr = $topicArray[1];
           if (strlen($addr) == 4) {
             echo "Short: ".$topicArray[1];
-            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
+            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default" );
           }
 
         }

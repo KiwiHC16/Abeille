@@ -135,8 +135,7 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
 }
 
 class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
-  public $debug = array(
-    "cli"                 => 0, // commande line mode or jeedom
+  public $debug = array( "cli"                 => 0, // commande line mode or jeedom
     "Checksum"            => 1, // Debug checksum calculation
     "tempo"               => 1, // Debug tempo queue
     "procmsg"             => 1, // Debug fct procmsg
@@ -2159,7 +2158,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 
     $test = explode('/', $topic);
     if ( sizeof( $test ) !=3 ) {
-      echo "Le format du message n est pas bon je ne le traite pas !!!\n";
+      $this->deamonlog("debug", "Le format du message n est pas bon je ne le traite pas !!!");
       return ;
     }
 
@@ -3352,6 +3351,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 // exemple d appel
 // php AbeilleMQTTCmd.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
 
+
 try {
   $AbeilleMQTTCmd = new AbeilleMQTTCmd("AbeilleMQTTCmd");
 
@@ -3365,14 +3365,15 @@ try {
   }
 
   $AbeilleMQTTCmd->client->disconnect();
-  unset($AbeilleMQTTCmd);
-
 }
 catch (Exception $e) {
   $AbeilleMQTTCmd->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
+  $AbeilleMQTTCmd->deamonlog('info', 'Fin du script');
 }
 
-$AbeilleMQTTCmd->deamonlog('info', 'Fin du script');
+unset($AbeilleMQTTCmd);
+
+
 
 
 ?>

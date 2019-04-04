@@ -897,573 +897,1008 @@ class Abeille extends eqLogic {
     if ($moquittoStatus['mosquitto'] != 'ok') {
       log::add( 'Abeille', 'warning', 'La verification de fonctionnement du service mosquitto renvoie: '. $moquittoStatus['mosquitto_message'] );
       $return['state'] = 'La verification de fonctionnement du service mosquitto renvoie:<br>'. $moquittoStatus['mosquitto_message'] . ' <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_mosquitto">(doc)</a>.';
-      return $return;
-    }
-
-    if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
-
-    return $return;
-  }
-
-  public static function dependancy_install() {
-    log::add('Abeille', 'debug', 'Installation des dépendances: IN');
-    message::add(
-      "Abeille",
-      "L installation des dependances est en cours, n oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation"
-    );
-    log::remove(__CLASS__.'_update');
-    $result = array( 'script' => dirname(__FILE__).'/../../resources/install.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance', 'log' => log::getPathToLog(__CLASS__.'_update'), );
-    if ($result['state'] == 'ok') {
-      $result['launchable'] = 'ok';
-    }
-    log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result, ' X '));
-
-    return $result;
-  }
-
-  public static function deamon() {
-    //use verified parameters
-    $parameters_info = self::getParameters();
-
-    log::add(
-      'Abeille',
-      'debug',
-      'Parametres utilises, Host : '.$parameters_info['AbeilleAddress'].',
-      Port : '.$parameters_info['AbeillePort'].',
-      AbeilleParentId : '.$parameters_info['AbeilleParentId'].',
-      AbeilleConId: '.$parameters_info['AbeilleConId'].',
-      AbeilleUser: '.$parameters_info['AbeilleUser'].',
-      Abeillepass: '.$parameters_info['AbeillePass'].',
-      AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].',
-      qos: '.$parameters_info['AbeilleQos'].',
-      showAllCommands: '.$parameters_info['showAllCommands'].',
-      affichageNetwork: '.$parameters_info['affichageNetwork'].',
-      affichageTime: '.$parameters_info['affichageTime'].',
-      affichageCmdAdd: '.$parameters_info['affichageCmdAdd'].',
-      ModeCreation: '.$parameters_info['creationObjectMode'].',
-      adresseCourteMode: '.$parameters_info['adresseCourteMode'].',
-      onlyTimer: '.$parameters_info['onlyTimer'].',
-      IpWifiZigate : '.$parameters_info['IpWifiZigate']
-    );
-
-    // https://github.com/mgdm/Mosquitto-PHP
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html
-    $client = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_deamon_Loop_ForEver');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-    $client->onConnect('Abeille::connect');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-    $client->onDisconnect('Abeille::disconnect');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-    $client->onSubscribe('Abeille::subscribe');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-    $client->onMessage('Abeille::message');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-    $client->onLog('Abeille::logmq');
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $client->setWill('/jeedom', "Client Abeille died :-(", $parameters_info['AbeilleQos'], 0);
-
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-    $client->setReconnectDelay(1, 120, 1);
-
-    try {
-      $client->setCredentials(
-        $parameters_info['AbeilleUser'],
-        $parameters_info['AbeillePass']
-      );
-
-      $client->connect(
-        $parameters_info['AbeilleAddress'],
-        $parameters_info['AbeillePort'],
-        60
-      );
-      $client->subscribe(
-        $parameters_info['AbeilleTopic'],
-        $parameters_info['AbeilleQos']
-      ); // !auto: Subscribe to root topic
-
-      log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
-
-
-      while (true) {
-        // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-        $client->loop(0);
-        time_nanosleep( 0, 10000000 ); // 1/100s
-      }
-
-
-      $client->disconnect();
-      unset($client);
-
-    } catch (Exception $e) {
-      log::add('Abeille', 'error', $e->getMessage());
-    }
-  }
-
-  public static function serviceMosquittoStatus() {
-    $debug_serviceMosquittoStatus = 0;
-
-    $outputSvc = array();
-    $return = array();
-    $return['mosquitto'] = 'nok';
-    $return['mosquitto_message'] = 'Service not running yet.';
-
-    $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -Eicv 'fail|unrecognized'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
-    exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-    $logmsg = 'Status du service mosquitto : '.($outputSvc[0] > 0 ? 'OK' : 'Probleme').'   ('.implode($outputSvc,'!').')';
-    if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', $logmsg);
-
-    //Docker workaround as service will not write a pid file for mosquitto (status will always fail)
-    if (file_exists("/.dockerenv") == true) {
-      $outputSvc = array();
-      exec(system::getCmdSudo()."pgrep mosquitto", $outputSvc);
-      if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'docker test: pid of mosquitto: '.$outputSvc[0]);
-    }
-    if ($outputSvc[0] > 0) {
-      $return['mosquitto'] = 'ok';
-      $return['mosquitto_message'] = 'Service mosquitto is running.';
-    }
-    unset($outputSvc);
-
-    return $return;
-  }
-
-  public static function serviceMosquittoStart() {
-    $outputSvc = array();
-    //try to start mosquitto service if not already started.
-    if (self::serviceMosquittoStatus()['mosquitto'] != 'ok') {
-      unset($outputSvc);
-      $cmdSvc = "kill `pgrep -f /usr/sbin/mosquitto` 2>&1";
-      exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-      log::add('Abeille', 'debug', 'kill du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
-      unset($outputSvc);
-
-      $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
-      exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-      log::add('Abeille', 'debug', 'Start du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
-      sleep(3);
-    }
-
-    return self::serviceMosquittoStatus();
-  }
-
-  public static function getParameters() {
-    $return = array();
-    $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
-    $return['parametersCheck_message'] = "";
-
-    //Most Fields are defined with default values
-    $return['AbeilleAddress']       = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
-    $return['AbeillePort']          = config::byKey('AbeillePort', 'Abeille', '1883');
-    $return['AbeilleConId']         = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
-    $return['AbeilleUser']          = config::byKey('mqttUser', 'Abeille', 'jeedom');
-    $return['AbeillePass']          = config::byKey('mqttPass', 'Abeille', 'jeedom');
-    $return['AbeilleTopic']         = config::byKey('mqttTopic', 'Abeille', '#');
-    $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
-    $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
-    $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
-    $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
-    $return['creationObjectMode']   = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
-    $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
-    $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
-    $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'N');
-    $return['affichageTime']        = config::byKey('affichageTime', 'Abeille', 'N');
-    $return['affichageCmdAdd']      = config::byKey('affichageCmdAdd', 'Abeille', 'N');
-    $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
-    $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
-
-    // Testons la validité de la configuration
-    // Pas de port alors que je ne suis pas en mode timer only.
-    if ( ($return['AbeilleSerialPort'] == 'none') && ($return['onlyTimer'] != "Y") ) {
-      log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
-      $return['parametersCheck']="nok";
-      $return['parametersCheck_message'] = __('Le port n\'est pas configuré', __FILE__);
-      return $return;
-    }
-
-    // Port Zigate en Wifi et pas en mode Timer
-    if ( ($return['AbeilleSerialPort'] == "/tmp/zigate") && ($return['onlyTimer'] != "Y") ) {
-      return $return;
-    }
-
-    // J ai un port et je ne suis pas en mode Timer
-    if ( ($return['AbeilleSerialPort'] != 'none') && ($return['onlyTimer'] != "Y") ) {
-      $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
-      if (@!file_exists($return['AbeilleSerialPort'])) {
-        log::add('Abeille','debug','getParameters: serialPort n\'existe pas. ->'.$return['AbeilleSerialPort'].'<-');
-        $return['parametersCheck']="nok";
-        $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
         return $return;
-      } else {
-        if (substr(decoct(fileperms($return['AbeilleSerialPort'])), -4) != "0777") {
-          exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
+      }
+
+      if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
+
+      return $return;
+    }
+
+    public static function dependancy_install() {
+      log::add('Abeille', 'debug', 'Installation des dépendances: IN');
+      message::add(
+        "Abeille",
+        "L installation des dependances est en cours, n oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation"
+      );
+      log::remove(__CLASS__.'_update');
+      $result = array( 'script' => dirname(__FILE__).'/../../resources/install.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance', 'log' => log::getPathToLog(__CLASS__.'_update'), );
+      if ($result['state'] == 'ok') {
+        $result['launchable'] = 'ok';
+      }
+      log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result, ' X '));
+
+      return $result;
+    }
+
+    public static function deamon() {
+      //use verified parameters
+      $parameters_info = self::getParameters();
+
+      log::add(
+        'Abeille',
+        'debug',
+        'Parametres utilises, Host : '.$parameters_info['AbeilleAddress'].',
+        Port : '.$parameters_info['AbeillePort'].',
+        AbeilleParentId : '.$parameters_info['AbeilleParentId'].',
+        AbeilleConId: '.$parameters_info['AbeilleConId'].',
+        AbeilleUser: '.$parameters_info['AbeilleUser'].',
+        Abeillepass: '.$parameters_info['AbeillePass'].',
+        AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].',
+        qos: '.$parameters_info['AbeilleQos'].',
+        showAllCommands: '.$parameters_info['showAllCommands'].',
+        affichageNetwork: '.$parameters_info['affichageNetwork'].',
+        affichageTime: '.$parameters_info['affichageTime'].',
+        affichageCmdAdd: '.$parameters_info['affichageCmdAdd'].',
+        ModeCreation: '.$parameters_info['creationObjectMode'].',
+        adresseCourteMode: '.$parameters_info['adresseCourteMode'].',
+        onlyTimer: '.$parameters_info['onlyTimer'].',
+        IpWifiZigate : '.$parameters_info['IpWifiZigate']
+      );
+
+      // https://github.com/mgdm/Mosquitto-PHP
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html
+      $client = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_deamon_Loop_ForEver');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
+      $client->onConnect('Abeille::connect');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
+      $client->onDisconnect('Abeille::disconnect');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
+      $client->onSubscribe('Abeille::subscribe');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
+      $client->onMessage('Abeille::message');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
+      $client->onLog('Abeille::logmq');
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
+      $client->setWill('/jeedom', "Client Abeille died :-(", $parameters_info['AbeilleQos'], 0);
+
+      // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
+      $client->setReconnectDelay(1, 120, 1);
+
+      try {
+        $client->setCredentials(
+          $parameters_info['AbeilleUser'],
+          $parameters_info['AbeillePass']
+        );
+
+        $client->connect(
+          $parameters_info['AbeilleAddress'],
+          $parameters_info['AbeillePort'],
+          60
+        );
+        $client->subscribe(
+          $parameters_info['AbeilleTopic'],
+          $parameters_info['AbeilleQos']
+        ); // !auto: Subscribe to root topic
+
+        log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
+
+
+        while (true) {
+          // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+          $client->loop(0);
+          time_nanosleep( 0, 10000000 ); // 1/100s
         }
+
+
+        $client->disconnect();
+        unset($client);
+
+      } catch (Exception $e) {
+        log::add('Abeille', 'error', $e->getMessage());
       }
     }
 
-    return $return;
-  }
+    public static function serviceMosquittoStatus() {
+      $debug_serviceMosquittoStatus = 0;
 
-  public static function postSave() {
-    log::add('Abeille', 'debug', 'deamon_postSave: IN');
-    $cron = cron::byClassAndFunction('Abeille', 'deamon');
-    if (is_object($cron) && !$cron->running()) {
-      $cron->run();
+      $outputSvc = array();
+      $return = array();
+      $return['mosquitto'] = 'nok';
+      $return['mosquitto_message'] = 'Service not running yet.';
+
+      $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -Eicv 'fail|unrecognized'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
+      exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+      $logmsg = 'Status du service mosquitto : '.($outputSvc[0] > 0 ? 'OK' : 'Probleme').'   ('.implode($outputSvc,'!').')';
+      if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', $logmsg);
+
+      //Docker workaround as service will not write a pid file for mosquitto (status will always fail)
+      if (file_exists("/.dockerenv") == true) {
+        $outputSvc = array();
+        exec(system::getCmdSudo()."pgrep mosquitto", $outputSvc);
+        if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'docker test: pid of mosquitto: '.$outputSvc[0]);
+      }
+      if ($outputSvc[0] > 0) {
+        $return['mosquitto'] = 'ok';
+        $return['mosquitto_message'] = 'Service mosquitto is running.';
+      }
+      unset($outputSvc);
+
+      return $return;
     }
-    log::add('Abeille', 'debug', 'deamon_postSave: OUT');
 
-  }
+    public static function serviceMosquittoStart() {
+      $outputSvc = array();
+      //try to start mosquitto service if not already started.
+      if (self::serviceMosquittoStatus()['mosquitto'] != 'ok') {
+        unset($outputSvc);
+        $cmdSvc = "kill `pgrep -f /usr/sbin/mosquitto` 2>&1";
+        exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+        log::add('Abeille', 'debug', 'kill du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
+        unset($outputSvc);
 
-  public static function connect($r, $message) {
-    log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code '.$r.' '.$message);
-    config::save('state', '1', 'Abeille');
-  }
+        $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
+        exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+        log::add('Abeille', 'debug', 'Start du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
+        sleep(3);
+      }
 
-  public static function disconnect($r) {
-    log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code '.$r);
-    config::save('state', '0', 'Abeille');
-  }
+      return self::serviceMosquittoStatus();
+    }
 
-  public static function subscribe() {
-    log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
-  }
+    public static function getParameters() {
+      $return = array();
+      $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
+      $return['parametersCheck_message'] = "";
 
-  public static function logmq($code, $str) {
+      //Most Fields are defined with default values
+      $return['AbeilleAddress']       = config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1');
+      $return['AbeillePort']          = config::byKey('AbeillePort', 'Abeille', '1883');
+      $return['AbeilleConId']         = config::byKey('AbeilleConId', 'Abeille', 'jeedom');
+      $return['AbeilleUser']          = config::byKey('mqttUser', 'Abeille', 'jeedom');
+      $return['AbeillePass']          = config::byKey('mqttPass', 'Abeille', 'jeedom');
+      $return['AbeilleTopic']         = config::byKey('mqttTopic', 'Abeille', '#');
+      $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
+      $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
+      $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
+      $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
+      $return['creationObjectMode']   = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
+      $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
+      $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
+      $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'N');
+      $return['affichageTime']        = config::byKey('affichageTime', 'Abeille', 'N');
+      $return['affichageCmdAdd']      = config::byKey('affichageCmdAdd', 'Abeille', 'N');
+      $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
+      $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
 
-    // log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+      // Testons la validité de la configuration
+      // Pas de port alors que je ne suis pas en mode timer only.
+      if ( ($return['AbeilleSerialPort'] == 'none') && ($return['onlyTimer'] != "Y") ) {
+        log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
+        $return['parametersCheck']="nok";
+        $return['parametersCheck_message'] = __('Le port n\'est pas configuré', __FILE__);
+        return $return;
+      }
 
-  }
+      // Port Zigate en Wifi et pas en mode Timer
+      if ( ($return['AbeilleSerialPort'] == "/tmp/zigate") && ($return['onlyTimer'] != "Y") ) {
+        return $return;
+      }
 
-  public static function fetchShortFromIEEE($IEEE, $checkShort) {
-    // Return:
-    // 0 : Short Address is aligned with the one received
-    // Short : Short Address is NOT aligned with the one received
-    // -1 : Error Nothing found
+      // J ai un port et je ne suis pas en mode Timer
+      if ( ($return['AbeilleSerialPort'] != 'none') && ($return['onlyTimer'] != "Y") ) {
+        $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
+        if (@!file_exists($return['AbeilleSerialPort'])) {
+          log::add('Abeille','debug','getParameters: serialPort n\'existe pas. ->'.$return['AbeilleSerialPort'].'<-');
+          $return['parametersCheck']="nok";
+          $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
+          return $return;
+        } else {
+          if (substr(decoct(fileperms($return['AbeilleSerialPort'])), -4) != "0777") {
+            exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'].' > /dev/null 2>&1');
+          }
+        }
+      }
 
-    // $lookForIEEE = "000B57fffe490C2a";
-    // $checkShort = "2006";
-    // log::add('Abeille', 'debug', 'BEN: start function fetchShortFromIEEE');
-    $abeilles = Abeille::byType('Abeille');
+      return $return;
+    }
 
-    foreach ($abeilles as $abeille) {
+    public static function postSave() {
+      log::add('Abeille', 'debug', 'deamon_postSave: IN');
+      $cron = cron::byClassAndFunction('Abeille', 'deamon');
+      if (is_object($cron) && !$cron->running()) {
+        $cron->run();
+      }
+      log::add('Abeille', 'debug', 'deamon_postSave: OUT');
 
-      $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
-      if (is_object($cmdIEEE)) {
+    }
 
-        if ($cmdIEEE->execCmd() == $IEEE) {
+    public static function connect($r, $message) {
+      log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code '.$r.' '.$message);
+      config::save('state', '1', 'Abeille');
+    }
 
-          $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
-          if ($cmdShort) {
-            if ($cmdShort->execCmd() == $checkShort) {
-              // echo "Success ";
-              // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return 0');
-              return 0;
-            } else {
-              // echo "Pas success du tout ";
-              // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
-              // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
-              // return $cmdShort->execCmd();
-              // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
-              return substr($abeille->getlogicalId(), -4);
+    public static function disconnect($r) {
+      log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code '.$r);
+      config::save('state', '0', 'Abeille');
+    }
+
+    public static function subscribe() {
+      log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
+    }
+
+    public static function logmq($code, $str) {
+
+      // log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+
+    }
+
+    public static function fetchShortFromIEEE($IEEE, $checkShort) {
+      // Return:
+      // 0 : Short Address is aligned with the one received
+      // Short : Short Address is NOT aligned with the one received
+      // -1 : Error Nothing found
+
+      // $lookForIEEE = "000B57fffe490C2a";
+      // $checkShort = "2006";
+      // log::add('Abeille', 'debug', 'BEN: start function fetchShortFromIEEE');
+      $abeilles = Abeille::byType('Abeille');
+
+      foreach ($abeilles as $abeille) {
+
+        $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
+        if (is_object($cmdIEEE)) {
+
+          if ($cmdIEEE->execCmd() == $IEEE) {
+
+            $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
+            if ($cmdShort) {
+              if ($cmdShort->execCmd() == $checkShort) {
+                // echo "Success ";
+                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return 0');
+                return 0;
+              } else {
+                // echo "Pas success du tout ";
+                // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
+                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
+                // return $cmdShort->execCmd();
+                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
+                return substr($abeille->getlogicalId(), -4);
+              }
+
+              return $return;
             }
-
-            return $return;
           }
         }
       }
+
+      // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return -1');
+      return -1;
     }
 
-    // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return -1');
-    return -1;
-  }
+    public static function checkInclusionStatus() {
+      // Return: Inclusion status or -1 if error
+      $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
 
-  public static function checkInclusionStatus() {
-    // Return: Inclusion status or -1 if error
-    $ruche = Abeille::byLogicalId('Abeille/Ruche', 'Abeille');
-
-    if ( $ruche ) {
-      // echo "Join status collection\n";
-      $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
-      if ($cmdJoinStatus) {
-        return $cmdJoinStatus->execCmd();
-      }
-    }
-
-    return -1;
-  }
-
-  public static function CmdAffichage( $affichageType, $Visibility = "na" ) {
-    // $affichageType could be:
-    //  affichageNetwork
-    //  affichageTime
-    //  affichageCmdAdd
-    // $Visibilty command could be
-    // Y
-    // N
-    // toggle
-    // na
-
-    if ($Visibility == "na") {
-      return;
-    }
-
-    $parameters_info = self::getParameters();
-
-    $convert = array(
-      "affichageNetwork"=>"Network",
-      "affichageTime"=>"Time",
-      "affichageCmdAdd"=>"additionalCommand"
-    );
-
-    log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility );
-
-    switch ($Visibility) {
-      case 'Y':
-      break;
-      case 'N':
-      break;
-      case 'toggle':
-      if ( $parameters_info[$affichageType] == 'Y' ) { $Visibility = 'N'; } else { $Visibility = 'Y'; }
-      break;
-    }
-    config::save( $affichageType, $Visibility,   'Abeille');
-
-    $abeilles = self::byType('Abeille');
-    foreach ($abeilles as $key=>$abeille) {
-      $cmds = $abeille->getCmd();
-      foreach ( $cmds as $keyCmd=>$cmd ){
-        if ( $cmd->getConfiguration("visibilityCategory")==$convert[$affichageType] ) {
-          switch ($Visibility) {
-            case 'Y':
-            $cmd->setIsVisible(1);
-            break;
-            case 'N':
-            $cmd->setIsVisible(0);
-            break;
-          }
+      if ( $ruche ) {
+        // echo "Join status collection\n";
+        $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
+        if ($cmdJoinStatus) {
+          return $cmdJoinStatus->execCmd();
         }
-        $cmd->save();
       }
-      $abeille->save();
-      $abeille->refresh();
+
+      return -1;
     }
 
-    log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
-    return;
-  }
+    public static function CmdAffichage( $affichageType, $Visibility = "na" ) {
+      // $affichageType could be:
+      //  affichageNetwork
+      //  affichageTime
+      //  affichageCmdAdd
+      // $Visibilty command could be
+      // Y
+      // N
+      // toggle
+      // na
 
-  public static function message($message) {
+      if ($Visibility == "na") {
+        return;
+      }
 
-    $parameters_info = self::getParameters();
+      $parameters_info = self::getParameters();
 
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // demande de creation de ruche au cas ou elle n'est pas deja crée....
-    // La ruche est aussi un objet Abeille
-    if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
-      log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-      self::createRuche($message);
+      $convert = array(
+        "affichageNetwork"=>"Network",
+        "affichageTime"=>"Time",
+        "affichageCmdAdd"=>"additionalCommand"
+      );
 
-      return;
-    }
+      log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility );
 
+      switch ($Visibility) {
+        case 'Y':
+        break;
+        case 'N':
+        break;
+        case 'toggle':
+        if ( $parameters_info[$affichageType] == 'Y' ) { $Visibility = 'N'; } else { $Visibility = 'Y'; }
+        break;
+      }
+      config::save( $affichageType, $Visibility,   'Abeille');
 
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
-
-    if ( substr($message->topic, 0, strlen($parameters_info["AbeilleTopic"])-2) != substr($parameters_info["AbeilleTopic"],0, strlen($parameters_info["AbeilleTopic"])-2 ) ) {
-      echo "Message receive but is not for me, wrong delivery !!!\n";
-      return;
-    }
-    // On enleve AbeilleTopic
-    $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
-
-    // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
-    if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
-      // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
-      return;
-    }
-
-    /*----------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Analyse du message recu
-    // [CmdAbeille:Abeille] / Address / Cluster-Parameter
-    // [CmdAbeille:Abeille] / $addr / $cmdId => $value
-    // $nodeId = [CmdAbeille:Abeille] / $addr
-
-    $topicArray = explode("/", $message->topic);
-    if (sizeof($topicArray) != 3) return;
-
-    $Filter = $topicArray[0];
-    if ($Filter == "CmdCreate") $Filter = "Abeille";
-    $addr = $topicArray[1];
-    $cmdId = $topicArray[2];
-    $nodeid = $Filter.'/'.$addr;
-
-    $value = $message->payload;
-    // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-    if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
-
-    $type = 'topic';         // type = topic car pas json
-
-    if ( strpos("_".$cmdId, "Time")>0 ) log::add('Abeille', 'debug','-');
-    else   log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-
-
-    // Si cmd Affichage
-    if ( $Filter == "CmdAffichage") {
-      log::add('Abeille', 'debug', 'Call CmdAffichage' );
-      self::CmdAffichage( $cmdId, 'toggle' );
-      return;
-    }
-
-    // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
-    if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
-      log::add('Abeille', 'debug', 'Entering enable/disable: '.$cmdId );
-      $cmds = Cmd::byLogicalId('IEEE-Addr');
-      foreach( $cmds as $cmd ) {
-        if ( $cmd->execCmd() == $value ) {
-          $abeille = $cmd->getEqLogic();
-          if ($cmdId == "enable") {
-            $abeille->setIsEnable(1);
+      $abeilles = self::byType('Abeille');
+      foreach ($abeilles as $key=>$abeille) {
+        $cmds = $abeille->getCmd();
+        foreach ( $cmds as $keyCmd=>$cmd ){
+          if ( $cmd->getConfiguration("visibilityCategory")==$convert[$affichageType] ) {
+            switch ($Visibility) {
+              case 'Y':
+              $cmd->setIsVisible(1);
+              break;
+              case 'N':
+              $cmd->setIsVisible(0);
+              break;
+            }
           }
-          else {
-            $abeille->setIsEnable(0);
-          }
-          $abeille->save();
-          $abeille->refresh();
+          $cmd->save();
         }
-        echo "\n";
+        $abeille->save();
+        $abeille->refresh();
       }
 
+      log::add('Abeille', 'debug', 'Leaving CmdAffichage' );
       return;
     }
 
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Cherche l objet par sa ref short Address et la commande
-    $elogic = self::byLogicalId($nodeid, 'Abeille');
-    if (is_object($elogic)) {
-      $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
-    }
-    $objetConnu = 0;
+    public static function message($message) {
 
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet n existe pas et je recoie son nom => je créé l objet.
-    if ( !is_object($elogic)
-    && (    preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId)
-    ||  preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId )
-    ||  preg_match( "/^SimpleDesc-[0-9A-F]*-*DeviceDescription/", $cmdId )
-    )
-    && ( config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel") ) {
+      $parameters_info = self::getParameters();
 
-      log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
-      //remove lumi. from name as all xiaomi devices have a lumi. name
-      //remove all space in names for easier filename handling
-      $trimmedValue = str_replace(' ', '', str_replace('lumi.', '', $value));
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // demande de creation de ruche au cas ou elle n'est pas deja crée....
+      // La ruche est aussi un objet Abeille
+      if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
+        log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+        self::createRuche($message);
 
-      // On enleve le / comme par exemple le nom des equipements Legrand
-      $trimmedValue = str_replace('/', '', $trimmedValue);
+        return;
+      }
 
-      // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-      $trimmedValue = str_replace("\0", '', $trimmedValue);
 
-      log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: '.$trimmedValue);
-      $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
-      log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
 
-      // On recupere le EP
-      // $EP = substr($cmdId,5,2);
-      $EP = explode('-', $cmdId)[1];
-      log::add('Abeille', 'debug', 'EP: '.$EP);
-      $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
-      $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);
-      $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
-      log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+      if ( substr($message->topic, 0, strlen($parameters_info["AbeilleTopic"])-2) != substr($parameters_info["AbeilleTopic"],0, strlen($parameters_info["AbeilleTopic"])-2 ) ) {
+        echo "Message receive but is not for me, wrong delivery !!!\n";
+        return;
+      }
+      // On enleve AbeilleTopic
+      $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
 
-      //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
-      if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists(
-        $trimmedValue,
-        $AbeilleObjetDefinition
-      )) {
-        $objetConnu = 1;
-        $jsonName = array_key_exists($value, $AbeilleObjetDefinition) ? $value : $trimmedValue;
-        log::add(
-          'Abeille',
-          'info',
-          'objet: '.$value.' recherché comme '.$trimmedValue.' peut etre cree car je connais ce type d objet.'
-        );
-      } else {
-        log::add(
-          'Abeille',
-          'info',
-          'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.'
-        );
-        log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
+      // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
+      if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
+        // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
+        return;
+      }
+
+      /*----------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Analyse du message recu
+      // [CmdAbeille:Abeille] / Address / Cluster-Parameter
+      // [CmdAbeille:Abeille] / $addr / $cmdId => $value
+      // $nodeId = [CmdAbeille:Abeille] / $addr
+
+      $topicArray = explode("/", $message->topic);
+      if (sizeof($topicArray) != 3) return;
+
+      $Filter = $topicArray[0];
+      if ($Filter == "CmdCreate") $Filter = "Abeille";
+      $addr = $topicArray[1];
+      $cmdId = $topicArray[2];
+      $nodeid = $Filter.'/'.$addr;
+
+      $value = $message->payload;
+      // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
+      if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
+
+      $type = 'topic';         // type = topic car pas json
+
+      if ( strpos("_".$cmdId, "Time")>0 ) {
+        // log::add('Abeille', 'debug','-');
+      }
+      else   log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+
+
+      // Si cmd Affichage
+      if ( $Filter == "CmdAffichage") {
+        log::add('Abeille', 'debug', 'Call CmdAffichage' );
+        self::CmdAffichage( $cmdId, 'toggle' );
+        return;
+      }
+
+      // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
+      if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
+        log::add('Abeille', 'debug', 'Entering enable/disable: '.$cmdId );
+        $cmds = Cmd::byLogicalId('IEEE-Addr');
+        foreach( $cmds as $cmd ) {
+          if ( $cmd->execCmd() == $value ) {
+            $abeille = $cmd->getEqLogic();
+            if ($cmdId == "enable") {
+              $abeille->setIsEnable(1);
+            }
+            else {
+              $abeille->setIsEnable(0);
+            }
+            $abeille->save();
+            $abeille->refresh();
+          }
+          echo "\n";
+        }
+
         return;
       }
 
       /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-      // Creation de l objet Abeille
-      // Exemple pour les objets créés par les commandes Ruche, e.g. Timer
-      if (strlen($addr) != 4) {
-        $index = rand(1000, 9999);
-        $addr = $addr."-".$index;
-        $nodeid = $nodeid."-".$index;
+      // Cherche l objet par sa ref short Address et la commande
+      $elogic = self::byLogicalId($nodeid, 'Abeille');
+      if (is_object($elogic)) {
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
+      }
+      $objetConnu = 0;
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet n existe pas et je recoie son nom => je créé l objet.
+      if ( !is_object($elogic)
+      && (    preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId)
+      ||  preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId )
+      ||  preg_match( "/^SimpleDesc-[0-9A-F]*-*DeviceDescription/", $cmdId )
+      )
+      && ( config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel") ) {
+
+        log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
+        //remove lumi. from name as all xiaomi devices have a lumi. name
+        //remove all space in names for easier filename handling
+        $trimmedValue = str_replace(' ', '', str_replace('lumi.', '', $value));
+
+        // On enleve le / comme par exemple le nom des equipements Legrand
+        $trimmedValue = str_replace('/', '', $trimmedValue);
+
+        // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+        $trimmedValue = str_replace("\0", '', $trimmedValue);
+
+        log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: '.$trimmedValue);
+        $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
+        log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+
+        // On recupere le EP
+        // $EP = substr($cmdId,5,2);
+        $EP = explode('-', $cmdId)[1];
+        log::add('Abeille', 'debug', 'EP: '.$EP);
+        $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
+        $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);
+        $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
+        log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+
+        //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
+        if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists(
+          $trimmedValue,
+          $AbeilleObjetDefinition
+        )) {
+          $objetConnu = 1;
+          $jsonName = array_key_exists($value, $AbeilleObjetDefinition) ? $value : $trimmedValue;
+          log::add(
+            'Abeille',
+            'info',
+            'objet: '.$value.' recherché comme '.$trimmedValue.' peut etre cree car je connais ce type d objet.'
+          );
+        } else {
+          log::add(
+            'Abeille',
+            'info',
+            'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.'
+          );
+          log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
+          return;
+        }
+
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        // Creation de l objet Abeille
+        // Exemple pour les objets créés par les commandes Ruche, e.g. Timer
+        if (strlen($addr) != 4) {
+          $index = rand(1000, 9999);
+          $addr = $addr."-".$index;
+          $nodeid = $nodeid."-".$index;
+        }
+
+        message::add( "Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir." );
+        $elogic = new Abeille();
+        //id
+        if ($objetConnu) {
+          $name = "Abeille-".$addr;
+          // $name = "Abeille-" . $addr . '-' . $jsonName;
+        } else {
+          $name = "Abeille-".$addr.'-'.$jsonName."-Type d objet inconnu (!JSON)";
+        }
+        $elogic->setName($name);
+        $elogic->setLogicalId($nodeid);
+        $elogic->setObject_id($parameters_info['AbeilleParentId']);
+        $elogic->setEqType_name('Abeille');
+
+        $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
+
+        $objetConfiguration = $objetDefSpecific["configuration"];
+        $elogic->setConfiguration('topic', $nodeid);
+        $elogic->setConfiguration('type', $type);
+        $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
+        $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+        $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
+        $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
+        $elogic->setConfiguration('type', $type);
+        if (isset($objetConfiguration['battery_type'])) {
+          $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
+        }
+        if (isset($objetConfiguration['Groupe'])) {
+          $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
+        }
+        if (isset($objetConfiguration['protocol'])) {
+          $elogic->setConfiguration('protocol', $objetConfiguration['protocol']);
+        }
+        if (isset($objetConfiguration['poll'])) {
+          $elogic->setConfiguration('poll', $objetConfiguration['poll']);
+        }
+        $elogic->setIsVisible("1");
+
+
+        // eqReal_id
+        $elogic->setIsEnable("1");
+        // status
+        // timeout
+        $elogic->setTimeout($objetDefSpecific["timeout"]);
+        // message::add("Abeille", "TimeOut in JSON:".$objetDefSpecific["timeout"] );
+
+        $elogic->setCategory(
+          array_keys($objetDefSpecific["Categorie"])[0],
+          $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
+        );
+        // display
+        // order
+        // comment
+
+        //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
+        //$elogic->save();
+        $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+        $elogic->save();
+
+
+        // Creation des commandes pour l objet Abeille juste créé.
+        if ($GLOBALS['debugBEN']) {
+          echo "On va creer les commandes.\n";
+          print_r($objetDefSpecific['Commandes']);
+        }
+
+        foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
+          log::add(
+            'Abeille',
+            'info',
+            // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
+            'Creation de la commande: '.$cmd.' suivant model de l objet pour l objet: '.$name
+          );
+          $cmdlogic = new AbeilleCmd();
+          // id
+          $cmdlogic->setEqLogic_id($elogic->getId());
+          $cmdlogic->setEqType('Abeille');
+          $cmdlogic->setLogicalId($cmd);
+          $cmdlogic->setOrder($cmdValueDefaut["order"]);
+          $cmdlogic->setName($cmdValueDefaut["name"]);
+          // value
+
+          if ($cmdValueDefaut["Type"] == "info") {
+            // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
+            $cmdlogic->setConfiguration('topic', $cmd);
+          }
+          if ($cmdValueDefaut["Type"] == "action") {
+            $cmdlogic->setConfiguration('retain', '0');
+
+            if (isset($cmdValueDefaut["value"])) {
+              // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
+              log::add(
+                'Abeille',
+                'debug',
+                'Define cmd info pour cmd action: '.$elogic->getName()." - ".$cmdValueDefaut["value"]
+              );
+
+              $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName(
+                "Abeille",
+                $elogic->getName(),
+                $cmdValueDefaut["value"]
+              );
+              $cmdlogic->setValue($cmdPointeur_Value->getId());
+
+            }
+
+          }
+
+          // La boucle est pour info et pour action
+          foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+            // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+            $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue));
+
+            // Ne pas effacer, en cours de dev.
+            // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
+            // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
+
+          }
+          // On conserve l info du template pour la visibility
+          $cmdlogic->setConfiguration( "visibiltyTemplate", $cmdValueDefaut["isVisible"]);
+
+          // template
+          $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
+          $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+          $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+          $cmdlogic->setType($cmdValueDefaut["Type"]);
+          $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+          $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
+          // unite
+          if (isset($cmdValueDefaut["unite"])) {
+            $cmdlogic->setUnite($cmdValueDefaut["unite"]);
+          }
+
+          if (isset($cmdValueDefaut["invertBinary"])) {
+            $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
+          }
+          // La boucle est pour info et pour action
+          // isVisible
+          $parameters_info = self::getParameters();
+          $isVisible = $parameters_info['showAllCommands'] == 'Y' ? "1" : $cmdValueDefaut["isVisible"];
+
+          foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+            // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+            $cmdlogic->setDisplay($confKey, $confValue);
+          }
+
+          $cmdlogic->setIsVisible($isVisible);
+
+          $cmdlogic->save();
+
+
+          // html
+          // alert
+
+          $cmdlogic->save();
+
+          // $elogic->checkAndUpdateCmd( $cmdlogic, $cmdValueDefaut["value"] );
+
+          if ($cmdlogic->getName() == "Short-Addr") {
+            $elogic->checkAndUpdateCmd($cmdlogic, $addr);
+          }
+
+        }
+
+        // On defini le nom de l objet
+        $elogic->checkAndUpdateCmd($cmdId, $value);
+
+        return;
       }
 
-      message::add( "Abeille", "Création d un nouvel objet Abeille (".$addr.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir." );
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
+      // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
+      if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Manuel")) {
+        log::add('Abeille', 'debug', "Mode Manuel donc je ne fais rien");
+
+        return;
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet n existe pas et je recoie une commande IEEE => je vais créer un objet pour visualiser cet inconnu (si mode semi-automatique)
+      // e.g. annonce recue en mode semi-automatique
+      if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
+        // On peux recevoir l'IEEE lorsqu'un equipement s'annonce. Dans ce cas on a sa ShortAddress et son IEEE. Je ne sais pas si il y a d autres scenarios
+        // Soit on ne le connais pas car il est nouveau ou sa shortAddress a changée. Mais dans les deux cas il n'est pas connu sous la ref de sa shortAddress
+
+        // Creation de l objet Abeille
+        log::add('Abeille', 'info', 'objet: '.$value.' creation sans model');
+        message::add(
+          "Abeille",
+          "Création d un nouvel objet INCONNU Abeille (".$addr.") en cours, dans quelques secondes rafraichissez votre dashboard pour le voir."
+        );
+        $elogic = new Abeille();
+        //id
+        if ($objetConnu) {
+          // ici pour moi on ne devrait jamais être dans cas de figure. Ce code ne sert a rien je pense.
+          $name = "Abeille-".$addr;
+        } else {
+          $name = "Abeille-".$addr."-Type d objet inconnu (IEEE)";
+        }
+        $elogic->setName($name);
+        $elogic->setLogicalId($nodeid);
+        $elogic->setObject_id($parameters_info['AbeilleParentId']);
+        $elogic->setEqType_name('Abeille');
+
+        // $objetDefSpecific = $AbeilleObjetDefinition[$value];
+        // $objetConfiguration = $objetDefSpecific["configuration"];
+        $elogic->setConfiguration('topic', $nodeid);
+        // $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+        $elogic->setIsVisible("1");
+        // eqReal_id
+        $elogic->setIsEnable("1");
+        // status
+        // timeout
+        // $elogic->setCategory(array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0],$AbeilleObjetDefinition[$value]["Categorie"][  array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0] ] );
+        // display
+        // order
+        // comment
+
+        //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
+        //$elogic->save();
+        $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+        $elogic->save();
+
+        return;
+
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
+      // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
+      if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Automatique")) {
+        $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
+        if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
+          // Short Address has changed
+          // log::add('Abeille', 'debug', "IEEE-Addr; Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
+          // message::add("Abeille", "Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
+
+          if (config::byKey('adresseCourteMode', 'Abeille', 'Automatique') == "Automatique") {
+
+            $elogic = self::byLogicalId("Abeille/".$ShortFound, 'Abeille');
+
+            log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
+            // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
+            message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
+
+            // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
+            log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
+            $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
+
+            $elogic->setLogicalId("Abeille/".$addr);
+
+            $elogic->setConfiguration('topic', "Abeille/".$addr);
+
+            $elogic->save();
+
+            // Il faut aussi mettre a jour la commande short address
+            self::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr, '0');
+          } else {
+            log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
+            message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
+          }
+        }
+
+        return;
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet n existe pas et je recoie une commande => je drop la cmd
+      // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
+      if (!is_object($elogic)) {
+        log::add( 'Abeille', 'debug', "L equipement $addr n existe pas dans Jeedom, je ne process pas la commande." );
+
+        return;
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si l objet exist et on recoie une IEEE
+      // e.g. Un NE renvoie son annonce
+      if (is_object($elogic) && ($cmdId == "IEEE-Addr")) {
+
+        // Je rejete les valeur null (arrive avec les equipement xiaomi qui envoie leur nom spontanement alors que l IEEE n est pas recue.
+        if (strlen($value)<2) {
+          log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
+          return;
+        }
+
+        // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
+        if ($value == "ffffffffffffffff") {
+          log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
+          return;
+        }
+
+        // Update IEEE cmd
+        if ( !is_object($cmdlogic) ){
+          log::add('Abeille', 'debug', 'IEEE-Addr commande n existe pas' );
+          return;
+        }
+
+        $IEEE = $cmdlogic->execCmd();
+        if ($IEEE == $value) {
+          log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
+          return;
+        }
+
+        // Je ne sais pas pourquoi des fois on recoit des IEEE null
+        if ($value == "0000000000000000") {
+          log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
+          return;
+        }
+
+        // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
+        if (strlen($IEEE)>2) {
+          log::add( 'Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." =>".$value."<=" );
+          message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )" );
+        }
+
+        $elogic->checkAndUpdateCmd($cmdlogic, $value);
+
+        return;
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Objet existe et cmd n existe pas
+      if (is_object($elogic) && !is_object($cmdlogic)) {
+        // Creons les commandes inconnues sur la base des commandes qu on recoit.
+        log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId);
+        if ($parameters_info['creationObjectMode'] == "Semi Automatique") {
+          // Cree la commande avec le peu d info que l on a
+          log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
+          $cmdlogic = new AbeilleCmd();
+          // id
+          $cmdlogic->setEqLogic_id($elogic->getId());
+          $cmdlogic->setEqType('Abeille');
+          $cmdlogic->setLogicalId($cmdId);
+          // $cmdlogic->setOrder('0');
+          $cmdlogic->setName('Cmd de type inconnue - '.$cmdId);
+          $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId);
+
+          if (isset($cmdValueDefaut["instance"])) {
+            $cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);
+          }
+          if (isset($cmdValueDefaut["class"])) {
+            $cmdlogic->setConfiguration('class', $cmdValueDefaut["class"]);
+          }
+          if (isset($cmdValueDefaut["index"])) {
+            $cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);
+          }
+
+          // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
+          // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
+          foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+            $cmdlogic->setConfiguration($confKey, $confValue);
+          }
+          // template
+          // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
+          // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+          // $cmdlogic->setType($cmdValueDefaut["Type"]);
+          $cmdlogic->setType('info');
+          // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
+          $cmdlogic->setSubType("string");
+          // unite
+          if (isset($cmdValueDefaut["units"])) {
+            $cmdlogic->setUnite($cmdValueDefaut["units"]);
+          }
+          // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
+          // isVisible
+          // value
+          // html
+          // alert
+          //$cmd->setTemplate('dashboard', 'light');
+          //$cmd->setTemplate('mobile', 'light');
+          //$cmd_info->setIsVisible(0);
+
+          $cmdlogic->save();
+          $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
+        }
+
+        return;
+      }
+
+      /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+      // Si equipement et cmd existe alors on met la valeur a jour
+      if (is_object($elogic) && is_object($cmdlogic)) {
+        /* Traitement particulier pour les batteries */
+        if ($cmdId == "Batterie-Volt") {
+          /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
+          $elogic->setStatus('battery', ($value / 1000 - 2.7) / (3.1 - 2.7) * 100);
+          $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
+        if ($cmdId == "0001-01-0021") {
+          /* en % batterie example Ikea Remote */
+          $elogic->setStatus('battery', $value);
+          $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
+        if ( ($cmdId == "Zigate-8000") && (substr($value,0,2)!="00") ) {
+          message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes (Voir log AbeilleParser).");
+        }
+        /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
+        // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
+        if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
+          log::add('Abeille', 'debug', 'Update ONLINE Status');
+          $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online');
+          $elogic->checkAndUpdateCmd($cmdlogicOnline, 1);
+        }
+
+        // Traitement particulier pour rejeter certaines valeurs
+        // exemple: le Xiaomi Wall Switch 2 Bouton envoie un On et un Off dans le même message donc Abeille recoit un ON/OFF consecutif et
+        // ne sais pas vraiment le gérer donc ici on rejete le Off et on met un retour d'etat dans la commande Jeedom
+        if ($cmdlogic->getConfiguration('AbeilleRejectValue') == $value) {
+          log::add('Abeille', 'debug', 'Rejet de la valeur: '.$value);
+
+          return;
+        }
+
+        $elogic->checkAndUpdateCmd($cmdlogic, $value);
+
+        return;
+      }
+
+      log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");
+
+      return; // function message
+    }
+
+    public static function publishMosquitto($_id, $_subject, $_message, $_retain) {
+      $parameters_info = self::getParameters();
+      log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
+      $publish = new Mosquitto\Client();
+
+      $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
+
+      $publish->connect($parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60);
+      $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
+      for ($i = 0; $i < 100; $i++) {
+        // Loop around to permit the library to do its work
+        $publish->loop(1);
+      }
+      $publish->disconnect();
+      unset($publish);
+    }
+
+    public function createRuche($message = null) {
+      $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
+      $parameters_info = self::getParameters();
+
+      if (is_object($elogic)) {
+        log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
+
+        // La ruche existe deja so return
+        return;
+      }
+      // Creation de la ruche
+      log::add('Abeille', 'info', 'objet ruche : creation par model');
+
+      $cmdId = end($topicArray);
+      $key = count($topicArray) - 1;
+      unset($topicArray[$key]);
+      $addr = end($topicArray);
+      // nodeid est le topic sans le dernier champ
+      $nodeid = implode($topicArray, '/');
+
+      message::add( "Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir." );
       $elogic = new Abeille();
       //id
-      if ($objetConnu) {
-        $name = "Abeille-".$addr;
-        // $name = "Abeille-" . $addr . '-' . $jsonName;
+      $elogic->setName("Ruche");
+      $elogic->setLogicalId("Abeille/Ruche");
+      if ($parameters_info['AbeilleParentId'] > 0) {
+        $elogic->setObject_id($parameters_info['AbeilleParentId']);
       } else {
-        $name = "Abeille-".$addr.'-'.$jsonName."-Type d objet inconnu (!JSON)";
+        $elogic->setObject_id(object::rootObject()->getId());
       }
-      $elogic->setName($name);
-      $elogic->setLogicalId($nodeid);
-      $elogic->setObject_id($parameters_info['AbeilleParentId']);
       $elogic->setEqType_name('Abeille');
-
-      $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
-
-      $objetConfiguration = $objetDefSpecific["configuration"];
-      $elogic->setConfiguration('topic', $nodeid);
-      $elogic->setConfiguration('type', $type);
-      $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
-      $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
-      $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
-      $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
-      $elogic->setConfiguration('type', $type);
-      if (isset($objetConfiguration['battery_type'])) {
-        $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
-      }
-      if (isset($objetConfiguration['Groupe'])) {
-        $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
-      }
-      if (isset($objetConfiguration['protocol'])) {
-        $elogic->setConfiguration('protocol', $objetConfiguration['protocol']);
-      }
-      if (isset($objetConfiguration['poll'])) {
-        $elogic->setConfiguration('poll', $objetConfiguration['poll']);
-      }
-      $elogic->setIsVisible("1");
-
-
+      $elogic->setConfiguration('topic', "Abeille/Ruche");
+      $elogic->setConfiguration('type', 'topic');
+      $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
+      $elogic->setIsVisible("0");
+      $elogic->setConfiguration('icone', "Ruche");
       // eqReal_id
       $elogic->setIsEnable("1");
       // status
-      // timeout
-      $elogic->setTimeout($objetDefSpecific["timeout"]);
-      // message::add("Abeille", "TimeOut in JSON:".$objetDefSpecific["timeout"] );
-
-      $elogic->setCategory(
-        array_keys($objetDefSpecific["Categorie"])[0],
-        $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
-      );
+      $elogic->setTimeout(15); // timeout en minutes
+      // $elogic->setCategory();
       // display
       // order
       // comment
@@ -1473,19 +1908,40 @@ class Abeille extends eqLogic {
       $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
       $elogic->save();
 
+      $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
+      $i = 100;
 
-      // Creation des commandes pour l objet Abeille juste créé.
-      if ($GLOBALS['debugBEN']) {
-        echo "On va creer les commandes.\n";
-        print_r($objetDefSpecific['Commandes']);
+      //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
+      $items = Tools::getDeviceNameFromJson('Abeille');
+
+      foreach ($items as $item) {
+        $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(
+          Tools::getTrimmedValueForJsonFiles($item),
+          'Abeille'
+        );
+        // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+        foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+          $rucheCommandList[$objetId] = array(
+            "name" => $objetId,
+            "order" => $i++,
+            "isVisible" => "0",
+            "isHistorized" => "0",
+            "Type" => "action",
+            "subType" => "other",
+            "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
+          );
+        }
       }
+      // print_r($rucheCommandList);
 
-      foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
+      //Create ruche object and commands
+      foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
+        $nomObjet = "Ruche";
         log::add(
           'Abeille',
           'info',
-          // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
-          'Creation de la commande: '.$cmd.' suivant model de l objet pour l objet: '.$name
+          // 'Creation de la command: ' . $nodeid . '/' . $cmd . ' suivant model de l objet: ' . $nomObjet
+          'Creation de la command: '.$cmd.' suivant model de l objet: '.$nomObjet
         );
         $cmdlogic = new AbeilleCmd();
         // id
@@ -1494,877 +1950,423 @@ class Abeille extends eqLogic {
         $cmdlogic->setLogicalId($cmd);
         $cmdlogic->setOrder($cmdValueDefaut["order"]);
         $cmdlogic->setName($cmdValueDefaut["name"]);
-        // value
-
-        if ($cmdValueDefaut["Type"] == "info") {
+        if ($cmdValueDefaut["Type"] == "action") {
+          // $cmdlogic->setConfiguration('topic', 'Cmd' . $nodeid . '/' . $cmd);
+          $cmdlogic->setConfiguration('topic', $cmd);
+        } else {
           // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
           $cmdlogic->setConfiguration('topic', $cmd);
         }
         if ($cmdValueDefaut["Type"] == "action") {
           $cmdlogic->setConfiguration('retain', '0');
-
-          if (isset($cmdValueDefaut["value"])) {
-            // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-            log::add(
-              'Abeille',
-              'debug',
-              'Define cmd info pour cmd action: '.$elogic->getName()." - ".$cmdValueDefaut["value"]
-            );
-
-            $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName(
-              "Abeille",
-              $elogic->getName(),
-              $cmdValueDefaut["value"]
-            );
-            $cmdlogic->setValue($cmdPointeur_Value->getId());
-
-          }
-
         }
-
-        // La boucle est pour info et pour action
         foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-          // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-          $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue));
-
-          // Ne pas effacer, en cours de dev.
-          // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
-          // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
-
+          $cmdlogic->setConfiguration($confKey, $confValue);
         }
-        // On conserve l info du template pour la visibility
-        $cmdlogic->setConfiguration( "visibiltyTemplate", $cmdValueDefaut["isVisible"]);
-
         // template
         $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
         $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
         $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
         $cmdlogic->setType($cmdValueDefaut["Type"]);
         $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-        $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
         // unite
-        if (isset($cmdValueDefaut["unite"])) {
-          $cmdlogic->setUnite($cmdValueDefaut["unite"]);
-        }
-
-        if (isset($cmdValueDefaut["invertBinary"])) {
-          $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
-        }
+        $cmdlogic->setDisplay('invertBinary', '0');
         // La boucle est pour info et pour action
-        // isVisible
-        $parameters_info = self::getParameters();
-        $isVisible = $parameters_info['showAllCommands'] == 'Y' ? "1" : $cmdValueDefaut["isVisible"];
-
         foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
           // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
           $cmdlogic->setDisplay($confKey, $confValue);
         }
-
-        $cmdlogic->setIsVisible($isVisible);
-
-        $cmdlogic->save();
-
-
-        // html
-        // alert
-
-        $cmdlogic->save();
-
-        // $elogic->checkAndUpdateCmd( $cmdlogic, $cmdValueDefaut["value"] );
-
-        if ($cmdlogic->getName() == "Short-Addr") {
-          $elogic->checkAndUpdateCmd($cmdlogic, $addr);
-        }
-
-      }
-
-      // On defini le nom de l objet
-      $elogic->checkAndUpdateCmd($cmdId, $value);
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
-    // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-    if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Manuel")) {
-      log::add('Abeille', 'debug', "Mode Manuel donc je ne fais rien");
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet n existe pas et je recoie une commande IEEE => je vais créer un objet pour visualiser cet inconnu (si mode semi-automatique)
-    // e.g. annonce recue en mode semi-automatique
-    if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
-      // On peux recevoir l'IEEE lorsqu'un equipement s'annonce. Dans ce cas on a sa ShortAddress et son IEEE. Je ne sais pas si il y a d autres scenarios
-      // Soit on ne le connais pas car il est nouveau ou sa shortAddress a changée. Mais dans les deux cas il n'est pas connu sous la ref de sa shortAddress
-
-      // Creation de l objet Abeille
-      log::add('Abeille', 'info', 'objet: '.$value.' creation sans model');
-      message::add(
-        "Abeille",
-        "Création d un nouvel objet INCONNU Abeille (".$addr.") en cours, dans quelques secondes rafraichissez votre dashboard pour le voir."
-      );
-      $elogic = new Abeille();
-      //id
-      if ($objetConnu) {
-        // ici pour moi on ne devrait jamais être dans cas de figure. Ce code ne sert a rien je pense.
-        $name = "Abeille-".$addr;
-      } else {
-        $name = "Abeille-".$addr."-Type d objet inconnu (IEEE)";
-      }
-      $elogic->setName($name);
-      $elogic->setLogicalId($nodeid);
-      $elogic->setObject_id($parameters_info['AbeilleParentId']);
-      $elogic->setEqType_name('Abeille');
-
-      // $objetDefSpecific = $AbeilleObjetDefinition[$value];
-      // $objetConfiguration = $objetDefSpecific["configuration"];
-      $elogic->setConfiguration('topic', $nodeid);
-      // $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
-      $elogic->setIsVisible("1");
-      // eqReal_id
-      $elogic->setIsEnable("1");
-      // status
-      // timeout
-      // $elogic->setCategory(array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0],$AbeilleObjetDefinition[$value]["Categorie"][  array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0] ] );
-      // display
-      // order
-      // comment
-
-      //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
-      //$elogic->save();
-      $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-      $elogic->save();
-
-      return;
-
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
-    // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-    if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Automatique")) {
-      $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
-      if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
-        // Short Address has changed
-        // log::add('Abeille', 'debug', "IEEE-Addr; Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
-        // message::add("Abeille", "Alerte l adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound, est ce que l objet aurait changé d adresse courte" );
-
-        if (config::byKey('adresseCourteMode', 'Abeille', 'Automatique') == "Automatique") {
-
-          $elogic = self::byLogicalId("Abeille/".$ShortFound, 'Abeille');
-
-          log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
-          // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
-          message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
-
-          // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
-          log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
-          $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
-
-          $elogic->setLogicalId("Abeille/".$addr);
-
-          $elogic->setConfiguration('topic', "Abeille/".$addr);
-
-          $elogic->save();
-
-          // Il faut aussi mettre a jour la commande short address
-          self::publishMosquitto(null, "Abeille/".$addr."/Short-Addr", $addr, '0');
-        } else {
-          log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
-          message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
-        }
-      }
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet n existe pas et je recoie une commande => je drop la cmd
-    // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
-    if (!is_object($elogic)) {
-      log::add( 'Abeille', 'debug', "L equipement $addr n existe pas dans Jeedom, je ne process pas la commande." );
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si l objet exist et on recoie une IEEE
-    // e.g. Un NE renvoie son annonce
-    if (is_object($elogic) && ($cmdId == "IEEE-Addr")) {
-
-      // Je rejete les valeur null (arrive avec les equipement xiaomi qui envoie leur nom spontanement alors que l IEEE n est pas recue.
-      if (strlen($value)<2) {
-        log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
-        return;
-      }
-
-      // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
-      if ($value == "ffffffffffffffff") {
-        log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
-        return;
-      }
-
-      // Update IEEE cmd
-      if ( !is_object($cmdlogic) ){
-        log::add('Abeille', 'debug', 'IEEE-Addr commande n existe pas' );
-        return;
-      }
-
-      $IEEE = $cmdlogic->execCmd();
-      if ($IEEE == $value) {
-        log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
-        return;
-      }
-
-      // Je ne sais pas pourquoi des fois on recoit des IEEE null
-      if ($value == "0000000000000000") {
-        log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
-        return;
-      }
-
-      // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
-      if (strlen($IEEE)>2) {
-        log::add( 'Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." =>".$value."<=" );
-        message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )" );
-      }
-
-      $elogic->checkAndUpdateCmd($cmdlogic, $value);
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Objet existe et cmd n existe pas
-    if (is_object($elogic) && !is_object($cmdlogic)) {
-      // Creons les commandes inconnues sur la base des commandes qu on recoit.
-      log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId);
-      if ($parameters_info['creationObjectMode'] == "Semi Automatique") {
-        // Cree la commande avec le peu d info que l on a
-        log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
-        $cmdlogic = new AbeilleCmd();
-        // id
-        $cmdlogic->setEqLogic_id($elogic->getId());
-        $cmdlogic->setEqType('Abeille');
-        $cmdlogic->setLogicalId($cmdId);
-        // $cmdlogic->setOrder('0');
-        $cmdlogic->setName('Cmd de type inconnue - '.$cmdId);
-        $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId);
-
-        if (isset($cmdValueDefaut["instance"])) {
-          $cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);
-        }
-        if (isset($cmdValueDefaut["class"])) {
-          $cmdlogic->setConfiguration('class', $cmdValueDefaut["class"]);
-        }
-        if (isset($cmdValueDefaut["index"])) {
-          $cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);
-        }
-
-        // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
-        // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
-        foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-          $cmdlogic->setConfiguration($confKey, $confValue);
-        }
-        // template
-        // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
-        // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-        // $cmdlogic->setType($cmdValueDefaut["Type"]);
-        $cmdlogic->setType('info');
-        // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-        $cmdlogic->setSubType("string");
-        // unite
-        if (isset($cmdValueDefaut["units"])) {
-          $cmdlogic->setUnite($cmdValueDefaut["units"]);
-        }
-        // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
-        // isVisible
+        $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
         // value
         // html
         // alert
-        //$cmd->setTemplate('dashboard', 'light');
-        //$cmd->setTemplate('mobile', 'light');
-        //$cmd_info->setIsVisible(0);
 
         $cmdlogic->save();
         $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
       }
-
-      return;
-    }
-
-    /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-    // Si equipement et cmd existe alors on met la valeur a jour
-    if (is_object($elogic) && is_object($cmdlogic)) {
-      /* Traitement particulier pour les batteries */
-      if ($cmdId == "Batterie-Volt") {
-        /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-        $elogic->setStatus('battery', ($value / 1000 - 2.7) / (3.1 - 2.7) * 100);
-        $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-      }
-      if ($cmdId == "0001-01-0021") {
-        /* en % batterie example Ikea Remote */
-        $elogic->setStatus('battery', $value);
-        $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-      }
-      if ( ($cmdId == "Zigate-8000") && (substr($value,0,2)!="00") ) {
-        message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes (Voir log AbeilleParser).");
-      }
-      /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
-      // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
-      if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
-        log::add('Abeille', 'debug', 'Update ONLINE Status');
-        $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online');
-        $elogic->checkAndUpdateCmd($cmdlogicOnline, 1);
-      }
-
-      // Traitement particulier pour rejeter certaines valeurs
-      // exemple: le Xiaomi Wall Switch 2 Bouton envoie un On et un Off dans le même message donc Abeille recoit un ON/OFF consecutif et
-      // ne sais pas vraiment le gérer donc ici on rejete le Off et on met un retour d'etat dans la commande Jeedom
-      if ($cmdlogic->getConfiguration('AbeilleRejectValue') == $value) {
-        log::add('Abeille', 'debug', 'Rejet de la valeur: '.$value);
-
-        return;
-      }
-
-      $elogic->checkAndUpdateCmd($cmdlogic, $value);
-
-      return;
-    }
-
-    log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");
-
-    return; // function message
-  }
-
-  public static function publishMosquitto($_id, $_subject, $_message, $_retain) {
-    $parameters_info = self::getParameters();
-    log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
-    $publish = new Mosquitto\Client();
-
-    $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
-
-    $publish->connect($parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60);
-    $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], $_retain);
-    for ($i = 0; $i < 100; $i++) {
-      // Loop around to permit the library to do its work
-      $publish->loop(1);
-    }
-    $publish->disconnect();
-    unset($publish);
-  }
-
-  public function createRuche($message = null) {
-    $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
-    $parameters_info = self::getParameters();
-
-    if (is_object($elogic)) {
-      log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
-
-      // La ruche existe deja so return
-      return;
-    }
-    // Creation de la ruche
-    log::add('Abeille', 'info', 'objet ruche : creation par model');
-
-    $cmdId = end($topicArray);
-    $key = count($topicArray) - 1;
-    unset($topicArray[$key]);
-    $addr = end($topicArray);
-    // nodeid est le topic sans le dernier champ
-    $nodeid = implode($topicArray, '/');
-
-    message::add( "Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir." );
-    $elogic = new Abeille();
-    //id
-    $elogic->setName("Ruche");
-    $elogic->setLogicalId("Abeille/Ruche");
-    if ($parameters_info['AbeilleParentId'] > 0) {
-      $elogic->setObject_id($parameters_info['AbeilleParentId']);
-    } else {
-      $elogic->setObject_id(object::rootObject()->getId());
-    }
-    $elogic->setEqType_name('Abeille');
-    $elogic->setConfiguration('topic', "Abeille/Ruche");
-    $elogic->setConfiguration('type', 'topic');
-    $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
-    $elogic->setIsVisible("0");
-    $elogic->setConfiguration('icone', "Ruche");
-    // eqReal_id
-    $elogic->setIsEnable("1");
-    // status
-    $elogic->setTimeout(15); // timeout en minutes
-    // $elogic->setCategory();
-    // display
-    // order
-    // comment
-
-    //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
-    //$elogic->save();
-    $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-    $elogic->save();
-
-    $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
-    $i = 100;
-
-    //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-    $items = Tools::getDeviceNameFromJson('Abeille');
-
-    foreach ($items as $item) {
-      $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(
-        Tools::getTrimmedValueForJsonFiles($item),
-        'Abeille'
-      );
-      // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-      foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-        $rucheCommandList[$objetId] = array(
-          "name" => $objetId,
-          "order" => $i++,
-          "isVisible" => "0",
-          "isHistorized" => "0",
-          "Type" => "action",
-          "subType" => "other",
-          "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
-        );
-      }
-    }
-    // print_r($rucheCommandList);
-
-    //Create ruche object and commands
-    foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
-      $nomObjet = "Ruche";
-      log::add(
-        'Abeille',
-        'info',
-        // 'Creation de la command: ' . $nodeid . '/' . $cmd . ' suivant model de l objet: ' . $nomObjet
-        'Creation de la command: '.$cmd.' suivant model de l objet: '.$nomObjet
-      );
-      $cmdlogic = new AbeilleCmd();
-      // id
-      $cmdlogic->setEqLogic_id($elogic->getId());
-      $cmdlogic->setEqType('Abeille');
-      $cmdlogic->setLogicalId($cmd);
-      $cmdlogic->setOrder($cmdValueDefaut["order"]);
-      $cmdlogic->setName($cmdValueDefaut["name"]);
-      if ($cmdValueDefaut["Type"] == "action") {
-        // $cmdlogic->setConfiguration('topic', 'Cmd' . $nodeid . '/' . $cmd);
-        $cmdlogic->setConfiguration('topic', $cmd);
-      } else {
-        // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
-        $cmdlogic->setConfiguration('topic', $cmd);
-      }
-      if ($cmdValueDefaut["Type"] == "action") {
-        $cmdlogic->setConfiguration('retain', '0');
-      }
-      foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-        $cmdlogic->setConfiguration($confKey, $confValue);
-      }
-      // template
-      $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-      $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-      $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-      $cmdlogic->setType($cmdValueDefaut["Type"]);
-      $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-      // unite
-      $cmdlogic->setDisplay('invertBinary', '0');
-      // La boucle est pour info et pour action
-      foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-        $cmdlogic->setDisplay($confKey, $confValue);
-      }
-      $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
-      // value
-      // html
-      // alert
-
-      $cmdlogic->save();
-      $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
     }
   }
-}
 
-class AbeilleCmd extends cmd {
-  public function execute($_options = null) {
-    log::add('Abeille', 'Debug', 'execute function with options ->'.json_encode($_options).'<-');
-    switch ($this->getType()) {
-      case 'action' :
-      //
-      /* ------------------------------ */
-      // Topic est l arborescence MQTT: La fonction Zigate
+  class AbeilleCmd extends cmd {
+    public function execute($_options = null) {
+      log::add('Abeille', 'Debug', 'execute function with options ->'.json_encode($_options).'<-');
+      switch ($this->getType()) {
+        case 'action' :
+        //
+        /* ------------------------------ */
+        // Topic est l arborescence MQTT: La fonction Zigate
 
-      $Abeilles = new Abeille();
+        $Abeilles = new Abeille();
 
-      $NE_Id = $this->getEqLogic_id();
-      $NE = $Abeilles->byId($NE_Id);
+        $NE_Id = $this->getEqLogic_id();
+        $NE = $Abeilles->byId($NE_Id);
 
-      if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
-        $topic = $this->getConfiguration('topic');
-      } else {
-        if (strpos("_".$this->getConfiguration('topic'), "CmdTimer") == 1) {
+        if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
           $topic = $this->getConfiguration('topic');
         } else {
-          if (strpos("_".$this->getConfiguration('topic'), "CmdCreate") == 1) {
+          if (strpos("_".$this->getConfiguration('topic'), "CmdTimer") == 1) {
             $topic = $this->getConfiguration('topic');
           } else {
-            $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
-            // $topic = $this->getConfiguration('topic');
+            if (strpos("_".$this->getConfiguration('topic'), "CmdCreate") == 1) {
+              $topic = $this->getConfiguration('topic');
+            } else {
+              $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+              // $topic = $this->getConfiguration('topic');
 
-          }
-        }
-      }
-
-      /* ------------------------------ */
-      // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
-      if ( strpos( $topic,"#addrGroup#" )>0 ) {
-        $topic = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $topic );
-      }
-
-      // -------------------------------------------------------------------------
-      // Process Request
-      $request = $this->getConfiguration('request', '1');
-      // request: c'est le payload dans la page de configuration pour une commande
-      // C est les parametres de la commande pour la zigate
-
-      /* ------------------------------ */
-      // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
-      if ( strpos( $request,"#addrGroup#" )>0 ) {
-        $request = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $request );
-      }
-
-      /* ------------------------------ */
-      // Je fais les remplacement pour le timer
-      if ( strpos( $request,"#TimerActionStart#" )>0 ) {
-        $request = str_replace( "#TimerActionStart#", $NE->getConfiguration("TimerActionStart"), $request );
-      }
-
-      if ( strpos( $request,"#TimerDuration#" )>0 ) {
-        if ( $NE->getConfiguration("TimerDuration") ) {
-          $request = str_replace( "#TimerDuration#", $NE->getConfiguration("TimerDuration"), $request );
-        }
-        else {
-          $request = str_replace( "#TimerDuration#", "60", $request );
-        }
-      }
-
-      if ( strpos( $request,"#TimerRampUp#" )>0 ) {
-        if ( $NE->getConfiguration("TimerRampUp") ) {
-          $request = str_replace( "#TimerRampUp#", $NE->getConfiguration("TimerRampUp"), $request );
-        }
-        else {
-          $request = str_replace( "#TimerRampUp#", "1", $request  );
-        }
-      }
-
-      if ( strpos( $request,"#TimerRampDown#" )>0 ) {
-        if ( $NE->getConfiguration("TimerRampDown") ) {
-          $request = str_replace( "#TimerRampDown#", $NE->getConfiguration("TimerRampDown"), $request );
-        }
-        else {
-          $request = str_replace( "#TimerRampDown#", "1", $request );
-        }
-      }
-
-      if ( strpos( $request,"#TimerActionRamp#" )>0 ) {
-        $request = str_replace( "#TimerActionRamp#", $NE->getConfiguration("TimerActionRamp"), $request );
-      }
-
-      if ( strpos( $request,"#TimerActionStop#" )>0 ) {
-        $request = str_replace( "#TimerActionStop#", $NE->getConfiguration("TimerActionStop"), $request );
-      }
-
-      if ( strpos( $request,"#TimerActionCancel#" )>0 ) {
-        $request = str_replace( "#TimerActionCancel#", $NE->getConfiguration("TimerActionCancel"), $request );
-      }
-
-      /* ------------------------------ */
-      // Je fais les remplacement dans les parametres
-      if (strpos($request, '#addrIEEE#') > 0) {
-        $ruche = new Abeille();
-        $commandIEEE = new AbeilleCmd();
-
-        // Recupere IEEE de la Ruche/ZiGate
-        $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
-        log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
-
-        $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
-        log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
-
-        $currentCommandId = $this->getId();
-        $currentObjectId = $this->getEqLogic_id();
-        log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
-
-        // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
-        $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
-
-        // print_r( $command->execCmd() );
-        log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE);
-
-        // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
-        // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
-        // echo "\n";
-        // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
-
-        $request = str_replace('#addrIEEE#', $commandIEEE, $request);
-        $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
-      }
-
-
-      switch ($this->getSubType()) {
-        case 'slider':
-        $request = str_replace('#slider#', $_options['slider'], $request);
-        break;
-        case 'color':
-        $request = str_replace('#color#', $_options['color'], $request);
-        break;
-        case 'message':
-        $request = str_replace('#title#', $_options['title'], $request);
-        $request = str_replace('#message#', $_options['message'], $request);
-        break;
-      }
-
-      $request = str_replace('\\', '', jeedom::evaluateExpression($request));
-      $request = cmd::cmdToValue($request);
-      Abeille::publishMosquitto($this->getId(), $topic, $request, $this->getConfiguration('retain', '0'));
-    }
-
-    return true;
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// La suite is Used for test
-// en ligne de comande =>
-// "php Abeille.class.php 1" to run the script to create any of the item listed in array L1057
-// "php Abeille.class.php 2" to run the script to create a ruche object
-// "php Abeille.class.php" to parse the file and verify syntax issues.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-if (isset($argv[1])) {
-  $debugBEN = $argv[1];
-} else {
-  $debugBEN = 0;
-}
-if ($debugBEN != 0) {
-  echo "Debut Abeille.class.php test mode\n";
-  $message = new stdClass();
-
-
-  switch ($debugBEN) {
-
-    // Creation des objets sur la base des modeles pour verifier la bonne creation dans Abeille
-    case "1":
-    $items = Tools::getDeviceNameFromJson('Abeille');
-    $parameters_info = Abeille::getParameters();
-    //problem icon creation
-    foreach ($items as $item) {
-      $name = str_replace(' ', '.', $item);
-      $message->topic = substr($parameters_info['AbeilleTopic'],0,-1)."Abeille/$name/0000-0005";
-      $message->payload = $item;
-      Abeille::message($message);
-      sleep(2);
-    }
-    break;
-
-    // Demande la creation de la ruche
-    case "2":
-    $message->topic = "CmdRuche/Ruche/CreateRuche";
-    $message->payload = "";
-    Abeille::message($message);
-    break;
-
-    // Verifie qu on recupere les IEEE pour les remplacer dans les commandes
-    case "3":
-    $ruche = new Abeille();
-    $commandIEEE = new AbeilleCmd();
-
-    // Recupere IEEE de la Ruche/ZiGate
-    $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
-    echo 'Id pour abeille Ruche: '.$rucheId."\n";
-
-    $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
-    echo 'IEEE pour  Ruche: '.$rucheIEEE."\n";
-
-    // $currentCommandId = $this->getId();
-    // $currentObjectId = $this->getEqLogic_id();
-    $currentObjectId = 284;
-    echo 'Id pour current abeille: '.$currentObjectId."\n";
-
-    $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
-    // print_r( $command->execCmd() );
-    echo 'IEEE pour current abeille: '.$commandIEEE."\n";
-
-    // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
-    // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
-    // echo "\n";
-    // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
-
-    $request = str_replace('#addrIEEE#', "'".$commandIEEE."'", $request);
-    $request = str_replace('#ZiGateIEEE#', "'".$rucheIEEE."'", $request);
-
-    break;
-
-    // Testing Dependancy info
-    case "4":
-    $ruche = new Abeille();
-
-    echo "Testing Dependancy info\n";
-    var_dump( $ruche::getDependencyInfo() );
-
-    echo "Testing deamon info\n";
-    var_dump( $ruche::deamon_info() );
-    break;
-
-
-    // Cherche l objet qui a une IEEE specifique
-    case "5":
-    // Info ampoue T7
-    $lookForIEEE = "000B57fffe490C2a";
-    $checkShort = "2096";
-
-    if (0) {
-      $abeilles = Abeille::byType('Abeille');
-      // var_dump( $abeilles );
-
-      foreach ($abeilles as $num => $abeille) {
-        //var_dump( $abeille );
-        // var_dump( $abeille->getCmd('Info', 'IEEE-Addr' ) );
-        $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
-        if ($cmdIEEE) {
-          // var_dump( $cmd );
-
-          if ($cmdIEEE->execCmd() == $lookFor) {
-            echo "Found it\n";
-            $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
-            if ($cmdShort) {
-              echo $cmdShort->execCmd()." ";
-              if ($cmdShort->execCmd() == $check) {
-                echo "Success ";
-
-                return 1;
-              } else {
-                echo "Pas success du tout ";
-
-                return 0;
-              }
             }
           }
-          echo $cmdIEEE->execCmd()."\n-----\n";
-        }
-      }
-
-      return $cmd;
-    } else {
-      Abeille::fetchShortFromIEEE($lookForIEEE, $checkShort);
-    }
-
-    break;
-
-    // Ask Model Identifier to all equipement without battery info, those equipement should be awake
-    case "6":
-    log::add('Abeille', 'debug', 'Ping routers to check Online status');
-    $eqLogics = Abeille::byType('Abeille');
-    foreach ($eqLogics as $eqLogic) {
-      // echo "Battery: ".$collectBattery = $eqLogic->getStatus("battery")."\n";
-      // echo "Battery: ".$collectBattery = $eqLogic->getConfiguration("battery_type")." - ";
-      if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
-        $topicArray = explode("/", $eqLogic->getLogicalId());
-        $addr = $topicArray[1];
-        if (strlen($addr) == 4) {
-          echo "Short: ".$topicArray[1];
-          Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
         }
 
+        /* ------------------------------ */
+        // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+        if ( strpos( $topic,"#addrGroup#" )>0 ) {
+          $topic = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $topic );
+        }
+
+        // -------------------------------------------------------------------------
+        // Process Request
+        $request = $this->getConfiguration('request', '1');
+        // request: c'est le payload dans la page de configuration pour une commande
+        // C est les parametres de la commande pour la zigate
+
+        /* ------------------------------ */
+        // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+        if ( strpos( $request,"#addrGroup#" )>0 ) {
+          $request = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $request );
+        }
+
+        /* ------------------------------ */
+        // Je fais les remplacement pour le timer
+        if ( strpos( $request,"#TimerActionStart#" )>0 ) {
+          $request = str_replace( "#TimerActionStart#", $NE->getConfiguration("TimerActionStart"), $request );
+        }
+
+        if ( strpos( $request,"#TimerDuration#" )>0 ) {
+          if ( $NE->getConfiguration("TimerDuration") ) {
+            $request = str_replace( "#TimerDuration#", $NE->getConfiguration("TimerDuration"), $request );
+          }
+          else {
+            $request = str_replace( "#TimerDuration#", "60", $request );
+          }
+        }
+
+        if ( strpos( $request,"#TimerRampUp#" )>0 ) {
+          if ( $NE->getConfiguration("TimerRampUp") ) {
+            $request = str_replace( "#TimerRampUp#", $NE->getConfiguration("TimerRampUp"), $request );
+          }
+          else {
+            $request = str_replace( "#TimerRampUp#", "1", $request  );
+          }
+        }
+
+        if ( strpos( $request,"#TimerRampDown#" )>0 ) {
+          if ( $NE->getConfiguration("TimerRampDown") ) {
+            $request = str_replace( "#TimerRampDown#", $NE->getConfiguration("TimerRampDown"), $request );
+          }
+          else {
+            $request = str_replace( "#TimerRampDown#", "1", $request );
+          }
+        }
+
+        if ( strpos( $request,"#TimerActionRamp#" )>0 ) {
+          $request = str_replace( "#TimerActionRamp#", $NE->getConfiguration("TimerActionRamp"), $request );
+        }
+
+        if ( strpos( $request,"#TimerActionStop#" )>0 ) {
+          $request = str_replace( "#TimerActionStop#", $NE->getConfiguration("TimerActionStop"), $request );
+        }
+
+        if ( strpos( $request,"#TimerActionCancel#" )>0 ) {
+          $request = str_replace( "#TimerActionCancel#", $NE->getConfiguration("TimerActionCancel"), $request );
+        }
+
+        /* ------------------------------ */
+        // Je fais les remplacement dans les parametres
+        if (strpos($request, '#addrIEEE#') > 0) {
+          $ruche = new Abeille();
+          $commandIEEE = new AbeilleCmd();
+
+          // Recupere IEEE de la Ruche/ZiGate
+          $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
+          log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
+
+          $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
+          log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
+
+          $currentCommandId = $this->getId();
+          $currentObjectId = $this->getEqLogic_id();
+          log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
+
+          // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
+          $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
+
+          // print_r( $command->execCmd() );
+          log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE);
+
+          // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+          // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+          // echo "\n";
+          // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+
+          $request = str_replace('#addrIEEE#', $commandIEEE, $request);
+          $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
+        }
+
+
+        switch ($this->getSubType()) {
+          case 'slider':
+          $request = str_replace('#slider#', $_options['slider'], $request);
+          break;
+          case 'color':
+          $request = str_replace('#color#', $_options['color'], $request);
+          break;
+          case 'message':
+          $request = str_replace('#title#', $_options['title'], $request);
+          $request = str_replace('#message#', $_options['message'], $request);
+          break;
+        }
+
+        $request = str_replace('\\', '', jeedom::evaluateExpression($request));
+        $request = cmd::cmdToValue($request);
+        Abeille::publishMosquitto($this->getId(), $topic, $request, $this->getConfiguration('retain', '0'));
       }
-      echo "\n";
+
+      return true;
     }
-    break;
+  }
 
-    // Check Inclusion status
-    case "7":
-    echo "Check inclusion status\n";
-    echo Abeille::checkInclusionStatus();
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // La suite is Used for test
+  // en ligne de comande =>
+  // "php Abeille.class.php 1" to run the script to create any of the item listed in array L1057
+  // "php Abeille.class.php 2" to run the script to create a ruche object
+  // "php Abeille.class.php" to parse the file and verify syntax issues.
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    break;
+  if (isset($argv[1])) {
+    $debugBEN = $argv[1];
+  } else {
+    $debugBEN = 0;
+  }
+  if ($debugBEN != 0) {
+    echo "Debut Abeille.class.php test mode\n";
+    $message = new stdClass();
 
-    // Check cleanup
-    case "8":
-    echo "Check cleanup\n";
-    Abeille::deamon_start_cleanup();
-    break;
 
-    case "9":
-    echo "Test Affichage\n";
-    //  toggleAffichageNetwork
-    //  toggleAffichageTime
-    //  toggleAffichageAdditionalCommand
-    Abeille::CmdAffichage( "affichageNetwork", "toggle" );
-    break;
+    switch ($debugBEN) {
 
-    case "10":
-    // $object = object::rootObject()->getId();
-    $object = object::all();
-    print_r($object);
-    break;
-
-    case "11":
-    Abeille::syncconfAbeille(false);
-    break;
-
-    case "12":
-    $cmds = Cmd::byLogicalId('IEEE-Addr');
-    foreach( $cmds as $cmd ) {
-      if ( $cmd->execCmd() == '00158d0001a66ca3' ) {
-        $abeille = $cmd->getEqLogic();
-        $abeille->setIsEnable(0);
-        $abeille->save();
-        $abeille->refresh();
+      // Creation des objets sur la base des modeles pour verifier la bonne creation dans Abeille
+      case "1":
+      $items = Tools::getDeviceNameFromJson('Abeille');
+      $parameters_info = Abeille::getParameters();
+      //problem icon creation
+      foreach ($items as $item) {
+        $name = str_replace(' ', '.', $item);
+        $message->topic = substr($parameters_info['AbeilleTopic'],0,-1)."Abeille/$name/0000-0005";
+        $message->payload = $item;
+        Abeille::message($message);
+        sleep(2);
       }
-      echo "\n";
-    }
-    break;
+      break;
 
-    case "13":
-    $message->topic = "Abeille/Ruche/Time-Time";
-    $message->payload = "2018-11-28 12:19:03";
-    Abeille::message($message);
-    break;
+      // Demande la creation de la ruche
+      case "2":
+      $message->topic = "CmdRuche/Ruche/CreateRuche";
+      $message->payload = "";
+      Abeille::message($message);
+      break;
 
-    case "14":
-    Abeille::updateConfigAbeille();
-    break;
+      // Verifie qu on recupere les IEEE pour les remplacer dans les commandes
+      case "3":
+      $ruche = new Abeille();
+      $commandIEEE = new AbeilleCmd();
 
-    case "15":
-    $abeilles = Abeille::byType('Abeille');
-    foreach ( $abeilles as $abeilleId=>$abeille) {
-      // var_dump($abeille->getCmd());
-      // var_dump($abeille);
-      echo $abeille->getId();
-      return;
-    }
-    break;
+      // Recupere IEEE de la Ruche/ZiGate
+      $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
+      echo 'Id pour abeille Ruche: '.$rucheId."\n";
 
-    case "16":
-    Abeille::cron15();
-    break;
+      $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
+      echo 'IEEE pour  Ruche: '.$rucheIEEE."\n";
 
-    case "17":
-    // On verifie le cron
-    var_dump( cron::byClassAndFunction('Abeille', 'deamon') );
-    echo "Is Object: ".is_object(cron::byClassAndFunction('Abeille', 'deamon'))."\n";
-    echo "running: ".cron::byClassAndFunction('Abeille', 'deamon')->running()."\n";
-    break;
+      // $currentCommandId = $this->getId();
+      // $currentObjectId = $this->getEqLogic_id();
+      $currentObjectId = 284;
+      echo 'Id pour current abeille: '.$currentObjectId."\n";
 
-    case "18":
+      $commandIEEE = $commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
+      // print_r( $command->execCmd() );
+      echo 'IEEE pour current abeille: '.$commandIEEE."\n";
 
-    break;
+      // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+      // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+      // echo "\n";
+      // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
 
-    case "19":
-    Abeille::deamon_start();
-    break;
+      $request = str_replace('#addrIEEE#', "'".$commandIEEE."'", $request);
+      $request = str_replace('#ZiGateIEEE#', "'".$rucheIEEE."'", $request);
 
-  } // switch
+      break;
 
-  echo "Fin Abeille.class.php test mode\n";
-}
+      // Testing Dependancy info
+      case "4":
+      $ruche = new Abeille();
+
+      echo "Testing Dependancy info\n";
+      var_dump( $ruche::getDependencyInfo() );
+
+      echo "Testing deamon info\n";
+      var_dump( $ruche::deamon_info() );
+      break;
+
+
+      // Cherche l objet qui a une IEEE specifique
+      case "5":
+      // Info ampoue T7
+      $lookForIEEE = "000B57fffe490C2a";
+      $checkShort = "2096";
+
+      if (0) {
+        $abeilles = Abeille::byType('Abeille');
+        // var_dump( $abeilles );
+
+        foreach ($abeilles as $num => $abeille) {
+          //var_dump( $abeille );
+          // var_dump( $abeille->getCmd('Info', 'IEEE-Addr' ) );
+          $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
+          if ($cmdIEEE) {
+            // var_dump( $cmd );
+
+            if ($cmdIEEE->execCmd() == $lookFor) {
+              echo "Found it\n";
+              $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
+              if ($cmdShort) {
+                echo $cmdShort->execCmd()." ";
+                if ($cmdShort->execCmd() == $check) {
+                  echo "Success ";
+
+                  return 1;
+                } else {
+                  echo "Pas success du tout ";
+
+                  return 0;
+                }
+              }
+            }
+            echo $cmdIEEE->execCmd()."\n-----\n";
+          }
+        }
+
+        return $cmd;
+      } else {
+        Abeille::fetchShortFromIEEE($lookForIEEE, $checkShort);
+      }
+
+      break;
+
+      // Ask Model Identifier to all equipement without battery info, those equipement should be awake
+      case "6":
+      log::add('Abeille', 'debug', 'Ping routers to check Online status');
+      $eqLogics = Abeille::byType('Abeille');
+      foreach ($eqLogics as $eqLogic) {
+        // echo "Battery: ".$collectBattery = $eqLogic->getStatus("battery")."\n";
+        // echo "Battery: ".$collectBattery = $eqLogic->getConfiguration("battery_type")." - ";
+        if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
+          $topicArray = explode("/", $eqLogic->getLogicalId());
+          $addr = $topicArray[1];
+          if (strlen($addr) == 4) {
+            echo "Short: ".$topicArray[1];
+            Abeille::publishMosquitto(null, "CmdAbeille/".$addr."/Annonce", "Default", '0');
+          }
+
+        }
+        echo "\n";
+      }
+      break;
+
+      // Check Inclusion status
+      case "7":
+      echo "Check inclusion status\n";
+      echo Abeille::checkInclusionStatus();
+
+      break;
+
+      // Check cleanup
+      case "8":
+      echo "Check cleanup\n";
+      Abeille::deamon_start_cleanup();
+      break;
+
+      case "9":
+      echo "Test Affichage\n";
+      //  toggleAffichageNetwork
+      //  toggleAffichageTime
+      //  toggleAffichageAdditionalCommand
+      Abeille::CmdAffichage( "affichageNetwork", "toggle" );
+      break;
+
+      case "10":
+      // $object = object::rootObject()->getId();
+      $object = object::all();
+      print_r($object);
+      break;
+
+      case "11":
+      Abeille::syncconfAbeille(false);
+      break;
+
+      case "12":
+      $cmds = Cmd::byLogicalId('IEEE-Addr');
+      foreach( $cmds as $cmd ) {
+        if ( $cmd->execCmd() == '00158d0001a66ca3' ) {
+          $abeille = $cmd->getEqLogic();
+          $abeille->setIsEnable(0);
+          $abeille->save();
+          $abeille->refresh();
+        }
+        echo "\n";
+      }
+      break;
+
+      case "13":
+      $message->topic = "Abeille/Ruche/Time-Time";
+      $message->payload = "2018-11-28 12:19:03";
+      Abeille::message($message);
+      break;
+
+      case "14":
+      Abeille::updateConfigAbeille();
+      break;
+
+      case "15":
+      $abeilles = Abeille::byType('Abeille');
+      foreach ( $abeilles as $abeilleId=>$abeille) {
+        // var_dump($abeille->getCmd());
+        // var_dump($abeille);
+        echo $abeille->getId();
+        return;
+      }
+      break;
+
+      case "16":
+      Abeille::cron15();
+      break;
+
+      case "17":
+      // On verifie le cron
+      var_dump( cron::byClassAndFunction('Abeille', 'deamon') );
+      echo "Is Object: ".is_object(cron::byClassAndFunction('Abeille', 'deamon'))."\n";
+      echo "running: ".cron::byClassAndFunction('Abeille', 'deamon')->running()."\n";
+      break;
+
+      case "18":
+
+      break;
+
+      case "19":
+      Abeille::deamon_start();
+      break;
+
+    } // switch
+
+    echo "Fin Abeille.class.php test mode\n";
+  }

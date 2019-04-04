@@ -1186,7 +1186,45 @@ apt-get install mosquitto</code></pre>
 </div></div>
 </div>
 <div class="sect3">
-<h4 id="_re_installation">6.4.4. Re-Installation</h4>
+<h4 id="_installation_manuelle">6.4.4. Installation Manuelle</h4>
+<div class="paragraph"><p>Soyez root ou en mode sudo.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cd /root
+apt-get -y update
+apt-get -y upgrade
+
+apt-get -y install php
+apt-get -y install mosquitto
+apt-get -y install libmosquitto-dev
+apt-get -y install git
+apt-get -y install php7.0-dev
+
+mkdir Mosquitto-PHP
+cd Mosquitto-PHP
+git clone https://github.com/mgdm/Mosquitto-PHP.git
+cd Mosquitto-PHP
+phpize
+./configure
+make
+make install</code></pre>
+</div></div>
+<div class="paragraph"><p>Ajouter extension=mosquitto.so à la fin du fichier php.ini
+(par exemple /etc/php/7.0/apache2/php.ini")
+Vous pouvez trouver les fichiers php.ini avec la commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>find /etc -name php.ini -print</code></pre>
+</div></div>
+<div class="paragraph"><p>Redemarrer tout le monde</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>/etc/init.d/mosquitto restart
+/etc/init.d/apapche2 restart</code></pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_re_installation">6.4.5. Re-Installation</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1291,7 +1329,7 @@ L&#8217;execution permet de tester, vérifier et donner des infos qui sont souve
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 18:42:25 CET
+ 2019-04-04 11:32:12 CEST
 </div>
 </div>
 </body>

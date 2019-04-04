@@ -190,6 +190,43 @@ Monitorer les messages
 mosquitto_sub -t "=" -v
 ----
 
+==== Installation Manuelle
+
+Soyez root ou en mode sudo.
+----
+cd /root
+apt-get -y update
+apt-get -y upgrade
+
+apt-get -y install php
+apt-get -y install mosquitto
+apt-get -y install libmosquitto-dev
+apt-get -y install git
+apt-get -y install php7.0-dev
+
+mkdir Mosquitto-PHP
+cd Mosquitto-PHP
+git clone https://github.com/mgdm/Mosquitto-PHP.git
+cd Mosquitto-PHP
+phpize
+./configure
+make
+make install
+----
+
+Ajouter extension=mosquitto.so à la fin du fichier php.ini
+(par exemple /etc/php/7.0/apache2/php.ini")
+Vous pouvez trouver les fichiers php.ini avec la commande:
+----
+find /etc -name php.ini -print
+----
+
+Redemarrer tout le monde
+----
+/etc/init.d/mosquitto restart
+/etc/init.d/apapche2 restart
+----
+
 ==== Re-Installation
 * Debian 8 sur VM
 - Je viens d'installer le plugin Abeille sur une Debian 8 en VM x86 64.

@@ -18,7 +18,7 @@
 
 
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlog($loglevel,'AbeilleSocat',$message);
+        Tools::deamonlogFilter($loglevel,'AbeilleSocat',$message);
         echo $message."\n";
     }
 

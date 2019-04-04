@@ -790,6 +790,8 @@ class Abeille extends eqLogic {
       $paramdeamon5 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
       $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
 
+      // ----------------
+
       $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
       log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
       exec($cmd.' 2>&1 &');

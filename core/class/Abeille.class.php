@@ -430,52 +430,24 @@ class Abeille extends eqLogic {
 
 
         log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-        Abeille::publishMosquitto(
-          null,
-          "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)),
-          "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE,
-          '0'
-        );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE, '0' );
 
-        Abeille::publishMosquitto(
-          null,
-          "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)),
-          "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE,
-          '0'
-        );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE, '0' );
 
-        Abeille::publishMosquitto(
-          null,
-          "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)),
-          "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10",
-          '0'
-        );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10", '0' );
 
-        Abeille::publishMosquitto(
-          null,
-          "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)),
-          "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20",
-          '0'
-        );
+        Abeille::publishMosquitto( null, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20", '0' );
       }
     }
     if ( ($i*33) > (3600) ) {
       message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure." );
     }
 
-    log::add(
-      'Abeille',
-      'debug',
-      'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------'
-    );
+    log::add( 'Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------' );
   }
 
   public static function cron15() {
-    log::add(
-      'Abeille',
-      'debug',
-      'Starting cron15 ------------------------------------------------------------------------------------------------------------------------'
-    );
+    log::add( 'Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------' );
     /**
     * Look every 15 minutes if the kernel driver is not in error
     */
@@ -489,11 +461,7 @@ class Abeille extends eqLogic {
         "Abeille",
         "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate. Il faut débrancher/rebrancher la zigate et relancer le demon."
       );
-      log::add(
-        'Abeille',
-        'debug',
-        'Ending cron15 ------------------------------------------------------------------------------------------------------------------------'
-      );
+      log::add( 'Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
     }
 
@@ -571,10 +539,6 @@ class Abeille extends eqLogic {
     // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
     $eqLogics = self::byType('Abeille');
 
-    // Debug
-    // Abeille::publishMosquitto(null, "CmdAbeille/Ruche/abeilleList", "abeilleListAll", '0');
-
-    // log::add('Abeille', 'debug', '----------- Ping Zigate to check Online status');
     $parameters_info = self::getParameters();
     if ($parameters_info['onlyTimer'] == 'N') {
       Abeille::publishMosquitto(null, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version",          '0');
@@ -582,12 +546,7 @@ class Abeille extends eqLogic {
     } else {
       Abeille::publishMosquitto(null, "Abeille/Ruche/SW-SDK", "TimerMode", '0');
       Abeille::publishMosquitto(null, "Abeille/Ruche/Time-TimeStamp", time(), '0');         // TimeStamp
-      Abeille::publishMosquitto(
-        null,
-        "Abeille/Ruche/Time-Time",
-        date("Y-m-d H:i:s"),
-        '0'
-      ); // 2018-10-06 03:13:31
+      Abeille::publishMosquitto( null, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s"), '0' ); // 2018-10-06 03:13:31
     }
 
     // Rafraichie l etat poll = 1
@@ -769,6 +728,7 @@ class Abeille extends eqLogic {
     self::publishMosquitto( null, "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'], 0);
 
     // Start other deamons
+
     $nohup = "/usr/bin/nohup";
     $php = "/usr/bin/php";
     $dirdeamon = dirname(__FILE__)."/../../resources/AbeilleDeamon/";
@@ -898,7 +858,7 @@ class Abeille extends eqLogic {
     $moquittoStatus = self::serviceMosquittoStatus();
     if ($moquittoStatus['mosquitto'] != 'ok') {
       log::add( 'Abeille', 'warning', 'La verification de fonctionnement du service mosquitto renvoie: '. $moquittoStatus['mosquitto_message'] );
-      $return['state'] = 'La verification de fonctionnement du service mosquitto renvoie:<br>'. $moquittoStatus['mosquitto_message'] . ' <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_mosquitto">(doc)</a>.';
+      $return['state'] = 'La verification de fonctionnement du service mosquitto renvoie:<br>' . $moquittoStatus['mosquitto_message'] . ' <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_mosquitto">(doc)</a>';
         return $return;
       }
 
@@ -1249,6 +1209,16 @@ class Abeille extends eqLogic {
 
       $parameters_info = self::getParameters();
 
+      // On gere la root de mqtt
+      if ( $parameters_info["AbeilleTopic"] != "#" ) {
+        if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
+          log::add('Abeille', 'debug', "Message receive but is not for me, wrong delivery !!!");
+          return;
+        }
+        // On enleve AbeilleTopic
+        $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
+      }
+
       /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
       // demande de creation de ruche au cas ou elle n'est pas deja crée....
       // La ruche est aussi un objet Abeille
@@ -1259,17 +1229,8 @@ class Abeille extends eqLogic {
         return;
       }
 
-
       /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
       // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
-
-      if ( substr($message->topic, 0, strlen($parameters_info["AbeilleTopic"])-2) != substr($parameters_info["AbeilleTopic"],0, strlen($parameters_info["AbeilleTopic"])-2 ) ) {
-        echo "Message receive but is not for me, wrong delivery !!!\n";
-        return;
-      }
-      // On enleve AbeilleTopic
-      $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
-
       // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
       if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
         // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);

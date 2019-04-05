@@ -711,15 +711,7 @@ class Abeille extends eqLogic {
     }
     cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-    // sleep(3);
-
     self::deamon_start_cleanup();
-
-    // sleep(3);
-
-    // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-    log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
-    Abeille::publishMosquitto( "CmdRuche/Ruche/CreateRuche", "", $parameters_info['AbeilleQos'] );
 
     // Start other deamons
 
@@ -779,6 +771,13 @@ class Abeille extends eqLogic {
     self::CmdAffichage('affichageTime',     $param['affichageTime']   );
     self::CmdAffichage('affichageCmdAdd',   $param['affichageCmdAdd'] );
 
+      sleep(2);
+    
+    // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
+    log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
+    Abeille::publishMosquitto( "CmdRuche/Ruche/CreateRuche", "" );
+
+      
     log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
 
     message::removeAll('Abeille', 'unableStartDeamon');

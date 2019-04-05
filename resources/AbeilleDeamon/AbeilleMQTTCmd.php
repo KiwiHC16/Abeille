@@ -1678,14 +1678,14 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
     // WriteAttributeRequest ------------------------------------------------------------------------------------
     if ( (isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
     {
-      setParam3( $dest, $Command );
+      $this->setParam3( $dest, $Command );
     }
 
     // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
     if ( (isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
     {
       // function setParam3($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
-      setParamXiaomi( $dest, $Command );
+      $this->setParamXiaomi( $dest, $Command );
     }
 
     // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2093,7 +2093,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
       if ( $Command['location'] == "" ) { $Command['location'] = "Not Def"; }
       if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
 
-      setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'], "42" );
+      $this->setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'], "42" );
     }
 
     if ( isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']) )

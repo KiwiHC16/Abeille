@@ -52,7 +52,7 @@ class MosquittoAbeille extends debug {
 
   static function logmq($code, $str) {
     // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-    log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+    // log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
     // }
   }
 
@@ -144,7 +144,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   public $debug = array( "cli"                 => 0, // commande line mode or jeedom
     "Checksum"            => 1, // Debug checksum calculation
     "tempo"               => 1, // Debug tempo queue
-    "procmsg"             => 1, // Debug fct procmsg
+    'procmsg'             => 1, // Debug fct procmsg
     "processCmd"          => 1, // Debug fct processCmd
     "sendCmd"             => 1, // Debug fct sendCmd
     "transcode"           => 1, // Debug transcode fct

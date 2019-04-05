@@ -127,7 +127,7 @@ $('#bt_setOnZigateLed').on('click', function () {
                           xmlhttpMQTTSendIncludeResult = this.responseText;
                           }
                           };
-                          
+
                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOnZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
                           xmlhttpMQTTSendInclude.send();
                           $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
@@ -141,7 +141,7 @@ $('#bt_setOffZigateLed').on('click', function () {
                           xmlhttpMQTTSendIncludeResult = this.responseText;
                           }
                           };
-                          
+
                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOffZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
                           xmlhttpMQTTSendInclude.send();
                           $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
@@ -155,7 +155,7 @@ $('#bt_setCertificationCE').on('click', function () {
                            xmlhttpMQTTSendIncludeResult = this.responseText;
                            }
                            };
-                           
+
                            xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationCE&payload=", true); // False pour bloquer sur la recuperation du fichier
                            xmlhttpMQTTSendInclude.send();
                            $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
@@ -169,7 +169,7 @@ $('#bt_setCertificationFCC').on('click', function () {
                             xmlhttpMQTTSendIncludeResult = this.responseText;
                             }
                             };
-                            
+
                             xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationFCC&payload=", true); // False pour bloquer sur la recuperation du fichier
                             xmlhttpMQTTSendInclude.send();
                             $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
@@ -296,6 +296,31 @@ $('#bt_toggleAffichageAdditionalCommand').on('click', function () {
 
                                              }
                                              );
+
+$("#bt_TimerActionStart").on('click', function () {
+                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
+                                                 document.getElementById("idTimerActionStart").value = result.human;
+                                               });
+                                             });
+
+$("#bt_TimerActionRamp").on('click', function () {
+                                            jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
+                                               document.getElementById("idTimerActionRamp").value = result.human;
+                                             });
+                                           });
+
+$("#bt_TimerActionStop").on('click', function () {
+                                             jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
+                                                document.getElementById("idTimerActionStop").value = result.human;
+                                              });
+                                            });
+
+$("#bt_TimerActionCancel").on('click', function () {
+                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
+                                                 document.getElementById("idTimerActionCancel").value = result.human;
+                                               });
+                                             });
+
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 

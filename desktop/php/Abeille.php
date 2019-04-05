@@ -716,7 +716,10 @@ td.two {
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Action sur demarrage}}</label>
                                 <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStart" placeholder="#cmd#"/>
+                                <input id="idTimerActionStart" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStart" placeholder="#cmd#" style="margin-bottom : 5px;width : 70%; display : inline-block;">
+                                <a class="btn btn-default btn-sm cursor" id="bt_TimerActionStart" data-input="infoName" style="margin-left : 5px;">
+                          	        Rechercher équipement
+                                </a>
                                 </div>
                                 </div>
 
@@ -744,21 +747,30 @@ td.two {
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Ramp Action}}</label>
                                 <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionRamp" placeholder="#cmd#"/>
+                                <input id="idTimerActionRamp" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionRamp" placeholder="#cmd#" style="margin-bottom : 5px;width : 70%; display : inline-block;">
+                                <a class="btn btn-default btn-sm cursor" id="bt_TimerActionRamp" data-input="infoName" style="margin-left : 5px;">
+                                    Rechercher équipement
+                                </a>
                                 </div>
                                 </div>
 
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Action sur arret}}</label>
                                 <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStop" placeholder="#cmd#"/>
+                                <input id="idTimerActionStop" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionStop" placeholder="#cmd#" style="margin-bottom : 5px;width : 70%; display : inline-block;">
+                                <a class="btn btn-default btn-sm cursor" id="bt_TimerActionStop" data-input="infoName" style="margin-left : 5px;">
+                                    Rechercher équipement
+                                </a>
                                 </div>
                                 </div>
 
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Action sur annulation}}</label>
                                 <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionCancel" placeholder="#cmd#"/>
+                                <input id="idTimerActionCancel" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="TimerActionCancel" placeholder="#cmd#" style="margin-bottom : 5px;width : 70%; display : inline-block;">
+                                <a class="btn btn-default btn-sm cursor" id="bt_TimerActionCancel" data-input="infoName" style="margin-left : 5px;">
+                                    Rechercher équipement
+                                </a>
                                 </div>
                                 </div>
                                 </div>

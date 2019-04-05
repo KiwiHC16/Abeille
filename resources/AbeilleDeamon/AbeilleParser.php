@@ -2303,7 +2303,7 @@ class AbeilleParser extends MosquittoAbeille {
           $this->client->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
           $this->client->mqqtPublish( $short, "Short", "Addr", $short, $qos);
           sleep(5); // time for the object to be created before configuring
-          configureNE($short);
+          $this->configureNE($short);
         }
         break;
 
@@ -2313,7 +2313,7 @@ class AbeilleParser extends MosquittoAbeille {
           if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
           $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande Current State Equipement');
           $GLOBALS['NE'][$short]['action']="configuration->currentState";
-          getNE($short);
+          $this->getNE($short);
         }
         break;
 

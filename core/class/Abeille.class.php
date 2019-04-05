@@ -2071,7 +2071,7 @@ class Abeille extends eqLogic {
 
         $request = str_replace('\\', '', jeedom::evaluateExpression($request));
         $request = cmd::cmdToValue($request);
-        $Abeille::publishMosquitto( $topic, $request );
+        $NE->publishMosquitto( $topic, $request );
       }
 
       return true;

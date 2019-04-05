@@ -243,7 +243,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   function procmsg($topic, $payload)
   {
-
+    // AbeilleParser traite les messages venant du port serie mais rien venant de MQTT, pas de besoin.
   }
 
   function hex2str($hex)   {

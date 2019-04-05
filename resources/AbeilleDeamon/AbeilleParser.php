@@ -246,8 +246,7 @@ class AbeilleParser extends MosquittoAbeille {
 
   }
 
-  function hex2str($hex)
-  {
+  function hex2str($hex)   {
     $str = '';
     for ($i = 0; $i < strlen($hex); $i += 2) {
       $str .= chr(hexdec(substr($hex, $i, 2)));
@@ -256,13 +255,11 @@ class AbeilleParser extends MosquittoAbeille {
     return $str;
   }
 
-  function displayClusterId($cluster)
-  {
+  function displayClusterId($cluster) {
     return 'Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab']["0x".$cluster] ;
   }
 
-  function displayStatus($status)
-  {
+  function displayStatus($status) {
     $return = "";
     switch ($status) {
       case "00":
@@ -305,8 +302,7 @@ class AbeilleParser extends MosquittoAbeille {
     return $return;
   }
 
-  function protocolDatas($datas,  $qos, $clusterTab, &$LQI)
-  {
+  function protocolDatas($datas,  $qos, $clusterTab, &$LQI) {
     // datas: trame complete recue sur le port serie sans le start ni le stop.
     // 01: 01 Start
     // 02-03: Msg Type
@@ -438,7 +434,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8001; (Log)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8002( $payload, $ln, $qos, $dummy)
@@ -446,7 +442,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8002; (Data indication)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8003( $payload, $ln, $qos, $clusterTab)
@@ -505,7 +501,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8006; (Non “Factory new” Restart)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8007( $payload, $ln, $qos, $dummy)
@@ -513,7 +509,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8007; (“Factory New” Restart)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8008( $payload, $ln, $qos, $dummy)
@@ -521,7 +517,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8008; (“Function inconnue pas dans la doc")(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8009( $payload, $ln, $qos, $dummy)
@@ -755,7 +751,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8028; (Authenticate response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode802B( $payload, $ln, $qos, $dummy)
@@ -763,7 +759,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 802B; (	User Descriptor Notify)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode802C( $payload, $ln, $qos, $dummy)
@@ -771,7 +767,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 802C; (User Descriptor Response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8030( $payload, $ln, $qos, $dummy)
@@ -797,7 +793,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8031; (unBind response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8034( $payload, $ln, $qos, $dummy)
@@ -805,7 +801,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8034; (Complex Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8040( $payload, $ln, $qos, $dummy)
@@ -872,7 +868,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8042; (Node Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8043( $payload, $ln, $qos, $clusterTab)
@@ -932,7 +928,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug',';type; 8044; (N	Power Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   // Active Endpoints Response
@@ -964,7 +960,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', 'Type; 8046; (Match Descriptor response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
   }
 
   function decode8047( $payload, $ln, $qos, $dummy)
@@ -972,7 +968,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', 'Type; 8047; (Management Leave response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2)));
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
   }
 
   function decode8048( $payload, $ln, $qos, $dummy)
@@ -1011,7 +1007,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', 'Type; 804A: (Management Network Update response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
   }
 
   function decode804B( $payload, $ln, $qos, $dummy)
@@ -1019,7 +1015,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', 'Type; 804B; (	System Server Discovery response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))  );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
   }
 
 
@@ -1082,7 +1078,7 @@ class AbeilleParser extends MosquittoAbeille {
 
     // $this->deamonlog('debug', ';Level: 0x'.substr($payload, 0, 2));
     // $this->deamonlog('debug', 'Message: ');
-    // $this->deamonlog('debug',hex2str(substr($payload, 2, strlen($payload) - 2)));
+    // $this->deamonlog('debug',$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
 
     //function $this->mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
     $this->mqqtPublishLQI( $NeighbourAddr, $index, $data, $qos);
@@ -1607,7 +1603,7 @@ class AbeilleParser extends MosquittoAbeille {
     . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
     . '; SQN : '.substr($payload, 0, 2)
     . '; EndPoint : '.substr($payload, 2, 2)
-    . '; '. displayClusterId(substr($payload, 4, 4))
+    . '; '. $this->displayClusterId(substr($payload, 4, 4))
     . '; Command : '.substr($payload, 8, 2)
     . '; Status : '.substr($payload, 10, 2)  );
   }
@@ -2073,7 +2069,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', ';Type; 8110; (	Write Attribute Response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   function decode8120( $payload, $ln, $qos, $dummy)
@@ -2107,7 +2103,7 @@ class AbeilleParser extends MosquittoAbeille {
     $this->deamonlog('debug', 'Type; 8140; (Configure Reporting response)(Not Processed)'
     . '; (Not processed*************************************************************)'
     . '; Level: 0x'.substr($payload, 0, 2)
-    . '; Message: '.hex2str(substr($payload, 2, strlen($payload) - 2))   );
+    . '; Message: '.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
   }
 
   // Codé sur la base des messages Xiaomi Inondation

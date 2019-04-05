@@ -1,0 +1,1726 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>Docker</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(4);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Docker</h1>
+<span id="author">KiwiHC16</span><br />
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_home">1. Home</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Retour au <a href="index.html">document principal</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vm_osx">2. VM OSX</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Une VM sous parallel OSX: debian 9.3.0 / Jeedom 3.1.7 / Abeille 2018-06-19 01:01:07</p></div>
+<div class="sect2">
+<h3 id="_vm">2.1. VM</h3>
+<div class="paragraph"><p>Configuration: choisissez un réseau ponté pour avoir un IP à vous.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_debian">2.2. Debian</h3>
+<div class="paragraph"><p>Installation de Debian des plus classique (Un gros 1/4 d&#8217;heure depuis un ISO sur disque).</p></div>
+<div class="paragraph"><p>Pas d&#8217;environnement de bureau, juste un serveur ssh et les utilitaires usuels système.</p></div>
+<div class="paragraph"><p>Une mise a jour en fin d&#8217;installation:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>su -
+vi /etc/apt/sources.list
+deb cdrom:[Debian GNU/Linux 9.3.0 _Stretch_ - Official amd64 DVD Binary-1 20171209-12:11]/ stretch contrib main
+apt-get update
+apt-get upgrade</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_jeedom">2.3. Jeedom</h3>
+<div class="paragraph"><p>La documentation Jeedom est à la page <a href="https://Jeedom.github.io/documentation/installation/fr_FR/index">https://Jeedom.github.io/documentation/installation/fr_FR/index</a></p></div>
+<div class="paragraph"><p>Perso j&#8217;utilise le dernier chapitre (Chapitre 10 - Autres) (Un gros 1/4 d&#8217;heure)</p></div>
+<div class="paragraph"><p>Connectez-vous en SSH à votre système et faites :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>su -
+wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
+chmod +x install.sh
+./install.sh
+./install.sh -w /var/www/html  -m Jeedom
+reboot</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_web_browser">2.4. Web Browser</h3>
+<div class="paragraph"><p>Ouvrir la page de votre Jeedom: <a href="http://Mon_IP_Jeedom">http://Mon_IP_Jeedom</a></p></div>
+<div class="paragraph"><p>admin/admin</p></div>
+<div class="paragraph"><p>Ne plus afficher et cloture fenetre du dessus.</p></div>
+<div class="paragraph"><p>Creation d&#8217;un Objet Abeille pour accueillir tous les futures équipement Zigbee:</p></div>
+<div class="paragraph"><p>Menu&#8594;Outils&#8594;Objets&#8594;'+', Sauvegarder et retour sur la page principale(Dashboard)</p></div>
+</div>
+<div class="sect2">
+<h3 id="_ajout_plugin_abeille">2.5. Ajout Plugin Abeille</h3>
+<div class="paragraph"><p>Menu&#8594;Plugins&#8594;Gestion des plugins</p></div>
+<div class="paragraph"><p>Market</p></div>
+<div class="paragraph"><p>Recherche Abeille</p></div>
+<div class="paragraph"><p>Selectionner Abeille</p></div>
+<div class="paragraph"><p>Installer stable (Version 2018-06-19 01:01:07)</p></div>
+<div class="paragraph"><p>Voulez vous aller sur la &#8230;. &#8594; Ok</p></div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_du_plugin">2.6. Configuration du plugin</h3>
+<div class="paragraph"><p>Activer</p></div>
+<div class="paragraph"><p>Dependances &#8594; Relancer (ou vous attendez et elles devraient s&#8217;installer automatiquement).</p></div>
+<div class="paragraph"><p>Deux messages doivent s&#8217;afficher pour confirmer le lancement et le lien vers la doc.</p></div>
+<div class="paragraph"><p>Une fois les dépendances installées, la date de derniere installation doit apparaitre.</p></div>
+<div class="paragraph"><p>Configuration:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Choisissez le port serie (on suppose que vous avez une Zigate ttl sur un port USB déjà branchée, sinon branchez la et rafraichissez la page)
+</p>
+</li>
+<li>
+<p>
+Choisissez l&#8217;Objet Parent: Abeille
+</p>
+</li>
+<li>
+<p>
+Sauvegarder
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le demon doit démarrer et passer au vert.</p></div>
+<div class="paragraph"><p>Dans mon cas mosquitto fait encore des siennes et il n&#8217;a pas démarré. Un reboot du systeme résoud le problème.</p></div>
+<div class="paragraph"><p>Rafraichir la page et vérifier que le demon est passé au vert: Statut Ok et Configuration: Ok.</p></div>
+<div class="paragraph"><p>Et maintenant tout est pret. Retour sur Dashboard. Vous devriez y touver l'équipement Ruche.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_demarrage_du_reseau_zigbee">2.7. Demarrage du reseau zigbee</h3>
+<div class="paragraph"><p>Si vous selectionnez "Version" alors les champs <em>Last</em>, <em>Last Stamps</em>, <em>SW</em>, <em>SDK</em> doivent se mettre à jour. Cela confirme que cela fonctionne.</p></div>
+<div class="paragraph"><p>Vous pouvez démarrer le réseau "Start Network".</p></div>
+<div class="paragraph"><p>Et faire un "get Network Status", d&#8217;autres champs vont se mettre à jour.</p></div>
+<div class="paragraph"><p>Voilà l&#8217;installation d&#8217;Abeille dans Jeedom est finie. Vous pouvez intégrer vo équipements.</p></div>
+<div class="paragraph"><p>En tout 1h pour faire une installation from scratch (et écrire cette doc).</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation_dans_un_conteneur_depuis_ubuntu">3. Installation dans un conteneur depuis Ubuntu</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_introduction">3.1. Introduction</h3>
+<div class="paragraph"><p>Debian supporte nativement Jeedom et le support est assuré par l'équipe de développement. Toute autre demande à propos d&#8217;une distribution est ignorée.   <a href="https://Jeedom.github.io/documentation/installation/fr_FR/index">https://Jeedom.github.io/documentation/installation/fr_FR/index</a></p></div>
+<div class="paragraph"><p>Docker permet d&#8217;installer un système invité minimal dans une partie virtualisée du système hôte, tout ajout/suppression/modification du conteneur laisse tel quel le système hôte. L&#8217;interet de docker est que n&#8217;est installé que le minimum nécéssaire au fonctionnement dans l&#8217;image. ( une image éxecutée est un conteneur.) Le but ici est de faire tourner un conteneur Jeedom sur un système Ubuntu, cependant ce n&#8217;est pas limité à ce système.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_prérequis">3.2. Prérequis</h3>
+<div class="paragraph"><p>Avoir docker disponible dans les dépôts de la distribution.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_de_docker">3.3. Installation de docker</h3>
+<div class="paragraph"><p>apt-get install docker docker.io</p></div>
+</div>
+<div class="sect2">
+<h3 id="_fonctionnement">3.4. Fonctionnement</h3>
+<div class="paragraph"><p>Loïc, un des créateurs de Jeedom maintient image Jeedom. Cette image appelé Jeedom-server utilise une image Jeedom-mysql pour stocker les données dans une base de données mysql. Il faudra donc a chaque fois lancer le conteneur Jeedom-mysql puis le Jeedom-server. Les réglages restent d&#8217;une fois sur l&#8217;autre.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_récupération_des_images_et_création_des_conteneurs">3.5. Récupération des images et Création des conteneurs</h3>
+<div class="paragraph"><p>Ces deux lignes vont récupérer les images, créer les conteneurs et les configurer. Le port USB est a adapter selon le besoin ( <code>ls /dev/ttyUSB*</code> pour avoir la liste )</p></div>
+<div class="paragraph"><p>docker run --name Jeedom-mysql -e MYSQL_ROOT_PASSWORD=MJeedom96 -d mysql:latest
+docker run --name Jeedom-server -e ROOT_PASSWORD=MJeedom96 --link Jeedom-mysql:mysql -p 9180:80 -p 9443:443 -p 9022:22 --device=/dev/ttyUSB0 Jeedom/Jeedom</p></div>
+<div class="paragraph"><p>A ce stade, l&#8217;installation de Jeedom commence dans le conteneur Jeedom-server. il faut compter 5 a 10 minutes selon la connexion et la puissance du système hôte.</p></div>
+<div class="paragraph"><p>Jeedom sera disponible après quelques instants à l&#8217;adresse <a href="http://0.0.0.0:9180">http://0.0.0.0:9180</a></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Le ssh est accessible via le port 9022. (root/MJeedom96)</td>
+</tr></table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_de_jeedom">3.6. Configuration de Jeedom</h3>
+<div class="paragraph"><p>Dans les champs indiqués entrer la valeur surlignée.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="40%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top">Database hostname</th>
+<th align="left" valign="top"> Jeedom-mysql</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td align="left" valign="top"><p class="table">Erase database</p></td>
+<td align="left" valign="top"><p class="table">checked</p></td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Database port</p></td>
+<td align="left" valign="top"><p class="table">3306</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Database username</p></td>
+<td align="left" valign="top"><p class="table">root</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Database password</p></td>
+<td align="left" valign="top"><p class="table">MJeedom96</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Database name</p></td>
+<td align="left" valign="top"><p class="table">Jeedom</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Une fois, le texte <code>[END INSTALL SUCCESS]</code> affiché en bas. Aller à l 'adresse <a href="http://0.0.0.0:9180">http://0.0.0.0:9180</a> la page de login de Jeedom devrait apparaître. Les login et mot de passe sont admin admin.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_start_stop_des_conteneurs">3.7. start/stop des conteneurs</h3>
+<div class="paragraph"><p>les conteneurs peuvent être arrêtés et relancés à la demande en gardant l&#8217;ordre mysql Jeedom au lancement, Jeedom mysql à  l&#8217;arrêt.</p></div>
+<div class="paragraph"><p>Arrêt <code>docker stop Jeedom-server &amp;&amp; docker stop Jeedom-mysql</code></p></div>
+<div class="paragraph"><p>Démarrage <code>docker start Jeedom-mysql &amp;&amp; docker start Jeedom-server</code></p></div>
+</div>
+<div class="sect2">
+<h3 id="_repartir_de_zéro">3.8. Repartir de zéro</h3>
+<div class="paragraph"><p>il est possible de supprimer les conteneurs et de repartir d&#8217;un Jeedom tout neuf.</p></div>
+<div class="paragraph"><p><code>docker rm Jeedom-server &amp;&amp; docker rm Jeedom-mysql</code></p></div>
+<div class="paragraph"><p>puis aller vers <a href="">Récupération des images et Création des conteneurs</a></p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_portainer">4. Portainer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour ceux que ne sont pas à l&#8217;aise avec la ligne de commande, portainer propose une interface graphique pour gérer les conteneurs et les images.
+C&#8217;est un conteneur à démarrage automatique qui pourra relancer les conteneurs crées.</p></div>
+<div class="paragraph"><p>docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer</p></div>
+<div class="paragraph"><p>le site sera disponible à l&#8217;adresse <a href="http://0.0.0.0:9000">http://0.0.0.0:9000</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_docker">5. Docker</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Installation d&#8217;Abeille dans docker
+(Il y a certainement plus simple mais je ne suis pas expert en Docker et cette méthode semble bien fonctionner).</p></div>
+<div class="sect2">
+<h3 id="_preparation_du_docker">5.1. Preparation du docker</h3>
+<div class="sect3">
+<h4 id="_preparation_sous_raspbian">5.1.1. Preparation sous Raspbian</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+installer 2018-06-27-raspbian-stretch-lite.zip sur une SD
+</p>
+</li>
+<li>
+<p>
+demarrer le RPI3
+</p>
+</li>
+<li>
+<p>
+se logger pi/raspberry (atttention au clavier US par defaut)
+</p>
+</li>
+<li>
+<p>
+lancer raspi-config (faire la conf que vous souhaitez): sshd, all memory space, clavier, locales,&#8230;
+</p>
+</li>
+<li>
+<p>
+Vérifier la conf réseau
+</p>
+</li>
+<li>
+<p>
+Vous connecter en ssh pour la suite:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>ssh pi@IP</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La suite se fait entant que root: sudo su -
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>sudo su -</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+une classique mise a jour du systeme:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>apt-get update, apt-get upgrade</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Restart du RPI
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>reboot
+ssh pi@IP
+sudo su -</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Installation de docker:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>apt-get install docker
+apt-get install docker.io</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Vérifier que cela fonctionne, un docker ps -a pour voir les images:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker ps -a</code></pre>
+</div></div>
+<div class="paragraph"><p>On voit ici qu’il n’y a pas d’image, il faut en créer une. Flasher la SD. Demarrer le PI et une commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker ps</code></pre>
+</div></div>
+<div class="paragraph"><p>Permet de voir que docker fonctionne.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_preparation_sous_hypriot">5.1.2. Preparation sous hypriot</h4>
+<div class="paragraph"><p>La version officielle raspbian est un peu vieille et nous n&#8217;avons pas toutes les nouveautés. Hypriot a une version bien plus recente et nous facilite la vie (pas de config manuelle tout est prêt). Elle permet aussi de faire tourner le plugin Homebridge (macvlan).
+<a href="http://blog.hypriot.com">http://blog.hypriot.com</a></p></div>
+<div class="paragraph"><p>Telecharger leur image à l adresse: <a href="http://blog.hypriot.com/downloads/">http://blog.hypriot.com/downloads/</a></p></div>
+<div class="paragraph"><p>On voit ici qu&#8217;il n&#8217;y a pas d&#8217;image, il faut en créer une.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_créons_un_system_pour_le_docker">5.1.3. Créons un system pour le docker.</h4>
+<div class="paragraph"><p><a href="http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/">http://www.guoyiang.com/2016/11/04/Build-My-Own-Raspbian-Docker-Image/</a></p></div>
+<div class="paragraph"><p>Ici je ne cherche pas à faire une image la plus petite possible mais la plus proche possible d&#8217;une install classique sur un HW RPI3. De ce fait l&#8217;image fait presque 1G.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mkdir DockerAbeille
+cd DockerAbeille</code></pre>
+</div></div>
+<div class="paragraph"><p>Recuperer le fichier 2018-06-27-raspbian-stretch-lite.zip par scp par exemple. Puis:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>unzip 2018-06-27-raspbian-stretch-lite.zip
+losetup -Pr /dev/loop0 2018-06-27-raspbian-stretch-lite.img
+mkdir rpi
+mount -o ro /dev/loop0p2 ./rpi
+tar -C ./rpi -czpf 2018-06-27-raspbian-stretch-lite.tar.gz --numeric-owner .
+umount ./rpi
+losetup -d /dev/loop0
+rmdir rpi
+rm 2018-06-27-raspbian-stretch-lite.img
+rm 2018-06-27-raspbian-stretch-lite.zip
+
+echo 'FROM scratch' &gt; Dockerfile
+echo 'ADD ./2018-06-27-raspbian-stretch-lite.tar.gz /' &gt;&gt; Dockerfile
+echo 'CMD ["/bin/bash"]' &gt;&gt; Dockerfile</code></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant on lance la creation du docker:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker build -t JeedomAbeille .</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Bien mettre le . a la fin de la ligne.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Le résultat doit ressembler à:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@docker:~/DockerAbeille= docker build -t JeedomAbeille .
+Sending build context to Docker daemon 348.4 MB
+Step 0 : FROM scratch
+---&gt;
+Step 1 : ADD ./2018-06-27-raspbian-stretch-lite.tar.gz /
+---&gt; f7009768b966
+Removing intermediate container ef5668638536
+Step 2 : CMD /bin/bash
+---&gt; Running in d95d0e65bbb4
+---&gt; 286ea5048dfd
+Removing intermediate container d95d0e65bbb4
+Successfully built 286ea5048dfd</code></pre>
+</div></div>
+<div class="paragraph"><p>Et si vous demandez les images:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@docker:~/DockerAbeille= docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+JeedomAbeille       latest              286ea5048dfd        12 minutes ago      900.9 MB</code></pre>
+</div></div>
+<div class="paragraph"><p>Démarrons le container:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker run -it JeedomAbeille</code></pre>
+</div></div>
+<div class="paragraph"><p>Le shell vous donne la main dans le docker:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@52b658b7d8f8:/=</code></pre>
+</div></div>
+<div class="paragraph"><p>Vous pouvez arreter le docker depuis un shell sur le host:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@docker:~/DockerAbeille= docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+52b658b7d8f8        JeedomAbeille       "/bin/bash"         3 minutes ago       Up 3 minutes                            sad_stallman
+root@docker:~/DockerAbeille= docker stop 52b658b7d8f8
+52b658b7d8f8</code></pre>
+</div></div>
+<div class="paragraph"><p>Vous pouvez demarrer de docker depuis un shell sur le host:</p></div>
+<div class="paragraph"><p><a href="mailto:root@docker">root@docker</a>:<sub>/DockerAbeille= docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                       PORTS               NAMES
+52b658b7d8f8        JeedomAbeille       "/bin/bash"         7 minutes ago       Exited (127) 3 minutes ago                       sad_stallman
+<a href="mailto:root@docker">root@docker</a>:</sub>/DockerAbeille= docker start 52b658b7d8f8
+52b658b7d8f8</p></div>
+<div class="paragraph"><p>Vous pouvez vous connecter au docker:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@docker:~/DockerAbeille= docker attach 52b658b7d8f8
+
+root@52b658b7d8f8:/=</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Faites plusieurs "enter" pour avoir le prompt.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Maintenant que le docker fonctionne on va faire l installation de Jeedom et Abeille.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">To stop a container, use CTRL-c. This key sequence sends SIGKILL to the container. If --sig-proxy is true (the default),CTRL-c sends a SIGINT to the container. You can detach from a container and leave it running using the <span class="underline">CTRL-p suivi de CTRL-q</span> key sequence.</td>
+</tr></table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_service_dans_le_docker">5.1.4. Service dans le docker</h4>
+<div class="paragraph"><p>Les services ne demarrent pas tout seuls dans le docker, il aurait probablement du le faire dans Dockfile.</p></div>
+<div class="paragraph"><p>Donc j&#8217;ajoute quelques lignes à /etc/rc.local pour Raspbian:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker start JeedomAbeille
+(docker exec -u root JeedomAbeille dpkg-reconfigure openssh-server)
+docker exec -u root JeedomAbeille /etc/init.d/ssh start
+docker exec -u root JeedomAbeille /etc/init.d/mysql start
+docker exec -u root JeedomAbeille /etc/init.d/apache2 start
+docker exec -u root JeedomAbeille /etc/init.d/cron start</code></pre>
+</div></div>
+<div class="paragraph"><p>que je mets sur le host dans /root sous le nom startJeedomAbeileDocker.sh.
+et un bon vieux:  chmod u+x startJeedomAbeileDocker.sh</p></div>
+<div class="paragraph"><p>et pour hypriot qui n&#8217;a pas de rc.local, je fait un script:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>sudo su -
+cd /etc/init.d
+vi startDockers</code></pre>
+</div></div>
+<div class="paragraph"><p>Je mets dedans</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>=! /bin/sh
+= /etc/init.d/startDockers
+
+=== BEGIN INIT INFO
+== Provides:          startDockers
+== Required-Start:    $remote_fs $syslog
+== Required-Stop:     $remote_fs $syslog
+== Default-Start:     2 3 4 5
+== Default-Stop:      0 1 6
+== Short-Description: Simple script to start a program at boot
+== Description:       A simple script from www.stuffaboutcode.com which will start / stop a program a boot / shutdown.
+=== END INIT INFO
+
+== If you want a command to always run, put it here
+
+== Carry out specific functions when asked to by the system
+case "$1" in
+start)
+echo "Starting startDockers"
+== run application you want to start
+docker start Jeedomgite
+docker exec -u root Jeedomgite /etc/init.d/ssh start
+docker exec -u root Jeedomgite /etc/init.d/mysql start
+docker exec -u root Jeedomgite /etc/init.d/apache2 start
+docker exec -u root Jeedomgite /etc/init.d/cron start
+;;
+stop)
+echo "Stopping startDockers"
+= kill application you want to stop
+docker stop Jeedomgite
+;;
+*)
+echo "Usage: /etc/init.d/startDockers {start|stop}"
+exit 1
+;;
+esac
+
+exit 0</code></pre>
+</div></div>
+<div class="paragraph"><p>Je sauvegarde.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>chmod 755 /etc/init.d/startDockers
+/etc/init.d/startDockers start
+update-rc.d startDockers defaults</code></pre>
+</div></div>
+<div class="paragraph"><p>Ajouter la ligne</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>* * * * * su --shell=/bin/bash - www-data -c '/usr/bin/php /var/www/html/core/php/jeeCron.php' &gt;&gt; /dev/null</code></pre>
+</div></div>
+<div class="paragraph"><p>dans le cron root.</p></div>
+<div class="paragraph"><p>Thanks to <a href="https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html">https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html</a></p></div>
+</div>
+<div class="sect3">
+<h4 id="_installation_jeedom">5.1.5. Installation Jeedom</h4>
+<div class="paragraph"><p>Dans le container precedent nous n&#8217;avons pas pris en compte les besoins réseaux et port série.
+Effaçons l&#8217;ancien container.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker rm 52b658b7d8f8</code></pre>
+</div></div>
+<div class="paragraph"><p>Créons en un nouveau avec les ports mysql, apache, ssh et le port serie ttyUSB0 (la Zigate).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker run --name=JeedomAbeille --device=/dev/ttyUSB0 -p 2222:22 -p 80:80 -p 3306:3306 -it JeedomAbeille
+docker run --name=Jeedomgite --device=/dev/ttyACM0 -p 51826:51826 -p 5353:5353 -p 2222:22 -p 80:80 -p 3306:3306 -it Jeedomgite</code></pre>
+</div></div>
+<div class="paragraph"><p>Si vous êtes sur hyprio et voulez exposer la machine completement, créé le Networks puis le Containers:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker network create -d macvlan --subnet=192.168.4.0/24 --gateway=192.168.4.2 -o parent=eth0 pub_net
+docker run --name=Jeedomgite --device=/dev/ttyACM0 --network pub_net --ip=192.168.4.38 --hostname=Jeedomgite -it Jeedomgite /bin/bash</code></pre>
+</div></div>
+<div class="paragraph"><p>Attention de ne pas vous prendre les pieds dans le tapis entre les adresses du "HW" rpi et les addresses des containers.</p></div>
+<div class="paragraph"><p>Donc Jeedom sera accessible sur le port 80 à l&#8217;adresse IP du host. 2222 pour ssh et 3306 pour mysql.
+J&#8217;ai mis un nom pour être plus sympas à gérer.</p></div>
+<div class="paragraph"><p>Vous pourrez le demarrer/arreter par:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker stop JeedomAbeille
+docker start JeedomAbeille</code></pre>
+</div></div>
+<div class="paragraph"><p>Passons a l installation des services:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker attach JeedomAbeille
+apt-get update
+apt-get upgrade
+apt-get install openssh-server
+dpkg-reconfigure openssh-server
+/etc/init.d/ssh start
+apt-get install mariadb-server
+apt-get install apache2</code></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant le systeme doit être prêt pour l installation de Jeedom lui-meme.
+(<a href="https://Jeedom.github.io/documentation/installation/fr_FR/index">https://Jeedom.github.io/documentation/installation/fr_FR/index</a> &#8658; Chap 10)</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
+chmod +x install.sh
+./install.sh -w /var/www/html -m Jeedom</code></pre>
+</div></div>
+<div class="paragraph"><p>L installation va se dérouler en 11 grandes étapes.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>étape 11 vérification de Jeedom réussie
+/!\ IMPORTANT /!\ Le mot de passe root MySQL est Jeedom
+Installation finie. Un redémarrage devrait être effectué</code></pre>
+</div></div>
+<div class="paragraph"><p>avec un ps -ef, vous devriez voir apache, ssh et mysql fonctionner.</p></div>
+<div class="paragraph"><p>Puis vous vous connecter à Jeedom avec l adresse <a href="http://IP_Host:80/">http://IP_Host:80/</a>
+Connectez vous avec admin/admin.
+Sauf que cela ne fonctionne pas !! &#8594;Mot de passe ou nom d&#8217;utilisateur incorrect&#8592;</p></div>
+<div class="paragraph"><p>Il demande un reboot donc allons y:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker stop JeedomAbeille
+docker start JeedomAbeille
+docker attach JeedomAbeille
+/etc/init.d/ssh start
+/etc/init.d/mysql start
+/etc/init.d/apache2 start</code></pre>
+</div></div>
+<div class="paragraph"><p>On ne peut toujours pas se connecter, je ne sais pas pourquoi&#8230;.</p></div>
+<div class="paragraph"><p>Donc on va passer par une autre solution: <a href="https://Jeedom.github.io/documentation/howto/fr_FR/reset.password">https://Jeedom.github.io/documentation/howto/fr_FR/reset.password</a></p></div>
+<div class="paragraph"><p>Problement de "Could not reliably determine the server&#8217;s fully qualified domain name, using 172.17.0.14. Set the <em>ServerName</em> directive globally to suppress this message":
+mettre en debut de fichier /etc/apache2/apache2.conf la line :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>Global configuration
+
+ServerName 2b8faafb19a4</code></pre>
+</div></div>
+<div class="paragraph"><p><a href="mailto:root@2b8faafb19a4">root@2b8faafb19a4</a>:/etc/apache2= apachectl configtest
+Syntax OK</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>= Global configuration
+=
+ServerName 2b8faafb19a4</code></pre>
+</div></div>
+<div class="paragraph"><p>Puis tester:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@2b8faafb19a4:/etc/apache2= apachectl configtest
+Syntax OK</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>root@2b8faafb19a4:/etc/apache2= cat /etc/hosts
+127.0.0.1    localhost
+::1    localhost ip6-localhost ip6-loopback
+fe00::0    ip6-localnet
+ff00::0    ip6-mcastprefix
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+172.17.0.14    2b8faafb19a4    JeedomAbeille
+172.17.0.14    JeedomAbeille.bridge</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cat /var/www/html/core/config/common.config.php
+mysql -uJeedom -p
+use Jeedom;
+REPLACE INTO user SET `login`='adminTmp',password='c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec',profils='admin', enable='1';
+exit</code></pre>
+</div></div>
+<div class="paragraph"><p>Et maintenant on peut se connecter en adminTmp/admin.</p></div>
+<div class="paragraph"><p>Aller dans la conf reseau et mettre l adresse du host dans les adresses http.</p></div>
+<div class="paragraph"><p>Maintenant on peut se connecter en admin/admin donc on peut effacer l utilisateur adminTmp.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_installation_du_plugin_abeille">5.1.6. Installation du plugin Abeille</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Créer un objet Abeille.
+</p>
+</li>
+<li>
+<p>
+Installer le plugin Abeille depuis le market.
+</p>
+</li>
+<li>
+<p>
+L&#8217;activer.
+</p>
+</li>
+<li>
+<p>
+Lancer l installation des dépendances.
+</p>
+</li>
+<li>
+<p>
+Definissez les bons parametres du demon.
+</p>
+</li>
+<li>
+<p>
+Lancer le demon
+</p>
+</li>
+<li>
+<p>
+L objet Ruche doit être créé.
+</p>
+</li>
+<li>
+<p>
+un petit getVersion et vous devriez avoir le champ SW et SDK qui se mettent à jour.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Enjoy !!!</p></div>
+<div class="quoteblock">
+<div class="content">
+<div class="paragraph"><p>Vous allez certainement avoir le message:
+"Jeedom est en cours de démarrage, veuillez patienter. La page se rechargera automatiquement une fois le démarrage terminé."</p></div>
+<div class="paragraph"><p>Aller dans le "Moteur de taches" et lancer "Jeedom-cron".</p></div>
+</div>
+<div class="attribution">
+&#8212; Me
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_backup_du_docker">5.1.7. Backup du Docker</h4>
+<div class="paragraph"><p>Plusieures solutions s&#8217;offrent à nous. Il est interessant de comprende ce qui se passe. Un bon article à lire: <a href="https://tuhrig.de/difference-between-save-and-export-in-docker/">https://tuhrig.de/difference-between-save-and-export-in-docker/</a></p></div>
+<div class="paragraph"><p>Toutes les operations suivantes se font depuis le host.</p></div>
+<div class="sect4">
+<h5 id="_commit_save_load">Commit / Save / Load</h5>
+<div class="paragraph"><p>Permet de garder tout l&#8217;historique.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_commit">Commit</h5>
+<div class="paragraph"><p>Pour avoir les docker en fonctionnement :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker ps</code></pre>
+</div></div>
+<div class="paragraph"><p>Pour avoir les docker en stock:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker ps -a</code></pre>
+</div></div>
+<div class="paragraph"><p>Créons un image du docker en prod: JeedomAbeille et appelons cette image JeedomAbeille_backup</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker commit -p JeedomAbeille JeedomAbeille_backup</code></pre>
+</div></div>
+<div class="paragraph"><p>Attention: avec le -p le container est en pause donc Jeedom ne fonctionne plus le temps de faire la capture.</p></div>
+<div class="paragraph"><p>Par exemple: faites cette operation avant de faire des opérations irréversibles qui risquent de planter votre Jeedom.</p></div>
+<div class="paragraph"><p>Pour voir les images crées et disponiqbles:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker images</code></pre>
+</div></div>
+</div>
+<div class="sect4">
+<h5 id="_save">Save</h5>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker save -o ~/JeedomAbeille_backup.tar JeedomAbeille_backup
+ls -l ~/JeedomAbeille_backup.tar</code></pre>
+</div></div>
+<div class="paragraph"><p>soyez patient le tar fait 3G.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_load">Load</h5>
+<div class="paragraph"><p>If we have transferred our "container1.tar" backup file to another docker host system we first need to load backed up tar file into a docker&#8217;s local image repository:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker load -i /root/JeedomAbeille_backup.tar
+docker images</code></pre>
+</div></div>
+</div>
+<div class="sect4">
+<h5 id="_export_import">Export / Import</h5>
+<div class="paragraph"><p>Garde que la derniere version.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_export">Export</h5>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker ps -a
+docker export &lt;CONTAINER ID&gt; &gt; /home/export.tar</code></pre>
+</div></div>
+</div>
+<div class="sect4">
+<h5 id="_import">Import</h5>
+<div class="listingblock">
+<div class="content">
+<pre><code>cat /home/export.tar | sudo docker import - NameYouWant:latest</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_conclusion">5.1.8. Conclusion</h4>
+<div class="paragraph"><p>Plus besoin d&#8217;aller chercher les cartes SD dans les differents RPI3 pour en faire de images. Tout va se faire à distance maintenant !!! YaaahhhOOOOUUU !!!!!</p></div>
+<div class="paragraph"><p>Vous pouvez effacer de vieilles images par:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker rmi JeedomAbeille_backup</code></pre>
+</div></div>
+<div class="sect4">
+<h5 id="_docker_gui">Docker GUI</h5>
+<div class="paragraph"><p>====== Sur la raspbian</p></div>
+<div class="paragraph"><p>Thanks to:
+* <a href="http://blog.hypriot.com/post/new-docker-ui-portainer/">http://blog.hypriot.com/post/new-docker-ui-portainer/</a>
+* <a href="https://portainer.readthedocs.io/en/latest/deployment.html">https://portainer.readthedocs.io/en/latest/deployment.html</a></p></div>
+<div class="paragraph"><p>Il semble qu&#8217;on puisse utiliser une interface graphique "portainer.io" sur le rpi, saisir:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer:arm -H unix:///var/run/docker.sock</code></pre>
+</div></div>
+<div class="paragraph"><p>Puis se logger sur <a href="http://IP_Host:9000">http://IP_Host:9000</a>
+Tout ne fonctionne pas mais c&#8217;est plus sympas que la ligne de commande.</p></div>
+<div class="paragraph"><p>Il semble que la version rpi par defaut est un peu ancienne et certaine feature comme volume ne sont pas dispo.</p></div>
+<div class="paragraph"><p>====== Sur la hypriot</p></div>
+<div class="paragraph"><p><a href="https://hub.docker.com/r/hypriot/rpi-portainer/">https://hub.docker.com/r/hypriot/rpi-portainer/</a></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock hypriot/rpi-portainer</code></pre>
+</div></div>
+<div class="paragraph"><p>Puis se logger sur <a href="http://IP_Host:9000">http://IP_Host:9000</a>.
+Tout fonctionne bien mieux que sur la version raspbian.</p></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_plugins">5.1.9. Plugins</h4>
+<div class="sect4">
+<h5 id="_zwave">Zwave</h5>
+<div class="paragraph"><p>Sur ma machine Jeedomprorpi, le repertoire /tmp/Jeedom/openzwave n&#8217;a pas les bons droits et le demon est toujours en erreur. Je viens de faire un chmod 777 /tmp/Jeedom/openzwave et tout est ok maintenant.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_homebridge">homebridge</h5>
+<div class="paragraph"><p>Comme il faut que le docker soit exposé au sous réseau, il faut utiliser macvlan et affecter une adresse spécifique.</p></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Ubuntu">6. Installation sur une VM Ubuntu</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_l_8217_os">6.1. Installation de l&#8217;OS</h3>
+<div class="paragraph"><p>Fichier ISO: ubuntu-16.04.1-server-amd64.iso</p></div>
+<div class="paragraph"><p>Installation classique de l&#8217;OS (Je ne détaille pas car cela dépend de votre envirroement de virtualisation).</p></div>
+</div>
+<div class="sect2">
+<h3 id="_preparation_de_l_8217_os">6.2. Preparation de l&#8217;OS</h3>
+<div class="paragraph"><p>login: (user créé pendant l install avec son password associé).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>sudo su -
+
+apt-get update
+apt-get upgrade
+apt-get autoremove</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_de_la_base_mysql">6.3. Installation de la base mysql</h3>
+<div class="paragraph"><p>installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>apt-get install mysql-server
+apt-get install mysql-client</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_de_jeedom">6.4. Installation de Jeedom</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
+chmod +x install.sh</code></pre>
+</div></div>
+<div class="paragraph"><p>Enlever le php7.0-ssh2 du fichier install.sh</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>./install.sh -m motDePasse</code></pre>
+</div></div>
+<div class="paragraph"><p>A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_du_plugin_abeille_2">6.5. Installation du Plugin Abeille</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>./install.sh -m motDePasse
+
+cd /var/www/html/plugins/
+
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
+
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_utilisation_de_jeedom">6.6. Utilisation de Jeedom</h3>
+<div class="paragraph"><p>Il ne vous reste plus qu'à vous connecter à Jeedom&#8230;</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="XU4">7. Installation sur une machine Odroid XU4 avec Ubuntu</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_installation_de_l_8217_os_2">7.1. Installation de l&#8217;OS</h3>
+<div class="paragraph"><p>Fichier img: ubuntu-14.04lts-server-odroid-xu3-20150725.img
+que l on trouve sur le server odroid: <a href="https://odroid.in/ubuntu_14.04lts/">https://odroid.in/ubuntu_14.04lts/</a></p></div>
+<div class="paragraph"><p>Installation classique odroid de l&#8217;OS : <a href="https://wiki.odroid.com/odroid-xu4/odroid-xu4">https://wiki.odroid.com/odroid-xu4/odroid-xu4</a></p></div>
+</div>
+<div class="sect2">
+<h3 id="_preparation_de_l_8217_os_2">7.2. Preparation de l&#8217;OS</h3>
+<div class="paragraph"><p>login: (root/odroid).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>apt-get update
+apt-get upgrade
+apt-get autoremove</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_de_la_base_mysql_2">7.3. Installation de la base mysql</h3>
+<div class="paragraph"><p>installation à la main de mysql (car l instanllation par Jeedom ne fonctionne pas)</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>apt-get install mysql-server
+apt-get install mysql-client</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_de_jeedom_2">7.4. Installation de Jeedom</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>wget https://raw.githubusercontent.com/Jeedom/core/stable/install/install.sh
+chmod +x install.sh</code></pre>
+</div></div>
+<div class="paragraph"><p>Enlever le php7.0-ssh2 du fichier install.sh</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>./install.sh -m motDePasse</code></pre>
+</div></div>
+<div class="paragraph"><p>A cette étape vous devoir pourvoir ouvrir un browser et utiliser Jeedom.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_installation_du_plugin_abeille_3">7.5. Installation du Plugin Abeille</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>./install.sh -m motDePasse
+
+cd /var/www/html/plugins/
+
+git clone https://github.com/KiwiHC16/Abeille.git Abeille
+
+chmod -R 777 /var/www/html/plugins/Abeille
+chown -R www-data:www-data /var/www/html/plugins/Abeille</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_utilisation_de_jeedom_2">7.6. Utilisation de Jeedom</h3>
+<div class="paragraph"><p>Il ne vous reste plus qu'à vous connecter à Jeedom&#8230;</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_de_installation">8. De-installation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le plugin Abeille utilise:
+- le code du plugin lui-même et
+- un broker MQTT mosquitto.</p></div>
+<div class="paragraph"><p>Par défaut, lors de l&#8217;installation de Abeille, le code du plugin est installé depuis le market et le broker est installé lors de l installation des dépendances.</p></div>
+<div class="paragraph"><p>Le broker MQTT peux être utilisé par d&#8217;autres logiciels comme par d&#8217;autres plugins.</p></div>
+<div class="paragraph"><p>C&#8217;est pourquoi lors de la desinstallation d&#8217;Abeille, mosquitto n&#8217;est pas desintallé, ni sa configuration.</p></div>
+<div class="paragraph"><p>Si vous souhaitez le desinstaller, vous avez le script "manual_remove_of_mosquito.sh" qui peut vous aider à enlever les déclaraitons faites dans apaches.</p></div>
+<div class="paragraph"><p>Pour la désinstallation de mosquitto, cela depend de votre système et il y a plein de doc sur le net (je manque de temps pour faire la doc&#8230;).</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2019-03-13 18:35:44 CET
+</div>
+</div>
+</body>
+</html>

@@ -2167,6 +2167,8 @@ class AbeilleParser extends MosquittoAbeille {
     $AttributId = "8702";
     $data       = substr($payload, 8, 4);
 
+    message::add("Abeille","L'équipement ".Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' )->getHumanName(true)." (".$data.") ne peut être join." );
+
     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
   }
 

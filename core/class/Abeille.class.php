@@ -806,7 +806,7 @@ class Abeille extends eqLogic {
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (is_object($cron)) {
       $cron->halt();
-      log::add('Abeille', 'error', 'deamon stop: demande d arret du cron faite');
+      // log::add('Abeille', 'error', 'deamon stop: demande d arret du cron faite');
     }
     else {
       log::add('Abeille', 'error', 'deamon stop: Abeille, Tache cron introuvable');

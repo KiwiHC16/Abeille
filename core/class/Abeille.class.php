@@ -633,8 +633,9 @@
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected = 0; // Comptons les process prevus.
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
+            $nbProcessExpected++;   // Process Mosquitto quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
-            if (self::getParameters()['AbeilleSerialPort'] != '/tmp/zigate') { $nbProcessExpected++; } // Socat
+            if (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') { $nbProcessExpected++; } // Socat
             
             
             // Combien de demons tournent ?

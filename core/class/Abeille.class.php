@@ -634,7 +634,8 @@ class Abeille extends eqLogic {
     // On verifie que le cron tourne
     if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
       if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
-        if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
+          log::add('Abeille', 'warning', 'deamon_info: cron not running');
+          message::add('Abeille', 'warning', 'deamon_info: cron not running');
         $return['state'] = "nok";
       }
     }
@@ -658,7 +659,8 @@ class Abeille extends eqLogic {
 
     if ( ($nbProcess != $nbProcessExpected) ) {
       if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
-      if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
+      log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
+        message::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
       $return['state'] = "nok";
     }
 
@@ -1022,6 +1024,7 @@ class Abeille extends eqLogic {
       // Pas de port alors que je ne suis pas en mode timer only.
       if ( ($return['AbeilleSerialPort'] == 'none') && ($return['onlyTimer'] != "Y") ) {
         log::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
+        message::add('Abeille','debug','getParameters: serialPort n\'est pas défini. ->'.$return['AbeilleSerialPort'].'<-');
         $return['parametersCheck']="nok";
         $return['parametersCheck_message'] = __('Le port n\'est pas configuré', __FILE__);
         return $return;
@@ -1037,6 +1040,7 @@ class Abeille extends eqLogic {
         $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
         if (@!file_exists($return['AbeilleSerialPort'])) {
           log::add('Abeille','debug','getParameters: serialPort n\'existe pas. ->'.$return['AbeilleSerialPort'].'<-');
+          message::add('Abeille','debug','getParameters: serialPort n\'existe pas. ->'.$return['AbeilleSerialPort'].'<-');
           $return['parametersCheck']="nok";
           $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
           return $return;

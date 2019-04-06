@@ -10,10 +10,10 @@
 */
 
 require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
-require_once dirname(__FILE__).("/lib/Tools.php");
-include(dirname(__FILE__).'/includes/config.php');
-include(dirname(__FILE__).'/includes/function.php');
+require_once dirname(__FILE__).'/Abeille.class.php';
+require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
 
 
 function message($message) {

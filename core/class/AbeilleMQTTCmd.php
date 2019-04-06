@@ -7,10 +7,10 @@
 */
 
 require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-require_once dirname(__FILE__)."/../../core/class/Abeille.class.php";
-require_once dirname(__FILE__).("/lib/Tools.php");
-include(dirname(__FILE__).'/includes/config.php');
-include(dirname(__FILE__).'/includes/function.php');
+require_once dirname(__FILE__).'/Abeille.class.php';
+require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
 
 
 
@@ -141,7 +141,7 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
 }
 
 class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
-  public $debug = array( "cli"                 => 0, // commande line mode or jeedom
+  public $debug = array( "cli"                 => 1, // commande line mode or jeedom
     "Checksum"            => 1, // Debug checksum calculation
     "tempo"               => 1, // Debug tempo queue
     'procmsg'             => 1, // Debug fct procmsg
@@ -3365,7 +3365,7 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
 // ***********************************************************************************************
 // exemple d appel
 // php AbeilleMQTTCmd.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
-
+    
 $AbeilleMQTTCmd = new AbeilleMQTTCmd("AbeilleMQTTCmd");
 try {
 

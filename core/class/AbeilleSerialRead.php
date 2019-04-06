@@ -10,11 +10,11 @@
      */
 
 
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    require_once dirname(__FILE__).("/lib/Tools.php");
+require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
-    include("includes/config.php");
-    include("includes/fifo.php");
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
+include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlogFilter($loglevel,'AbeilleSerialRead',$message);

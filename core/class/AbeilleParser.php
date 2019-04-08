@@ -2303,8 +2303,8 @@
                             }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
                             $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
-                            $this->client->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
-                            $this->client->mqqtPublish( $short, "Short", "Addr", $short, $qos);
+                            $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
+                            $this->mqqtPublish( $short, "Short", "Addr", $short, $qos);
                             sleep(5); // time for the object to be created before configuring
                             $this->configureNE($short);
                         }

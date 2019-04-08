@@ -636,12 +636,14 @@
             $nbProcessExpected++;   // Process Mosquitto quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
             if (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') { $nbProcessExpected++; } // Socat
+            $return['nbProcessExpected'] = $nbProcessExpected;
             
             
             // Combien de demons tournent ?
             exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output1 );
             exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/mosquitto /' | cut -d ';'  -f 1 | wc -l", $output2 );
             $nbProcess = $output1[0]+$output2[0];
+            $return['nbProcess'] = $nbProcess;
             
             if ( ($nbProcess != $nbProcessExpected) ) {
                 if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);

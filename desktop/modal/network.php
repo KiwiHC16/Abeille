@@ -30,19 +30,11 @@ foreach ($eqLogics as $eqLogic) {
 }
 $neighbors = substr($neighbors, 0, -2);
 
-$nbProcess = count(system::ps("AbeilleDeamon", 'true'));
+$processes = Abeille::deamon_info();
+$color = ($processes['nbProcess'] == $processes['nbProcessExpected']) ? "greeniconcolor" : "rediconcolor";
+$nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
 
-if (config::byKey('onlyTimer', 'Abeille') == 'N') {
-    $nbProcessExpected = 4;
-    if ( $usbPath == '/tmp/zigate' ) { $nbProcessExpected++; }
-    $color = ($nbProcess == $nbProcessExpected) ? "greeniconcolor" : "rediconcolor";
-    $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/".$nbProcessExpected;
-} else {
-    $nbProcessExpected = 1;
-    $color = ($nbProcess == $nbProcessExpected) ? "greeniconcolor" : "rediconcolor";
-    $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $nbProcess . "/".$nbProcessExpected;
-}
-
+    
 sendVarToJS('nodesFromJeedom', $nodes);
 
 ?>

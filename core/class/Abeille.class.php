@@ -623,7 +623,7 @@
             // On verifie que le cron tourne
             if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
-                    log::add('Abeille', 'warning', 'deamon_info: cron not running');
+                    if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
                     message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
                     $return['state'] = "nok";
                 }
@@ -645,7 +645,7 @@
             
             if ( ($nbProcess != $nbProcessExpected) ) {
                 if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
-                log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
+                if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
                 message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.','','Abeille/Demon' );
                 $return['state'] = "nok";
             }
@@ -949,17 +949,35 @@
             $return['mosquitto'] = 'ok';
             $return['mosquitto_message'] = '';
             
-            $cmdSvc = "expr  `service mosquitto status 2>&1 | grep -Eicv 'fail|unrecognized'` + `systemctl is-active mosquitto 2>&1 | grep -c ^active`";
-            exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-            if ( !$outputSvc[0] ) message::add('AbeilleMosquitto','Warning: Je ne trouve pas le service mosquitto','','Abeille/Demon');
-            $logmsg = 'Status du service mosquitto : '.($outputSvc[0] > 0 ? 'OK' : 'Probleme').'   ('.implode($outputSvc,'!').')';
-            if ($debug_serviceMosquittoStatus) log::add('AbeilleMosquitto', 'debug', $logmsg);
+            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStatus begin');
+            
+            // On regarde ce que dit service de mosquitto
+            $cmdSvc1 = "expr  `service mosquitto status 2>&1 | grep 'active' | grep 'running' | wc -l`";
+            exec(system::getCmdSudo().$cmdSvc1, $outputSvc1);
+            if ( $outputSvc1[0] != 1 ) {
+                message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le service mosquitto','','Abeille/Demon');
+                $return['mosquitto'] = 'nok';
+                $return['mosquitto_message'] = 'Service mosquitto pas démarré.';
+            }
+            $logmsg = 'Status du service mosquitto : '.json_encode($outputSvc1);
+            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - '.$logmsg);
+            
+            // Maintenant on vérifie qu on trouve bien un process mosquitto qui fonctionne
+            $cmdSvc2 = "expr  `ps -ef | grep -e '/usr/sbin/mosquitto' | grep -v 'grep' | wc -l`";
+            exec(system::getCmdSudo().$cmdSvc2, $outputSvc2);
+            if ( $outputSvc2[0] != "1" ) {
+                message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le processus mosquitto','','Abeille/Demon');
+                $return['mosquitto'] = 'nok';
+                $return['mosquitto_message'] = 'Processus mosquitto introuvable.';
+            }
+            $logmsg = 'Status du process mosquitto: '.json_encode($outputSvc2);
+            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - '.$logmsg);
             
             //Docker workaround as service will not write a pid file for mosquitto (status will always fail)
             if (file_exists("/.dockerenv") == true) {
                 $outputSvc = array();
                 exec(system::getCmdSudo()."pgrep mosquitto", $outputSvc);
-                if ($debug_serviceMosquittoStatus) log::add('AbeilleMosquitto', 'debug', 'docker test: pid of mosquitto: '.$outputSvc[0]);
+                if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - docker test: pid of mosquitto: '.$outputSvc[0]);
             }
             if ($outputSvc[0] > 0) {
                 $return['mosquitto'] = 'ok';
@@ -967,27 +985,42 @@
             }
             unset($outputSvc);
             
+            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStatus end: '.json_encode($return));
+            
             return $return;
         }
         
         public static function serviceMosquittoStart() {
+            $debug_serviceMosquittoStart = 1;
             $outputSvc = array();
+            
+            if ($debug_serviceMosquittoStart) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStart begin');
+            
             //try to start mosquitto service if not already started.
             if (self::serviceMosquittoStatus()['mosquitto'] != 'ok') {
                 unset($outputSvc);
                 $cmdSvc = "kill `pgrep -f /usr/sbin/mosquitto` 2>&1";
                 exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('AbeilleMosquitto', 'debug', 'kill du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
+                log::add('Abeille', 'debug', 'Mosquitto - kill du service mosquitto: '.$cmdSvc.' '.json_encode($outputSvc));
                 unset($outputSvc);
                 sleep(3);
                 
-                $cmdSvc = "service mosquitto start 2>&1 ;systemctl start mosquitto 2>&1";
+                $cmdSvc = "service mosquitto start 2>&1 ;";
                 exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('AbeilleMosquitto', 'debug', 'Start du service mosquitto: '.$cmdSvc.' '.implode($outputSvc, '!'));
+                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with service): '.$cmdSvc.' '.json_encode($outputSvc));
+                sleep(3);
+                
+                $cmdSvc = "systemctl start mosquitto 2>&1";
+                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with systemctl): '.$cmdSvc.' '.json_encode($outputSvc));
                 sleep(3);
             }
             
-            return self::serviceMosquittoStatus();
+            $return = self::serviceMosquittoStatus();
+            
+            if ($debug_serviceMosquittoStart) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStart end: '.json_encode($return));
+            
+            return $return;
         }
         
         public static function getParameters() {

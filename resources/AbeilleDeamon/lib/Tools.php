@@ -19,7 +19,12 @@ class Tools
          "INFO" => 3,
          "DEBUG" => 4,);
 
-         return $niveau[$loglevel];
+       $upperString = strtoupper($loglevel);
+       if (array_search($upperString,$niveau,false)) {
+           return $niveau[$upperString];
+            }
+       #if logLevel is not found, then no log is allowed
+       return "0";
        }
 
     /***
@@ -30,6 +35,9 @@ class Tools
      */
     public static function deamonlogFilter($loglevel = 'NONE', $loggerName = 'Tools', $message = '') {
         if (strlen($message) < 1) return;
+        #$iLog=Tools::getNumberFromLevel($loglevel);
+        #$iRequested=Tools::getNumberFromLevel($GLOBALS['requestedlevel']);
+        #fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '['.strtoupper($loglevel). '='.$iLog.']/[' . strtoupper($GLOBALS['requestedlevel']) . '='.$iRequested. ']' . PHP_EOL);
         if (Tools::getNumberFromLevel($loglevel) <= Tools::getNumberFromLevel($GLOBALS['requestedlevel'])) {
             fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . strtoupper($GLOBALS['requestedlevel']) . ']' . $message . PHP_EOL);
         }

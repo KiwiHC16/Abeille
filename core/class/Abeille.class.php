@@ -1773,7 +1773,11 @@
                 /* Traitement particulier pour les batteries */
                 if ($cmdId == "Batterie-Volt") {
                     /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-                    $elogic->setStatus('battery', ($value / 1000 - 2.7) / (3.1 - 2.7) * 100);
+                    $elogic->setStatus('battery', $value );
+                    $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+                }
+                if ($cmdId == "Batterie-Pourcent") {
+                    $elogic->setStatus('battery', $value);
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
                 if ($cmdId == "0001-01-0021") {

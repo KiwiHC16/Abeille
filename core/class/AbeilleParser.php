@@ -206,41 +206,41 @@
             parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleParserClass"] );
         }
         
-        function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos = 0)
+        function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $qos);
+            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $this->parameters_info['AbeilleQos']);
+            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $this->parameters_info['AbeilleQos']);
+            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $this->parameters_info['AbeilleQos']);
         }
         
-        function mqqtPublishFct( $SrcAddr, $fct, $data, $qos = 0)
+        function mqqtPublishFct( $SrcAddr, $fct, $data)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish("Abeille/".$SrcAddr."/".$fct,    $data,               $qos);
+            $this->client->publish("Abeille/".$SrcAddr."/".$fct,    $data);
         }
         
-        function mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
+        function mqqtPublishLQI( $Addr, $Index, $data)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."LQI/".$Addr."/".$Index, $data, $qos);
+            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."LQI/".$Addr."/".$Index, $data);
         }
         
-        function mqqtPublishAnnounce( $SrcAddr, $data, $qos = 0)
+        function mqqtPublishAnnounce( $SrcAddr, $data)
         {
             // Abeille / short addr / Annonce -> data
             // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-            $this->client->publish("CmdAbeille/".$SrcAddr."/Annonce", $data, $qos);
+            $this->client->publish("CmdAbeille/".$SrcAddr."/Annonce", $data);
         }
         
-        function mqqtPublishAnnounceProfalux( $SrcAddr, $data, $qos = 0)
+        function mqqtPublishAnnounceProfalux( $SrcAddr, $data)
         {
             // Abeille / short addr / Annonce -> data
             // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-            $this->client->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data, $qos);
+            $this->client->publish("CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data);
         }
         
         function procmsg($topic, $payload)
@@ -255,6 +255,10 @@
             }
             
             return $str;
+        }
+        
+        public function volt2pourcent( $value ) {
+            return (100-(((3.135-($voltage/1000))/(3.135-2.8))*100));
         }
         
         function displayClusterId($cluster) {
@@ -392,12 +396,12 @@
             $capability = substr($payload, 20,  2);
             
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
-            $this->mqqtPublish( $SrcAddr, "IEEE", "Addr", $IEEE, $qos);
+            $this->mqqtPublish( $SrcAddr, "IEEE", "Addr", $IEEE);
             
-            $this->mqqtPublishFct( "Ruche", "enable", $IEEE, $qos = 0);
+            $this->mqqtPublishFct( "Ruche", "enable", $IEEE);
             
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
-            $this->mqqtPublish( "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE, $qos);
+            $this->mqqtPublish( "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
             
             $GLOBALS['NE'][$SrcAddr]['IEEE']                    = $IEEE;
             $GLOBALS['NE'][$SrcAddr]['capa']                    = $capability;
@@ -428,7 +432,7 @@
             $AttributId = "8000";
             $data       = $this->displayStatus($status);
             
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
         
         function decode8001( $payload, $ln, $qos, $dummy)
@@ -542,7 +546,7 @@
             $ClusterId = "Short";
             $AttributId = "Addr";
             $data = $ShortAddress;
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
             
             // Envoie Extended Address
@@ -550,7 +554,7 @@
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $data = $ExtendedAddress;
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
             
             // Envoie PAN ID
@@ -558,7 +562,7 @@
             $ClusterId = "PAN";
             $AttributId = "ID";
             $data = $PAN_ID;
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
             
             // Envoie Ext PAN ID
@@ -566,7 +570,7 @@
             $ClusterId = "Ext_PAN";
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
             
             // Envoie Channel
@@ -574,7 +578,7 @@
             $ClusterId = "Network";
             $AttributId = "Channel";
             $data = $Channel;
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; Channel: '.$Channel); }
             
             if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
@@ -592,14 +596,14 @@
             $AttributId = "Application";
             $data = substr($payload, 0, 4);
             if ($GLOBALS['debugArray']['8010']) { $this->deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos); }
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
             $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "SDK";
             $data = substr($payload, 4, 4);
             if ($GLOBALS['debugArray']['8010']) { $this->deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos); }
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
         
         function decode8014( $payload, $ln, $qos, $dummy)
@@ -620,7 +624,7 @@
             
             $data = substr($payload, 0, 2);
             
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
         }
         
@@ -659,19 +663,19 @@
                 $ClusterId = "IEEE";
                 $AttributId = "Addr";
                 $dataAddr = substr($payload, $i * 26 + 6, 16);
-                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataAddr, $qos);
+                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataAddr);
                 
                 // Envoie Power Source
                 $ClusterId = "Power";
                 $AttributId = "Source";
                 $dataPower = substr($payload, $i * 26 + 22, 2);
-                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataPower, $qos);
+                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataPower);
                 
                 // Envoie Link Quality
                 $ClusterId = "Link";
                 $AttributId = "Quality";
                 $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
-                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataLink, $qos);
+                $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataLink);
                 
                 $this->deamonlog('debug','type: 8015 (Abeille List) Abeille i: '.$i
                                  . '; ID : '.substr($payload, $i * 26 + 0, 2)
@@ -693,7 +697,7 @@
             $ClusterId = "ZiGate";
             $AttributId = "Time";
             $data = date( DATE_RFC2822, hexdec($Timestamp) );
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
         }
         
@@ -721,28 +725,28 @@
             if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
             if( substr($payload, 0, 2) == "04" ) { $data = "Network already formed, not starting it again."; }
             if( substr($payload, 0, 2) > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
             // Envoie Short Address
             $SrcAddr = "Ruche";
             $ClusterId = "Short";
             $AttributId = "Addr";
             $dataShort = substr($payload, 2, 4);
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataShort, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataShort);
             
             // Envoie IEEE Address
             $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $dataIEEE = substr($payload, 6,16);
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataIEEE, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataIEEE);
             
             // Envoie channel
             $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Channel";
             $dataNetwork = hexdec( substr($payload,22, 2) );
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataNetwork, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $dataNetwork);
             
             $this->deamonlog('debug',';type; 8024; ( Network joined / formed )(Processed->MQTT); Satus; '.$data.'; short addr : '.$dataShort.'; extended address : '.$dataIEEE.';Channel : '.$dataNetwork);
             
@@ -786,7 +790,7 @@
             $ClusterId = "Network";
             $AttributId = "Bind";
             $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
         }
         
@@ -918,7 +922,7 @@
             
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
             if ( strlen( $data) > 1 ) {
-                $this->mqqtPublish( $SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data, $qos);
+                $this->mqqtPublish( $SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
                 // if ( isset($GLOBALS['NE'][$SrcAddr]) ) { $GLOBALS['NE'][$SrcAddr]['deviceId']=$deviceInfo[$profile][$deviceId]; }
                 $GLOBALS['NE'][$SrcAddr]['deviceId']=$data;
             }
@@ -993,12 +997,12 @@
             }
             
             $data = "Leave->".$name."->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
             $SrcAddr = "Ruche";
             $fct = "disable";
             $extendedAddr = substr($payload, 0, 16);
-            $this->mqqtPublishFct( $SrcAddr, $fct, $extendedAddr, $qos = 0);
+            $this->mqqtPublishFct( $SrcAddr, $fct, $extendedAddr);
             
         }
         
@@ -1083,7 +1087,7 @@
             // $this->deamonlog('debug',$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
             
             //function $this->mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
-            $this->mqqtPublishLQI( $NeighbourAddr, $index, $data, $qos);
+            $this->mqqtPublishLQI( $NeighbourAddr, $index, $data);
             
             if ( strlen($NeighbourAddr) !=4 ) { return; }
             
@@ -1159,7 +1163,7 @@
             $AttributId = "Membership";
             if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }
             
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
             $this->deamonlog('debug', ';Type; 8062; (Group Memebership)(Processed->MQTT)'
                              . '; SQN: '          .substr($payload, 0, 2)
@@ -1239,7 +1243,7 @@
             $AttributId     = "Down";
             $data           = substr($payload,14, 2);
             
-            $this->mqqtPublish( $source, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $source, $ClusterId, $AttributId, $data);
         }
         
         
@@ -1266,7 +1270,7 @@
             $AttributId     = "Middle";
             $data           = substr($payload,14, 2);
             
-            $this->mqqtPublish( $source, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $source, $ClusterId, $AttributId, $data);
         }
         //----------------------------------------------------------------------------------------------------------------
         ##TODO
@@ -1456,7 +1460,7 @@
                 // Je ne peux pas envoyer, je ne sais pas qui a repondu pour tester je mets l adresse en fixe d une ampoule
                 $ClusterId = "Scene";
                 $AttributId = "Membership";
-                $this->mqqtPublish( $source, $ClusterId, $AttributId, $data, $qos);
+                $this->mqqtPublish( $source, $ClusterId, $AttributId, $data);
                 
             }
             
@@ -1528,12 +1532,12 @@
             $clusterId = "80A7";
             $AttributId = "Cmd";
             $data = $cmd;
-            $this->mqqtPublish( $source, $clusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $source, $clusterId, $AttributId, $data);
             
             $clusterId = "80A7";
             $AttributId = "Direction";
             $data = $direction;
-            $this->mqqtPublish( $source, $clusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $source, $clusterId, $AttributId, $data);
             
         }
         //----------------------------------------------------------------------------------------------------------------
@@ -1596,7 +1600,7 @@
             //deamonlog('Data byte: '.$data);
             $this->deamonlog('debug','Type; 0x8100;Data byte: '.$data);
             
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
         
         function decode8101( $payload, $ln, $qos, $dummy)
@@ -1632,7 +1636,7 @@
             $dataType           = substr($payload,18, 2);
             $AttributSize       = substr($payload,20, 4);
             
-            $this->mqqtPublish( $SrcAddr, 'Link', 'Quality', $quality, $qos);
+            $this->mqqtPublish( $SrcAddr, 'Link', 'Quality', $quality);
             
             
             // 0005: ModelIdentifier
@@ -1751,7 +1755,7 @@
                     $this->deamonlog('debug', 'Voltage: '      .$voltage);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                 }
                 
@@ -1768,7 +1772,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, '0006',     '01-0000', $etat,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                 }
                 
                 // Xiaomi Door Sensor V2
@@ -1782,7 +1786,7 @@
                     $this->deamonlog('debug', 'Door V2 Etat: '      .$etat);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)), $qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ));
                     $this->mqqtPublish( $SrcAddr, '0006', '01-0000', $etat,  $qos);
                 }
                 
@@ -1800,7 +1804,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                     $this->mqqtPublish( $SrcAddr, '0402', '01-0000', $temperature,$qos);
                     $this->mqqtPublish( $SrcAddr, '0405', '01-0000', $humidity,$qos);
@@ -1837,7 +1841,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     $this->mqqtPublish( $SrcAddr, '0400', '01-0000', $lux,$qos); // Luminosite
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
@@ -1865,7 +1869,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1890,7 +1894,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                     $this->mqqtPublish( $SrcAddr, '0402', '01-0000', $temperature,      $qos);
                     $this->mqqtPublish( $SrcAddr, '0405', '01-0000', $humidity,         $qos);
@@ -1909,7 +1913,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                 }
                 
@@ -1930,7 +1934,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1955,7 +1959,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -2000,7 +2004,7 @@
                     $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                 }
                 
@@ -2015,7 +2019,7 @@
                     $this->deamonlog('debug', 'Voltage: '      .$voltage);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', (100-(((3.135-($voltage/1000))/(3.135-2.8))*100)),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
                     
                 }
                 // ------------------------------------------------------- Philips ----------------------------------------------------------
@@ -2034,8 +2038,8 @@
                     $buttonDuree = hexdec(substr($payload, 24+6, 2 ));
                     $this->deamonlog("debug",";Type; 8102; Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations, Bouton: ".$button." Event: ".$buttonEvent." Event Texte: ".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
                     
-                    $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Event", $buttonEvent, $qos);
-                    $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Duree", $buttonDuree, $qos);
+                    $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Event", $buttonEvent);
+                    $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Duree", $buttonDuree);
                     
                 }
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
@@ -2046,7 +2050,7 @@
             
             if (isset($data)) {
                 if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; } // Verrue: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
-                $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data, $qos);
+                $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }
             
             // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
@@ -2096,7 +2100,7 @@
             $ClusterId = "Network";
             $AttributId = "Report";
             $data = date("Y-m-d H:i:s")." Attribut: ".substr($payload,12, 4)." Status (00: Ok, <>0: Error): ".substr($payload,16, 2);
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
         
         function decode8140( $payload, $ln, $qos, $dummy)
@@ -2139,7 +2143,7 @@
             $data       = substr($payload,14, 4);
             
             // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
             
         }
         
@@ -2172,7 +2176,7 @@
             if ( Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' )->getHumanName(true);
             message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être join." );
             
-            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data, $qos);
+            $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
         
         // ***********************************************************************************************
@@ -2270,10 +2274,10 @@
                             if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
                                 if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                                 $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
-                                $this->client->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short, $qos);
-                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $qos);
-                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $qos);
-                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short, $qos);
+                                $this->client->publish("CmdAbeille/Ruche/ActiveEndPoint", "address=".$short);
+                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short);
+                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short);
+                                $this->client->publish("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short);
                                 $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
                             }
                         }
@@ -2283,15 +2287,15 @@
                         if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
                             if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
-                            $this->client->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-                            $this->client->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                            $this->client->publish("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP']);
+                            $this->client->publish("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP']);
                             
-                            $this->client->publish("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
-                            $this->client->publish("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $qos);
+                            $this->client->publish("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP']);
+                            $this->client->publish("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP']);
                             
                             // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
-                            $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
-                            $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $qos);
+                            $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP']);
+                            $this->client->publish("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP']);
                             $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                         }
                         break;
@@ -2303,8 +2307,8 @@
                             }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
                             $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
-                            $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
-                            $this->mqqtPublish( $short, "Short", "Addr", $short, $qos);
+                            $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE']);
+                            $this->mqqtPublish( $short, "Short", "Addr", $short);
                             sleep(5); // time for the object to be created before configuring
                             $this->configureNE($short);
                         }
@@ -2346,9 +2350,9 @@
                 if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
                 if ( ((($infos['timeAnnonceReceived'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
                     if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
-                    $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE'], $qos);
-                    $this->mqqtPublish( $short, "Short", "Addr", $short, $qos);
-                    $this->mqqtPublish( $short, "Power", "Source", ((base_convert($infos['capa'],16,2)&0x04)>>2), $qos);
+                    $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE']);
+                    $this->mqqtPublish( $short, "Short", "Addr", $short);
+                    $this->mqqtPublish( $short, "Power", "Source", ((base_convert($infos['capa'],16,2)&0x04)>>2));
                     unset( $GLOBALS['NE'][$short] );
                 }
             }
@@ -2394,8 +2398,8 @@
             $data = $fifoIN->read();
             $AbeilleParser->protocolDatas( $data, $qos, $clusterTab, $LQI );
             
-            $AbeilleParser->processAnnonce($NE, $qos);
-            $AbeilleParser->cleanUpNE($NE, $qos);
+            $AbeilleParser->processAnnonce($NE);
+            $AbeilleParser->cleanUpNE($NE);
             
             time_nanosleep( 0, 10000000 ); // 1/100s
         }

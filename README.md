@@ -19,12 +19,13 @@ Dépense:
 
 * Capteur Motion Hue Indoor - 39,95€ - Dans la version stable du 16/3/2019
 * Capteur Motion Hue Outdoor - 49,99€ - Dans la version master
+* Une prise et un micro module Legrand - 82,90€ - Livré.
 * Ampoule Aqara Xiaomi / Prise en encastrée Aqara - 39,17€  - Livraison en cours
-* Une prise et un micro module Legrand - 82,90€ - Livraison en cours.
+* Double relai Aqara Mural - 18,06€ - Livraison en cours
 
 Reste:
 
-* 332,09€
+* 314,03€
 
 Échanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 

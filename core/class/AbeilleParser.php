@@ -2174,7 +2174,7 @@
             $data       = substr($payload, 8, 4);
             
             if ( Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' )->getHumanName(true);
-            message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être join." );
+            // message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être joint." );
             
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }

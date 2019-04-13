@@ -142,13 +142,13 @@ class AbeilleMQTTCmdQueue extends MosquittoAbeille {
 
 class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
   public $debug = array( "cli"                 => 1, // commande line mode or jeedom
-    "Checksum"            => 1, // Debug checksum calculation
-    "tempo"               => 1, // Debug tempo queue
-    'procmsg'             => 1, // Debug fct procmsg
-    "processCmd"          => 1, // Debug fct processCmd
-    "sendCmd"             => 1, // Debug fct sendCmd
-    "transcode"           => 1, // Debug transcode fct
-    "AbeilleMQTTCmdClass" => 1, // Mise en place des class
+    "Checksum"            => 0, // Debug checksum calculation
+    "tempo"               => 0, // Debug tempo queue
+    'procmsg'             => 0, // Debug fct procmsg
+    "processCmd"          => 0, // Debug fct processCmd
+    "sendCmd"             => 0, // Debug fct sendCmd
+    "transcode"           => 0, // Debug transcode fct
+    "AbeilleMQTTCmdClass" => 0, // Mise en place des class
    );
 
   public $parameters_info;

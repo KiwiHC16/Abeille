@@ -1004,6 +1004,13 @@
                 log::add('Abeille', 'debug', 'Mosquitto - kill du service mosquitto: '.$cmdSvc.' '.json_encode($outputSvc));
                 sleep(3);
                 */
+                log::add('Abeille', 'debug', 'Mosquitto - Le service mosquitto ne semble pas fonctionner, je vais essayer de le démarrer.','Demarrer le service mosquitto: /etc/init.d/mosquitto start');
+                
+                $cmdSvc = "/etc/init.d/mosquitto start 2>&1 ;";
+                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
+                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with service): '.$cmdSvc.' '.json_encode($outputSvc));
+                sleep(3);
+                
                 $cmdSvc = "service mosquitto start 2>&1 ;";
                 exec(system::getCmdSudo().$cmdSvc, $outputSvc);
                 log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with service): '.$cmdSvc.' '.json_encode($outputSvc));

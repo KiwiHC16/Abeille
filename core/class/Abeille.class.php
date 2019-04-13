@@ -1086,12 +1086,12 @@
         }
         
         public static function postSave() {
-            log::add('Abeille', 'debug', 'deamon_postSave: IN');
+            // log::add('Abeille', 'debug', 'deamon_postSave: IN');
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (is_object($cron) && !$cron->running()) {
                 $cron->run();
             }
-            log::add('Abeille', 'debug', 'deamon_postSave: OUT');
+            // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
             
         }
         

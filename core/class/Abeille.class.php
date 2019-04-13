@@ -635,7 +635,7 @@
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
             $nbProcessExpected++;   // Process Mosquitto quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
-            if (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') { $nbProcessExpected++; } // Socat
+            if ( (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
             $return['nbProcessExpected'] = $nbProcessExpected;
             
             

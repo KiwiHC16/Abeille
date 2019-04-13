@@ -112,6 +112,10 @@ image:Capture_d_ecran_2018_02_21_a_23_31_11.png[]
 
 pour un retour Off de l'ampoule.
 
+=== HomeBridge
+
+image:Capture_d_ecran_2019_04_14_a_00_44_29.png[]
+
 
 == Télécommande
 

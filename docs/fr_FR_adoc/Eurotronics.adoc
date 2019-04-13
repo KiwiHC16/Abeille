@@ -51,3 +51,37 @@ Maintenez les touches boost, moins et plus enfoncées jusqu'à ce que le compteu
 ************************************************
 
 Quand on fait ca, l'écran fait un countdown et le reset se produit. Puis l'écran affiche Rst.
+
+=== Homebridge
+
+Voici la configuration qui fonctionne sur mon système:
+image:Capture_d_ecran_2019_04_13_a_22_22-22.png[]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,8 +8,7 @@
     "configuration": {
       "uniqId": "5c07c766208a7",
       "icone": "HueGo",
-      "mainEP": "#EP#",
-      "defaultEP": "0B",
+      "mainEP": "0B",
       "poll": "1"
     },
     "Commandes": {

@@ -9,7 +9,6 @@
       "uniqId": "5588cae6278a7",
       "icone": "zigbeeExtendedcolorlight",
       "mainEP": "#EP#",
-      "defaultEP": "#EP#",
       "poll": "1"
     },
     "Commandes": {

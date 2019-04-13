@@ -9,8 +9,7 @@
     "configuration": {
       "uniqId": "5c07c76625baa",
       "icone": "TI0001",
-      "mainEP": "#EP#",
-      "defaultEP": "06"
+      "mainEP": "06"
     },
     "Commandes": {
       "include1": "nom",

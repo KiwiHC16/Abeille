@@ -8,8 +8,7 @@
     "configuration": {
       "uniqId": "5c07c76620939",
       "icone": "HueWhite",
-      "mainEP": "#EP#",
-      "defaultEP": "0B"
+      "mainEP": "0B"
     },
     "Commandes": {
       "include1": "nom",

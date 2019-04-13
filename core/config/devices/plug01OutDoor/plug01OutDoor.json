@@ -9,8 +9,7 @@
     "configuration": {
       "uniqId": "5c07c76625e53",
       "icone": "OsramLightifyplug01OutDoor",
-      "mainEP": "#EP#",
-      "defaultEP": "03"
+      "mainEP": "03"
     },
     "Commandes": {
       "include1": "SW",

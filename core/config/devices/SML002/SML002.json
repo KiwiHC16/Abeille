@@ -9,8 +9,7 @@
       "uniqId": "5c07iug6264bf",
       "icone": "SML002",
       "battery_type": "2x AAA",
-      "mainEP": "#EP#",
-      "defaultEP": "02"
+      "mainEP": "02"
     },
     "Commandes": {
       "include1": "SW",

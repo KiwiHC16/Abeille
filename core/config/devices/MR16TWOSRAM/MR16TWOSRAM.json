@@ -8,8 +8,7 @@
     "configuration": {
       "uniqId": "5c0a678222b6b",
       "icone": "MR16TWOSRAM",
-      "mainEP": "#EP#",
-      "defaultEP": "03",
+      "mainEP": "03",
       "poll": "1"
     },
     "Commandes": {

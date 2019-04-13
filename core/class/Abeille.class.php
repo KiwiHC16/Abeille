@@ -219,8 +219,8 @@
                     // $abeille = abeille::byId( $cmd->getEqLogic_id() );
                     $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
                     $templateJSON = json_encode( $template );
-                    if ( isset($template[$templateName]['configuration']["defaultEP"]) ) {
-                        $templateJSON = str_replace("#EP#", $template[$templateName]['configuration']["defaultEP"], $templateJSON);
+                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) {
+                        $templateJSON = str_replace("#EP#", $template[$templateName]['configuration']["mainEP"], $templateJSON);
                     }
                     else {
                         $templateJSON = str_replace("#EP#", "01", $templateJSON);
@@ -256,8 +256,6 @@
                     // Groupe
                     // mainEP
                     if ( self::testUpdateCommand($fp, "mainEP", $templateMainConfig["mainEP"], $abeille->getConfiguration("mainEP") ) ) { $abeille->setConfiguration( "mainEP", $templateMainConfig["mainEP"] ); }
-                    // defaultEP
-                    if ( self::testUpdateCommand($fp, "defaultEP", $templateMainConfig["defaultEP"], $abeille->getConfiguration("defaultEP") ) ) { $abeille->setConfiguration( "defaultEP", $templateMainConfig["defaultEP"] ); }
                     // createtime
                     // positionX
                     // positionY

@@ -1437,10 +1437,7 @@
                 // timeout
                 $elogic->setTimeout($objetDefSpecific["timeout"]);
                 
-                $elogic->setCategory(
-                                     array_keys($objetDefSpecific["Categorie"])[0],
-                                     $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]
-                                     );
+                $elogic->setCategory( array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]] );
                 // display
                 // order
                 // comment
@@ -1458,12 +1455,9 @@
                 }
                 
                 foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
-                    log::add(
-                             'Abeille',
-                             'info',
+                    log::add( 'Abeille', 'info', 'Creation de la commande: '.$cmd.' suivant model de l objet pour l objet: '.$name );
                              // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
-                             'Creation de la commande: '.$cmd.' suivant model de l objet pour l objet: '.$name
-                             );
+                             
                     $cmdlogic = new AbeilleCmd();
                     // id
                     $cmdlogic->setEqLogic_id($elogic->getId());
@@ -1482,17 +1476,9 @@
                         
                         if (isset($cmdValueDefaut["value"])) {
                             // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                            log::add(
-                                     'Abeille',
-                                     'debug',
-                                     'Define cmd info pour cmd action: '.$elogic->getName()." - ".$cmdValueDefaut["value"]
-                                     );
+                            log::add( 'Abeille',  'debug',  'Define cmd info pour cmd action: '.$elogic->getName()." - ".$cmdValueDefaut["value"]  );
                             
-                            $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName(
-                                                                               "Abeille",
-                                                                               $elogic->getName(),
-                                                                               $cmdValueDefaut["value"]
-                                                                               );
+                            $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName( "Abeille", $elogic->getName(), $cmdValueDefaut["value"] );
                             $cmdlogic->setValue($cmdPointeur_Value->getId());
                             
                         }

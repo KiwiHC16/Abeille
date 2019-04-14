@@ -237,66 +237,75 @@
 
 
                 <legend><i class="fa fa-list-alt"></i> {{Messages MQTT - Brocker Mosquitto}}</legend>
-                <div>
-                    <p>
-                        <i> Abeille utilise le protocol MQTT pour échanger des messages MQTT entre les parties logicielles d'Abeille. Par defaut le broker Mosquitto est installé. C'est lui qui gere la reception et distribution des messages MQTT. Vous pouvez utiliser celui qui est installé par défaut ou utiliser un autre. Si vous n'avez pas de broker MQTT spécifique alors laissez les parametres par défaut.</br>
-                    Tous les tests sont faits avec le broker mosquitto par defaut donc si vous voulez utiliser un autre broker vérifiez que tout fonctionne comme attendu.
-                        </i>
-                    </p>
+                <a class="btn btn-success" id="bt_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
+
+                <div id="paramMosquitto">
+
+                    <div>
+                        <p><i> Abeille utilise le protocol MQTT pour échanger des messages MQTT entre les parties logicielles d'Abeille. Par defaut le broker Mosquitto est installé.</i></p>
+                        <p><i>C'est lui qui gere la reception et distribution des messages MQTT. Vous pouvez utiliser celui qui est installé par défaut ou utiliser un autre.</i></p>
+                        <p><i>Si vous n'avez pas de broker MQTT spécifique alors <span style="text-decoration: underline;"><b>laissez les parametres par défaut</b></span>.</br></i></p>
+                        <p><i>Tous les tests sont faits avec le broker mosquitto par defaut donc si vous voulez utiliser un autre broker vérifiez que tout fonctionne comme attendu.</i></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Mosquitto passe les messages entre les différents éléments du plugin, le plugin installera mosquitto sur jeedom si besoin.">{{IP de Mosquitto : }}</label>
+                        <div class="col-sm-4">
+                            <input class="configKey form-control" data-l1key="AbeilleAddress" style="margin-top:5px" placeholder="127.0.0.1"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label data-toggle="tooltip" title="Adresse IP du Broker MQTT">{{Port de Mosquitto : }}</label>
+                        <div class="col-sm-4">
+                            <input class="configKey form-control" data-l1key="AbeillePort" style="margin-top:5px" placeholder="1883">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label data-toggle="tooltip" title="Port du Broker MQTT">{{Identifiant de Connexion : }}</label>
+                        <div class="col-sm-4">
+                            <input class="configKey form-control" data-l1key="AbeilleConId" style="margin-top:5px" placeholder="Jeedom"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label data-toggle="tooltip" title="Nom d'utilisateur pour se connecter au Broker MQTT">{{Compte de Connexion (non obligatoire) : }}</label>
+                        <div class="col-lg-4">
+                            <input class="configKey form-control" data-l1key="mqttUser" style="margin-top:5px" placeholder="Jeedom"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label data-toggle="tooltip" title="Password de l'utilisateur pour se connecter au Broker MQTT">{{Mot de passe de Connexion (non obligatoire) : }}</label>
+                        <div class="col-lg-4">
+                            <input type="password" class="configKey form-control" data-l1key="mqttPass" style="margin-top:5px" placeholder="Jeedom"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label data-toggle="tooltip" title="Racine dans l'arborescence MQTT des messages">{{Topic root (defaut: Tous): }}</label>
+                        <div class="col-lg-4">
+                            <input class="configKey form-control" data-l1key="mqttTopic" style="margin-top:5px" placeholder="#"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le mode 0 est conseillé. Les trois mode ont été testés et fonctionnent.">{{Qos}}</label>
+                        <div class="col-lg-4">
+                            <select class="configKey form-control" data-l1key="mqttQos">
+                                <option value="0">0</option>
+                                <option value="1" >1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Mosquitto passe les messages entre les différents éléments du plugin, le plugin installera mosquitto sur jeedom si besoin.">{{IP de Mosquitto : }}</label>
-                    <div class="col-sm-4">
-                        <input class="configKey form-control" data-l1key="AbeilleAddress" style="margin-top:5px" placeholder="127.0.0.1"/>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Adresse IP du Broker MQTT">{{Port de Mosquitto : }}</label>
-                    <div class="col-sm-4">
-                        <input class="configKey form-control" data-l1key="AbeillePort" style="margin-top:5px" placeholder="1883">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Port du Broker MQTT">{{Identifiant de Connexion : }}</label>
-                    <div class="col-sm-4">
-                        <input class="configKey form-control" data-l1key="AbeilleConId" style="margin-top:5px" placeholder="Jeedom"/>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Nom d'utilisateur pour se connecter au Broker MQTT">{{Compte de Connexion (non obligatoire) : }}</label>
-                    <div class="col-lg-4">
-                        <input class="configKey form-control" data-l1key="mqttUser" style="margin-top:5px" placeholder="Jeedom"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Password de l'utilisateur pour se connecter au Broker MQTT">{{Mot de passe de Connexion (non obligatoire) : }}</label>
-                    <div class="col-lg-4">
-                        <input type="password" class="configKey form-control" data-l1key="mqttPass" style="margin-top:5px" placeholder="Jeedom"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Racine dans l'arborescence MQTT des messages">{{Topic root (defaut: Tous): }}</label>
-                    <div class="col-lg-4">
-                        <input class="configKey form-control" data-l1key="mqttTopic" style="margin-top:5px" placeholder="#"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le mode 0 est conseillé. Les trois mode ont été testés et fonctionnent.">{{Qos}}</label>
-                    <div class="col-lg-4">
-                        <select class="configKey form-control" data-l1key="mqttQos">
-                            <option value="0">0</option>
-                            <option value="1" >1</option>
-                            <option value="2">2</option>
-                        </select>
-                    </div>
-                </div>
 
 
 
@@ -305,6 +314,23 @@
 </form>
 
 <script>
+
+ $("#paramMosquitto").hide();
+
+$('#bt_hide').on('click', function () {
+                    console.log("bt_hide");
+                    // To be defined
+                 $("#paramMosquitto").hide();
+                    }
+                    );
+
+$('#bt_show').on('click', function () {
+                 console.log("bt_test");
+                 // To be defined
+                 $("#paramMosquitto").show();
+                 }
+                 );
+
 $('#bt_syncconfigAbeille').on('click',function(){
 		bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {
 				if (result) {

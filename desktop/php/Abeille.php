@@ -31,7 +31,7 @@ $parameters_info = Abeille::getParameters();
         </div>
     </div>
 
-    <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
+<div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
 
         <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
 

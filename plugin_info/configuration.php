@@ -32,6 +32,7 @@
 
             <legend><i class="fa fa-list-alt"></i> {{Documentation}}</legend>
 
+
             <div align="center">
                 <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/changelog.html" target="_blank">{{ChangeLog (Locale)}}</a>
                 <a class="btn btn-success" href="https://kiwihc16.github.io/Abeille/fr_FR/changelog.html" target="_blank">{{ChangeLog (Derniere)}}</a>
@@ -54,6 +55,7 @@
 
             <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
 
+
             <div>
                 <p><i> En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.</i></p>
                 <div class="form-group">
@@ -67,171 +69,179 @@
 
 
             <legend><i class="fa fa-list-alt"></i> {{Connection}}</legend>
-            <div>
-                <p>
-                    <i> La ZiGate possede trois types possibles de modules pour etre connecté au système Jeedom. Un module USB / PiZigate(GPIO) ou un module Wifi. Si vous êtes en wifi choisissez WIFI ici et indiquez dans le champ IP:Port les informations du module WIFI. Si vous êtes en USB, choisissez le port USB du type ttyUSBx sur lequel la ZiGate est branchée. Pour PiZiGate choisissez le port série /dev/ttyS0.
-                    </i>
-                </p>
-            </div>
+            <a class="btn btn-success" id="bt_Connection_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_Connection_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
-                <div class="col-lg-4">
-                    <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
-                        <option value="none" >{{Aucun}}</option>
-                        <option value="/tmp/zigate" >{{WIFI}}</option>
-                        <!--option value="auto">{{Auto}}</option-->
-                        <?php
-                            foreach (jeedom::getUsbMapping('', true) as $name => $value) {
-                                echo '<option value="'.$name.'">'.$name.' ('.$value.')</option>';
-                            }
-                        ?>
-                    </select>
+            <div id="Connection">
+                <div>
+                    <p>
+                        <i> La ZiGate possede trois types possibles de modules pour etre connecté au système Jeedom. Un module USB / PiZigate(GPIO) ou un module Wifi. Si vous êtes en wifi choisissez WIFI ici et indiquez dans le champ IP:Port les informations du module WIFI. Si vous êtes en USB, choisissez le port USB du type ttyUSBx sur lequel la ZiGate est branchée. Pour PiZiGate choisissez le port série /dev/ttyS0.
+                        </i>
+                    </p>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate ainsi que le port (IP:Port(9999/23)). 9999 est le port du module wifi zigate par dafaut, mettre 23 si vous utilisez ESP-Link.">{{IP (IP:Port) de Zigate Wifi : }}</label>
-                    <div class="col-sm-4">
-                        <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
+                    <div class="col-lg-4">
+                        <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
+                            <option value="none" >{{Aucun}}</option>
+                            <option value="/tmp/zigate" >{{WIFI}}</option>
+                            <!--option value="auto">{{Auto}}</option-->
+                            <?php
+                                foreach (jeedom::getUsbMapping('', true) as $name => $value) {
+                                    echo '<option value="'.$name.'">'.$name.' ('.$value.')</option>';
+                                }
+                            ?>
+                        </select>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate ainsi que le port (IP:Port(9999/23)). 9999 est le port du module wifi zigate par dafaut, mettre 23 si vous utilisez ESP-Link.">{{IP (IP:Port) de Zigate Wifi : }}</label>
+                        <div class="col-sm-4">
+                            <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
+                        </div>
+                </div>
             </div>
 
             <legend><i class="fa fa-list-alt"></i> {{Parametre}}</legend>
+            <a class="btn btn-success" id="bt_parametre_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_parametre_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Tous les objets crées seront des enfants de l'objet selectionné. Les objets sont définis dans le menu principal de Jeedom: Outils->Objets. Les objets representent les pieces de la maison par exemple.">{{Objet Parent}}</label>
-                <div class="col-lg-4">
-                    <select class="configKey form-control" data-l1key="AbeilleParentId">
-                        <?php
-                            foreach (object::all() as $object) {
-                                echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                            }
-                        ?>
-                    </select>
+            <div id="Parametre">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Tous les objets crées seront des enfants de l'objet selectionné. Les objets sont définis dans le menu principal de Jeedom: Outils->Objets. Les objets representent les pieces de la maison par exemple.">{{Objet Parent}}</label>
+                    <div class="col-lg-4">
+                        <select class="configKey form-control" data-l1key="AbeilleParentId">
+                            <?php
+                                foreach (object::all() as $object) {
+                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Abeille plusieurs mode de création des équipements dans Jeedom. Automatique: si l'objet zigbee est connu et reconnu alors qu'il se join au réseau, il est crée dans jeedom de facon completement automatique. Semi-auto:l'objet est crée a partir des infos communiquées par l'objet zigbee, manuel: il faut créer l'objet soit même.">{{Mode de creation des objets}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="creationObjectMode">
-                        <option value="Automatique">{{Automatique}}</option>
-                        <option value="Semi Automatique">{{Semi-Automatique}}</option>
-                        <option value="Manuel">{{Manuel}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Abeille plusieurs mode de création des équipements dans Jeedom. Automatique: si l'objet zigbee est connu et reconnu alors qu'il se join au réseau, il est crée dans jeedom de facon completement automatique. Semi-auto:l'objet est crée a partir des infos communiquées par l'objet zigbee, manuel: il faut créer l'objet soit même.">{{Mode de creation des objets}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="creationObjectMode">
+                            <option value="Automatique">{{Automatique}}</option>
+                            <option value="Semi Automatique">{{Semi-Automatique}}</option>
+                            <option value="Manuel">{{Manuel}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Dans le réseau ZigBee, les équipements ont une adresse dite courte qui peut variée au fil de la vie du réseau. Si celle si change le mode Automatique mettra à jour l objet. Manuel: Abeille ne fera rien sur changement d adresse courte d un équipement. Ce choix n'a pas vraiment de sens dans le fonctionnement normal, choisissez automatique et il est fort probable que le mode manuel disparaisse dans l avenir.">{{Mode de gestion des adresses courtes}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="adresseCourteMode">
-                        <option value="Automatique">{{Automatique}}</option>
-                        <option value="Manuel">{{Manuel}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Dans le réseau ZigBee, les équipements ont une adresse dite courte qui peut variée au fil de la vie du réseau. Si celle si change le mode Automatique mettra à jour l objet. Manuel: Abeille ne fera rien sur changement d adresse courte d un équipement. Ce choix n'a pas vraiment de sens dans le fonctionnement normal, choisissez automatique et il est fort probable que le mode manuel disparaisse dans l avenir.">{{Mode de gestion des adresses courtes}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="adresseCourteMode">
+                            <option value="Automatique">{{Automatique}}</option>
+                            <option value="Manuel">{{Manuel}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage de toutes les commandes des équipements et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage mode dévelopeur}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">
-                        <option value="Y">{{Oui}}</option>
-                        <option value="N">{{Non}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage de toutes les commandes des équipements et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage mode dévelopeur}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">
+                            <option value="Y">{{Oui}}</option>
+                            <option value="N">{{Non}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations réseau sur les widgets. Par défaut c est desactivé car ces informations ne sont pas nécessaire pour l utilisateur. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Réseau}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="affichageNetwork">
-                        <option value="Y">{{Oui}}</option>
-                        <option value="N">{{Non}}</option>
-                        <option value="na">{{Aucune action}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations réseau sur les widgets. Par défaut c est desactivé car ces informations ne sont pas nécessaire pour l utilisateur. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Réseau}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="affichageNetwork">
+                            <option value="Y">{{Oui}}</option>
+                            <option value="N">{{Non}}</option>
+                            <option value="na">{{Aucune action}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations de temps sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Time}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="affichageTime">
-                        <option value="Y">{{Oui}}</option>
-                        <option value="N">{{Non}}</option>
-                        <option value="na">{{Aucune action}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations de temps sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Time}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="affichageTime">
+                            <option value="Y">{{Oui}}</option>
+                            <option value="N">{{Non}}</option>
+                            <option value="na">{{Aucune action}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des commandes additionnelles sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Commandes Additionnelles}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="affichageCmdAdd">
-                        <option value="Y">{{Oui}}</option>
-                        <option value="N">{{Non}}</option>
-                        <option value="na">{{Aucune action}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des commandes additionnelles sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Commandes Additionnelles}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="affichageCmdAdd">
+                            <option value="Y">{{Oui}}</option>
+                            <option value="N">{{Non}}</option>
+                            <option value="na">{{Aucune action}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>
-                <div class="col-lg-4">
-                    <select style="width:auto" class="configKey form-control" data-l1key="onlyTimer">
-                        <option value="Y">{{Oui}}</option>
-                        <option value="N">{{Non}}</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="onlyTimer">
+                            <option value="Y">{{Oui}}</option>
+                            <option value="N">{{Non}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de recuperer les derniers modeles des objets.">{{Options avancées}}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Mise a jour des modèles}}</a>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de recuperer les derniers modeles des objets.">{{Options avancées}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Mise a jour des modèles}}</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet d appliquer les derniers modeles des objets sur les objets existants.">{{Options avancées}}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_updateConfigAbeille"><i class="fa fa-refresh"></i> {{Appliquer nouveaux modèles}}</a>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet d appliquer les derniers modeles des objets sur les objets existants.">{{Options avancées}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_updateConfigAbeille"><i class="fa fa-refresh"></i> {{Appliquer nouveaux modèles}}</a>
+                    </div>
                 </div>
             </div>
 
             <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
+            <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
-            <div>
-                <p>
-                    <i> La Pi-ZiGate peut être programmée directement depuis le raspberry alors qu elle est en place sur le slot GPIO. Pour se faire, deux PIN du GPIO doivent être pilotées. Il faut pour cela avoir le logiciel Wiring Pi installé (voir bouton ci dessous). Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.
-                    </i>
-                </p>
-            </div>
+            <div id="PiZigate">
+                <div>
+                    <p><i>La Pi-ZiGate peut être programmée directement depuis le raspberry alors qu elle est en place sur le slot GPIO. Pour se faire, deux PIN du GPIO doivent être pilotées.</i></p>
+                    <p><i>Il faut pour cela avoir le logiciel Wiring Pi installé (voir bouton ci dessous).</i></p>
+                    <p><i>Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.</i></p>
+                </div>
 
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate en pilotant les PIN specifiques de la PiZiGate.">{{Installation de Wiring Pi}}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_installGPIO"><i class="fa fa-refresh"></i> {{Installer}}</a>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate en pilotant les PIN specifiques de la PiZiGate.">{{Installation de Wiring Pi}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_installGPIO"><i class="fa fa-refresh"></i> {{Installer}}</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_updateFrimware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_updateFrimware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
-                </div>
-            </div>
-
 
 
 
@@ -315,21 +325,66 @@
 
 <script>
 
- $("#paramMosquitto").hide();
+$("#paramMosquitto").hide();
+$("#PiZigate").hide();
+$("#Parametre").hide();
+$("#Connection").hide();
 
 $('#bt_hide').on('click', function () {
-                    console.log("bt_hide");
+                    // console.log("bt_hide");
                     // To be defined
                  $("#paramMosquitto").hide();
                     }
                     );
 
 $('#bt_show').on('click', function () {
-                 console.log("bt_test");
+                 // console.log("bt_test");
                  // To be defined
                  $("#paramMosquitto").show();
                  }
                  );
+
+$('#bt_pizigate_hide').on('click', function () {
+                 // console.log("bt_hide");
+                 // To be defined
+                 $("#PiZigate").hide();
+                 }
+                 );
+
+$('#bt_pizigate_show').on('click', function () {
+                 // console.log("bt_test");
+                 // To be defined
+                 $("#PiZigate").show();
+                 }
+                 );
+
+$('#bt_parametre_hide').on('click', function () {
+                          // console.log("bt_hide");
+                          // To be defined
+                          $("#Parametre").hide();
+                          }
+                          );
+
+$('#bt_parametre_show').on('click', function () {
+                          // console.log("bt_test");
+                          // To be defined
+                          $("#Parametre").show();
+                          }
+                          );
+
+$('#bt_Connection_hide').on('click', function () {
+                           // console.log("bt_hide");
+                           // To be defined
+                           $("#Connection").hide();
+                           }
+                           );
+
+$('#bt_Connection_show').on('click', function () {
+                           // console.log("bt_test");
+                           // To be defined
+                           $("#Connection").show();
+                           }
+                           );
 
 $('#bt_syncconfigAbeille').on('click',function(){
 		bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {

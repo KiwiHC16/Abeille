@@ -1047,7 +1047,7 @@
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['creationObjectMode']   = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
             $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
-            $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N);
+            $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
             $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'Aucune action');
             $return['affichageTime']        = config::byKey('affichageTime', 'Abeille', 'Aucune action');
             $return['affichageCmdAdd']      = config::byKey('affichageCmdAdd', 'Abeille', 'Aucune action');

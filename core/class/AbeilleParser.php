@@ -257,7 +257,7 @@
             return $str;
         }
         
-        public function volt2pourcent( $value ) {
+        public function volt2pourcent( $voltage ) {
             return (100-(((3.135-($voltage/1000))/(3.135-2.8))*100));
         }
         
@@ -1754,8 +1754,8 @@
                     
                     $this->deamonlog('debug', 'Voltage: '      .$voltage);
                     
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $qos);
                     
                 }
                 
@@ -1772,7 +1772,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, '0006',     '01-0000', $etat,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                 }
                 
                 // Xiaomi Door Sensor V2
@@ -1786,7 +1786,7 @@
                     $this->deamonlog('debug', 'Door V2 Etat: '      .$etat);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ));
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ));
                     $this->mqqtPublish( $SrcAddr, '0006', '01-0000', $etat,  $qos);
                 }
                 
@@ -1804,7 +1804,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                     $this->mqqtPublish( $SrcAddr, '0402', '01-0000', $temperature,$qos);
                     $this->mqqtPublish( $SrcAddr, '0405', '01-0000', $humidity,$qos);
@@ -1841,7 +1841,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     $this->mqqtPublish( $SrcAddr, '0400', '01-0000', $lux,$qos); // Luminosite
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
@@ -1869,7 +1869,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1894,7 +1894,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                     $this->mqqtPublish( $SrcAddr, '0402', '01-0000', $temperature,      $qos);
                     $this->mqqtPublish( $SrcAddr, '0405', '01-0000', $humidity,         $qos);
@@ -1913,7 +1913,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                 }
                 
@@ -1934,7 +1934,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -1959,7 +1959,7 @@
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                     // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
                     // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
@@ -2004,7 +2004,7 @@
                     $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                 }
                 
@@ -2019,7 +2019,7 @@
                     $this->deamonlog('debug', 'Voltage: '      .$voltage);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $value ),$qos);
+                    $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                     
                 }
                 // ------------------------------------------------------- Philips ----------------------------------------------------------
@@ -2396,7 +2396,7 @@
             
             //traitement de chaque trame;
             $data = $fifoIN->read();
-            $AbeilleParser->protocolDatas( $data, $qos, $clusterTab, $LQI );
+            $AbeilleParser->protocolDatas( $data, $AbeilleParser->parameters_info['AbeilleQos'], $clusterTab, $LQI );
             
             $AbeilleParser->processAnnonce($NE);
             $AbeilleParser->cleanUpNE($NE);

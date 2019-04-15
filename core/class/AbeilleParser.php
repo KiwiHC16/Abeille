@@ -258,7 +258,7 @@
         }
         
         public function volt2pourcent( $voltage ) {
-            return (100-(((3.135-($voltage/1000))/(3.135-2.8))*100));
+            return round(100-(((3.135-($voltage/1000))/(3.135-2.8))*100));
         }
         
         function displayClusterId($cluster) {

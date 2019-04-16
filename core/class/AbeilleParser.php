@@ -99,25 +99,26 @@
     
     function connect($r, $message)
     {
-        log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        log::add('Abeille', 'info', 'AbeilleParser - Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
         // config::save('state', '1', 'Abeille');
     }
     
     function disconnect($r)
     {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+        log::add('Abeille', 'debug', 'AbeilleParser - Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
         // config::save('state', '0', 'Abeille');
     }
     
     function subscribe()
     {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+        log::add('Abeille', 'debug', 'AbeilleParser -  Mosquitto: Subscribe to topics');
     }
     
     function logmq($code, $str)
     {
         // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // log::add('Abeille', 'debug', 'AbeilleParser - Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        // AbeilleParser::deamonlog( 'debug', 'AbeilleParser - Mosquitto: Log level: ' . $code . ' Message: ' . $str );
         // }
     }
     
@@ -135,7 +136,7 @@
                 echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd] '.$message."\n";
             }
             else {
-                Tools::deamonlog($loglevel,'AbeilleMQTTCmd',$message);
+                Tools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleMQTTCmd', $message );
             }
         }
     }
@@ -190,7 +191,7 @@
                               "processAnnonce"          => 0,
                               "processAnnonceStageChg"  => 0,
                               "cleanUpNE"               => 0,
-                              "Serial"                  => 0, );
+                              "Serial"                  => 1, );
         
         public $parameters_info;
         
@@ -200,8 +201,9 @@
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
             
-            $this->requestedlevel = $argv[7];
-            $this->requestedlevel = '' ? 'none' : $argv[7];
+            // $this->requestedlevel = $argv[7];
+            // $this->requestedlevel = '' ? 'none' : $argv[7];
+            $this->requestedlevel = "debug";
             
             parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleParserClass"] );
         }
@@ -360,7 +362,8 @@
             if ($type == "8102") $param1=$quality;
             
             $fct = "decode".$type;
-            if ( function_exists ($fct) ) $this->$fct($payload, $ln, $qos, $param1);
+            // if ( function_exists ($fct) )
+                $this->$fct($payload, $ln, $qos, $param1);
             
             return $tab;
         }
@@ -2368,6 +2371,9 @@
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
+    
+    
+ 
     
     try {
         // On crée l objet AbeilleParser

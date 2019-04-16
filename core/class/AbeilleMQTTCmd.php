@@ -27,7 +27,7 @@ class debug extends Tools {
       echo $message."\n";
     }
     else {
-      $this->deamonlogFilter($loglevel,'AbeilleMQTTCmd',$message);
+      $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd',$message);
     }
   }
 

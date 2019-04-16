@@ -17,7 +17,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlogFilter($loglevel,'AbeilleSerialRead',$message);
+        Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead',$message);
     }
 
     function _exec($cmd, &$out = null)

@@ -4,7 +4,29 @@
 
 class Tools
 {
-
+    /**
+     * Get Plugin Log Level.
+     *
+     * @param: pluginName: Nom du plugin
+     * @return: int, niveau de log defini pour le plugin
+     */
+    public static function getPluginLogLevel( $pluginName ) {
+        // var_dump( config::getLogLevelPlugin()["log::level::Abeille"] );
+        // si debug:  {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"}
+        // si info:   {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"}
+        // si warning:{"100":"0","200":"0","300":"1","400":"0","1000":"0","default":"0"}
+        // si error:  {"100":"0","200":"0","300":"0","400":"1","1000":"0","default":"0"}
+        // si aucun:  {"100":"0","200":"0","300":"0","400":"0","1000":"1","default":"0"}
+        // si defaut: {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"}
+        $logLevelPluginJson = config::getLogLevelPlugin()["log::level::Abeille"];
+        if ( $logLevelPluginJson[    '100'] ) return 4;
+        if ( $logLevelPluginJson[    '200'] ) return 3;
+        if ( $logLevelPluginJson[    '300'] ) return 2;
+        if ( $logLevelPluginJson[    '400'] ) return 1;
+        if ( $logLevelPluginJson[   '1000'] ) return 0;
+        if ( $logLevelPluginJson['default'] ) return 1; // This one is set to 1 but should be found from conf
+    }
+    
     /**
      * Convert log level string to number to compare more easily.
      *
@@ -12,12 +34,19 @@ class Tools
      * @return int
      */
      public static function getNumberFromLevel($loglevel) {
-       $niveau = array(
-         "NONE" => 0,
-         "ERROR" => 1,
-         "WARNING" => 2,
-         "INFO" => 3,
-         "DEBUG" => 4,);
+
+         
+         $niveau = array(
+                         "NONE" => 0,
+                         "ERROR" => 1,
+                         "WARNING" => 2,
+                         "INFO" => 3,
+                         "DEBUG" => 4,
+                         "none" => 0,
+                         "error" => 1,
+                         "warning" => 2,
+                         "info" => 3,
+                         "debug" => 4,              );
 
        $upperString = strtoupper($loglevel);
        if (array_search($upperString,$niveau,false)) {
@@ -30,16 +59,19 @@ class Tools
     /***
      * if loglevel is lower/equal than the app requested level then message is written
      *
-     * @param string $loglevel
+     * @param string $log level of the message
+     * @param string plugin Name
+     * @param string logger name = script qui envoie le message
+     * @param string le message lui meme
      * @param string $message
      */
-    public static function deamonlogFilter($loglevel = 'NONE', $loggerName = 'Tools', $message = '') {
+    public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '') {
         if (strlen($message) < 1) return;
         #$iLog=Tools::getNumberFromLevel($loglevel);
         #$iRequested=Tools::getNumberFromLevel($GLOBALS['requestedlevel']);
         #fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '['.strtoupper($loglevel). '='.$iLog.']/[' . strtoupper($GLOBALS['requestedlevel']) . '='.$iRequested. ']' . PHP_EOL);
-        if (Tools::getNumberFromLevel($loglevel) <= Tools::getNumberFromLevel($GLOBALS['requestedlevel'])) {
-            fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . strtoupper($GLOBALS['requestedlevel']) . ']' . $message . PHP_EOL);
+        if (Tools::getNumberFromLevel($loglevel) <= Tools::getPluginLogLevel($pluginName)) {
+            fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . $loglevel . ']' . $message . PHP_EOL);
         }
     }
 

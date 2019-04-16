@@ -18,7 +18,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
 
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlogFilter($loglevel,'AbeilleSocat',$message);
+        Tools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSocat', $message);
         echo $message."\n";
     }
 

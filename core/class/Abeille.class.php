@@ -622,7 +622,7 @@
             if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
                     if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
-                    message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
+                    if ($debug_deamon_info) message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
                     $return['state'] = "nok";
                 }
             }
@@ -646,7 +646,7 @@
             if ( ($nbProcess != $nbProcessExpected) ) {
                 if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
                 if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
-                message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.','','Abeille/Demon' );
+                if ($debug_deamon_info) message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.','','Abeille/Demon' );
                 $return['state'] = "nok";
             }
             

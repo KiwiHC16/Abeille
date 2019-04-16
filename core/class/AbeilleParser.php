@@ -188,8 +188,8 @@
                               "8000"                    => 0, // Status
                               "8009"                    => 0, // Get Network Status
                               "8010"                    => 0,
-                              "processAnnonce"          => 0,
-                              "processAnnonceStageChg"  => 0,
+                              "processAnnonce"          => 1,
+                              "processAnnonceStageChg"  => 1,
                               "cleanUpNE"               => 0,
                               "Serial"                  => 1, );
         
@@ -1766,7 +1766,7 @@
                     
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     
-                    $this->deamonlog('debug', 'Voltage: '.$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', $SrcAddr.': Voltage: '.$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $qos);
@@ -1781,7 +1781,7 @@
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat           = substr($payload, 80, 2);
                     
-                    $this->deamonlog('debug', 'Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Etat: '         .$etat);
+                    $this->deamonlog('debug', $SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Etat: '         .$etat);
                     
                     $this->mqqtPublish( $SrcAddr, '0006',     '01-0000', $etat,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
@@ -1795,7 +1795,7 @@
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat           = substr($payload, 80, 2);
                     
-                    $this->deamonlog('debug', 'Door V2 Voltage: '   .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Door V2 Etat: '      .$etat);
+                    $this->deamonlog('debug', $SrcAddr.': Door V2 Voltage: '   .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Door V2 Etat: '      .$etat);
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ));
@@ -1845,7 +1845,7 @@
                     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                     
-                    $this->deamonlog('debug', ';Type; 8102;Voltage; '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Lux; '          .$lux);
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage; '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Lux; '          .$lux);
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -1872,7 +1872,7 @@
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                     $etat = substr($payload, 88, 2);
                     
-                    $this->deamonlog('debug', ';Type; 8102;Inondation Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Inondation Etat: '      .$etat);
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Inondation Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ).' Inondation Etat: '      .$etat);
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -1919,7 +1919,7 @@
                     
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     
-                    $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     
                     $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
@@ -1937,7 +1937,7 @@
                     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                     
-                    $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.'Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -1962,7 +1962,7 @@
                     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                     
-                    $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -2011,7 +2011,7 @@
                     
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     
-                    $this->deamonlog('debug', ';Type; 8102;Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
@@ -2026,7 +2026,7 @@
                     
                     $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
                     
-                    $this->deamonlog('debug', 'Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', $SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);

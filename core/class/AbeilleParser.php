@@ -2346,7 +2346,7 @@
                         break;
 
                     default:
-                        $this->deamonlog('debug',';Type; fct; processAnnonce, Switch default: WARNING should not exist '.$infos['state']);
+                        $this->deamonlog('debug',';Type; fct; processAnnonce, Switch default: WARNING should not exist for ->'.$short.'<- with state ->'.$infos['state'].'<-');
                 }
             }
 

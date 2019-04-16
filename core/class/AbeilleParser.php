@@ -182,15 +182,15 @@
     
     class AbeilleParser extends MosquittoAbeille {
         public $debug = array(
-                              "cli"                     => 1, // commande line mode or jeedom
-                              "AbeilleParserClass"      => 1,  // Mise en place des class
-                              "8000"                    => 1, // Status
+                              "cli"                     => 0, // commande line mode or jeedom
+                              "AbeilleParserClass"      => 0,  // Mise en place des class
+                              "8000"                    => 0, // Status
                               "8009"                    => 0, // Get Network Status
                               "8010"                    => 0,
                               "processAnnonce"          => 0,
-                              "processAnnonceStageChg"  => 1,
+                              "processAnnonceStageChg"  => 0,
                               "cleanUpNE"               => 0,
-                              "Serial"                  => 1, );
+                              "Serial"                  => 0, );
         
         public $parameters_info;
         

@@ -360,7 +360,7 @@
             if ($type == "8102") $param1=$quality;
             
             $fct = "decode".$type;
-            $this->$fct($payload, $ln, $qos, $param1);
+            if ( function_exists ($fct) ) $this->$fct($payload, $ln, $qos, $param1);
             
             return $tab;
         }
@@ -1217,6 +1217,9 @@
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
         
+        function decode8084( $payload, $ln, $qos, $dummy) {
+            // J ai eu un crash car le soft cherchait cette fonction mais elle n'est pas documentée...
+        }
         
         function decode8085( $payload, $ln, $qos, $dummy)
         {

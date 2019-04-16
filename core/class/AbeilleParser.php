@@ -99,25 +99,25 @@
     
     function connect($r, $message)
     {
-        log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
+        log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: AbeilleParser Connexion à Mosquitto avec code ' . $r . ' ' . $message);
         // config::save('state', '1', 'Abeille');
     }
     
     function disconnect($r)
     {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
+        log::add('Abeille', 'debug', 'Mosquitto: AbeilleParser Déconnexion de Mosquitto avec code ' . $r);
         // config::save('state', '0', 'Abeille');
     }
     
     function subscribe()
     {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
+        log::add('Abeille', 'debug', 'Mosquitto: AbeilleParser Subscribe to topics');
     }
     
     function logmq($code, $str)
     {
         // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-        log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
+        log::add('Abeille', 'debug', 'Mosquitto AbeilleParser: Log level: ' . $code . ' Message: ' . $str);
         // }
     }
     

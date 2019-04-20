@@ -13,7 +13,7 @@ Cagnotte au 28/3/2019:
 
 Recettes:
 
-* 544,19€ (568€ moins la com paypal)
+* 567,84€ (593€ moins la com paypal)
 
 Dépense: 
 
@@ -25,7 +25,7 @@ Dépense:
 
 Reste:
 
-* 314,03€
+* 337,68€
 
 Échanges sur la cagnotte: https://github.com/KiwiHC16/Abeille/issues/584
 

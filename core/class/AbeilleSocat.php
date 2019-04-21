@@ -39,20 +39,24 @@
     
     deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
     
-    
-    deamonlog('Info','Creation de la connection wifi.');
-    // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
-    //$cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
-    // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
-    
-    //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
-    $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-    
-    deamonlog('Info','Command: '.$cmd);
-    shell_exec( $cmd );
+    while (1) {
+        
+        deamonlog('Info','Creation de la connection wifi.');
+        // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+        //$cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+        // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
+        
+        //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
+        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+        
+        deamonlog('Info','Command: '.$cmd);
+        shell_exec( $cmd );
+        deamonlog('Info','Arret de Socat on relance dans 1 minute.');
+        sleep(60);
+    }
     
     deamonlog('info','Fin script AbeilleSocat');
     

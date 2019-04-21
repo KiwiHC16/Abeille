@@ -41,14 +41,10 @@ class Tools
                          "ERROR" => 1,
                          "WARNING" => 2,
                          "INFO" => 3,
-                         "DEBUG" => 4,
-                         "none" => 0,
-                         "error" => 1,
-                         "warning" => 2,
-                         "info" => 3,
-                         "debug" => 4,              );
+                         "DEBUG" => 4
+         );
 
-       $upperString = strtoupper($loglevel);
+       $upperString = strtoupper(trim($loglevel));
        if (array_search($upperString,$niveau,false)) {
            return $niveau[$upperString];
             }

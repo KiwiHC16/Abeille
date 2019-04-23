@@ -12,9 +12,9 @@
     "template": "",
     "configuration": {
       "uniqId": "5c07c766251f1",
-      "topic": "additionalCommand",
+      "topic": "setVert",
       "request": "EP=#EP#&color=#slider#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "additionalCommand"
     },
     "display": {
       "forceReturnLineAfter": "1"

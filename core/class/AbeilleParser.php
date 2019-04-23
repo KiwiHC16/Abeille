@@ -369,8 +369,12 @@
             if ($type == "8102") $param1=$quality;
 
             $fct = "decode".$type;
-            // if ( function_exists ($fct) )
-                $this->$fct($payload, $ln, $qos, $param1);
+            // $this->deamonlog('debug','Calling function: '.$fct);
+            if ( method_exists($this, $fct) ) {
+                $this->$fct($payload, $ln, $qos, $param1); }
+            else {
+                $this->deamonlog('debug','Call to a function which doesn t exist: '.$fct);
+            }
 
             return $tab;
         }

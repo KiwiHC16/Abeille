@@ -119,6 +119,35 @@ ou issue dans GitHub
 
 == Changelog
 
+En fait le ChangeLog est dans GitHub alors je perds mon temps. C est ca derniere mise a jour.
+
+Voir directement dans : https://github.com/KiwiHC16/Abeille/commits/master
+
+
+=== 2019-03-20 
+...
+
+=== 2019-03-19
+
+* Motion Hue Outdoor integration
+* Doc Hue Motion
+* Hue Motion Luminosite
+
+=== 2019-03-18
+
+* Plus de doc sur la radio
+* Modification modele sur EP
+
+=== 2019-03-17
+
+* Resolution sur un systeme en espagnole
+
+
+=== 2019-03-16
+
+* start to track APS failures
+* dependancy_info debut des modifications
+
 === 2019-03-15
 
 * Moved all doc to asciidoc format

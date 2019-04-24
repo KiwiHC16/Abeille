@@ -44,6 +44,11 @@ try {
         ajax::success();
     }
     
+    if (init('action') == 'installS0') {
+        abeille::installS0(false);
+        ajax::success();
+    }
+    
     if (init('action') == 'updateFirmwarePiZiGate') {
         abeille::updateFirmwarePiZiGate(false);
         ajax::success();

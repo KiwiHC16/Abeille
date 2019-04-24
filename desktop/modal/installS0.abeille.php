@@ -18,11 +18,11 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 ?>
-<div id='div_installGPIOAbeilleAlert' style="display: none;"></div>
+<div id='div_installS0AbeilleAlert' style="display: none;"></div>
 <a class="btn btn-warning pull-right" data-state="1" id="bt_abeilleLogStopStart"><i class="fa fa-pause"></i> {{Pause}}</a>
 <input class="form-control pull-right" id="in_abeilleLogSearch" style="width : 300px;" placeholder="{{Rechercher}}"/>
 <br/><br/><br/>
-<pre id='pre_abeilleInstallGPIO' style='overflow: auto; height: 90%;with:90%;'>
+<pre id='pre_abeilleInstallS0' style='overflow: auto; height: 90%;with:90%;'>
 Lancement des operations.
 </pre>
 
@@ -31,12 +31,12 @@ Lancement des operations.
         type: 'POST',
         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
         data: {
-            action: 'installGPIO',
+            action: 'installS0',
         },
         dataType: 'json',
         global: false,
         error: function (request, status, error) {
-            handleAjaxError(request, status, error, $('#div_installGPIOAbeilleAlert'));
+            handleAjaxError(request, status, error, $('#div_installS0AbeilleAlert'));
         },
         success: function () {
         }
@@ -44,13 +44,13 @@ Lancement des operations.
 
 function updatelog(){
     jeedom.log.autoupdate({
-                log: 'Abeille_installGPIO',
-                display: $('#pre_abeilleInstallGPIO'),
+                log: 'Abeille_installS0',
+                display: $('#pre_abeilleInstallS0'),
                 search: $('#in_abeilleLogSearch'),
                 control: $('#bt_abeilleLogStopStart'),
             });
 }
 
-setTimeout(updatelog,5000);
+setTimeout(updatelog,2000);
 
 </script>

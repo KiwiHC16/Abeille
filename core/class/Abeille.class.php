@@ -72,6 +72,23 @@
             if ($GLOBALS['debugBEN']) echo "installGPIO end\n";
         }
         
+        public static function installS0($_background = true) {
+            if ($GLOBALS['debugBEN']) echo "installS0 start\n";
+            log::add('Abeille', 'debug', 'Starting installS0');
+            log::remove('Abeille_installS0');
+            log::add('Abeille_installS0', 'info', 'installS0 Start');
+            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/installS0.sh >> ' . log::getPathToLog('Abeille_installS0') . ' 2>&1';
+            if ($_background) {
+                $cmd .= ' &';
+            }
+            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            log::add('Abeille_installS0', 'info', $cmd);
+            shell_exec($cmd);
+            log::add('Abeille_installS0', 'info', 'installS0 End');
+            if ($GLOBALS['debugBEN']) echo "installS0 end\n";
+        }
+        
         public static function updateFirmwarePiZiGate($_background = true) {
             if ($GLOBALS['debugBEN']) echo "updateFirmwarePiZiGate start\n";
             log::add('Abeille', 'debug', 'Starting updateFirmwarePiZiGate');

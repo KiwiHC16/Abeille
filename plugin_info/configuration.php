@@ -212,15 +212,22 @@
 
             <div id="PiZigate">
                 <div>
-                    <p><i>La Pi-ZiGate peut être programmée directement depuis le raspberry alors qu elle est en place sur le slot GPIO. Pour se faire, deux PIN du GPIO doivent être pilotées.</i></p>
-                    <p><i>Il faut pour cela avoir le logiciel Wiring Pi installé (voir bouton ci dessous).</i></p>
+                    <p><i>La PiZiGate est installée sur les pin GPIO du raspberry pi. Sur un RPI2, par defaut le port /dev/ttyAMA0 est disponible et utilisable. Sur un RPI3, il faut activer le port serie /dev/ttyS0.</i></p>
+                    <p><i>Il faut aussi avoir le logiciel Wiring Pi installé pour faire un reset de la PiZIGate ou la programmer.</i></p>
                     <p><i>Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.</i></p>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate en pilotant les PIN specifiques de la PiZiGate.">{{Installation de Wiring Pi}}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Installation de WiringPI qui permet de controller les GPIO du RPI.">{{Installation de Wiring Pi}}</label>
                     <div class="col-lg-5">
                         <a class="btn btn-warning" id="bt_installGPIO"><i class="fa fa-refresh"></i> {{Installer}}</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Configuration du RPI pour avoir acces au port serie ttyS0 (Reboot a faire apres execution).">{{Activation ttyS0}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_installS0"><i class="fa fa-refresh"></i> {{Activer}}</a>
                     </div>
                 </div>
 
@@ -408,6 +415,15 @@ $('#bt_installGPIO').on('click',function(){
                                            }
                                            });
                            })
+
+$('#bt_installS0').on('click',function(){
+                        bootbox.confirm('{{Vous êtes sur le point d activer le port serie pour le RPI3. Cela va modifier le mode par defaut avec la console sur ce port. <br> Voulez vous continuer ?}}', function (result) {
+                                        if (result) {
+                                        $('#md_modal2').dialog({title: "{{Activation ttyS0}}"});
+                                        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installS0.abeille').dialog('open');
+                                        }
+                                        });
+                        })
 
 $('#bt_updateFrimware').on('click',function(){
                               bootbox.confirm('{{Vous êtes sur le point de programmer la zigate.<br> Voulez vous continuer ?}}', function (result) {

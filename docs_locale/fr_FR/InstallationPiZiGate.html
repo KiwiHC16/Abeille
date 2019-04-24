@@ -786,12 +786,18 @@ asciidoc.install(4);
 <div class="sectionbody">
 <div class="paragraph"><p>L&#8217;installation de la PiZiGate demande des actions un peu spécifiques.</p></div>
 <div class="sect2">
-<h3 id="_port_serie">2.1. Port Serie</h3>
-<div class="paragraph"><p>Premièrement il faut rendre disponible le port série du RPI, suivre les instructions suivantes (Pas encore dans Abeille): <a href="https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/">https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/</a></p></div>
+<h3 id="_gpio">2.1. GPIO</h3>
+<div class="paragraph"><p>Il faut installé le software qui va piloter les GPIO. Pour se faire vous avez le bouton: "Installation de Wiring Pi".
+Cela va permettre plusieruss choses. Reset par le HW de la PiZiGate, programmation de la PiZiGate directement sur le RPI (ssans PC externe et autre).</p></div>
 </div>
 <div class="sect2">
-<h3 id="_gpio">2.2. GPIO</h3>
-<div class="paragraph"><p>Ensuite il faut installé le software qui va piloter les GPIO. Pour se faire vous avez le bouton: "Installation de Wiring Pi"</p></div>
+<h3 id="_port_serie">2.2. Port Serie</h3>
+<div class="paragraph"><p>Premièrement il faut rendre disponible le port série du RPI, si vous souhaitez le faire manuellement suivre les instructions suivantes : <a href="https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/">https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/</a>
+Sinon Abeille inclus des scripts pour le faire.
+Il y a des differences entre les version de RPI sur le hardware qui controle les ports série.
+Pour le RPI2, le port est /dev/ttyAMA0 qui doit être dispo sans action particulière.
+Pour le RPI3, le port est /dev/ttyS0 qui n&#8217;est pas dispo par defaut. D&#8217;ou la necessité de l&#8217;activer (le rendre dispo pour la PiZiGate).</p></div>
+<div class="paragraph"><p>Ces actions demande un reboot du RPI.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_lancement">2.3. Lancement</h3>
@@ -799,12 +805,24 @@ asciidoc.install(4);
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_programmer">3. Programmer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Il est possible de programmer la PiZiGate avec le dernier firmware directement depuis Jeedom sans toucher à la PiZiGate. Pour ce faire utiliser le bouton: Programmer.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reset">4. Reset</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Il est possible de faire un reset "forcé" depuis Jeedom de la ZiGate si celle ci ne repond plus aux commandes avec le bouton "Reset" (on peut aussi demander un reset avec le commandes: bouton reset sur l équipement ruche).</p></div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-04-01 14:57:57 CEST
+ 2019-04-24 17:24:38 CEST
 </div>
 </div>
 </body>

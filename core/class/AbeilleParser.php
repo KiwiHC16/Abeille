@@ -103,11 +103,11 @@
         log::add('Abeille', 'debug', 'AbeilleParser - Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
         // config::save('state', '0', 'Abeille');
     }
-    
+
     function  disconnect() {
-        
+
     }
-    
+
     function subscribe()
     {
         log::add('Abeille', 'debug', 'AbeilleParser -  Mosquitto: Subscribe to topics');
@@ -192,6 +192,86 @@
                               "cleanUpNE"               => 0,
                               "Serial"                  => 1, );
 
+        // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
+        // Data Type -> Description, # octets
+        public $dataType = array(
+                                 '00' => array( 'Null', 0 ),
+                                 // 01-07: reserved
+                                 '08' => array( 'General Data', 1),
+                                 '09' => array( 'General Data', 2),
+                                 '0a' => array( 'General Data', 3),
+                                 '0b' => array( 'General Data', 4),
+                                 '0c' => array( 'General Data', 5),
+                                 '0d' => array( 'General Data', 6),
+                                 '0e' => array( 'General Data', 7),
+                                 '0f' => array( 'General Data', 8),
+
+                                 '10' => array( 'Logical', 1 ),
+                                 // 0x11-0x17 Reserved
+                                 '18' => array( 'Bitmap', 1 ),
+                                 '19' => array( 'Bitmap', 2 ),
+                                 '1a' => array( 'Bitmap', 3 ),
+                                 '1b' => array( 'Bitmap', 4 ),
+                                 '1c' => array( 'Bitmap', 5 ),
+                                 '1d' => array( 'Bitmap', 6 ),
+                                 '1e' => array( 'Bitmap', 7 ),
+                                 '1f' => array( 'Bitmap', 8 ),
+
+                                 '20' => array( 'Unsigned integer', 1 ),
+                                 '21' => array( 'Unsigned integer', 2 ),
+                                 '22' => array( 'Unsigned integer', 3 ),
+                                 '23' => array( 'Unsigned integer', 4 ),
+                                 '24' => array( 'Unsigned integer', 5 ),
+                                 '25' => array( 'Unsigned integer', 6 ),
+                                 '26' => array( 'Unsigned integer', 7 ),
+                                 '27' => array( 'Unsigned integer', 8 ),
+
+                                 '28' => array( 'Signed integer', 1 ),
+                                 '29' => array( 'Signed integer', 2 ),
+                                 '2a' => array( 'Signed integer', 3 ),
+                                 '2b' => array( 'Signed integer', 4 ),
+                                 '2c' => array( 'Signed integer', 5 ),
+                                 '2d' => array( 'Signed integer', 6 ),
+                                 '2e' => array( 'Signed integer', 7 ),
+                                 '2f' => array( 'Signed integer', 8 ),
+
+                                 '30' => array( 'Enumeration', 1 ),
+                                 '31' => array( 'Enumeration', 2 ),
+                                 // 0x32-0x37 Reserved
+
+                                 '38' => array( 'SemiPrecision',   2 ),
+                                 '39' => array( 'SinglePrecision', 4 ),
+                                 '3a' => array( 'DoublePrecision', 8 ),
+                                 // 0x3b-0x3f
+                                 // 0x40 Reserved
+                                 '41' => array( 'String - Octet string',             'Defined in first octet' ),
+                                 '42' => array( 'String - Charactere string',        'Defined in first octet' ),
+                                 '43' => array( 'String - Long octet string',        'Defined in first two octets' ),
+                                 '44' => array( 'String - Long charactere string',   'Defined in first two octets' ),
+                                 // 0x45-0x47 Reserved
+                                 '48' => array( 'Ordered sequence - Array',          '2+sum of lengths of contents' ),
+                                 // 0x49-0x4b Reserved
+                                 '4c' => array( 'Ordered sequence - Structure',      '2+sum of lengths of contents' ),
+                                 // 0x4d-0x4f Reserved
+                                 '50' => array( 'Collection - Set',      'Sum of lengths of contents' ),
+                                 '51' => array( 'Collection - Bag',      'Sum of lengths of contents' ),
+                                 //0x52-0x57 Reserved
+                                 // 0x58-0xdf Reserved
+                                 'e0' => array( 'Time - Time of day', 4 ),
+                                 'e1' => array( 'Time - Date', 4 ),
+                                 'e2' => array( 'Time - UTCTime', 4 ),
+                                 // 0xe3 - 0xe7 Reserved
+                                 'e8' => array( 'Identifier - Cluster ID', 2 ),
+                                 'e8' => array( 'Identifier - Attribute ID', 2 ),
+                                 'e8' => array( 'Identifier - BACnet OID', 4 ),
+                                 // 0xeb-0xef Reserved
+                                 'f0' => array( 'Miscellaneous - IEEE address', 8 ),
+                                 'f1' => array( 'Miscellaneous - 128 bit security key', 16 ),
+                                 // 0xF2-0xFe Reserved
+                                 'ff' => array( 'Unknown', 0 ),
+
+        );
+
         public $parameters_info;
 
         function __construct($client_id) {
@@ -272,6 +352,64 @@
 
         function displayClusterId($cluster) {
             return 'Cluster ID: '.$cluster.'-'.$GLOBALS['clusterTab']["0x".$cluster] ;
+        }
+
+        function Logical( $value ) {
+          return hexdec( $value );
+        }
+
+        function SinglePrecision( $value ) {
+          return unpack('f', pack('H*', $value ))[1];
+        }
+
+        function getFF01IdName($id) {
+          $IdName = array(
+            '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
+            '03' => "tbd1",
+            '05' => "tbd2",
+            '07' => "tbd3",
+            '08' => "tbd4",
+            '09' => "tbd5",
+            '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2)
+            '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
+            '66' => "Pression",          // Based on Temperature Capteur V2
+            '6e' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
+            '6f' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
+            '94' => "tbd6",
+            '95' => "Consommation",     // Based on Prise Xiaomi
+            '96' => "tbd8",
+            '97' => "tbdç",
+            '98' => "Puissance",        // Based on Aqara Double Relay
+            '9b' => "tbd11",
+          );
+
+          return $IdName[$id];
+
+        }
+
+        function decodeFF01( $data ) {
+          $continue = 1;
+          $fields = array();
+          if ( strlen( $data ) < 2 ) return $fields;
+          while ($continue) {
+            $id = $data[0].$data[1];
+            $type = $data[2].$data[3];
+            $len = $this->dataType[$type][1]*2;
+            $value = substr($data, 4, $len );
+            $fct = $this->dataType[$type][0];
+            if ( method_exists($this, $fct) ) { $valueConverted = $this->$fct($value); } else { $valueConverted = ""; }
+
+            $fields[$this->getFF01IdName( $id )] = array(
+              'id' => $id,
+              'type' => $type,
+              'converter' => $this->dataType[$type][0],
+              'value' => $value,
+              'valueConverted' => $valueConverted,
+            );
+            $data = substr( $data, 4+$len );
+            if ( strlen($data)<2 ) $continue = 0;
+          }
+          return $fields;
         }
 
         function displayStatus($status) {
@@ -1110,7 +1248,7 @@
             // CmdAbeille/Ruche/getName address=bbf5&destinationEndPoint=0B
             if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
                 $this->deamonlog('debug', ';Type; 804E; (Management LQI response)($mqtt->decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
-                
+
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01", $this->parameters_info['AbeilleQos']);
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03", $this->parameters_info['AbeilleQos']);
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B", $this->parameters_info['AbeilleQos']);
@@ -1736,9 +1874,25 @@
             }
 
             if ($dataType == "39") {
-                if ( ($ClusterId=="000C") && ($AttributId="0055") && ($EPoint=="02") ) {
-                    // Remontée puissance (instantannée) de la prise xiaomi.
-                    // On va envoyer ca sur la meme variable que le champ $this->decode ff01
+
+                if ( ($ClusterId=="000C") && ($AttributId="0055")  ) {
+                    if ($EPoint=="01") {
+                        // Remontée puissance (instantannée) relay double switch 1
+                        // On va envoyer ca sur la meme variable que le champ ff01
+                        $hexNumber = substr($payload, 24, 8);
+                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                        $bin = pack('H*', $hexNumberOrder );
+                        $data = unpack("f", $bin )[1];
+
+                        $puissanceValue = $data;
+                        // $this->mqqtPublish( $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+
+                        // Relay Double
+                        $this->mqqtPublish( $SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
+                    }
+                    if ($EPoint=="02") {
+                    // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
+                    // On va envoyer ca sur la meme variable que le champ ff01
                     $hexNumber = substr($payload, 24, 8);
                     $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
                     $bin = pack('H*', $hexNumberOrder );
@@ -1747,6 +1901,9 @@
                     $puissanceValue = $data;
                     $this->mqqtPublish( $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
 
+                    // Relay Double
+                    $this->mqqtPublish( $SrcAddr, '000C',     '02-0055',    $puissanceValue,    $qos);
+                    }
                 } else {
                     // Example Cube Xiaomi
                     // Sniffer dit Single Precision Floating Point
@@ -1959,14 +2116,14 @@
 
                 // Xiaomi Vibration
                 elseif (($AttributId == 'ff01') && ($AttributSize == "002e")) {
-                    $this->deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Vibration)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Vibration)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
-                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', ';Type; 8102; '.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -1975,13 +2132,7 @@
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                     $this->mqqtPublish( $SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
 
-                    // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
-
                 }
-
 
                 // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
                 elseif (($AttributId == "ff01") && (($AttributSize == "0031") || ($AttributSize == "002b") )) {
@@ -2006,6 +2157,17 @@
                     $this->deamonlog('debug', $logMessage);
                 }
 
+                // Xiaomi Double Relay (Kiwi:  )
+                elseif ( ($AttributId == "ff01") && ($AttributSize == "0044") ) {
+                    $FF01 = $this->decodeFF01(substr($payload, 24));
+
+                    $this->mqqtPublish( $SrcAddr, '0006',  '01-0000',       $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish( $SrcAddr, '0006',  '02-0000',       $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish( $SrcAddr, '000C',  '01-0055',       $FF01["Puissance"]["valueConverted"],         $qos);
+                    $this->mqqtPublish( $SrcAddr, 'tbd',   '--conso--',     $FF01["Consommation"]["valueConverted"],      $qos);
+
+                    $this->deamonlog('debug', ";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Relay Double):".json_encode($FF01));
+                }
 
                 // Xiaomi Capteur Presence
                 // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
@@ -2381,8 +2543,6 @@
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
 
 
-
-
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
@@ -2431,5 +2591,4 @@
     }
 
     $AbeilleParser->deamonlog('info', 'Fin du script');
-
     ?>

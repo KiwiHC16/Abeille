@@ -1,0 +1,21 @@
+{
+  "000C-02-0055": {
+    "isVisible": 0,
+    "Type": "info",
+    "invertBinary": "0",
+    "isHistorized": "1",
+    "name": "Puissance Inst 2",
+    "unite": "W",
+    "order": 20,
+    "subType": "numeric",
+    "generic_type": "POWER",
+    "template": "badge",
+    "configuration": {
+      "uniqId": "5c07jfc76shgy566sd249c9",
+      "historizeRound": "0",
+      "maxValue": "2500",
+      "minValue": "0",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

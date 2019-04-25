@@ -193,6 +193,7 @@
 
 
                 <div class="form-group">
+                    <p><i>Vous pouvez recupérer les derniers modeles a l aide de ces boutons. Mais surtout faire des backup de votre systeme avant. En effet le code qui tourne sur votre machine peut ne pas etre compatibles avec ces modeles. Ces boutons ne sont pas pour les utilisateurs classiques mais pour le dev et les utilisateurs très impatient qui savent ce qu ils font.</i></p>
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de recuperer les derniers modeles des objets.">{{Options avancées}}</label>
                     <div class="col-lg-5">
                         <a class="btn btn-warning" id="bt_syncconfigAbeille"><i class="fa fa-refresh"></i> {{Mise a jour des modèles}}</a>

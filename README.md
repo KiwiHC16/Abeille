@@ -21,7 +21,7 @@ Dépense:
 * Capteur Motion Hue Outdoor - 49,99€ - Dans la version master
 * Une prise et un micro module Legrand - 82,90€ - Livré.
 * Ampoule Aqara Xiaomi / Prise en encastrée Aqara - 39,17€  - Livraison en cours
-* Double relai Aqara Mural - 18,06€ - Livraison en cours
+* Double relai Aqara Mural - 18,06€ - Dans le master du 25 avril 2019
 
 Reste:
 

@@ -11,7 +11,7 @@
     "configuration": {
 	"uniqId": "5c07c76623c26",
       "topic": "ReadAttributeRequest",
-      "request": "clusterId=0300&attributeId=0004",
+      "request": "clusterId=0300&attributeId=0004&EP=#EP#",
       "visibilityCategory": "additionalCommand"
     },
     "display": {

@@ -2775,6 +2775,9 @@ class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         $fields = preg_split("/[=&]+/", $msg);
         if (count($fields) > 1) {
           $parameters = proper_parse_str( $msg );
+          if (strlen($parameters['color']) == 7) {
+            $parameters['color'] = substr($parameters['color'], 1);
+          }
         }
 
         // Si message vient de Abeille alors le parametre est: RRVVBB

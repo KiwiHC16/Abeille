@@ -9,7 +9,7 @@ Version master en développement permanent.
 Le budget depuis le début est assez conséquent, surtout quand j'investis dans des équipements que je n'utiliserai pas moi même, alors j'ouvre une cagnotte pour financer l'achat d'équipements pour faciliter l'intégration dans Abeille. L'idée est d'avoir au moins un exemplaire de ce que les utilisateur d'Abeille utilisent.
 Je n'ai aucune idée de votre participation à cette cagnotte mais comme tout est open source depuis le début, la cagnotte sera aussi complètement transparente.
 
-Cagnotte au 28/3/2019: 
+Cagnotte au 25 avril 2019: 
 
 Recettes:
 

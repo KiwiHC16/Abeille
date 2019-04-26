@@ -933,7 +933,7 @@
             // <Sequence number: uint8_t>
             // <status: uint8_t>
 
-            $this->deamonlog('debug',';type; 8030; (Bind response)($mqtt->decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
+            $this->deamonlog('debug',';type; 8030; (Bind response)(decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
                              . '; SQN: 0x'.substr($payload, 0, 2)
                              . '; Status: 0x'.substr($payload, 2, 2)  );
 
@@ -974,7 +974,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug',';type; 8040; (IEEE Address response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug',';type; 8040; (IEEE Address response)(decoded but Not Processed)'
                              . '; SQN : '                                    .substr($payload, 0, 2)
                              . '; Status : '                                 .substr($payload, 2, 2)
                              . '; IEEE address : '                           .substr($payload, 4,16)
@@ -1004,7 +1004,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug',';type; 8041; (IEEE Address response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug',';type; 8041; (IEEE Address response)(decoded but Not Processed)'
                              . '; SQN : '                                    .substr($payload, 0, 2)
                              . '; Status : '                                 .substr($payload, 2, 2)
                              . '; IEEE address : '                           .substr($payload, 4,16)
@@ -1204,7 +1204,7 @@
 
             // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
 
-            $this->deamonlog('debug', ';Type; 804E; (Management LQI response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug', ';Type; 804E; (Management LQI response)(decoded but Not Processed)'
                              . '; SQN: '                          .substr($payload, 0, 2)
                              . '; status: '                       .substr($payload, 2, 2)
                              . '; Neighbour Table Entries: '      .substr($payload, 4, 2)
@@ -1247,7 +1247,7 @@
             // Ca ne va marcher que pour les équipements en eveil.
             // CmdAbeille/Ruche/getName address=bbf5&destinationEndPoint=0B
             if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
-                $this->deamonlog('debug', ';Type; 804E; (Management LQI response)($mqtt->decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
+                $this->deamonlog('debug', ';Type; 804E; (Management LQI response)(decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
 
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01", $this->parameters_info['AbeilleQos']);
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03", $this->parameters_info['AbeilleQos']);
@@ -1270,7 +1270,7 @@
             // <Group id :        uint16_t> (added only from 3.0f version)
             // <Src Addr:         uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', 'Type; 8060; (Add a group response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug', 'Type; 8060; (Add a group response)(decoded but Not Processed)'
                              . '; SQN: '           .substr($payload, 0, 2)
                              . '; endPoint: '      .substr($payload, 2, 2)
                              . '; clusterId: '     .substr($payload, 4, 4)
@@ -1339,7 +1339,7 @@
             // <Group id: uint16_t>         -> 4
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', 'Type; 8063; (Remove a group response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug', 'Type; 8063; (Remove a group response)(decoded but Not Processed)'
                              . '; SQN: '          .substr($payload, 0, 2)
                              . '; endPoint: '     .substr($payload, 2, 2)
                              . '; clusterId: '    .substr($payload, 4, 4)
@@ -1386,7 +1386,7 @@
 
             // 2: 'click', 1: 'hold', 3: 'release'
 
-            $this->deamonlog('debug', ';Type; 8085; (Remote button pressed (ClickHoldRelease) a group response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug', ';Type; 8085; (Remote button pressed (ClickHoldRelease) a group response)(decoded but Not Processed)'
                              . '; SQN: '           .substr($payload, 0, 2)
                              . '; endPoint: '      .substr($payload, 2, 2)
                              . '; clusterId: '     .substr($payload, 4, 4)
@@ -1413,7 +1413,7 @@
             // <source addr: uint16_t>      -> 4
             // <cmd: uint8>                 -> 2
 
-            $this->deamonlog('debug', ';Type; 8095; (Remote button pressed (ONOFF_UPDATE) a group response)($mqtt->decoded but Not Processed)'
+            $this->deamonlog('debug', ';Type; 8095; (Remote button pressed (ONOFF_UPDATE) a group response)(decoded but Not Processed)'
                              . '; SQN: '          .substr($payload, 0, 2)
                              . '; endPoint: '     .substr($payload, 2, 2)
                              . '; clusterId: '    .substr($payload, 4, 4)
@@ -1453,7 +1453,7 @@
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
 
-            $this->deamonlog('debug', ';Type; 80A0 (Scene View)($mqtt->decoded but not Processed)'
+            $this->deamonlog('debug', ';Type; 80A0 (Scene View)(decoded but not Processed)'
                              . '; SQN: '                           .substr($payload, 0, 2)
                              . '; endPoint: '                      .substr($payload, 2, 2)
                              . '; clusterId: '                     .substr($payload, 4, 4)
@@ -1494,7 +1494,7 @@
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
 
-            $this->deamonlog('debug', ';Type: 80A3; (Remove All Scene)($mqtt->decoded but not Processed)'
+            $this->deamonlog('debug', ';Type: 80A3; (Remove All Scene)(decoded but not Processed)'
                              . '; SQN: '          .substr($payload, 0, 2)
                              . '; endPoint: '     .substr($payload, 2, 2)
                              . '; clusterId: '    .substr($payload, 4, 4)
@@ -1516,7 +1516,7 @@
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
 
-            $this->deamonlog('debug', ';Type; 80A3; (Store Scene Response)($mqtt->decoded but not Processed)'
+            $this->deamonlog('debug', ';Type; 80A3; (Store Scene Response)(decoded but not Processed)'
                              . '; SQN: '          .substr($payload, 0, 2)
                              . '; endPoint: '     .substr($payload, 2, 2)
                              . '; clusterId: '    .substr($payload, 4, 4)
@@ -2263,7 +2263,7 @@
             // <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
 
-            $this->deamonlog('debug', ';type; 8120; (Configure Reporting response)($mqtt->decoded but not Processed)'
+            $this->deamonlog('debug', ';type; 8120; (Configure Reporting response)(decoded but not Processed)'
                              . '; SQN: '              .substr($payload, 0, 2)
                              . '; Source address: '   .substr($payload, 2, 4)
                              . '; EndPoint: '         .substr($payload, 6, 2)
@@ -2326,22 +2326,103 @@
 
         function decode8701( $payload, $ln, $qos, $dummy)
         {
-            $this->deamonlog('debug', ';type; 8701; (Route Discovery Confirm)($mqtt->decoded but Not Processed)'
-                             . '; Status : '.substr($payload, 0, 2)
-                             . '; Nwk Status : '.substr($payload, 2, 2)  );
+            // NWK Code Table Chap 10.2.3 from JN-UG-3113
+            // D apres https://github.com/fairecasoimeme/ZiGate/issues/92 il est fort possible que les deux status soient inversés
+            
+            $macCode = array(
+                          "00" => array( "MAC_ENUM_SUCCESS", "Success", ),
+                          "e0" => array( "MAC_ENUM_BEACON_LOSS", "Beacon loss after synchronisation request", ),
+                          "e1" => array( "MAC_ENUM_CHANNEL_ACCESS_FAILURE", "CSMA/CA channel access failure", ),
+                          "e2" => array( "MAC_ENUM_DENIED", "GTS request denied", ),
+                          "e3" => array( "MAC_ENUM_DISABLE_TRX_FAILURE", "Could not disable transmit or receive", ),
+                          "e4" => array( "MAC_ENUM_FAILED_SECURITY_CHECK", "Incoming frame failed security check", ),
+                          "e5" => array( "MAC_ENUM_FRAME_TOO_LONG", "Frame too long, after security processing, to be sent", ),
+                          "e6" => array( "MAC_ENUM_INVALID_GTS", "GTS transmission failed", ),
+                          "e7" => array( "MAC_ENUM_INVALID_HANDLE", "Purge request failed to find entry in queue", ),
+                          "e8" => array( "MAC_ENUM_INVALID_PARAMETER", "Out-of-range parameter in function", ),
+                          "e9" => array( "MAC_ENUM_NO_ACK", "No acknowledgement received when expected", ),
+                          "ea" => array( "MAC_ENUM_NO_BEACON", "Scan failed to find any beacons", ),
+                          "eb" => array( "MAC_ENUM_NO_DATA", "No response data after a data request", ),
+                          "ec" => array( "MAC_ENUM_NO_SHORT_ADDRESS", "No allocated network (short) address for operation", ),
+                          "ed" => array( "MAC_ENUM_OUT_OF_CAP", "Receiver-enable request could not be executed, as CAP finished", ),
+                          "ee" => array( "MAC_ENUM_PAN_ID_CONFLICT", "PAN ID conflict has been detected", ),
+                          "ef" => array( "MAC_ENUM_REALIGNMENT", "Co-ordinator realignment has been received", ),
+                          "f0" => array( "MAC_ENUM_TRANSACTION_EXPIRED", "Pending transaction has expired and data discarded", ),
+                          "f1" => array( "MAC_ENUM_TRANSACTION_OVERFLOW", "No capacity to store transaction", ),
+                          "f2" => array( "MAC_ENUM_TX_ACTIVE", "Receiver-enable request could not be executed, as in transmit state", ),
+                          "f3" => array( "MAC_ENUM_UNAVAILABLE_KEY", "Appropriate key is not available in ACL", ),
+                          "f4" => array( "MAC_ENUM_UNSUPPORTED_ATTRIBUTE", "PIB Set/Get on unsupported attribute", ),
+            );
+            
+            $nwkCode = array (
+            "00" => array( "ZPS_NWK_ENUM_SUCCESS", "Success", ),
+            "c1" => array( "ZPS_NWK_ENUM_INVALID_PARAMETER", "An invalid or out-of-range parameter has been passed", ),
+            "c2" => array( "ZPS_NWK_ENUM_INVALID_REQUEST", "Request cannot be processed", ),
+            "c3" => array( "ZPS_NWK_ENUM_NOT_PERMITTED", "NLME-JOIN.request not permitted", ),
+            "c4" => array( "ZPS_NWK_ENUM_STARTUP_FAILURE", "NLME-NETWORK-FORMATION.request failed", ),
+            "c5" => array( "ZPS_NWK_ENUM_ALREADY_PRESENT", "NLME-DIRECT-JOIN.request failure - device already present", ),
+            "c6" => array( "ZPS_NWK_ENUM_SYNC_FAILURE", "NLME-SYNC.request has failed", ),
+            "c7" => array( "ZPS_NWK_ENUM_NEIGHBOR_TABLE_FULL", "NLME-DIRECT-JOIN.request failure - no space in Router table", ),
+            "c8" => array( "ZPS_NWK_ENUM_UNKNOWN_DEVICE", "NLME-LEAVE.request failure - device not in Neighbour table", ),
+            "c9" => array( "ZPS_NWK_ENUM_UNSUPPORTED_ATTRIBUTE", "NLME-GET/SET.request unknown attribute identifier", ),
+            "ca" => array( "ZPS_NWK_ENUM_NO_NETWORKS", "NLME-JOIN.request detected no networks", ),
+            "cb" => array( "ZPS_NWK_ENUM_RESERVED_1", "Reserved", ),
+            "cc" => array( "ZPS_NWK_ENUM_MAX_FRM_CTR", "Security processing has failed on outgoing frame due to maximum frame counter", ),
+            "cd" => array( "ZPS_NWK_ENUM_NO_KEY", "Security processing has failed on outgoing frame due to no key", ),
+            "ce" => array( "ZPS_NWK_ENUM_BAD_CCM_OUTPUT", "Security processing has failed on outgoing frame due CCM", ),
+            "cf" => array( "ZPS_NWK_ENUM_NO_ROUTING_CAPACITY", "Attempt at route discovery has failed due to lack of table space", ),
+            "d0" => array( "ZPS_NWK_ENUM_ROUTE_DISCOVERY_FAILED", "Attempt at route discovery has failed due to any reason except lack of table space (KiwiHC16: exemple no body response to a route request to a specific short address = no route known to this address, NE removed ? NE out of cobverage ?)", ),
+            "d1" => array( "ZPS_NWK_ENUM_ROUTE_ERROR", "NLDE-DATA.request has failed due to routing failure on sending device", ),
+            "d2" => array( "ZPS_NWK_ENUM_BT_TABLE_FULL", "Broadcast or broadcast-mode multicast has failed as there is no room in BTT", ),
+            "d3" => array( "ZPS_NWK_ENUM_FRAME_NOT_BUFFERED", "Unicast  mode  multi-cast  frame  was  discarded pending route discovery", ),
+                              );
+            
+            // $status = substr($payload, 0, 2);
+            // $nwkStatus = substr($payload, 2, 2);
+            // D apres https://github.com/fairecasoimeme/ZiGate/issues/92 il est fort possible que les deux status soient inversés
+            $nwkStatus = substr($payload, 0, 2);
+            $status = substr($payload, 2, 2);
+            
+            
+            $this->deamonlog('debug', ';type; 8701; (Route Discovery Confirm)(decoded but Not Processed)'
+                             . '; MAC Status: '.$status.' ('.$macCode[$status][0].'->'.$macCode[$status][1].')'
+                             . '; Nwk Status: '.$nwkStatus.' ('.$nwkCode[$nwkStatus][0].'->'.$nwkCode[$nwkStatus][1].')'  );
         }
 
         function decode8702( $payload, $ln, $qos, $dummy)
         {
+            // APS Code Table Chap 10.2.2 from JN-UG-3113
+            $apsCode = array(
+            "a0" => array( "ZPS_APL_APS_E_ASDU_TOO_LONG", "A transmit request failed since the ASDU is too large and fragmentation is not supported.", ),
+            "a1" => array( "ZPS_APL_APS_E_DEFRAG_DEFERRED", "A received fragmented frame could not be defragmented at the current time.", ),
+            "a2" => array( "ZPS_APL_APS_E_DEFRAG_UNSUPPORTED", "A received fragmented frame could not be defragmented since the device does not support fragmentation.", ),
+            "a3" => array( "ZPS_APL_APS_E_ILLEGAL_REQUEST", "A parameter value was out of range.", ),
+            "a4" => array( "ZPS_APL_APS_E_INVALID_BINDING", "An APSME-UNBIND.request failed due to the requested binding link not existing in the binding table.", ),
+            "a5" => array( "ZPS_APL_APS_E_INVALID_GROUP", "An APSME-REMOVE-GROUP.request has been issued with a group identifier that does not appear in the group table.", ),
+            "a6" => array( "ZPS_APL_APS_E_INVALID_PARAMETER", "A parameter value was invalid or out of range.", ),
+            "a7" => array( "ZPS_APL_APS_E_NO_ACK", "An APSDE-DATA.request requesting acknowledged transmission failed due to no acknowledgement being received.", ),
+            "a8" => array( "ZPS_APL_APS_E_NO_BOUND_DEVICE", "An APSDE-DATA.request with a destination addressing mode set to 0x00 failed due to there being no devices bound to this device.", ),
+            "a9" => array( "ZPS_APL_APS_E_NO_SHORT_ADDRESS", "An APSDE-DATA.request with a destination addressing mode set to 0x03 failed due to no corresponding short address found in the address map table.", ),
+            "aa" => array( "ZPS_APL_APS_E_NOT_SUPPORTED", "An APSDE-DATA.request with a destination addressing mode set to 0x00 failed due to a binding table not being supported on the device.", ),
+            "ab" => array( "ZPS_APL_APS_E_SECURED_LINK_KEY", "An ASDU was received that was secured using a link key.", ),
+            "ac" => array( "ZPS_APL_APS_E_SECURED_NWK_KEY", "An ASDU was received that was secured using a network key.", ),
+            "ad" => array( "ZPS_APL_APS_E_SECURITY_FAIL", "An APSDE-DATA.request requesting security has resulted in an error during the corresponding security processing.", ),
+            "ae" => array( "ZPS_APL_APS_E_TABLE_FULL", "An APSME-BIND.request or APSME.ADDGROUP.request issued when the binding or group tables, respectively, were full.", ),
+            "af" => array( "ZPS_APL_APS_E_UNSECURED", "An ASDU was received without any security.", ),
+            "b0" => array( "ZPS_APL_APS_E_UNSUPPORTED_ATTRIBUTE ", " An APSME-GET.request or APSMESET. request has been issued with an unknown attribute identifier.", ),
+                             );
+
+            $status = substr($payload, 0, 2);
+            
             $this->deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
-                             . '; Status : '.substr($payload, 0, 2)
+                             . '; Status : '.$status.' ('.$apsCode[$status][1].'->'.$apsCode[$status][2].')'
                              . '; Source Endpoint : '.substr($payload, 2, 2)
                              . '; Destination Endpoint : '.substr($payload, 4, 2)
                              . '; Destination Mode : '.substr($payload, 6, 2)
                              . '; Destination Address : '.substr($payload, 8, 4)
                              . '; SQN: : '.substr($payload, 12, 2)   );
 
-            // type; 8702; (APS Data Confirm Fail)($mqtt->decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
+            // type; 8702; (APS Data Confirm Fail)(decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
             $SrcAddr    = "Ruche";

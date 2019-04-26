@@ -2392,6 +2392,8 @@
         function decode8702( $payload, $ln, $qos, $dummy)
         {
             // APS Code Table Chap 10.2.2 from JN-UG-3113
+            // Cette table ne semble pas etre la bonne car je recois un d4 comme status
+            // AbeilleParser 2019-04-26 11:58:06[debug];type; 8702; (APS Data Confirm Fail); Status : d4 (->); Source Endpoint : 01; Destination Endpoint : 0B; Destination Mode : 02; Destination Address : bbf5; SQN: : 00
             $apsCode = array(
             "a0" => array( "ZPS_APL_APS_E_ASDU_TOO_LONG", "A transmit request failed since the ASDU is too large and fragmentation is not supported.", ),
             "a1" => array( "ZPS_APL_APS_E_DEFRAG_DEFERRED", "A received fragmented frame could not be defragmented at the current time.", ),

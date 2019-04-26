@@ -424,4 +424,29 @@ $Abeilles = array(
 ----
 
 
+== Routage
+
+Le ZigBee est un réseau Mesh qui permet de "router" les messages d'équipements en équipements pour rejoindre leur destination.
+
+L'organisation du routage suit des règles définies dans la norme ZigBee. Chaque équipement contient dans la stack ZigBee les taches relatives au routage. Tout est automatique et rien n'est accéssible à l'utilisateur final. Une liaison radio en milieu ouvert va faire disons 20m maximum. Et sauf erreur un message est capable d'être routé 30 fois (il faudrait vérifier cette valeur). Ca permet de faire un réseau de 600m de rayon autour du coordinateur.
+
+Sauf que...
+
+Je me suis retrouvé avec des prises outdoor Osram qui refusaient de fonctionner correctement. Apres investigation il s'avere que le routage entre equipement de marque différentes ne se passe pas forcement tres bien. Voici un recap des sceanrii testés et les résultats:
+
+ZiGate - Ampoule Ikea  - Ampoule Ikea: Ok
+ZiGate - Ampoule Ikea - Prise Osram: NOK
+ZiGate - Prise Xiaomi - Ampoule Ikea: Ok
+ZiGate - Prise Xiaomi - Prise Osram: NOK
+ZiGate - Prise Osram - Ampoule Ikea: Ok
+ZiGate - Prise Osram - Prise Osram: Ok
+ZiGate - Module GledOpto Ruban - Ampoule Ikea: Ok
+ZiGate - Module GledOpto Ruban - Prise Osram: NOK
+ZiGate - Ampoule Osram Couleur - Ampoule Ikea: Ok
+ZiGate - Ampoule Osram Couleur - Prise Osram: Ok
+
+Alors pour monter le mesh il faut vérifier que les équipements sont compatibles même si en théorie les routeurs routent, en pratique...
+
+
+
 Enjoy

@@ -1943,6 +1943,26 @@ Le deuxieme graphe est le LQI en fonction de la distance à vol d&#8217;oiseau.<
 'T3'       =&gt; array('position' =&gt; array( 'x'=&gt;450, 'y'=&gt;350), 'color'=&gt;'orange',),
 'T4'       =&gt; array('position' =&gt; array( 'x'=&gt;450, 'y'=&gt;250), 'color'=&gt;'orange',),</code></pre>
 </div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_routage">8. Routage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le ZigBee est un réseau Mesh qui permet de "router" les messages d'équipements en équipements pour rejoindre leur destination.</p></div>
+<div class="paragraph"><p>L&#8217;organisation du routage suit des règles définies dans la norme ZigBee. Chaque équipement contient dans la stack ZigBee les taches relatives au routage. Tout est automatique et rien n&#8217;est accéssible à l&#8217;utilisateur final. Une liaison radio en milieu ouvert va faire disons 20m maximum. Et sauf erreur un message est capable d'être routé 30 fois (il faudrait vérifier cette valeur). Ca permet de faire un réseau de 600m de rayon autour du coordinateur.</p></div>
+<div class="paragraph"><p>Sauf que&#8230;</p></div>
+<div class="paragraph"><p>Je me suis retrouvé avec des prises outdoor Osram qui refusaient de fonctionner correctement. Apres investigation il s&#8217;avere que le routage entre equipement de marque différentes ne se passe pas forcement tres bien. Voici un recap des sceanrii testés et les résultats:</p></div>
+<div class="paragraph"><p>ZiGate - Ampoule Ikea  - Ampoule Ikea: Ok
+ZiGate - Ampoule Ikea - Prise Osram: NOK
+ZiGate - Prise Xiaomi - Ampoule Ikea: Ok
+ZiGate - Prise Xiaomi - Prise Osram: NOK
+ZiGate - Prise Osram - Ampoule Ikea: Ok
+ZiGate - Prise Osram - Prise Osram: Ok
+ZiGate - Module GledOpto Ruban - Ampoule Ikea: Ok
+ZiGate - Module GledOpto Ruban - Prise Osram: NOK
+ZiGate - Ampoule Osram Couleur - Ampoule Ikea: Ok
+ZiGate - Ampoule Osram Couleur - Prise Osram: Ok</p></div>
+<div class="paragraph"><p>Alors pour monter le mesh il faut vérifier que les équipements sont compatibles même si en théorie les routeurs routent, en pratique&#8230;</p></div>
 <div class="paragraph"><p>Enjoy</p></div>
 </div>
 </div>
@@ -1951,7 +1971,7 @@ Le deuxieme graphe est le LQI en fonction de la distance à vol d&#8217;oiseau.<
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-18 09:24:05 CET
+ 2019-04-26 21:26:50 CEST
 </div>
 </div>
 </body>

@@ -17,6 +17,7 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="ChangeLog" href="changelog.html" />
     <link rel="prev" title="Help" href="help.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -79,7 +80,7 @@
 <li>Titre, l’adresse IEEE de l’ampoule que vous voulez paramétrer</li>
 <li>Message, le cluster qui doit être rapporté, et l adresse IEEE de la Zigate.</li>
 </ul>
-<p>image:Capture_d_ecran_2018_02_21_a_23_26_49.png[]</p>
+<p>image:Capture_d_ecran_2018_02_21_a_23_26_49.png</p>
 <p>Attention la capture d’écran n’est pas à jour pour le deuxième champs.</p>
 <p>Dans message mettre::</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">targetExtendedAddress</span><span class="o">=</span><span class="n">XXXXXXXXXXXXXXXX</span><span class="o">&amp;</span><span class="n">targetEndpoint</span><span class="o">=</span><span class="n">YY</span><span class="o">&amp;</span><span class="n">ClusterId</span><span class="o">=</span><span class="n">ZZZZ</span><span class="o">&amp;</span><span class="n">reportToAddress</span><span class="o">=</span><span class="n">AAAAAAAAAAAAAAAA</span>
@@ -186,20 +187,96 @@ Ensuite paramétrer l’adresse du groupe comme indiqué ci dessous (voir deuxi�
 <p>Vous pouvez aussi forcer le groupe utilisé par la télécommande en sélectionnant la télécommande ikea, en mettant le groupe dans le champ Id puis clic sur le bouton «&nbsp;Set Group Remote&nbsp;» et dans la seconde qui suis en appuyant sur un bouton de la télécommande pour la réveiller. Il peut être nécessaire de le faire plusieurs fois du fait du timing un peu spécifique.</p>
 <p>C’est aussi valide pour le bouton On/Off Ikea.</p>
 <p><a class="reference external" href="https://github.com/fairecasoimeme/Zigate/issues/6">https://github.com/fairecasoimeme/Zigate/issues/6</a></p>
-<p><a href="#id4"><span class="problematic" id="id5">|Button   |Pres-stype  |Response  |command       |attr|</span></a>
-<a href="#id6"><span class="problematic" id="id7">|---------|</span></a>————<a href="#id8"><span class="problematic" id="id9">|----------|</span></a>————–<a href="#id10"><span class="problematic" id="id11">|---------------------------------------|</span></a>
-<a href="#id12"><span class="problematic" id="id13">|down     |click       |0x8085    |0x02          |None|</span></a>
-<a href="#id14"><span class="problematic" id="id15">|down     |hold        |0x8085    |0x01          |None|</span></a>
-<a href="#id16"><span class="problematic" id="id17">|down     |release     |0x8085    |0x03          |None|</span></a>
-<a href="#id18"><span class="problematic" id="id19">|up       |click       |0x8085    |0x06          |None|</span></a>
-<a href="#id20"><span class="problematic" id="id21">|up       |hold        |0x8085    |0x05          |None|</span></a>
-<a href="#id22"><span class="problematic" id="id23">|up       |release     |0x8085    |0x07          |None|</span></a>
-<a href="#id24"><span class="problematic" id="id25">|middle   |click       |0x8095    |0x02          |None|</span></a>
-<a href="#id26"><span class="problematic" id="id27">|left     |click       |0x80A7    |0x07          |direction: 1|</span></a>
-<a href="#id28"><span class="problematic" id="id29">|left     |hold        |0x80A7    |0x08          |direction: 1    =&gt; can t get that one|</span></a>
-<a href="#id30"><span class="problematic" id="id31">|right    |click       |0x80A7    |0x07          |direction: 0|</span></a>
-<a href="#id32"><span class="problematic" id="id33">|right    |hold        |0x80A7    |0x08          |direction: 0    =&gt; can t get that one|</span></a>
-<a href="#id34"><span class="problematic" id="id35">|left/right |release   |0x80A7    |0x09          |None            =&gt; can t get that one|</span></a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="14%" />
+<col width="12%" />
+<col width="17%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Pres-stype</th>
+<th class="head">Response</th>
+<th class="head">command</th>
+<th class="head">attr</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>down</td>
+<td>click</td>
+<td>0x8085</td>
+<td>0x02</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>down</td>
+<td>hold</td>
+<td>0x8085</td>
+<td>0x01</td>
+<td>None</td>
+</tr>
+<tr class="row-even"><td>down</td>
+<td>release</td>
+<td>0x8085</td>
+<td>0x03</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>up</td>
+<td>click</td>
+<td>0x8085</td>
+<td>0x06</td>
+<td>None</td>
+</tr>
+<tr class="row-even"><td>up</td>
+<td>hold</td>
+<td>0x8085</td>
+<td>0x05</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>up</td>
+<td>release</td>
+<td>0x8085</td>
+<td>0x07</td>
+<td>None</td>
+</tr>
+<tr class="row-even"><td>middle</td>
+<td>click</td>
+<td>0x8095</td>
+<td>0x02</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>left</td>
+<td>click</td>
+<td>0x80A7</td>
+<td>0x07</td>
+<td>direction: 1</td>
+</tr>
+<tr class="row-even"><td>left</td>
+<td>hold</td>
+<td>0x80A7</td>
+<td>0x08</td>
+<td>direction: 1    =&gt; can t get that one</td>
+</tr>
+<tr class="row-odd"><td>right</td>
+<td>click</td>
+<td>0x80A7</td>
+<td>0x07</td>
+<td>direction: 0</td>
+</tr>
+<tr class="row-even"><td>right</td>
+<td>hold</td>
+<td>0x80A7</td>
+<td>0x08</td>
+<td>direction: 0    =&gt; can t get that one</td>
+</tr>
+<tr class="row-odd"><td colspan="2">left/right <a href="#id2"><span class="problematic" id="id3">|</span></a>release</td>
+<td>0x80A7</td>
+<td>0x09</td>
+<td>None            =&gt; can t get that one</td>
+</tr>
+</tbody>
+</table>
 <p>down = brightness down, up = brightness up,
 middle = Power button,
 left and right = when brightness up is up left is left and right is right.
@@ -228,8 +305,8 @@ Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommand
 </div>
 <div class="section" id="prise">
 <h2>Prise<a class="headerlink" href="#prise" title="Lien permanent vers ce titre">¶</a></h2>
-<div class="section" id="id2">
-<h3>Nouvelle inclusion<a class="headerlink" href="#id2" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="id4">
+<h3>Nouvelle inclusion<a class="headerlink" href="#id4" title="Lien permanent vers ce titre">¶</a></h3>
 <ul class="simple">
 <li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter…</li>
 <li>Faire un reset de la prise en insérant un petit trombone dans le trou pres de la led de la prise. Attendre 5s, la prise doit apparaitre dans Jeedom.</li>
@@ -238,8 +315,8 @@ Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommand
 </div>
 <div class="section" id="telecommande">
 <h2>Télécommande<a class="headerlink" href="#telecommande" title="Lien permanent vers ce titre">¶</a></h2>
-<div class="section" id="id3">
-<h3>Nouvelle inclusion<a class="headerlink" href="#id3" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="id5">
+<h3>Nouvelle inclusion<a class="headerlink" href="#id5" title="Lien permanent vers ce titre">¶</a></h3>
 <ul class="simple">
 <li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter…</li>
 <li>Prendre la telecommande Ikea et faire 4 appuis sur le bouton OO au dos de la télécommande. La télécommande doit se mettre à flasher rouge en face avant. La télécommande doit apparaitre dans Jeedom.</li>
@@ -305,6 +382,7 @@ Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommand
 <li class="toctree-l2"><a class="reference internal" href="#telecommande">Télécommande</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ChangeLog</a></li>
 </ul>
 
 <div class="relations">
@@ -312,6 +390,7 @@ Par exemple vous pouvez avoir une Ampoule Ikea sur le groupe de la télécommand
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="help.html" title="Chapitre précédent">Help</a></li>
+      <li>Next: <a href="changelog.html" title="Chapitre suivant">ChangeLog</a></li>
   </ul></li>
 </ul>
 </div>

@@ -49,7 +49,7 @@ Mettre dans le champ:
 - Titre, l'adresse IEEE de l'ampoule que vous voulez paramétrer
 - Message, le cluster qui doit être rapporté, et l adresse IEEE de la Zigate.
 
-image:Capture_d_ecran_2018_02_21_a_23_26_49.png[]
+image:Capture_d_ecran_2018_02_21_a_23_26_49.png
 
 Attention la capture d'écran n'est pas à jour pour le deuxième champs.
 
@@ -207,21 +207,33 @@ C'est aussi valide pour le bouton On/Off Ikea.
 
 https://github.com/fairecasoimeme/Zigate/issues/6
 
-
-|Button   |Pres-stype  |Response  |command       |attr|
-|---------|------------|----------|--------------|---------------------------------------|
-|down     |click       |0x8085    |0x02          |None|
-|down     |hold        |0x8085    |0x01          |None|
-|down     |release     |0x8085    |0x03          |None|
-|up       |click       |0x8085    |0x06          |None|
-|up       |hold        |0x8085    |0x05          |None|
-|up       |release     |0x8085    |0x07          |None|
-|middle   |click       |0x8095    |0x02          |None|
-|left     |click       |0x80A7    |0x07          |direction: 1|
-|left     |hold        |0x80A7    |0x08          |direction: 1    => can t get that one|
-|right    |click       |0x80A7    |0x07          |direction: 0|
-|right    |hold        |0x80A7    |0x08          |direction: 0    => can t get that one|
-|left/right |release   |0x80A7    |0x09          |None            => can t get that one|
++---------+------------+----------+--------------+---------------------------------------+
+|Button   |Pres-stype  |Response  |command       |attr                                   |
++=========+============+==========+==============+=======================================+
+|down     |click       |0x8085    |0x02          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|down     |hold        |0x8085    |0x01          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|down     |release     |0x8085    |0x03          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|up       |click       |0x8085    |0x06          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|up       |hold        |0x8085    |0x05          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|up       |release     |0x8085    |0x07          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|middle   |click       |0x8095    |0x02          |None                                   |
++---------+------------+----------+--------------+---------------------------------------+
+|left     |click       |0x80A7    |0x07          |direction: 1                           |
++---------+------------+----------+--------------+---------------------------------------+
+|left     |hold        |0x80A7    |0x08          |direction: 1    => can t get that one  |
++---------+------------+----------+--------------+---------------------------------------+
+|right    |click       |0x80A7    |0x07          |direction: 0                           |
++---------+------------+----------+--------------+---------------------------------------+
+|right    |hold        |0x80A7    |0x08          |direction: 0    => can t get that one  |
++---------+------------+----------+--------------+---------------------------------------+
+|left/right |release   |0x80A7    |0x09          |None            => can t get that one  |
++---------+------------+----------+--------------+---------------------------------------+
 
 down = brightness down, up = brightness up,
 middle = Power button,
@@ -321,4 +333,3 @@ PS: Les scénarios ne sont pas implémentés pour l'instant (30/10/2018):
 
 * Sc1, Sc2, SC3 sur la télécommande dans Jeedom,
 * et les boutons "Fleche Gauche", "Fleche Droite" de la télécommande physique.
-

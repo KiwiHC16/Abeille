@@ -205,6 +205,7 @@ J'ai developpé mon propre module link:Wifi.html[Wifi] du fait de petits soucis 
    :caption: Contents:
 
    help
+   Eurotronics
    Ikea
    changelog
 

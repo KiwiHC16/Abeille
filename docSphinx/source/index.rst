@@ -201,7 +201,7 @@ Wifi
 J'ai developpé mon propre module link:Wifi.html[Wifi] du fait de petits soucis sur le premier module disponible. Finalement il fonctionne tellement bien et fourni une protection coupure electrique avec une batterie que je l'utilise dans toutes configuration et mêm avec mon sniffer ZigBee ...
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    help

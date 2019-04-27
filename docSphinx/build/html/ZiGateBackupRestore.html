@@ -1,0 +1,154 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Zigate Backup/Restore &#8212; Documentation Abeille 27.04.2019</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="zigate-backup-restore">
+<h1>Zigate Backup/Restore<a class="headerlink" href="#zigate-backup-restore" title="Lien permanent vers ce titre">¶</a></h1>
+<p>[NOTE]
+Info dans le doc JN-UG-3007 (confirmed in doc JN-SW -4141)</p>
+<p>[TIP]
+Caution: For a JN516x device, entering a new MAC address is a “one-time programmable’ option and care should be taken to ensure that the MAC address specified is correct before programming, as it cannot be modified after programming.</p>
+<p>Tout se fait depuis NXP Beyond Studio</p>
+<p>== Home</p>
+<p>Retour au link:index.html[document principal].</p>
+<p>== Backup</p>
+<p>Branchez la Zigate sur le port USB en appuyant sur le bouton de la Zigate puis relacher.</p>
+<p>Récupérer les informations de la Zigate</p>
+<p>Menu -&gt; Devices -&gt; Device Info</p>
+<p>image:Capture_d_ecran_2018_02_28_a_09_59_50.png[]</p>
+<p>Ensuite, faire un «&nbsp;Read&nbsp;» de la Flash et de l’EEPROM.</p>
+<p>Le restore de la Flash ne fonctionne pas pour moi, alors bien noter la version de Zigate utilisée pour re-installer le bin Zigate et pas la copie de la flash. En esperant comprendre plus tard pourquoi cela ne fonctionne pas. Quelqu’un a une idée ?</p>
+<p>image:Capture_d_ecran_2018_02_28_a_10_17_19.png[]</p>
+<p>Si tout se déroule comme prévu vous devez avoir une information de progression sous la forme d’une fenêtre ou dans l’onglet «&nbsp;Progress&nbsp;».</p>
+<p>image:Capture_d_ecran_2018_02_28_a_10_17_28.png[]</p>
+<p>Voilà le backup est fait. Débranchez la Zigate du port USB.</p>
+<p>== Restore</p>
+<p>Branchez la Zigate (ou une nouvelle Zigate) sur le port USB en appuyant sur le bouton de la Zigate puis relacher.</p>
+<p>Vérifiez les informations de cette Zigate depuis le menu «&nbsp;Menu -&gt; Devices -&gt; Device Info&nbsp;». Si c’est la même tout doit être identique, si c’est une nouvelle alors l’adresse MAC doit être différente.</p>
+<p>Allez dans le menu «&nbsp;Menu -&gt; Devices -&gt; Program Device&nbsp;». Selectionner vos fichiers de Backup et mettez l’adresse MAC à la bonne valeur (MAC: cf note haut de page).</p>
+<p>Le restore du backup de la Flash ne fonctionne pas dans mon cas. Je n’ai pas trouvé pourquoi. Donc je selectionne le bin de la Zigate. De même le changement de la MAC ne fonctionne pas donc je garde celle en place. Ce qui revient à ne reprogrammer que l’EEPROM…</p>
+<p>image:Capture_d_ecran_2018_02_28_a_10_32_14.png[]</p>
+<p>Voilà le restore est fait. Débranchez la Zigate du port USB.</p>
+<p>Vous avez une nouvelle Zigate identique à l’originale (Sauf peut être l’adresse MAC). Si vous perdez la première (crash HW par exemple), il vous suffi de la remplacer par la nouvelle.</p>
+<p>== Remplacer la Zigate</p>
+<p>Si pour une raison ou une autre vous devez/voulez remplacer la Zigate alors il faut faire les actions suivantes:
+(On part de l’hypotheses que Abeille/Jeedom est à jour).</p>
+<ul class="simple">
+<li>Remplacer la Zigate par une nouvelle vide</li>
+<li>Redemarrer Abeille</li>
+<li>Depuis la ruche démarrer le réseau Zigbee (La Zigate doit être prête)</li>
+<li>Passer en mode inclusion</li>
+<li>Appairer tous les équipements du réseau</li>
+<li>Abeille mettra a jours les informtions dans Jeedom.</li>
+</ul>
+<p>== A noter</p>
+<p>=== Adresse MAC</p>
+<p>Si l’adresse MAC change, il y a certainement des conséquences. La première que j’ai en tête est relative aux «&nbsp;Bind&nbsp;» qui utilisent les adresses MAC pour les adresses IEEE. Donc il doit falloir refaire les Bind. Tout ceci doit être vérifié et investigué.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Abeille</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Presentation.html">Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eurotronics.html">Eurotronics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ikea.html">Ikea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tuto.html">Tuto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Changelog.html">ChangeLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">Help</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/ZiGateBackupRestore.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

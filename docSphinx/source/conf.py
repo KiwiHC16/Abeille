@@ -76,6 +76,11 @@ pygments_style = None
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+#html_theme = 'classic'
+#html_theme = 'bizstyle'
+#html_theme = 'nature'
+#html_theme = 'scrolls'
+#html_theme = 'haiku'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

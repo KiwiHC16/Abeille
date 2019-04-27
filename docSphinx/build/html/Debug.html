@@ -1,0 +1,364 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Debug / Troubleshooting / Investigations &#8212; Documentation Abeille 27.04.2019</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="debug-troubleshooting-investigations">
+<h1>Debug / Troubleshooting / Investigations<a class="headerlink" href="#debug-troubleshooting-investigations" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Je vais essayer de consolider ici tous les retours d’expériences et les vérifications à faire pour résoudre un éventuel problème.</p>
+<div class="section" id="forum">
+<h2>Forum<a class="headerlink" href="#forum" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>Liste des sujets en cours de discussions: link:https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille[Forum]</li>
+</ul>
+<p>== Investigations</p>
+<ul class="simple">
+<li>Liste des sujets en investigations : link:https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue[Issues sous GitHub]</li>
+</ul>
+<p>== Problèmes</p>
+<p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir link:https://github.com/KiwiHC16/Abeille/issues[une «&nbsp;issue&nbsp;» dans GitHub]</p>
+<p>Si vous ouvrez une «&nbsp;issue&nbsp;» merci de fournir le plus d’information possible et en particulier:</p>
+<ul class="simple">
+<li>Votre configuration Jeedom:</li>
+</ul>
+<ul class="simple">
+<li>Le HW sur lequel vous faite tourner le plugin,</li>
+<li>la Version de l’OS,</li>
+<li>la version de Jeedom</li>
+<li>…</li>
+</ul>
+<ul class="simple">
+<li>Votre configuration Gateway</li>
+</ul>
+<ul class="simple">
+<li>Type de Zigate</li>
+<li>quel firmware</li>
+<li>…</li>
+</ul>
+<ul class="simple">
+<li>Les logs, aussi nombreux que possibles surtout</li>
+</ul>
+<ul class="simple">
+<li>AbeilleParser</li>
+<li>AbeilleMQTT</li>
+<li>Abeille</li>
+</ul>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>…
+- Description
+* ce que vous cherchez à faire
+* les résultats
+* captures d’ecrans
+* …</p>
+<p>== Evolution</p>
+<p>Si vous souhaitez une évolution dans le plugin, merci d ouvrir une «&nbsp;issue&nbsp;» dans GitHub à l’adresse avec un «&nbsp;Labels&nbsp;» «&nbsp;enhancement&nbsp;»: <a class="reference external" href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p>
+<p>== Debug</p>
+<p>=== «&nbsp;retain&nbsp;» dans les objets</p>
+<ul class="simple">
+<li>Ce plugin utilise un broker MQTT qui a une fonction spécifique «&nbsp;retain&nbsp;».</li>
+<li>Le plugin [underline]#n’utilise pas# ce mode de fonctionnement.</li>
+<li>[underline]#Il est fortement conseillé de ne pas choisir «&nbsp;retain&nbsp;»# si vous ne comprenez pas les conséquences.</li>
+<li>L’option reste accessible pour les pros de MQTT. Si jamais vous voulez l’utiliser alors allez voir <a class="reference external" href="https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages">https://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages</a> .</li>
+<li>Normalement vous ne devriez pas avoir accès à cette propriété par défaut car je l’ai enlevé des commandes.</li>
+<li>Si vous avez par erreur activé un «&nbsp;retain&nbsp;» et que le comportement du plugin est impacté, vous pouvez faire la manipulation suivante:</li>
+</ul>
+</div>
+<div class="section" id="apt-get-install-mosquitto-3">
+<h2>apt-get install mosquitto &lt;3&gt;<a class="headerlink" href="#apt-get-install-mosquitto-3" title="Lien permanent vers ce titre">¶</a></h2>
+<p>&lt;1&gt; Effacons la base de données contenant les informations relative aux messages «&nbsp;retain&nbsp;».
+&lt;2&gt; Enlevons mosquitto du systeme
+&lt;3&gt; Installons de nouveau mosquitto sur le systeme.</p>
+<p>=== Configuration</p>
+<ul class="simple">
+<li>Verifier la configuration réseau et en particulier /hostname, /etc/hosts</li>
+<li>Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l’objet de rattachement de l’équipement Ruche n’est pas défini.</li>
+</ul>
+<div class="section" id="mysql-error-code-23000-1452-cannot-add-or-update-a-child-row-a-foreign-key-constraint-fails-jeedom-eqlogic-constraint-fk-eqlogic-object1-foreign-key-object-id-references-object-id-on-delete-set-null-on-update-cascade">
+<h3>[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (<cite>Jeedom</cite>.`eqLogic`, CONSTRAINT <cite>fk_eqLogic_object1</cite> FOREIGN KEY (<cite>object_id</cite>) REFERENCES <cite>object</cite> (<cite>id</cite>) ON DELETE SET NULL ON UPDATE CASCADE)<a class="headerlink" href="#mysql-error-code-23000-1452-cannot-add-or-update-a-child-row-a-foreign-key-constraint-fails-jeedom-eqlogic-constraint-fk-eqlogic-object1-foreign-key-object-id-references-object-id-on-delete-set-null-on-update-cascade" title="Lien permanent vers ce titre">¶</a></h3>
+<p>=== Connection</p>
+<p>==== Premier test</p>
+<ul class="simple">
+<li>Rendez l équipement Ruche Visible (Il est maintenant caché par défaut).</li>
+<li>Dans l équipement ruche, appuyez sur le bouton «&nbsp;Version&nbsp;», vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois. Si les dates se mettent à jour c’est que le dialogue Abeille-Zigate fonctionne dans les deux sens.</li>
+</ul>
+<p>==== Deuxième test</p>
+<ul class="simple">
+<li>Vérifiez bien que vous n’avez pas plusieurs Plugins essayant d’utiliser le même port série (/dev/ttyUSBx).</li>
+</ul>
+<p>==== Troisième test</p>
+<ul class="simple">
+<li>Tester la Zigate en ligne de commande</li>
+</ul>
+<p>On envoie</p>
+<hr class="docutils" />
+<p>&lt;1&gt; On configure le port série
+&lt;2&gt; On demande à la zigate de se mettre en inclusion.</p>
+<p>(Cela peut être fait alors que le plugin est Zigate fonctionnent).</p>
+<p>Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:</p>
+<p>AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5
+AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)
+AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8
+—-</p>
+<p>Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.</p>
+<p>PS: la configuration du port peu varier d’un système à l’autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.</p>
+<p>==== Quatrième test</p>
+<p>Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):</p>
+</div>
+<div class="section" id="cat-dev-ttyusb0-hexdump-vc">
+<h3>cat /dev/ttyUSB0 | hexdump -vC<a class="headerlink" href="#cat-dev-ttyusb0-hexdump-vc" title="Lien permanent vers ce titre">¶</a></h3>
+</div>
+</div>
+<div class="section" id="dans-un-second-terminal-envoiyez-la-commande">
+<h2>Dans un second terminal envoiyez la commande<a class="headerlink" href="#dans-un-second-terminal-envoiyez-la-commande" title="Lien permanent vers ce titre">¶</a></h2>
+<p>stty -F/dev/ttyUSB0 115200
+echo -ne “x01x02x10x49x02x10x02x14xb0xffxfcxfex02x10x03” &gt; /dev/ttyUSB0
+—-</p>
+</div>
+<div class="section" id="dans-le-premier-terminal-ecoute-vous-devriez-voir-passer-du-traffic-comme">
+<h2>Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:<a class="headerlink" href="#dans-le-premier-terminal-ecoute-vous-devriez-voir-passer-du-traffic-comme" title="Lien permanent vers ce titre">¶</a></h2>
+<p><a class="reference external" href="mailto:www-data&#37;&#52;&#48;Abeille">www-data<span>&#64;</span>Abeille</a>:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC
+00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  <a href="#id3"><span class="problematic" id="id4">|........w.....I.|</span></a>
+00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  <a href="#id5"><span class="problematic" id="id6">|..........p.....|</span></a>
+—-</p>
+<p>Cela confirme Zigate vers Jeedom</p>
+<p>=== Mosquitto</p>
+<ul class="simple">
+<li>Abeille utilise un broker mosquitto pour échanger des messages entre les modules logicielles.</li>
+<li>mosquitto est installé sur la machine par défaut lors de l’installation des dépendances, vous pouvez utiliser un autre broker, sur une autre machine si vous le souhaitez (pas testé)</li>
+</ul>
+<p>==== Configuration</p>
+<ul class="simple">
+<li>La configuration générale du plugin propose les paramètres :</li>
+</ul>
+<ul class="simple">
+<li>Adresse du broker Mosquitto (peut être présent ailleurs sur le réseau)</li>
+<li>Port du serveur Mosquitto (1883 par défaut)</li>
+<li>Identifiant de Jeedom avec lequel il publiera sur le broker</li>
+<li>Il est possible d’ajouter un compte et mot de passe si la connexion le requiert.</li>
+<li>QoS à utiliser (par défaut 0).</li>
+</ul>
+<p>==== Fonctionne
+* Dans santé vous avez le plugin en alerte car mosquitto ne repond pas.
+- Faites un “ps -ef | grep mosquitto” pour voir si le process tourne.
+- Lancez à la main mosquitto; Juste “mosquitto” en ligne de commande.
+- Lancez à la main mosquitto avec votre fichier de configuration en ligne de commande: “mosquitto -c /etc/mosquitto/mosquitto.conf” (Corrigez les erreurs si il y a).
+- Experience: après coupure de courant:
+—-
+mosquitto -c /etc/mosquitto/mosquitto.conf
+1516788158: Error: Success.
+1516788158: Error: Couldn’t open database.
+—-</p>
+<p>la solution a été de supprimer la base de donnée et de réinstaller mosquitto:</p>
+</div>
+<div class="section" id="apt-get-install-mosquitto">
+<h2>apt-get install mosquitto<a class="headerlink" href="#apt-get-install-mosquitto" title="Lien permanent vers ce titre">¶</a></h2>
+<p>==== Monitorer</p>
+</div>
+<div class="section" id="monitorer-les-messages">
+<h2>Monitorer les messages<a class="headerlink" href="#monitorer-les-messages" title="Lien permanent vers ce titre">¶</a></h2>
+</div>
+<div class="section" id="mosquitto-sub-t-v">
+<h2>mosquitto_sub -t «&nbsp;=&nbsp;» -v<a class="headerlink" href="#mosquitto-sub-t-v" title="Lien permanent vers ce titre">¶</a></h2>
+<p>==== Installation Manuelle</p>
+</div>
+<div class="section" id="soyez-root-ou-en-mode-sudo">
+<h2>Soyez root ou en mode sudo.<a class="headerlink" href="#soyez-root-ou-en-mode-sudo" title="Lien permanent vers ce titre">¶</a></h2>
+<p>cd /root
+apt-get -y update
+apt-get -y upgrade</p>
+<p>apt-get -y install php
+apt-get -y install mosquitto
+apt-get -y install libmosquitto-dev
+apt-get -y install git
+apt-get -y install php7.0-dev</p>
+<p>mkdir Mosquitto-PHP
+cd Mosquitto-PHP
+git clone <a class="reference external" href="https://github.com/mgdm/Mosquitto-PHP.git">https://github.com/mgdm/Mosquitto-PHP.git</a>
+cd Mosquitto-PHP
+phpize
+./configure
+make
+make install
+—-</p>
+<p>Ajouter extension=mosquitto.so à la fin du fichier php.ini
+(par exemple /etc/php/7.0/apache2/php.ini&nbsp;»)
+Vous pouvez trouver les fichiers php.ini avec la commande:
+—-
+find /etc -name php.ini -print
+—-</p>
+</div>
+<div class="section" id="redemarrer-tout-le-monde">
+<h2>Redemarrer tout le monde<a class="headerlink" href="#redemarrer-tout-le-monde" title="Lien permanent vers ce titre">¶</a></h2>
+<p>/etc/init.d/mosquitto restart
+/etc/init.d/apapche2 restart
+—-</p>
+<p>==== Re-Installation
+* Debian 8 sur VM
+- Je viens d’installer le plugin Abeille sur une Debian 8 en VM x86 64.
+- Impossible de lancer le demon.
+- Même un /etc/init.d/mosquitto start à la main ne fonctionne pas.
+- Après des recherches infructueuse je suis passé par synaptic (ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;machine">root<span>&#64;</span>machine</a> -Y) et fait «&nbsp;reinstallé&nbsp;» de tous les modules mosquitto. Et maintenant cela fonctionne.</p>
+<p>=== Equipements ZigBee</p>
+<p>La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.</p>
+<p>image:Capture_d_ecran_2018_02_06_a_17_33_19.png[]</p>
+<p>Dans ActiveEndPoint mettre l’adresse de l’équipement dans le titre puis clic sur le bouton ActiveEndPoint.</p>
+</div>
+<div class="section" id="regardez-dans-la-log-abeilleparser-vous-devez-voir-passer-la-reponse-par-exemple-pour-une-ampoule-ikea">
+<h2>Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:<a class="headerlink" href="#regardez-dans-la-log-abeilleparser-vous-devez-voir-passer-la-reponse-par-exemple-pour-une-ampoule-ikea" title="Lien permanent vers ce titre">¶</a></h2>
+<p>AbeilleParser: 2018-02-06 17:40:16[DEBUG]————– 2018-02-06 17:40:16: protocolData
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]message &gt; 12 char
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]SQN : da
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :
+AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01
+—-</p>
+<p>Il y a, dans ce cas, une seul EndPoint à l’adresse «&nbsp;01&nbsp;» (Donné par les lignes suivant «&nbsp;Endpoint List&nbsp;»).</p>
+<p>Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.</p>
+<p>AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length: 5
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status: 00-(Success)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN: db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]————– 2018-02-06 17:42:25: protocolData
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 quality: 93
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 (Simple Descriptor Response)(Not Processed)
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN : db
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status : 00
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Short Address : 6e1b
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length : 20
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]endpoint : 01
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]profile : c05e
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]deviceId : 0100
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]bitField : 02
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]InClusterCount : 08
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0005 - General: Scenes
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0006 - General: On/Off
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0008 - General: Level Control
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0B05 - Misc: Diagnostics
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 1000 - ZLL: Commissioning
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups
+AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes
+—-</p>
+<p>Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.</p>
+<p>=== Script</p>
+<p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh.
+L’execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n’est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Abeille</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Presentation.html">Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eurotronics.html">Eurotronics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ikea.html">Ikea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tuto.html">Tuto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Changelog.html">ChangeLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">Help</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Debug.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

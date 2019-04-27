@@ -1,0 +1,421 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Radio &#8212; Documentation Abeille 27.04.2019</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="radio">
+<h1>Radio<a class="headerlink" href="#radio" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="lqi">
+<h2>LQI<a class="headerlink" href="#lqi" title="Lien permanent vers ce titre">¶</a></h2>
+<p>[[NetworkList]]
+Network List
+^^^^^^^^^^^^</p>
+<p>Depuis le menu: Plugins-&gt;Protocole Domotique-&gt;Abeille-&gt;Network List vous allez arriver sur une page contenant 3 volets.</p>
+<p>==== Résumé</p>
+<p>Le résumé vous donne un appercu de l’état du plugin.</p>
+<p>==== Graphique</p>
+<p>Le graphique représente la situation de votre réseau</p>
+<p>==== Table</p>
+<p>La table contient les informations nécessaire à la representation du réseau plus des informations radios très iteressantes.</p>
+<p>Abeille demande toutes les nuits aux équipement de fournir les informations sur les équipements qu’ils ont dans leur entourage radio.
+Une ligne represente une relation radio entre l’équipement et un équipement voisin.
+Vous allez y trouver le type de relation, le LQI, etc.
+Le LQI est le «&nbsp;Link Quality Radio&nbsp;» qui represente la Qualité de la liaison radio entre les deux équipements. 2videment si cette qualité est mauvaise alors les mesages ne peuvent pas être échangés et le réseau ne fonctionne pas. Ou dison sle réseau ne peut utiliser ce lien. Pour des valeur inférieures à 50 (valeur empirique) il faut essayer d’améliorer les choses.</p>
+<p>image:Capture_d_ecran_2019_03_15_a_09_32_16.png[]</p>
+<p>=== Network List Old</p>
+<p>(Ce chapitre est maintenant bien plus integré dans Abeille et de ce fait la doc doit être mise à jour).</p>
+<p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script AbeilleLQI_Map.php et visualiser les résultats dans un browser web:</p>
+<p><a class="reference external" href="http://[adresse">http://[adresse</a> de votre Jeedom]/plugins/Abeille/Network/AbeilleLQI_Map.php</p>
+<p>Vous pouvez vérifier que l’execution est en cours en monitorant le log AbeilleParser. Vous devriez voir passer des messages comme celui ci (Type 804E):</p>
+<div class="section" id="abeilleparser-2018-04-13-09-43-24-debug-type-804e-management-lqi-response-decoded-but-not-processed-sqn-11-status-00-neighbour-table-entries-0a-neighbour-table-list-count-02-start-index-00-nwk-address-df33-extended-pan-id-28d07615bb019209-ieee-address-00158d00019f9199-depth-1-link-quality-152-bit-map-of-attributes-1a">
+<h3>AbeilleParser 2018-04-13 09:43:24[DEBUG]Type: 804E: (Management LQI response)(Decoded but Not Processed); SQN: 11; status: 00; Neighbour Table Entries: 0A; Neighbour Table List Count: 02; Start Index: 00; NWK Address: df33; Extended PAN ID: 28d07615bb019209; IEEE Address: 00158d00019f9199; Depth: 1; Link Quality: 152; Bit map of attributes: 1a<a class="headerlink" href="#abeilleparser-2018-04-13-09-43-24-debug-type-804e-management-lqi-response-decoded-but-not-processed-sqn-11-status-00-neighbour-table-entries-0a-neighbour-table-list-count-02-start-index-00-nwk-address-df33-extended-pan-id-28d07615bb019209-ieee-address-00158d00019f9199-depth-1-link-quality-152-bit-map-of-attributes-1a" title="Lien permanent vers ce titre">¶</a></h3>
+</div>
+</div>
+<div class="section" id="si-cela-ne-fonctionne-pas-vous-pouvez-faire-la-manip-a-la-main">
+<h2>Si cela ne fonctionne pas, vous pouvez faire la manip à la main:<a class="headerlink" href="#si-cela-ne-fonctionne-pas-vous-pouvez-faire-la-manip-a-la-main" title="Lien permanent vers ce titre">¶</a></h2>
+<p>cd /var/www/html/plugins/Abeille/Network
+php AbeilleLQI_Map.php
+—-</p>
+<p>C’est une version brute de fonderie alors il y a plein de bonnes raisons pour que cela ne fonctionne pas et demande votre expertise.</p>
+<p>== Tableau</p>
+<p>Le script va interroger tous les équipements qu’il détecte, un à un. Le procesus est assez long et pour l’instant la page reste blanche tant que la collect est en cours. Soyez donc patient. Si les résultats sont interessants, je verrai à faire une interface plus conviviale.</p>
+<p>Lors de la premiere execution un tableau est généré avec toutes les informations collectées (les exemples ci dessous ne contiennent pas toutes les colonnes car depuis certaines ont été ajoutées.</p>
+<p>=== Test</p>
+<p>Sur mon systeme de test, après 40s, cela donne:</p>
+<p>.LQI Systeme de test
+[width=&nbsp;»100%&nbsp;»,options=&nbsp;»header,footer&nbsp;»]
+<a href="#id1"><span class="problematic" id="id2">|</span></a>====================
+<a href="#id3"><span class="problematic" id="id4">|</span></a>NE|Voisine|Relation|Profondeur|LQI
+<a href="#id5"><span class="problematic" id="id6">|</span></a>0000|df33|Child|01|152
+<a href="#id7"><span class="problematic" id="id8">|</span></a>0000|a008|Child|01|141
+<a href="#id9"><span class="problematic" id="id10">|</span></a>0000|7bd5|Child|01|169
+<a href="#id11"><span class="problematic" id="id12">|</span></a>0000|dcd9|Child|01|175
+<a href="#id13"><span class="problematic" id="id14">|</span></a>0000|3950|Child|01|167
+<a href="#id15"><span class="problematic" id="id16">|</span></a>0000|5dea|Child|01|144
+<a href="#id17"><span class="problematic" id="id18">|</span></a>0000|4ebd|Child|01|161
+<a href="#id19"><span class="problematic" id="id20">|</span></a>0000|633e|Child|01|219
+<a href="#id21"><span class="problematic" id="id22">|</span></a>0000|c7c0|Child|01|174
+<a href="#id23"><span class="problematic" id="id24">|</span></a>0000|d45e|Sibling|00|158
+<a href="#id25"><span class="problematic" id="id26">|</span></a>d45e|0000|Sibling|00|186
+<a href="#id27"><span class="problematic" id="id28">|</span></a>d45e|2389|Child|02|255
+<a href="#id29"><span class="problematic" id="id30">|</span></a>====================</p>
+<p>La première colonne contient l’adresse de l’équipement qui a été interrogé.
+La deuxieme colonne continet l’adresse de l’équipement voisin connu
+La troisieme colonne contient le type de relation entre les deux équipements.
+La quatrieme colonne contient la profondeur de l’équipement dans l’arborescence du réseau.
+La cinquième colonne contient le LQI (Link Quality Indicator), la qualité de la liaison radio.</p>
+<p>On peut voir que le coordinateur «&nbsp;0000&nbsp;» a 9 enfants (des capteurs Xiaomi) et un «&nbsp;Sibling&nbsp;» qui est un routeur (Ampoule Ikea dans ce cas).</p>
+<p>On peut y voir que le routeur d45e est «&nbsp;Sibling&nbsp;» avec le coordinateur (Zigate). Qu’il possède un équipement enfant qui est donc en 2ieme niveau.</p>
+<p>=== Production</p>
+<p>Sur mon système de prod</p>
+<p>Celui ci contient au moins 8 routeurs (Ampoules Ikea et Prises Xiaomi).</p>
+<p>Petites interrogations/Observation:
+- des «&nbsp;Relation&nbsp;» sont «&nbsp;Unknown&nbsp;» : bug ou valeur remontée inconnue, uniquement sur ma HueGo actuellement.
+- des «&nbsp;Profondeur&nbsp;» ont des valeurs «&nbsp;0F&nbsp;» qu’il faut que je comprenne.
+- Aucun des routeurs ne possède de «&nbsp;Child&nbsp;».</p>
+<p>Après 4 minutes, cela donne:</p>
+<p>.LQI Systeme de production
+[width=&nbsp;»100%&nbsp;»,options=&nbsp;»header,footer&nbsp;»]
+<a href="#id31"><span class="problematic" id="id32">|</span></a>====================
+<a href="#id33"><span class="problematic" id="id34">|</span></a>NE|Voisine|Relation|Profondeur|LQI
+<a href="#id35"><span class="problematic" id="id36">|</span></a>0000|1be0|Child|01|189
+<a href="#id37"><span class="problematic" id="id38">|</span></a>0000|5571|Child|01|212
+<a href="#id39"><span class="problematic" id="id40">|</span></a>0000|b774|Child|01|146
+<a href="#id41"><span class="problematic" id="id42">|</span></a>0000|873a|Child|01|197
+<a href="#id43"><span class="problematic" id="id44">|</span></a>0000|4260|Child|01|48
+<a href="#id45"><span class="problematic" id="id46">|</span></a>0000|d43e|Child|01|151
+<a href="#id47"><span class="problematic" id="id48">|</span></a>0000|6c0B|Child|01|51
+<a href="#id49"><span class="problematic" id="id50">|</span></a>0000|0F7e|Child|01|194
+<a href="#id51"><span class="problematic" id="id52">|</span></a>0000|f984|Child|01|59
+<a href="#id53"><span class="problematic" id="id54">|</span></a>0000|2349|Child|01|81
+<a href="#id55"><span class="problematic" id="id56">|</span></a>0000|345f|Child|01|94
+<a href="#id57"><span class="problematic" id="id58">|</span></a>0000|28f2|Child|01|137
+<a href="#id59"><span class="problematic" id="id60">|</span></a>0000|a728|Sibling|00|81
+<a href="#id61"><span class="problematic" id="id62">|</span></a>0000|41c0|Sibling|00|167
+<a href="#id63"><span class="problematic" id="id64">|</span></a>0000|174f|Sibling|00|51
+<a href="#id65"><span class="problematic" id="id66">|</span></a>0000|46d9|Sibling|00|105
+<a href="#id67"><span class="problematic" id="id68">|</span></a>0000|60fb|Sibling|00|80
+<a href="#id69"><span class="problematic" id="id70">|</span></a>0000|a0da|Sibling|00|85
+<a href="#id71"><span class="problematic" id="id72">|</span></a>0000|498d|Sibling|00|135
+<a href="#id73"><span class="problematic" id="id74">|</span></a>0000|e4c0|Sibling|00|84
+<a href="#id75"><span class="problematic" id="id76">|</span></a>a728|0000|Sibling|00|145
+<a href="#id77"><span class="problematic" id="id78">|</span></a>a728|174f|Sibling|0F|27
+<a href="#id79"><span class="problematic" id="id80">|</span></a>a728|41c0|Sibling|0F|76
+<a href="#id81"><span class="problematic" id="id82">|</span></a>a728|46d9|Sibling|0F|90
+<a href="#id83"><span class="problematic" id="id84">|</span></a>a728|498d|Sibling|0F|47
+<a href="#id85"><span class="problematic" id="id86">|</span></a>a728|60fb|Sibling|0F|87
+<a href="#id87"><span class="problematic" id="id88">|</span></a>a728|a0da|Sibling|0F|86
+<a href="#id89"><span class="problematic" id="id90">|</span></a>a728|db83|Sibling|0F|63
+<a href="#id91"><span class="problematic" id="id92">|</span></a>41c0|0000|Parent|00|171
+<a href="#id93"><span class="problematic" id="id94">|</span></a>41c0|e4c0|Sibling|01|59
+<a href="#id95"><span class="problematic" id="id96">|</span></a>41c0|db83|Sibling|01|169
+<a href="#id97"><span class="problematic" id="id98">|</span></a>41c0|7714|Sibling|01|110
+<a href="#id99"><span class="problematic" id="id100">|</span></a>41c0|498d|Sibling|01|146
+<a href="#id101"><span class="problematic" id="id102">|</span></a>174f|0000|Sibling|00|97
+<a href="#id103"><span class="problematic" id="id104">|</span></a>174f|1b7b|Sibling|0F|34
+<a href="#id105"><span class="problematic" id="id106">|</span></a>174f|46d9|Sibling|0F|29
+<a href="#id107"><span class="problematic" id="id108">|</span></a>174f|498d|Sibling|0F|21
+<a href="#id109"><span class="problematic" id="id110">|</span></a>174f|60fb|Sibling|0F|29
+<a href="#id111"><span class="problematic" id="id112">|</span></a>174f|6766|Sibling|0F|26
+<a href="#id113"><span class="problematic" id="id114">|</span></a>174f|7714|Sibling|0F|45
+<a href="#id115"><span class="problematic" id="id116">|</span></a>174f|8ffe|Sibling|0F|45
+<a href="#id117"><span class="problematic" id="id118">|</span></a>174f|a728|Sibling|0F|29
+<a href="#id119"><span class="problematic" id="id120">|</span></a>174f|db83|Sibling|0F|45
+<a href="#id121"><span class="problematic" id="id122">|</span></a>174f|e4c0|Sibling|0F|20
+<a href="#id123"><span class="problematic" id="id124">|</span></a>46d9|0000|Sibling|00|179
+<a href="#id125"><span class="problematic" id="id126">|</span></a>46d9|174f|Sibling|0F|33
+<a href="#id127"><span class="problematic" id="id128">|</span></a>46d9|41c0|Sibling|0F|61
+<a href="#id129"><span class="problematic" id="id130">|</span></a>46d9|498d|Sibling|0F|119
+<a href="#id131"><span class="problematic" id="id132">|</span></a>46d9|498d|Sibling|0F|119
+<a href="#id133"><span class="problematic" id="id134">|</span></a>46d9|7714|Sibling|0F|83
+<a href="#id135"><span class="problematic" id="id136">|</span></a>46d9|a0da|Sibling|0F|111
+<a href="#id137"><span class="problematic" id="id138">|</span></a>46d9|a728|Sibling|0F|97
+<a href="#id139"><span class="problematic" id="id140">|</span></a>46d9|c551|Sibling|0F|22
+<a href="#id141"><span class="problematic" id="id142">|</span></a>46d9|db83|Sibling|0F|145
+<a href="#id143"><span class="problematic" id="id144">|</span></a>46d9|e4c0|Sibling|0F|68
+<a href="#id145"><span class="problematic" id="id146">|</span></a>60fb|0000|Parent|00|145
+<a href="#id147"><span class="problematic" id="id148">|</span></a>60fb|174f|Sibling|0F|32
+<a href="#id149"><span class="problematic" id="id150">|</span></a>60fb|41c0|Sibling|0F|63
+<a href="#id151"><span class="problematic" id="id152">|</span></a>60fb|46d9|Sibling|0F|129
+<a href="#id153"><span class="problematic" id="id154">|</span></a>60fb|498d|Sibling|0F|91
+<a href="#id155"><span class="problematic" id="id156">|</span></a>60fb|6766|Sibling|0F|16
+<a href="#id157"><span class="problematic" id="id158">|</span></a>60fb|7714|Sibling|0F|31
+<a href="#id159"><span class="problematic" id="id160">|</span></a>60fb|8ffe|Sibling|0F|16
+<a href="#id161"><span class="problematic" id="id162">|</span></a>60fb|a0da|Sibling|0F|85
+<a href="#id163"><span class="problematic" id="id164">|</span></a>60fb|a728|Sibling|0F|93
+<a href="#id165"><span class="problematic" id="id166">|</span></a>60fb|db83|Sibling|0F|112
+<a href="#id167"><span class="problematic" id="id168">|</span></a>60fb|e4c0|Sibling|0F|30
+<a href="#id169"><span class="problematic" id="id170">|</span></a>a0da|0000|Sibling|00|152
+<a href="#id171"><span class="problematic" id="id172">|</span></a>a0da|41c0|Sibling|0F|70
+<a href="#id173"><span class="problematic" id="id174">|</span></a>a0da|46d9|Sibling|0F|106
+<a href="#id175"><span class="problematic" id="id176">|</span></a>a0da|498d|Sibling|0F|41
+<a href="#id177"><span class="problematic" id="id178">|</span></a>a0da|60fb|Sibling|0F|81
+<a href="#id179"><span class="problematic" id="id180">|</span></a>a0da|6766|Sibling|0F|17
+<a href="#id181"><span class="problematic" id="id182">|</span></a>a0da|7714|Sibling|0F|46
+<a href="#id183"><span class="problematic" id="id184">|</span></a>a0da|a728|Sibling|0F|91
+<a href="#id185"><span class="problematic" id="id186">|</span></a>a0da|db83|Sibling|0F|63
+<a href="#id187"><span class="problematic" id="id188">|</span></a>a0da|e4c0|Sibling|0F|50
+<a href="#id189"><span class="problematic" id="id190">|</span></a>498d|db83|Parent|01|247
+<a href="#id191"><span class="problematic" id="id192">|</span></a>498d|0000|Unknown|00|252
+<a href="#id193"><span class="problematic" id="id194">|</span></a>498d|41c0|Unknown|02|252
+<a href="#id195"><span class="problematic" id="id196">|</span></a>498d|7714|Unknown|02|247
+<a href="#id197"><span class="problematic" id="id198">|</span></a>498d|46d9|Unknown|02|247
+<a href="#id199"><span class="problematic" id="id200">|</span></a>498d|a728|Unknown|02|247
+<a href="#id201"><span class="problematic" id="id202">|</span></a>498d|c551|Unknown|02|252
+<a href="#id203"><span class="problematic" id="id204">|</span></a>498d|174f|Unknown|02|252
+<a href="#id205"><span class="problematic" id="id206">|</span></a>498d|a0da|Unknown|02|252
+<a href="#id207"><span class="problematic" id="id208">|</span></a>498d|60fb|Unknown|02|247
+<a href="#id209"><span class="problematic" id="id210">|</span></a>498d|6766|Unknown|02|238
+<a href="#id211"><span class="problematic" id="id212">|</span></a>498d|e4c0|Unknown|02|247
+<a href="#id213"><span class="problematic" id="id214">|</span></a>498d|1b7b|Unknown|02|0
+<a href="#id215"><span class="problematic" id="id216">|</span></a>498d|dc15|Unknown|02|0
+<a href="#id217"><span class="problematic" id="id218">|</span></a>498d|8ffe|Unknown|02|0
+<a href="#id219"><span class="problematic" id="id220">|</span></a>498d|8ffe|Unknown|02|0
+<a href="#id221"><span class="problematic" id="id222">|</span></a>e4c0|0000|Sibling|00|152
+<a href="#id223"><span class="problematic" id="id224">|</span></a>e4c0|41c0|Sibling|0F|106
+<a href="#id225"><span class="problematic" id="id226">|</span></a>e4c0|174f|Sibling|0F|23
+<a href="#id227"><span class="problematic" id="id228">|</span></a>e4c0|46d9|Sibling|0F|69
+<a href="#id229"><span class="problematic" id="id230">|</span></a>e4c0|498d|Sibling|0F|80
+<a href="#id231"><span class="problematic" id="id232">|</span></a>e4c0|60fb|Sibling|0F|31
+<a href="#id233"><span class="problematic" id="id234">|</span></a>e4c0|7714|Sibling|0F|42
+<a href="#id235"><span class="problematic" id="id236">|</span></a>e4c0|a0da|Sibling|0F|51
+<a href="#id237"><span class="problematic" id="id238">|</span></a>e4c0|c551|Sibling|0F|20
+<a href="#id239"><span class="problematic" id="id240">|</span></a>e4c0|db83|Sibling|0F|59
+<a href="#id241"><span class="problematic" id="id242">|</span></a>====================</p>
+<p>== Graphique Old</p>
+<p>Graphique Vieille Version</p>
+<p>=== Configuration</p>
+<p>Afin de visualiser les données, il vous faut modifier le fichier NetworkDefinition.php dans le repertoire Abeille/Network car celui-ci contient les équipements, leur nom et positions.</p>
+<p>la premiere table:</p>
+<p>$knownNE = array(
+«&nbsp;0000&nbsp;» =&gt; «&nbsp;Ruche&nbsp;»,         // 00:15:8d:00:01:b2:2e:24
+// Abeille Prod JeedomZwave
+«&nbsp;dc15&nbsp;» =&gt; «&nbsp;T1&nbsp;»,
+«&nbsp;1e8c&nbsp;» =&gt; «&nbsp;T2&nbsp;»,
+«&nbsp;174f&nbsp;» =&gt; «&nbsp;T3&nbsp;»,            // 00:0b:57:ff:fe:49:10:ea
+…</p>
+<p>définie la liste des équipements en mettant leur adresse Zigbee et leur nom.</p>
+<p>Dans la deuxieme table vous definissez les positions des équipements et leur couleur:</p>
+<p>$Abeilles = array(
+“Ruche”    =&gt; array(“position” =&gt; array( “x”=&gt;700, “y”=&gt;520), “color”=&gt;”red”,),
+// Abeille Prod JeedomZwave
+// Terrasse
+“T1”       =&gt; array(“position” =&gt; array( “x”=&gt;300, “y”=&gt;450), “color”=&gt;”orange”,),
+“T2”       =&gt; array(“position” =&gt; array( “x”=&gt;400, “y”=&gt;450), “color”=&gt;”orange”,),
+“T3”       =&gt; array(“position” =&gt; array( “x”=&gt;450, “y”=&gt;350), “color”=&gt;”orange”,),</p>
+<p>=== Graphique</p>
+<p>Une fois la configuration faite vous devrier avoir le schéma de votre réseau. Par exemple pour moi, j’ai fait une configuration comprenant les équipements de mon réseau de production mais aussi le réseau de test. Capture d’écran des données du réseau de test:</p>
+<p>image:Capture_d_ecran_2018_04_30_a_23_45_51.png[width=800]</p>
+<p>On peut voir toutes les voisines rapportées par les équipements.</p>
+<p>Vous pouvez choisir ce qui est affiché à l’écran:</p>
+<ul class="simple">
+<li>premier menu permet de selectionner les équipements qui ont remontés des voisines.</li>
+<li>second menu permet de selectionner les équipements qui ont été mentionné comme étant un voisin d’un autre équipement</li>
+<li>le troisieme menu permet en mode cache d’utiliser les fichier json contenant les informations collectées, le mode refresh permet d’interroger le reseau</li>
+<li>le dernier menu permet de selectionner l information affiché sur les fleches</li>
+</ul>
+<p>Par exemple, je veux toutes les relations de voisinages alors dans le premier menu je choisi all.</p>
+<p>Par exemple, je veux voir tous les équipements rapportant vori un équipement xxxx, je choisi none dans le premier menu et xxxx dans le second.</p>
+<p>Dans la capture ci dessus on peut voir que le noeud Detecteur Smoke est un fils de l’ampoule bois bureau, alors que tous les autres équipements rapportent à la Zigate en direct.</p>
+<p>== Graphique New</p>
+<p>=== Configuration</p>
+<p>Normalement après 24h les informations sont disponibles. Si vous n’avez pas les 24h ou souhaiter rafraichier les données, il faut avoir fait un «&nbsp;Recalcul du cache&nbsp;» (Network List-&gt;Table des noeuds-&gt;Recalcul du cache).</p>
+<p>Juste un clic sur «&nbsp;Network Graph&nbsp;»:</p>
+<p>image:Capture_d_ecran_2018_10_04_a_02_39_04.png[]</p>
+<p>Juste ouvrir le graph et les Abeilles seront disposées sur un grand cercle. Vous pourrez déplacer les Abeilles (clic, deplacement, relache).</p>
+<p>image:Capture_d_ecran_2018_10_04_a_02_24_10.png[width=800]</p>
+<p>=== Filtre</p>
+<p>image:Capture_d_ecran_2018_10_04_a_11_44_30.png[width=800]</p>
+<p>Les Abeilles sont toujours representées. Vous pouvez appliquer des filtres sur les voisines.</p>
+<ul class="simple">
+<li>Source: La relation de voisinage qui a pour source la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.</li>
+<li>Destination: La relation de voisinage qui a pour destination la valeur selectionnée sera dessinée. All pour toutes et None pour aucune.</li>
+<li>Parametre: permet de selectionner la valeurs associée à la relation qui sera imprimer le long du lien. Si le parametre choisi est le LinkQualityDec alors le code couleur est vert LQI bon, orange LQI moyen , rouge LQI pas bon.</li>
+<li>Relation: permet de choisir les relations hirarchique que l’on veut afficher.</li>
+<li>Save: permet de sauvegarder en local sur le PC CLient un graph.</li>
+<li>Restore: permet de recupérer un graph sauvegardé</li>
+</ul>
+<p>Utilisation du filtre par l’exemple:</p>
+<ul class="simple">
+<li>Je veux voir toutes les Abeilles vues par la ruche (Zigate). Je choisi Ruche dans la source et none dans destination.</li>
+<li>Je veux représenter qui voit la sonnette. Je choisi Sonnette dans la destination et none dans la source.</li>
+<li>Je veux voir toutes les relations Child. Je mets All dans Source et Destination, Child dans Relation.</li>
+<li>Je choisi la valeur affichée le long de la ligne avec le parametre. Le plus utilisé probablement est LinkQualityDec qui represente la qualité de la relation radio dans le sens Source - Destination. Le nombre est entre 0 et 250. Pour des équipments proches d’environ 20cm j’ai des valeurs autour de 180. Au dessus de 220, je me dis que la valeur est farfelue surtout quand elle vaut 255. Tous les équipements ne semblent pas remonter des infos pertinentes. En dessous de 50 la liaison est vraiment pas bonne, il faut probablement faire quelque chose comme ajouter un routeur.</li>
+</ul>
+<p>=== Exemples</p>
+<p>Exemple avec tout positionné à la main:</p>
+<p>image:Capture_d_ecran_2018_10_04_a_02_23_17.png[width=800]</p>
+<p>Exemple qu’avec les relations Child (Filter Child):</p>
+<p>image:Capture_d_ecran_2018_10_04_a_02_23_37.png[width=800]</p>
+<p>On peut voir ici que j’ai 4 End Device sur la ruche(Zigate), 5 sur la priseY,…</p>
+<p>Vue interressante car elle permet de voir quels sont le équipements terminaux rattachés à quels routeurs.</p>
+<p>Exemple en demandant la Ruche au centre:</p>
+<p>image:Capture_d_ecran_2018_10_04_a_02_24_23.png[width=800]</p>
+<p>Exemple avec l’upload d’une image en fond d’écran:</p>
+<p>image:Capture_d_ecran_2018_10_04_a_11_15_34.png[width=800]</p>
+<p>Vous pouvez aussi choisir votre fond d’écran pour positionner vos Abeilles.</p>
+<p>== Couverture</p>
+<p>Sur la base de la collecte de ces informations, j’ai fait quelques graphes pour comprendre ce qu’on espérer en terme de couverture radio.</p>
+<p>Je n’ai pris que des routeurs dans cet exercice: prise xiaomi, prise ikea, ampoule ikea.
+Comme tout est mélangé, type de routeur, types de murs (Fenetre, Bois, Pierre,…), Distances définies à vue d’oeil,.. cela permet d’avoir une vue d’un réseau réel.</p>
+<p>Le premier graphe est le LQI rapporté par l’équipement en fonction du nombre de mur à traverser.
+Le deuxieme graphe est le LQI en fonction de la distance à vol d’oiseau.</p>
+<p>image:Capture_d_ecran_2018_12_14_a_10_45_20.png[width=800]</p>
+<p>Si l’on considère qu’avec un LQI inférieur à 50 la liaison radio est compliquée (basé sur une expérience partagée mais en rien mesurée) il faut resté dans la mesure du possible au dessus.</p>
+<p>Cela nous indique qu’en moyenne plus de 2 murs est très compliqué. Ce qui implique un routeur dans chaque pièce pour être tranquile.</p>
+<p>On peut voir des écarts très important dans le LQI alors que les équipements sont dans la meme piece (Colonne 0 des graphes LQI/Wall).</p>
+<p>Pour le LQI/m, on peut dire que jusqu’à 10m c’est jouable. Mais on peut trouver les extrèmes aussi. Exemple: la Zigate et une ampoule ikea à 16m pour un LQI de 117 alors que deux ampoules à 5 m on un LQI de 15.</p>
+<p>Je suppose qu’en environnement ouvert on peut avoir des distances bien supérieures, avec des distances annoncées par les fabriquants jusqu’a 100m, mais ce type de situation sera des plus rares…</p>
+<p>== Link Status</p>
+<p>Afin de comprendre la situation radio de votre réseau, vous pouvez utiliser ce script RadioVoisinesMap.php et visualiser les résultats dans un browser web:</p>
+<p><a class="reference external" href="http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php">http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php</a></p>
+<p>Ce script va présenter graphiquement les informations échangées entre les routeurs dans les messages «&nbsp;Link Status&nbsp;».</p>
+<p>Faites une capture du traffique avec wireshark, puis faites une sauvegarde JSON sous essai.json:</p>
+<p>image:Capture_d_ecran_2018_05_10_a_23_33_32.png[width=800]</p>
+<p>image:Capture_d_ecran_2018_05_10_a_23_33_48.png[width=800]</p>
+<p>Une fois cela fait ouvrez la page: <a class="reference external" href="http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php">http://[Jeedom]/plugins/Abeille/Network/RadioVoisinesMap.php</a></p>
+<p>Vous devriez avoir un résultat comme:</p>
+<p>image:Capture_d_ecran_2018_05_10_a_23_43_31.png[width=800]</p>
+<p>Dans le menu déroulent le premier champ permet de filtrer les enregistrement qui ont pour adresse de source la valeur selectionnée. Idem pour le deuxième champ mais pour l’adresse destination. Et enfin le dernier champ permet d’afficher la valeur du champ In ou du champ Out. La valeur In ou Out est la dernière valeur trouvée dans le fichier json lors de son analyse.</p>
+<p>Evidement la configuration est celle de mon réseau de prod et de mon réseau de test donc il vous faut déclarer votre propre réseau dans le fichier NetworkDefinition.php.</p>
+<p>Dans le tableau knowNE mettre l’adresse courte suiivie du nom de léquipement:</p>
+<p>// 00:01:58:d0:00:19:1b:22 000158d000191b22 -&gt; Test
+// Abeille Prod JeedomZwave
+«&nbsp;dc15&nbsp;» =&gt; «&nbsp;T1&nbsp;»,            // 00:0B:57:ff:fe:49:0D:bf 000B57fffe490Dbf
+«&nbsp;1e8c&nbsp;» =&gt; «&nbsp;T2&nbsp;»,
+«&nbsp;174f&nbsp;» =&gt; «&nbsp;T3&nbsp;»,            // 00:0b:57:ff:fe:49:10:ea
+«&nbsp;6766&nbsp;» =&gt; «&nbsp;T4&nbsp;»,
+—-</p>
+<p>Puis dans le tableau Abeilles, définissez les coordonnées de chaque équipements:</p>
+<p>// Abeille Prod JeedomZwave
+// Terrasse
+“T1”       =&gt; array(“position” =&gt; array( “x”=&gt;300, “y”=&gt;450), “color”=&gt;”orange”,),
+“T2”       =&gt; array(“position” =&gt; array( “x”=&gt;400, “y”=&gt;450), “color”=&gt;”orange”,),
+“T3”       =&gt; array(“position” =&gt; array( “x”=&gt;450, “y”=&gt;350), “color”=&gt;”orange”,),
+“T4”       =&gt; array(“position” =&gt; array( “x”=&gt;450, “y”=&gt;250), “color”=&gt;”orange”,),
+—-</p>
+<p>== Routage</p>
+<p>Le ZigBee est un réseau Mesh qui permet de «&nbsp;router&nbsp;» les messages d’équipements en équipements pour rejoindre leur destination.</p>
+<p>L’organisation du routage suit des règles définies dans la norme ZigBee. Chaque équipement contient dans la stack ZigBee les taches relatives au routage. Tout est automatique et rien n’est accéssible à l’utilisateur final. Une liaison radio en milieu ouvert va faire disons 20m maximum. Et sauf erreur un message est capable d’être routé 30 fois (il faudrait vérifier cette valeur). Ca permet de faire un réseau de 600m de rayon autour du coordinateur.</p>
+<p>Sauf que…</p>
+<p>Je me suis retrouvé avec des prises outdoor Osram qui refusaient de fonctionner correctement. Apres investigation il s’avere que le routage entre equipement de marque différentes ne se passe pas forcement tres bien. Voici un recap des sceanrii testés et les résultats:</p>
+<p>ZiGate - Ampoule Ikea  - Ampoule Ikea: Ok
+ZiGate - Ampoule Ikea - Prise Osram: NOK
+ZiGate - Prise Xiaomi - Ampoule Ikea: Ok
+ZiGate - Prise Xiaomi - Prise Osram: NOK
+ZiGate - Prise Osram - Ampoule Ikea: Ok
+ZiGate - Prise Osram - Prise Osram: Ok
+ZiGate - Module GledOpto Ruban - Ampoule Ikea: Ok
+ZiGate - Module GledOpto Ruban - Prise Osram: NOK
+ZiGate - Ampoule Osram Couleur - Ampoule Ikea: Ok
+ZiGate - Ampoule Osram Couleur - Prise Osram: Ok</p>
+<p>Alors pour monter le mesh il faut vérifier que les équipements sont compatibles même si en théorie les routeurs routent, en pratique…</p>
+<p>Enjoy</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Abeille</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Presentation.html">Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eurotronics.html">Eurotronics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ikea.html">Ikea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tuto.html">Tuto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Changelog.html">ChangeLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">Help</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Radio.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

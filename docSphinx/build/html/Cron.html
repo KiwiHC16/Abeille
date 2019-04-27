@@ -1,0 +1,147 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Actions réguliaires (cron) &#8212; Documentation Abeille 27.04.2019</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="actions-reguliaires-cron">
+<h1>Actions réguliaires (cron)<a class="headerlink" href="#actions-reguliaires-cron" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="daily">
+<h2>Daily<a class="headerlink" href="#daily" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="voisines">
+<h3>Voisines<a class="headerlink" href="#voisines" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Une fois par jour, Abeille va interroger les équipements pour obtenir leurs informations radio (voisines).</p>
+<p>== Hourly</p>
+<p>=== IKEA</p>
+<p>Refresh Ampoule Ikea Bind et set Report</p>
+<p>Les ampoules Ikea ont une certaine tendance à oublier leur configuration alors on refait les bind et set report.</p>
+<p>== 1/4 d’heure</p>
+<p>=== pl2303</p>
+<p>Le driver pl2303 sur les RPI qui controle le module TTL-USB n’est pas super stable donc on verifie que tout va bien sinon on redemarre.</p>
+<p>=== Ping</p>
+<p>Tous les équipements qui ont un champ «&nbsp;battery_type&nbsp;» vide vont recevoir un message auquel ils doivent répondre pour vérifier qui sont bien en vie.</p>
+<p>[[Poll15]]
+=== Poll</p>
+<p>Les équipments qui ont une variable poll dans leur configuration à <em>_15_</em>, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu’ils sont en vie.</p>
+<p>Pour vérifier la valeur, dans ce cas c’est 1 par exemple.
+image:Capture_d_ecran_2019_03_15_a_11_46_00.png[width=900]</p>
+<p>== Minutes</p>
+<p>=== Ping</p>
+<p>Ping (getVersion) de la zigate pour être sûr qu’elle est présente et fonctionne.</p>
+<p>[[Poll1]]
+=== Poll</p>
+<p>Les équipments qui ont une variable poll dans leur configuration à <em>_1_</em>, vont recevoir deux messages (Manufacturer/Location) auquels ils doivent répondre pour vérifier qu’ils sont en vie.</p>
+<p>Pour vérifier la valeur, dans ce cas c’est 1.
+image:Capture_d_ecran_2019_03_15_a_11_46_00.png[width=900]</p>
+<p>=== Health</p>
+<p>En fonction de la date de la derniere communication avec l’équipement, les etats de TimeOut sont positionnés.</p>
+<p>=== Inclusion</p>
+<p>On demande à la Zigate si elle est en mode Inclusion ou non.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Abeille</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Presentation.html">Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eurotronics.html">Eurotronics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ikea.html">Ikea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tuto.html">Tuto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Changelog.html">ChangeLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">Help</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Cron.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

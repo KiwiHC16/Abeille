@@ -7,7 +7,9 @@ Radiateur
 Inclusion
 ^^^^^^^^^
 
-Traduction de la doc::
+.. epigraph::
+
+    Traduction de la doc
 
     Une fois les piles insérées, PrP apparaît à l'écran et le Spirit ZigBee est prêt à être assemblé. Le Spirit ZigBee est réglé en usine en mode Add-in et affiche Jin en connexion avec une icône de radio clignotante sur l'écran LCD.
     Si le Spirit ZigBee a été ajouté avec succès, l’écran LCD affiche en permanence l’icône de la radio et le voyant clignote en vert.
@@ -37,7 +39,9 @@ Fonctionnement
 Reset
 ^^^^^
 
-Traduction de la doc::
+.. epigraph::
+
+    Traduction de la doc:
 
     Maintenez les touches boost, moins et plus enfoncées jusqu'à ce que le compteur de l'écran LCD atteigne 10. Ne relâchez le bouton que lorsque l'écran LCD affiche "rES". La réinitialisation est effectuée peu de temps après le relâchement du bouton. L’écran LCD affiche «PrP» et le poussoir de la vanne passe en position de montage.
 

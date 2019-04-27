@@ -17,6 +17,7 @@ Ici je mets mon premier text.::
 
    help
    Ikea
+   changelog
 
 
 Indices and tables

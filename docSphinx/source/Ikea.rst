@@ -16,6 +16,12 @@ Un petit mémo avec la télécommande Hue à 20€ pour ceux qui, comme moi, von
 5. La télécommande joint à son tour le réseau ZigBee
 6. Si on le souhaite, on peut associer la télécommande et l’ampoule en maintenant le bouton ON (1) pendant 5 secondes à 50 cm de l’ampoule (toujours sous tension).
 
+Pour les ampoules recalcitrantes:
+Je viens de réussir ! J'ai réalisé un scénario qui commande une prise connectée (Ikea aussi tiens :D ). Voici ma méthode qui semble fonctionner, en tout cas chez moi 2/2 OK :
+Mode inclusion
+ON du spot
+Boucle qui fait 6 fois : OFF / sleep 2s / ON / sleep 0.5s .
+
 Nouvelle inclusion
 ^^^^^^^^^^^^^^^^^^
 

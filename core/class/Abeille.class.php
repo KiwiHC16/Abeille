@@ -972,7 +972,7 @@
             $cmdSvc1 = "expr  `service mosquitto status 2>&1 | grep 'active' | grep 'running' | wc -l`";
             exec(system::getCmdSudo().$cmdSvc1, $outputSvc1);
             if ( $outputSvc1[0] != "1" ) {
-                message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le service mosquitto','','Abeille/Demon');
+                // message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le service mosquitto','','Abeille/Demon');
                 $return['mosquitto'] = 'nok';
                 $return['mosquitto_message'] = 'Service mosquitto pas démarré.';
             }

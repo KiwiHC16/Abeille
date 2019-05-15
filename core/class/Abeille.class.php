@@ -977,7 +977,9 @@
                 
                 while (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
                     log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
-                    self::message($msg->message);
+                    $message->topic = $msg->message['topic'];
+                    $message->payload = $msg->message['payload'];
+                    self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
                 }
@@ -1289,6 +1291,7 @@
             
             $parameters_info = self::getParameters();
             
+            /*
             // On gere la root de mqtt
             if ( $parameters_info["AbeilleTopic"] != "#" ) {
                 if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
@@ -1298,7 +1301,8 @@
                 // On enleve AbeilleTopic
                 $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
             }
-            
+            */
+            log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // demande de creation de ruche au cas ou elle n'est pas deja crée....
             // La ruche est aussi un objet Abeille

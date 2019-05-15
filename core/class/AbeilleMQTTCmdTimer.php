@@ -438,7 +438,7 @@ try {
     $max_msg_size = 512;
     
     while ( true ) {
-        if (msg_receive( $AbeilleTimer->queueKeyAbeilleToTimer, 0, $msg_type, $max_msg_size, $msg, true)) {
+        if (msg_receive( $AbeilleTimer->queueKeyAbeilleToTimer, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
             $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 124: ".$msg->message['topic']." -> ".$msg->message['payload']);
             $message->topic = $msg->message['topic'];
             $message->payload = $msg->message['payload'];
@@ -447,7 +447,7 @@ try {
             $msg = NULL;
         }
         
-        if (msg_receive( $AbeilleTimer->queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+        if (msg_receive( $AbeilleTimer->queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
             $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 421: ".$msg->message['topic']." -> ".$msg->message['payload']);
             $message->topic = $msg->message['topic'];
             $message->payload = $msg->message['payload'];

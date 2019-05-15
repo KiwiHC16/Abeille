@@ -934,7 +934,7 @@
                 $max_msg_size = 512;
                 
                 while ( true ) {
-                    if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                    if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                         log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
@@ -942,7 +942,7 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                    if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                     log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
@@ -950,7 +950,7 @@
                     $msg_type = NULL;
                     $msg = NULL;
                 }
-                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                         log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];

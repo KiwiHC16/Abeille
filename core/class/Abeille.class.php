@@ -24,9 +24,11 @@
     // 2: AbeilleParser
     // 3: AbeilleMQTTCmd
     // 221: means AbeilleParser to(2) Abeille
-    define('queueKeyParserToAbeille', 221);
-    define('queueKeyParserToCmd', 223);
-    define('queueKeyAbeilleToCmd', 123);
+    define('queueKeyParserToAbeille',   221);
+    define('queueKeyParserToCmd',       223);
+    define('queueKeyAbeilleToCmd',      123);
+    define('queueKeyCmdToCmd',          323);
+    define('queueKeyCmdToAbeille',      321);
     
     Class MsgAbeille {
         public $message = array(

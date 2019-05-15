@@ -1821,22 +1821,7 @@
             $parameters_info = Abeille::getParameters();
             log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
             
-            /*
-            $publish = new Mosquitto\Client();
-            
-            $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
-            
-            $publish->connect($parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60);
-            $publish->publish(substr($parameters_info['AbeilleTopic'],0,-1).$_subject, $_message, $parameters_info['AbeilleQos'], 0);
-            for ($i = 0; $i < 100; $i++) {
-                // Loop around to permit the library to do its work
-                $publish->loop(1);
-            }
-            $publish->disconnect();
-            unset($publish);
-             */
-            
-            $queue = msg_get_queue(queueId);
+            $queue = msg_get_queue( $queueId );
             
             $msgAbeille = new MsgAbeille;
             

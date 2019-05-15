@@ -37,20 +37,23 @@
             if ($debug) $this->deamonlog("debug", "AbeilleMQTTCmdQueue constructor");
         }
         
-        public function publishMosquitto( $queueKeyId, $topic, $message ) {
+        public function publishMosquitto( $queueKeyId, $topic, $payload ) {
             /*
              $this->client->publish( substr($this->parameters_info["AbeilleTopic"],0,-1).$topic, $message, $this->qos, 0 );
              */
-            $queue = msg_get_queue(queueKeyId);
+            $queue = msg_get_queue($queueKeyId);
             
             $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message['topic']   = $topic;
+            $msgAbeille->message['payload'] = $payload;
             
             if (msg_send($queue, 1, $msgAbeille)) {
                 echo "added to queue\n";
                 print_r(msg_stat_queue($queue));
             }
             else {
-                echo "could not add message to queue \n";
+                echo "could not add message to queue id: ".$queueKeyId."\n";
             }
             
         }
@@ -69,7 +72,7 @@
             return;
         }
         
-        public function execTempoCmdAbeille($client,$qos) {
+        public function execTempoCmdAbeille() {
             
             if ( count($this->mqttMessageQueue)<1 ) {
                 return;
@@ -3353,6 +3356,8 @@
                 $msg_type = NULL;
                 $msg = NULL;
             }
+            
+            $AbeilleMQTTCmd->execTempoCmdAbeille();
         }
         
     }

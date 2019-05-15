@@ -19,6 +19,21 @@
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
     
+    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
+    // 1: Abeille
+    // 2: AbeilleParser
+    // 3: AbeilleMQTTCmd
+    // 221: means AbeilleParser to(2) Abeille
+    define('queueKeyParserToAbeille', 221);
+    define('queueKeyParserToCmd', 223);
+    
+    Class MsgAbeille {
+        public $message = array(
+                                'topic' => 'Coucou',
+                                'payload' => 'me voici',
+                                );
+    }
+    
     class Abeille extends eqLogic {
         
         // Is it the health of the plugin level menu Analyse->santé ? A verifier.
@@ -909,6 +924,7 @@
             //use verified parameters
             $parameters_info = self::getParameters();
             
+            /*
             log::add( 'Abeille', 'debug', 'Parametres utilises, Host : '.$parameters_info['AbeilleAddress'].', Port : '.$parameters_info['AbeillePort'].', AbeilleParentId : '.$parameters_info['AbeilleParentId'].', AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].', qos: '.$parameters_info['AbeilleQos'].', showAllCommands: '.$parameters_info['showAllCommands'].', affichageNetwork: '.$parameters_info['affichageNetwork'].', affichageTime: '.$parameters_info['affichageTime'].', affichageCmdAdd: '.$parameters_info['affichageCmdAdd'].', ModeCreation: '.$parameters_info['creationObjectMode'].', adresseCourteMode: '.$parameters_info['adresseCourteMode'].', onlyTimer: '.$parameters_info['onlyTimer'].', IpWifiZigate : '.$parameters_info['IpWifiZigate'] );
             
             // https://github.com/mgdm/Mosquitto-PHP
@@ -950,6 +966,21 @@
                 
                 $client->disconnect();
                 unset($client);
+             }
+             */
+            try {
+                $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
+                
+                $msg_type = NULL;
+                $msg = NULL;
+                $max_msg_size = 512;
+                
+                while (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                    log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                    self::message($msg->message);
+                    $msg_type = NULL;
+                    $msg = NULL;
+                }
                 
             } catch (Exception $e) {
                 log::add('Abeille', 'error', $e->getMessage());
@@ -2340,7 +2371,7 @@
                 break;
                 
             case "18":
-                
+                Abeille::deamon();
                 break;
                 
             case "19":

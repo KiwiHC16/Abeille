@@ -17,7 +17,6 @@
     include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
-
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',
                            '0104'=>'ZigBee Home Automation (ZHA)',
@@ -97,6 +96,7 @@
                                          ),
                          );
 
+    /*
     function connect($r, $message)
     {
         log::add('Abeille', 'info', 'Mosquitto: AbeilleParser Connexion à Mosquitto avec code ' . $r . ' ' . $message);
@@ -127,6 +127,7 @@
         // var_dump( $message );
         $AbeilleParser->procmsg( $message->topic, $message->payload );
     }
+    */
 
     class debug {
         function deamonlog($loglevel = 'NONE', $message = "")
@@ -140,6 +141,7 @@
         }
     }
 
+    /*
     class MosquittoAbeille extends debug {
         public $client;
 
@@ -180,7 +182,14 @@
         }
     }
 
+    
     class AbeilleParser extends MosquittoAbeille {
+*/
+    
+    class AbeilleParser extends debug {
+        public $queueKeyParserToAbeille = null;
+        public $queueKeyParserToCmd = null;
+        
         public $debug = array(
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
@@ -284,44 +293,135 @@
             // $this->requestedlevel = '' ? 'none' : $argv[7];
             $this->requestedlevel = "debug";
 
-            parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleParserClass"] );
-        }
+            // parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleParserClass"] );
+            // parent::__construct();
+            
+            $this->queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
+            $this->queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
 
+        }
+        
+        function checkMessage() {
+            // Sauf erreur Parser ne recoit pas de message des autres process
+        }
+        
         function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
         {
+            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $this->parameters_info['AbeilleQos']);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $this->parameters_info['AbeilleQos']);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $this->parameters_info['AbeilleQos']);
+             */
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                             'topic' => "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,
+                             'payload' => $data,
+                             );
+            
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+                echo "added to queue  \n";
+                print_r(msg_stat_queue($queue));
+            }
+            else {
+                echo "could not add message to queue \n";
+            }
         }
 
         function mqqtPublishFct( $SrcAddr, $fct, $data)
         {
+            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$fct,    $data);
+             */
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                                         'topic' => "Abeille/".$SrcAddr."/".$fct,
+                                         'payload' => $data,
+                                         );
+            
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+                echo "added to queue  \n";
+                print_r(msg_stat_queue($queue));
+            }
+            else {
+                echo "could not add message to queue \n";
+            }
+            
         }
 
         function mqqtPublishLQI( $Addr, $Index, $data)
         {
+            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."LQI/".$Addr."/".$Index, $data);
+             */
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                                         'topic' => "LQI/".$Addr."/".$Index,
+                                         'payload' => $data,
+                                         );
+            
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+                echo "added to queue  \n";
+                print_r(msg_stat_queue($queue));
+            }
+            else {
+                echo "could not add message to queue \n";
+            }
+            
         }
 
         function mqqtPublishAnnounce( $SrcAddr, $data)
         {
+            /*
             // Abeille / short addr / Annonce -> data
             // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/".$SrcAddr."/Annonce", $data);
+             */
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                                         'topic' => "CmdAbeille/".$SrcAddr."/Annonce",
+                                         'payload' => $data,
+                                         );
+            
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille)) {
+                echo "added to queue  \n";
+                print_r(msg_stat_queue($queue));
+            }
+            else {
+                echo "could not add message to queue \n";
+            }
         }
 
         function mqqtPublishAnnounceProfalux( $SrcAddr, $data)
         {
+            /*
             // Abeille / short addr / Annonce -> data
             // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data);
+             */
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                                         'topic' => "CmdAbeille/".$SrcAddr."/AnnonceProfalux",
+                                         'payload' => $data,
+                                         );
+            
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille)) {
+                echo "added to queue  \n";
+                print_r(msg_stat_queue($queue));
+            }
+            else {
+                echo "could not add message to queue \n";
+            }
         }
 
         function procmsg($topic, $payload)
@@ -2637,18 +2737,24 @@
             exit(1);
         }
 
-        if ( $AbeilleParser->debug['Serial'] )$AbeilleParser->deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$AbeilleParser->requestedlevel.' on '.$AbeilleParser->parameters_info['AbeilleUser'].':'.$AbeilleParser->parameters_info['AbeillePass'].'@'.$AbeilleParser->parameters_info['AbeilleAddress'].':'.$AbeilleParser->parameters_info['AbeillePort'].' qos='.$AbeilleParser->parameters_info['AbeilleQos'] );
+        /*
+        if ( $AbeilleParser->debug['Serial'] ) $AbeilleParser->deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$AbeilleParser->requestedlevel.' on '.$AbeilleParser->parameters_info['AbeilleUser'].':'.$AbeilleParser->parameters_info['AbeillePass'].'@'.$AbeilleParser->parameters_info['AbeilleAddress'].':'.$AbeilleParser->parameters_info['AbeillePort'].' qos='.$AbeilleParser->parameters_info['AbeilleQos'] );
         if ( $AbeilleParser->debug['AbeilleParserClass'] ) $AbeilleParser->deamonlog("debug", json_encode( $AbeilleParser ) );
-
+         */
+         
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
 
         $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 
         while (true) {
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-            $AbeilleParser->client->loop(0);
-
+           /*
+                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
+                $AbeilleParser->client->loop(0);
+            */
+            
+            $AbeilleParser->checkMessage();
+            
             if (!file_exists($in)) {
                 $AbeilleParser->deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
                 exit(1);

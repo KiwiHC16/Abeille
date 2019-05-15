@@ -438,13 +438,6 @@
                     $topicArray = explode("/", $eqLogic->getLogicalId());
                     $addr = $topicArray[1];
                     $i=$i+1;
-                    // log::add('Abeille', 'debug', 'Short: '.$addr);
-                    
-                    /*
-                     if ( is_object($elogic) ) { $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "IEEE-Addr"); }
-                     $addrIEEE = $cmdlogic->execCmd();
-                     log::add('Abeille', 'debug', 'IEEE: '.$addrIEEE);
-                     */
                     
                     $abeille = new Abeille();
                     $commandIEEE = new AbeilleCmd();
@@ -931,51 +924,8 @@
             //use verified parameters
             $parameters_info = self::getParameters();
             
-            /*
-            log::add( 'Abeille', 'debug', 'Parametres utilises, Host : '.$parameters_info['AbeilleAddress'].', Port : '.$parameters_info['AbeillePort'].', AbeilleParentId : '.$parameters_info['AbeilleParentId'].', AbeilleSerialPort: '.$parameters_info['AbeilleSerialPort'].', qos: '.$parameters_info['AbeilleQos'].', showAllCommands: '.$parameters_info['showAllCommands'].', affichageNetwork: '.$parameters_info['affichageNetwork'].', affichageTime: '.$parameters_info['affichageTime'].', affichageCmdAdd: '.$parameters_info['affichageCmdAdd'].', ModeCreation: '.$parameters_info['creationObjectMode'].', adresseCourteMode: '.$parameters_info['adresseCourteMode'].', onlyTimer: '.$parameters_info['onlyTimer'].', IpWifiZigate : '.$parameters_info['IpWifiZigate'] );
-            
-            // https://github.com/mgdm/Mosquitto-PHP
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html
-            $client = new Mosquitto\Client($parameters_info['AbeilleConId'].'_pub_deamon_Loop_ForEver');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-            $client->onConnect('Abeille::connect');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-            $client->onDisconnect('Abeille::disconnect');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-            $client->onSubscribe('Abeille::subscribe');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-            $client->onMessage('Abeille::message');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-            $client->onLog('Abeille::logmq');
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-            $client->setWill('/jeedom', "Client Abeille died :-(", $parameters_info['AbeilleQos'], 0);
-            
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-            $client->setReconnectDelay(1, 120, 1);
-            
             try {
-                $client->setCredentials(  $parameters_info['AbeilleUser'], $parameters_info['AbeillePass'] );
-                $client->connect( $parameters_info['AbeilleAddress'], $parameters_info['AbeillePort'], 60 );
-                $client->subscribe( $parameters_info['AbeilleTopic'], $parameters_info['AbeilleQos'] ); // !auto: Subscribe to root topic
-                
-                log::add('Abeille', 'debug', 'Subscribe to topic '.$parameters_info['AbeilleTopic']);
-                
-                while (true) {
-                    $client->loop(0);
-                    time_nanosleep( 0, 10000000 ); // 1/100s
-                }
-                
-                $client->disconnect();
-                unset($client);
-             }
-             */
-            try {
+                $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
                 $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
                 $queueKeyTimerToAbeille = msg_get_queue(queueKeyTimerToAbeille);
                 
@@ -984,6 +934,14 @@
                 $max_msg_size = 512;
                 
                 while ( true ) {
+                    if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        $message->topic = $msg->message['topic'];
+                        $message->payload = $msg->message['payload'];
+                        self::message($message);
+                        $msg_type = NULL;
+                        $msg = NULL;
+                    }
                     if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
                     log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                     $message->topic = $msg->message['topic'];
@@ -1066,12 +1024,7 @@
             
             //try to start mosquitto service if not already started.
             if (self::serviceMosquittoStatus()['mosquitto'] != 'ok') {
-                /*
-                $cmdSvc = "kill `pgrep -f /usr/sbin/mosquitto` 2>&1";
-                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('Abeille', 'debug', 'Mosquitto - kill du service mosquitto: '.$cmdSvc.' '.json_encode($outputSvc));
-                sleep(3);
-                */
+
                 log::add('Abeille', 'debug', 'Mosquitto - Le service mosquitto ne semble pas fonctionner, je vais essayer de le démarrer.','Demarrer le service mosquitto: /etc/init.d/mosquitto start');
                 
                 $cmdSvc = "/etc/init.d/mosquitto start 2>&1 ;";
@@ -1309,17 +1262,6 @@
             
             $parameters_info = self::getParameters();
             
-            /*
-            // On gere la root de mqtt
-            if ( $parameters_info["AbeilleTopic"] != "#" ) {
-                if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
-                    log::add('Abeille', 'debug', "Message receive but is not for me, wrong delivery !!!");
-                    return;
-                }
-                // On enleve AbeilleTopic
-                $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
-            }
-            */
             log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // demande de creation de ruche au cas ou elle n'est pas deja crée....
@@ -2180,10 +2122,6 @@
                     
                     $request = str_replace('\\', '', jeedom::evaluateExpression($request));
                     $request = cmd::cmdToValue($request);
-                    
-                    /*
-                    $NE->publishMosquitto( $topic, $request );
-                     */
                     
                     $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     

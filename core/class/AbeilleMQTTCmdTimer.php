@@ -15,13 +15,14 @@ require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
 
-
+/*
 function message($message) {
   global $AbeilleTimer;
   // var_dump( $message );
   $AbeilleTimer->procmsg( $message );
 }
-
+*/
+    
 class debug extends Tools {
   function deamonlog($loglevel = 'NONE', $message = "") {
     if ($this->debug["cli"] ) {
@@ -32,7 +33,7 @@ class debug extends Tools {
     }
   }
 }
-
+/*
 class MosquittoAbeille extends debug {
   public $client;
 
@@ -101,8 +102,8 @@ class MosquittoAbeille extends debug {
     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
   }
 }
-
-class AbeilleTimer extends MosquittoAbeille {
+*/
+class AbeilleTimer extends debug {
   public $debug = array(  "cli"                 => 1, // commande line mode or jeedom
   "AbeilleTimerClass" => 1,
   "procmsg" => 1, );
@@ -112,6 +113,7 @@ class AbeilleTimer extends MosquittoAbeille {
   public $lastCmdUpdate;
   public $RefreshWidgetRate;
   public $RefreshCmdRate;
+    public $queueKeyAbeilleToTimer;
 
   function __construct($client_id) {
     global $argv;
@@ -128,11 +130,34 @@ class AbeilleTimer extends MosquittoAbeille {
     $this->lastWidgetUpdate = time();
     $this->lastCmdUpdate = time();
 
-    parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleMQTTCmdClass"] );
+    // parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleMQTTCmdClass"] );
 
   }
 
+    function publishTimer( $queueId, $SrcAddr, $ClusterId, $AttributId, $data ) {
+        // Abeille / short addr / Cluster ID - Attr ID -> data
+        
+        // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data              );
+        // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",                 time()             );
+        // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"));
+        
+        $queue = msg_get_queue(queueId);
+        
+        $msgAbeille = new MsgAbeille;
+        
+        $msgAbeille->message['topic'] = "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId;
+        $msgAbeille->message['payload'] = $data;
+        
+        if (msg_send( $queue, 1, $msgAbeille)) {
+            log::add('Abeille', 'Debug', 'Msg sent');
+            log::add('Abeille', 'Debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+        }
+        else {
+            log::add('Abeille', 'Debug', 'Could not send Msg');
+        }
 
+        
+    }
 
   function execCommandeTimer( $commande, $options ) {
     // echo "Commande: " . $commande . "\n";
@@ -173,7 +198,7 @@ class AbeilleTimer extends MosquittoAbeille {
       else {
         // echo $address . " running \n";
         if ( (time()-$this->lastWidgetUpdate) > $this->RefreshWidgetRate ){
-          $this->publishTimer( $address, "Var", "Duration", $Timer['T3']-time() );
+          $this->publishTimer( queueKeyAbeilleToTimer, $address, "Var", "Duration", $Timer['T3']-time() );
         }
 
         if ( (time()-$this->lastCmdUpdate) > $this->RefreshCmdRate ) {
@@ -394,7 +419,7 @@ $AbeilleTimer = new AbeilleTimer("AbeilleTimer");
 try {
 
   if ( $AbeilleTimer->debug['AbeilleTimerClass'] ) $AbeilleTimer->deamonlog("debug", json_encode( $AbeilleTimer ) );
-
+/*
   while (true) {
     $AbeilleTimer->client->loop(0);
     $AbeilleTimer->checkExparies();
@@ -402,7 +427,38 @@ try {
   }
 
   $AbeilleTimer->Client->disconnect();
-
+*/
+    $AbeilleTimer->deamonlog("debug", "Let s start" );
+    
+    $AbeilleTimer->queueKeyAbeilleToTimer = msg_get_queue(queueKeyAbeilleToTimer);
+    $AbeilleTimer->queueKeyTimerToAbeille = msg_get_queue(queueKeyTimerToAbeille);
+    
+    $msg_type = NULL;
+    $msg = NULL;
+    $max_msg_size = 512;
+    
+    while ( true ) {
+        if (msg_receive( $AbeilleTimer->queueKeyAbeilleToTimer, 0, $msg_type, $max_msg_size, $msg, true)) {
+            $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 124: ".$msg->message['topic']." -> ".$msg->message['payload']);
+            $message->topic = $msg->message['topic'];
+            $message->payload = $msg->message['payload'];
+            $AbeilleMQTTCmd->procmsg($message);
+            $msg_type = NULL;
+            $msg = NULL;
+        }
+        
+        if (msg_receive( $AbeilleTimer->queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+            $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 421: ".$msg->message['topic']." -> ".$msg->message['payload']);
+            $message->topic = $msg->message['topic'];
+            $message->payload = $msg->message['payload'];
+            $AbeilleMQTTCmd->procmsg($message);
+            $msg_type = NULL;
+            $msg = NULL;
+        }
+        
+        $AbeilleTimer->checkExparies();
+        time_nanosleep( 0, 10000000 ); // 1/100s
+    }
 }
 catch (Exception $e) {
   $AbeilleTimer->deamonlog('debug', 'error', $e->getMessage());

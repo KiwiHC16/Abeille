@@ -23,12 +23,16 @@
     // 1: Abeille
     // 2: AbeilleParser
     // 3: AbeilleMQTTCmd
+    // 4: AbeilleTimer
     // 221: means AbeilleParser to(2) Abeille
+    define('queueKeyAbeilleToAbeille',  121);
+    define('queueKeyAbeilleToCmd',      123);
+    define('queueKeyAbeilleToTimer',    124);
+    define('queueKeyCmdToAbeille',      321);
     define('queueKeyParserToAbeille',   221);
     define('queueKeyParserToCmd',       223);
-    define('queueKeyAbeilleToCmd',      123);
     define('queueKeyCmdToCmd',          323);
-    define('queueKeyCmdToAbeille',      321);
+    define('queueKeyTimerToAbeille',    421);
     
     Class MsgAbeille {
         public $message = array(
@@ -454,10 +458,10 @@
                     
                     
                     log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-                    Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
-                    Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
-                    Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10" );
-                    Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/setReport&time=".(time()+(($i*33)+4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20" );
                 }
             }
             if ( ($i*33) > (3600) ) {
@@ -495,24 +499,24 @@
                         $i=$i+1;
                         // Ca devrait être le fonctionnement normal
                         if (strlen($eqLogic->getConfiguration("mainEP"))>1) {
-                            Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP") );
+                            Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP") );
                         }
                         // Cette partie devrait disparaitre, elle existe depuis le debut car je ne comprenais pas bien le fonctionnement
                         else {
                             if ($eqLogic->getConfiguration("protocol") == "") {
-                                Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
+                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
                             }
                             if ($eqLogic->getConfiguration("protocol") == "Hue") {
-                                Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue" );
+                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Hue" );
                             }
                             if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
-                                Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM" );
+                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM" );
                             }
                             if ($eqLogic->getConfiguration("protocol") == "Profalux") {
-                                Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux" );
+                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux" );
                             }
                             if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
-                                Abeille::publishMosquitto( "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
+                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
                             }
                         }
                     }
@@ -531,8 +535,8 @@
                     if ($eqLogic->getConfiguration("poll") == "15") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
                         $i=$i+1;
-                        Abeille::publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-                        Abeille::publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
                     }
                     
                 }
@@ -557,12 +561,12 @@
             
             $parameters_info = self::getParameters();
             if ($parameters_info['onlyTimer'] == 'N') {
-                Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                Abeille::publishMosquitto( "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
             } else {
-                Abeille::publishMosquitto( "Abeille/Ruche/SW-SDK", "TimerMode" );
-                Abeille::publishMosquitto( "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
-                Abeille::publishMosquitto( "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/SW-SDK", "TimerMode" );
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
             }
             
             // Rafraichie l etat poll = 1
@@ -574,8 +578,8 @@
                     if ($eqLogic->getConfiguration("poll") == "1") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
                         $i=$i+1;
-                        Abeille::publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-                        Abeille::publishMosquitto( "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
                     }
                 }
             }
@@ -625,7 +629,7 @@
             // Si Inclusion status est à 1 on demande un Refresh de l information
             if (self::checkInclusionStatus() == "01") {
                 // log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
-                Abeille::publishMosquitto( "CmdAbeille/Ruche/permitJoin", "Status" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille/Ruche/permitJoin", "Status" );
             } else {
                 // log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
             }
@@ -827,7 +831,7 @@
             
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
-            Abeille::publishMosquitto( "CmdRuche/Ruche/CreateRuche", "" );
+            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "" );
             
             
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
@@ -973,18 +977,29 @@
              */
             try {
                 $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
+                $queueKeyTimerToAbeille = msg_get_queue(queueKeyTimerToAbeille);
                 
                 $msg_type = NULL;
                 $msg = NULL;
                 $max_msg_size = 512;
                 
-                while (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                while ( true ) {
+                    if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
                     log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
+                }
+                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true)) {
+                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        $message->topic = $msg->message['topic'];
+                        $message->payload = $msg->message['payload'];
+                        self::message($message);
+                        $msg_type = NULL;
+                        $msg = NULL;
+                    }
                 }
                 
             } catch (Exception $e) {
@@ -1688,7 +1703,7 @@
                         $elogic->save();
                         
                         // Il faut aussi mettre a jour la commande short address
-                        Abeille::publishMosquitto( "Abeille/".$addr."/Short-Addr", $addr );
+                        Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/".$addr."/Short-Addr", $addr );
                     } else {
                         log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
                         message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique.", '', 'Abeille/Abeille' );
@@ -1860,9 +1875,11 @@
             return; // function message
         }
         
-        public static function publishMosquitto( $_subject, $_message ) {
+        public static function publishMosquitto( $queueId, $_subject, $_message ) {
             $parameters_info = Abeille::getParameters();
             log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
+            
+            /*
             $publish = new Mosquitto\Client();
             
             $publish->setCredentials($parameters_info['AbeilleUser'], $parameters_info['AbeillePass']);
@@ -1875,6 +1892,22 @@
             }
             $publish->disconnect();
             unset($publish);
+             */
+            
+            $queue = msg_get_queue(queueId);
+            
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message['topic'] = "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId;
+            $msgAbeille->message['payload'] = $data;
+            
+            if (msg_send( $queue, 1, $msgAbeille)) {
+                log::add('Abeille', 'Debug', 'Msg sent');
+                log::add('Abeille', 'Debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+            }
+            else {
+                log::add('Abeille', 'Debug', 'Could not send Msg');
+            }
         }
         
         public function createRuche($message = null) {
@@ -2312,7 +2345,7 @@
                         $addr = $topicArray[1];
                         if (strlen($addr) == 4) {
                             echo "Short: ".$topicArray[1];
-                            Abeille::publishMosquitto( "CmdAbeille/".$addr."/Annonce", "Default" );
+                            Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille/".$addr."/Annonce", "Default" );
                         }
                         
                     }

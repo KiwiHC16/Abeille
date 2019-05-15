@@ -26,6 +26,7 @@
     // 221: means AbeilleParser to(2) Abeille
     define('queueKeyParserToAbeille', 221);
     define('queueKeyParserToCmd', 223);
+    define('queueKeyAbeilleToCmd', 123);
     
     Class MsgAbeille {
         public $message = array(
@@ -2144,7 +2145,25 @@
                     
                     $request = str_replace('\\', '', jeedom::evaluateExpression($request));
                     $request = cmd::cmdToValue($request);
+                    
+                    /*
                     $NE->publishMosquitto( $topic, $request );
+                     */
+                    
+                    $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
+                    
+                    $msgAbeille = new MsgAbeille;
+                    
+                    $msgAbeille->message['topic'] = $topic;
+                    $msgAbeille->message['payload'] = $request;
+                    
+                    if (msg_send( $queueKeyAbeilleToCmd, 1, $msgAbeille)) {
+                        log::add('Abeille', 'Debug', 'Msg sent');
+                        log::add('Abeille', 'Debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+                    }
+                    else {
+                        log::add('Abeille', 'Debug', 'Could not send Msg');
+                    }
             }
             
             return true;

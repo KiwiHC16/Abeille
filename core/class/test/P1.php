@@ -1,15 +1,19 @@
 <?php
     
-    define('queueKey', 221);
+    define('queueKeyParserToAbeille',   221);
+    define('queueKeyParserToCmd',       223);
+    define('queueKeyAbeilleToCmd',      123);
+    define('queueKeyCmdToCmd',          323);
+    define('queueKeyCmdToAbeille',      321);
     
     Class MsgAbeille {
         public $message = array(
-            'topic' => 'Coucou',
-            'payload' => 'message de P1 pour test',
+            'topic' => 'Abeille/Ruche/Network-Channel',
+            'payload' => '09',
         );
     }
     
-    $queue = msg_get_queue(queueKey);
+    $queue = msg_get_queue(queueKeyAbeilleToCmd);
     
     $msgAbeille = new MsgAbeille;
     

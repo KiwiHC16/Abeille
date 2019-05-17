@@ -32,24 +32,24 @@
     $ip=''?'192.168.4.1':$argv[3];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
     
-    $nohup = "/usr/bin/nohup";
-    $socat = "/usr/bin/socat";
-    $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;"
+    $nohup 	= "/usr/bin/nohup";
+    $socat 	= "/usr/bin/socat";
+    $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     
-    /*
     if ( $serial != $WifiLink ) {
         deamonlog('info','Pas de connection wifi donc je ne fais rien, et je n aurais pas du être lancé.');
         exit(1);
     }
-     */
     
     deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
     
     while (1) {
         
         deamonlog('Info','Creation de la connection wifi.');
+	//
         // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
-        //$cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+        // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+	//
         // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
         
@@ -58,9 +58,10 @@
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
         
         $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-        $cmd = $nohup." ".$socat." ".$parameters ;
+        $cmd = $socat." ".$parameters ;
         deamonlog('Info','Command: '.$cmd);
-        $cmd = $cmd . ' 2>&1 &';
+        // $cmd = $cmd . ' 2>&1 &';
+        $cmd = $cmd . ' 2>&1';
         
         exec( $cmd );
         deamonlog('Info','Arret de Socat on relance dans 1 minute.');

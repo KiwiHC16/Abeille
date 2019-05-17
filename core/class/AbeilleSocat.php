@@ -32,10 +32,16 @@
     $ip=''?'192.168.4.1':$argv[3];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
     
+    $nohup = "/usr/bin/nohup";
+    $socat = "/usr/bin/socat";
+    $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;"
+    
+    /*
     if ( $serial != $WifiLink ) {
         deamonlog('info','Pas de connection wifi donc je ne fais rien, et je n aurais pas du être lancé.');
         exit(1);
     }
+     */
     
     deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
     
@@ -50,10 +56,13 @@
         //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
-        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
         
+        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+        $cmd = $nohup." ".$socat." ".$parameters ;
         deamonlog('Info','Command: '.$cmd);
-        shell_exec( $cmd );
+        $cmd = $cmd . ' 2>&1 &';
+        
+        exec( $cmd );
         deamonlog('Info','Arret de Socat on relance dans 1 minute.');
         sleep(60);
     }

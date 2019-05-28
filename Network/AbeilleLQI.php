@@ -16,7 +16,33 @@
     require_once("../resources/AbeilleDeamon/includes/fifo.php");
     require_once("../resources/AbeilleDeamon/includes/function.php");
     
+    /*
+    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
+    // 1: Abeille
+    // 2: AbeilleParser -> Parser
+    // 3: AbeilleMQTTCmd -> Cmd
+    // 4: AbeilleTimer  -> Timer
+    // 5: AbeilleLQI -> LQI
     
+    // 221: means AbeilleParser to(2) Abeille
+    define('queueKeyAbeilleToAbeille',  121);
+    define('queueKeyAbeilleToCmd',      123);
+    define('queueKeyAbeilleToTimer',    124);
+    define('queueKeyCmdToAbeille',      321);
+    define('queueKeyParserToAbeille',   221);
+    define('queueKeyParserToCmd',       223);
+    define('queueKeyCmdToCmd',          323);
+    define('queueKeyTimerToAbeille',    421);
+    define('queueKeyLQIToCmd',          523);
+    define('queueKeyParserToLQI',       223);
+    
+    Class MsgAbeille {
+        public $message = array(
+                                'topic' => 'Coucou',
+                                'payload' => 'me voici',
+                                );
+    }
+*/
     
     function benLog($message = "")
     {
@@ -25,7 +51,7 @@
     }
     
     // Definition MQTT
-    
+   /*
     function connect($r, $message)
     {
     }
@@ -42,21 +68,33 @@
     {
         
     }
+    */
     
     // ---------------------------------------------------------------------------------------------------------------------------
-    function message($message)
+    function message()
     {
         global $qos;
         global $abeilleParameters;
+        global $queueKeyParserToLQI;
         
-        echo "Message: \n";
-        var_dump( $message );
-        echo "\n";
-        echo "\n";
+        benLog("Check if message");
+        
+        $max_msg_size = 512;
+        
+        if (msg_receive( $queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+            $message->topic = $msg->message['topic'];
+            $message->payload = $msg->message['payload'];
+        }
+        else {
+            return;
+        }
+        
+        benLog("Message: ".json_encode( $message ) );
         
         $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
         $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
         
+        /*
         // On gere la root de mqtt
         if ( $abeilleParameters["AbeilleTopic"] != "#" ) {
             if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
@@ -67,8 +105,9 @@
             echo "lets remove topic root\n";
             $message->topic = substr( $message->topic, strlen($abeilleParameters["AbeilleTopic"])-1 );
         }
-        
-        echo "Message Topic: ".$message->topic."\n";
+        */
+         
+        benLog("Message Topic: ".$message->topic);
         
         if (strpos( "_".$message->topic, "LQI") != 1) {
             echo "LQI not\n";
@@ -161,8 +200,8 @@
         
         // Envoie de l'adresse IEEE a Abeille pour completer les objets.
         // e.g. Abeille/d45e/IEEE-Addr
-        $mqtt = $GLOBALS['client'];
-        $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."Abeille/" . $parameters['Voisine'] . "/IEEE-Addr", $parameters['IEEE_Address'], $qos);
+        // $mqtt = $GLOBALS['client'];
+        //$mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."Abeille/" . $parameters['Voisine'] . "/IEEE-Addr", $parameters['IEEE_Address'], $qos);
         
     }
     
@@ -172,10 +211,27 @@
      + *
      + * Ask NE at address to provide LQI from its table at index index
      + */
-    function mqqtPublishLQI($mqtt, $destAddr, $index, $qos = 0)
+    function mqqtPublishLQI( $destAddr, $index )
     {
-        global $abeilleParameters;
-        $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
+        // global $abeilleParameters;
+        // $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
+        
+        global $queueKeyLQIToCmd;
+        
+        $msgAbeille = new MsgAbeille;
+        
+        $msgAbeille->message['topic'] = "CmdAbeille/Ruche/Management_LQI_request";
+        $msgAbeille->message['payload'] = "address=" . $destAddr . "&StartIndex=" . $index;
+        
+        benLog("publishLQI: ".json_encode($msgAbeille));
+        
+        if (msg_send( $queueKeyLQIToCmd, 1, $msgAbeille)) {
+            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
+        }
+        else {
+            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Could not send Msg');
+        }
+
         
     }
     
@@ -201,7 +257,8 @@
         
         while ($GLOBALS['NE_continue']) {
             // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-            mqqtPublishLQI($client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
+            // mqqtPublishLQI( queueKeyLQIToCmd, $client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
+            mqqtPublishLQI( $NE, sprintf("%'.02x", $indexTable) );
             
             $indexTable++;
             // if ($indexTable > count($GLOBALS['knownNE'])+10) {
@@ -210,17 +267,25 @@
                 $GLOBALS['NE_continue'] = 0;
             }
             // usleep(100);
-            $client->loop(5000);
-            sleep(1);
+            // $client->loop(5000);
+            for ($i = 1; $i <= 1; $i++) {
+                message();
+                sleep(1);
+            }
+            
+            
             
         }
         // On vide les derniers messages qui trainent
         sleep(1);
-        $client->loop(5000);
+        message();
+        // $client->loop(5000);
         sleep(1);
-        $client->loop(5000);
+        message();
+        // $client->loop(5000);
         sleep(1);
-        $client->loop(5000);
+        message();
+        // $client->loop(5000);
         
     }
     
@@ -231,6 +296,7 @@
     $debugBen = 1;
     $abeilleParameters = Abeille::getParameters();
     
+    /*
     $serial         = $abeilleParameters["AbeilleSerialPort"];
     $server         = $abeilleParameters["AbeilleAddress"];             // change if necessary
     $port           = $abeilleParameters["AbeillePort"];                // change if necessary
@@ -239,11 +305,14 @@
     $client_id      = "AbeilleLQI";                                     // make sure this is unique for connecting to sever - you could use uniqid()
     $qos            = $abeilleParameters["AbeilleQos"];
     $requestedlevel = "debug";
+    */
     
     benLog('Start Main');
     
-    var_dump( $abeilleParameters );
+    benLog( "abeilleParameters: ".json_encode($abeilleParameters) );
     
+    $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
+    $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
     
     $DataFile = "AbeilleLQI_MapData.json";
     $FileLock = $DataFile . ".lock";
@@ -278,19 +347,18 @@
     }
     
     benLog("NE connus pas Abeille");
-    if ($debugBen) {
-        var_dump($knownNE_FromAbeille);
-        echo "----------------------------------\n";
-    }
+    benLog( json_encode($knownNE_FromAbeille) );
+    benLog( "----------------------------------");
     
     
     // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
     $LQI = array();
     
-    // echo "DEBUT: ".date(DATE_RFC2822)."<br>";
+    benLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
     //lqiLog('debug', '---------: definition et connection a mosquitto');
     
+    /*
     // https://github.com/mgdm/Mosquitto-PHP
     // http://mosquitto-php.readthedocs.io/en/latest/client.html
     
@@ -326,9 +394,10 @@
     
     echo "Sub to: ->".substr($abeilleParameters['AbeilleTopic'],0,-1)."LQI/#"."<-\n";
     $client->subscribe( substr($abeilleParameters['AbeilleTopic'],0,-1)."LQI/#", $qos ); // !auto: Subscribe to root topic
-    
+        */
+     
     // Let's start with the Coordinator
-    if ($debugBen) { echo "---------: Let s start with the Coordinator\n"; }
+    benLog( "---------: Let s start with the Coordinator");
     //lqiLog('debug', '---------: Let s start with the Coordinator');
     $NE_All_BuildFromLQI = array();
     $NE_All_BuildFromLQI["0000"] = array("LQI_Done" => 0);
@@ -382,7 +451,7 @@
             }
             
             benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
-            if ($debugBen) var_dump($NE_All_BuildFromLQI);
+            benLog( json_encode($NE_All_BuildFromLQI) );
             
             if ($currentNeStatus['LQI_Done'] == 0) {
                 // echo "Let s do\n";
@@ -400,8 +469,10 @@
         
     }
     
+    /*
     $client->disconnect();
     unset($client);
+    */
     
     //announce end of processing
     //file_put_contents($FileLock, "done");

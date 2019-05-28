@@ -26,6 +26,7 @@
     // 4: AbeilleTimer  -> Timer
     // 5: AbeilleLQI -> LQI
     // 6: xmlhttpMQTTSend -> xml
+    // 7: queueKeyFormToCmd -> Form
     
     // 221: means AbeilleParser to(2) Abeille
     define('queueKeyAbeilleToAbeille',  121);
@@ -41,6 +42,7 @@
     define('queueKeyLQIToCmd',          523);
     define('queueKeyXmlToAbeille',      621);
     define('queueKeyXmlToCmd',          623);
+    define('queueKeyFormToCmd',         723);
     
     Class MsgAbeille {
         public $message = array(
@@ -975,6 +977,7 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
+
                 }
                 
             } catch (Exception $e) {

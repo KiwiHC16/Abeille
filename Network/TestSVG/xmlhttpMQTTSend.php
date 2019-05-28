@@ -23,6 +23,7 @@
     define('queueKeyLQIToAbeille',      521);
     define('queueKeyLQIToCmd',          523);
     define('queueKeyXmlToAbeille',      621);
+    define('queueKeyXmlToCmd',          623);
     
     Class MsgAbeille {
         public $message = array(
@@ -35,6 +36,7 @@
     echo 'debug: Envoi du message ->'.$_GET['payload'].'<- vers ->'.$_GET['topic'].'<-';
 
     $queueKeyXmlToAbeille       = msg_get_queue(queueKeyXmlToAbeille);
+    $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
     /*
     $parameters_info = Abeille::getParameters();
 
@@ -61,15 +63,23 @@
                                  );
     
     //topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion
-    /*
+    
     $msgAbeille->message = array(
                                  'topic' => 'CmdAbeille/Ruche/SetPermit',
                                  'payload' => 'Inclusion',
                                  );
-    */
+    
     
     
     if (msg_send( $queueKeyXmlToAbeille, 1, $msgAbeille)) {
+        echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
+        // print_r(msg_stat_queue($queue));
+    }
+    else {
+        echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
+    }
+    
+    if (msg_send( $queueKeyXmlToCmd, 1, $msgAbeille)) {
         echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
         // print_r(msg_stat_queue($queue));
     }

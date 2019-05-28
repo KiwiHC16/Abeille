@@ -15,14 +15,6 @@
     include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
     include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     
-    /*
-     function message($message) {
-     global $AbeilleTimer;
-     // var_dump( $message );
-     $AbeilleTimer->procmsg( $message );
-     }
-     */
-    
     class debug extends Tools {
         function deamonlog($loglevel = 'NONE', $message = "") {
             if ($this->debug["cli"] ) {
@@ -33,76 +25,7 @@
             }
         }
     }
-    /*
-     class MosquittoAbeille extends debug {
-     public $client;
-     
-     static function connect($r, $message) {
-     log::add('AbeilleMQTTCmd', 'info', 'Mosquitto: Connexion à Mosquitto avec code ' . $r . ' ' . $message);
-     // config::save('state', '1', 'Abeille');
-     }
-     
-     static function disconnect($r) {
-     log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
-     // config::save('state', '0', 'Abeille');
-     }
-     
-     static function subscribe() {
-     log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Subscribe to topics');
-     }
-     
-     static function logmq($code, $str) {
-     // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-     log::add('AbeilleMQTTCmd', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
-     // }
-     }
-     
-     function publishTimer( $SrcAddr, $ClusterId, $AttributId, $data ) {
-     // Abeille / short addr / Cluster ID - Attr ID -> data
-     
-     $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data              );
-     // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",                 time()             );
-     // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"));
-     
-     }
-     
-     function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
-     if ($debug) $this->deamonlog("debug", "MosquittoAbeille constructor");
-     
-     // https://github.com/mgdm/Mosquitto-PHP
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html
-     $this->client = new Mosquitto\Client($client_id);
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-     $this->client->onConnect('MosquittoAbeille::connect');
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-     $this->client->onDisconnect('MosquittoAbeille::disconnect');
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-     $this->client->onSubscribe('MosquittoAbeille::subscribe');
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-     $this->client->onMessage('message');
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-     $this->client->onLog('MosquittoAbeille::logmq');
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-     $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
-     
-     // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-     $this->client->setReconnectDelay(1, 120, 1);
-     
-     $this->client->setCredentials( $username, $password );
-     $this->client->connect( $server, $port, 60 );
-     $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos, 0 );
-     $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
-     
-     if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
-     }
-     }
-     */
+
     class AbeilleTimer extends debug {
         public $debug = array(  "cli"                 => 1, // commande line mode or jeedom
                               "AbeilleTimerClass" => 1,
@@ -137,10 +60,6 @@
         
         function publishTimer( $SrcAddr, $ClusterId, $AttributId, $data ) {
             // Abeille / short addr / Cluster ID - Attr ID -> data
-            
-            // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,    $data              );
-            // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",                 time()             );
-            // $this->client->publish(substr($this->parameters_info["AbeilleTopic"],0,-1)."Abeille/".$SrcAddr."/Time-Time",                      date("Y-m-d H:i:s"));
             
             $msgAbeille = new MsgAbeille;
             
@@ -249,17 +168,6 @@
             
             $parameters_info = Abeille::getParameters();
             
-            /*
-             // On gere la root de mqtt
-             if ( $parameters_info["AbeilleTopic"] != "#" ) {
-             if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
-             $this->deamonlog('debug', "AbeilleMQTTCmdTimer - Message receive but is not for me, wrong delivery !!!");
-             return;
-             }
-             // On enleve AbeilleTopic
-             $message->topic = substr( $message->topic, strlen($parameters_info["AbeilleTopic"])-1 );
-             }
-             */
             $this->deamonlog("debug", "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             
             $topic = $message->topic;
@@ -437,15 +345,7 @@
     try {
         
         if ( $AbeilleTimer->debug['AbeilleTimerClass'] ) $AbeilleTimer->deamonlog("debug", json_encode( $AbeilleTimer ) );
-        /*
-         while (true) {
-         $AbeilleTimer->client->loop(0);
-         $AbeilleTimer->checkExparies();
-         time_nanosleep( 0, 10000000 ); // 1/100s
-         }
-         
-         $AbeilleTimer->Client->disconnect();
-         */
+
         $AbeilleTimer->deamonlog("debug", "Let s start" );
         
         $AbeilleTimer->queueKeyAbeilleToTimer = msg_get_queue(queueKeyAbeilleToTimer);

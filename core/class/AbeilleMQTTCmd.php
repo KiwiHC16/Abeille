@@ -29,8 +29,9 @@
         public $mqttMessageQueue = array();
         
         public $queueKeyAbeilleToCmd;
-        public  $queueKeyCmdToCmd;
+        public $queueKeyCmdToCmd;
         public $queueKeyCmdToAbeille;
+        public $queueKeyLQIToCmd;
         
         function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
             // parent::__construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug);
@@ -3332,6 +3333,7 @@
         $AbeilleMQTTCmd->queueKeyAbeilleToCmd   = msg_get_queue(queueKeyAbeilleToCmd);
         $AbeilleMQTTCmd->queueKeyCmdToCmd       = msg_get_queue(queueKeyCmdToCmd);
         $AbeilleMQTTCmd->queueKeyCmdToAbeille   = msg_get_queue(queueKeyCmdToAbeille);
+        $AbeilleMQTTCmd->queueKeyLQIToCmd       = msg_get_queue(queueKeyLQIToCmd);
         
         $msg_type = NULL;
         $msg = NULL;
@@ -3350,6 +3352,14 @@
             }
             if (msg_receive( $AbeilleMQTTCmd->queueKeyCmdToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                 $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 323: ".$msg->message['topic']." -> ".$msg->message['payload']);
+                $message->topic = $msg->message['topic'];
+                $message->payload = $msg->message['payload'];
+                $AbeilleMQTTCmd->procmsg($message);
+                $msg_type = NULL;
+                $msg = NULL;
+            }
+            if (msg_receive( $AbeilleMQTTCmd->queueKeyLQIToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 223: ".$msg->message['topic']." -> ".$msg->message['payload']);
                 $message->topic = $msg->message['topic'];
                 $message->payload = $msg->message['payload'];
                 $AbeilleMQTTCmd->procmsg($message);

@@ -2124,19 +2124,28 @@
                     $request = str_replace('\\', '', jeedom::evaluateExpression($request));
                     $request = cmd::cmdToValue($request);
                     
-                    $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
-                    
                     $msgAbeille = new MsgAbeille;
                     
                     $msgAbeille->message['topic'] = $topic;
                     $msgAbeille->message['payload'] = $request;
                     
-                    if (msg_send( $queueKeyAbeilleToCmd, 1, $msgAbeille)) {
-                        log::add('Abeille', 'debug', 'Msg sent');
-                        log::add('Abeille', 'debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+                    if ( strpos( $topic, "CmdTimer" ) === 0 ) {
+                        $queueKeyAbeilleToTimer = msg_get_queue(queueKeyAbeilleToTimer);
+                        if (msg_send( $queueKeyAbeilleToTimer, 1, $msgAbeille, true, false)) {
+                            log::add('Abeille', 'debug', '(CmdTimer) Msg sent: '.json_encode($msgAbeille));
+                        }
+                        else {
+                            log::add('Abeille', 'debug', '(CmdTimer) Could not send Msg');
+                        }
                     }
                     else {
-                        log::add('Abeille', 'debug', 'Could not send Msg');
+                        $queueKeyAbeilleToCmd   = msg_get_queue(queueKeyAbeilleToCmd);
+                        if (msg_send( $queueKeyAbeilleToCmd, 1, $msgAbeille, true, false)) {
+                            log::add('Abeille', 'debug', '(All) Msg sent: '.json_encode($msgAbeille));
+                        }
+                        else {
+                            log::add('Abeille', 'debug', '(All) Could not send Msg');
+                        }
                     }
             }
             

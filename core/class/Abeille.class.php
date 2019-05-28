@@ -25,6 +25,7 @@
     // 3: AbeilleMQTTCmd -> Cmd
     // 4: AbeilleTimer  -> Timer
     // 5: AbeilleLQI -> LQI
+    // 6: xmlhttpMQTTSend -> xml
     
     // 221: means AbeilleParser to(2) Abeille
     define('queueKeyAbeilleToAbeille',  121);
@@ -38,7 +39,7 @@
     define('queueKeyTimerToAbeille',    421);
     define('queueKeyLQIToAbeille',      521);
     define('queueKeyLQIToCmd',          523);
-    
+    define('queueKeyXmlToAbeille',      621);
     
     Class MsgAbeille {
         public $message = array(
@@ -931,9 +932,10 @@
             $parameters_info = self::getParameters();
             
             try {
-                $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
-                $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
-                $queueKeyTimerToAbeille = msg_get_queue(queueKeyTimerToAbeille);
+                $queueKeyAbeilleToAbeille   = msg_get_queue(queueKeyAbeilleToAbeille);
+                $queueKeyParserToAbeille    = msg_get_queue(queueKeyParserToAbeille);
+                $queueKeyTimerToAbeille     = msg_get_queue(queueKeyTimerToAbeille);
+                $queueKeyXmlToAbeille       = msg_get_queue(queueKeyXmlToAbeille);
                 
                 $msg_type = NULL;
                 $msg = NULL;
@@ -957,6 +959,14 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        $message->topic = $msg->message['topic'];
+                        $message->payload = $msg->message['payload'];
+                        self::message($message);
+                        $msg_type = NULL;
+                        $msg = NULL;
+                    }
+                    if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                         log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];

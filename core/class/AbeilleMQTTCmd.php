@@ -33,6 +33,7 @@
         public $queueKeyCmdToAbeille;
         public $queueKeyLQIToCmd;
         public $queueKeyXmlToCmd;
+        public $queueKeyFormToCmd;
         
         function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
             // parent::__construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug);
@@ -50,7 +51,7 @@
             $msgAbeille->message['topic']   = $topic;
             $msgAbeille->message['payload'] = $payload;
             
-            if (msg_send($queue, 1, $msgAbeille)) {
+            if (msg_send($queue, 1, $msgAbeille, true, false)) {
                 echo "added to queue\n";
                 print_r(msg_stat_queue($queue));
             }
@@ -3336,6 +3337,7 @@
         $AbeilleMQTTCmd->queueKeyCmdToAbeille   = msg_get_queue(queueKeyCmdToAbeille);
         $AbeilleMQTTCmd->queueKeyLQIToCmd       = msg_get_queue(queueKeyLQIToCmd);
         $AbeilleMQTTCmd->queueKeyXmlToCmd       = msg_get_queue(queueKeyXmlToCmd);
+        $AbeilleMQTTCmd->queueKeyFormToCmd      = msg_get_queue(queueKeyFormToCmd);
         
         $msg_type = NULL;
         $msg = NULL;
@@ -3369,6 +3371,14 @@
                 $msg = NULL;
             }
             if (msg_receive( $AbeilleMQTTCmd->queueKeyXmlToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 223: ".$msg->message['topic']." -> ".$msg->message['payload']);
+                $message->topic = $msg->message['topic'];
+                $message->payload = $msg->message['payload'];
+                $AbeilleMQTTCmd->procmsg($message);
+                $msg_type = NULL;
+                $msg = NULL;
+            }
+            if (msg_receive( $AbeilleMQTTCmd->queueKeyFormToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                 $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for 223: ".$msg->message['topic']." -> ".$msg->message['payload']);
                 $message->topic = $msg->message['topic'];
                 $message->payload = $msg->message['payload'];

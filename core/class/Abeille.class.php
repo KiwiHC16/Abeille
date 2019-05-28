@@ -40,6 +40,7 @@
     define('queueKeyLQIToAbeille',      521);
     define('queueKeyLQIToCmd',          523);
     define('queueKeyXmlToAbeille',      621);
+    define('queueKeyXmlToCmd',          623);
     
     Class MsgAbeille {
         public $message = array(

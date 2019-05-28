@@ -1829,11 +1829,10 @@
             $msgAbeille->message['payload'] = $data;
             
             if (msg_send( $queue, 1, $msgAbeille)) {
-                log::add('Abeille', 'Debug', 'Msg sent');
-                log::add('Abeille', 'Debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+                log::add('Abeille', 'debug', 'Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
             }
             else {
-                log::add('Abeille', 'Debug', 'Could not send Msg');
+                log::add('Abeille', 'debug', 'Could not send Msg');
             }
         }
         
@@ -2116,11 +2115,11 @@
                     $msgAbeille->message['payload'] = $request;
                     
                     if (msg_send( $queueKeyAbeilleToCmd, 1, $msgAbeille)) {
-                        log::add('Abeille', 'Debug', 'Msg sent');
-                        log::add('Abeille', 'Debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
+                        log::add('Abeille', 'debug', 'Msg sent');
+                        log::add('Abeille', 'debug', json_encode(msg_stat_queue($queueKeyAbeilleToCmd)));
                     }
                     else {
-                        log::add('Abeille', 'Debug', 'Could not send Msg');
+                        log::add('Abeille', 'debug', 'Could not send Msg');
                     }
             }
             

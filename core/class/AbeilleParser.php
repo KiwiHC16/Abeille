@@ -96,39 +96,6 @@
                                          ),
                          );
 
-    /*
-    function connect($r, $message)
-    {
-        log::add('Abeille', 'info', 'Mosquitto: AbeilleParser Connexion à Mosquitto avec code ' . $r . ' ' . $message);
-        log::add('Abeille', 'debug', 'AbeilleParser - Mosquitto: Déconnexion de Mosquitto avec code ' . $r);
-        // config::save('state', '0', 'Abeille');
-    }
-
-    function  disconnect() {
-
-    }
-
-    function subscribe()
-    {
-        log::add('Abeille', 'debug', 'AbeilleParser -  Mosquitto: Subscribe to topics');
-    }
-
-    function logmq($code, $str)
-    {
-        // if (strpos($str, 'PINGREQ') === false && strpos($str, 'PINGRESP') === false) {
-        // log::add('Abeille', 'debug', 'AbeilleParser - Mosquitto: Log level: ' . $code . ' Message: ' . $str);
-        // AbeilleParser::deamonlog( 'debug', 'AbeilleParser - Mosquitto: Log level: ' . $code . ' Message: ' . $str );
-        // }
-    }
-
-    function message($message)
-    {
-        global $AbeilleParser;
-        // var_dump( $message );
-        $AbeilleParser->procmsg( $message->topic, $message->payload );
-    }
-    */
-
     class debug {
         function deamonlog($loglevel = 'NONE', $message = "")
         {
@@ -140,51 +107,6 @@
             }
         }
     }
-
-    /*
-    class MosquittoAbeille extends debug {
-        public $client;
-
-        function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
-            if ($debug) $this->deamonlog("debug", "MosquittoAbeille constructor");
-
-            // https://github.com/mgdm/Mosquitto-PHP
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html
-            $this->client = new Mosquitto\Client($client_id);
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-            $this->client->onConnect('connect');
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-            $this->client->onDisconnect('disconnect');
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-            $this->client->onSubscribe('subscribe');
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-            $this->client->onMessage('message');
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onLog
-            $this->client->onLog('logmq');
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-            $this->client->setWill('/jeedom', "Client ".$client_id." died :-(", $qos, 0);
-
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-            $this->client->setReconnectDelay(1, 120, 1);
-
-            $this->client->setCredentials( $username, $password );
-            $this->client->connect( $server, $port, 60 );
-            $this->client->publish( "/jeedom", "Client ".$client_id." is joining", $this->qos );
-            $this->client->subscribe( $topicRoot, $qos ); // !auto: Subscribe to root topic
-
-            if ($debug) $this->deamonlog( 'debug', 'Subscribed to topic: '.$topicRoot );
-        }
-    }
-
-    
-    class AbeilleParser extends MosquittoAbeille {
-*/
     
     class AbeilleParser extends debug {
         public $queueKeyParserToAbeille = null;
@@ -307,13 +229,8 @@
         
         function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
         {
-            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
-            // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,  $data,               $this->parameters_info['AbeilleQos']);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-TimeStamp",               time(),              $this->parameters_info['AbeilleQos']);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/Time-Time",                    date("Y-m-d H:i:s"), $this->parameters_info['AbeilleQos']);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(
@@ -357,11 +274,8 @@
 
         function mqqtPublishFct( $SrcAddr, $fct, $data)
         {
-            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
-            // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$fct,    $data);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(
@@ -381,11 +295,8 @@
         
         function mqqtPublishCmdFct( $fct, $data)
         {
-            /*
              // Abeille / short addr / Cluster ID - Attr ID -> data
-             // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-             $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."Abeille/".$SrcAddr."/".$fct,    $data);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(
@@ -405,11 +316,8 @@
 
         function mqqtPublishLQI( $Addr, $Index, $data)
         {
-            /*
             // Abeille / short addr / Cluster ID - Attr ID -> data
-            // $this->deamonlog("debug","mqttPublish with Qos: ".$qos);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."LQI/".$Addr."/".$Index, $data);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(
@@ -437,11 +345,8 @@
 
         function mqqtPublishAnnounce( $SrcAddr, $data)
         {
-            /*
             // Abeille / short addr / Annonce -> data
-            // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/".$SrcAddr."/Annonce", $data);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(
@@ -460,11 +365,8 @@
 
         function mqqtPublishAnnounceProfalux( $SrcAddr, $data)
         {
-            /*
             // Abeille / short addr / Annonce -> data
-            // $this->deamonlog("debug", "function mqttPublishAnnonce pour addr: ".$SrcAddr." et endPoint: " .$data);
-            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/".$SrcAddr."/AnnonceProfalux", $data);
-             */
+            
             $msgAbeille = new MsgAbeille;
             
             $msgAbeille->message = array(

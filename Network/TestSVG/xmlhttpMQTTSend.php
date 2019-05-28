@@ -63,12 +63,12 @@
                                  );
     
     //topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion
-    
+    /*
     $msgAbeille->message = array(
                                  'topic' => 'CmdAbeille/Ruche/SetPermit',
                                  'payload' => 'Inclusion',
                                  );
-    
+    */
     
     
     if (msg_send( $queueKeyXmlToAbeille, 1, $msgAbeille)) {

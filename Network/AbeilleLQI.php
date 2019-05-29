@@ -225,7 +225,7 @@
         
         benLog("publishLQI: ".json_encode($msgAbeille));
         
-        if (msg_send( $queueKeyLQIToCmd, 1, $msgAbeille)) {
+        if (msg_send( $queueKeyLQIToCmd, 1, $msgAbeille, true, false)) {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
         }
         else {

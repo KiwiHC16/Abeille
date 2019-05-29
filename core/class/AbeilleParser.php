@@ -238,7 +238,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublish) added to queue: ".json_encode($msgAbeille));
             }
             else {
@@ -250,7 +250,7 @@
                                          'payload' => time(),
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue: ".json_encode($msgAbeille));
             }
             else {
@@ -262,7 +262,7 @@
                                          'payload' => date("Y-m-d H:i:s"),
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue: ".json_encode($msgAbeille));
             }
             else {
@@ -283,7 +283,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishFct) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
@@ -304,7 +304,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishFct) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
@@ -325,7 +325,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
@@ -333,7 +333,7 @@
                 $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) could not add message to queue");
             }
             
-            if (msg_send( $this->queueKeyParserToLQI, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToLQI, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
@@ -354,7 +354,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishAnnounce) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
@@ -374,7 +374,7 @@
                                          'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille)) {
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) added to queue: ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }

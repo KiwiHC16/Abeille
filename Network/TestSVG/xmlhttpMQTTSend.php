@@ -71,7 +71,7 @@
     */
     
     
-    if (msg_send( $queueKeyXmlToAbeille, 1, $msgAbeille)) {
+    if (msg_send( $queueKeyXmlToAbeille, 1, $msgAbeille, true, false)) {
         echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
         // print_r(msg_stat_queue($queue));
     }
@@ -79,7 +79,7 @@
         echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
     }
     
-    if (msg_send( $queueKeyXmlToCmd, 1, $msgAbeille)) {
+    if (msg_send( $queueKeyXmlToCmd, 1, $msgAbeille, true, false)) {
         echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
         // print_r(msg_stat_queue($queue));
     }

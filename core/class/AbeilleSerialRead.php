@@ -54,7 +54,6 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     $requestedlevel=''?'none':$argv[2];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
-    $fifo = 0;
     $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
     
     deamonlog('info','Starting reading port '.$serial.' and transcoding to '.$in.' with log level '.$requestedlevel);
@@ -74,17 +73,10 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
     
     $f = fopen($serial, "r");
-    
-    if ($fifo) {
-        $fifoIN = new fifo($in, 0777, "w" );
-        deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
-    }
 
     $transcodage = false;
     $trame = "";
     $test = "";
-
-    $msgSerial = new MsgSerial;
     
     while (true) {
         if (!file_exists($serial)) {
@@ -100,16 +92,11 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         } else {
             if ($car == "03") {
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
-                if ($fifo) {
-                    $fifoIN->write($trame."\n");
+                if (msg_send( $queueKeySerieToParser, 1, $trame."\n", false, false)) {
+                    deamonlog('info', 'Msg sent ('.queueKeySerieToParser.'): '.json_encode($trame));
                 }
                 else {
-                    if (msg_send( $queueKeySerieToParser, 1, $trame."\n", false, false)) {
-                        deamonlog('info', 'Msg sent ('.queueKeySerieToParser.'): '.json_encode($trame));
-                    }
-                    else {
-                        deamonlog('error', 'Msg sent ('.queueKeySerieToParser.'): Could not send Msg');
-                    }
+                    deamonlog('error', 'Msg sent ('.queueKeySerieToParser.'): Could not send Msg');
                 }
             } else {
                 if ($car == "02") {
@@ -129,7 +116,6 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     }
 
     fclose($f);
-    $fifoIN->close();
 
     deamonlog('error','Fin script AbeilleSerial');
 

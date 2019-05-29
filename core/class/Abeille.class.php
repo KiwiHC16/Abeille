@@ -27,6 +27,7 @@
     // 5: AbeilleLQI -> LQI
     // 6: xmlhttpMQTTSend -> xml
     // 7: queueKeyFormToCmd -> Form
+    // 8: serie -> Serie
     
     // 221: means AbeilleParser to(2) Abeille
     define('queueKeyAbeilleToAbeille',  121);
@@ -43,6 +44,7 @@
     define('queueKeyXmlToAbeille',      621);
     define('queueKeyXmlToCmd',          623);
     define('queueKeyFormToCmd',         723);
+    define('queueKeySerieToParser',     822);
     
     Class MsgAbeille {
         public $message = array(

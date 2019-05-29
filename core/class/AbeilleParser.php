@@ -223,10 +223,6 @@
             $this->queueKeyParserToLQI = msg_get_queue(queueKeyParserToLQI);
         }
         
-        function checkMessage() {
-            // Sauf erreur Parser ne recoit pas de message des autres process
-        }
-        
         function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
@@ -531,7 +527,7 @@
             // Message trop court pour etre un vrai message
             if ($length < 12) { return -1; }
 
-            // $this->deamonlog('info', '-------------- '.date("Y-m-d H:i:s").': protocolData size('.$length.') message > 12 char');
+            $this->deamonlog('info', '-------------- '.date("Y-m-d H:i:s").': protocolData size('.$length.') message > 12 char: '.$datas);
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
@@ -2692,50 +2688,54 @@
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
-
-        // Connection au fichier fifo
-        $fifoIN = new fifo( $in, 0777, "r" );
-        if (!file_exists($in)) {
-            $AbeilleParser->deamonlog('error', 'ERROR, fichier '.$in.' n existe pas (pas réussi à l ouvrir)');
-            exit(1);
-        }
-
-        /*
-        if ( $AbeilleParser->debug['Serial'] ) $AbeilleParser->deamonlog('info', 'Starting parsing from '.$in.' to mqtt broker with log level '.$AbeilleParser->requestedlevel.' on '.$AbeilleParser->parameters_info['AbeilleUser'].':'.$AbeilleParser->parameters_info['AbeillePass'].'@'.$AbeilleParser->parameters_info['AbeilleAddress'].':'.$AbeilleParser->parameters_info['AbeillePort'].' qos='.$AbeilleParser->parameters_info['AbeilleQos'] );
-        if ( $AbeilleParser->debug['AbeilleParserClass'] ) $AbeilleParser->deamonlog("debug", json_encode( $AbeilleParser ) );
-         */
-         
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
-
         $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-
-        while (true) {
-           /*
-                // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-                $AbeilleParser->client->loop(0);
-            */
-            
-            $AbeilleParser->checkMessage();
-            
+        
+        
+        $fifo = 0;
+        
+        if ($fifo) {
+            // Connection au fichier fifo
+            $fifoIN = new fifo( $in, 0777, "r" );
             if (!file_exists($in)) {
-                $AbeilleParser->deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
+                $AbeilleParser->deamonlog('error', 'ERROR, fichier '.$in.' n existe pas (pas réussi à l ouvrir)');
                 exit(1);
             }
-
-            //traitement de chaque trame;
-            $data = $fifoIN->read();
-            $AbeilleParser->protocolDatas( $data, $AbeilleParser->parameters_info['AbeilleQos'], $clusterTab, $LQI );
-
+        }
+        else {
+            $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
+            $max_msg_size = 512;
+        }
+        
+        while (true) {
+            if ($fifo) {
+                if (!file_exists($in)) {
+                    $AbeilleParser->deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
+                    exit(1);
+                }
+                //traitement de chaque trame;
+                $data = $fifoIN->read();
+            }
+            else {
+                if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
+                    log::add('Abeille', 'debug', "Message pulled from queue : ".$data);
+                    $msg_type = NULL;
+                    $msg = NULL;
+                }
+            }
+            $AbeilleParser->protocolDatas( $data, 0, $clusterTab, $LQI );
+            
             $AbeilleParser->processAnnonce($NE);
             $AbeilleParser->cleanUpNE($NE);
-
+            
             time_nanosleep( 0, 10000000 ); // 1/100s
         }
 
-
+/*
         $AbeilleParser->client->disconnect();
-        unset($AbeilleParser);
+ */
+ unset($AbeilleParser);
 
     }
     catch (Exception $e) {

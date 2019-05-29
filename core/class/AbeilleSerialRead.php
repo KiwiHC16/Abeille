@@ -16,6 +16,8 @@ require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
+        define('queueKeySerieToParser',     822);
+    
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead',$message);
     }
@@ -52,6 +54,9 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     $requestedlevel=''?'none':$argv[2];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
+    $fifo = 0;
+    $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
+    
     deamonlog('info','Starting reading port '.$serial.' and transcoding to '.$in.' with log level '.$requestedlevel);
 
     if ($serial == 'none') {
@@ -65,20 +70,22 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         exit(1);
     }
 
-    $fifoIN = new fifo($in, 0777, "w" );
-    deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
-
     _exec("stty -F ".$serial." sane", $out);
     _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
-
+    
     $f = fopen($serial, "r");
-
-    // print_r( $f ); echo "\n";
+    
+    if ($fifo) {
+        $fifoIN = new fifo($in, 0777, "w" );
+        deamonlog('info','Starting with pipe file (to send info to AbeilleParser): '.$in);
+    }
 
     $transcodage = false;
     $trame = "";
     $test = "";
 
+    $msgSerial = new MsgSerial;
+    
     while (true) {
         if (!file_exists($serial)) {
             deamonlog('error','CRITICAL Fichier '.$serial.' n existe pas');
@@ -93,7 +100,17 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         } else {
             if ($car == "03") {
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
-                $fifoIN->write($trame."\n");
+                if ($fifo) {
+                    $fifoIN->write($trame."\n");
+                }
+                else {
+                    if (msg_send( $queueKeySerieToParser, 1, $trame."\n", false, false)) {
+                        deamonlog('info', 'Msg sent ('.queueKeySerieToParser.'): '.json_encode($trame));
+                    }
+                    else {
+                        deamonlog('error', 'Msg sent ('.queueKeySerieToParser.'): Could not send Msg');
+                    }
+                }
             } else {
                 if ($car == "02") {
                     $transcodage = true;
@@ -102,7 +119,6 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
                         $trame .= sprintf("%02X", (hexdec($car) ^ 0x10));
 
                     } else {
-
                         $trame .= $car;
                     }
                     $transcodage = false;

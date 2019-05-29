@@ -2693,37 +2693,19 @@
         $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
         
         
-        $fifo = 0;
         
-        if ($fifo) {
-            // Connection au fichier fifo
-            $fifoIN = new fifo( $in, 0777, "r" );
-            if (!file_exists($in)) {
-                $AbeilleParser->deamonlog('error', 'ERROR, fichier '.$in.' n existe pas (pas réussi à l ouvrir)');
-                exit(1);
-            }
-        }
-        else {
-            $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
-            $max_msg_size = 512;
-        }
+        $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
+        $max_msg_size = 512;
+        
         
         while (true) {
-            if ($fifo) {
-                if (!file_exists($in)) {
-                    $AbeilleParser->deamonlog('error', 'Erreur, fichier '.$in.' n existe pas');
-                    exit(1);
-                }
-                //traitement de chaque trame;
-                $data = $fifoIN->read();
+            
+            if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
+                log::add('Abeille', 'debug', "Message pulled from queue : ".$data);
+                $msg_type = NULL;
+                $msg = NULL;
             }
-            else {
-                if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
-                    log::add('Abeille', 'debug', "Message pulled from queue : ".$data);
-                    $msg_type = NULL;
-                    $msg = NULL;
-                }
-            }
+            
             $AbeilleParser->protocolDatas( $data, 0, $clusterTab, $LQI );
             
             $AbeilleParser->processAnnonce($NE);
@@ -2731,16 +2713,14 @@
             
             time_nanosleep( 0, 10000000 ); // 1/100s
         }
-
-/*
-        $AbeilleParser->client->disconnect();
- */
- unset($AbeilleParser);
-
+        
+        
+        unset($AbeilleParser);
+        
     }
     catch (Exception $e) {
         $AbeilleParser->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
     }
-
+    
     $AbeilleParser->deamonlog('info', 'Fin du script');
     ?>

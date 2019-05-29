@@ -1839,22 +1839,22 @@
             return; // function message
         }
         
-        public static function publishMosquitto( $queueId, $_subject, $_message ) {
+        public static function publishMosquitto( $queueId, $topic, $payload ) {
             $parameters_info = Abeille::getParameters();
-            log::add('Abeille', 'debug', 'Envoi du message: '.$_message.' vers '.substr($parameters_info['AbeilleTopic'],0,-1).$_subject);
+            log::add('Abeille', 'debug', 'Envoi du message topic: '.$topic.' payload: '.$payload.' vers '. $queueId);
             
             $queue = msg_get_queue( $queueId );
             
             $msgAbeille = new MsgAbeille;
             
-            $msgAbeille->message['topic'] = "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId;
-            $msgAbeille->message['payload'] = $data;
+            $msgAbeille->message['topic'] = $topic;
+            $msgAbeille->message['payload'] = $payload;
             
             if (msg_send( $queue, 1, $msgAbeille, true, false)) {
-                log::add('Abeille', 'debug', 'Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
+                log::add('Abeille', 'debug', 'Msg sent: '.json_encode($msgAbeille).' on queue: '.$queueId);
             }
             else {
-                log::add('Abeille', 'debug', 'Could not send Msg');
+                log::add('Abeille', 'debug', 'Could not send Msg: '.json_encode($msgAbeille).' on queue: '.$queueId);
             }
         }
         

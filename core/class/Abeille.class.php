@@ -1848,7 +1848,7 @@
             $msgAbeille->message['topic'] = "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId;
             $msgAbeille->message['payload'] = $data;
             
-            if (msg_send( $queue, 1, $msgAbeille)) {
+            if (msg_send( $queue, 1, $msgAbeille, true, false)) {
                 log::add('Abeille', 'debug', 'Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
             }
             else {

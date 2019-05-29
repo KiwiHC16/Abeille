@@ -205,7 +205,7 @@
 
         public $parameters_info;
 
-        function __construct($client_id) {
+        function __construct() {
             global $argv;
 
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
@@ -214,9 +214,6 @@
             // $this->requestedlevel = $argv[7];
             // $this->requestedlevel = '' ? 'none' : $argv[7];
             $this->requestedlevel = "debug";
-
-            // parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleParserClass"] );
-            // parent::__construct();
             
             $this->queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
             $this->queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
@@ -281,10 +278,29 @@
             
             if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
                 $this->deamonlog("debug","(fct mqqtPublishFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-                // print_r(msg_stat_queue($queue));
             }
             else {
                 $this->deamonlog("debug","(fct mqqtPublishFct) could not add message to queue (queueKeyParserToAbeille)");
+            }
+            
+        }
+        
+        function mqqtPublishFctToCmd( $fct, $data)
+        {
+            // Abeille / short addr / Cluster ID - Attr ID -> data
+            
+            $msgAbeille = new MsgAbeille;
+            
+            $msgAbeille->message = array(
+                                         'topic' => $fct,
+                                         'payload' => $data,
+                                         );
+            
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
+                $this->deamonlog("debug","(fct mqqtPublishFctToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
+            }
+            else {
+                $this->deamonlog("debug","(fct mqqtPublishFctToCmd) could not add message to queue (queueKeyParserToCmd)");
             }
             
         }
@@ -2592,10 +2608,10 @@
                             if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
                                 if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                                 $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
-                                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$short, $this->parameters_info['AbeilleQos']);
-                                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short, $this->parameters_info['AbeilleQos']);
-                                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short, $this->parameters_info['AbeilleQos']);
-                                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short, $this->parameters_info['AbeilleQos']);
+                                $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$short );
+                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short );
+                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short );
+                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short );
                                 $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
                             }
                         }
@@ -2605,15 +2621,15 @@
                         if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
                             if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
+                            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
+                            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
 
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
+                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
+                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
 
                             // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
-                            $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'], $this->parameters_info['AbeilleQos']);
+                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'] );
+                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'] );
                             $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
                         }
                         break;

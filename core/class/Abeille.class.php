@@ -948,7 +948,7 @@
                 
                 while ( true ) {
                     if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyAbeilleToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -956,7 +956,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyParserToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -964,7 +964,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -972,7 +972,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue : ".$msg->message['topic']." -> ".$msg->message['payload']);
+                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -1284,14 +1284,13 @@
             
             $parameters_info = self::getParameters();
             
-            log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+            log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // demande de creation de ruche au cas ou elle n'est pas deja crée....
             // La ruche est aussi un objet Abeille
             if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
                 log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
                 self::createRuche($message);
-                
                 return;
             }
             

@@ -2717,7 +2717,7 @@
         while (true) {
             
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
-                log::add('Abeille', 'debug', "Message pulled from queue : ".$data);
+                $AbeilleParser->deamonlog( 'debug', "Message pulled from queue : ".json_encode($data) );
                 $msg_type = NULL;
                 $msg = NULL;
             }

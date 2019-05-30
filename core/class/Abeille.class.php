@@ -58,17 +58,12 @@
         // Is it the health of the plugin level menu Analyse->santé ? A verifier.
         public static function health() {
             $return = array();
-            $socket = socket_create(AF_INET, SOCK_STREAM, 0);
-            $server = socket_connect(
-                                     $socket,
-                                     config::byKey('AbeilleAddress', 'Abeille', '127.0.0.1'),
-                                     config::byKey('AbeillePort', 'Abeille', '1883')
-                                     );
+
             $return[] = array(
-                              'test' => __('Mosquitto', __FILE__),
-                              'result' => ($server) ? __('OK', __FILE__) : __('NOK', __FILE__),
-                              'advice' => ($server) ? '' : __('Indique si Mosquitto est disponible', __FILE__),
-                              'state' => $server,
+                              'test' => 'OK',
+                              'result' => 'OK',
+                              'advice' => 'OK',
+                              'state' => 'OK',
                               );
             
             return $return;
@@ -675,7 +670,6 @@
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected = 0; // Comptons les process prevus.
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
-            $nbProcessExpected++;   // Process Mosquitto quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
             if ( (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
             $return['nbProcessExpected'] = $nbProcessExpected;
@@ -683,12 +677,12 @@
             
             // Combien de demons tournent ?
             exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output1 );
-            exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/mosquitto /' | cut -d ';'  -f 1 | wc -l", $output2 );
-            $nbProcess = $output1[0]+$output2[0];
+
+            $nbProcess = $output1[0];
             $return['nbProcess'] = $nbProcess;
             
             if ( ($nbProcess != $nbProcessExpected) ) {
-                if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]."+".$output2[0]);
+                if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]);
                 if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.' );
                 if ($debug_deamon_info) message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.'/'.$nbProcessExpected.' running.','','Abeille/Demon' );
                 $return['state'] = "nok";
@@ -734,8 +728,6 @@
             sleep(3);
             
             $param = self::getParameters();
-            
-            self::serviceMosquittoStart();
             
             if (self::dependancy_info()['state'] != 'ok') {
                 message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée less dépendances.", 'Abeille/Demon');
@@ -888,32 +880,6 @@
             $return['state'] = 'ok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependance';
             
-            // Check package mosquitto
-            $cmd = "dpkg -l | grep mosquitto";
-            exec($cmd, $output_dpkg, $return_var);
-            if ($output_dpkg[0] == "") {
-                log::add( 'Abeille', 'warning', 'Les packages mosquitto ne semblent pas être installés.' );
-                $return['state'] = 'Les packages mosquitto ne semblent pas être installés<a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_installation_manuelle">(doc)</a>.';
-                return $return;
-            }
-            
-            //lib PHP exist for Jeedom
-            if ( !extension_loaded('mosquitto') ) {
-                log::add( 'Abeille', 'warning', 'je ne trouve pas la lib php pour me connecter à mosquitto.' );
-                $return['state'] = 'je ne trouve pas la lib php pour me connecter à mosquitto <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_installation_manuelle">(doc)</a>.';
-                return $return;
-            };
-            
-            // Check que le service Mosquitto tourne
-            // $return['mosquitto'] = 'ok';
-            // $return['mosquitto_message'] = 'Service mosquitto is running.';
-            $moquittoStatus = self::serviceMosquittoStatus();
-            if ($moquittoStatus['mosquitto'] != 'ok') {
-                log::add( 'Abeille', 'warning', 'La verification de fonctionnement du service mosquitto renvoie: '. $moquittoStatus['mosquitto_message'] );
-                $return['state'] = 'La verification de fonctionnement du service mosquitto renvoie:<br>' . $moquittoStatus['mosquitto_message'] . ' <a href="https://kiwihc16.github.io/Abeille/fr_FR/Debug.html#_mosquitto">(doc)</a>';
-                return $return;
-            }
-            
             if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
             
             return $return;
@@ -987,91 +953,6 @@
             }
         }
         
-        public static function serviceMosquittoStatus() {
-            $debug_serviceMosquittoStatus = 1;
-            
-            // On part du principe que tout est bon et on cherche les soucis.
-            
-            $outputSvc = array();
-            $return = array();
-            $return['mosquitto'] = 'ok';
-            $return['mosquitto_message'] = '';
-            
-            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStatus begin');
-            
-            // On regarde ce que dit service de mosquitto
-            $cmdSvc1 = "expr  `service mosquitto status 2>&1 | grep 'active' | grep 'running' | wc -l`";
-            exec(system::getCmdSudo().$cmdSvc1, $outputSvc1);
-            if ( $outputSvc1[0] != "1" ) {
-                // message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le service mosquitto','','Abeille/Demon');
-                $return['mosquitto'] = 'nok';
-                $return['mosquitto_message'] = 'Service mosquitto pas démarré.';
-            }
-            $logmsg = 'Status du service mosquitto : '.json_encode($outputSvc1);
-            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - '.$logmsg);
-            
-            // Maintenant on vérifie qu on trouve bien un process mosquitto qui fonctionne
-            $cmdSvc2 = "expr  `ps -ef | grep -e '/usr/sbin/mosquitto' | grep -v 'grep' | wc -l`";
-            exec(system::getCmdSudo().$cmdSvc2, $outputSvc2);
-            if ( $outputSvc2[0] != "1" ) {
-                message::add('Abeille','Mosquitto - Warning: Je ne trouve pas le processus mosquitto','','Abeille/Demon');
-                $return['mosquitto'] = 'nok';
-                $return['mosquitto_message'] = 'Processus mosquitto introuvable.';
-            }
-            $logmsg = 'Status du process mosquitto: '.json_encode($outputSvc2);
-            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - '.$logmsg);
-            
-            //Docker workaround as service will not write a pid file for mosquitto (status will always fail)
-            if (file_exists("/.dockerenv") == true) {
-                $outputSvc = array();
-                exec(system::getCmdSudo()."pgrep mosquitto", $outputSvc);
-                if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - docker test: pid of mosquitto: '.$outputSvc[0]);
-            }
-            if ($outputSvc[0] > 0) {
-                $return['mosquitto'] = 'ok';
-                $return['mosquitto_message'] = 'Service mosquitto is running.';
-            }
-            unset($outputSvc);
-            
-            if ($debug_serviceMosquittoStatus) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStatus end: '.json_encode($return));
-            
-            return $return;
-        }
-        
-        public static function serviceMosquittoStart() {
-            $debug_serviceMosquittoStart = 1;
-            $outputSvc = array();
-            
-            if ($debug_serviceMosquittoStart) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStart begin');
-            
-            //try to start mosquitto service if not already started.
-            if (self::serviceMosquittoStatus()['mosquitto'] != 'ok') {
-
-                log::add('Abeille', 'debug', 'Mosquitto - Le service mosquitto ne semble pas fonctionner, je vais essayer de le démarrer.','Demarrer le service mosquitto: /etc/init.d/mosquitto start');
-                
-                $cmdSvc = "/etc/init.d/mosquitto start 2>&1 ;";
-                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with service): '.$cmdSvc.' '.json_encode($outputSvc));
-                sleep(3);
-                
-                $cmdSvc = "service mosquitto start 2>&1 ;";
-                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with service): '.$cmdSvc.' '.json_encode($outputSvc));
-                sleep(3);
-                
-                $cmdSvc = "systemctl start mosquitto 2>&1";
-                exec(system::getCmdSudo().$cmdSvc, $outputSvc);
-                log::add('Abeille', 'debug', 'Mosquitto - Start du service mosquitto (with systemctl): '.$cmdSvc.' '.json_encode($outputSvc));
-                sleep(3);
-            }
-            
-            $return = self::serviceMosquittoStatus();
-            
-            if ($debug_serviceMosquittoStart) log::add('Abeille', 'debug', 'Mosquitto - serviceMosquittoStart end: '.json_encode($return));
-            
-            return $return;
-        }
-        
         public static function getParameters() {
             $return = array();
             $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
@@ -1139,26 +1020,6 @@
                 $cron->run();
             }
             // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
-            
-        }
-        
-        public static function connect($r, $message) {
-            log::add('Abeille', 'info', 'Mosquitto: Connexion à Mosquitto avec code '.$r.' '.$message);
-            config::save('state', '1', 'Abeille');
-        }
-        
-        public static function disconnect($r) {
-            log::add('Abeille', 'debug', 'Mosquitto: Déconnexion de Mosquitto avec code '.$r);
-            config::save('state', '0', 'Abeille');
-        }
-        
-        public static function subscribe() {
-            log::add('Abeille', 'debug', 'Mosquitto: Subscribe to topics');
-        }
-        
-        public static function logmq($code, $str) {
-            
-            // log::add('Abeille', 'debug', 'Mosquitto: Log level: ' . $code . ' Message: ' . $str);
             
         }
         

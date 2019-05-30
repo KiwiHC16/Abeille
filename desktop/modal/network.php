@@ -19,7 +19,6 @@ if (config::byKey('active', 'Abeille', '0') == 1) {
 
 $neighbors = "";
 $color = "greeniconcolor";
-$mosquitto = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i>";
 $usbPath = config::byKey('AbeilleSerialPort', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 $nodesCount = count($eqLogics);
@@ -163,10 +162,6 @@ sendVarToJS('nodesFromJeedom', $nodes);
                             <p>{{Chemin du contrôleur Zigbee :}} <span class="zigBNetworkAttr label label-default"
                                                                        data-l1key=""
                                                                        style="font-size : 1em;"><?php echo $usbPath ?></span>
-                            </p>
-                            <p>{{Service mosquitto démarré :}} <span class="zigBNetworkAttr label label-default"
-                                                                     data-l1key=""
-                                                                     style="font-size : 1em;"><?php echo $mosquitto ?></span>
                             </p>
                             <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default"
                                                                    data-l1key=""

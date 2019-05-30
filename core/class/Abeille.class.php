@@ -906,6 +906,7 @@
                 $queueKeyAbeilleToAbeille   = msg_get_queue(queueKeyAbeilleToAbeille);
                 $queueKeyParserToAbeille    = msg_get_queue(queueKeyParserToAbeille);
                 $queueKeyTimerToAbeille     = msg_get_queue(queueKeyTimerToAbeille);
+                $queueKeyCmdToAbeille       = msg_get_queue(queueKeyCmdToAbeille);
                 $queueKeyXmlToAbeille       = msg_get_queue(queueKeyXmlToAbeille);
                 
                 $msg_type = NULL;
@@ -931,6 +932,14 @@
                     }
                     if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                         log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
+                        $message->topic = $msg->message['topic'];
+                        $message->payload = $msg->message['payload'];
+                        self::message($message);
+                        $msg_type = NULL;
+                        $msg = NULL;
+                    }
+                    if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);

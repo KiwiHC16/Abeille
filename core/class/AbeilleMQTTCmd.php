@@ -3380,6 +3380,8 @@
             }
             
             $AbeilleMQTTCmd->execTempoCmdAbeille();
+            
+            time_nanosleep( 0, 10000000 ); // 1/100s
         }
         
     }

@@ -945,7 +945,8 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-
+                    
+                    time_nanosleep( 0, 10000000 ); // 1/100s
                 }
                 
             } catch (Exception $e) {

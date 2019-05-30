@@ -99,7 +99,7 @@ apt-get update
 
 echo 20 > ${PROGRESS_FILE}
 echo
-echo "Avancement: 20% ---------------------------------------------------------------------------------------------------> install mosquiito packages"
+echo "Avancement: 20% ---------------------------------------------------------------------------------------------------> install socat packages"
 echo
 
 apt-get -y install socat

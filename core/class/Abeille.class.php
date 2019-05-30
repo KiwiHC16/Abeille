@@ -879,7 +879,20 @@
             $return = array();
             $return['state'] = 'ok';
             $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependance';
-            
+
+            // Check package socat
+            $cmd = "dpkg -l socat";
+            exec($cmd, $output_dpkg, $return_var);
+            if ($output_dpkg[0] == "") {
+                log::add( 'Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.' );
+                $return['state'] = 'nok'; //Il manque Socat, relancer l\'installation';
+                $return['launchable'] = 'nok';
+                $return['launchable_message'] = __('Veuillez (ré-)installer les dépendances', __FILE__);
+            }
+            log::add( 'Abeille', 'debug', ' state: '.$return['state'] );
+            log::add( 'Abeille', 'debug', ' progress: '.file_get_contents($return['progress_file'] ));
+            log::add( 'Abeille', 'debug', '-------------------------------------> dependancy_info() END' );
+
             if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
             
             return $return;
@@ -889,10 +902,9 @@
             log::add('Abeille', 'debug', 'Installation des dépendances: IN');
             message::add( "Abeille", "L installation des dependances est en cours", "N oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation", "Abeille/Dependances" );
             log::remove(__CLASS__.'_update');
-            $result = array( 'script' => dirname(__FILE__).'/../../resources/install.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance', 'log' => log::getPathToLog(__CLASS__.'_update'), );
-            if ($result['state'] == 'ok') {
-                $result['launchable'] = 'ok';
-            }
+            $result = [ 'script' => dirname(__FILE__).'/../../resources/install_#stype#.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance',
+                'log' => log::getPathToLog(__CLASS__.'_update')
+            ];
             log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result, ' X '));
             
             return $result;

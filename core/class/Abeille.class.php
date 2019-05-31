@@ -1203,6 +1203,7 @@
             $value = $message->payload;
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
+            if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
             
             $type = 'topic';         // type = topic car pas json
             

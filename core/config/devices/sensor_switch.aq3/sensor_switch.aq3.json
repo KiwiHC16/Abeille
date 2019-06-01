@@ -7,16 +7,16 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662668565",
+      "uniqId": "5c07c7662668565",
       "icone": "XiaomiBouton3",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "SW",
+      "include2 2": "societe",
       "include2": "nom",
-      "include3": "etatSwitchXiaomiCarre",
-      "include4": "multi",
+      "include3": "etatSwitchDoubleb286acn01",
       "include5": "Batterie-Volt",
       "include6": "Batterie-Pourcent",
       "include7": "Xiaomi-ff01"

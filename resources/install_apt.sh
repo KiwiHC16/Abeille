@@ -62,33 +62,6 @@ echo "pwd: "$cmd
 cmd=`uname -a`
 echo "uname -a: "$cmd
 
-if [ -d "/etc/php5/fpm/" ]; then
-  echo "system tourne avec fpm et php5"
-  SERVICE="php5-fpm"
-elif [ -d "/etc/php5/apache2/" ]; then
-  echo "system tourne avec apache2 et php5"
-  SERVICE="apache2"
-elif [ -d "/etc/php/7.0/fpm/" ]; then
-  echo "system tourne avec fpm et php7"
-  SERVICE="php7-fpm"
-elif [ -d "/etc/php/7.0/apache2" ]; then
-  echo "system tourne avec apache2 et php7"
-  SERVICE="apache2"
-else
-  arretSiErreur "Erreur critique, je ne reconnais pas le system (apache, php,...)"
-fi
-
-echo 5 > ${PROGRESS_FILE}
-echo
-echo "Avancement: 5% ---------------------------------------------------------------------------------------------------> Install lsb-release php-pear"
-echo
-
-apt-get -y install dpkg
-
-apt-get -y install lsb-release php-pear make locales
-[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de l'installation de pear et lsb-release. Pb réseau ?"
-
-
 echo 10 > ${PROGRESS_FILE}
 echo
 echo "Avancement: 10% ---------------------------------------------------------------------------------------------------> Update list package"

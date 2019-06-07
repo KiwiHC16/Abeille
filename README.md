@@ -18,3 +18,7 @@ https://github.com/KiwiHC16/Abeille/blob/master/Documentation/040_Compatibilite.
 ## Change log
 
 https://kiwihc16.github.io/Abeille/fr_FR/changelog
+
+## Cagnote
+
+https://github.com/KiwiHC16/Abeille/wiki

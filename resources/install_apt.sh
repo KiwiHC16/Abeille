@@ -3,9 +3,6 @@ set -x
 
 # Variables
 PROGRESS_FILE=/tmp/jeedom/Abeille/dependancy_abeille_in_progress
-#Nombre d'essai pour dl les paquets
-tries=3
-
 
 # Functions
 
@@ -53,35 +50,10 @@ echo
 echo "Avancement: 0% ---------------------------------------------------------------------------------------------------> Environnement "
 echo
 
-cmd=`id`
-echo "id: "$cmd
-
-cmd=`pwd`
-echo "pwd: "$cmd
-
-cmd=`uname -a`
-echo "uname -a: "$cmd
-
-echo 10 > ${PROGRESS_FILE}
+echo 50 > ${PROGRESS_FILE}
 echo
-echo "Avancement: 10% ---------------------------------------------------------------------------------------------------> Update list package"
+echo "Avancement: 50% ---------------------------------------------------------------------------------------------------> Ajout au groupe dialout."
 echo
-
-apt-get update
-[[ $? -ne 0 ]] && arretSiErreur "Erreur lors de la mise ajour des dépots via apt-get update. Pb réseau ?"
-
-echo 20 > ${PROGRESS_FILE}
-echo
-echo "Avancement: 20% ---------------------------------------------------------------------------------------------------> install socat packages"
-echo
-
-apt-get -y install socat
-
-echo 90 > ${PROGRESS_FILE}
-echo
-echo "Avancement: 90% ---------------------------------------------------------------------------------------------------> Demarrage des services."
-echo
-
 
 echo "**Ajout du user www-data dans le groupe dialout (accès à la zigate)**"
 if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
@@ -97,12 +69,7 @@ if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
 
 echo 100 > ${PROGRESS_FILE}
 echo
-echo "Avancement: 99% ---------------------------------------------------------------------------------------------------> ;-) "
-echo
-echo "Fin installation des dépendances"
-echo
 echo "Avancement: 100% ---------------------------------------------------------------------------------------------------> FIN"
 echo
 
 rm ${PROGRESS_FILE}
-

@@ -639,7 +639,7 @@
             $SQN        = substr($payload, 2, 2);
             $PacketType = substr($payload, 4, 4);
 
-            if ($GLOBALS['debugArray']['8000']) {
+            if ($this->debug['8000']) {
                 $this->deamonlog('debug',';type; 8000; (Status)(Not Processed)'
                                  . '; Length: '.hexdec($ln)
                                  . '; Status: '.$this->displayStatus($status)
@@ -751,7 +751,7 @@
 
         function decode8009( $payload, $ln, $qos, $dummy)
         {
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT)'); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT)'); }
 
             // <Short Address: uint16_t>
             // <Extended Address: uint64_t>
@@ -770,7 +770,7 @@
             $AttributId = "Addr";
             $data = $ShortAddress;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
 
             // Envoie Extended Address
             $SrcAddr = "Ruche";
@@ -778,7 +778,7 @@
             $AttributId = "Addr";
             $data = $ExtendedAddress;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
 
             // Envoie PAN ID
             $SrcAddr = "Ruche";
@@ -786,7 +786,7 @@
             $AttributId = "ID";
             $data = $PAN_ID;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
 
             // Envoie Ext PAN ID
             $SrcAddr = "Ruche";
@@ -794,7 +794,7 @@
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
 
             // Envoie Channel
             $SrcAddr = "Ruche";
@@ -802,14 +802,14 @@
             $AttributId = "Channel";
             $data = $Channel;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; Channel: '.$Channel); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Channel: '.$Channel); }
 
-            if ($GLOBALS['debugArray']['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
+            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
         }
 
         function decode8010( $payload, $ln, $qos, $dummy)
         {
-            if ($GLOBALS['debugArray']['8010']) {
+            if ($this->debug['8010']) {
                 $this->deamonlog('debug',';type; 8010; (Version)(Processed->MQTT)'
                                  . '; Application : '.hexdec(substr($payload, 0, 4))
                                  . '; SDK : '.hexdec(substr($payload, 4, 4)));
@@ -818,14 +818,14 @@
             $ClusterId = "SW";
             $AttributId = "Application";
             $data = substr($payload, 0, 4);
-            if ($GLOBALS['debugArray']['8010']) { $this->deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos); }
+            if ($this->debug['8010']) { $this->deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos); }
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
 
             $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "SDK";
             $data = substr($payload, 4, 4);
-            if ($GLOBALS['debugArray']['8010']) { $this->deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos); }
+            if ($this->debug['8010']) { $this->deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos); }
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -2577,7 +2577,7 @@
             $this->deamonlog('debug',';Type; fct; ===> Configure NE End');
         }
 
-        function processAnnonce( $NE,  $qos )
+        function processAnnonce( $NE )
         {
             // Etat successifs
             // annonceReceived
@@ -2598,7 +2598,7 @@
 
             if ( count($GLOBALS['NE'])<1 ) { return; }
 
-            if ( $GLOBALS['debugArray']['processAnnonce'] ) { $this->deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
+            if ( $this->debig['processAnnonce'] ) { $this->deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
 
             foreach ( $NE as $short=>$infos ) {
                 switch ($infos['state']) {
@@ -2606,7 +2606,7 @@
                     case 'annonceReceived':
                         if (!isset($NE[$short]['action'])) {
                             if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
-                                if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                                if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                                 $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
                                 $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$short );
                                 $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short );
@@ -2619,7 +2619,7 @@
 
                     case 'EndPoint':
                         if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
-                            if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
                             $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
                             $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
@@ -2636,7 +2636,7 @@
 
                     case 'modelIdentifier':
                         if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
-                            if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) {
+                            if ( $this->debug['processAnnonceStageChg'] ) {
                                 $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE']));
                             }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
@@ -2651,7 +2651,7 @@
 
                     case 'configuration':
                         if ( $NE[$short]['action'] == "modelIdentifierReceived->configuration" ) {
-                            if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                             $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande Current State Equipement');
                             $GLOBALS['NE'][$short]['action']="configuration->currentState";
                             $this->getNE($short);
@@ -2660,7 +2660,7 @@
 
                     case 'currentState':
                         if ( $NE[$short]['action'] == "configuration->currentState" ) {
-                            if ( $GLOBALS['debugArray']['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
+                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                             $GLOBALS['NE'][$short]['state']="done";
                             $GLOBALS['NE'][$short]['action']="done";
                         }
@@ -2676,21 +2676,21 @@
 
         }
 
-        function cleanUpNE($NE,  $qos)
+        function cleanUpNE($NE)
         {
             if ( count($GLOBALS['NE'])<1 ) { return; }
-            if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
+            if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
             foreach ( $NE as $short=>$infos ) {
-                if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
+                if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
                 if ( ((($infos['timeAnnonceReceived'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
-                    if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
+                    if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
                     $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE']);
                     $this->mqqtPublish( $short, "Short", "Addr", $short);
                     $this->mqqtPublish( $short, "Power", "Source", ((base_convert($infos['capa'],16,2)&0x04)>>2));
                     unset( $GLOBALS['NE'][$short] );
                 }
             }
-            if ( $GLOBALS['debugArray']['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE end, NE: '.json_encode($GLOBALS['NE'])); }
+            if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE end, NE: '.json_encode($GLOBALS['NE'])); }
         }
 
     }

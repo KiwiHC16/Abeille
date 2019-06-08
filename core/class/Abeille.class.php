@@ -117,6 +117,22 @@
             log::add('Abeille_installS0', 'info', 'installS0 End');
             if ($GLOBALS['debugBEN']) echo "installS0 end\n";
         }
+
+        public static function installSocat($_background = true) {
+            if ($GLOBALS['debugBEN']) echo "installS0 start\n";
+            log::add('Abeille', 'debug', 'Starting installSocat');
+            log::remove('Abeille_installSocat');
+            log::add('Abeille_installSocat', 'info', 'installSocat Start');
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/installSocat.sh >> ' . log::getPathToLog('Abeille_installSocat') . ' 2>&1';
+            if ($_background) {
+                $cmd .= ' &';
+            }
+            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            log::add('Abeille_installSocat', 'info', $cmd);
+            shell_exec($cmd);
+            log::add('Abeille_installSocat', 'info', 'installSocat End');
+            if ($GLOBALS['debugBEN']) echo "installSocat end\n";
+        }
         
         public static function updateFirmwarePiZiGate($_background = true) {
             if ($GLOBALS['debugBEN']) echo "updateFirmwarePiZiGate start\n";
@@ -874,6 +890,7 @@
             // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
             // $dependancy_info['state'] pour affichage
             // state = [ok / nok / in_progress (progression/duration)] / state
+            // il n ' y plus de dépendance hotmis pour la zigate wifi (socat) qui est installé par un script a part.
             $debug_dependancy_info = 1;
             
             $return = array();
@@ -884,10 +901,8 @@
             $cmd = "dpkg -l socat";
             exec($cmd, $output_dpkg, $return_var);
             if ($output_dpkg[0] == "") {
+                message::add( "Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message");
                 log::add( 'Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.' );
-                $return['state'] = 'nok'; //Il manque Socat, relancer l\'installation';
-                $return['launchable'] = 'nok';
-                $return['launchable_message'] = __('Veuillez (ré-)installer les dépendances', __FILE__);
             }
             log::add( 'Abeille', 'debug', ' state: '.$return['state'] );
             log::add( 'Abeille', 'debug', ' progress: '.file_get_contents($return['progress_file'] ));

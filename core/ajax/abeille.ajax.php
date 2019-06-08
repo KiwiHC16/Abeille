@@ -48,7 +48,12 @@ try {
         abeille::installS0(false);
         ajax::success();
     }
-    
+
+    if (init('action') == 'installSocat') {
+        abeille::installSocat(false);
+        ajax::success();
+    }
+
     if (init('action') == 'updateFirmwarePiZiGate') {
         abeille::updateFirmwarePiZiGate(false);
         ajax::success();

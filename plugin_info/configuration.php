@@ -207,7 +207,24 @@
                     </div>
                 </div>
             </div>
-<hr>
+
+            <hr>
+            <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
+            <a class="btn btn-success" id="bt_zigatewifi_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_zigatewifi_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
+            <div id="zigatewifi">
+                <div>
+                    <p><i>La zigate wifi néccéssite l'installation de l'utilitaire socat pour lier un fichier fifo a une ip:port.</i></p>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Installation de socat qui permet les échanges avec la zigate wifi.">{{Installation de socat}}</label>
+                    <div class="col-lg-5">
+                        <a class="btn btn-warning" id="bt_installSocat"><i class="fa fa-refresh"></i> {{Installer}}</a>
+                    </div>
+                </div>
+
+
+                <hr>
             <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
             <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
@@ -264,6 +281,7 @@ $("#paramMosquitto").hide();
 $("#PiZigate").hide();
 $("#Parametre").hide();
 $("#Connection").hide();
+$("#zigatewifi").hide();
 
 $('#bt_hide').on('click', function () {
                     // console.log("bt_hide");
@@ -292,6 +310,20 @@ $('#bt_pizigate_show').on('click', function () {
                  $("#PiZigate").show();
                  }
                  );
+
+$('#bt_zigatewifi_show').on('click', function () {
+        // console.log("bt_test");
+        // To be defined
+        $("#zigatewifi").show();
+    }
+);
+
+$('#bt_zigatewifi_hide').on('click', function () {
+        // console.log("bt_hide");
+        // To be defined
+        $("#zigatewifi").hide();
+    }
+);
 
 $('#bt_parametre_hide').on('click', function () {
                           // console.log("bt_hide");
@@ -338,6 +370,16 @@ $('#bt_updateConfigAbeille').on('click',function(){
                                               }
                                               });
                               });
+
+$('#bt_installSocat').on('click',function(){
+    bootbox.confirm('{{Vous êtes sur le point d\'installer socat pour le module wifi de la zigate. <br> Voulez vous continuer ?}}', function (result) {
+        if (result) {
+            $('#md_modal2').dialog({title: "{{Installation de socat}}"});
+            $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installSocat.abeille').dialog('open');
+        }
+    });
+})
+
 
 $('#bt_installGPIO').on('click',function(){
                            bootbox.confirm('{{Vous êtes sur le point d installer Wiring Pi (http://wiringpi.com), cela peut provoquer des conflits avec d autres gestionnaires des pin GPIO.<br> Voulez vous continuer ?}}', function (result) {

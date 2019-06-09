@@ -100,7 +100,7 @@
         function deamonlog($loglevel = 'NONE', $message = "")
         {
             if ($this->debug["cli"] ) {
-                echo "[".date("Y-m-d H:i:s").'][AbeilleParser] '.$message."\n";
+                echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
             }
             else {
                 Tools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
@@ -2717,7 +2717,7 @@
         while (true) {
             
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
-                $AbeilleParser->deamonlog( 'debug', "Message pulled from queue : ".json_encode($data) );
+                $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
                 $msg_type = NULL;
                 $msg = NULL;
             }

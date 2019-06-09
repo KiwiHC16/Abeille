@@ -45,7 +45,7 @@
     define('queueKeyXmlToCmd',          623);
     define('queueKeyFormToCmd',         723);
     define('queueKeySerieToParser',     822);
-    
+
     Class MsgAbeille {
         public $message = array(
                                 'topic' => 'Coucou',

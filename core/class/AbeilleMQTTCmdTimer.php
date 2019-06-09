@@ -18,7 +18,7 @@
     class debug extends Tools {
         function deamonlog($loglevel = 'NONE', $message = "") {
             if ($this->debug["cli"] ) {
-                echo $message."\n";
+                echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmdTimer][DEBUG.BEN] '.$message."\n";
             }
             else {
                 $this->deamonlogFilter($loglevel,'Abeille', 'AbeilleMQTTCmd',$message);

@@ -67,7 +67,7 @@ class Tools
         #$iRequested=Tools::getNumberFromLevel($GLOBALS['requestedlevel']);
         #fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '['.strtoupper($loglevel). '='.$iLog.']/[' . strtoupper($GLOBALS['requestedlevel']) . '='.$iRequested. ']' . PHP_EOL);
         if (Tools::getNumberFromLevel($loglevel) <= Tools::getPluginLogLevel($pluginName)) {
-            fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '[' . $loglevel . ']' . $message . PHP_EOL);
+            fwrite(STDOUT,  '['.date('Y-m-d H:i:s').']['.$loggerName . '][' . $loglevel . ']' . $message . PHP_EOL);
         }
     }
 

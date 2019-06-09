@@ -16,7 +16,7 @@
         function deamonlog($loglevel = 'NONE', $message = "")
         {
             if ($this->debug["cli"] ) {
-                echo $message."\n";
+                echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd][DEBUG.BEN] '.$message."\n";
             }
             else {
                 $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd',$message);
@@ -101,7 +101,7 @@
                               "processCmd"          => 1, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
                               "transcode"           => 0, // Debug transcode fct
-                              "AbeilleMQTTCmdClass" => 0, // Mise en place des class
+                              "AbeilleMQTTCmdClass" => 1, // Mise en place des class
                               );
         
         public $parameters_info;
@@ -2102,41 +2102,77 @@
             }
             
         }
-        
+
+        /**
+         * return queue name from queueId
+         *
+         * has to be implemented in each classe that use msg_get_queue
+         *
+         * @param $queueId
+         * @return string queue name
+         */
+        public function getQueueName($queue){
+            $queueTopic="Not Found";
+            switch($queue){
+                case $this->queueKeyAbeilleToCmd:
+                    $queueTopic="queueKeyAbeilleToCmd";
+                    break;
+                case $this->queueKeyParserToCmd:
+                    $queueTopic="queueKeyParserToCmd";
+                    break;
+                case $this->queueKeyCmdToCmd:
+                    $queueTopic="queueKeyCmdToCmd";
+                    break;
+                case $this->queueKeyCmdToAbeille:
+                    $queueTopic="queueKeyCmdToAbeille";
+                    break;
+                case $this->queueKeyLQIToCmd:
+                    $queueTopic="queueKeyLQIToCmd";
+                    break;
+                case $this->queueKeyXmlToCmd:
+                    $queueTopic="queueKeyXmlToCmd";
+                    break;
+                case $this->queueKeyFormToCmd:
+                    $queueTopic="queueKeyFormToCmd";
+                    break;
+            }
+            return $queueTopic;
+        }
+
         function procmsg( $message ) {
-            
+
             if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "----------");
             if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - message: ". json_encode($message) );
-            
+
             $parameters_info = Abeille::getParameters();
-            
+
             $topic = $message->topic;
             $msg = $message->payload;
-            
+
             $test = explode('/', $topic);
             if ( sizeof( $test ) !=3 ) {
                 $this->deamonlog("debug", "Le format du message n est pas bon je ne le traite pas !!!");
                 return ;
             }
-            
+
             list($type, $address, $action) = explode('/', $topic);
-            
+
             if ($type == "TempoCmdAbeille") {
                 if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue.");
                 $this->addTempoCmdAbeille( $topic, $msg);
                 return;
             }
-            
+
             if ($type != "CmdAbeille") {
                 if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> CmdAbeille donc ce n est pas pour moi, no action.');
                 return;
             }
-            
+
             if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
             if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
-            
+
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
-            
+
             if ($address != "Ruche") {
                 switch ($action) {
                         //----------------------------------------------------------------------------
@@ -2223,9 +2259,9 @@
                                              );
                         }
                         else {
-                            
+
                             $actionId = $convertOnOff[$msg];
-                            
+
                             $Command = array(
                                              "onoff" => "1",
                                              "addressMode" => "02",
@@ -2358,7 +2394,7 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
@@ -2374,7 +2410,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $parameters['value'],
                                          "attributeType" => $parameters['attributeType'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2386,7 +2422,7 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         // Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=03010000&repeat=1
                         $Command = array(
                                          "WriteAttributeRequestVibration" => "1",
@@ -2402,7 +2438,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $parameters['value'],
                                          "repeat" => $parameters['repeat'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2414,11 +2450,11 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         // $consigne = sprintf( "%06X", $parameters['value'] );
                         $consigne = $parameters['value'];
                         $consigneHex = $consigne[4].$consigne[5].$consigne[2].$consigne[3].$consigne[0].$consigne[1];
-                        
+
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
                                          "address" => $address,
@@ -2433,7 +2469,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $consigneHex,
                                          // "repeat" => $parameters['repeat'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2445,10 +2481,10 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         $consigne = sprintf( "%04X", $parameters['value']*100 );
                         $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
-                        
+
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
                                          "address" => $address,
@@ -2463,7 +2499,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $consigneHex,
                                          // "repeat" => $parameters['repeat'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2475,10 +2511,10 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         $consigne = sprintf( "%02X", $parameters['value'] );
                         $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
-                        
+
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
                                          "address" => $address,
@@ -2493,7 +2529,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $consigneHex,
                                          // "repeat" => $parameters['repeat'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2505,10 +2541,10 @@
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
                         $this->deamonlog('debug', 'Msg Received: '.$msg);
-                        
+
                         $consigne = sprintf( "%02X", $parameters['value'] );
                         $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
-                        
+
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
                                          "address" => $address,
@@ -2523,7 +2559,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $consigneHex,
                                          // "repeat" => $parameters['repeat'],
-                                         
+
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;
@@ -2579,7 +2615,7 @@
                                              );
                         }
                         else {
-                            
+
                         }
                         break;
                         //----------------------------------------------------------------------------
@@ -2597,7 +2633,7 @@
                                              );
                         }
                         else {
-                            
+
                         }
                         break;
                         //----------------------------------------------------------------------------
@@ -2619,28 +2655,28 @@
                         // b=0.2171167
                         // c=-8.60201639
                         // level = level * level * a + level * b + c
-                        
+
                         $a = -0.8571429;
                         $b = 1.8571429;
                         $c = 0;
-                        
+
                         $keywords = preg_split("/[=&]+/", $msg);
-                        
+
                         // $level255 = intval($keywords[1] * 255 / 100);
                         // $this->deamonlog('debug', 'level255: '.$level255);
-                        
+
                         $levelSlider = $keywords[1];                // Valeur entre 0 et 100
                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
-                        
+
                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
-                        
+
                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
                         $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+c;
                         $level = $levelPourcent * 255;
                         $level = min( max( round( $level), 0), 255);
-                        
+
                         $this->deamonlog('debug', 'level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
-                        
+
                         $Command = array(
                                          "setLevel" => "1",
                                          "addressMode" => "02",
@@ -2720,22 +2756,22 @@
                                 $parameters['color'] = substr($parameters['color'], 1);
                             }
                         }
-                        
+
                         // Si message vient de Abeille alors le parametre est: RRVVBB
                         // Si le message vient de Homebridge: {"color":"#00FF11"}, j'extrais la partie interessante.
-                        
-                        
+
+
                         $rouge = hexdec(substr($parameters['color'],0,2));
                         $vert  = hexdec(substr($parameters['color'],2,2));
                         $bleu  = hexdec(substr($parameters['color'],4,2));
-                        
+
                         $this->deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/ColourRGB',  $parameters['color']);
-                        
+
                         $Command = array(
                                          "setColourRGB" => "1",
                                          "address" => $address,
@@ -2748,24 +2784,24 @@
                         //----------------------------------------------------------------------------
                     case "setRouge":
                         $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
-                        
+
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $msg );
-                        
+
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "setColourRGB" => "1",
                                          "address" => $address,
@@ -2778,24 +2814,24 @@
                         //----------------------------------------------------------------------------
                     case "setVert":
                         $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
-                        
+
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert', $msg );
-                        
+
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "setColourRGB" => "1",
                                          "address" => $address,
@@ -2808,24 +2844,24 @@
                         //----------------------------------------------------------------------------
                     case "setBleu":
                         $abeille = Abeille::byLogicalId('Abeille/'.$address,'Abeille');
-                        
+
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
                         $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu', $msg );
-                        
+
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "setColourRGB" => "1",
                                          "address" => $address,
@@ -2869,7 +2905,7 @@
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $temperatureK = $parameters['slider'];
                         $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureK );
                         $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
@@ -2885,7 +2921,7 @@
                                          "temperature"          => $temperatureConsigne,
                                          "destinationEndPoint"  => $parameters['EP'],
                                          );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/Temperature-Light', $temperatureK );
                         break;
                         //----------------------------------------------------------------------------
@@ -2900,7 +2936,7 @@
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $temperatureK = $parameters['slider'];
                         $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureK );
                         $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
@@ -2916,7 +2952,7 @@
                                          "temperature"          => $temperatureConsigne,
                                          "destinationEndPoint"  => $parameters['EP'],
                                          );
-                        
+
                         $this->publishMosquitto( queueKeyCmdToAbeille, 'Abeille/'.$address.'/Temperature-Light', $temperatureK );
                         break;
                         //----------------------------------------------------------------------------
@@ -2927,11 +2963,11 @@
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
-                                         
+
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          // "DestinationEndPoint"      => "ff",
                                          // "groupID"                  => $parameters['groupID'],
@@ -3009,7 +3045,7 @@
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "setReport"                => "1",
                                          "address"                  => $address,
@@ -3026,7 +3062,7 @@
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "setReport"                => "1",
                                          "address"                  => $address,
@@ -3038,7 +3074,7 @@
                                          "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
                                          );
                         break;
-                        
+
                         //----------------------------------------------------------------------------
                     default:
                         $this->deamonlog('warning', 'AbeilleCommand unknown: '.$action );
@@ -3047,13 +3083,13 @@
             } // if $address != "Ruche"
             else { // $address == "Ruche"
                 $done = 0;
-                
+
                 // Crée les variables dans la chaine et associe la valeur.
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = proper_parse_str( $msg );
                 }
-                
+
                 switch ($action) {
                     case "ReadAttributeRequest":
                         $Command = array(
@@ -3063,11 +3099,11 @@
                                          "attributeId"  => $parameters['attributId'],
                                          "Proprio"      => $parameters['Proprio'],
                                          );
-                        
+
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
                         $done = 1;
                         break;
-                        
+
                     case "bindShort":
                         $Command = array(
                                          "bindShort"                => "1",
@@ -3080,7 +3116,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "setReport":
                         $Command = array(
                                          "setReport"                => "1",
@@ -3093,7 +3129,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "getGroupMembership":
                         if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
@@ -3104,7 +3140,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "addGroup":
                         if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
@@ -3116,7 +3152,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "removeGroup":
                         if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
@@ -3128,9 +3164,9 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                         // Scene -----------------------------------------------------------------------------------------------
-                        
+
                     case "viewScene":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3142,7 +3178,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "storeScene":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3154,7 +3190,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "recallScene":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3166,18 +3202,18 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "sceneGroupRecall":
                         $this->deamonlog( 'debug', 'sceneGroupRecall msg: ' . $msg );
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        
+
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
-                                         
+
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          // "DestinationEndPoint"      => "ff",
                                          // "groupID"                  => $parameters['groupID'],
@@ -3186,7 +3222,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "addScene":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3199,7 +3235,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "getSceneMembership":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3210,7 +3246,7 @@
                                          );
                         $done = 1;
                         break;
-                        
+
                     case "removeSceneAll":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
@@ -3222,11 +3258,11 @@
                         $done = 1;
                         break;
                 } // switch action
-                
+
                 //  -----------------------------------------------------------------------------------------------
                 if ( !$done ) {
                     $keywords = preg_split("/[=&]+/", $msg);
-                    
+
                     // Si une string simple
                     if (count($keywords) == 1) {
                         $Command = array($action => $msg);
@@ -3288,21 +3324,20 @@
                                          $keywords[10] => $keywords[11],
                                          );
                     }
-                    
+
                 }
             }
-            
+
             /*---------------------------------------------------------*/
-            
+
             if ( $this->debug['procmsg'] ) $this->deamonlog('debug','procmsg fct - calling processCmd with Command parameters: '.json_encode($Command));
-            
+
             $this->processCmd($Command);
-            
+
             return;
         }
-        
     }
-    
+
     
     // ***********************************************************************************************
     // MAIN
@@ -3312,8 +3347,7 @@
     
     $AbeilleMQTTCmd = new AbeilleMQTTCmd("AbeilleMQTTCmd");
     try {
-        
-        $AbeilleMQTTCmd->deamonlog("debug", "Let s start" );
+        if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Let s start" );}
         
         $AbeilleMQTTCmd->queueKeyAbeilleToCmd   = msg_get_queue(queueKeyAbeilleToCmd);
         $AbeilleMQTTCmd->queueKeyParserToCmd    = msg_get_queue(queueKeyParserToCmd);
@@ -3326,62 +3360,28 @@
         $msg_type = NULL;
         $msg = NULL;
         $max_msg_size = 512;
-        
-        $AbeilleMQTTCmd->deamonlog("debug", "Loop start" );
+        $message= new MsgAbeille();
+
+        if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Loop start" );}
         
         while ( true ) {
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyAbeilleToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyAbeilleToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
+
+            foreach (array($AbeilleMQTTCmd->queueKeyAbeilleToCmd, $AbeilleMQTTCmd->queueKeyParserToCmd, $AbeilleMQTTCmd->queueKeyCmdToCmd,
+                         $AbeilleMQTTCmd->queueKeyLQIToCmd, $AbeilleMQTTCmd->queueKeyXmlToCmd, $AbeilleMQTTCmd->queueKeyFormToCmd) as $queue) {
+                $queueTopic = "None defined";
+                $queueTopic = $AbeilleMQTTCmd->getQueueName($queue);
+
+                if (msg_receive($queue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) { $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue "&$queueTopic&": ".$msg->message['topic']." -> ".$msg->message['payload']);}
+                    $message->topic = $msg->message['topic'];
+                    $message->payload = $msg->message['payload'];
+                    $AbeilleMQTTCmd->procmsg($message);
+                    $msg_type = NULL;
+                    $msg = NULL;
+                }
             }
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyParserToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyParserToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
-            }
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyCmdToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyCmdToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
-            }
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyLQIToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyLQIToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
-            }
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyXmlToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyXmlToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
-            }
-            if (msg_receive( $AbeilleMQTTCmd->queueKeyFormToCmd, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                $AbeilleMQTTCmd->deamonlog("debug", "Message pulled from queue for queueKeyFormToCmd: ".$msg->message['topic']." -> ".$msg->message['payload']);
-                $message->topic = $msg->message['topic'];
-                $message->payload = $msg->message['payload'];
-                $AbeilleMQTTCmd->procmsg($message);
-                $msg_type = NULL;
-                $msg = NULL;
-            }
-            
             $AbeilleMQTTCmd->execTempoCmdAbeille();
-            
-            time_nanosleep( 0, 10000000 ); // 1/100s
+            time_nanosleep(0, 10000000); // 1/100s
         }
         
     }
@@ -3391,8 +3391,4 @@
     }
     
     unset($AbeilleMQTTCmd);
-    
-    
-    
-    
     ?>

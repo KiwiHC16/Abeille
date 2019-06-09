@@ -93,10 +93,10 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
             if ($car == "03") {
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
                 if (msg_send( $queueKeySerieToParser, 1, $trame."\n", false, false)) {
-                    deamonlog('info', 'Msg sent ('.queueKeySerieToParser.'): '.json_encode($trame));
+                    deamonlog('info', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): '.json_encode($trame));
                 }
                 else {
-                    deamonlog('error', 'Msg sent ('.queueKeySerieToParser.'): Could not send Msg');
+                    deamonlog('error', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): Could not send Msg');
                 }
             } else {
                 if ($car == "02") {

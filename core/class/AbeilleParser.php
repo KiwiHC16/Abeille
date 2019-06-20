@@ -232,10 +232,10 @@
                                          );
             
             if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+                // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             
             $msgAbeille->message = array(
@@ -247,7 +247,7 @@
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             
             $msgAbeille->message = array(
@@ -259,7 +259,7 @@
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): .json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             
             
@@ -2717,7 +2717,7 @@
         while (true) {
             
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $data, false, MSG_IPC_NOWAIT)) {
-                $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
+                // $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
                 $msg_type = NULL;
                 $msg = NULL;
             }

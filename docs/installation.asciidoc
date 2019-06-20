@@ -1,0 +1,3 @@
+==== Installation
+
+L'installation de ce plugin ...

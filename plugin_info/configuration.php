@@ -211,8 +211,11 @@
                 </div>
 
 
-                <hr>
             </div>
+
+<hr>
+
+
             <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
             <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 

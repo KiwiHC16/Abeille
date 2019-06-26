@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OSRAM &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="osram">
+<h1>OSRAM<a class="headerlink" href="#osram" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="prise-smart">
+<h2>Prise Smart +<a class="headerlink" href="#prise-smart" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les prises Inddor et Outdoor semble identique. Dans Abeille par defaut elle seront considérées indoor. Vous pouvez changer l icone si elle est OutDoor.</p>
+<div class="section" id="nouvelle-inclusion">
+<h3>Nouvelle inclusion<a class="headerlink" href="#nouvelle-inclusion" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...</li>
+<li>Appui long sur le bouton du flanc de la prise, la prise switche rapidement On/Off, lâcher le bouton, l&#8217;équipement doit se connecter et un objet doit apparaître dans Jeedom.</li>
+</ul>
+<img alt="_images/plug01_new.png" src="_images/plug01_new.png" />
+</div>
+<div class="section" id="inclue">
+<h3>Inclue<a class="headerlink" href="#inclue" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Déjà inclue préalablement</p>
+<ul class="simple">
+<li>un appui long (&gt; 20s) sur le bouton latéral doit provoquer l&#8217;association (Zigate en mode inclusion) l&#8217;équipement doit se connecter et un objet doit apparaître dans Jeedom.</li>
+</ul>
+<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;- A clarifier</p>
+</div>
+<div class="section" id="retour-d-etat">
+<h3>Retour d&#8217;état<a class="headerlink" href="#retour-d-etat" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Afin de configurer le retour d&#8217;état il faut avoir:
+- l&#8217;adresse IEEE sur l objet prise OSRAM
+- et sur l&#8217;objet ruche</p>
+<p>Si ce n&#8217;est pas le cas vous pouvez faire un &#8220;liste Equipements&#8221; sur la ruche. Si cela ne suffit pas il faut faire &#8220;menu-&gt;Plugins-&gt;Protocol domotique-&gt;Abeille-&gt;Network List-&gt;Table de noeuds-&gt;Recalcul du cache&#8221; (Soyez patient).</p>
+<p>Ensuite utilisez de préférence &#8220;BindShortToZigateEtat&#8221; puis &#8220;setReportEtat&#8221;. Maintenant un changement d&#8217;état doit remonter tout seul et mettre à jour l&#8217;icone.</p>
+<img alt="_images/Capture_d_ecran_2018_06_27_a_11_24_09.png" src="_images/Capture_d_ecran_2018_06_27_a_11_24_09.png" />
+<p>Le retour d&#8217;état ne remonte que si l&#8217;état change. Donc si l&#8217;icone n&#8217;est pas synchro avec la prise vous pouvez avoir l&#8217;impression que cela ne fonctionne pas. Ex: la prise est Off et l&#8217;icone est on. Vous faites Off et rien ne se passe. Pour éviter cela un double Toggle doit réaligner tout le monde.</p>
+<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;- A clarifier</p>
+</div>
+</div>
+<div class="section" id="ampoules">
+<h2>Ampoules<a class="headerlink" href="#ampoules" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Ampoule E27 CLA 60 RGBW OSRAM (Classic E27 Multicolor)</p>
+<div class="section" id="id1">
+<h3>Nouvelle inclusion<a class="headerlink" href="#id1" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...</li>
+<li>Brancher l&#8217;ampoule OSRAM. Elle devrait joindre le réseau immédiatement et un objet doit être créé dans Jeedom.</li>
+</ul>
+</div>
+<div class="section" id="deja-inclue">
+<h3>Déjà inclue<a class="headerlink" href="#deja-inclue" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Ampoule allumée. Éteindre/Allumer 5 fois toutes les 3 s et elle doit essayer de joindre le réseau et faire un flash.</li>
+</ul>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=PaA0DV5BXH0">https://www.youtube.com/watch?v=PaA0DV5BXH0</a></p>
+</div>
+</div>
+<div class="section" id="routage">
+<h2>Routage<a class="headerlink" href="#routage" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Le routage avec les prise OSRAM ne semble pas compatible avec les autres produits comme xiaomi, ikea,... voir plus de détail dans le chapitre route et les aspects <a class="reference internal" href="Radio.html#radio-routes"><span class="std std-ref">OSRAM</span></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OSRAM</a><ul>
+<li><a class="reference internal" href="#prise-smart">Prise Smart +</a><ul>
+<li><a class="reference internal" href="#nouvelle-inclusion">Nouvelle inclusion</a></li>
+<li><a class="reference internal" href="#inclue">Inclue</a></li>
+<li><a class="reference internal" href="#retour-d-etat">Retour d&#8217;état</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ampoules">Ampoules</a><ul>
+<li><a class="reference internal" href="#id1">Nouvelle inclusion</a></li>
+<li><a class="reference internal" href="#deja-inclue">Déjà inclue</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#routage">Routage</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/OSRAM.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/OSRAM.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

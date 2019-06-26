@@ -1,3 +1,0 @@
-==== Configuration
-
-La configuration de ce plugin ...

@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Xiaomi &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="xiaomi">
+<h1>Xiaomi<a class="headerlink" href="#xiaomi" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="tous">
+<h2>Tous<a class="headerlink" href="#tous" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Tous les périphériques classiques</p>
+<div class="section" id="nouvelle-inclusion">
+<h3>Nouvelle inclusion<a class="headerlink" href="#nouvelle-inclusion" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...</li>
+<li>Appui long de 7s sur le bouton du flanc de l&#8217;équipement, l&#8217;équipement doit se connecter et un objet doit apparaître dans Jeedom.</li>
+</ul>
+</div>
+<div class="section" id="deja-inclue">
+<h3>Déjà inclue<a class="headerlink" href="#deja-inclue" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Zigate en fonctionnement normale</li>
+<li>Appui court sur le bouton du flanc de l&#8217;équipement et l&#8217;objet Abeille doit être créé.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bouton-rond">
+<h2>Bouton Rond<a class="headerlink" href="#bouton-rond" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Bouton Rond (lumi.sensor_switch)</p>
+<p>Ce bouton envoie un message lors de l&#8217;appui mais aussi lors du relâchement. L&#8217;état dans Abeille/Jeedom reflète l&#8217;état du bouton.</p>
+</div>
+<div class="section" id="bouton-carre">
+<h2>Bouton Carre<a class="headerlink" href="#bouton-carre" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Bouton Carre (lumi.sensor_switch.aq2)</p>
+<p>Contrairement au bouton rond ci dessus, le bouton carré n&#8217;envoie pas d&#8217;information sur l&#8217;appui. Il envoie l&#8217;information que sur la relache.</p>
+<p>Afin d&#8217;avoir le visuel sur le dashboard, l&#8217;état passe à 1 sur la réception du message et Jeedom attend 1 minute avant de le remettre à 0.</p>
+</div>
+<div class="section" id="informations">
+<h2>Informations<a class="headerlink" href="#informations" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Informations complémentaires</p>
+<p>Du fait de ce fonctionnement, nous ne pouvons avoir une approche changement d&#8217;état. Il faut avoir une approche événement. De ce fait la gestion des scénarii est un peu différente du bouton rond.</p>
+<p>Par défaut le bouton est configuré pour déclencher les scénarii à chaque appui (même si l&#8217;état était déjà à 1). Mais Jeedom va aussi provoquer un événement au bout d&#8217;une minute en passant la valeur à 0.</p>
+<p>Lors de l&#8217;exécution du scénario, si vous testé l&#8217;état du bouton est qu&#8217;il est à un vous avez reçu un événement appui bouton, si l&#8217;état est 0, vous avez reçu un événement retour à zéro après une minute.</p>
+<p>Par exemple pour commander une ampoule Ikea:</p>
+<img alt="_images/Capture_d_ecran_2018_09_04_a_13_05_49.png" src="_images/Capture_d_ecran_2018_09_04_a_13_05_49.png" />
+<img alt="_images/Capture_d_ecran_2018_09_04_a_13_05_.36.png" src="_images/Capture_d_ecran_2018_09_04_a_13_05_.36.png" />
+</div>
+<div class="section" id="multi">
+<h2>Multi<a class="headerlink" href="#multi" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pour l&#8217;information multi, celle ci remonte quand on fait plus d&#8217;un appui sur le bouton. Multi prend alors la valeur remontée. Le bouton n&#8217;envoie pas d&#8217;autre information et donc la valeur reste indéfiniment. Par défaut l&#8217;objet créé demande à Jeedom de faire un retour d&#8217;état à 0 après une minute. Cela peut être enlevé dans les paramètres de la commande.</p>
+<p>Le fonctionnement de base va provoquer 2 événements, un lors de l&#8217;appui multiple, puis un second après 1 minute (généré par Jeedom pour le retour d&#8217;état). Si vous enlevez de la commande le retour d&#8217;état alors vous n&#8217;aurez que l&#8217;événement appui multiple.
+Par défaut, en gros, le scénario se déclenche et si vous testez la valeur multi &gt; 1, c&#8217;est un événement appui multiple et si valeur à 0 alors événement Jeedom de retour d&#8217;état.</p>
+</div>
+<div class="section" id="inondation">
+<h2>Inondation<a class="headerlink" href="#inondation" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Inondation (lumi.sensor_wleak.aq1)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) sur le dessus</li>
+</ul>
+<p>Remonte son nom et attribut ff01 (longueur 34)</p>
+</div>
+<div class="section" id="porte-v1">
+<h2>Porte V1<a class="headerlink" href="#porte-v1" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur de Porte Ovale (lumi.sensor_magnet)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) avec un trombone</li>
+</ul>
+<p>Remonte un champ ff02 avec 6 éléments
+Puis son nom lumi.sensor_magnet</p>
+</div>
+<div class="section" id="porte-v2">
+<h2>Porte V2<a class="headerlink" href="#porte-v2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Porte Rectangle (lumi.sensor_magnet.aq2)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) sur bouton latéral</li>
+</ul>
+<p>Remonte son nom et ff01 (len 29)</p>
+<ul class="simple">
+<li>Appui Long (7s) sur bouton latéral</li>
+</ul>
+<p>Inclusion
+Remonte son nom et Application Version
+Remonte ff01 (len 29)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) avec trombone</li>
+<li>Appui long (7s) avec trombone</li>
+</ul>
+<p>Inclusion
+Remonte son nom
+Remonte Appli Version
+Remonte ff02 avec 6 éléments</p>
+<ul class="simple">
+<li>Double flash bleu sans action de notre part</li>
+</ul>
+<p>Visiblement quand le capteur fait un rejoin après avoir perdu le réseau par exemple, il fait un double flash bleu.</p>
+</div>
+<div class="section" id="presence-v2">
+<h2>Présence V2<a class="headerlink" href="#presence-v2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur de Présence V2</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) sur bouton latéral</li>
+</ul>
+<p>Remonte son nom et FF01 de temps en temps.</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton latéral</li>
+</ul>
+<p>Inclusion
+Remonte son nom et SW version
+Remonte FF01 (len 33)</p>
+<ul class="simple">
+<li>Comportement</li>
+</ul>
+<p>Il remonte une info a chaque détection de présence et remonte en même temps la luminosité. Sinon la luminosité ne remonte pas d&#8217;elle même. Ce n&#8217;est pas un capteur de luminosité qui remonte l&#8217;information périodiquement.</p>
+</div>
+<div class="section" id="temperature-v1">
+<h2>Température V1<a class="headerlink" href="#temperature-v1" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Température Rond (lumi.sensor_ht)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) sur bouton latéral</li>
+</ul>
+<p>Remonte son nom</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton latéral</li>
+</ul>
+<p>Exclusion
+Inclusion
+Remonte son nom et appli version
+Remonte ff01 (len 31)</p>
+</div>
+<div class="section" id="temperature-v2">
+<h2>Température V2<a class="headerlink" href="#temperature-v2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Température Carré (lumi.weather)</p>
+<ul class="simple">
+<li>Appui court (&lt;1s) sur bouton latéral</li>
+</ul>
+<p>Si sur le réseau: Remonte son nom
+Si hors réseau et Zigate pas en Inclusion: Un flash bleu puis un flash bleu unique
+Si hors réseau et Zigate en Inclusion: Un flash bleu, pause 2s, 3 flash bleu</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton latéral</li>
+</ul>
+<p>Exclusion
+Inclusion
+Remonte son nom et appli version
+Remonte ff01 (len 37)</p>
+<ul>
+<li><p class="first">Comportement</p>
+<blockquote>
+<div><ul class="simple">
+<li>Si détection de petite variation de température ou humidité, rapport une fois par heure</li>
+<li>Si variation de plus de 0,5°C ou de plus de 6% d&#8217;humidité, rapport immédiat</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Précision (Source Appli IOS MI FAQ Xiaomi)</p>
+<blockquote>
+<div><ul class="simple">
+<li>Température +-0,3°C</li>
+<li>Humidité +-3%</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="cube-aqara">
+<h2>Cube Aqara<a class="headerlink" href="#cube-aqara" title="Lien permanent vers ce titre">¶</a></h2>
+<img alt="_images/Capture_d_ecran_2018_06_12_a_22_00_03.png" src="_images/Capture_d_ecran_2018_06_12_a_22_00_03.png" />
+</div>
+<div class="section" id="wall-switch-1">
+<h2>Wall Switch 1<a class="headerlink" href="#wall-switch-1" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Wall Switch Double Battery (lumi.sensor_86sw2)</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton de gauche</li>
+</ul>
+<p>Inclusion
+Remonte son nom et appli version
+Remonte ff01 (len 37)</p>
+<ul class="simple">
+<li>getName</li>
+</ul>
+<p>Il répond au getName sur EP 01 si on fait un appuie long sur l&#8217;interrupteur de droite (7s) et pendant cette période on fait un getName depuis la ruche.</p>
+<ul class="simple">
+<li>Appui très Long (&gt;10s) sur bouton de gauche</li>
+</ul>
+<p>Exclusion</p>
+</div>
+<div class="section" id="wall-switch-2">
+<h2>Wall Switch 2<a class="headerlink" href="#wall-switch-2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Wall Switch Double 220V Sans Neutre (lumi.ctrl_neutral2)</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton de gauche</li>
+</ul>
+<p>Inclusion
+Remonte son nom et appli version
+Remonte d&#8217;autres informations</p>
+<ul class="simple">
+<li>getName</li>
+</ul>
+<p>Il répond au getName sur EP 01 s.</p>
+<ul class="simple">
+<li>Appui Tres Long (&gt;8s) sur bouton de gauche</li>
+</ul>
+<p>Exclusion</p>
+</div>
+<div class="section" id="vibration">
+<h2>Vibration<a class="headerlink" href="#vibration" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Vibration</p>
+<ul class="simple">
+<li>Appui long (7s) sur bouton de gauche</li>
+</ul>
+<p>Inclusion
+Remonte son nom et appli version
+Remonte d&#8217;autres informations</p>
+<ul class="simple">
+<li>Attribute 0055</li>
+</ul>
+<p>Il semblerai qu&#8217;une valeur:</p>
+<ul class="simple">
+<li>1 indique une détection de vibration</li>
+<li>2 indique un rotation</li>
+<li>3 indique une chute</li>
+<li>Attribute 0503</li>
+</ul>
+<p>Pourrait être la rotation après l&#8217;envoi de l&#8217;attribut 0055 à la valeur 2</p>
+<ul class="simple">
+<li>Attribute 0508</li>
+</ul>
+<p>Inconnu, est envoyé après attribut 0055.</p>
+</div>
+<div class="section" id="fumee">
+<h2>Fumée<a class="headerlink" href="#fumee" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur de fumée</p>
+<ul class="simple">
+<li>3 appuis sur le bouton de façade</li>
+</ul>
+<p>Inclusion ou Exclusion si la Zigate n&#8217;est pas en mode inclusion</p>
+<ul class="simple">
+<li>Sensibilité du capteur</li>
+</ul>
+<p>Il est possible de définir le seuil de détection du capteur: 3 niveaux (En développement).</p>
+<ul class="simple">
+<li>Test du capteur</li>
+</ul>
+<p>Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par Abeille, il doit y avoir entre 1 et 3 bips).</p>
+<ul class="simple">
+<li>Réveil</li>
+</ul>
+<p>Le capteur se réveille toutes les 15s pour savoir si la Zigate à des infos pour lui.</p>
+</div>
+<div class="section" id="gaz">
+<h2>Gaz<a class="headerlink" href="#gaz" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Capteur Gaz</p>
+<p>Ce capteur est un router.</p>
+<ul class="simple">
+<li>Paramètres</li>
+</ul>
+<p>Vous pouvez choisir le niveau de sensibilité: Low - Moyen - High</p>
+<ul class="simple">
+<li>Tester la bonne connexion au réseau</li>
+</ul>
+<p>Avec le bouton tester, vous envoyez un message au capteur qui doit réagir avec un bip sonore (3 messages envoyés par Abeille, il doit y avoir 3 bips à 5s d&#8217;intervalles).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Xiaomi</a><ul>
+<li><a class="reference internal" href="#tous">Tous</a><ul>
+<li><a class="reference internal" href="#nouvelle-inclusion">Nouvelle inclusion</a></li>
+<li><a class="reference internal" href="#deja-inclue">Déjà inclue</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bouton-rond">Bouton Rond</a></li>
+<li><a class="reference internal" href="#bouton-carre">Bouton Carre</a></li>
+<li><a class="reference internal" href="#informations">Informations</a></li>
+<li><a class="reference internal" href="#multi">Multi</a></li>
+<li><a class="reference internal" href="#inondation">Inondation</a></li>
+<li><a class="reference internal" href="#porte-v1">Porte V1</a></li>
+<li><a class="reference internal" href="#porte-v2">Porte V2</a></li>
+<li><a class="reference internal" href="#presence-v2">Présence V2</a></li>
+<li><a class="reference internal" href="#temperature-v1">Température V1</a></li>
+<li><a class="reference internal" href="#temperature-v2">Température V2</a></li>
+<li><a class="reference internal" href="#cube-aqara">Cube Aqara</a></li>
+<li><a class="reference internal" href="#wall-switch-1">Wall Switch 1</a></li>
+<li><a class="reference internal" href="#wall-switch-2">Wall Switch 2</a></li>
+<li><a class="reference internal" href="#vibration">Vibration</a></li>
+<li><a class="reference internal" href="#fumee">Fumée</a></li>
+<li><a class="reference internal" href="#gaz">Gaz</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Xiaomi.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Xiaomi.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

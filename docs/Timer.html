@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Timer &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="timer">
+<h1>Timer<a class="headerlink" href="#timer" title="Lien permanent vers ce titre">¶</a></h1>
+<img alt="_images/node_Timer.png" src="_images/node_Timer.png" />
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans le plugin Abeille, il a été inclus un &#8220;sous-plugin&#8221; TIMER qui fonctionne à la seconde.</p>
+<p>[NOTE]
+_Dans le futur, il est possible que ce &#8220;sous-plugin&#8221; soit dédié et indépendant._</p>
+<div class="section" id="fonctionnement">
+<h3>Fonctionnement<a class="headerlink" href="#fonctionnement" title="Lien permanent vers ce titre">¶</a></h3>
+<img alt="_images/Capture_d_ecran_2018_03_21_a_13_16_53.png" src="_images/Capture_d_ecran_2018_03_21_a_13_16_53.png" />
+<p>Le timer possède 4 phases:</p>
+<p>T0-&gt;T1: RampUp de 0 à 100% =&gt; RampUp</p>
+<p>T1-&gt;T2: Stable à 100% =&gt; durationSeconde</p>
+<p>T2-&gt;T3: Ramp Down de 100% à 0% =&gt; RampDown</p>
+<p>T3-&gt; : n existe plus</p>
+<p>Exemple d&#8217;application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.</p>
+<p>[NOTE]
+Il est important de noter que chaque phase fait au minimum 1s.</p>
+<p>[NOTE]
+Le rafraichissement du widget se fait toutes les 5s mais la mise à jour des valeurs se fait toutes les secondes.</p>
+</div>
+</div>
+<div class="section" id="video">
+<h2>Video<a class="headerlink" href="#video" title="Lien permanent vers ce titre">¶</a></h2>
+<p><a class="reference external" href="https://youtu.be/B3qullXc-_s">Video expliquant les fonctionnements des Timers.</a></p>
+<div class="section" id="trois-commandes">
+<h3>Trois commandes<a class="headerlink" href="#trois-commandes" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Start: permet d&#8217;exécuter une commande et de démarrer le Timer.</li>
+<li>Cancel: permet d&#8217;exécuter une commande et d&#8217;annuler le Timer.</li>
+<li>Stop: permet d&#8217;exécuter une commande, à l&#8217;expiration du Timer.</li>
+</ul>
+</div>
+<div class="section" id="retour-d-information">
+<h3>Retour d&#8217;information<a class="headerlink" href="#retour-d-information" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Time-Time: Date de la dernière action sur le Timer</li>
+<li>Time-TimeStamp: Heure système de la dernière action</li>
+<li>Duration: Temps restant avant expiration du Timer en secondes</li>
+<li>ExpiryTime: Heure d&#8217;expiration du Timer</li>
+<li>RampUpDown: Pourcentage entre 0 et 100 (Ramp Up 0-&gt;100, Ramp Down 100-&gt;0)</li>
+</ul>
+<p>Elles ne sont pas forcement toutes visibles, à vous de choisir.</p>
+<p>Dans les phase de ramp Up ou Down, la commande actionRamp/scenarioRamp est exécutée régulièrement avec pour paramètre la valeur en cours de RampUpDown.</p>
+</div>
+<div class="section" id="creation-d-un-timers">
+<h3>Creation d un Timers<a class="headerlink" href="#creation-d-un-timers" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Pour créer un objet Timer, clic sur le bouton &#8220;Timer&#8221; dans la configuration du plugin.</p>
+<p>Un message doit apparaitre pour annoncer la création du Timer avec un Id Abeille-NombreAléatoire.</p>
+<img alt="_images/Capture_d_ecran_2018_03_21_a_13_14_36.png" src="_images/Capture_d_ecran_2018_03_21_a_13_14_36.png" />
+<p>Apres avoir rafraichi l&#8217;écran vous devriez avoir l objet:</p>
+<img alt="_images/Capture_d_ecran_2018_03_21_a_13_16_53.png" src="_images/Capture_d_ecran_2018_03_21_a_13_16_53.png" />
+</div>
+<div class="section" id="configuration-du-timer">
+<h3>Configuration du Timer<a class="headerlink" href="#configuration-du-timer" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="equipement">
+<h4>Equipement<a class="headerlink" href="#equipement" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Comme pour tous les objets, dans l&#8217;onglet Équipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...</p>
+</div>
+<div class="section" id="param">
+<h4>Param<a class="headerlink" href="#param" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Dans l&#8217;onglet paramétrage du Timer, remplissez les champs:</p>
+<ul class="simple">
+<li>action sur demarrage: Action a éxecuter au démarrage du Timer</li>
+<li>Duration: c&#8217;est la durée en secondes entre T1 et T2, soit entre la fin du ramp up et le début du ramp down.</li>
+<li>Ramp Up duration: temps en secondes pour passer de T0 à T1</li>
+<li>Ramp Down duration: temps en secondes pour passer de T2 à T3</li>
+<li>Ramp Action: action qui sera executer lors de la variation de la commande info RampUpDown.</li>
+<li>Action sur arret: arret executée lors de l&#8217;expiration du timer.</li>
+<li>Action sur annulation: action excutée si le timer est annulé</li>
+</ul>
+<p>[NOTE]
+Toutes les commandes sont au format #[objet][equipement][cmd]# par exemple #[test][Ruban][Level]#</p>
+</div>
+</div>
+<div class="section" id="commandes">
+<h3>Commandes<a class="headerlink" href="#commandes" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Dans les premières versions du timer, il fallait configurer directement dans les Commandes les parametres. Maintenant cela se fait dans la page Param.</p>
+<p>[NOTE]
+Certaines captures d&#8217;écran datent de cette période, ne pas modifier les commandes comme pourrait le faire croire les images mais bien faire le parametrage dans la page Param.</p>
+</div>
+<div class="section" id="commande-ou-scenario">
+<h3>Commande ou Scénario<a class="headerlink" href="#commande-ou-scenario" title="Lien permanent vers ce titre">¶</a></h3>
+<p>[TIP]
+Il faut que je revois cette partie suite aux derniers changements, je ne suis pas sût que cela fonctionne encore.</p>
+<p>Par défaut l&#8217;objet Timer est créé avec des commande Start, Stop, Cancel qui font référence à l&#8217;exécution d&#8217;une commande.</p>
+<p>Mais vous avez la possibilité d&#8217;appeler un scénario à la place d&#8217;une commande.</p>
+<p>Cela vous permet beaucoup plus de flexibilité comme le lancement d&#8217;une série de commandes.</p>
+<p>La syntaxe: scenarioStart=Id,scenarioCancel=Id,scenarioStop=Id, en remplaçant Id pour l&#8217;identifiant du scénario que vous trouvez dans la définition du scénario.</p>
+<img alt="_images/Capture_d_ecran_2018_03_27_a_12_52_53.png" src="_images/Capture_d_ecran_2018_03_27_a_12_52_53.png" />
+<p>L&#8217;Id du scénario est dans le tab de la page de configuration du scenario.</p>
+<img alt="_images/Capture_d_ecran_2018_03_27_a_12_55_27.png" src="_images/Capture_d_ecran_2018_03_27_a_12_55_27.png" />
+<p>Ici vous pouvez voir l&#8217;ID 3 du scénario utilisé.</p>
+<p>Commande Start Complete</p>
+<p>actionStart=#put_the_cmd_here#=&amp;durationSeconde=300&amp;RampUp=10&amp;RampDown=10&amp;actionRamp=#put_the_cmd_here#</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Timer</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#fonctionnement">Fonctionnement</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#video">Video</a><ul>
+<li><a class="reference internal" href="#trois-commandes">Trois commandes</a></li>
+<li><a class="reference internal" href="#retour-d-information">Retour d&#8217;information</a></li>
+<li><a class="reference internal" href="#creation-d-un-timers">Creation d un Timers</a></li>
+<li><a class="reference internal" href="#configuration-du-timer">Configuration du Timer</a><ul>
+<li><a class="reference internal" href="#equipement">Equipement</a></li>
+<li><a class="reference internal" href="#param">Param</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#commandes">Commandes</a></li>
+<li><a class="reference internal" href="#commande-ou-scenario">Commande ou Scénario</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Timer.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Timer.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

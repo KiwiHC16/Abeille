@@ -1,3 +1,0 @@
-==== FAQ
-
-La FAQ de ce plugin ...

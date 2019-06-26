@@ -1,0 +1,31 @@
+Scènes
+======
+
+Intro
+-----
+
+Les scènes permettent d'envoyer un seul message Zigbee et d'avoir multiple équipement qui se mette en position automatiquement.
+
+Une scène peut être: "Séance TV", qui allumera la TV, fermera les volets et mettra une lumière tamisée en place.
+
+Pour ce faire chaque équipement doit savoir ce qu'il doit faire lorsqu'il reçoit la commande. Il doit donc avoir été paramétré avant.
+
+Pour l'instant tout le paramétrage se fait depuis l'objet Ruche.
+
+== Ajout
+
+Ajout d une scène à un équipement
+
+* en cours ...
+
+== Retrait
+
+Retrait d une scène à un équipement
+
+* en cours ...
+
+== Récupérer
+
+Récupérer les scènes d'un équipement
+
+* en cours ...

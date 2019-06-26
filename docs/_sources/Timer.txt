@@ -1,0 +1,140 @@
+#####
+Timer
+#####
+
+.. image:: images/node_Timer.png
+
+************
+Introduction
+************
+
+Dans le plugin Abeille, il a été inclus un "sous-plugin" TIMER qui fonctionne à la seconde.
+
+[NOTE]
+_Dans le futur, il est possible que ce "sous-plugin" soit dédié et indépendant._
+
+Fonctionnement
+==============
+
+.. image:: images/Capture_d_ecran_2018_03_21_a_13_16_53.png
+
+Le timer possède 4 phases:
+
+T0->T1: RampUp de 0 à 100% => RampUp
+
+T1->T2: Stable à 100% => durationSeconde
+
+T2->T3: Ramp Down de 100% à 0% => RampDown
+
+T3-> : n existe plus
+
+Exemple d'application: allumage progressif d une ampoule, maintient allumé pendant x secondes puis extinction progressive.
+
+[NOTE]
+Il est important de noter que chaque phase fait au minimum 1s.
+
+[NOTE]
+Le rafraichissement du widget se fait toutes les 5s mais la mise à jour des valeurs se fait toutes les secondes.
+
+
+*****
+Video
+*****
+
+`Video expliquant les fonctionnements des Timers.  <https://youtu.be/B3qullXc-_s>`_
+
+
+Trois commandes
+===============
+
+* Start: permet d'exécuter une commande et de démarrer le Timer.
+* Cancel: permet d'exécuter une commande et d'annuler le Timer.
+* Stop: permet d'exécuter une commande, à l'expiration du Timer.
+
+Retour d'information
+====================
+
+* Time-Time: Date de la dernière action sur le Timer
+* Time-TimeStamp: Heure système de la dernière action
+* Duration: Temps restant avant expiration du Timer en secondes
+* ExpiryTime: Heure d'expiration du Timer
+* RampUpDown: Pourcentage entre 0 et 100 (Ramp Up 0->100, Ramp Down 100->0)
+
+Elles ne sont pas forcement toutes visibles, à vous de choisir.
+
+
+Dans les phase de ramp Up ou Down, la commande actionRamp/scenarioRamp est exécutée régulièrement avec pour paramètre la valeur en cours de RampUpDown.
+
+Creation d un Timers
+====================
+
+Pour créer un objet Timer, clic sur le bouton "Timer" dans la configuration du plugin.
+
+Un message doit apparaitre pour annoncer la création du Timer avec un Id Abeille-NombreAléatoire.
+
+.. image:: images/Capture_d_ecran_2018_03_21_a_13_14_36.png
+
+Apres avoir rafraichi l'écran vous devriez avoir l objet:
+
+.. image:: images/Capture_d_ecran_2018_03_21_a_13_16_53.png
+
+
+Configuration du Timer
+======================
+
+Equipement
+----------
+
+Comme pour tous les objets, dans l'onglet Équipement, vous pouvez changer son nom, le rattacher à un objet Parent, etc...
+
+
+Param
+-----
+
+Dans l'onglet paramétrage du Timer, remplissez les champs:
+
+* action sur demarrage: Action a éxecuter au démarrage du Timer
+* Duration: c'est la durée en secondes entre T1 et T2, soit entre la fin du ramp up et le début du ramp down.
+* Ramp Up duration: temps en secondes pour passer de T0 à T1
+* Ramp Down duration: temps en secondes pour passer de T2 à T3
+* Ramp Action: action qui sera executer lors de la variation de la commande info RampUpDown.
+* Action sur arret: arret executée lors de l'expiration du timer.
+* Action sur annulation: action excutée si le timer est annulé
+
+[NOTE]
+Toutes les commandes sont au format \#[objet][equipement][cmd]# par exemple \#[test][Ruban][Level]#
+
+Commandes
+=========
+
+Dans les premières versions du timer, il fallait configurer directement dans les Commandes les parametres. Maintenant cela se fait dans la page Param.
+
+[NOTE]
+Certaines captures d'écran datent de cette période, ne pas modifier les commandes comme pourrait le faire croire les images mais bien faire le parametrage dans la page Param.
+
+
+Commande ou Scénario
+====================
+
+[TIP]
+Il faut que je revois cette partie suite aux derniers changements, je ne suis pas sût que cela fonctionne encore.
+
+Par défaut l'objet Timer est créé avec des commande Start, Stop, Cancel qui font référence à l'exécution d'une commande.
+
+Mais vous avez la possibilité d'appeler un scénario à la place d'une commande.
+
+Cela vous permet beaucoup plus de flexibilité comme le lancement d'une série de commandes.
+
+La syntaxe: scenarioStart=Id,scenarioCancel=Id,scenarioStop=Id, en remplaçant Id pour l'identifiant du scénario que vous trouvez dans la définition du scénario.
+
+.. image:: images/Capture_d_ecran_2018_03_27_a_12_52_53.png
+
+L'Id du scénario est dans le tab de la page de configuration du scenario.
+
+.. image:: images/Capture_d_ecran_2018_03_27_a_12_55_27.png
+
+Ici vous pouvez voir l'ID 3 du scénario utilisé.
+
+Commande Start Complete
+
+actionStart=\#put_the_cmd_here\#=&durationSeconde=300&RampUp=10&RampDown=10&actionRamp=\#put_the_cmd_here\#

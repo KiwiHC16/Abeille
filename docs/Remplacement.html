@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fonctions Jeedom &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fonctions-jeedom">
+<h1>Fonctions Jeedom<a class="headerlink" href="#fonctions-jeedom" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="remplacement">
+<h2>Remplacement<a class="headerlink" href="#remplacement" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="equipement">
+<h3>Equipement<a class="headerlink" href="#equipement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Si vous voulez remplacer un équipement par un autre (identique) par exemple parce que le premier est en panne sans perdre toutes les informations (Historique, Scénarios,...), voici la méthode à suivre.</p>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p class="last">Attention, cette manipulation n&#8217;est pas sans risque car je n&#8217;ai pas la maitrise de tout.</p>
+</div>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p class="last">Cette fonction était intéressante dans les premières versions d&#8217;Abeille car le changement d&#8217;adresse des équipements zigbee n&#8217;était pas géré. Maintenant c&#8217;est automatique et donc le remplacement manuelle non nécessaire. A n&#8217;utiliser que pour des besoins très spécifiques.</p>
+</div>
+<p>Prenons l&#8217;exemple du remplacement d&#8217;un bouton carre Xiaomi ayant pour adresse 21ce remplacé par un nouveau bouton.</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_16_53_29.png" src="_images/Capture_d_ecran_2018_03_01_a_16_53_29.png" />
+<p>Première opération, Inclure le nouveau bouton dans Abeille.</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_16_48_35.png" src="_images/Capture_d_ecran_2018_03_01_a_16_48_35.png" />
+<p>Le nouveau bouton a pour adresse 8818.</p>
+<p>Renseigner les champs dans la commande &#8220;Replace Equipment&#8221; dans l&#8217;objet Ruche.
+Pour le champ Titre mettre l&#8217;adresse de l&#8217;ancien équipement.
+Pour le champ Message mettre l&#8217;adresse du nouvel équipement.</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_16_57_02.png" src="_images/Capture_d_ecran_2018_03_01_a_16_57_02.png" />
+<p>Puis clic sur &#8220;Replace Equipement&#8221;.</p>
+<p>Ouvrez l&#8217;ancien équipement qui porte toujours le nom &#8220;Abeille-21ce&#8221;.</p>
+<p>Vous devez voir le nouveau nom:</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_17_01_04.png" src="_images/Capture_d_ecran_2018_03_01_a_17_01_04.png" />
+<p>Sauvegardez le nouvel objet.</p>
+<p>Vous devez avoir deux équipements:</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_17_04_30.png" src="_images/Capture_d_ecran_2018_03_01_a_17_04_30.png" />
+<p>Il ne vous reste plus qu&#8217;a ouvrir l&#8217;objet &#8220;Abeille-8818&#8221; et à le supprimer.</p>
+<p>Vous pouvez maintenant changer le nom de l&#8217;objet &#8220;Abeille-8818-New&#8221; à la valeur que vous voulez.</p>
+<img alt="_images/Capture_d_ecran_2018_03_01_a_17_09_46.png" src="_images/Capture_d_ecran_2018_03_01_a_17_09_46.png" />
+</div>
+<div class="section" id="commande">
+<h3>Commande<a class="headerlink" href="#commande" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Vous pouvez remplacer une commande A par une autre commande B à l&#8217;aide des boutons oranges:</p>
+<img alt="_images/Capture_d_ecran_2018_10_01_a_12_32_20.png" src="_images/Capture_d_ecran_2018_10_01_a_12_32_20.png" />
+<p>Cela permet de mettre à jour les scénarios, les autres objets,... faisant référence à cette commande. C&#8217;est très pratique et rapide.</p>
+<p>Mais car il y a un mais, ou plutôt n&#8217;oubliez pas qu&#8217;une commande est attachée à un objet, un historique et éventuellement un autre Jeedom par JeeLink. A vous de gérer ces aspects.</p>
+<p>Si vous aviez une mesure de température A que vous avez remplacé par une mesure B et que vous voulez aussi transférer l&#8217;historique de A vers B:</p>
+<img alt="_images/Capture_d_ecran_2018_10_01_a_12_31_57.png" src="_images/Capture_d_ecran_2018_10_01_a_12_31_57.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fonctions Jeedom</a><ul>
+<li><a class="reference internal" href="#remplacement">Remplacement</a><ul>
+<li><a class="reference internal" href="#equipement">Equipement</a></li>
+<li><a class="reference internal" href="#commande">Commande</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Remplacement.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Remplacement.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

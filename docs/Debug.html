@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Debug / Troubleshooting / Investigations &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="debug-troubleshooting-investigations">
+<h1>Debug / Troubleshooting / Investigations<a class="headerlink" href="#debug-troubleshooting-investigations" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Je vais essayer de consolider ici tous les retours d&#8217;expériences et les vérifications à faire pour résoudre un éventuel problème.</p>
+<div class="section" id="forum">
+<h2>Forum<a class="headerlink" href="#forum" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>Liste des sujets en cours de discussions: <a class="reference external" href="https://www.Jeedom.com/forum/viewtopic.php?f=59&amp;t=33573&amp;hilit=Abeille">Forum Jeedom</a></li>
+<li>Liste des sujets en investigations : <a class="reference external" href="https://github.com/KiwiHC16/Abeille/issues?utf8=✓&amp;q=is%3Aissue">GitHub Abeille</a></li>
+</ul>
+</div>
+<div class="section" id="problemes">
+<h2>Problèmes<a class="headerlink" href="#problemes" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Si vous trouvez un problème qui demande une correction dans le plugin, merci d ouvrir ùne issue &lt;<a class="reference external" href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a>&gt;`_  dans GitHub.</p>
+<p>Si vous ouvrez une &#8220;issue&#8221; merci de fournir le plus d&#8217;information possible et en particulier:</p>
+<ul class="simple">
+<li>Votre configuration Jeedom:</li>
+</ul>
+<ul class="simple">
+<li>Le HW sur lequel vous faite tourner le plugin,</li>
+<li>la Version de l&#8217;OS,</li>
+<li>la version de Jeedom</li>
+<li>...</li>
+</ul>
+<ul class="simple">
+<li>Votre configuration Gateway</li>
+</ul>
+<ul class="simple">
+<li>Type de Zigate</li>
+<li>quel firmware</li>
+<li>...</li>
+</ul>
+<ul class="simple">
+<li>Les logs, aussi nombreux que possibles surtout</li>
+</ul>
+<ul class="simple">
+<li>AbeilleParser</li>
+<li>AbeilleMQTT</li>
+<li>Abeille</li>
+</ul>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>...
+- Description
+* ce que vous cherchez à faire
+* les résultats
+* captures d&#8217;ecrans
+* ...</p>
+</div>
+<div class="section" id="evolution">
+<h2>Evolution<a class="headerlink" href="#evolution" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Si vous souhaitez une évolution dans le plugin, merci d ouvrir une &#8220;issue&#8221; dans GitHub à l&#8217;adresse avec un &#8220;Labels&#8221; &#8220;enhancement&#8221;: <a class="reference external" href="https://github.com/KiwiHC16/Abeille/issues">https://github.com/KiwiHC16/Abeille/issues</a></p>
+</div>
+<div class="section" id="debug">
+<h2>Debug<a class="headerlink" href="#debug" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Verifier la configuration réseau et en particulier /hostname, /etc/hosts</li>
+<li>Vérifier la configuration du plugin. Par exemple le message suivant indique très probablement que l&#8217;objet de rattachement de l&#8217;équipement Ruche n&#8217;est pas défini.</li>
+</ul>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">[MySQL] Error code : 23000 (1452). Cannot add or update a child row: a foreign key constraint fails (`Jeedom`.`eqLogic`, CONSTRAINT `fk_eqLogic_object1` FOREIGN KEY (`object_id`) REFERENCES `object` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="connection">
+<h3>Connection<a class="headerlink" href="#connection" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="premier-test">
+<h4>Premier test<a class="headerlink" href="#premier-test" title="Lien permanent vers ce titre">¶</a></h4>
+<ul class="simple">
+<li>Rendez l équipement Ruche Visible (Il est maintenant caché par défaut).</li>
+<li>Dans l équipement ruche, appuyez sur le bouton &#8220;Version&#8221;, vous devez récupérer la version logicielle dans le champ SW, la version de dev dans le champ SDK et les dates Last et Lasts Stamps doivent se mettre à jour à chaque fois. Si les dates se mettent à jour c&#8217;est que le dialogue Abeille-Zigate fonctionne dans les deux sens.</li>
+</ul>
+</div>
+<div class="section" id="deuxieme-test">
+<h4>Deuxième test<a class="headerlink" href="#deuxieme-test" title="Lien permanent vers ce titre">¶</a></h4>
+<ul class="simple">
+<li>Vérifiez bien que vous n&#8217;avez pas plusieurs Plugins essayant d&#8217;utiliser le même port série (/dev/ttyUSBx).</li>
+</ul>
+</div>
+<div class="section" id="troisieme-test">
+<h4>Troisième test<a class="headerlink" href="#troisieme-test" title="Lien permanent vers ce titre">¶</a></h4>
+<ul class="simple">
+<li>Tester la Zigate en ligne de commande (ssh)</li>
+</ul>
+<p>On envoie</p>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">stty -F/dev/ttyUSB0 115200 &lt;1&gt;</span>
+<span class="x">echo -ne &#39;\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03&#39; &gt; /dev/ttyUSB0 &lt;2&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>&lt;1&gt; On configure le port série</p>
+<p>&lt;2&gt; On demande à la zigate de se mettre en inclusion.</p>
+<p>(Cela peut être fait alors que le plugin est Zigate fonctionnent).</p>
+<p>Cette commande demande à la Zigate de se mettre en Inclusion, vous devriez voir la LED bleu se mettre à clignoter et dans le log AbeilleParser vous devriez voir passer un message comme:</p>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]-------------- 2018-02-28 04:21:32: protocolData size(20) message &gt; 12 char</span>
+<span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]Type: 8000 quality: 00</span>
+<span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]type: 8000 (Status)(Not Processed)</span>
+<span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]Length: 5</span>
+<span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]Status: 00-(Success)</span>
+<span class="x">AbeilleParser 2018-02-28 04:21:32[DEBUG]SQN: b8</span>
+</pre></div>
+</td></tr></table></div>
+<p>Si la LED bleue clignote cela confirme que le dialogue Abeille vers Zigate fonctionne.</p>
+<p>PS: la configuration du port peu varier d&#8217;un système à l&#8217;autre donc il peut être nécesaire de jouer avec stty en rajoutant les arguments raw, cs8, -parenb et autres.</p>
+</div>
+<div class="section" id="quatrieme-test">
+<h4>Quatrième test<a class="headerlink" href="#quatrieme-test" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Arretez le plugin Abeille. Lancer la commande dans un terminal (Ecoute):</p>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">cat /dev/ttyUSB0 | hexdump -vC</span>
+</pre></div>
+</td></tr></table></div>
+<p>Dans un second terminal envoyez la commande</p>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">stty -F/dev/ttyUSB0 115200</span>
+<span class="x">echo -ne &#39;\x01\x02\x10\x49\x02\x10\x02\x14\xb0\xff\xfc\xfe\x02\x10\x03&#39; &gt; /dev/ttyUSB0</span>
+</pre></div>
+</td></tr></table></div>
+<p>Dans le premier terminal (Ecoute) vous devriez voir passer du traffic comme:</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="x">www-data@Abeille:~/html/log$ cat /dev/ttyUSB0 | hexdump -vC</span>
+<span class="x">00000000  01 80 02 10 02 10 02 15  77 02 10 bb 02 10 49 02  |........w.....I.|</span>
+<span class="x">00000010  10 03 01 80 02 10 02 10  02 15 70 02 10 bc 02 10  |..........p.....|</span>
+</pre></div>
+</div>
+<p>Cela confirme Zigate vers Jeedom</p>
+</div>
+</div>
+<div class="section" id="equipements-zigbee">
+<h3>Equipements ZigBee<a class="headerlink" href="#equipements-zigbee" title="Lien permanent vers ce titre">¶</a></h3>
+<p>La ruche possede des commandes pour interroger les objets. Les deux principales sont ActiveEndPoint et SingleDescriptorRequest.</p>
+<img alt="_images/Capture_d_ecran_2018_02_06_a_17_33_19.png" src="_images/Capture_d_ecran_2018_02_06_a_17_33_19.png" />
+<p>Dans ActiveEndPoint mettre l&#8217;adresse de l&#8217;équipement dans le titre puis clic sur le bouton ActiveEndPoint.</p>
+<p>Regardez dans la log AbeilleParser, vous devez voir passer la réponse. Par exemple pour une ampoule IKEA:</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]-------------- 2018-02-06 17:40:16: protocolData</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]message &gt; 12 char</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Type: 8045 quality: 93</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]type: 8045 (Active Endpoints Response)(Not Processed)</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]SQN : da</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Status : 00</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Short Address : 6e1b</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint Count : 01</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint List :</span>
+<span class="x">AbeilleParser: 2018-02-06 17:40:16[DEBUG]Endpoint : 01</span>
+</pre></div>
+</div>
+<p>Il y a, dans ce cas, une seul EndPoint à l&#8217;adresse &#8220;01&#8221; (Donné par les lignes suivant &#8220;Endpoint List&#8221;).</p>
+<p>Faire de même pour SingleDescriptorRequest en ajoutant le EndPoint voulu dans le champ Message.</p>
+<div class="highlight-php"><div class="highlight"><pre><span></span><span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8000 quality: 00</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]type: 8000 (Status)(Not Processed)</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length: 5</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status: 00-(Success)</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN: db</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]-------------- 2018-02-06 17:42:25: protocolData</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]message &gt; 12 char</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 quality: 93</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Type: 8043 (Simple Descriptor Response)(Not Processed)</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]SQN : db</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Status : 00</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Short Address : 6e1b</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Length : 20</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]endpoint : 01</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]profile : c05e</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]deviceId : 0100</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]bitField : 02</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]InClusterCount : 08</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0000 - General: Basic</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0003 - General: Identify</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0004 - General: Groups</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0005 - General: Scenes</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0006 - General: On/Off</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0008 - General: Level Control</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 0B05 - Misc: Diagnostics</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]In cluster: 1000 - ZLL: Commissioning</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]OutClusterCount : 04</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0000 - General: Basic</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0003 - General: Identify</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0004 - General: Groups</span>
+<span class="x">AbeilleParser: 2018-02-06 17:42:25[DEBUG]Out cluster: 0005 - General: Scenes</span>
+</pre></div>
+</div>
+<p>Nous avons maintenant les clusters supportés par cet objet sur son endpoint 01.</p>
+</div>
+<div class="section" id="script">
+<h3>Script<a class="headerlink" href="#script" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Dans Abeille/resources/AbeilleDeamon/Debug, vous trouverez le script verification.sh.</p>
+<p>L&#8217;execution permet de tester, vérifier et donner des infos qui sont souvent interessantes pour des problème de base. Ce script n&#8217;est pas forcement bien maintenu alors les résultats ne sont pas forcement fiables.</p>
+<p>Je ne suis pas sûre que ce script soit toujours à jour...</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Debug / Troubleshooting / Investigations</a><ul>
+<li><a class="reference internal" href="#forum">Forum</a></li>
+<li><a class="reference internal" href="#problemes">Problèmes</a></li>
+<li><a class="reference internal" href="#evolution">Evolution</a></li>
+<li><a class="reference internal" href="#debug">Debug</a><ul>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#connection">Connection</a><ul>
+<li><a class="reference internal" href="#premier-test">Premier test</a></li>
+<li><a class="reference internal" href="#deuxieme-test">Deuxième test</a></li>
+<li><a class="reference internal" href="#troisieme-test">Troisième test</a></li>
+<li><a class="reference internal" href="#quatrieme-test">Quatrième test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#equipements-zigbee">Equipements ZigBee</a></li>
+<li><a class="reference internal" href="#script">Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Debug.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Debug.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

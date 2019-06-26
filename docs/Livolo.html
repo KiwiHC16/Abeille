@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Livolo &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="livolo">
+<h1>Livolo<a class="headerlink" href="#livolo" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="interrupteur-1-btn">
+<h2>Interrupteur 1 btn<a class="headerlink" href="#interrupteur-1-btn" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="en-cours">
+<h3>En cours<a class="headerlink" href="#en-cours" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Fonctionne pendant  une minute puis ne répond plus. Je n&#8217;avais pas ce soucis avec le modèle 2 boutons...</p>
+<div class="section" id="inclure">
+<h4>Inclure<a class="headerlink" href="#inclure" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Un appui long (&gt; 5s) sur le bouton central jusqu&#8217;à émission d&#8217;un bip doit provoquer l&#8217;association (Zigate en mode inclusion) l&#8217;équipement doit se connecter et un objet doit apparaître dans Jeedom.</p>
+</div>
+<div class="section" id="caracteristiques">
+<h4>Caracteristiques<a class="headerlink" href="#caracteristiques" title="Lien permanent vers ce titre">¶</a></h4>
+<div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="x">EP: 6</span>
+<span class="x">(Simple Descriptor Response)</span>
+<span class="x">profile : 0104 (ZigBee Home Automation (ZHA)); deviceId : 0000 (On/Off Switch); bitField : 00;</span>
+<span class="x">InClusterCount : 02</span>
+<span class="x">In cluster: 0000 - General: Basic</span>
+<span class="x">In cluster: 0003 - General: Identify</span>
+<span class="x">OutClusterCount : 01</span>
+<span class="x">Out cluster: 0006 - General: On/Off</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="retour-d-etat">
+<h4>Retour d&#8217;état<a class="headerlink" href="#retour-d-etat" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Abeille fait la demande après envoie d&#8217;une commande.</p>
+</div>
+</div>
+<div class="section" id="interrupteur-2-btn">
+<h3>Interrupteur 2 btn<a class="headerlink" href="#interrupteur-2-btn" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Un appui long (&gt; ?s) sur un bouton jusqu&#8217;à émission d&#8217;un bip doit provoquer l&#8217;association (Zigate en mode inclusion) l&#8217;équipement doit se connecter et un objet doit apparaître dans Jeedom.</p>
+<div class="section" id="id1">
+<h4>Retour d&#8217;état<a class="headerlink" href="#id1" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Abeille fait la demande après envoie d&#8217;une commande.</p>
+</div>
+</div>
+<div class="section" id="remarques">
+<h3>Remarques<a class="headerlink" href="#remarques" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>les deux interrupteurs s&#8217;annonce sous le même nom &#8220;TI0001&#8221;.</li>
+<li>par defaut Abeille crée un modèle 2 boutons. Effacer les commandes On et Off pour le second boutons si vous avez un modèle 1 bouton.</li>
+<li>ils ne semblent pas aimer les commandes non supportées et se met en carafe et ne répond plus.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Livolo</a><ul>
+<li><a class="reference internal" href="#interrupteur-1-btn">Interrupteur 1 btn</a><ul>
+<li><a class="reference internal" href="#en-cours">En cours</a><ul>
+<li><a class="reference internal" href="#inclure">Inclure</a></li>
+<li><a class="reference internal" href="#caracteristiques">Caracteristiques</a></li>
+<li><a class="reference internal" href="#retour-d-etat">Retour d&#8217;état</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interrupteur-2-btn">Interrupteur 2 btn</a><ul>
+<li><a class="reference internal" href="#id1">Retour d&#8217;état</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#remarques">Remarques</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Livolo.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Livolo.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

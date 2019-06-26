@@ -1,0 +1,57 @@
+#############
+Developpement
+#############
+
+**************
+Grandes lignes
+**************
+
+* branche master : pour tous les développements en cours a condition que les pushs soient utilisables et "stabilisés" pour la phase de test.
+* branche beta: pour figer un développement et le mettre en test avant de passer en stable
+* branche stable: version stable
+* Dev en cours: autre branche
+
+Vue générale
+============
+
+.. attention::
+
+   Ces graphes ne sont pas à jour car la partie Mosquitto n'existe plus.
+
+Vue générale de la solution
+
+.. image:: images/Capture_d_ecran_2018_01_21_a_13_13_26.png
+
+.. code-block:: php
+
+                    +------------+
+                    |   Jeedom   |
+                    +------------+
+                    +------------+
+                    |  Abeille   |
+                    +-+-----+----+
+   CmdAbeille/Addr/Action     |         ^               Abeille/=
+                                            v         |              CmdRuche/Ruche/CreateRuche
+                                            +-------+----+
+                          +-----+ Mosquitto  + <----+
+            cmdAbeille /=|        +-------------+           |   Abeille/Addr/xxxx
+                      v                         |   CmdAbeille/Addr/xxx
+            +--------------+---+                +----+----------------+
+            |AbeilleMQTTCmd.php|                |AbeilleParser.php    |
+            |CmdToAbeille.php  |                |AbeilleSerialRead.php|
+            +----+-------------+                +----+----------------+
+                    |                                 ^
+                    |           +--------------+      |
+                    +---------->+ /deb/ttyUSBX +------+
+                                +--------------+
+                               +-------------+
+                               |   Zigate    |
+                              X+-------------+X
+                            X                   X
+                +---------+X                     X+----------+
+                | Abeille  |                      | Abeille  |
+                |---------+X                     X+----------+
+                            X                  X
+                              X+------------+X
+                              |   Abeille   |
+                              +-------------+

@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Modele et Fichier JSON &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="modele-et-fichier-json">
+<h1>Modele et Fichier JSON<a class="headerlink" href="#modele-et-fichier-json" title="Lien permanent vers ce titre">¶</a></h1>
+<p>(Cette partie doit être revue et mie a jour sur la base des dernieres evolutions)</p>
+<div class="section" id="video">
+<h2>Video<a class="headerlink" href="#video" title="Lien permanent vers ce titre">¶</a></h2>
+<p><a class="reference external" href="https://youtu.be/WDeFK0OQETQ">Video expliquant la gestion des modeles JSON.</a></p>
+</div>
+<div class="section" id="configuration-des-objets">
+<h2>Configuration  des objets<a class="headerlink" href="#configuration-des-objets" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Losqu&#8217;un objet Zigbee remonte son nom à Jeedom, le plugin Abeille utilise celui-ci pour créer un nouvel équipement dans Jeedom. Le nom permet de déterminer un type d&#8217;équipement. Chaque type d&#8217;équipement possède sa configuration, ses informations et ses actions. Tour cela est stocké dans un repertoire au nom du périphérique dans lequel se trouve le fichier JSON au nom du périphérique aussi (plugins/Abeille/core/class/devices/name/name.json). ou name = la valeur du message 0000-01-0005 (avec qq traitements pour enlever les espaces ou les &#8220;lumi&#8221; qui se repetent).</p>
+<p>Actuellement nous y trouvons les Xiaomi temperature rond et carré, capteur présence, interrupteurs, prise et un type de lampe IKEA et la liste continue à s&#8217;allonger.</p>
+<p>L&#8217;idée est de pourvoir étendre au fur et à mesure la listes de objets connus avec le retour des utilisateurs (voir aussi le mode semi automatique pour collecter des informations: <a class="reference external" href="https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets">https://github.com/KiwiHC16/Abeille/blob/master/Documentation/Debug.asciidoc=creation-des-objets</a>).</p>
+<div class="section" id="interface-jeedom">
+<h3>Interface Jeedom<a class="headerlink" href="#interface-jeedom" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Penons un exemple: Capteur de porte Xiaomi.</p>
+<p>Dans Jeedom, il apparaîtra sous le widget:</p>
+<img alt="_images/Screen_Shot_2018_01_29_at_19_39_52.png" src="_images/Screen_Shot_2018_01_29_at_19_39_52.png" />
+<p>Son nom est pour l&#8217;occasion &#8220;lumi.sensor_magnet.aq2&#8221;. C&#8217;est à partir de là que tout le reste a été déduit, par exemple le symbole de porte,...</p>
+<p>Si vous sélectionnez, l&#8217;objet vous arrivez dans la page suivante:</p>
+<img alt="_images/Screen_Shot_2018_01_29_at_19_40_30.png" src="_images/Screen_Shot_2018_01_29_at_19_40_30.png" />
+<p>En sélectionnant &#8220;Configuration Avancée&#8221;:</p>
+<img alt="_images/Screen_Shot_2018_01_29_at_20_47_13.png" src="_images/Screen_Shot_2018_01_29_at_20_47_13.png" />
+<p>Vous pouvez voir tous les paramètres associés à l&#8217;équipement et vous en servir d&#8217;exemple pour définir les paramètres de configuration à mettre dans le fichier JSON.</p>
+<p>Attention tous les paramètres ne sont pas encore pris en compte.</p>
+<p>Puis si vous sélectionnez &#8220;Commandes&#8221;, puis une commande spécifique à l&#8217;aide du symbole engrenage:</p>
+<img alt="_images/Screen_Shot_2018_01_29_at_19_42_20.png" src="_images/Screen_Shot_2018_01_29_at_19_42_20.png" />
+<p>Puis si vous sélectionnez une commande spécifique comme l&#8217;état:</p>
+<img alt="_images/Screen_Shot_2018_01_29_at_19_42_44.png" src="_images/Screen_Shot_2018_01_29_at_19_42_44.png" />
+<p>Vous pouvez voir tous les paramètres associés à une commande et vous en servir d&#8217;exemple pour définir les paramatres de configuration à mettre dans le fichier JSON.</p>
+<p>Si vous modifiez à l&#8217;aide de Jeedom la présentation de la commande cela vous permet de savoir ce qu&#8217;il faut mettre dans le fichier de conf.</p>
+<p>Mais attention car il y a un mais, tous les paramètres ne sont pas encore gérés par Abeille, mais c&#8217;est prévu.</p>
+</div>
+<div class="section" id="editer-json">
+<h3>Editer JSON<a class="headerlink" href="#editer-json" title="Lien permanent vers ce titre">¶</a></h3>
+<p>(Cette partie doit être mise à jour car les fichiers JSON ont beaucoup changés)</p>
+<p>Vous avez plusieurs façons pour éditer le fichier JSON.
+* La premiere est d&#8217;éditer le fichier sous format texte mais je ne vous le conseille pas car ce n&#8217;est pas facile à lire et à modifier (beaucoup de parentheses ouvrantes et fermantes qu&#8217;il faut absolument respecter)
+* Utiliser un éditeur JSON (il y en a plein sur internet).</p>
+<p>Une fois ouvert le fichier peut ressembler à quelque chose comme ca:</p>
+<img alt="_images/Capture_d_ecran_2018_01_29_a_21_15_55.png" src="_images/Capture_d_ecran_2018_01_29_a_21_15_55.png" />
+<p>Vous retrouvez les même informations que celles vues ci dessus. Comparez les différents équipements entre eux cela vous aidera à comprendre les paramètres. Vous pouvez faire des copier / coller avec vos informations et sauvegarder. Le fichier est lu à chaque nouvel équipement donc vous pouvez rapidement voir le résultat. Pour cela supprimez l&#8217;équipement dans Jeedom et provoquez l&#8217;envoie du nom par l&#8217;objet.</p>
+<p>Les fichiers JSON ont évolués et intègrent des include. Les fichiers JSON include sont dans le répertoire Template. Ces fichiers permettent de définir les commandes individuellement et de ne pas avoir à tout réécrire à chaque fois.</p>
+<p>PS: si vous supprimez un équipement, n&#8217;oubliez pas que cela supprime aussi l&#8217;historique des valeurs.</p>
+</div>
+<div class="section" id="ajout-des-icones-pour-les-objets-crees">
+<h3>Ajout des icônes pour les objets crées<a class="headerlink" href="#ajout-des-icones-pour-les-objets-crees" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Lorsqu&#8217;un objet est crée, une icône lui est associée. Lorsqu&#8217;un nouvel objet est ajouté dans le fichier JSON &#8220;plugins/Abeille/core/class/devices/objet.json&#8221;, il est possible de lui attribuer une icône personnalisée. Le nom affichée est celui du champ nameJeedom, l&#8217;icone utilisée celle de configuration-&gt;icone</p>
+<p>Le fichier image au format png nommé node_objet.png est a déposer dans le répertoire _plugins/Abeille/images/_ (500x500 px semble correct)</p>
+<img alt="_images/Device_icone01.png" src="_images/Device_icone01.png" />
+</div>
+<div class="section" id="mise-a-jour-des-fichiers-json">
+<h3>Mise a jour des fichiers JSON<a class="headerlink" href="#mise-a-jour-des-fichiers-json" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Vous pouvez mettre à jour les fichiers JSON depuis la page de configuration du plugin: menu-&gt;PLugin-&gt;Gestion des plugin-&gt;Abeille.
+Pour se faire, clic sur le bouton: &#8220;Mise a jour des modeles&#8221;. Cela va télécharger les dernières versions sur votre systeme. Attention: si vous avez des JSON perso, ils seront effacés lors de cette opération. Les sauvegarder et les réinstallé après.</p>
+<p>Ensuite vous n&#8217;avez plus qu&#8217;a appliquer ces nouveau modèles en utilisant le bouton &#8220;Appliquer nouveaux modeles&#8221;.</p>
+<p>Vous pouvez aussi appliquer les nouveaux modeles que sur certains équipements en allant dans menu-&gt;plugin-&gt;Protocole domotique-&gt;Abeille, selectionnez les devices et clic qur &#8220;Apply Template&#8221;.</p>
+</div>
+<div class="section" id="creation-des-objets">
+<h3>Creation des objets<a class="headerlink" href="#creation-des-objets" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Les modèles des objets sont dans un fichier JSON, ce fichier peut être éditer pour modifier les configurations pas défaut et ajouter de nouveaux modèles par exemple.</li>
+<li>L&#8217;appareil Ruche contient une commande cachée par type d&#8217;objet (identifié das le fichier JSON). Chaque commande cachée permet la création d&#8217;objets fictifs pour vérifier la bonne création de l&#8217;objet dans Jeedom. Pour avoir les commandes, il faut regénerer l&#8217;objet Ruche pour prendre en compte les modifications éventuelles du fichier json. Pour ce faire supprimer Ruche et relancer le démon. Puis un clic sur le bouton pour créer l&#8217;objet.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_23_a_22_31_19.png" src="_images/Capture_d_ecran_2018_01_23_a_22_31_19.png" />
+<ul class="simple">
+<li>Si vour rendez visible ces commandes cachées cela donne:</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_23_a_22_31_43.png" src="_images/Capture_d_ecran_2018_01_23_a_22_31_43.png" />
+<ul class="simple">
+<li>En cliquant sur l&#8217;un de ces boutons vous vérifier vous testez la bonne création des objets mais aussi que le chemin Jeedom-&gt;Mosquitto-&gt;Jeedom fonctionne.</li>
+<li>Pas recommandé: Vous pouvez tester la création pure des objets en ligne de commande avec: &#8220;php Abeille.class.php 1&#8221; en ayant mis les bon paramètres en fin de fichier &#8220;Abeille.class.php&#8221; (A faire que par ceux qui comprennent ce qu&#8217;ils font)</li>
+<li>L&#8217;objet obtenu ressemble à cela pour un Xiaomi Temperature Rond:</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_23_a_22_53_24.png" src="_images/Capture_d_ecran_2018_01_23_a_22_53_24.png" />
+<ul class="simple">
+<li>Si un objet type Xiaomi Plug, Ampoule IKEA (Il faut que l objet soit en reception radio) a été effacé de Jeedom vous pouvez l&#8217;interroger depuis la Ruche et cela devrait le recréer. Mettre dans le champ &#8220;Titre&#8221; de Get Name, l&#8217;adresse (ici example 7c54)  et faites Get Name. Rafraîchir la page et vous devriez avoir l&#8217;objet.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_25_a_14_59_34.png" src="_images/Capture_d_ecran_2018_01_25_a_14_59_34.png" />
+<img alt="_images/Capture_d_ecran_2018_01_25_a_14_59_43.png" src="_images/Capture_d_ecran_2018_01_25_a_14_59_43.png" />
+<ul class="simple">
+<li>Pour un objet qui n&#8217;est pas un routeur, exemple Xiaomi IR Presence, qui donc s&#8217;endort 99% du temps, il n&#8217;est pas possible de l&#8217;interroger pour qu&#8217;il provoque la création de l objet dans Jeedom. Mais vous pouvez créer l objet en allant dans les commandes de la ruche.</li>
+<li>Ouvrir la page commande de la ruche et trouver la commande &#8220;lumi.sensor_motion&#8221;.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_03_02_a_11_09_04.png" src="_images/Capture_d_ecran_2018_03_02_a_11_09_04.png" />
+<p>Remplacez &#8220;/lumi.sensor_motion/&#8221; l&#8217;adresse du groupe que vous voulez controler. Par exemple AAAA.</p>
+<img alt="_images/Capture_d_ecran_2018_03_02_a_11_09_47.png" src="_images/Capture_d_ecran_2018_03_02_a_11_09_47.png" />
+<p>Sauvegardez et faites &#8220;Tester&#8221;.</p>
+<p>Vous avez maintenant une capteur.</p>
+<img alt="_images/Capture_d_ecran_2018_03_02_a_11_11_02.png" src="_images/Capture_d_ecran_2018_03_02_a_11_11_02.png" />
+<ul class="simple">
+<li>Vous avez aussi la possibilité de lire des attributs de certains équipements en mettant l&#8217;adresse dans le titre et les paramètres de l attribut dans le Message comme dans la capture d&#8217;écran ci dessous. Regardez dans les logs si vous récupérez des infos (Attention il faut que l&#8217;équipement soit à l&#8217;écoute):</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_25_a_16_12_32.png" src="_images/Capture_d_ecran_2018_01_25_a_16_12_32.png" />
+<ul class="simple">
+<li>Vous avez la possibilité de demander la liste des équipements dans la base interne de la Zigate. Pour ce faire vous avez le bouton &#8220;Liste Equipements&#8221; sur la ruche. Si vous êtes en mode automatique, les valeurs des objets existants vont se mettre à jour (IEEE, Link Quality et Power-Source). Si vous êtes en mode semi-automatique de même et si l&#8217;objet n&#8217;existe pas un objet &#8220;inconnu&#8221; sera créé avec les informations.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_26_a_10_46_04.png" src="_images/Capture_d_ecran_2018_01_26_a_10_46_04.png" />
+<img alt="_images/Capture_d_ecran_2018_01_26_a_10_46_13.png" src="_images/Capture_d_ecran_2018_01_26_a_10_46_13.png" />
+<ul class="simple">
+<li>Il peut être nécessaire de faire la demande de la liste pour que les valeurs remontent dans les objets inconnus. Et en attendant un peu on peut avoir un objet avec une longue liste de paramètres (Voir objet 9156 ci dessous).</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_26_a_10_52_58.png" src="_images/Capture_d_ecran_2018_01_26_a_10_52_58.png" />
+<ul class="simple">
+<li>Avec la liste des équipements vous avez la liste connue par Zigate dans sa base de données. Vous avez aussi la possibilité de voir la liste des equipments qui se sont déconnectés du réseau. Pour cela, il faut qu&#8217;ils aient envoyé une commande &#8220;leave&#8221; à Zigate et qu&#8217;Abeille soit actif pour enregistrer l&#8217;information. Le dernier ayant quitté peut être visualisé sur l&#8217;objet ruche:</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_02_07_a_12_54_55.png" src="_images/Capture_d_ecran_2018_02_07_a_12_54_55.png" />
+<p>Nous pouvons voir que l objet ayant pour adresse complete IEEE: 00158d00016d8d4f s&#8217;est déconnecté (Leave) avec l&#8217;information 00 (Pas décodé pour l&#8217;instant).</p>
+<p>Si vous souhaitez avoir l&#8217;historique alors allez dans le menu:</p>
+<img alt="_images/Capture_d_ecran_2018_02_07_a_12_49_42.png" src="_images/Capture_d_ecran_2018_02_07_a_12_49_42.png" />
+<p>Puis choisissez Ruche-joinLeave:</p>
+<img alt="_images/Capture_d_ecran_2018_02_07_a_12_49_56.png" src="_images/Capture_d_ecran_2018_02_07_a_12_49_56.png" />
+<p>et là vous devez avoir toutes les informations:</p>
+<img alt="_images/Capture_d_ecran_2018_02_07_a_12_50_09.png" src="_images/Capture_d_ecran_2018_02_07_a_12_50_09.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Modele et Fichier JSON</a><ul>
+<li><a class="reference internal" href="#video">Video</a></li>
+<li><a class="reference internal" href="#configuration-des-objets">Configuration  des objets</a><ul>
+<li><a class="reference internal" href="#interface-jeedom">Interface Jeedom</a></li>
+<li><a class="reference internal" href="#editer-json">Editer JSON</a></li>
+<li><a class="reference internal" href="#ajout-des-icones-pour-les-objets-crees">Ajout des icônes pour les objets crées</a></li>
+<li><a class="reference internal" href="#mise-a-jour-des-fichiers-json">Mise a jour des fichiers JSON</a></li>
+<li><a class="reference internal" href="#creation-des-objets">Creation des objets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ModeleJson.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/ModeleJson.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

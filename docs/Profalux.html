@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Profalux &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="profalux">
+<h1>Profalux<a class="headerlink" href="#profalux" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="volet">
+<h2>Volet<a class="headerlink" href="#volet" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="inclusion-d-un-volet">
+<h3>Inclusion d&#8217;un volet<a class="headerlink" href="#inclusion-d-un-volet" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Comme pour tous modules Zigbee et pour bien comprendre la procédure, il faut savoir que :</p>
+<p>La Zigate est un coordinateur Zigbee qui permet de contrôler / créer un réseau. De la même manière que le couple télécommande / ampoule Zigbee, il est important que les deux matériels appartiennent et soient authentifiés sur le même réseau.</p>
+<p>N’ayant pas de boutons ou d’interfaces, un volet Profalux Zigbee ne peux pas rentrer tout seul sur un réseau Zigbee. Il est indispensable d’avoir une télécommande maître qui jouera le rôle d’interface entre le volet et la Zigate.</p>
+<p>A savoir tout au long de cette procédure : lorsque le volet fait un petit va et vient c&#8217;est le signe que la commande a bien été reçue.</p>
+<div class="section" id="etape-1">
+<h4>Etape 1<a class="headerlink" href="#etape-1" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Étape 1: Remise à zéro de la télécommande et du volet.</p>
+<ul class="simple">
+<li>Retourner la télécommande.</li>
+<li>A l’aide d’un trombone, appuyer 5 fois sur le bouton R.</li>
+</ul>
+<p>La télécommande va clignoter rouge puis vert.</p>
+<img alt="_images/profalux_inclusion_etape1.png" src="_images/profalux_inclusion_etape1.png" />
+<p>Le volet va faire un va et vient (attendre un petit moment).</p>
+<p>Attendre que la télécommande ne clignote plus.</p>
+<ul class="simple">
+<li>Dans la minute qui suit, appuyer sur STOP.</li>
+</ul>
+<p>Le volet va faire un va et vient.</p>
+<p>Pour tester le bon fonctionnement, vous devriez pouvoir piloter le volet avec la télécommande.</p>
+<p>Si jamais les commandes de votre volet sont inversées, il suffit à l&#8217;aide d&#8217;un trombone d&#8217;appuyer sur fois sur F et ensuite une fois sur STOP.</p>
+<ul class="simple">
+<li>Fermer le volet complètement.</li>
+</ul>
+</div>
+<div class="section" id="etape-2">
+<h4>Étape 2<a class="headerlink" href="#etape-2" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Inclusion du volet</p>
+<p>Mettre la ruche en mode inclusion</p>
+<ul class="simple">
+<li>Pour cela appuyer sur le bouton inclusion depuis le plugin Abeille (La Zigate doit clignoter bleue)</li>
+</ul>
+<img alt="_images/inclusion.png" src="_images/inclusion.png" />
+<p>Une fois le réseau de la Zigate ouvert, il ne vous reste plus qu’à:</p>
+<ul class="simple">
+<li>Retourner votre télécommande</li>
+<li>Appuyer 1 fois sur R</li>
+<li>Appuyer ensuite sur la flèche du haut</li>
+</ul>
+<p>Le moteur devrait faire plusieurs va et vient …
+Attendre que la télécommande ne clignote plus !</p>
+<ul class="simple">
+<li>Pour finir, appuyer sur la touche STOP de la télécommande.</li>
+<li>Ouvrir et fermer votre volet complètement 2 fois.</li>
+</ul>
+<p>A la fin de la 2ème fermeture, le volet fera un petit va et vient.</p>
+<p>Faites un rafraichissement de votre dashboard et votre volet devrait apparaitre !!!</p>
+</div>
+</div>
+<div class="section" id="resolution">
+<h3>Résolution<a class="headerlink" href="#resolution" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Résolution de problèmes</p>
+<div class="section" id="le-volet">
+<h4>Le volet<a class="headerlink" href="#le-volet" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Le volet ne répond plus à la télécommande.</p>
+<p>Si par une mauvaise manipulation votre volet ne répond plus à la télécommande, il est nécessaire de faire un reset de la télécommande et du volet.</p>
+<ul class="simple">
+<li>Retourner l’appareil</li>
+<li>A l’aide d’un trombone, appuyer 5 fois sur le bouton R</li>
+</ul>
+<img alt="_images/profalux_inclusion_etape1.png" src="_images/profalux_inclusion_etape1.png" />
+<p>Attention c&#8217;est une manipulation dangereuse !</p>
+<ul class="simple">
+<li>Couper l&#8217;alimentation électrique</li>
+<li>Réunir les fils noir et marron puis les brancher sur la borne de phase</li>
+</ul>
+<img alt="_images/profalux_inclusion_reset_volet2.png" src="_images/profalux_inclusion_reset_volet2.png" />
+<ul class="simple">
+<li>Remettre l&#8217;alimentation électrique pendant 5 secondes. Le volet devrait faire un petit mouvement.</li>
+<li>Couper l&#8217;alimentation électrique</li>
+<li>Séparer les fils noir et marron. Brancher le fils marron sur la phase. Si votre fils noir était brancher avec le bleu aupparavant, rebrancher le avec le bleu sinon laisser le fils noir seul en pensant à l&#8217;isoler(capuchon noir)</li>
+</ul>
+<img alt="_images/profalux_inclusion_reset_volet3.png" src="_images/profalux_inclusion_reset_volet3.png" />
+<ul class="simple">
+<li>Remettre l&#8217;alimentation électrique et dans la minute appuyer sur le bouton stop</li>
+</ul>
+<img alt="_images/profalux_inclusion_reset_volet4.png" src="_images/profalux_inclusion_reset_volet4.png" />
+<p>Le volet devrait faire des mouvement de va-et-vient puis s&#8217;arrêter
+* La télécommande devrait à nouveau fonctionner
+* Recommencer à nouveau la procédure d&#8217;inclusion</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Profalux</a><ul>
+<li><a class="reference internal" href="#volet">Volet</a><ul>
+<li><a class="reference internal" href="#inclusion-d-un-volet">Inclusion d&#8217;un volet</a><ul>
+<li><a class="reference internal" href="#etape-1">Etape 1</a></li>
+<li><a class="reference internal" href="#etape-2">Étape 2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resolution">Résolution</a><ul>
+<li><a class="reference internal" href="#le-volet">Le volet</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Profalux.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Profalux.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

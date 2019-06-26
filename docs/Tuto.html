@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tuto &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tuto">
+<h1>Tuto<a class="headerlink" href="#tuto" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="scenario-1">
+<h2>Scénario 1<a class="headerlink" href="#scenario-1" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pilotage d&#8217;une ampoule à partir d&#8217;un capteur de présence avec un scénario</p>
+<div class="section" id="pre-requis">
+<h3>Pré-requis<a class="headerlink" href="#pre-requis" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Ampoule IKEA incluse (Dans cette exemple : le nom de l&#8217;objet est &#8220;Ampoule&#8221;)</li>
+<li>Capteur de présence inclus (Dans cette exemple : le nom de l&#8217;objet est &#8220;Capteur&#8221;)</li>
+<li>Télécommande IKEA incluse (Dans cette exemple : le nom de l&#8217;objet est &#8220;Tele&#8221;)</li>
+</ul>
+</div>
+<div class="section" id="realisation">
+<h3>Réalisation<a class="headerlink" href="#realisation" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Nous allons utiliser les scénarios:</p>
+<img alt="_images/Capture_d_ecran_2018_10_30_a_10_33_20.png" src="_images/Capture_d_ecran_2018_10_30_a_10_33_20.png" />
+<p>Créons un scénario &#8220;test&#8221; avec pour déclencheur &#8220;Présence&#8221;.</p>
+<img alt="_images/Capture_d_ecran_2018_10_30_a_10_38_29.png" src="_images/Capture_d_ecran_2018_10_30_a_10_38_29.png" />
+<p>Et les actions:</p>
+<img alt="_images/Capture_d_ecran_2018_10_30_a_10_40_48.png" src="_images/Capture_d_ecran_2018_10_30_a_10_40_48.png" />
+<p>Ici, quand une présence est détectée, on allume l&#8217;ampoule et quand la présence n&#8217;est pas activée on éteint l&#8217;ampoule.</p>
+</div>
+</div>
+<div class="section" id="scenario-2">
+<h2>Scénario 2<a class="headerlink" href="#scenario-2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pilotage d’une ampoule à partir d’un capteur de présence avec un scénario (=Scenario 1) plus commande de cette même ampoule à l&#8217;aide d&#8217;une télécommande physique.</p>
+<p>Présence-&gt;Ampoule&lt;-Télécommande</p>
+<p>Continuons en configurant l&#8217;ampoule depuis la &#8220;Tele&#8221;:</p>
+<ul class="simple">
+<li>Allumer l&#8217;ampoule.</li>
+<li>Approcher la télécommande à quelques centimètres de l&#8217;ampoule</li>
+<li>Appuyer plus de 10s sur le bouton OO au dos de la télécommande: la led rouge sur la face avant de la télécommande doit clignoter et l&#8217;ampoule doit se mettre à à clignoter.</li>
+</ul>
+<p>La télécommande pilote l&#8217;ampoule et l&#8217;ampoule remonte son état à Jeedom.</p>
+</div>
+<div class="section" id="scenario-3">
+<h2>Scenario 3<a class="headerlink" href="#scenario-3" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Vous avez des télécommandes réelles incluses dans le réseau zigbee. Par exemple une télécommande ronde 5 boutons Ikea. Si vous avez associé des ampoules (ou une seule) avec elle vous pouvez télécommander les ampoules simultanémant directement depuis la télécommande réelle. Mais vous ne pouvez pas le faire depuis Jeedom. Comment faire ? Normalement cette télécommande est aussi dans dans Abeille. Ouvrez les paramètres (deuxième tab) et ajoutez le groupe de votre télécommande réelle. Maintenant vous pouvez commander depuis Abeille/Jeedom.</p>
+<p>Ci dessous exemple avec le groupe &#8220;ABCD&#8221;.</p>
+<img alt="_images/Capture_d_ecran_2019_06_20_a_16_25_15.png" src="_images/Capture_d_ecran_2019_06_20_a_16_25_15.png" />
+</div>
+<div class="section" id="scenario-4">
+<h2>Scénario 4<a class="headerlink" href="#scenario-4" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Récupérer les boutons d&#8217;une télécommande dans Jeedom.</p>
+<div class="section" id="fonctionnement">
+<h3>Fonctionnement<a class="headerlink" href="#fonctionnement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Le principe est qu&#8217;une télécommande zigbee (Ikea, Hue,..) envoie des commandes directement à un <a class="reference internal" href="Groups.html"><span class="doc">Groupes</span></a> d&#8217;équipements zigbee (Ampoules,...) qui agissent en fonction. Mais dans la configuration de base la ZiGate ne prend pas en compte ces messages. Le firmware ZiGate a donc été modifier pour traiter ces messages. L&#8217;idée a été de faire passer la ZiGate pour un équipement classique qui réagit aux messages de groupes. La réaction est d&#8217;envoyer un message à Abeille/Jeedom. Cela suppose que la ZiGate possède l&#8217;adresse de groupe auquel elle doit réagir.</p>
+</div>
+<div class="section" id="id1">
+<h3>Pré-requis<a class="headerlink" href="#id1" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Vous avez une télécommande dans votre réseau zigbee et vous connaissez le groupe qu&#8217;elle utilise.</p>
+</div>
+<div class="section" id="id2">
+<h3>Réalisation<a class="headerlink" href="#id2" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Pour connaitre les groupes configurés dans la zigate allez dans la page de configuration du plugin, sélectionnez la zigate et faite un &#8220;Get Group&#8221;.</p>
+<img alt="_images/Capture_d_ecran_2019_05_28_a_23_36_22.png" src="_images/Capture_d_ecran_2019_05_28_a_23_36_22.png" />
+<p>Si la zigate possede un groupe alors on doit avoir quelque chose comme:</p>
+<img alt="_images/Capture_d_ecran_2019_05_28_a_23_36_39.png" src="_images/Capture_d_ecran_2019_05_28_a_23_36_39.png" />
+<p>Ici elle indique réagir au groupe &#8220;0001&#8221; (Colonne &#8220;Membre&#8221; / C&#8217;est une valeur hexadécimale de 4 digits).</p>
+<p>Si elle ne possède pas de groupe ajoutez le groupe de votre télécommande. Je vais prendre pour exemple une télécommande Ikea et leur donner le groupe &#8220;ABCD&#8221;.</p>
+<p>Pour se faire je sélectionne la ruche, je mets &#8220;ABCD&#8221; dans l&#8217;Id et j&#8217;appuie sur le bouton &#8220;Add Group&#8221;.</p>
+<img alt="_images/Capture_d_ecran_2019_06_20_a_16_14_18.png" src="_images/Capture_d_ecran_2019_06_20_a_16_14_18.png" />
+<p>Puis un &#8220;get group&#8221;:</p>
+<img alt="_images/Capture_d_ecran_2019_06_20_a_16_14_38.png" src="_images/Capture_d_ecran_2019_06_20_a_16_14_38.png" />
+<p>J&#8217;ai bien &#8220;ABCD&#8221; dans la zigate en plus de &#8220;0001&#8221;.</p>
+<p>La zigate est limitée à 5 groupes.</p>
+<p>Une fois la ZiGate configurée, vous devriez recevoir les informations sur l&#8217;objet Télécommande Ikea and Abeille.</p>
+<img alt="_images/Capture_d_ecran_2019_06_20_a_17_00_17.png" src="_images/Capture_d_ecran_2019_06_20_a_17_00_17.png" />
+<p>En fonction des boutons sur lesquels vous avez appuyé, les commandes de la télécommande doivent se mettre à jour. Commande Up-Down pour les bouton Haut et Bas, etc...
+Vous trouverez la table de correspondance ici <a class="reference internal" href="Ikea.html#telecommande-ikea-recuperation"><span class="std std-ref">Récupération</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tuto</a><ul>
+<li><a class="reference internal" href="#scenario-1">Scénario 1</a><ul>
+<li><a class="reference internal" href="#pre-requis">Pré-requis</a></li>
+<li><a class="reference internal" href="#realisation">Réalisation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scenario-2">Scénario 2</a></li>
+<li><a class="reference internal" href="#scenario-3">Scenario 3</a></li>
+<li><a class="reference internal" href="#scenario-4">Scénario 4</a><ul>
+<li><a class="reference internal" href="#fonctionnement">Fonctionnement</a></li>
+<li><a class="reference internal" href="#id1">Pré-requis</a></li>
+<li><a class="reference internal" href="#id2">Réalisation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Tuto.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Tuto.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

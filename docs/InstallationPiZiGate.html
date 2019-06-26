@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation PiZiGate &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation-pizigate">
+<h1>Installation PiZiGate<a class="headerlink" href="#installation-pizigate" title="Lien permanent vers ce titre">¶</a></h1>
+<p>L&#8217;installation de la PiZiGate demande des actions un peu spécifiques.</p>
+<div class="section" id="gpio">
+<h2>GPIO<a class="headerlink" href="#gpio" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Il faut installer le software qui va piloter les GPIO. Pour se faire vous avez le bouton: &#8220;Installation de Wiring Pi&#8221;.
+Cela va permettre plusieurs choses. Reset par le HW de la PiZiGate, programmation de la PiZiGate directement sur le RPI (ssans PC externe et autre).</p>
+</div>
+<div class="section" id="port-serie">
+<h2>Port Serie<a class="headerlink" href="#port-serie" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Il faut rendre disponible le port série du RPI, si vous souhaitez le faire manuellement suivre les instructions suivantes : <a class="reference external" href="https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/">https://spellfoundry.com/2016/05/29/configuring-gpio-serial-port-raspbian-jessie-including-pi-3/</a>
+Sinon Abeille inclus des scripts pour le faire.
+Il y a des differences entre les version de RPI sur le hardware qui controle les ports série.
+Pour le RPI2, le port est /dev/ttyAMA0 qui doit être dispo sans action particulière.
+Pour le RPI3, le port est /dev/ttyS0 qui n&#8217;est pas dispo par defaut. D&#8217;ou la necessité de l&#8217;activer (le rendre dispo pour la PiZiGate).</p>
+<p>Ces actions demandent un reboot du RPI.</p>
+</div>
+<div class="section" id="lancement">
+<h2>Lancement<a class="headerlink" href="#lancement" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Une fois les deux étapes précédentes réalisées avec succes, il faut redemarrer le RPI si pas déjà fait apres l&#8217;étape &#8220;Port Série&#8221;, choisir le port &#8220;/dev/ttyS0&#8221; dans la configuration Abeille et relancer le demon.</p>
+</div>
+<div class="section" id="programmer">
+<h2>Programmer<a class="headerlink" href="#programmer" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Il est possible de programmer la PiZiGate avec le dernier firmware directement depuis Jeedom sans toucher à la PiZiGate. Pour ce faire utiliser le bouton: Programmer.</p>
+</div>
+<div class="section" id="reset">
+<h2>Reset<a class="headerlink" href="#reset" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Il est possible de faire un reset &#8220;forcé&#8221; depuis Jeedom de la ZiGate si celle ci ne repond plus aux commandes avec le bouton &#8220;Reset&#8221; (on peut aussi demander un reset avec le commandes: bouton reset sur l équipement ruche).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation PiZiGate</a><ul>
+<li><a class="reference internal" href="#gpio">GPIO</a></li>
+<li><a class="reference internal" href="#port-serie">Port Serie</a></li>
+<li><a class="reference internal" href="#lancement">Lancement</a></li>
+<li><a class="reference internal" href="#programmer">Programmer</a></li>
+<li><a class="reference internal" href="#reset">Reset</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/InstallationPiZiGate.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/InstallationPiZiGate.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Inclusion &#8212; documentation Abeille 27.04.2019</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '27.04.2019',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="top" title="documentation Abeille 27.04.2019" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="inclusion">
+<h1>Inclusion<a class="headerlink" href="#inclusion" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="id1">
+<h2>Inclusion<a class="headerlink" href="#id1" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Inclusion de nouveaux périphériques Zigbee</p>
+<div class="section" id="exemple-1">
+<h3>Exemple 1<a class="headerlink" href="#exemple-1" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Exemple d&#8217;ajout d&#8217;équipements courants (S&#8217;ils ne sont pas déjà dans le réseau Zigbee)</p>
+<ul class="simple">
+<li>Mettre la Zigate en mode inclusion (Bouton Inclusion), la Led bleue de la Zigate doit clignoter...</li>
+</ul>
+<img alt="_images/inclusion.png" src="_images/inclusion.png" />
+<p>puis:</p>
+<ul class="simple">
+<li>Ampoules IKEA: faire un reset de l&#8217;ampoule en partant de la position allumée, puis 6 fois, éteindre-allumer. Il n&#8217;est pas facile d&#8217;avoir le reset... et après maintes tentatives, vous devriez récupérer l&#8217;ampoule dans Jeedom. Autre solution bien plus simple utiliser une télécommande Philips Hue (Hue Dimmer Switch) et forcer le reset par un bouton I + bouton O appuyés suffisamment longtemps. Une fois associée, il est possible d&#8217;avoir besoin d&#8217;éteindre, attendre 10 secondes et allumer.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_11_13_44.png" src="_images/Capture_d_ecran_2018_01_21_a_11_13_44.png" />
+<ul class="simple">
+<li>Xiaomi : Capteur de porte, prise, capteur de température rond/carre, bouton et capteur infrarouge : un appuie long (plus de 6s, led flash, attendre plusieurs flash avant de lâcher) sur le bouton sur le côté. Et vous devriez récupérer l&#8217;objet dans Jeedom.</li>
+<li>Porte</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_11_11_38.png" src="_images/Capture_d_ecran_2018_01_21_a_11_11_38.png" />
+<ul class="simple">
+<li>Température rond</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_11_12_43.png" src="_images/Capture_d_ecran_2018_01_21_a_11_12_43.png" />
+<ul class="simple">
+<li>Température Carre</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_11_12_15.png" src="_images/Capture_d_ecran_2018_01_21_a_11_12_15.png" />
+<ul class="simple">
+<li>Bouton</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_11_13_15.png" src="_images/Capture_d_ecran_2018_01_21_a_11_13_15.png" />
+<p>État: passe à 1 quand vous appuyez sur le bouton. Deux, Trois et Quatres appuies apparaissent dans le champ multi.</p>
+<ul class="simple">
+<li>Capteur Présence InfraRouge</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_12_45_22.png" src="_images/Capture_d_ecran_2018_01_21_a_12_45_22.png" />
+<ul class="simple">
+<li>Objet inconnu: Si le type d&#8217;objet n&#8217;est pas connu, Abeille va créer un objet vide.</li>
+</ul>
+<img alt="_images/Capture_d_ecran_2018_01_21_a_12_49_06.png" src="_images/Capture_d_ecran_2018_01_21_a_12_49_06.png" />
+</div>
+<div class="section" id="exemple-2">
+<h3>Exemple 2<a class="headerlink" href="#exemple-2" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Exemple d&#8217;ajout d&#8217;équipements courants (S&#8217;ils sont déjà dans le réseau Zigbee)</p>
+<ul class="simple">
+<li>Ampoule IKEA: éteindre, attendre 15 secondes et allumer électriquement l&#8217;ampoule et elle doit réapparaître dans Jeedom.</li>
+<li>Xiaomi : Capteur de porte, capteur de température rond/carre et bouton : un appuie rapide sur le bouton latérale et il doit réapparaître dans Jeedom.</li>
+<li>Capteur InfraRouge Xiaomi: pas implémenté.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table des Matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Inclusion</a><ul>
+<li><a class="reference internal" href="#id1">Inclusion</a><ul>
+<li><a class="reference internal" href="#exemple-1">Exemple 1</a></li>
+<li><a class="reference internal" href="#exemple-2">Exemple 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Inclusion.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KiwiHC16.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Inclusion.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

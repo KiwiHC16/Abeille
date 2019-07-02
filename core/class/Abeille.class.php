@@ -2041,6 +2041,15 @@
                             log::add('Abeille', 'debug', '(CmdTimer) Could not send Msg');
                         }
                     }
+                    else if ( strpos( $topic, "CmdCreate" ) === 0 ) {
+                        $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
+                        if (msg_send( $queueKeyAbeilleToAbeille, 1, $msgAbeille, true, false)) {
+                            log::add('Abeille', 'debug', '(CmdCreate) Msg sent: '.json_encode($msgAbeille));
+                        }
+                        else {
+                            log::add('Abeille', 'debug', '(CmdCreate) Could not send Msg');
+                        }
+                    }
                     else {
                         $queueKeyAbeilleToCmd   = msg_get_queue(queueKeyAbeilleToCmd);
                         if (msg_send( $queueKeyAbeilleToCmd, 1, $msgAbeille, true, false)) {

@@ -535,7 +535,7 @@
             // 07-: Data / Payload
             // Last 8 bit is Link quality (modif zigate)
             // xx: 03 Stop
-
+            
             $tab = "";
             $crctmp = 0;
 
@@ -543,7 +543,8 @@
             // Message trop court pour etre un vrai message
             if ($length < 12) { return -1; }
 
-            //$this->deamonlog('info', '-------------- '.date("Y-m-d H:i:s").': protocolData size('.$length.') message > 12 char: '.$datas);
+            //$this->deamonlog('debug','protocolDatas: '.$datas);
+            $this->deamonlog('info', '-------------- '.date("Y-m-d H:i:s").': protocolData size('.$length.') message > 12 char: '.$datas);
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
@@ -727,6 +728,8 @@
 
         function decode8006( $payload, $ln, $qos, $dummy)
         {
+            // Firmware 3.1a,  Fix Rearranged teNODE_STATES to logical in all cases https://github.com/fairecasoimeme/ZiGate/issues/101
+            
             $this->deamonlog('debug',';type; 8006; (Non “Factory new” Restart)(Not Processed)'
                              . '; (Not processed*************************************************************)'
                              . '; Level: 0x'.substr($payload, 0, 2)
@@ -926,6 +929,8 @@
 
         function decode8024( $payload, $ln, $qos, $dummy)
         {
+            // https://github.com/fairecasoimeme/ZiGate/issues/74
+            
             // Formed Msg Type = 0x8024
             // Node->Host  Network Joined / Formed
 
@@ -1001,6 +1006,7 @@
 
         function decode8030( $payload, $ln, $qos, $dummy)
         {
+            // Firmware V3.1a: Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
             // <Sequence number: uint8_t>
             // <status: uint8_t>
 
@@ -1019,6 +1025,8 @@
 
         function decode8031( $payload, $ln, $qos, $dummy)
         {
+            // Firmware V3.1a: Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
+            
             $this->deamonlog('debug',';type; 8031; (unBind response)(Not Processed)'
                              . '; (Not processed*************************************************************)'
                              . '; Level: 0x'.substr($payload, 0, 2)
@@ -1035,6 +1043,8 @@
 
         function decode8040( $payload, $ln, $qos, $dummy)
         {
+            // Firmware V3.1a: Add SrcAddr to 0x8040 command (MANAGEMENT_LQI_REQUEST) https://github.com/fairecasoimeme/ZiGate/issues/198
+            
             // Network Address response
 
             // <Sequence number: uin8_t>
@@ -1231,6 +1241,9 @@
 
         function decode804A( $payload, $ln, $qos, $dummy)
         {
+            // Firmware V3.1a Add SrcAddr to 0x804A command (MANAGEMENT_NETWORK_UPDATE_RESPONSE) https://github.com/fairecasoimeme/ZiGate/issues/203
+            // Source address  est le dernier champ, voir page https://zigate.fr/documentation/commandes-zigate/
+            
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
             $this->deamonlog('debug', 'Type; 804A: (Management Network Update response)(Not Processed)'
@@ -1860,8 +1873,8 @@
             //<Data byte list : stream of uint8_t>
             $SQN                = substr($payload, 0, 2);
             $SrcAddr            = substr($payload, 2, 4);
-            $ClusterId          = substr($payload, 8, 4);
             $EPoint             = substr($payload, 6, 2);
+            $ClusterId          = substr($payload, 8, 4);
             $AttributId         = substr($payload,12, 4);
             $AttributStatus     = substr($payload,16, 2);
             $dataType           = substr($payload,18, 2);
@@ -1894,7 +1907,7 @@
                                  . '; Attr Status : '     .$AttributStatus
                                  . '; Attr Data Type : '  .$dataType
                                  . '; Attr Size : '       .$AttributSize
-                                 . '; Data byte list : '  .substr($payload, 24, (strlen($payload) - 24 - 2))  );
+                                 . '; Data byte list : ->'  .substr($payload, 24, (strlen($payload) - 24 - 2))  .'<-' );
             }
 
 
@@ -1922,6 +1935,11 @@
                 $data = substr($payload, 24, 2);
             }
 
+            // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
+            if ($dataType == "19") {
+                $data = substr($payload, 24, 2);
+            }
+            
             if ($dataType == "20") {
                 $data = hexdec(substr($payload, 24, 2));
             }
@@ -2466,6 +2484,8 @@
 
         function decode8702( $payload, $ln, $qos, $dummy)
         {
+            // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
+            
             // APS Code Table Chap 10.2.2 from JN-UG-3113
             // Cette table ne semble pas etre la bonne car je recois un d4 comme status
             // AbeilleParser 2019-04-26 11:58:06[debug];type; 8702; (APS Data Confirm Fail); Status : d4 (->); Source Endpoint : 01; Destination Endpoint : 0B; Destination Mode : 02; Destination Address : bbf5; SQN: : 00

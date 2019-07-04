@@ -3098,6 +3098,7 @@
                                          "clusterId"    => $parameters['clusterId'],
                                          "attributeId"  => $parameters['attributId'],
                                          "Proprio"      => $parameters['Proprio'],
+                                         "EP"           => $parameters['EP'],
                                          );
 
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');

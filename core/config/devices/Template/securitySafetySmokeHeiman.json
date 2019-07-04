@@ -1,0 +1,17 @@
+{
+  "0500-#EP#-0002": {
+    "isVisible": 1,
+    "name": "Etat",
+    "order": 2,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "SMOKE",
+    "invertBinary": "1",
+    "template": "alert",
+    "configuration": {
+      "uniqId": "sf5c07c76sdf624b46",
+      "visibilityCategory": "All"
+    }
+  }
+}

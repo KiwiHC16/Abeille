@@ -34,11 +34,10 @@
 
 
             <div align="center">
-                <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/changelog.html" target="_blank">{{ChangeLog (Locale)}}</a>
-                <a class="btn btn-success" href="https://kiwihc16.github.io/Abeille/fr_FR/changelog.html" target="_blank">{{ChangeLog (Derniere)}}</a>
+
+                <a class="btn btn-success" href="https://abeilledocsphinx.readthedocs.io/fr/latest/Changelog.html" target="_blank">{{ChangeLog}}</a>
             
-                <a class="btn btn-success" href="/plugins/Abeille/docs/fr_FR/index.html" target="_blank">{{Manuel utilisateur (Locale)}}</a>
-                <a class="btn btn-success" href="https://kiwihc16.github.io/Abeille/fr_FR/index.html" target="_blank">{{Manuel utilisateur (Derniere)}}</a>
+                <a class="btn btn-success" href="https://abeilledocsphinx.readthedocs.io/fr/latest/index.html" target="_blank">{{Manuel utilisateur}}</a>
             </div>
 
             <p>

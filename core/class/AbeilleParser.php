@@ -2577,6 +2577,7 @@
                                            'BindToZigateOccupancy',                 'setReportOccupancy',
                                            'BindToZigateTemperature',               'setReportTemperature',
                                            'BindToZigatePuissanceLegrand',          'setReportPuissanceLegrand',
+                                           'BindShortToSmokeHeiman',                'setReportSmokeHeiman',
                                            );
 
             $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');

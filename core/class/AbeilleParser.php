@@ -93,6 +93,10 @@
                                          '0401'=>'IAs Ancillary Equipment',
                                          '0402'=>'IAS Zone',
                                          '0403'=>'IAS Warning Device',
+                                         
+                                         // From Legrand investigation
+                                         '0B04'=>'Electrical Measurement', // Attribut Id: 0x50B - Active Power
+                                         
                                          ),
                          );
 

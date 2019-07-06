@@ -1276,8 +1276,10 @@
                 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 //remove lumi. from name as all xiaomi devices have a lumi. name
+                $trimmedValue = str_replace('lumi.', '', $value);
+                
                 //remove all space in names for easier filename handling
-                $trimmedValue = str_replace(' ', '', str_replace('lumi.', '', $value));
+                $trimmedValue = str_replace(' ', '', $trimmedValue);
                 
                 // On enleve le / comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace('/', '', $trimmedValue);
@@ -1285,7 +1287,7 @@
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
                 
-                log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: '.$trimmedValue);
+                log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
                 log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
                 

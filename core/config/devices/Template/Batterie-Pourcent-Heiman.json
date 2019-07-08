@@ -12,7 +12,7 @@
     "unite": "%",
     "configuration": {
       "uniqId": "5c07ciusd7662165e",
-      "calculValueOffset 2": "#value#/255*100",
+      "calculValueOffset": "#value#/255*100",
       "minValue": "0",
       "maxValue": "100",
       "visibilityCategory": "All"

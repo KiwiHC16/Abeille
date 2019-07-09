@@ -1941,7 +1941,7 @@
 
             // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
             if ($dataType == "19") {
-                $data = substr($payload, 24, 2);
+                $data = substr($payload, 24, 4);
             }
             
             if ($dataType == "20") {

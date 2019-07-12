@@ -219,7 +219,7 @@ sendVarToJS('nodesFromJeedom', $nodes);
                             <a data-action="refreshNetworkCache"
                                class="btn btn-success refreshCache"><i
                                         class="fa fa-refresh" ></i>
-                            Recalcul du cache</a></span>
+                            Get LQI</a></span>
                         </span>
                         <table class="table table-condensed tablesorter" id="table_routingTable">
                             <thead>

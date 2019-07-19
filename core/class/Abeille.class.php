@@ -904,9 +904,9 @@
                 message::add( "Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message");
                 log::add( 'Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.' );
             }
-            log::add( 'Abeille', 'debug', ' state: '.$return['state'] );
-            log::add( 'Abeille', 'debug', ' progress: '.file_get_contents($return['progress_file'] ));
-            log::add( 'Abeille', 'debug', '-------------------------------------> dependancy_info() END' );
+            // log::add( 'Abeille', 'debug', ' state: '.$return['state'] );
+            // log::add( 'Abeille', 'debug', ' progress: '.file_get_contents($return['progress_file'] ));  <= Provoque une erreur dans le log http.
+            // log::add( 'Abeille', 'debug', '-------------------------------------> dependancy_info() END' );
 
             if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return) );
             

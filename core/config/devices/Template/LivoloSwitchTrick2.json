@@ -1,0 +1,19 @@
+{
+  "LivoloSwitchTrick2": {
+    "isVisible": 0,
+    "name": "LivoloSwitchTrick2",
+    "order": 7,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "LIGHT_ON",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "dsdfsgsgdsqs",
+      "topic": "OnOff",
+      "request": "Action=On&EP=#EP#",
+      "visibilityCategory": "All"
+    }
+  }
+}

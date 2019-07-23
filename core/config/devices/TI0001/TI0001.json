@@ -25,7 +25,15 @@
       "include24 2 2 2 2 2 2": "setLivoloOn2",
       "include24 2 2 2 2 2 2 2": "setLivoloOn",
       "include4": "etatSwitchLivolo",
-      "include8": "getEtat"
+      "include8": "getEtat",
+      "include8 2": "LivoloSwitchTrick1",
+      "include8 2 2": "LivoloSwitchTrick2",
+      "include8 2 2 2": "LivoloSwitchTrick3",
+      "include8 2 2 2 3": "LivoloSwitchTrick4",
+      "include8 2 2 2 2": "BindToZigateEtat",
+      "include8 2 2 2 2 2": "BindToZigateLevel",
+      "include8 2 2 2 2 2 2": "setReportEtat",
+      "include8 2 2 2 2 2 2 2": "setReportLevel"
     }
   }
 }

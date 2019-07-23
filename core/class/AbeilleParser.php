@@ -2578,6 +2578,7 @@
                                            'BindToZigateTemperature',               'setReportTemperature',
                                            'BindToZigatePuissanceLegrand',          'setReportPuissanceLegrand',
                                            'BindShortToSmokeHeiman',                'setReportSmokeHeiman',
+                                           'LivoloSwitchTrick1',                    'LivoloSwitchTrick2', 'LivoloSwitchTrick3', 'LivoloSwitchTrick4',
                                            );
 
             $abeille = Abeille::byLogicalId('Abeille/'.$short,'Abeille');

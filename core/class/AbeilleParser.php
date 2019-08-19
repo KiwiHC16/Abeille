@@ -548,7 +548,7 @@
             if ($length < 12) { return -1; }
 
             //$this->deamonlog('debug','protocolDatas: '.$datas);
-            $this->deamonlog('info', '-------------- '.date("Y-m-d H:i:s").': protocolData size('.$length.') message > 12 char: '.$datas);
+            $this->deamonlog('debug', ' Data ('.$length.'>12 char): '.$datas);
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];

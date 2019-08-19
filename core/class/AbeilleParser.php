@@ -658,9 +658,24 @@
         //  1 – from client to server
         //  Manufacturer specific :
         //  0 – No 1 – Yes
-        
-            // Exemple 01000011660208460608010115d206a8380012110066 // Switch Off
-// 0100 00116602084606080101 15d2 06 a8 38 00 12 11 00 66
+        // Probleme sur format c.f. mail avec Fred.
+            
+// Cmd         AddrMode   Addr EPS EPD                      Value
+// 0100 0011bb 02         c7b8 06  08  010115d206a838001211 00    8a -> 0&0 (0)
+// 0100 0011bd 02         c7b8 06  08  010115d206a838001211 01    8d -> 1&0 (1)
+// 0100 0011b9 02         c7b8 06  08  010115d206a838001211 02    8a -> 0&1 (2)
+// 0100 0011bf 02         c7b8 06  08  010115d206a838001211 03    8d -> 1&1 (3)
+   
+// 0    4      12
+//             0          2    6   8   10                   30
+            
+        $SrcAddr    = substr($payload,  2,  4);
+        $EPS        = substr($payload,  6,  2);
+        $ClusterId  = "0006-".$EPS;
+        $AttributId = "0000";
+        $data       = substr($payload, 30,  2);
+            
+        $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
             
         }
         

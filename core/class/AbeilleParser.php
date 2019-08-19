@@ -647,7 +647,7 @@
         // <target short address: uint16_t>
         // <source endpoint: uint8_t>
         // <destination endpoint: uint8_t>
-        // <Cluster id: uint16_t>
+            // <Cluster id: uint16_t> : missing
         // <direction: uint8_t>
         // <manufacturer specific: uint8_t>
         // <manufacturer id: uint16_t>
@@ -660,14 +660,12 @@
         //  0 – No 1 – Yes
         // Probleme sur format c.f. mail avec Fred.
             
-// Cmd         AddrMode   Addr EPS EPD                      Value
-// 0100 0011bb 02         c7b8 06  08  010115d206a838001211 00    8a -> 0&0 (0)
-// 0100 0011bd 02         c7b8 06  08  010115d206a838001211 01    8d -> 1&0 (1)
-// 0100 0011b9 02         c7b8 06  08  010115d206a838001211 02    8a -> 0&1 (2)
-// 0100 0011bf 02         c7b8 06  08  010115d206a838001211 03    8d -> 1&1 (3)
-   
-// 0    4      12
-//             0          2    6   8   10                   30
+// Cmd         AddrMode   Addr EPS EPD Dir Spe Id   #  #1 #2 #3 #4 #5 Value
+// 0100 0011bb 02         c7b8 06  08  01  01  15d2 06 a8 38 00 12 11 00    8a -> 0&0 (0)
+// 0100 0011bd 02         c7b8 06  08  01  01  15d2 06 a8 38 00 12 11 01    8d -> 1&0 (1)
+// 0100 0011b9 02         c7b8 06  08  01  01  15d2 06 a8 38 00 12 11 02    8a -> 0&1 (2)
+// 0100 0011bf 02         c7b8 06  08  01  01  15d2 06 a8 38 00 12 11 03    8d -> 1&1 (3)
+//             0          2    6   8   10                                   30
             
         $SrcAddr    = substr($payload,  2,  4);
         $EPS        = substr($payload,  6,  2);

@@ -637,6 +637,33 @@
             $GLOBALS['NE'][$SrcAddr]['state']                   = 'annonceReceived';
 
         }
+        
+        /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
+        function decode0100( $payload, $ln, $qos, $dummy)
+        {
+        // obj -> ZiGate            0x0100
+        // Read Attribute request
+        // <address mode: uint8_t>
+        // <target short address: uint16_t>
+        // <source endpoint: uint8_t>
+        // <destination endpoint: uint8_t>
+        // <Cluster id: uint16_t>
+        // <direction: uint8_t>
+        // <manufacturer specific: uint8_t>
+        // <manufacturer id: uint16_t>
+        // <number of attributes: uint8_t>
+        // <attributes list: data list of uint16_t each>
+        // Direction:
+        //  0 – from server to client
+        //  1 – from client to server
+        //  Manufacturer specific :
+        //  0 – No 1 – Yes
+        
+            // Exemple 01000011660208460608010115d206a8380012110066 // Switch Off
+// 0100 00116602084606080101 15d2 06 a8 38 00 12 11 00 66
+            
+        }
+        
         // Zigate Status
         function decode8000( $payload, $ln, $qos, $dummy)
         {

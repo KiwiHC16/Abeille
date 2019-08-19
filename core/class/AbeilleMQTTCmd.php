@@ -15,11 +15,11 @@
     class debug extends Tools {
         function deamonlog($loglevel = 'NONE', $message = "")
         {
-            if ($this->debug["cli"] ) {
+            if ( $this->debug["cli"] ) {
                 echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd][DEBUG.BEN] '.$message."\n";
             }
             else {
-                $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd',$message);
+                $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd', $message);
             }
         }
         
@@ -94,10 +94,10 @@
     }
     
     class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
-        public $debug = array( "cli"                 => 1, // commande line mode or jeedom
+        public $debug = array( "cli"                 => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
                               "tempo"               => 0, // Debug tempo queue
-                              'procmsg'             => 1, // Debug fct procmsg
+                              "procmsg"             => 1, // Debug fct procmsg
                               "processCmd"          => 1, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
                               "transcode"           => 0, // Debug transcode fct

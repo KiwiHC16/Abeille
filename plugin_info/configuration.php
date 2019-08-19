@@ -35,9 +35,9 @@
 
             <div align="center">
 
-                <a class="btn btn-success" href="https://abeilledocsphinx.readthedocs.io/fr/latest/Changelog.html" target="_blank">{{ChangeLog}}</a>
+                <a class="btn btn-success" href="http://http://kiwihc16.free.fr/#changelog" target="_blank">{{ChangeLog}}</a>
             
-                <a class="btn btn-success" href="https://abeilledocsphinx.readthedocs.io/fr/latest/index.html" target="_blank">{{Manuel utilisateur}}</a>
+                <a class="btn btn-success" href="http://http://kiwihc16.free.fr" target="_blank">{{Manuel utilisateur}}</a>
             </div>
 
             <p>

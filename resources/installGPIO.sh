@@ -13,17 +13,8 @@ sudo apt-get -y install make
 echo "installation de gcc"
 sudo apt-get -y install gcc
 
-echo "Recupeartion de wiringPi"
-cd /var/www/html/plugins/Abeille/
-mkdir tmp
-cd tmp
-git clone git://git.drogon.net/wiringPi
-
-echo "Compilation de wiringPi"
-cd wiringPi
-./build
-cd /var/www/html/plugins/Abeille/
-rm -rf tmp
+echo "installation de wiringPi"
+sudo apt-get -y install wiringpi
 
 echo "Verification que wiringPi est installé."
 gpio -v

@@ -29,19 +29,6 @@
 
         <fieldset>
 
-
-            <legend><i class="fa fa-list-alt"></i> {{Documentation}}</legend>
-
-
-            <div align="center">
-
-                <a class="btn btn-success" href="http://kiwihc16.free.fr/#changelog" target="_blank">{{ChangeLog}}</a>
-            
-                <a class="btn btn-success" href="http://kiwihc16.free.fr" target="_blank">{{Manuel utilisateur}}</a>
-            </div>
-
-
-
             <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
 
 

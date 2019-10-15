@@ -35,17 +35,10 @@
 
             <div align="center">
 
-                <a class="btn btn-success" href="http://http://kiwihc16.free.fr/#changelog" target="_blank">{{ChangeLog}}</a>
+                <a class="btn btn-success" href="http://kiwihc16.free.fr/#changelog" target="_blank">{{ChangeLog}}</a>
             
-                <a class="btn btn-success" href="http://http://kiwihc16.free.fr" target="_blank">{{Manuel utilisateur}}</a>
+                <a class="btn btn-success" href="http://kiwihc16.free.fr" target="_blank">{{Manuel utilisateur}}</a>
             </div>
-
-            <p>
-                <i>
-                (Locale) => Version Locale, sur votre système, associée à la verison Abeille de votre systeme<br>
-                (Derniere) => Derniere Version de la documentation disponible sur le net
-                </i>
-            </p>
 
 
 

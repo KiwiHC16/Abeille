@@ -1786,7 +1786,7 @@
             if ($parameters_info['AbeilleParentId'] > 0) {
                 $elogic->setObject_id($parameters_info['AbeilleParentId']);
             } else {
-                $elogic->setObject_id(object::rootObject()->getId());
+                $elogic->setObject_id(jeeObject::rootObject()->getId());
             }
             $elogic->setEqType_name('Abeille');
             $elogic->setConfiguration('topic', "Abeille/Ruche");
@@ -2237,8 +2237,8 @@
                 break;
                 
             case "10":
-                // $object = object::rootObject()->getId();
-                $object = object::all();
+                // $object = jeeObject::rootObject()->getId();
+                $object = jeeObject::all();
                 print_r($object);
                 break;
                 

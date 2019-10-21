@@ -87,7 +87,7 @@
                     <div class="col-lg-4">
                         <select class="configKey form-control" data-l1key="AbeilleParentId">
                             <?php
-                                foreach (object::all() as $object) {
+                                foreach (jeeObject::all() as $object) {
                                     echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
                                 }
                             ?>

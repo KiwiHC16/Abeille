@@ -95,15 +95,6 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage de toutes les commandes des équipements et infos des péripériques zigbee. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non">{{Affichage mode dévelopeur}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="showAllCommands">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                        </select>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>

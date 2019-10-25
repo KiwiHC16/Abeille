@@ -1001,7 +1001,6 @@
             $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
-            $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
             
@@ -1437,7 +1436,7 @@
                     // La boucle est pour info et pour action
                     // isVisible
                     $parameters_info = self::getParameters();
-                    $isVisible = $parameters_info['showAllCommands'] == 'Y' ? "1" : $cmdValueDefaut["isVisible"];
+                    $isVisible = $cmdValueDefaut["isVisible"];
                     
                     foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
                         // Pour certaine Action on doit remplacer le #addr# par la vrai valeur

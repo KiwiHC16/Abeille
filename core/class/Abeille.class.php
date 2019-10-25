@@ -1006,7 +1006,6 @@
             $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
-            $return['creationObjectMode']   = config::byKey('creationObjectMode', 'Abeille', 'Automatique');
             $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
             $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
             $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'Aucune action');
@@ -1272,7 +1271,7 @@
                     ||  preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId )
                     ||  preg_match( "/^SimpleDesc-[0-9A-F]*-*DeviceDescription/", $cmdId )
                     )
-                && ( config::byKey('creationObjectMode', 'Abeille', 'Automatique') != "Manuel") ) {
+                ) {
                 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 //remove lumi. from name as all xiaomi devices have a lumi. name
@@ -1485,66 +1484,11 @@
                 
                 return;
             }
-            
+                        
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
             // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-            if (!is_object($elogic) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Manuel")) {
-                log::add('Abeille', 'debug', "Mode Manuel donc je ne fais rien");
-                
-                return;
-            }
-            
-            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            // Si l objet n existe pas et je recoie une commande IEEE => je vais créer un objet pour visualiser cet inconnu (si mode semi-automatique)
-            // e.g. annonce recue en mode semi-automatique
-            if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Semi Automatique")) {
-                // On peux recevoir l'IEEE lorsqu'un equipement s'annonce. Dans ce cas on a sa ShortAddress et son IEEE. Je ne sais pas si il y a d autres scenarios
-                // Soit on ne le connais pas car il est nouveau ou sa shortAddress a changée. Mais dans les deux cas il n'est pas connu sous la ref de sa shortAddress
-                
-                // Creation de l objet Abeille
-                log::add('Abeille', 'info', 'objet: '.$value.' creation sans model');
-                message::add( "Abeille", "Création d un nouvel objet INCONNU Abeille (".$addr.") en cours"."Dans quelques secondes rafraichissez votre dashboard pour le voir.", 'Abeille/Abeille' );
-                $elogic = new Abeille();
-                //id
-                if ($objetConnu) {
-                    // ici pour moi on ne devrait jamais être dans cas de figure. Ce code ne sert a rien je pense.
-                    $name = "Abeille-".$addr;
-                } else {
-                    $name = "Abeille-".$addr."-Type d objet inconnu (IEEE)";
-                }
-                $elogic->setName($name);
-                $elogic->setLogicalId($nodeid);
-                $elogic->setObject_id($parameters_info['AbeilleParentId']);
-                $elogic->setEqType_name('Abeille');
-                
-                // $objetDefSpecific = $AbeilleObjetDefinition[$value];
-                // $objetConfiguration = $objetDefSpecific["configuration"];
-                $elogic->setConfiguration('topic', $nodeid);
-                // $elogic->setConfiguration('type', $type); $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
-                $elogic->setIsVisible("1");
-                // eqReal_id
-                $elogic->setIsEnable("1");
-                // status
-                // timeout
-                // $elogic->setCategory(array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0],$AbeilleObjetDefinition[$value]["Categorie"][  array_keys($AbeilleObjetDefinition[$value]["Categorie"])[0] ] );
-                // display
-                // order
-                // comment
-                
-                //log::add('Abeille', 'info', 'Saving device ' . $nodeid);
-                //$elogic->save();
-                $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-                $elogic->save();
-                
-                return;
-                
-            }
-            
-            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
-            // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-            if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") && ($parameters_info['creationObjectMode'] == "Automatique")) {
+            if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") ) {
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
                 if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
                     
@@ -1628,65 +1572,6 @@
                 }
                 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                
-                return;
-            }
-            
-            /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            // Objet existe et cmd n existe pas
-            if (is_object($elogic) && !is_object($cmdlogic)) {
-                // Creons les commandes inconnues sur la base des commandes qu on recoit.
-                log::add('Abeille', 'debug', 'L objet: '.$nodeid.' existe mais pas la commande: '.$cmdId);
-                if ($parameters_info['creationObjectMode'] == "Semi Automatique") {
-                    // Cree la commande avec le peu d info que l on a
-                    log::add('Abeille', 'info', 'Creation par defaut de la commande: '.$nodeid.'/'.$cmdId);
-                    $cmdlogic = new AbeilleCmd();
-                    // id
-                    $cmdlogic->setEqLogic_id($elogic->getId());
-                    $cmdlogic->setEqType('Abeille');
-                    $cmdlogic->setLogicalId($cmdId);
-                    // $cmdlogic->setOrder('0');
-                    $cmdlogic->setName('Cmd de type inconnue - '.$cmdId);
-                    $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmdId);
-                    
-                    if (isset($cmdValueDefaut["instance"])) {
-                        $cmdlogic->setConfiguration('instance', $cmdValueDefaut["instance"]);
-                    }
-                    if (isset($cmdValueDefaut["class"])) {
-                        $cmdlogic->setConfiguration('class', $cmdValueDefaut["class"]);
-                    }
-                    if (isset($cmdValueDefaut["index"])) {
-                        $cmdlogic->setConfiguration('index', $cmdValueDefaut["index"]);
-                    }
-                    
-                    // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd); } else { $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd); }
-                    // if ( $cmdValueDefaut["Type"]=="action" ) { $cmdlogic->setConfiguration('retain','0'); }
-                    foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-                        $cmdlogic->setConfiguration($confKey, $confValue);
-                    }
-                    // template
-                    // $cmdlogic->setTemplate('dashboard',$cmdValueDefaut["template"]); $cmdlogic->setTemplate('mobile',$cmdValueDefaut["template"]);
-                    // $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                    // $cmdlogic->setType($cmdValueDefaut["Type"]);
-                    $cmdlogic->setType('info');
-                    // $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                    $cmdlogic->setSubType("string");
-                    // unite
-                    if (isset($cmdValueDefaut["units"])) {
-                        $cmdlogic->setUnite($cmdValueDefaut["units"]);
-                    }
-                    // $cmdlogic->setDisplay('invertBinary',$cmdValueDefaut["invertBinary"]);
-                    // isVisible
-                    // value
-                    // html
-                    // alert
-                    //$cmd->setTemplate('dashboard', 'light');
-                    //$cmd->setTemplate('mobile', 'light');
-                    //$cmd_info->setIsVisible(0);
-                    
-                    $cmdlogic->save();
-                    $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
-                }
                 
                 return;
             }

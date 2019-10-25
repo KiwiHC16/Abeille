@@ -96,17 +96,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Abeille plusieurs mode de création des équipements dans Jeedom. Automatique: si l'objet zigbee est connu et reconnu alors qu'il se join au réseau, il est crée dans jeedom de facon completement automatique. Semi-auto:l'objet est crée a partir des infos communiquées par l'objet zigbee, manuel: il faut créer l'objet soit même.">{{Mode de creation des objets}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="creationObjectMode">
-                            <option value="Automatique">{{Automatique}}</option>
-                            <option value="Semi Automatique">{{Semi-Automatique}}</option>
-                            <option value="Manuel">{{Manuel}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Dans le réseau ZigBee, les équipements ont une adresse dite courte qui peut variée au fil de la vie du réseau. Si celle si change le mode Automatique mettra à jour l objet. Manuel: Abeille ne fera rien sur changement d adresse courte d un équipement. Ce choix n'a pas vraiment de sens dans le fonctionnement normal, choisissez automatique et il est fort probable que le mode manuel disparaisse dans l avenir.">{{Mode de gestion des adresses courtes}}</label>
                     <div class="col-lg-4">
                         <select style="width:auto" class="configKey form-control" data-l1key="adresseCourteMode">

@@ -1001,7 +1001,6 @@
             $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
-            $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
             $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
@@ -1475,8 +1474,6 @@
             if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") ) {
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
                 if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
-                    
-                    if (config::byKey('adresseCourteMode', 'Abeille', 'Automatique') == "Automatique") {
                         
                         $elogic = self::byLogicalId("Abeille/".$ShortFound, 'Abeille');
                         
@@ -1496,10 +1493,7 @@
                         
                         // Il faut aussi mettre a jour la commande short address
                         Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/".$addr."/Short-Addr", $addr );
-                    } else {
-                        log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique." );
-                        message::add( "Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on ne fait pas la mise a jour car pas mode automatique.", '', 'Abeille/Abeille' );
-                    }
+                    
                 }
                 
                 return;

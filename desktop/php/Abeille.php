@@ -130,43 +130,6 @@ $parameters_info = Abeille::getParameters();
 
         </div>
 
-
-
-        <legend><i class="fa fa-commenting-o"></i> {{Affichage Commandes dans les Widget}}</legend>
-
-        <div class="eqLogicThumbnailContainer">
-                <div class="cursor" id="bt_toggleAffichageNetwork" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                    <center>
-                        <?php
-                            if ($parameters_info["affichageNetwork"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            else { echo '<div affichageNetwork><i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i></div>'; }
-                            ?>
-                    </center>
-                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network</center></span>
-                </div>
-
-                <div class="cursor" id="bt_toggleAffichageTime" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                    <center>
-                        <?php
-                            if ($parameters_info["affichageTime"] == 'Y') { echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            ?>
-                    </center>
-                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Time</center></span>
-                </div>
-
-                <div class="cursor" id="bt_toggleAffichageAdditionalCommand" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                    <center>
-                        <?php
-                            if ($parameters_info["affichageCmdAdd"] == 'Y') {  echo '<i class="fa fa-check-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            else { echo '<i class="fa fa-square-o" style="font-size : 3em;color:#767676;"></i>'; }
-                            ?>
-                    </center>
-                    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Cmd Add</center></span>
-                </div>
-        </div>
-
-
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
 
 

@@ -116,40 +116,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations réseau sur les widgets. Par défaut c est desactivé car ces informations ne sont pas nécessaire pour l utilisateur. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Réseau}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="affichageNetwork">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                            <option value="na">{{Aucune action}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des informations de temps sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Information Time}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="affichageTime">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                            <option value="na">{{Aucune action}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Oui: Ce mode active l'affichage des commandes additionnelles sur les widgets. En mode d'utilisation normale, cela n'est pas nécessaire. Par defaut choisissez plutot Non. Si vous avez changé la visibilité de certaines commandes choisissez: Aucune Action">{{Affichage Commandes Additionnelles}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="affichageCmdAdd">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                            <option value="na">{{Aucune action}}</option>
-                        </select>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>
                     <div class="col-lg-4">
                         <select style="width:auto" class="configKey form-control" data-l1key="onlyTimer">

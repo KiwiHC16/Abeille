@@ -835,11 +835,6 @@
             log::add('Abeille', 'debug', 'Start deamon Timer: '.$cmd);
             exec($cmd.' 2>&1 &');
             
-            // affichage Widget
-            self::CmdAffichage('affichageNetwork',  $param['affichageNetwork']);
-            self::CmdAffichage('affichageTime',     $param['affichageTime']   );
-            self::CmdAffichage('affichageCmdAdd',   $param['affichageCmdAdd'] );
-            
             sleep(2);
             
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
@@ -1008,9 +1003,6 @@
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['adresseCourteMode']    = config::byKey('adresseCourteMode', 'Abeille', 'Automatique');
             $return['showAllCommands']      = config::byKey('showAllCommands', 'Abeille', 'N');
-            $return['affichageNetwork']     = config::byKey('affichageNetwork', 'Abeille', 'Aucune action');
-            $return['affichageTime']        = config::byKey('affichageTime', 'Abeille', 'Aucune action');
-            $return['affichageCmdAdd']      = config::byKey('affichageCmdAdd', 'Abeille', 'Aucune action');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
             
@@ -1194,7 +1186,7 @@
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
             // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
-            if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^CmdAffichage)", $message->topic)) {
+            if (!preg_match("(^Abeille|^Ruche|^CmdCreate)", $message->topic)) {
                 // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
                 return;
             }
@@ -1225,14 +1217,6 @@
                 // log::add('Abeille', 'debug','-');
             }
             else   log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-            
-            
-            // Si cmd Affichage
-            if ( $Filter == "CmdAffichage") {
-                log::add('Abeille', 'debug', 'Call CmdAffichage' );
-                self::CmdAffichage( $cmdId, 'toggle' );
-                return;
-            }
             
             // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
             if ( ($cmdId == "enable") || ($cmdId == "disable") ) {

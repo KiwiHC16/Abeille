@@ -1389,6 +1389,45 @@
                 
             }
             
+            // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
+            if ( isset($Command['WindowsCovering']) && isset($Command['address']) && isset($Command['clusterCommand']) )
+            {
+                // 0x00FA    Windows covering (v3.0f only)
+                // <address mode: uint8_t>    Status
+                // <target short address: uint16_t>    Data indication
+                // <source endpoint: uint8_t>
+                // <destination endpoint: uint8_t>
+                // <cluster command : uint8_t>
+                // 0 = Up/Open
+                // 1 = Down/Close
+                // 2 = Stop
+                // 4 = Go To Lift Value (extra cmd : Value in cm)
+                // 5 = Go To Lift Percentage (extra cmd : percentage 0-100)
+                // 7 = Go To Tilt Value (extra cmd : Value in cm)
+                // 8 = Go To Tilt Percentage (extra cmd : percentage 0-100)
+                // <extra command : uint8_t or uint16_t >
+                
+                $cmd = "00FA";
+                
+                $addressMode    = "02"; // 01 pour groupe
+                $address        = $Command['address'];
+                $srcEP          = "01";
+                $detEP          = "01";
+                $clusterCommand = $Command['clusterCommand'];
+           
+                $data = $addressMode . $address . $srcEP . $detEP . $clusterCommand;
+                
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                
+                $this->deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
+                
+                $this->sendCmd( $dest, $cmd, $lenth, $data );
+                
+            }
+            
+            
+            
+            
             if ( isset($Command['ActiveEndPoint']) )
             {
                 $cmd = "0045";
@@ -3076,6 +3115,20 @@
                         break;
 
                         //----------------------------------------------------------------------------
+                    case "WindowsCovering":
+                        $fields = preg_split("/[=&]+/", $msg);
+                          if (count($fields) > 1) {
+                              $parameters = proper_parse_str( $msg );
+                          }
+                        
+                        $Command = array(
+                                         "WindowsCovering"          => "1",
+                                         "address"                  => $address,
+                                         "clusterCommand"           => $parameters['clusterCommand'],
+                        );
+                        break;
+                        //----------------------------------------------------------------------------
+                        
                     default:
                         $this->deamonlog('warning', 'AbeilleCommand unknown: '.$action );
                         break;

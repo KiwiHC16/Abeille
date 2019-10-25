@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "5c0qs7c7qs6622080",
       "topic": "WindowsCovering",
-      "request": "clusterCommand=01",
+      "request": "clusterCommand=00",
       "visibilityCategory": "All"
     }
   }

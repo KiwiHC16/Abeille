@@ -2551,6 +2551,7 @@
             "ae" => array( "ZPS_APL_APS_E_TABLE_FULL", "An APSME-BIND.request or APSME.ADDGROUP.request issued when the binding or group tables, respectively, were full.", ),
             "af" => array( "ZPS_APL_APS_E_UNSECURED", "An ASDU was received without any security.", ),
             "b0" => array( "ZPS_APL_APS_E_UNSUPPORTED_ATTRIBUTE ", " An APSME-GET.request or APSMESET. request has been issued with an unknown attribute identifier.", ),
+            "d4" => array( "Unknown Attribut", " reported  by https://github.com/KiwiHC16/Abeille/issues/812", ),"
                              );
 
             $status = substr($payload, 0, 2);

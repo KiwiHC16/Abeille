@@ -119,7 +119,7 @@
         public $debug = array(
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
-                              "8000"                    => 0, // Status
+                              "8000"                    => 1, // Status
                               "8009"                    => 0, // Get Network Status
                               "8010"                    => 0,
                               "processAnnonce"          => 1,
@@ -548,7 +548,7 @@
             if ($length < 12) { return -1; }
 
             //$this->deamonlog('debug','protocolDatas: '.$datas);
-            $this->deamonlog('debug', ' Data ('.$length.'>12 char): '.$datas);
+            //$this->deamonlog('debug', ' Data ('.$length.'>12 char): '.$datas);
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];

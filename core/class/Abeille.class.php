@@ -47,10 +47,12 @@
     define('queueKeySerieToParser',     822);
 
     Class MsgAbeille {
+        /*
         public $message = array(
-                                'topic' => 'Coucou',
-                                'payload' => 'me voici',
+                                // 'topic' => 'Coucou class Abeille',
+                                // 'payload' => 'me voici creation message',
                                 );
+         */
     }
     
     class Abeille extends eqLogic {
@@ -937,7 +939,7 @@
                 
                 while ( true ) {
                     if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyAbeilleToAbeille) : ".json_encode($msg) );
+                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyAbeilleToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -945,7 +947,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyParserToAbeille) : ".json_encode($msg) );
+                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyParserToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -953,7 +955,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
+                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -961,7 +963,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
+                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -969,7 +971,7 @@
                         $msg = NULL;
                     }
                     if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                        log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
+                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
@@ -1171,7 +1173,9 @@
             
             $parameters_info = self::getParameters();
             
-            log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+            if (!preg_match("(Time|Link-Quality)", $message->topic)) {
+                log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+            }
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // demande de creation de ruche au cas ou elle n'est pas deja crée....
             // La ruche est aussi un objet Abeille
@@ -1210,11 +1214,6 @@
             if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
             
             $type = 'topic';         // type = topic car pas json
-            
-            if ( strpos("_".$cmdId, "Time")>0 ) {
-                // log::add('Abeille', 'debug','-');
-            }
-            else   log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             
             // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
             if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
@@ -1270,7 +1269,7 @@
                 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
-                log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+                log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
                 
                 // On recupere le EP
                 // $EP = substr($cmdId,5,2);
@@ -1279,27 +1278,16 @@
                 $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
                 $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);
                 $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
-                log::add('Abeille', 'debug', 'Template : '.json_encode($AbeilleObjetDefinition));
+                log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
                 
                 //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
-                if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists(
-                                                                                          $trimmedValue,
-                                                                                          $AbeilleObjetDefinition
-                                                                                          )) {
+                if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists( $trimmedValue, $AbeilleObjetDefinition )) {
                     $objetConnu = 1;
                     $jsonName = array_key_exists($value, $AbeilleObjetDefinition) ? $value : $trimmedValue;
-                    log::add(
-                             'Abeille',
-                             'info',
-                             'objet: '.$value.' recherché comme '.$trimmedValue.' peut etre cree car je connais ce type d objet.'
-                             );
+                    log::add( 'Abeille', 'info', 'objet: '.$value.' recherché comme '.$trimmedValue.' peut etre cree car je connais ce type d objet.' );
                 } else {
-                    log::add(
-                             'Abeille',
-                             'info',
-                             'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.'
-                             );
-                    log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
+                    log::add( 'Abeille', 'info', 'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.' );
+                    // log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
                     return;
                 }
                 
@@ -1596,6 +1584,10 @@
                 return;
             }
             
+            if (is_object($elogic) && !is_object($cmdlogic)) {
+                log::add('Abeille', 'debug', "Objet existe mais pas la commande, je passe.");
+                return;
+            }
             log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");
             
             return; // function message

@@ -1682,9 +1682,17 @@
             
             // ReadAttributeRequest ------------------------------------------------------------------------------------
             // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) )
+  
+            if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']) )
             {
                 $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
+            }
+            else
+            {
+                if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) )
+                  {
+                      $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], "0000" );
+                  }
             }
             
             // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2609,6 +2617,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         $this->deamonlog('debug', 'AbeilleMQTTCmd: Msg received: '.json_encode($msg).' from NE');
+                        if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
                                          "address"      => $address,

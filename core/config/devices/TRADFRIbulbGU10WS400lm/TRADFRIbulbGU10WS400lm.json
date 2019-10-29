@@ -24,6 +24,7 @@
       "include13": "2700K",
       "include14": "4000K",
       "include15": "temperatureLight",
+      "include16": "setTemperatureLight",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",

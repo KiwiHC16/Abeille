@@ -568,7 +568,7 @@
         
         function sendCmd( $dest, $cmd, $len, $datas='') {
             $this->cmdQueue[] = array( 'time'=>time(), 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            $this->deamonlog("debug", "Je mets la commande dans la queue: ".json_encode($this->cmdQueue) );
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue: ".json_encode($this->cmdQueue) ); }
         }
         
         function sendCmdToZigate( $dest, $cmd, $len, $datas) {
@@ -603,7 +603,7 @@
                 $this->cmdAck--;
                 if ( $this->cmdAck < 0 ) {
                     $this->cmdAck = 0;
-                    $this->deamonlog("debug", "Alerte j'ai plus de Ack (Status) que de commande envoyées !!!");
+                    if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Alerte j'ai plus de Ack (Status) que de commande envoyées !!!"); }
                 }
             }
             else {

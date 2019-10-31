@@ -219,9 +219,10 @@
             // $this->requestedlevel = '' ? 'none' : $argv[7];
             $this->requestedlevel = "debug";
             
-            $this->queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
-            $this->queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
-            $this->queueKeyParserToLQI = msg_get_queue(queueKeyParserToLQI);
+            $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
+            $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
+            $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
+            $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
         }
         
         function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
@@ -701,6 +702,20 @@
             $data       = $this->displayStatus($status);
 
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
+            
+            $msgAbeille = array ('type'         => "8000",
+                                 'status'       => $status,
+                                 'SQN'          => $SQN,
+                                 'PacketType'   => $PacketType , // The value of the initiating command request.
+                                 );
+            
+            // Envoie du message 8000 (Status) pour AbeilleMQTTCmd pour la gestion du flux de commandes vers la zigate
+            if (msg_send( $this->queueKeyParserToCmdSemaphore, 1, $msgAbeille, true, false)) {
+                // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+            }
+            else {
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToCmdSemaphore): ".json_encode($msgAbeille));
+            }
         }
 
         function decode8001( $payload, $ln, $qos, $dummy)

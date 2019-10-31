@@ -22,11 +22,13 @@
                 $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd', $message);
             }
         }
-        
     }
     
     class AbeilleMQTTCmdQueue extends debug {
-        public $mqttMessageQueue = array();
+        public $messageWithAnswer = array(); // Continent la liste des messages envoyé avec l'attente de l ack pour faire une gestion de flux des mesages envoyés à la zigate.
+                                                // Par exemple si j envoie Inclusion le message 0x0049 (Permit Joining request), j'attends 8000 (Status) suivant la table: https://zigate.fr/documentation/commandes-zigate/
+                                                // Certaines commandes attende deux reponses en retour.
+                                                // dans la table je pourrai avoir 0049 => 8000 ou 8000 => 0049 ou 0049-8000 mais comment gérer ?
         
         public $queueKeyAbeilleToCmd;
         public $queueKeyParserToCmd;
@@ -35,6 +37,7 @@
         public $queueKeyLQIToCmd;
         public $queueKeyXmlToCmd;
         public $queueKeyFormToCmd;
+        public $queueKeyParserToCmdSemaphore;
         
         function __construct($client_id, $username, $password, $server, $port, $topicRoot, $qos, $debug) {
             if ($debug) $this->deamonlog("debug", "AbeilleMQTTCmdQueue constructor");
@@ -103,9 +106,15 @@
                               "sendCmd"             => 0, // Debug fct sendCmd
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
+                              "sendCmdAck"          => 0, // Mise en place des class
                               );
         
         public $parameters_info;
+        
+        public $cmdQueue;           // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
+        public $cmdAck = 1;         // cmdAck compte le nombre de Ack (Status) recus.
+        public $maxRetry = 3;       // Abeille will try to send the message max x times
+        public $timeOutRetry = 10;  // After x s second we will drop the message
         
         function __construct($client_id) {
             global $argv;
@@ -543,7 +552,7 @@
             return $mess;
         }
         
-        function writeToDest( $f, $dest, $cmd,$len,$datas) {
+        function writeToDest( $f, $dest, $cmd, $len, $datas) {
             fwrite($f,pack("H*","01"));
             fwrite($f,pack("H*",$this->transcode($cmd))); //MSG TYPE
             fwrite($f,pack("H*",$this->transcode($len))); //LENGTH
@@ -557,7 +566,12 @@
             fwrite($f,pack("H*","03"));
         }
         
-        function sendCmd( $dest, $cmd, $len, $datas) {
+        function sendCmd( $dest, $cmd, $len, $datas='') {
+            $this->cmdQueue[] = array( 'time'=>time(), 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
+            $this->deamonlog("debug", "Je mets la commande dans la queue: ".json_encode($this->cmdQueue) );
+        }
+        
+        function sendCmdToZigate( $dest, $cmd, $len, $datas) {
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
             // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
             
@@ -568,9 +582,33 @@
                 fclose($f);
             }
             
+            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "Envoi de la commande a la zigate: ".$dest.'-'.$cmd.'-'.$len.'-'.$datas); }
             $f=fopen($dest,"w");
             $this->writeToDest( $f, $dest, $cmd, $len, $datas);
             fclose($f);
+            
+        }
+        
+        function processCmdQueueToZigate() {
+            if ( !isset( $this->cmdQueue) ) return; // si la queue n existe pas je passe mon chemin
+            if ( count( $this->cmdQueue ) < 1 ) return; // si la queue est vide je passe mon chemin
+            
+            if ( $this->cmdAck > 0 ) {
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
+                $cmd = array_slice( $this->cmdQueue, 0, 1 );                        // je recupere une copie du premier élément de la queue
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($cmd) ); }
+                $this->sendCmdToZigate( $cmd[0]['dest'], $cmd[0]['cmd'], $cmd[0]['len'], $cmd[0]['datas'] );    // J'envoie la premiere commande récupérée
+                array_shift( $this->cmdQueue );                                    // j'enleve le premier element de la queue
+            
+                $this->cmdAck--;
+                if ( $this->cmdAck < 0 ) {
+                    $this->cmdAck = 0;
+                    $this->deamonlog("debug", "Alerte j'ai plus de Ack (Status) que de commande envoyées !!!");
+                }
+            }
+            else {
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate mais pas de Ack: ".json_encode($this->cmdQueue) ); }
+            }
         }
         
         function processCmd($Command) {
@@ -2183,6 +2221,9 @@
                 case $this->queueKeyFormToCmd:
                     $queueTopic="queueKeyFormToCmd";
                     break;
+                case $this->queueKeyParserToCmdSemaphore:
+                    $queueTopic="queueKeyParserToCmdSemaphore";
+                    break;
             }
             return $queueTopic;
         }
@@ -3413,13 +3454,14 @@
     try {
         if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Let s start" );}
         
-        $AbeilleMQTTCmd->queueKeyAbeilleToCmd   = msg_get_queue(queueKeyAbeilleToCmd);
-        $AbeilleMQTTCmd->queueKeyParserToCmd    = msg_get_queue(queueKeyParserToCmd);
-        $AbeilleMQTTCmd->queueKeyCmdToCmd       = msg_get_queue(queueKeyCmdToCmd);
-        $AbeilleMQTTCmd->queueKeyCmdToAbeille   = msg_get_queue(queueKeyCmdToAbeille);
-        $AbeilleMQTTCmd->queueKeyLQIToCmd       = msg_get_queue(queueKeyLQIToCmd);
-        $AbeilleMQTTCmd->queueKeyXmlToCmd       = msg_get_queue(queueKeyXmlToCmd);
-        $AbeilleMQTTCmd->queueKeyFormToCmd      = msg_get_queue(queueKeyFormToCmd);
+        $AbeilleMQTTCmd->queueKeyAbeilleToCmd           = msg_get_queue(queueKeyAbeilleToCmd);
+        $AbeilleMQTTCmd->queueKeyParserToCmd            = msg_get_queue(queueKeyParserToCmd);
+        $AbeilleMQTTCmd->queueKeyCmdToCmd               = msg_get_queue(queueKeyCmdToCmd);
+        $AbeilleMQTTCmd->queueKeyCmdToAbeille           = msg_get_queue(queueKeyCmdToAbeille);
+        $AbeilleMQTTCmd->queueKeyLQIToCmd               = msg_get_queue(queueKeyLQIToCmd);
+        $AbeilleMQTTCmd->queueKeyXmlToCmd               = msg_get_queue(queueKeyXmlToCmd);
+        $AbeilleMQTTCmd->queueKeyFormToCmd              = msg_get_queue(queueKeyFormToCmd);
+        $AbeilleMQTTCmd->queueKeyParserToCmdSemaphore   = msg_get_queue(queueKeyParserToCmdSemaphore);
         
         $msg_type = NULL;
         $msg = NULL;
@@ -3430,8 +3472,24 @@
         
         while ( true ) {
 
-            foreach (array($AbeilleMQTTCmd->queueKeyAbeilleToCmd, $AbeilleMQTTCmd->queueKeyParserToCmd, $AbeilleMQTTCmd->queueKeyCmdToCmd,
-                         $AbeilleMQTTCmd->queueKeyLQIToCmd, $AbeilleMQTTCmd->queueKeyXmlToCmd, $AbeilleMQTTCmd->queueKeyFormToCmd) as $queue) {
+            // Traite tous les Ack recus
+            if (msg_receive($AbeilleMQTTCmd->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                $AbeilleMQTTCmd->cmdAck++;
+                $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".$AbeilleMQTTCmd->cmdAck);
+            }
+            
+            // Traite toutes les commandes zigate en attente
+            $AbeilleMQTTCmd->processCmdQueueToZigate();
+            
+            // Recuperes tous les messages venant des autres threads
+            foreach (array(
+                           $AbeilleMQTTCmd->queueKeyAbeilleToCmd,
+                           $AbeilleMQTTCmd->queueKeyParserToCmd,
+                           $AbeilleMQTTCmd->queueKeyCmdToCmd,
+                           $AbeilleMQTTCmd->queueKeyLQIToCmd,
+                           $AbeilleMQTTCmd->queueKeyXmlToCmd,
+                           $AbeilleMQTTCmd->queueKeyFormToCmd,
+                           ) as $queue) {
                 $queueTopic = "None defined";
                 $queueTopic = $AbeilleMQTTCmd->getQueueName($queue);
 
@@ -3444,7 +3502,11 @@
                     $msg = NULL;
                 }
             }
+            
+            // Recuperes tous les messages en attente de traitement
             $AbeilleMQTTCmd->execTempoCmdAbeille();
+            
+            // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s
         }
         

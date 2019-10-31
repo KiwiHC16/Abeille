@@ -3467,6 +3467,17 @@
         $msg = NULL;
         $max_msg_size = 512;
         $message= new MsgAbeille();
+        
+        $statusText = array(
+                        "00" => "Success",
+                        "01" => "Incorrect parameters",
+                        "02" => "Unhandled command",
+                        "03" => "Command failed",
+                        "04" => "Busy (Node is carrying out a lengthy operation and is currently unable to handle the incoming command)",
+                        "05" => "Stack already started (no new configuration accepted)",
+                        
+                        "15" => "ZPS_EVENT_ERROR Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message",
+                        );
 
         if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Loop start" );}
         
@@ -3475,7 +3486,13 @@
             // Traite tous les Ack recus
             if (msg_receive($AbeilleMQTTCmd->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                 $AbeilleMQTTCmd->cmdAck++;
-                $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".$AbeilleMQTTCmd->cmdAck);
+                $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".$AbeilleMQTTCmd->cmdAck." status: ".$statusText[$msg['status']] );
+                $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".json_encode($msg) ) ;
+                // [2019-10-31 13:17:37][AbeilleMQTTCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
+                // type: 8000 : message status en retour d'une commande envoyée à la zigate
+                // status: 00 : Ok commande bien recue par la zigate / 15: ???
+                // SQN semble s'incrementer à chaque commande
+                // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
             }
             
             // Traite toutes les commandes zigate en attente

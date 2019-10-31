@@ -6,7 +6,7 @@
     "isHistorized": "1",
     "Type": "info",
     "subType": "numeric",
-    "generic_type": "WEATHER_PRESSURE",
+    "generic_type": "PRESSURE",
     "invertBinary": "0",
     "template": "barometre",
     "unite": "hPa",

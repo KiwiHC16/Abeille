@@ -1,5 +1,6 @@
 {
   "0403-01-0010": {
+    "Comment": "Type Generique = PRESSURE et pas WEATHER_PRESSURE sinon homebridge pas content.",
     "isVisible": 1,
     "name": "Pression",
     "order": 5,

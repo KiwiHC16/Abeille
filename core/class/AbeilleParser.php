@@ -636,6 +636,7 @@
             $GLOBALS['NE'][$SrcAddr]['capa']                    = $capability;
             $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']     = time();
             $GLOBALS['NE'][$SrcAddr]['state']                   = 'annonceReceived';
+            $GLOBALS['NE'][$SrcAddr]['action']                  = 'na';
 
         }
         
@@ -1216,7 +1217,10 @@
             if ( strlen( $data) > 1 ) {
                 $this->mqqtPublish( $SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
                 // if ( isset($GLOBALS['NE'][$SrcAddr]) ) { $GLOBALS['NE'][$SrcAddr]['deviceId']=$deviceInfo[$profile][$deviceId]; }
-                $GLOBALS['NE'][$SrcAddr]['deviceId']=$data;
+                $GLOBALS['NE'][$SrcAddr]['deviceId']                    = $data;
+                $GLOBALS['NE'][$SrcAddr]['state']                       = 'annonceReceived';
+                $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']         = time();
+                $GLOBALS['NE'][$SrcAddr]['action']                      = 'na';
             }
 
         }
@@ -1248,8 +1252,9 @@
                              . '; Endpoint Count : '  .substr($payload, 8, 2)
                              . '; Endpoint List :'    .$endPointList             );
 
-            $GLOBALS['NE'][$SrcAddr]['state']='EndPoint';
-            $GLOBALS['NE'][$SrcAddr]['EP']=$EP;
+            $GLOBALS['NE'][$SrcAddr]['state']   = 'EndPoint';
+            $GLOBALS['NE'][$SrcAddr]['EP']      = $EP;
+            $GLOBALS['NE'][$SrcAddr]['action']  = "annonceReceived->ActiveEndPoint";
 
         }
 
@@ -2682,13 +2687,13 @@
 
             if ( count($GLOBALS['NE'])<1 ) { return; }
 
-            if ( $this->debig['processAnnonce'] ) { $this->deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
+            if ( $this->debug['processAnnonce'] ) { $this->deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
 
             foreach ( $NE as $short=>$infos ) {
                 switch ($infos['state']) {
 
                     case 'annonceReceived':
-                        if (!isset($NE[$short]['action'])) {
+                        if ( (!isset($NE[$short]['action'])) || ($NE[$short]['action']=='na') ) {
                             if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
                                 if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
                                 $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');

@@ -125,7 +125,9 @@
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
                               "cleanUpNE"               => 0,
-                              "Serial"                  => 1, );
+                              "Serial"                  => 1,
+                              "processActionQueue"      => 1,
+                              );
 
         // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
         // Data Type -> Description, # octets
@@ -208,6 +210,7 @@
         );
 
         public $parameters_info;
+        public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
 
         function __construct() {
             global $argv;
@@ -632,12 +635,20 @@
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish( "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
+            /*
             $GLOBALS['NE'][$SrcAddr]['IEEE']                    = $IEEE;
             $GLOBALS['NE'][$SrcAddr]['capa']                    = $capability;
             $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']     = time();
             $GLOBALS['NE'][$SrcAddr]['state']                   = 'annonceReceived';
             $GLOBALS['NE'][$SrcAddr]['action']                  = 'na';
-
+            */
+             $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$SrcAddr );
+            
+            $this->actionQueue[] = array( 'when'=>time()+15, 'what'=>'mqqtPublish', 'parm0'=>$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            
         }
         
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -1251,11 +1262,22 @@
                              . '; Short Address : '   .substr($payload, 4, 4)
                              . '; Endpoint Count : '  .substr($payload, 8, 2)
                              . '; Endpoint List :'    .$endPointList             );
-
+            
+            /*
             $GLOBALS['NE'][$SrcAddr]['state']   = 'EndPoint';
             $GLOBALS['NE'][$SrcAddr]['EP']      = $EP;
             $GLOBALS['NE'][$SrcAddr]['action']  = "annonceReceived->ActiveEndPoint";
-
+            */
+            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getName",                                          "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getLocation",                                      "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),                "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            
+            $this->actionQueue[] = array( 'when'=>time()+8, 'what'=>'configureNE', 'addr'=>$SrcAddr );
+            $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE', 'addr'=>$SrcAddr );
+            
         }
 
         function decode8046( $payload, $ln, $qos, $dummy)
@@ -2386,6 +2408,7 @@
                 $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }
 
+            /*
             // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
             if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
                 if ( $GLOBALS['NE'][$SrcAddr]['action']=="ActiveEndPointReceived->modelIdentifier") {
@@ -2401,6 +2424,7 @@
                     }
                 }
             }
+            */
         }
 
         function decode8110( $payload, $ln, $qos, $dummy)
@@ -2823,7 +2847,28 @@
             if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE end, NE: '.json_encode($GLOBALS['NE'])); }
         }
 
-    }
+        function processActionQueue() {
+            if ( count($this->actionQueue) < 1 ) return;
+            
+            foreach ( $this->actionQueue as $key=>$action ) {
+                if ( $action['when'] < time() ) {
+                    if ( method_exists($this, $action['what']) ) {
+                        if ( $this->debug['processActionQueue'] ) { $this->deamonlog('debug',';Type; fct; processActionQueue, action: '.json_encode($action)); }
+                        $fct = $action['what'];
+                        if ( isset($action['parm0']) ) {
+                            $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
+                        }
+                        else {
+                            $this->$fct($action['addr']);
+                        }
+                        unset($this->actionQueue[$key]);
+                    }
+                }
+            }
+        }
+        
+    } // class AbeilleParser
+    
     // ***********************************************************************************************
     // MAIN
     // ***********************************************************************************************
@@ -2854,8 +2899,9 @@
             
             $AbeilleParser->protocolDatas( $data, 0, $clusterTab, $LQI );
             
-            $AbeilleParser->processAnnonce($NE);
-            $AbeilleParser->cleanUpNE($NE);
+            // $AbeilleParser->processAnnonce($NE);
+            // $AbeilleParser->cleanUpNE($NE);
+            $AbeilleParser->processActionQueue();
             
             time_nanosleep( 0, 10000000 ); // 1/100s
         }

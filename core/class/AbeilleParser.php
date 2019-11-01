@@ -635,13 +635,6 @@
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish( "Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
-            /*
-            $GLOBALS['NE'][$SrcAddr]['IEEE']                    = $IEEE;
-            $GLOBALS['NE'][$SrcAddr]['capa']                    = $capability;
-            $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']     = time();
-            $GLOBALS['NE'][$SrcAddr]['state']                   = 'annonceReceived';
-            $GLOBALS['NE'][$SrcAddr]['action']                  = 'na';
-            */
              $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$SrcAddr );
              $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );
              $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$SrcAddr );
@@ -1227,11 +1220,6 @@
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
             if ( strlen( $data) > 1 ) {
                 $this->mqqtPublish( $SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
-                // if ( isset($GLOBALS['NE'][$SrcAddr]) ) { $GLOBALS['NE'][$SrcAddr]['deviceId']=$deviceInfo[$profile][$deviceId]; }
-                $GLOBALS['NE'][$SrcAddr]['deviceId']                    = $data;
-                $GLOBALS['NE'][$SrcAddr]['state']                       = 'annonceReceived';
-                $GLOBALS['NE'][$SrcAddr]['timeAnnonceReceived']         = time();
-                $GLOBALS['NE'][$SrcAddr]['action']                      = 'na';
             }
 
         }
@@ -1263,11 +1251,6 @@
                              . '; Endpoint Count : '  .substr($payload, 8, 2)
                              . '; Endpoint List :'    .$endPointList             );
             
-            /*
-            $GLOBALS['NE'][$SrcAddr]['state']   = 'EndPoint';
-            $GLOBALS['NE'][$SrcAddr]['EP']      = $EP;
-            $GLOBALS['NE'][$SrcAddr]['action']  = "annonceReceived->ActiveEndPoint";
-            */
             $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getName",                                          "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getLocation",                                      "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
@@ -2408,23 +2391,6 @@
                 $this->mqqtPublish( $SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }
 
-            /*
-            // Si nous recevons le modelIdentifer ou le location en phase d'annonce d un equipement, nous envoyons aussi le short address et IEEE
-            if ( isset($GLOBALS['NE'][$SrcAddr]) ) {
-                if ( $GLOBALS['NE'][$SrcAddr]['action']=="ActiveEndPointReceived->modelIdentifier") {
-                    if ( ($ClusterId=="0000") && ( $AttributId=="0005" ) && ( strlen($data)>1 ) ) {
-                        $GLOBALS['NE'][$SrcAddr]['state'] = "modelIdentifier";
-                        $GLOBALS['NE'][$SrcAddr]['modelIdentifier']=$data;
-                    }
-                }
-                if ($GLOBALS['NE'][$SrcAddr]['action']=="modelIdentifierReceived->location") {
-                    if ( ($ClusterId=="0000") && ( $AttributId=="0010" ) && ( strlen($data)>1 ) ) {
-                        $GLOBALS['NE'][$SrcAddr]['state'] = "modelIdentifier";
-                        $GLOBALS['NE'][$SrcAddr]['location']=$data;
-                    }
-                }
-            }
-            */
         }
 
         function decode8110( $payload, $ln, $qos, $dummy)
@@ -2687,7 +2653,6 @@
                 }
             }
 
-            $GLOBALS['NE'][$short]['state']='currentState';
         }
 
         function configureNE( $short )
@@ -2726,125 +2691,7 @@
                 }
             }
 
-            $GLOBALS['NE'][$short]['state']='configuration';
-
             $this->deamonlog('debug',';Type; fct; ===> Configure NE End');
-        }
-
-        function processAnnonce( $NE )
-        {
-            // Etat successifs
-            // annonceReceived
-            // ActiveEndPoint
-            // modelIdentifier || location: meme etat
-            // configuration: bind, setReport
-            // currentState : get etat: etat, level
-            // done
-
-            // Transition
-            // none
-            // annonceReceived->ActiveEndPoint
-            // ActiveEndPointReceived->modelIdentifier
-            // modelIdentifierReceived->location
-            // location->configuration
-            // configuration->currentState
-            // done
-
-            if ( count($GLOBALS['NE'])<1 ) { return; }
-
-            if ( $this->debug['processAnnonce'] ) { $this->deamonlog('debug',';Type; fct; processAnnonce, NE: '.json_encode($GLOBALS['NE'])); }
-
-            foreach ( $NE as $short=>$infos ) {
-                switch ($infos['state']) {
-
-                    case 'annonceReceived':
-                        if ( (!isset($NE[$short]['action'])) || ($NE[$short]['action']=='na') ) {
-                            if ( (($infos['timeAnnonceReceived'])+1) < time() ) { // on attend 1s apres l annonce pour envoyer nos demandes car l equipement fait son appairage.
-                                if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
-                                $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le EP de l equipement');
-                                $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/ActiveEndPoint",                       "address=".$short );
-                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$short );
-                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$short );
-                                $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$short );
-                                $GLOBALS['NE'][$short]['action']="annonceReceived->ActiveEndPoint";
-                            }
-                        }
-                        break;
-
-                    case 'EndPoint':
-                        if ( $NE[$short]['action'] == "annonceReceived->ActiveEndPoint" ) {
-                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
-                            $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande le nom de l equipement');
-                            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getName",                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
-                            $this->mqqtPublishFctToCmd("CmdAbeille/Ruche/getLocation",              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
-
-                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getName&time=".(time()+2),                  "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
-                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/getLocation&time=".(time()+2),              "address=".$short.'&destinationEndPoint='.$NE[$short]['EP'] );
-
-                            // TempoCmdAbeille/Ruche/getVersion&time=123 -> msg=Version
-                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$short.'&endPoint='.           $NE[$short]['EP'] );
-                            $this->mqqtPublishFctToCmd("TempoCmdAbeille/Ruche/SimpleDescriptorRequest&time=".(time()+6), "address=".$short.'&endPoint='.           $NE[$short]['EP'] );
-                            $GLOBALS['NE'][$short]['action']="ActiveEndPointReceived->modelIdentifier";
-                        }
-                        break;
-
-                    case 'modelIdentifier':
-                        if ( $NE[$short]['action'] == "ActiveEndPointReceived->modelIdentifier" ) {
-                            if ( $this->debug['processAnnonceStageChg'] ) {
-                                $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE']));
-                            }
-                            $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Configure NE');
-                            $GLOBALS['NE'][$short]['action']="modelIdentifierReceived->configuration";
-                            $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE']);
-                            $this->mqqtPublish( $short, "Short", "Addr", $short);
-                            sleep(5); // time for the object to be created before configuring
-                            $this->configureNE($short);
-                        }
-                        break;
-
-
-                    case 'configuration':
-                        if ( $NE[$short]['action'] == "modelIdentifierReceived->configuration" ) {
-                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
-                            $this->deamonlog('debug',';Type; fct; processAnnonceStageChg ; ===> Demande Current State Equipement');
-                            $GLOBALS['NE'][$short]['action']="configuration->currentState";
-                            $this->getNE($short);
-                        }
-                        break;
-
-                    case 'currentState':
-                        if ( $NE[$short]['action'] == "configuration->currentState" ) {
-                            if ( $this->debug['processAnnonceStageChg'] ) { $this->deamonlog('debug',';Type; fct; processAnnonceStageChg, NE: '.json_encode($GLOBALS['NE'])); }
-                            $GLOBALS['NE'][$short]['state']="done";
-                            $GLOBALS['NE'][$short]['action']="done";
-                        }
-                        break;
-
-                    case 'done':
-                        break;
-
-                    default:
-                        $this->deamonlog('debug',';Type; fct; processAnnonce, Switch default: WARNING should not exist for ->'.$short.'<- with state ->'.$infos['state'].'<-');
-                }
-            }
-
-        }
-
-        function cleanUpNE($NE)
-        {
-            if ( count($GLOBALS['NE'])<1 ) { return; }
-            if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE begin, NE: '.json_encode($GLOBALS['NE'])); }
-            foreach ( $NE as $short=>$infos ) {
-                if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE time: '.($infos['timeAnnonceReceived']+60).' - ' . time() ); }
-                if ( ((($infos['timeAnnonceReceived'])+60) < time()) || ( ($GLOBALS['NE'][$short]['state']=="done")&&($GLOBALS['NE'][$short]['action']=="done") ) ) {
-                    if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE unset: '.$short); }
-                    $this->mqqtPublish( $short, "IEEE", "Addr", $infos['IEEE']);
-                    $this->mqqtPublish( $short, "Short", "Addr", $short);
-                    $this->mqqtPublish( $short, "Power", "Source", ((base_convert($infos['capa'],16,2)&0x04)>>2));
-                    unset( $GLOBALS['NE'][$short] );
-                }
-            }
-            if ( $this->debug['cleanUpNE'] ) { $this->deamonlog('debug',';Type; fct; cleanUpNE end, NE: '.json_encode($GLOBALS['NE'])); }
         }
 
         function processActionQueue() {

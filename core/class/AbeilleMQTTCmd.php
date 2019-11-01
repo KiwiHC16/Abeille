@@ -113,6 +113,7 @@
         
         public $cmdQueue;           // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
         public $cmdAck = 1;         // cmdAck compte le nombre de Ack (Status) recus.
+        public $timeLastBadAck = 0; // 0 means no date, otherwise date of the last message which was not accepted not to retry too quickly.
         public $maxRetry = 3;       // Abeille will try to send the message max x times
         public $timeOutRetry = 10;  // After x s second we will drop the message
         
@@ -592,22 +593,17 @@
         function processCmdQueueToZigate() {
             if ( !isset( $this->cmdQueue) ) return; // si la queue n existe pas je passe mon chemin
             if ( count( $this->cmdQueue ) < 1 ) return; // si la queue est vide je passe mon chemin
+            if ( $this->timeLastBadAck != 0 ) {
+                if ( (time()-$this->timeLastBadAck) < 1 )
+                    return;
+            }
             
             if ( $this->cmdAck > 0 ) {
                 if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
                 $cmd = array_slice( $this->cmdQueue, 0, 1 );                        // je recupere une copie du premier élément de la queue
                 if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($cmd) ); }
                 $this->sendCmdToZigate( $cmd[0]['dest'], $cmd[0]['cmd'], $cmd[0]['len'], $cmd[0]['datas'] );    // J'envoie la premiere commande récupérée
-                array_shift( $this->cmdQueue );                                    // j'enleve le premier element de la queue
-            
                 $this->cmdAck--;
-                if ( $this->cmdAck < 0 ) {
-                    $this->cmdAck = 0;
-                    if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Alerte j'ai plus de Ack (Status) que de commande envoyées !!!"); }
-                }
-            }
-            else {
-                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate mais pas de Ack: ".json_encode($this->cmdQueue) ); }
             }
         }
         
@@ -3482,10 +3478,11 @@
         if ( $AbeilleMQTTCmd->debug['AbeilleMQTTCmdClass'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Loop start" );}
         
         while ( true ) {
-
+            
             // Traite tous les Ack recus
             if (msg_receive($AbeilleMQTTCmd->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                 $AbeilleMQTTCmd->cmdAck++;
+                $AbeilleMQTTCmd->lastStatus = $msg['status'];
                 $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".$AbeilleMQTTCmd->cmdAck." status: ".$statusText[$msg['status']] );
                 $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".json_encode($msg) ) ;
                 // [2019-10-31 13:17:37][AbeilleMQTTCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
@@ -3493,6 +3490,18 @@
                 // status: 00 : Ok commande bien recue par la zigate / 15: ???
                 // SQN semble s'incrementer à chaque commande
                 // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
+                
+                if ( $msg['status'] == "00" ) {
+                    array_shift( $AbeilleMQTTCmd->cmdQueue );
+                    $AbeilleMQTTCmd->timeLastBadAck = 0;
+                    if ( $AbeilleMQTTCmd->cmdAck < 0 ) {
+                        $AbeilleMQTTCmd->cmdAck = 0;
+                        if ( $AbeilleMQTTCmd->debug['sendCmdAck'] ) {$AbeilleMQTTCmd->deamonlog("debug", "Alerte j'ai plus de Ack (Status) que de commande envoyées !!!"); }
+                    }
+                }
+                else {
+                    $AbeilleMQTTCmd->timeLastBadAck = time();
+                }
             }
             
             // Traite toutes les commandes zigate en attente

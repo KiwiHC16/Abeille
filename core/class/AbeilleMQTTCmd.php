@@ -106,7 +106,7 @@
                               "sendCmd"             => 0, // Debug fct sendCmd
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
-                              "sendCmdAck"          => 0, // Mise en place des class
+                              "sendCmdAck"          => 1, // Mise en place des class
                               );
         
         public $parameters_info;
@@ -600,9 +600,11 @@
             
             if ( $this->cmdAck > 0 ) {
                 if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
-                $cmd = array_slice( $this->cmdQueue, 0, 1 );                        // je recupere une copie du premier élément de la queue
-                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($cmd) ); }
-                $this->sendCmdToZigate( $cmd[0]['dest'], $cmd[0]['cmd'], $cmd[0]['len'], $cmd[0]['datas'] );    // J'envoie la premiere commande récupérée
+                $cmd = array_shift($this->cmdQueue);    // Je recupere la premiere commande
+                $cmd['retry']--;                        // Je reduis le nombre de retry restant
+                array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
+                $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
                 $this->cmdAck--;
             }
         }
@@ -3491,7 +3493,12 @@
                 // SQN semble s'incrementer à chaque commande
                 // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
                 
-                if ( $msg['status'] == "00" ) {
+                $cmd = array_slice( $AbeilleMQTTCmd->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
+                if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry']<0) ) {
+                    // Je vire la commande si elle est bonne
+                    // ou si elle est incorrecte
+                    // ou si conf alors que stack demarrée
+                    // ou si retry tombe à 0
                     array_shift( $AbeilleMQTTCmd->cmdQueue );
                     $AbeilleMQTTCmd->timeLastBadAck = 0;
                     if ( $AbeilleMQTTCmd->cmdAck < 0 ) {

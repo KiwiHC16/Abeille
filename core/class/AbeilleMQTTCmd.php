@@ -442,7 +442,7 @@
             //$ClusterId = "0006";
             $ClusterId = $clusterId;
             $Direction = "00";
-            if ( strlen($Proprio)<1 ) {
+            if ( (strlen($Proprio)<1) || ($Proprio="0000") ) {
                 $manufacturerSpecific = "00";
                 $manufacturerId = "0000";
             }
@@ -1727,9 +1727,9 @@
             else
             {
                 if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) )
-                  {
-                      $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], "0000" );
-                  }
+                {
+                    $this->getParam( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], "0000" );
+                }
             }
             
             // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -3487,6 +3487,7 @@
                 $AbeilleMQTTCmd->lastStatus = $msg['status'];
                 $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".$AbeilleMQTTCmd->cmdAck." status: ".$statusText[$msg['status']] );
                 $AbeilleMQTTCmd->deamonlog("debug", "Message 8000 status recu, cmdAck: ".json_encode($msg) ) ;
+                $AbeilleMQTTCmd->deamonlog("debug", "------------" );
                 // [2019-10-31 13:17:37][AbeilleMQTTCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
                 // type: 8000 : message status en retour d'une commande envoyée à la zigate
                 // status: 00 : Ok commande bien recue par la zigate / 15: ???

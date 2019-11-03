@@ -1,6 +1,6 @@
 <?php
     // Pour mettre a jour la doc github:
-    // php listeCompatibilite.php 1 > ../../../Documentation/040_Compatibilite.adoc
+    // php listeCompatibilite.php rst
     
     function equipementHtml( $resultIcone, $resultRaw, $result) {
         

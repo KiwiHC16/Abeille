@@ -602,11 +602,11 @@
             }
             if ( $this->cmdAck < 1 )  return;                                           // Si je n'ai pas encore recu le Ack, j'attend.
             
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
+            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
             $cmd = array_shift($this->cmdQueue);    // Je recupere la premiere commande
             $cmd['retry']--;                        // Je reduis le nombre de retry restant
             array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
+            // if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai une commande pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
             $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
             $this->cmdAck--;
             $this->timeLastAck = time();

@@ -1135,6 +1135,7 @@
                              );
             
             log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility );
+            echo 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility ;
             
             switch ($Visibility) {
                 case 'Y':
@@ -2084,14 +2085,21 @@
                 Abeille::deamon_start_cleanup();
                 break;
                 
+                // Affichage Commandes
             case "9":
-                echo "Test Affichage\n";
+                // echo "Test Affichage\n";
                 //  toggleAffichageNetwork
                 //  toggleAffichageTime
                 //  toggleAffichageAdditionalCommand
-                Abeille::CmdAffichage( "affichageNetwork", "toggle" );
+                
+                // Abeille::CmdAffichage( "affichageNetwork", "toggle" );
+                Abeille::CmdAffichage( "affichageNetwork", "N" );
+                Abeille::CmdAffichage( "affichageTime", "N" );
+                Abeille::CmdAffichage( "affichageCmdAdd", "N" );
+
                 break;
                 
+                // Test jeeObject::all() function
             case "10":
                 // $object = jeeObject::rootObject()->getId();
                 $object = jeeObject::all();

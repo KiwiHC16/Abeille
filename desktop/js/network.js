@@ -468,7 +468,7 @@ function network_links() {
 
                 //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
                 tbody += '<td id="vid">';
-                tbody += '<span class="label label-success" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
+                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
                 tbody += '</td>';
                 tbody += '<td id="vname">';
                 tbody += nodes[nodeFromJson].Voisine_Name;
@@ -488,7 +488,7 @@ function network_links() {
             
                 tbody += nodes[nodeFromJson].LinkQualityDec +'</span></td>';
                 tbody += '<td>';
-                tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
+                tbody += '<span class="label label-success" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
                 tbody += '</td>';
                 tbody += '<td></tr>';
             }

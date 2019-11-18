@@ -1410,9 +1410,10 @@
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03", $this->parameters_info['AbeilleQos']);
                 $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B", $this->parameters_info['AbeilleQos']);
                  */
-                $this->mqqtPublishCmdFct( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
-                $this->mqqtPublishCmdFct( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
-                $this->mqqtPublishCmdFct( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=0B" );
+                $this->mqqtPublishFctToCmd( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
+                $this->mqqtPublishFctToCmd( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
+                $this->mqqtPublishFctToCmd( "CmdAbeille/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=0B" );
+                                
             }
 
         }

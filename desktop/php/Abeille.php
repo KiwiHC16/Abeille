@@ -46,7 +46,7 @@ $parameters_info = Abeille::getParameters();
 
             <div class="cursor changeIncludeState card" id="bt_include" data-mode="1" data-state="1" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 0px; top: 0px;">
                 <center>
-                    <i class="fa fa-sign-in fa-rotate-90" style="font-size : 6em;color:#94ca02;"></i>
+                    <i class="fa fa-link" style="font-size : 6em;color:#94ca02;"></i>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Inclusion}}</center></span>
             </div>
@@ -115,14 +115,14 @@ $parameters_info = Abeille::getParameters();
 
             <div class="cursor" id="bt_listeCompatibilite" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
-                    <i class="fa fa-address-card-o" style="font-size : 5em;color:#767676;"></i>
+                    <i class="fa fa-align-left" style="font-size : 5em;color:#767676;"></i>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Compatibilite</center></span>
             </div>
 
             <div class="cursor" id="bt_Inconnu" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
-                    <i class="fa fa-address-card-o" style="font-size : 5em;color:#767676;"></i>
+                    <i class="fa fa-paperclip" style="font-size : 5em;color:#767676;"></i>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Inconnu</center></span>
             </div>

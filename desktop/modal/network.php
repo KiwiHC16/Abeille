@@ -101,8 +101,7 @@ sendVarToJS('nodesFromJeedom', $nodes);
 <link rel="stylesheet" href="/3rdparty/jquery.tablesorter/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
-<!--script type="text/javascript"
-        src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
+<!--script type="text/javascript" src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
 
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
@@ -111,16 +110,11 @@ sendVarToJS('nodesFromJeedom', $nodes);
     <div class="container-fluid">
         <div id="content">
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
-                <li class="active"><a href="#summary_network" data-toggle="tab"><i class="fa fa-tachometer"></i>
-                        {{Résumé}}</a></li>
-                <li><a href="#actions_network" style="display:none;" data-toggle="tab"><i class="fa fa-sliders"></i>
-                        {{Actions}}</a></li>
-                <li><a href="#statistics_network" style="display:none;" data-toggle="tab"><i
-                                class="fa fa-bar-chart"></i> {{Statistiques}}</a></li>
-                <li id="tab_graph"><a href="#graph_network" data-toggle="tab"><i class="fa fa-picture-o"></i>
-                        {{Graphique du réseau}}</a></li>
-                <li id="tab_route"><a href="#route_network" data-toggle="tab"><i class="fa fa-table"></i> {{Table des
-                        noeuds}}</a></li>
+                <li class="active"> <a href="#summary_network"                          data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
+                <li>                <a href="#actions_network"    style="display:none;" data-toggle="tab"> <i class="fa fa-sliders">     </i> {{Actions}}               </a></li>
+                <li>                <a href="#statistics_network" style="display:none;" data-toggle="tab"> <i class="fa fa-bar-chart">   </i> {{Statistiques}}          </a></li>
+                <li id="tab_graph"> <a href="#graph_network"                            data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
+                <li id="tab_route"> <a href="#route_network"                            data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
             </ul>
             <div id="network-tab-content" class="tab-content">
                 <div class="tab-pane active" id="summary_network">
@@ -205,22 +199,17 @@ sendVarToJS('nodesFromJeedom', $nodes);
                     <br/>
                     <div id="div_routingTable">
                         <span>
-                            <label class="control-label" data-toggle="tooltip"
-                                   title="Filtre les nodes par emetteur">Source
-                            </label>
-                            <select class="filterSource" id="nodeFrom">
-                            </select>
-                            <label class="control-label" data-toggle="tooltip"
-                                   title="Filtre les nodes par destinataire">Destinataire
-                            </label>
-                            <select class="filterRecipient" id="nodeTo">
-                            </select>
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
+                            <select class="filterSource" id="nodeFrom"> </select>
+
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">Destinataire </label>
+                            <select class="filterRecipient" id="nodeTo"> </select>
+
                             <span class="" style="padding: 3px 20px;">
-                            <a data-action="refreshNetworkCache"
-                               class="btn btn-success refreshCache"><i
-                                        class="fa fa-refresh" ></i>
-                            Get LQI</a></span>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache"><i class="fa fa-refresh" ></i> Get LQI</a>
+                            </span>
                         </span>
+
                         <table class="table table-condensed tablesorter" id="table_routingTable">
                             <thead>
                             <tr>

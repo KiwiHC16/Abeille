@@ -437,7 +437,8 @@ function network_links() {
                 nodesFrom[nodes[nodeFromJson].NE] = nodes[nodeFromJson].NE_Name;
 
                 //New Row
-                tbody += (nodes[nodeFromJson].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
+                // tbody += (nodes[nodeFromJson].LinkQualityDec > 100) ? '<tr>' : '<tr class="active">';
+                tbody += '<tr>';
                 //process NE to jeedom id
                 nodeJName = nodes[nodeFromJson].NE;
                 //zigbee LQI result is not null
@@ -479,8 +480,13 @@ function network_links() {
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
                 tbody += '</td>';
                 tbody += '<td id="lqi">';
-                tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '</span>';
-                tbody += '</td>';
+               
+                // tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '  ';
+               tbody += (nodes[nodeFromJson].LinkQualityDec <=  50) ? '<span class="label label-danger"  style="font-size : 1em;" >' : '';
+               tbody += ((nodes[nodeFromJson].LinkQualityDec > 50)&&(nodes[nodeFromJson].LinkQualityDec <= 100)) ? '<span class="label label-warning" style="font-size : 1em;">'  : '';
+               tbody += (nodes[nodeFromJson].LinkQualityDec >  100) ? '<span class="label label-success" style="font-size : 1em;">'  : '';
+            
+                tbody += nodes[nodeFromJson].LinkQualityDec +'</span></td>';
                 tbody += '<td>';
                 tbody += '<span class="label label-warning" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
                 tbody += '</td>';

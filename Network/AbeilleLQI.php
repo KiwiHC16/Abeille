@@ -268,7 +268,7 @@
             }
             // usleep(100);
             // $client->loop(5000);
-            for ($i = 1; $i <= 1; $i++) {
+            for ($i = 1; $i <= 3; $i++) {
                 message();
                 sleep(1);
             }
@@ -458,7 +458,7 @@
                 // $NE = $neAddress;
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " Je lance la collecte");
+                benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
                 sleep(5);
                 collectInformation($client, $currentNeAddress);
                 $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;

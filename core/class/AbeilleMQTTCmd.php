@@ -2117,7 +2117,7 @@
                 // $this->deamonlog('debug','Get Name from: '.$Command['address']);
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->getParam( $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'] );
+                $this->getParam( $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'], "0000" );
             }
 
             if ( isset($Command['getLocation']) && isset($Command['address']) )
@@ -2125,7 +2125,7 @@
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
                 // $this->deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
-                $this->getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'] );
+                $this->getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'], "0000" );
             }
 
             if ( isset($Command['setLocation']) && isset($Command['address']) )

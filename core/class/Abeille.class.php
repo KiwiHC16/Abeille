@@ -1562,9 +1562,13 @@
                     $elogic->setStatus('battery', $value);
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
+                
+                /*
                 if ( ($cmdId == "Zigate-8000") && (substr($value,0,2)!="00") ) {
                     message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes.",'KiwiHC16: Investigations en cours pour mieux traiter ce sujet.','Abeille/Abeille');
                 }
+                */
+                
                 /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
                 // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
                 if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {

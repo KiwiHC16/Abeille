@@ -430,6 +430,8 @@
         }
         
         public static function cronDaily() {
+
+            
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
             /**
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
@@ -442,6 +444,7 @@
         }
         
         public static function cronHourly() {
+            
             log::add( 'Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------' );
             
             log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
@@ -492,6 +495,7 @@
         }
         
         public static function cron15() {
+            
             log::add( 'Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------' );
             /**
              * Look every 15 minutes if the kernel driver is not in error
@@ -575,8 +579,10 @@
         }
         
         public static function cron() {
+            
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
+            
             $eqLogics = self::byType('Abeille');
             
             $parameters_info = self::getParameters();

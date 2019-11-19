@@ -123,11 +123,11 @@
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
                               "8000"                    => 1, // Status
-                              "8009"                    => 0, // Get Network Status
-                              "8010"                    => 0,
+                              "8009"                    => 1, // Get Network Status
+                              "8010"                    => 1,
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
-                              "cleanUpNE"               => 0,
+                              "cleanUpNE"               => 1,
                               "Serial"                  => 1,
                               "processActionQueue"      => 1,
                               );
@@ -236,41 +236,35 @@
             // Abeille / short addr / Cluster ID - Attr ID -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = true;
             
-            $msgAbeille->message = array(
-                                         'topic' => "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId,
-                                         'payload' => $data,
+            $msgAbeille->message = array( 'topic' => "Abeille/".$SrcAddr."/".$ClusterId."-".$AttributId, 'payload' => $data,
                                          );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
             }
             
-            $msgAbeille->message = array(
-                                         'topic' => "Abeille/".$SrcAddr."/Time-TimeStamp",
-                                         'payload' => time(),
-                                         );
+            $msgAbeille->message = array( 'topic' => "Abeille/".$SrcAddr."/Time-TimeStamp", 'payload' => time(), );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
             }
             
-            $msgAbeille->message = array(
-                                         'topic' => "Abeille/".$SrcAddr."/Time-Time",
-                                         'payload' => date("Y-m-d H:i:s"),
-                                         );
+            $msgAbeille->message = array( 'topic' => "Abeille/".$SrcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"), );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): .json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
             }
             
             
@@ -281,17 +275,16 @@
             // Abeille / short addr / Cluster ID - Attr ID -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
             
-            $msgAbeille->message = array(
-                                         'topic' => "Abeille/".$SrcAddr."/".$fct,
-                                         'payload' => $data,
-                                         );
+            $msgAbeille->message = array( 'topic' => "Abeille/".$SrcAddr."/".$fct, 'payload' => $data, );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
+                // $this->deamonlog("debug","(fct mqqtPublishFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishFct) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublishFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
             }
             
         }
@@ -301,17 +294,16 @@
             // Abeille / short addr / Cluster ID - Attr ID -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
             
-            $msgAbeille->message = array(
-                                         'topic' => $fct,
-                                         'payload' => $data,
-                                         );
+            $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
             
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishFctToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
+                // $this->deamonlog("debug","(fct mqqtPublishFctToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishFctToCmd) could not add message to queue (queueKeyParserToCmd)");
+                $this->deamonlog("debug","(fct mqqtPublishFctToCmd) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
             }
             
         }
@@ -321,18 +313,17 @@
              // Abeille / short addr / Cluster ID - Attr ID -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
             
-            $msgAbeille->message = array(
-                                         'topic' => $fct,
-                                         'payload' => $data,
-                                         );
+            $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
+                // $this->deamonlog("debug","(fct mqqtPublishFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishFct) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublishFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
             }
             
         }
@@ -342,26 +333,25 @@
             // Abeille / short addr / Cluster ID - Attr ID -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
             
-            $msgAbeille->message = array(
-                                         'topic' => "LQI/".$Addr."/".$Index,
-                                         'payload' => $data,
-                                         );
+            $msgAbeille->message = array( 'topic' => "LQI/".$Addr."/".$Index, 'payload' => $data, $errorcode);
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, )) {
+                // $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) could not add message to queue (queueKeyParserToAbeille)");
+                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
             }
             
             if (msg_send( $this->queueKeyParserToLQI, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) added to queue (queueKeyParserToLQI): ".json_encode($msgAbeille));
+                // $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) added to queue (queueKeyParserToLQI): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) could not add message to queue (queueKeyParserToLQI)");
+                $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) could not add message to queue (queueKeyParserToLQI) with error code : ".$errorcode);
             }
             
         }
@@ -371,18 +361,17 @@
             // Abeille / short addr / Annonce -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
+                                 
+            $msgAbeille->message = array( 'topic' => "CmdAbeille/".$SrcAddr."/Annonce", 'payload' => $data, );
             
-            $msgAbeille->message = array(
-                                         'topic' => "CmdAbeille/".$SrcAddr."/Annonce",
-                                         'payload' => $data,
-                                         );
-            
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishAnnounce) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
+                // $this->deamonlog("debug","(fct mqqtPublishAnnounce) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishAnnounce) could not add message to queue (queueKeyParserToCmd)");
+                $this->deamonlog("debug","(fct mqqtPublishAnnounce) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
             }
         }
 
@@ -391,18 +380,17 @@
             // Abeille / short addr / Annonce -> data
             
             $msgAbeille = new MsgAbeille;
+            $errorcode = 0;
+            $blocking = false;
+                                 
+            $msgAbeille->message = array( 'topic' => "CmdAbeille/".$SrcAddr."/AnnonceProfalux", 'payload' => $data, );
             
-            $msgAbeille->message = array(
-                                         'topic' => "CmdAbeille/".$SrcAddr."/AnnonceProfalux",
-                                         'payload' => $data,
-                                         );
-            
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, false)) {
-                $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
+                // $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) could not add message to queue (queueKeyParserToCmd)");
+                $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
             }
         }
 
@@ -700,7 +688,7 @@
                                  . '; SQN: '.$SQN
                                  . '; PacketType: '.$PacketType  );
 
-                if ( $SQN==0 ) { $this->deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
+                // if ( $SQN==0 ) { $this->deamonlog('debug',';type; 8000; SQN: 0 for messages which are not transmitted over the air.'); }
             }
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
@@ -722,7 +710,7 @@
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToCmdSemaphore): ".json_encode($msgAbeille));
+                $this->deamonlog("debug","(fct decode8000) could not add message to queue (queueKeyParserToCmdSemaphore): ".json_encode($msgAbeille));
             }
         }
 
@@ -821,7 +809,7 @@
 
         function decode8009( $payload, $ln, $qos, $dummy)
         {
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT)'); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT)'); }
 
             // <Short Address: uint16_t>
             // <Extended Address: uint64_t>
@@ -834,13 +822,15 @@
             $Ext_PAN_ID         = substr($payload,24,16);
             $Channel            = hexdec(substr($payload,40, 2));
 
+                                 if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT) Short: '.$ShortAddress.' Ext Addr: '.$ExtendedAddress.' PAN Id: '.$PAN_ID.' Ext PAN Id: '.$Ext_PAN_ID.' Channel: '.$Channel); }
+            
             // Envoie Short Address
             $SrcAddr = "Ruche";
             $ClusterId = "Short";
             $AttributId = "Addr";
             $data = $ShortAddress;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
 
             // Envoie Extended Address
             $SrcAddr = "Ruche";
@@ -848,7 +838,7 @@
             $AttributId = "Addr";
             $data = $ExtendedAddress;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
 
             // Envoie PAN ID
             $SrcAddr = "Ruche";
@@ -856,7 +846,7 @@
             $AttributId = "ID";
             $data = $PAN_ID;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
 
             // Envoie Ext PAN ID
             $SrcAddr = "Ruche";
@@ -864,7 +854,7 @@
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
 
             // Envoie Channel
             $SrcAddr = "Ruche";
@@ -872,30 +862,28 @@
             $AttributId = "Channel";
             $data = $Channel;
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Channel: '.$Channel); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Channel: '.$Channel); }
 
-            if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ; Level: 0x'.substr($payload, 0, 2)); }
         }
 
         function decode8010( $payload, $ln, $qos, $dummy)
         {
             if ($this->debug['8010']) {
-                $this->deamonlog('debug',';type; 8010; (Version)(Processed->MQTT)'
-                                 . '; Application : '.hexdec(substr($payload, 0, 4))
-                                 . '; SDK : '.hexdec(substr($payload, 4, 4)));
+                $this->deamonlog('debug',';type; 8010; (Version)(Processed->MQTT)' . '; Application : '.hexdec(substr($payload, 0, 4)) . '; SDK : '.hexdec(substr($payload, 4, 4)));
             }
             $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "Application";
             $data = substr($payload, 0, 4);
-            if ($this->debug['8010']) { $this->deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos); }
+            // if ($this->debug['8010']) { $this->deamonlog("debug", ';type; 8010; '.$AttributId.": ".$data." qos:".$qos); }
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
 
             $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "SDK";
             $data = substr($payload, 4, 4);
-            if ($this->debug['8010']) { $this->deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos); }
+            // if ($this->debug['8010']) { $this->deamonlog('debug',';type; 8010; '.$AttributId.': '.$data.' qos:'.$qos); }
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
 

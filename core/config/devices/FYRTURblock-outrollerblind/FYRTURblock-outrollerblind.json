@@ -16,7 +16,6 @@
       "include3": "SW",
       "include4": "ZCLVersion",
       "include5": "dateCode",
-      "include6": "location",
       "include9": "WindowsCoveringUp",
       "include10": "WindowsCoveringDown",
       "include10 2": "WindowsCoveringStop",

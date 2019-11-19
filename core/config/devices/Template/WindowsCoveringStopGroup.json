@@ -1,0 +1,19 @@
+{
+  "WindowsCoveringStopGroup": {
+    "isVisible": 1,
+    "name": "Stop",
+    "order": 7,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c0qs7c7qzzuuzs662208456780",
+      "topic": "CmdAbeille/#addrGroup#/WindowsCoveringGroup",
+      "request": "clusterCommand=02",
+      "visibilityCategory": "All"
+    }
+  }
+}

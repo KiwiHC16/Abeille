@@ -745,12 +745,10 @@
             message::removeAll('Abeille', 'Abeille/cron');
             message::removeAll('Abeille', 'Abeille/Abeille');
             
-            sleep(3);
-            
             $param = self::getParameters();
             
             if (self::dependancy_info()['state'] != 'ok') {
-                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée less dépendances.", 'Abeille/Demon');
+                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.", 'Abeille/Demon');
                 log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
                 return false;
             }
@@ -842,9 +840,14 @@
             sleep(2);
             
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-            log::add('Abeille', 'debug', 'deamon_start: *****Envoi de la creation de ruche par défaut ********');
+            log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
             Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "" );
             
+            sleep(2);
+            
+            // Send a message to AbeilleMQTTCmd to start ZigBee Network
+            log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee ********');
+            Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille/Ruche/startNetwork", "StartNetwork" );
             
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
             

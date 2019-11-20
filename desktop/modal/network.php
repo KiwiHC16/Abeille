@@ -199,15 +199,17 @@ sendVarToJS('nodesFromJeedom', $nodes);
                     <br/>
                     <div id="div_routingTable">
                         <span>
+                            <span class="" style="padding: 3px 20px;">
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache"><i class="fa fa-refresh" ></i>Get LQI</a>
+                            </span>
+                            Get LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
+
                             <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
                             <select class="filterSource" id="nodeFrom"> </select>
 
                             <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">Destinataire </label>
                             <select class="filterRecipient" id="nodeTo"> </select>
 
-                            <span class="" style="padding: 3px 20px;">
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache"><i class="fa fa-refresh" ></i> Get LQI</a>
-                            </span>
                         </span>
 
                         <table class="table table-condensed tablesorter" id="table_routingTable">

@@ -135,23 +135,24 @@ $parameters_info = Abeille::getParameters();
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
+                
+                // find opacity
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+                
+                // Find icone
+                $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+                if (in_array($test, $files, 0)) {
+                    $path = 'node_' . $eqLogic->getConfiguration('icone');
+                } else {
+                    $path = 'Abeille_icon';
+                }
+                
+                // Affichage
                 echo '<div class="eqLogicDisplayCardB">';
-                    echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" /></br>';
-
-                    echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
-                        echo "<center>";
-                        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                        if (in_array($test, $files, 0)) {
-                            $path = 'node_' . $eqLogic->getConfiguration('icone');
-                        } else {
-                            $path = 'Abeille_icon';
-                        }
-                        echo '<img src="plugins/Abeille/images/' . $path . '.png" height="105" width="95" />';
-                        echo "</center>";
-                        echo '<span class="name" style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span><BR>';
+                    echo '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
+                    echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+                        echo '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td<</tr></table>';
                     echo '</div>';
-
                 echo '</div>';
             }
             ?>

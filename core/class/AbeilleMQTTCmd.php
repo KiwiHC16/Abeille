@@ -759,15 +759,35 @@
                 $this->sendCmd($dest,$cmd,$lenth,$data);
             }
             //----------------------------------------------------------------------
+            // https://github.com/fairecasoimeme/ZiGate/issues/145
+            // PHY_PIB_TX_POWER_DEF (default - 0x80)
+            // PHY_PIB_TX_POWER_MIN (minimum - 0)
+            // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
             if ( isset($Command['TxPower'])  )
             {
                 $this->deamonlog('debug',"TxPower");
                 $cmd = "0806";
                 $data = $Command['TxPower'];
+                if ( $data < 10 ) $data = '0'.$data;
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
                 $this->sendCmd($dest,$cmd,$lenth,$data);
             }
+            //----------------------------------------------------------------------
+              // https://github.com/fairecasoimeme/ZiGate/issues/145
+              // Added cmd 0807 Get Tx Power #175
+              // PHY_PIB_TX_POWER_DEF (default - 0x80)
+              // PHY_PIB_TX_POWER_MIN (minimum - 0)
+              // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
+              if ( isset($Command['GetTxPower'])  )
+              {
+                  $this->deamonlog('debug',"GetTxPower");
+                  $cmd = "0807";
+                  $data = "";
+
+                  $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                  $this->sendCmd($dest,$cmd,$lenth,$data);
+              }
             //----------------------------------------------------------------------
             if ( isset($Command['setChannelMask'])  )
             {

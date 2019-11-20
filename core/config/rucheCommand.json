@@ -809,5 +809,78 @@
     "subType": "string",
     "invertBinary": "0",
     "template": ""
+  },
+  "Set Power 0": {
+    "name": "Set Power (0dBm)",
+    "order": 57,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "TxPower",
+      "request": "00"
+    }
+  },
+  "Set Power 9": {
+    "name": "Set Power (-9dBm)",
+    "order": 58,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "TxPower",
+      "request": "34"
+    }
+  },
+  "Set Power 20": {
+    "name": "Set Power (-20dBm)",
+    "order": 59,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "TxPower",
+      "request": "28"
+    }
+  },
+  "Set Power 32": {
+    "name": "Set Power (-32dBm)",
+    "order": 60,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "TxPower",
+      "request": "20"
+    }
+  },
+  "Get Power": {
+    "name": "Get Power",
+    "order": 61,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "GetTxPower",
+      "request": ""
+    }
+  },
+  "ZiGate-Power": {
+    "name": "ZiGate-Power",
+    "order": 62,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
   }
 }

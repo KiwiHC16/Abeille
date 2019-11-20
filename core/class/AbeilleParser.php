@@ -2625,6 +2625,76 @@
             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
         }
 
+        function decode8806( $payload, $ln, $qos, $dummy)
+        {
+            // Command 0x0807 Get Tx Power doesn't need any parameters.
+            // If command is handled successfully response will be first status(0x8000) with success status and after that Get Tx Power Response(0x8807).
+            // 0x8807 has only single parameter which is uint8 power. If 0x0807 fails then response is going to be only status(0x8000) with status 1.
+            // Standard power modules of JN516X(Except JN5169) modules have only 4 possible power levels (Table 5 JN-UG-3024 v2.6). These levels are based on some kind of hardware registry so there is no way to change them in firmware. In ZiGate's case this means:
+            // Set/get tx value    Mapped value (dBM)
+            // 0 to 31              0
+            // 32 to 39             -32
+            // 40 to 51             -20
+            // 52 to 63             -9
+
+            // <sequence number: uint8_t>
+                     // <endpoint : uint8_t>
+                     // <cluster id: uint16_t>
+                     // <src address mode: uint8_t>
+                     // <src address: uint64_t  or uint16_t based on address mode>
+                     // <zone status: uint16_t>
+                     // <extended status: uint8_t>
+                     // <zone id : uint8_t>
+                     // <delay: data each element uint16_t>
+
+            $this->deamonlog('debug', ';Type; 8807; (Set TX Power Answer)(Processed)'
+                             . '; Power: '               .$payload
+                             );
+            $SrcAddr    = "Ruche";
+            $ClusterId  = "Zigate";
+            $AttributId = "Power";
+            $data       = substr($payload, 0, 2);
+
+            // On transmettre l info sur la ruche
+             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
+        }
+        
+        function decode8807( $payload, $ln, $qos, $dummy)
+        {
+            // Command 0x0807 Get Tx Power doesn't need any parameters.
+            // If command is handled successfully response will be first status(0x8000) with success status and after that Get Tx Power Response(0x8807).
+            // 0x8807 has only single parameter which is uint8 power. If 0x0807 fails then response is going to be only status(0x8000) with status 1.
+            // Standard power modules of JN516X(Except JN5169) modules have only 4 possible power levels (Table 5 JN-UG-3024 v2.6). These levels are based on some kind of hardware registry so there is no way to change them in firmware. In ZiGate's case this means:
+            // Set/get tx value    Mapped value (dBM)
+            // 0 to 31              0
+            // 32 to 39             -32
+            // 40 to 51             -20
+            // 52 to 63             -9
+
+            // <sequence number: uint8_t>
+                     // <endpoint : uint8_t>
+                     // <cluster id: uint16_t>
+                     // <src address mode: uint8_t>
+                     // <src address: uint64_t  or uint16_t based on address mode>
+                     // <zone status: uint16_t>
+                     // <extended status: uint8_t>
+                     // <zone id : uint8_t>
+                     // <delay: data each element uint16_t>
+
+            $this->deamonlog('debug', ';Type; 8807; (Get Tx Power)(Processed)'
+                             . '; Power: '               .$payload
+                             );
+
+            $SrcAddr    = "Ruche";
+            $ClusterId  = "Zigate";
+            $AttributId = "Power";
+            $data       = substr($payload, 0, 2);
+
+            // On transmettre l info sur la ruche
+             $this->mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data);
+            
+        }
+        
         // ***********************************************************************************************
         // Gestion des annonces
         // ***********************************************************************************************

@@ -489,10 +489,10 @@ td.two {
         <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i>      {{Configuration avancée}}</a>
 
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation"                 ><a href="#"               aria-controls="home"    role="tab" data-toggle="tab" class="eqLogicAction" data-action="returnToThumbnailDisplay">       <i class="fa fa-arrow-circle-left"></i>                 </a></li>
-            <li role="presentation" class="active"  ><a href="#eqlogictab"     aria-controls="home"    role="tab" data-toggle="tab">                                                                    <i class="fa fa-tachometer"></i>        {{Equipement}}  </a></li>
-            <li role="presentation"                 ><a href="#paramtab"       aria-controls="home"    role="tab" data-toggle="tab">                                                                    <i class="fa fa-list-alt"></i>          {{Param}}       </a></li>
-            <li role="presentation"                 ><a href="#commandtab"     aria-controls="profile" role="tab" data-toggle="tab">                                                                    <i class="fa fa-list-alt"></i>          {{Commandes}}   </a></li>
+            <li role="presentation"                 ><a href="#"               aria-controls="home"    role="tab" data-toggle="tab" class="eqLogicAction" data-action="returnToThumbnailDisplay">       <i class="fa fa-arrow-circle-left"></i>                     </a></li>
+            <li role="presentation" class="active"  ><a href="#eqlogictab"     aria-controls="home"    role="tab" data-toggle="tab">                                                                    <i class="fa fa-home"></i>                  {{Equipement}}  </a></li>
+            <li role="presentation"                 ><a href="#paramtab"       aria-controls="home"    role="tab" data-toggle="tab">                                                                    <i class="fa fa-list-alt"></i>              {{Param}}       </a></li>
+            <li role="presentation"                 ><a href="#commandtab"     aria-controls="profile" role="tab" data-toggle="tab">                                                                    <i class="fa fa-align-left"></i>            {{Commandes}}   </a></li>
         </ul>
 
         <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
@@ -504,7 +504,6 @@ td.two {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
                             <div class="col-sm-3">
-
                                 <input type="text" class="eqLogicAttr form-control" data-l1key="name"                               placeholder="{{Nom de l'équipement Abeille}}"   />
                             </div>
                         </div>
@@ -537,20 +536,20 @@ td.two {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label"></label>
-                            <div class="col-sm-8">
+                                <label class="col-sm-3 control-label">.</label>
+                            <div class="col-sm-3">
                                 <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable"     checked/>{{Activer}}</label>
                                 <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible"    checked/>{{Visible}}</label>
                             </div>
                         </div>
 
-                                <hr>
-                                <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
-                                <div class="col-sm-3">
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
+                            <div class="col-sm-3">
                                 <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
-                                </div>
-                                </div>
+                            </div>
+                        </div>
 
                         <hr>
                         <div class="form-group">

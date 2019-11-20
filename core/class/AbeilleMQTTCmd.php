@@ -16,7 +16,7 @@
         function deamonlog($loglevel = 'NONE', $message = "")
         {
             if ( $this->debug["cli"] ) {
-                echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd][DEBUG.BEN] '.$message."\n";
+                echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd][DEBUG.KIWI] '.$message."\n";
             }
             else {
                 $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd', $message);
@@ -3140,7 +3140,7 @@
                                          );
                         break;
                         //----------------------------------------------------------------------------
-                    case "identifySend": // identifySend BEN1
+                    case "identifySend": // identifySend KIWI1
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
@@ -3153,7 +3153,7 @@
                                          );
                         break;
                         //----------------------------------------------------------------------------
-                    case "identifySendHue": // identifySendHue BEN2
+                    case "identifySendHue": // identifySendHue KIWI2
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "identifySend" => "1",

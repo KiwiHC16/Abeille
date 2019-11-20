@@ -437,8 +437,9 @@
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
              */
             log::add('Abeille', 'debug', 'Launching AbeilleLQI.php');
-            $DOMROOT=(null!=NEXTDOM_ROOT)?NEXTDOM_ROOT:JEEDOM_ROOT;
-            $cmd = "cd $DOMROOT/plugins/Abeille/Network/; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
+            $ROOT=getcwd();
+            log::add('Abeille', 'debug', 'ROOT: '.$ROOT);
+            $cmd = "cd ".$ROOT."/../../Network; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
             log::add('Abeille', 'debug', $cmd);
             exec($cmd);
         }
@@ -2181,6 +2182,10 @@
                 
             case "19":
                 Abeille::deamon_start();
+                break;
+               
+            case "20":
+                Abeille::cronDaily();
                 break;
                 
         } // switch

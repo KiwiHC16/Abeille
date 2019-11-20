@@ -2637,17 +2637,10 @@
             // 40 to 51             -20
             // 52 to 63             -9
 
-            // <sequence number: uint8_t>
-                     // <endpoint : uint8_t>
-                     // <cluster id: uint16_t>
-                     // <src address mode: uint8_t>
-                     // <src address: uint64_t  or uint16_t based on address mode>
-                     // <zone status: uint16_t>
-                     // <extended status: uint8_t>
-                     // <zone id : uint8_t>
-                     // <delay: data each element uint16_t>
+            // <Power: uint8_t>
+                   
 
-            $this->deamonlog('debug', ';Type; 8807; (Set TX Power Answer)(Processed)'
+            $this->deamonlog('debug', ';Type; 8806; (Set TX Power Answer)(Processed)'
                              . '; Power: '               .$payload
                              );
             $SrcAddr    = "Ruche";
@@ -2671,15 +2664,8 @@
             // 40 to 51             -20
             // 52 to 63             -9
 
-            // <sequence number: uint8_t>
-                     // <endpoint : uint8_t>
-                     // <cluster id: uint16_t>
-                     // <src address mode: uint8_t>
-                     // <src address: uint64_t  or uint16_t based on address mode>
-                     // <zone status: uint16_t>
-                     // <extended status: uint8_t>
-                     // <zone id : uint8_t>
-                     // <delay: data each element uint16_t>
+            // <Power: uint8_t>
+           
 
             $this->deamonlog('debug', ';Type; 8807; (Get Tx Power)(Processed)'
                              . '; Power: '               .$payload

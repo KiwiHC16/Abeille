@@ -46,7 +46,7 @@ $parameters_info = Abeille::getParameters();
 
             <div class="cursor" id="bt_createTimer" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
                 <center>
-                    <img src="plugins/Abeille/images/node_Timer.png" height="105" width="95">
+                    <i class="fa fa-hourglass-half" style="font-size : 6em;color:#767676;"></i>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Timer}}</center></span>
             </div>
@@ -85,25 +85,17 @@ $parameters_info = Abeille::getParameters();
             <div class="cursor" id="bt_networkAbeille"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
-                    <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
+                    <i class="fa fa-map" style="font-size : 5em;color:#767676;"></i>
                 </center>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph</center></span>
-            </div>
-
-            <div class="cursor" id="bt_networkAbeilleNew"
-                style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph New</center></span>
             </div>
 
             <div class="cursor" id="bt_graph"
                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
-                    <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
+                    <i class="fa fa-flask" style="font-size : 5em;color:#767676;"></i>
                 </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Graph Dev</center></span>
+                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Graph</center></span>
             </div>
 
             <div class="cursor" id="bt_listeCompatibilite" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">

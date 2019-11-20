@@ -338,7 +338,7 @@
             
             $msgAbeille->message = array( 'topic' => "LQI/".$Addr."/".$Index, 'payload' => $data, $errorcode);
             
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, )) {
+            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublishLQI ParserToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }

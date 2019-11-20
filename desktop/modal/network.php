@@ -97,7 +97,7 @@ sendVarToJS('nodesFromJeedom', $nodes);
         color: red;
     }
 </style>
-<link rel="stylesheet" href="/3rdparty/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css">
 <link rel="stylesheet" href="/3rdparty/jquery.tablesorter/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->

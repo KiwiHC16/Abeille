@@ -112,6 +112,6 @@
 
 <?php
 foreach ($IEEE_Table as $IEEE=>$IEEE_Device) {
-    if ($IEEE_Device>1) { echo "L'adresse $IEEE est dupliqué ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
+    if ($IEEE_Device>1) { echo "L'adresse ->".$IEEE."<- est dupliquée ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
 }
     ?>

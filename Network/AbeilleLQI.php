@@ -46,8 +46,8 @@
     
     function benLog($message = "")
     {
-        global $debugBen;
-        if ($debugBen && strlen($message) > 0) echo $message . "\n";
+        global $debugKiwi;
+        if ($debugKiwi && strlen($message) > 0) echo $message . "\n";
     }
     
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -259,7 +259,7 @@
     /* Main
      /*--------------------------------------------------------------------------------------------------*/
     
-    $debugBen = 1;
+    $debugKiwi = 1;
     $abeilleParameters = Abeille::getParameters();
     
     /*

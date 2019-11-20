@@ -50,26 +50,6 @@
         if ($debugBen && strlen($message) > 0) echo $message . "\n";
     }
     
-    // Definition MQTT
-   /*
-    function connect($r, $message)
-    {
-    }
-    
-    function disconnect($r)
-    {
-    }
-    
-    function subscribe()
-    {
-    }
-    
-    function logmq($code, $str)
-    {
-        
-    }
-    */
-    
     // ---------------------------------------------------------------------------------------------------------------------------
     function message()
     {
@@ -93,19 +73,6 @@
         
         $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
         $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
-        
-        /*
-        // On gere la root de mqtt
-        if ( $abeilleParameters["AbeilleTopic"] != "#" ) {
-            if ( strpos( "_".$message->topic, substr($message->topic,0,-1)) != 1 ) {
-                log::add('Abeille', 'debug', "Message receive but is not for me, wrong delivery !!!");
-                return;
-            }
-            // On enleve AbeilleTopic
-            echo "lets remove topic root\n";
-            $message->topic = substr( $message->topic, strlen($abeilleParameters["AbeilleTopic"])-1 );
-        }
-        */
          
         benLog("Message Topic: ".$message->topic);
         
@@ -256,8 +223,7 @@
         $indexTable = 0;
         
         while ($GLOBALS['NE_continue']) {
-            // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::loop
-            // mqqtPublishLQI( queueKeyLQIToCmd, $client, $NE, sprintf("%'.02x", $indexTable), $qos = 0);
+
             mqqtPublishLQI( $NE, sprintf("%'.02x", $indexTable) );
             
             $indexTable++;
@@ -443,7 +409,7 @@
                 $name = "Inconnu-" . $currentNeAddress;
             }
             
-            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ' - ' . $currentNeStatus['LQI_Done'] . ')');
+            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
             if ($nbwritten<1) {
                 unlink($FileLock);
                 echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
@@ -468,14 +434,8 @@
         }
         
     }
-    
-    /*
-    $client->disconnect();
-    unset($client);
-    */
-    
+        
     //announce end of processing
-    //file_put_contents($FileLock, "done");
     file_put_contents($FileLock, "done - ".date('l jS \of F Y h:i:s A'));
     
     // encode array to json

@@ -1361,13 +1361,14 @@
                              . '; Link Quality: '          .hexdec(substr($payload, 48, 2))
                              . '; Bit map of attributes: '        .substr($payload, 50, 2)   );
 
-            $srcAddress         = 'Not Available Yet Due To ZiGate';
-            $index              = substr($payload, 8, 2);
-            $NeighbourAddr      = substr($payload, 10, 4);
-            $lqi                = hexdec(substr($payload, 48, 2));
-            $Depth              = hexdec(substr($payload, 46, 2));
-            $bitMapOfAttributes = substr($payload, 50, 2); // to be $this->decoded
-            $LQI[$srcAddress]=array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
+            $srcAddress           = 'Not Available Yet Due To ZiGate';
+            $index                = substr($payload, 8, 2);
+            $NeighbourAddr        = substr($payload, 10, 4);
+            $NeighbourIEEEAddress = substr($payload, 30,16);
+            $lqi                  = hexdec(substr($payload, 48, 2));
+            $Depth                = hexdec(substr($payload, 46, 2));
+            $bitMapOfAttributes   = substr($payload, 50, 2); // to be $this->decoded
+            $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
 
             $data =
             "NeighbourTableEntries="       .substr($payload, 4, 2)
@@ -1404,6 +1405,9 @@
                                 
             }
 
+            $this->mqqtPublishCmdFct( "Abeille/".$NeighbourAddr."/IEEE-Addr", $NeighbourIEEEAddress);
+                 // Abeille / short addr / Cluster ID - Attr ID -> data
+            
         }
 
         //----------------------------------------------------------------------------------------------------------------

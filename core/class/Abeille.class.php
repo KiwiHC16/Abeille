@@ -74,22 +74,22 @@
         }
         
         public static function syncconfAbeille($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "syncconfAbeille start\n";
+            if ($GLOBALS['debugKIWI']) echo "syncconfAbeille start\n";
             log::add('Abeille', 'debug', 'Starting syncconfAbeille');
             log::remove('Abeille_syncconf');
             log::add('Abeille_syncconf', 'info', 'syncconfAbeille Start');
             // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
             $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
             if ($_background) $cmd .= ' &';
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_syncconf', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_syncconf', 'info', 'syncconfAbeille End');
-            if ($GLOBALS['debugBEN']) echo "syncconfAbeille end\n";
+            if ($GLOBALS['debugKIWI']) echo "syncconfAbeille end\n";
         }
         
         public static function installGPIO($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "installGPIO start\n";
+            if ($GLOBALS['debugKIWI']) echo "installGPIO start\n";
             log::add('Abeille', 'debug', 'Starting installGPIO');
             log::remove('Abeille_installGPIO');
             log::add('Abeille_installGPIO', 'info', 'installGPIO Start');
@@ -98,15 +98,15 @@
             if ($_background) {
                 $cmd .= ' &';
             }
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_installGPIO', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_installGPIO', 'info', 'installGPIO End');
-            if ($GLOBALS['debugBEN']) echo "installGPIO end\n";
+            if ($GLOBALS['debugKIWI']) echo "installGPIO end\n";
         }
         
         public static function installS0($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "installS0 start\n";
+            if ($GLOBALS['debugKIWI']) echo "installS0 start\n";
             log::add('Abeille', 'debug', 'Starting installS0');
             log::remove('Abeille_installS0');
             log::add('Abeille_installS0', 'info', 'installS0 Start');
@@ -115,15 +115,15 @@
             if ($_background) {
                 $cmd .= ' &';
             }
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_installS0', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_installS0', 'info', 'installS0 End');
-            if ($GLOBALS['debugBEN']) echo "installS0 end\n";
+            if ($GLOBALS['debugKIWI']) echo "installS0 end\n";
         }
 
         public static function installSocat($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "installS0 start\n";
+            if ($GLOBALS['debugKIWI']) echo "installS0 start\n";
             log::add('Abeille', 'debug', 'Starting installSocat');
             log::remove('Abeille_installSocat');
             log::add('Abeille_installSocat', 'info', 'installSocat Start');
@@ -131,30 +131,30 @@
             if ($_background) {
                 $cmd .= ' &';
             }
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_installSocat', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_installSocat', 'info', 'installSocat End');
-            if ($GLOBALS['debugBEN']) echo "installSocat end\n";
+            if ($GLOBALS['debugKIWI']) echo "installSocat end\n";
         }
         
         public static function updateFirmwarePiZiGate($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "updateFirmwarePiZiGate start\n";
+            if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate start\n";
             log::add('Abeille', 'debug', 'Starting updateFirmwarePiZiGate');
             log::remove('Abeille_updateFirmwarePiZiGate');
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate Start');
             // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
             $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
             if ($_background) $cmd .= ' &';
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_updateFirmwarePiZiGate', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate End');
-            if ($GLOBALS['debugBEN']) echo "updateFirmwarePiZiGate end\n";
+            if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate end\n";
         }
         
         public static function resetPiZiGate($_background = true) {
-            if ($GLOBALS['debugBEN']) echo "resetPiZiGate start\n";
+            if ($GLOBALS['debugKIWI']) echo "resetPiZiGate start\n";
             log::add('Abeille', 'debug', 'Starting resetPiZiGate');
             log::remove('Abeille_resetPiZiGate');
             log::add('Abeille_resetPiZiGate', 'info', 'resetPiZiGate Start');
@@ -163,11 +163,11 @@
             if ($_background) {
                 $cmd .= ' &';
             }
-            if ($GLOBALS['debugBEN']) echo "cmd: ".$cmd . "\n";
+            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_resetPiZiGate', 'info', $cmd);
             shell_exec($cmd);
             log::add('Abeille_resetPiZiGate', 'info', 'resetPiZiGate End');
-            if ($GLOBALS['debugBEN']) echo "resetPiZiGate end\n";
+            if ($GLOBALS['debugKIWI']) echo "resetPiZiGate end\n";
         }
         
         public static function testUpdateCommand( $fp, $parameter, $template, $NE ) {
@@ -189,7 +189,7 @@
         }
         
         public static function updateConfigAbeille($abeilleIdFilter = false) {
-            if ($GLOBALS['debugBEN']) echo "updateConfigAbeille start\n";
+            if ($GLOBALS['debugKIWI']) echo "updateConfigAbeille start\n";
             log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
             
             $fp = fopen(log::getPathToLog('Abeille_updateConfig'), 'w');
@@ -295,7 +295,7 @@
                     $templateMain = $template[$templateName]; // passe par une variable intermediaire pour simplifier l ecriture
                     $templateMainConfig = $template[$templateName]['configuration']; // passe par une variable intermediaire pour simplifier l ecriture
                     
-                    if ($GLOBALS['debugBEN']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ->".$templateName."<-\n";
+                    if ($GLOBALS['debugKIWI']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ->".$templateName."<-\n";
                     fwrite($fp, "-------------------------------------------------------------------\n");
                     fwrite($fp, "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
                     
@@ -352,14 +352,14 @@
                             }
                         }
                         
-                        if ($GLOBALS['debugBEN']) {
+                        if ($GLOBALS['debugKIWI']) {
                             echo "\n".$templateCmdId."\n";
                             var_dump($templateCmd);
                             var_dump($templateCmdConfig);
                         }
                         
                         if (isset($templateCmd)) {
-                            // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()."\n";
+                            // if ($GLOBALS['debugKIWI']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()."\n";
                             fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()."\n" );
                             // id
                             // logicalId: sujet convert par les commande topic.
@@ -411,7 +411,7 @@
                             $cmd->save();
                         }
                         else {
-                            // if ($GLOBALS['debugBEN']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
+                            // if ($GLOBALS['debugKIWI']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
                             fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
                             log::add('Abeille', 'debug', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template");
                             // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
@@ -424,7 +424,7 @@
             // log::add('updateConfigAbeille', 'info', 'updateConfigAbeille End');
             fwrite($fp, "Ending updateConfigAbeille\n");
             log::add('Abeille', 'debug', 'updateConfigAbeille end');
-            if ($GLOBALS['debugBEN']) echo "updateConfigAbeille end\n";
+            if ($GLOBALS['debugKIWI']) echo "updateConfigAbeille end\n";
             
             fclose($fp);
         }
@@ -446,6 +446,24 @@
         public static function cronHourly() {
             
             log::add( 'Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------' );
+            
+            //--------------------------------------------------------
+            // Check Zigate Presence
+            
+            log::add('Abeille', 'debug', 'Check Zigate Presence');
+            
+            $parameters_info = self::getParameters();
+            if ($parameters_info['onlyTimer'] == 'N') {
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+            } else {
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/SW-SDK", "TimerMode" );
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
+            }
+            
+            //--------------------------------------------------------
+            // Refresh Ampoule Ikea Bind et set Report
             
             log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
             
@@ -579,25 +597,14 @@
         }
         
         public static function cron() {
-            return;
             
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
             
             $eqLogics = self::byType('Abeille');
             
-            $parameters_info = self::getParameters();
-            if ($parameters_info['onlyTimer'] == 'N') {
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-            } else {
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/SW-SDK", "TimerMode" );
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
-            }
-            
             // Rafraichie l etat poll = 1
-            log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            // log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
             $i = 0;
             foreach ($eqLogics as $eqLogic) {
                 $address = explode("/", $eqLogic->getLogicalId())[1];
@@ -862,7 +869,7 @@
         }
         
         public static function deamon_stop() {
-            log::add('Abeille', 'debug', 'deamon stop: IN -------------BEN------------------');
+            log::add('Abeille', 'debug', 'deamon stop: IN -------------KIWI------------------');
             // Stop socat if exist
             exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/tmp\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
             log::add('Abeille', 'debug', 'deamon stop: Killing deamons socat: '.implode($output, '!'));
@@ -1071,7 +1078,7 @@
             
             // $lookForIEEE = "000B57fffe490C2a";
             // $checkShort = "2006";
-            // log::add('Abeille', 'debug', 'BEN: start function fetchShortFromIEEE');
+            // log::add('Abeille', 'debug', 'KIWI: start function fetchShortFromIEEE');
             $abeilles = Abeille::byType('Abeille');
             
             foreach ($abeilles as $abeille) {
@@ -1085,14 +1092,14 @@
                         if ($cmdShort) {
                             if ($cmdShort->execCmd() == $checkShort) {
                                 // echo "Success ";
-                                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return 0');
+                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
                                 return 0;
                             } else {
                                 // echo "Pas success du tout ";
                                 // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
-                                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
+                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
                                 // return $cmdShort->execCmd();
-                                // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
+                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
                                 return substr($abeille->getlogicalId(), -4);
                             }
                             
@@ -1102,7 +1109,7 @@
                 }
             }
             
-            // log::add('Abeille', 'debug', 'BEN: function fetchShortFromIEEE return -1');
+            // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return -1');
             return -1;
         }
         
@@ -1370,7 +1377,7 @@
                 
                 
                 // Creation des commandes pour l objet Abeille juste créé.
-                if ($GLOBALS['debugBEN']) {
+                if ($GLOBALS['debugKIWI']) {
                     echo "On va creer les commandes.\n";
                     print_r($objetDefSpecific['Commandes']);
                 }
@@ -1947,16 +1954,16 @@
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     if (isset($argv[1])) {
-        $debugBEN = $argv[1];
+        $debugKIWI = $argv[1];
     } else {
-        $debugBEN = 0;
+        $debugKIWI = 0;
     }
-    if ($debugBEN != 0) {
+    
+    if ($debugKIWI != 0) {
         echo "Debut Abeille.class.php test mode\n";
         $message = new stdClass();
         
-        
-        switch ($debugBEN) {
+        switch ($debugKIWI) {
                 
                 // Creation des objets sur la base des modeles pour verifier la bonne creation dans Abeille
             case "1":

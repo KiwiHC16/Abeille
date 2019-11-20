@@ -566,7 +566,7 @@
                 }
             }
             if ( ($i*13) > (60*15) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC15 sur le Forum","Abeille/cron" );
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum","Abeille/cron" );
             }
             
             log::add(
@@ -579,6 +579,7 @@
         }
         
         public static function cron() {
+            return;
             
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );

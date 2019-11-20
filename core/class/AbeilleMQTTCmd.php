@@ -130,6 +130,7 @@
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
                               "sendCmdToZigate"     => 1, // Mise en place des class
+                              "traiteLesAckRecus"   => 1, // Nouvelle Gestion des Ack
                               );
 
         public $parameters_info;
@@ -137,9 +138,8 @@
         public $cmdQueue;                   // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
         public $cmdAck = 1;                 // cmdAck compte le nombre de Ack (Status) recus.
         public $timeLastAck = 0;            // When I got the last Ack from Zigate
-        public $timeLastAckTimeOut = 3;     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
-        public $maxRetry = 3;               // Abeille will try to send the message max x times
-        public $timeOutRetry = 10;          // After x s second we will drop the message
+        public $timeLastAckTimeOut = 1;     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
+        public $maxRetry = 9;               // Abeille will try to send the message max x times
 
         function __construct($client_id) {
             global $argv;
@@ -593,21 +593,21 @@
 
         function sendCmd( $dest, $cmd, $len, $datas='') {
             $this->cmdQueue[] = array( 'time'=>0, 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue: ".json_encode($this->cmdQueue) ); }
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
         }
 
         function sendCmdToZigate( $dest, $cmd, $len, $datas) {
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
             // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
 
-            if ( $this->debug['sendCmd'] ) $this->deamonlog('debug','sendCmd fct - Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
+            // if ( $this->debug['sendCmd'] ) $this->deamonlog('debug','sendCmd fct - Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas);
             if (0) {
                 $f=fopen("/var/www/html/log/toto","w");
                 $this->writeToDest( $f, $dest, $cmd, $len, $datas);
                 fclose($f);
             }
 
-            if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", "=================> Envoi de la commande a la zigate: ".$dest.'-'.$cmd.'-'.$len.'-'.$datas); }
+            if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$dest.'-'.$cmd.'-'.$len.'-'.$datas); }
             $f=fopen($dest,"w");
             $this->writeToDest( $f, $dest, $cmd, $len, $datas);
             fclose($f);
@@ -3520,18 +3520,17 @@
             // Traite tous les Ack recus
             if ( !msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) ) return; // Si pas de message je passe mon chemin
             
-            $this->deamonlog("debug", "*************" );
-            $this->deamonlog("debug", "Message 8000 status recu, cmdAck number: ".$this->cmdAck." status: ".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) ) ;
-            $this->deamonlog("debug", "Alors que j ai en attente: ".json_encode($this->cmdQueue));
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
             // [2019-10-31 13:17:37][AbeilleMQTTCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
             // type: 8000 : message status en retour d'une commande envoyée à la zigate
             // status: 00 : Ok commande bien recue par la zigate / 15: ???
             // SQN semble s'incrementer à chaque commande
             // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
             
-            // $cmd = array_slice( $this->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
+            $cmd = array_slice( $this->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
             
-            if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry'] <=0 ) ) {
+            if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry'] <= 0 ) ) {
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
                 // ou si conf alors que stack demarrée
@@ -3541,11 +3540,11 @@
                 $this->timeLastAck = 0;
             }
             else {
-                $this->zigateAvailabe = 1;      // Je dis que la Zigate n est pas dispo
+                $this->zigateAvailabe = 0;      // Je dis que la Zigate n est pas dispo
                 $this->timeLastAck = time();    // Je garde la date de ce mauvais Ack
             }
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) ); }
-            $this->deamonlog("debug", "*************" );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
         }
         
         

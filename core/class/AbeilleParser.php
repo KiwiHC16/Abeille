@@ -2600,11 +2600,71 @@
                              "d4" => array( "ZPS_NWK_ENUM_FRAME_IS_BUFFERED", "Unicast frame does not have a route available but it is buffered for automatic resend. / https://github.com/fairecasoimeme/ZiGate/issues/207"),
                              );
             
+            // Event We can find all of status / error code here : https://www.nxp.com/docs/en/user-guide/JN-UG-3113.pdf page 437 from https://github.com/fairecasoimeme/ZiGate/issues/47
+            $event = array(
+                           "00" => array( "ZPS_EVENT_NONE","" ),
+                           "01" => array( "ZPS_EVENT_APS_DATA_INDICATION","" ),
+                           "02" => array( "ZPS_EVENT_APS_DATA_CONFIRM","" ),
+                           "03" => array( "ZPS_EVENT_APS_DATA_ACK","" ),
+                           "04" => array( "ZPS_EVENT_NWK_STARTED","" ),
+                           "05" => array( "ZPS_EVENT_NWK_JOINED_AS_ROUTER","" ),
+                           "06" => array( "ZPS_EVENT_NWK_JOINED_AS_ENDDEVICE","" ),
+                           "07" => array( "ZPS_EVENT_NWK_FAILED_TO_START","" ),
+                           "08" => array( "ZPS_EVENT_NWK_FAILED_TO_JOIN","" ),
+                           "09" => array( "ZPS_EVENT_NWK_NEW_NODE_HAS_JOINED","" ),
+                           "0A" => array( "ZPS_EVENT_NWK_DISCOVERY_COMPLETE","" ),
+                           "0B" => array( "ZPS_EVENT_NWK_LEAVE_INDICATION","" ),
+                           "0C" => array( "ZPS_EVENT_NWK_LEAVE_CONFIRM","" ),
+                           "0D" => array( "ZPS_EVENT_NWK_STATUS_INDICATION","" ),
+                           "0E" => array( "ZPS_EVENT_NWK_ROUTE_DISCOVERY_CONFIRM","" ),
+                           "0F" => array( "ZPS_EVENT_NWK_POLL_CONFIRM","" ),
+                           "10" => array( "ZPS_EVENT_NWK_ED_SCAN","" ),
+                           "11" => array( "ZPS_EVENT_ZDO_BIND","" ),
+                           "12" => array( "ZPS_EVENT_ZDO_UNBIND","" ),
+                           "13" => array( "ZPS_EVENT_ZDO_LINK_KEY","" ),
+                           "14" => array( "ZPS_EVENT_BIND_REQUEST_SERVER","" ),
+                           "15" => array( "ZPS_EVENT_ERROR","" ),
+                           "16" => array( "ZPS_EVENT_APS_INTERPAN_DATA_INDICATION","" ),
+                           "17" => array( "ZPS_EVENT_APS_INTERPAN_DATA_CONFIRM","" ),
+                           "18" => array( "ZPS_EVENT_APS_ZGP_DATA_INDICATION","" ),
+                           "19" => array( "ZPS_EVENT_APS_ZGP_DATA_CONFIRM","" ),
+                           "1A" => array( "ZPS_EVENT_TC_STATUS","" ),
+                           "1B" => array( "ZPS_EVENT_NWK_DUTYCYCLE_INDICATION","" ),
+                           "1C" => array( "ZPS_EVENT_NWK_FAILED_TO_SELECT_AUX_CHANNEL","" ),
+                           "1D" => array( "ZPS_EVENT_NWK_ROUTE_RECORD_INDICATION","" ),
+                           "1E" => array( "ZPS_EVENT_NWK_FC_OVERFLOW_INDICATION","" ),
+                           "1F" => array( "ZPS_ZCP_EVENT_FAILURE","" ),
+                           );
+            
+            $macCode = array(
+                             "00" => array( "MAC_ENUM_SUCCESS","Success" ),
+                             "E0" => array( "MAC_ENUM_BEACON_LOSS","Beacon loss after synchronisation request" ),
+                             "E1" => array( "MAC_ENUM_CHANNEL_ACCESS_FAILURE","CSMA/CA channel access failure" ),
+                             "E2" => array( "MAC_ENUM_DENIED","GTS request denied" ),
+                             "E3" => array( "MAC_ENUM_DISABLE_TRX_FAILURE","Could not disable transmit or receive" ),
+                             "E4" => array( "MAC_ENUM_FAILED_SECURITY_CHECK","Incoming frame failed security check" ),
+                             "E5" => array( "MAC_ENUM_FRAME_TOO_LONG","Frame too long, after security processing, to be sent" ),
+                             "E6" => array( "MAC_ENUM_INVALID_GTS","GTS transmission failed" ),
+                             "E7" => array( "MAC_ENUM_INVALID_HANDLE","Purge request failed to find entry in queue" ),
+                             "E8" => array( "MAC_ENUM_INVALID_PARAMETER","Out-of-range parameter in function" ),
+                             "E9" => array( "MAC_ENUM_NO_ACK","No acknowledgement received when expected" ),
+                             "EA" => array( "MAC_ENUM_NO_BEACON","Scan failed to find any beacons" ),
+                             "EB" => array( "MAC_ENUM_NO_DATA","No response data after a data request" ),
+                             "EC" => array( "MAC_ENUM_NO_SHORT_ADDRESS","No allocated network (short) address for operation" ),
+                             "ED" => array( "MAC_ENUM_OUT_OF_CAP","Receiver-enable request could not be executed, as CAP finished" ),
+                             "EE" => array( "MAC_ENUM_PAN_ID_CONFLICT","PAN ID conflict has been detected" ),
+                             "EF" => array( "MAC_ENUM_REALIGNMENT","Co-ordinator realignment has been received" ),
+                             "F0" => array( "MAC_ENUM_TRANSACTION_EXPIRED","Pending transaction has expired and data discarded" ),
+                             "F1" => array( "MAC_ENUM_TRANSACTION_OVERFLOW","No capacity to store transaction" ),
+                             "F2" => array( "MAC_ENUM_TX_ACTIVE","Receiver-enable request could not be executed, as in transmit state" ),
+                             "F3" => array( "MAC_ENUM_UNAVAILABLE_KEY","Appropriate key is not available in ACL" ),
+                             "F4" => array( "MAC_ENUM_UNSUPPORTED_ATTRIBUTE","PIB Set/Get on unsupported attribute" ),
+                             );
 
             $status = substr($payload, 0, 2);
             
             $this->deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
-                             . '; Status : '.$status.' ('.$nwkCode[$status][1].'->'.$nwkCode[$status][2].')'
+                             . '; Status : '.$status.' ('.$macCode[$status][1].'->'.$macCode[$status][2].')'
                              . '; Source Endpoint : '.substr($payload, 2, 2)
                              . '; Destination Endpoint : '.substr($payload, 4, 2)
                              . '; Destination Mode : '.substr($payload, 6, 2)

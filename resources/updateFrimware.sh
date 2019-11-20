@@ -22,7 +22,7 @@ gpio write 2 1
 
 sleep 1
 
-sudo ../Zigate_Module/JennicModuleProgrammerRPI3 -V 6 -P 115200 -v -f  ZiGate_v30f.bin  -s /dev/ttyS0
+sudo /var/www/html/plugins/Abeille/Zigate_Module/JennicModuleProgrammerRPI3 -V 6 -P 115200 -v -f  ZiGate_v30f.bin  -s /dev/ttyS0
 
 echo "Programmation faite. Redemarrage de la PiZiGate"
 

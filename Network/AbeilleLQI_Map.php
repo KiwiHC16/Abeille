@@ -26,12 +26,13 @@
     // $Hierarchy = "All";
     // $Hierarchy = "Child";
     
-    
+    /*
     echo "\n\n";
     echo $Data;
     echo "\n";
     echo $Hierarchy;
     echo "\n\n";
+    */
     
     // -----------------------------------------------------------------------------------------------------------
     $DataFile = "AbeilleLQI_MapData.json";
@@ -47,7 +48,7 @@
         $LQI = $json['data'];
     }
     else {
-        echo "Le cache n existe pas, faites un refresh.<br>";
+        echo 'Le fichier contenant les information réseau n existe pas, faites un "Refresh Cache" puis "Submit".<br>';
     }
     
     // On pre-rempli table avec les NE trouvés dans les voisines
@@ -89,14 +90,23 @@
         }
         else {
             
-            if ( ($abeille->getConfiguration()["positionX"]=="") || ($abeille->getConfiguration()["positionY"]=="")) {
+            if ( ($abeille->getConfiguration()["positionX"]=="") || ($abeille->getConfiguration()["positionY"]=="") ) {
+                
                 $X = $centerX + $rayon * cos($angle/180*3.14);
                 $Y = $centerY + $rayon * sin($angle/180*3.14);
                 $angle = $angle + $angleIncrement;
+                
+                $Z = 0;
             }
             else {
                 $X = $abeille->getConfiguration()["positionX"];
                 $Y = $abeille->getConfiguration()["positionY"];
+                if ($abeille->getConfiguration()["positionZ"]=="") {
+                    $Z = "0";
+                }
+                else {
+                    $Z = $abeille->getConfiguration()["positionZ"];
+                }
             }
             
             $shortAddress = substr($abeille->getLogicalId(),-4);
@@ -104,6 +114,7 @@
             
             $table[$shortAddress]['x'] = $X;
             $table[$shortAddress]['y'] = $Y;
+            $table[$shortAddress]['z'] = $Z;
             
             if ( $abeille->getConfiguration()["battery_type"]== "" ) {
                 $table[$shortAddress]['color'] = "Orange";
@@ -140,6 +151,8 @@
     
     
     echo "<h1>Abeille Network Graph</h1>";
+    
+    echo "Attention: les équipements sans position seront positionnés sur le cercle par defaut donc les distances ne seront pas représentative des distances réelles.";
     
     echo '<form method="get">';
     
@@ -323,8 +336,9 @@
                         $midY = ( $table[$voisineList['NE']]['y'] + $table[$voisineList['Voisine']]['y'] ) / 2;
                         $dx = $table[$voisineList['Voisine']]['x'] -  $table[$voisineList['NE']]['x'];
                         $dy = $table[$voisineList['Voisine']]['y'] - $table[$voisineList['NE']]['y'];
+                        $dz = $table[$voisineList['Voisine']]['z'] - $table[$voisineList['NE']]['z'];
                         
-                        $distance = sqrt( pow($dx,2) + pow($dy,2));
+                        $distance = sqrt( pow($dx,2) + pow($dy,2) + pow($dz,2) );
                         // echo $distance.'<br>';
                         $error = $error . "<tr><td>".round($table[$voisineList['NE']]['x'])."</td><td>".round($table[$voisineList['NE']]['y'])."</td><td>".round($table[$voisineList['Voisine']]['x'])."</td><td>".round($table[$voisineList['Voisine']]['y'])."</td><td>".round($distance)."</td><td>".$voisineList[$Data]."</td></tr>";
                         
@@ -354,7 +368,7 @@
     }
     $error = $error . "</table>";
     
-    echo "<br>Sorry, your browser does not support inline SVG.<br>";
+    // echo "<br>Sorry, your browser does not support inline SVG.<br>";
     echo "</svg>\n";
     
     // echo "<br>" . $error . "</br>\n\n";

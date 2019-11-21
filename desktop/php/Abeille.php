@@ -543,6 +543,7 @@ td.two {
                             </div>
                         </div>
 
+                        <br>
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
@@ -551,6 +552,7 @@ td.two {
                             </div>
                         </div>
 
+                        <br>
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>
@@ -571,6 +573,15 @@ td.two {
                                 <input class="eqLogicAttr form-control" data-l1key="configuration"
                                 data-l2key="positionY"
                                 placeholder="{{Position sur l axe vertical (0 en haut - 1000 en bas)}}"/>
+                            </div>
+                        </div>
+                                
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{Position Z}}</label>
+                            <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration"
+                                data-l2key="positionZ"
+                                placeholder="{{Position en hauteur (0 en bas - 1000 en haut)}}"/>
                             </div>
                         </div>
 

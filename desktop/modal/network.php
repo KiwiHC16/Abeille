@@ -69,6 +69,10 @@ sendVarToJS('nodesFromJeedom', $nodes);
         color: #E5E500;
     }
 
+    .typeAlert-color {
+      color: ##FF4000;
+    }
+
     .node-more-of-two-up-color {
         color: #FFAA00;
     }
@@ -116,6 +120,10 @@ sendVarToJS('nodesFromJeedom', $nodes);
                 <li id="tab_graph"> <a href="#graph_network"                            data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
                 <li id="tab_route"> <a href="#route_network"                            data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
             </ul>
+
+
+
+
             <div id="network-tab-content" class="tab-content">
                 <div class="tab-pane active" id="summary_network">
                     <br>
@@ -165,9 +173,14 @@ sendVarToJS('nodesFromJeedom', $nodes);
                         </div>
                     </div>
                 </div>
+
+
+
+
+
                 <div id="graph_network" class="tab-pane">
                     <table class="table table-bordered table-condensed"
-                           style="width: 350px;position:fixed;margin-top : 25px;">
+                           style="width: 700px;position:fixed;margin-top : 25px;">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -175,9 +188,11 @@ sendVarToJS('nodesFromJeedom', $nodes);
                         </thead>
                         <tbody>
                         <tr>
-                            <td class="typeCoordinator-color" style="width: 35px"><i class="fa fa-square fa-2x"></i>
-                            </td>
+                            <td class="typeCoordinator-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
                             <td>Coordinateur</td>
+
+                            <td class="typeAlert-color" style="width: 35px"><i class="fa fa-ambulance fa-2x"></i></td>
+                            <td>Warning: chaque nom d objet doit être unique<a href="https://github.com/KiwiHC16/Abeille/issues/458">(voir ici)</a></td>
                         </tr>
                         <tr>
                             <td class="typeEndDevice-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
@@ -191,10 +206,16 @@ sendVarToJS('nodesFromJeedom', $nodes);
                             <td class="typeUndefined-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
                             <td>Inconnu</td>
                         </tr>
+
                         </tbody>
                     </table>
                     <span id="graph-node-name" style="width: 100%;height: 100%"></span>
                 </div>
+
+
+
+
+
                 <div id="route_network" class="tab-pane">
                     <br/>
                     <div id="div_routingTable">
@@ -231,11 +252,19 @@ sendVarToJS('nodesFromJeedom', $nodes);
                         </table>
                     </div>
                 </div>
+
+
+
+
                 <div class="tab-pane" id="actions_network">
                     <table class="table">
 
                     </table>
                 </div>
+
+
+
+
                 <div class="tab-pane" id="statistics_network">
                     <table class="table table-condensed table-striped">
                         <tr>
@@ -250,6 +279,10 @@ sendVarToJS('nodesFromJeedom', $nodes);
                         </tr>
                     </table>
                 </div>
+                                
+                                
+                                
+                                
             </div>
         </div>
     </div>

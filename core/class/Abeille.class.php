@@ -956,6 +956,7 @@
                 $max_msg_size = 512;
                 
                 // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
+                // #define    ENOMSG        42    /* No message of desired type */
                 $errorcodeMsg = 0;
                 
                 while ( true ) {

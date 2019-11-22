@@ -957,8 +957,11 @@
                 $msg = NULL;
                 $max_msg_size = 512;
                 
+                // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
+                $errorcode = 0;
+                
                 while ( true ) {
-                    if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
                         // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyAbeilleToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
@@ -966,7 +969,12 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyAbeilleToAbeille issue');
+                    if ( ($errorcode!=42) && ($errorcode!=0) ) {
+                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyAbeilleToAbeille issue: '.$errorcode);
+                    }
+                    
+                    if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
                         // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyParserToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
@@ -974,7 +982,12 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille issue');
+                    if ( ($errorcode!=42) && ($errorcode!=0) ) {
+                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyParserToAbeille issue: '.$errorcode);
+                    }
+                    
+                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
                         // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
@@ -982,7 +995,12 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyTimerToAbeille issue');
+                    if ( ($errorcode!=42) && ($errorcode!=0) ) {
+                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyTimerToAbeille issue: '.$errorcode);
+                    }
+                    
+                    if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
                         // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
@@ -990,13 +1008,22 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille issue');
+                    if ( ($errorcode!=42) && ($errorcode!=0) ) {
+                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyCmdToAbeille issue: '.$errorcode);
+                    }
+                    
+                    if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
                         // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
+                    }
+                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille issue');
+                    if ( ($errorcode!=42) && ($errorcode!=0) ) {
+                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyXmlToAbeille issue: '.$errorcode);
                     }
                     
                     time_nanosleep( 0, 10000000 ); // 1/100s

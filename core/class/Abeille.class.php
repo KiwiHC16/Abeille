@@ -943,8 +943,6 @@
         }
         
         public static function deamon() {
-            //use verified parameters
-            $parameters_info = self::getParameters();
             
             try {
                 $queueKeyAbeilleToAbeille   = msg_get_queue(queueKeyAbeilleToAbeille);
@@ -962,66 +960,56 @@
                 
                 while ( true ) {
                     if (msg_receive( $queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
-                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyAbeilleToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyAbeilleToAbeille issue');
                     if ( ($errorcode!=42) && ($errorcode!=0) ) {
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyAbeilleToAbeille issue: '.$errorcode);
                     }
                     
                     if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
-                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyParserToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille issue');
                     if ( ($errorcode!=42) && ($errorcode!=0) ) {
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyParserToAbeille issue: '.$errorcode);
                     }
                     
                     if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
-                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyTimerToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyTimerToAbeille issue');
                     if ( ($errorcode!=42) && ($errorcode!=0) ) {
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyTimerToAbeille issue: '.$errorcode);
                     }
                     
                     if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
-                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille issue');
                     if ( ($errorcode!=42) && ($errorcode!=0) ) {
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyCmdToAbeille issue: '.$errorcode);
                     }
                     
                     if (msg_receive( $queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcode)) {
-                        // log::add('Abeille', 'debug', "Message pulled from queue (queueKeyXmlToAbeille) : ".json_encode($msg) );
                         $message->topic = $msg->message['topic'];
                         $message->payload = $msg->message['payload'];
                         self::message($message);
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    // else log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille issue');
                     if ( ($errorcode!=42) && ($errorcode!=0) ) {
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyXmlToAbeille issue: '.$errorcode);
                     }
@@ -1030,7 +1018,7 @@
                 }
                 
             } catch (Exception $e) {
-                log::add('Abeille', 'error', $e->getMessage());
+                log::add('Abeille', 'error', 'Gestion erreur dans boucle try: '.$e->getMessage());
             }
         }
         
@@ -1670,8 +1658,6 @@
             
             if (is_object($elogic)) {
                 log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
-                
-                // La ruche existe deja so return
                 return;
             }
             // Creation de la ruche

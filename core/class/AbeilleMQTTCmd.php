@@ -136,7 +136,7 @@
         public $parameters_info;
 
         public $cmdQueue;                   // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
-        public $cmdAck = 1;                 // cmdAck compte le nombre de Ack (Status) recus.
+        public $zigateAvailabe = 1;         // Si on pense la zigate dispo ou non.
         public $timeLastAck = 0;            // When I got the last Ack from Zigate
         public $timeLastAckTimeOut = 1;     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
         public $maxRetry = 9;               // Abeille will try to send the message max x times
@@ -622,7 +622,8 @@
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
             
-            $this->zigateAvailabe = 0; // Je considere la zigate pas dispo car je lui envoie une commande
+            $this->zigateAvailabe = 0;    // Je considere la zigate pas dispo car je lui envoie une commande
+            $this->timeLastAck = time();
             
             $cmd = array_shift($this->cmdQueue);    // Je recupere la premiere commande
             $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
@@ -3575,8 +3576,8 @@
             $delta = $now-$this->timeLastAck;
             if ( $delta > $this->timeLastAckTimeOut ) {
                 if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai plas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck); }
-                $this->timeLastAck = 0;
                 $this->zigateAvailabe = 1;
+                $this->timeLastAck = 0;
                 if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai plas de Ack (Status) depuis ".$this->timeLastAckTimeOut." secondes donc je considère la zigate dispo....."); }
             }
         }

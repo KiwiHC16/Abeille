@@ -25,10 +25,7 @@
     }
 
     class AbeilleMQTTCmdQueue extends debug {
-        public $messageWithAnswer = array(); // Continent la liste des messages envoyé avec l'attente de l ack pour faire une gestion de flux des mesages envoyés à la zigate.
-                                                // Par exemple si j envoie Inclusion le message 0x0049 (Permit Joining request), j'attends 8000 (Status) suivant la table: https://zigate.fr/documentation/commandes-zigate/
-                                                // Certaines commandes attende deux reponses en retour.
-                                                // dans la table je pourrai avoir 0049 => 8000 ou 8000 => 0049 ou 0049-8000 mais comment gérer ?
+
         public $statusText = array(
                             "00" => "Success",
                             "01" => "Incorrect parameters",
@@ -366,6 +363,8 @@
 
             $frameControlZCL = "14";   // ZCL Control Field
             // Disable Default Response + Manufacturer Specific
+            // $frameControlZCL = "10";   // ZCL Control Field
+            // Disable Default Response + Not Manufacturer Specific
 
             $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
@@ -629,7 +628,14 @@
             $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
             $cmd['retry']--;                        // Je reduis le nombre de retry restant
             $cmd['time']=time();                    // Je mets l'heure a jour
-            array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
+            
+            if ($cmd['retry']>0) {
+                array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
+            }
+            else {
+                // Le nombre de retry est épuisé donc je ne remet pas la commande dans la queue.
+            }
+            
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie: ".json_encode($this->cmdQueue) ); }
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
         }
@@ -2575,8 +2581,6 @@
                                          "attributeType" => $parameters['attributeType'],
                                          // "value" => $keywords[9],
                                          "value" => $parameters['value'],
-                                         "attributeType" => $parameters['attributeType'],
-
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;

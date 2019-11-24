@@ -607,12 +607,15 @@
             // Bit 5 - Reserved                     => 32 no
             // Bit 6 - Security capability          => 64 no
             // Bit 7 - Allocate Address             => 128 no
+            // Pour le Rejoin, à la fin de la trame, j'ai rajouté une information pour savoir si c'est un JOIN classique ou REJOIN c'est un uint8 - JOIN =0 REJOIN= 2 (mail du 22/11/2019 17:11)
             $test = 2 + 4 + 8;
 
             $this->deamonlog('debug',';Type; 004d; (Device announce)(Processed->MQTT)'
-                             . '; Src Addr : '.substr($payload, 0, 4)
-                             . '; IEEE : '.substr($payload, 4, 16)
-                             . '; MAC capa : '.substr($payload, 20, 2)   );
+                             . '; Src Addr : '  .substr($payload,  0, 4)
+                             . '; IEEE : '      .substr($payload,  4, 16)
+                             . '; MAC capa : '  .substr($payload, 20, 2)
+                             . '; Rejoin : '    .substr($payload, 22, 2)
+                             );
 
             $SrcAddr    = substr($payload,  0,  4);
             $IEEE       = substr($payload,  4, 16);

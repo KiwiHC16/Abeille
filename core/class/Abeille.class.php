@@ -674,19 +674,20 @@
         }
         
         public static function deamon_info() {
-            $debug_deamon_info = 0;
+            $debug_deamon_info = 1;
             
             if ($debug_deamon_info) log::add('Abeille', 'debug', '**deamon info: IN**');
             
             // On suppose que tout est bon et on cherche les problemes.
-            $return = array( 'state'                => 'ok',  // On couvre le fait que le process tourne en tache de fond
-                            'launchable'                            => 'ok',  // On couvre la configuration de plugin
-                            'launchable_message'                    => "", );
+            $return = array( 'state'                 => 'ok',  // On couvre le fait que le process tourne en tache de fond
+                             'launchable'            => 'ok',  // On couvre la configuration de plugin
+                             'launchable_message'    => "", );
             
             // On vérifie que le demon est demarable
             // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
             $parameters = self::getParameters();
             if ( $parameters['parametersCheck'] != "ok" ) {
+                log::add('Abeille', 'warning', 'deamon_info: parametersCheck not ok');
                 $return['launchable'] = $parameters['parametersCheck'];
                 $return['launchable_message'] = $parameters['parametersCheck_message'];
             }
@@ -695,8 +696,8 @@
             // On verifie que le cron tourne
             if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
-                    if ($debug_deamon_info) log::add('Abeille', 'warning', 'deamon_info: cron not running');
-                    if ($debug_deamon_info) message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
+                    log::add('Abeille', 'warning', 'deamon_info: cron not running');
+                    message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
                     $return['state'] = "nok";
                 }
             }
@@ -1242,11 +1243,19 @@
             
             $Filter = $topicArray[0];
             if ($Filter == "CmdCreate") $Filter = "Abeille";
+            
             $addr = $topicArray[1];
+            if ( $addr == "0000" ) $addr = "Ruche";
+            
             $cmdId = $topicArray[2];
+            
             $nodeid = $Filter.'/'.$addr;
             
             $value = $message->payload;
+            
+            // Si le message est pour 0000 alors on change en Ruche
+            
+            
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
             if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
@@ -1494,7 +1503,7 @@
             }
                         
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE (si mode automatique)
+            // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE
             // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
             if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") ) {
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
@@ -2037,8 +2046,8 @@
             case "4":
                 $ruche = new Abeille();
                 
-                echo "Testing Dependancy info\n";
-                var_dump( $ruche::getDependencyInfo() );
+                // echo "Testing Dependancy info\n";
+                // var_dump( $ruche::getDependencyInfo() );
                 
                 echo "Testing deamon info\n";
                 var_dump( $ruche::deamon_info() );

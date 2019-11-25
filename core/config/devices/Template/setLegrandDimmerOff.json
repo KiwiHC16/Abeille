@@ -1,0 +1,20 @@
+{
+  "DimmerOff": {
+    "isVisible": 0,
+    "name": "DimmerOff",
+    "order": 6,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "uniqId": "5c07c766dsd2525sdsdff",
+      "topic": "WriteAttributeRequestActivateDimmer",
+      "request": "clusterId=fc01&attributeId=0000&attributeType=09&value=0000",
+      "repeatEventManagement": "always",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

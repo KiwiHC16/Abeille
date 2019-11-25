@@ -30,7 +30,9 @@
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
-      "include29": "setReportLevel"
+      "include29": "setReportLevel",
+      "include29 2": "setLegrandDimmerOn",
+      "include29 2 2": "setLegrandDimmerOff"
     }
   }
 }

@@ -363,8 +363,6 @@
 
             $frameControlZCL = "14";   // ZCL Control Field
             // Disable Default Response + Manufacturer Specific
-            // $frameControlZCL = "10";   // ZCL Control Field
-            // Disable Default Response + Not Manufacturer Specific
 
             $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
@@ -386,6 +384,86 @@
 
             // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
             $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            // $this->deamonlog('debug',"data: ".$data );
+            // $this->deamonlog('debug',"lenth data: ".$lenth );
+
+            $this->sendCmd( $dest, $cmd, $lenth, $data );
+
+        }
+        
+        // Needed for fc01 of Legrand Dimmer
+        // clusterId=fc01&attributeId=0000&attributeType=09&value=0101
+        function setParam4($dest,$Command) {
+
+            $this->deamonlog('debug',"command setParam4");
+
+            $cmd = "0530";
+
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+            // <data: auint8_t>
+            // APS Part <= data
+            // dummy 00 to align mesages                                            -> 1
+            // <target extended address: uint64_t>                                  -> 8
+            // <target endpoint: uint8_t>                                           -> 1
+            // <cluster ID: uint16_t>                                               -> 2
+            // <destination address mode: uint8_t>                                  -> 1
+            // <destination address:uint16_t or uint64_t>                           -> 8
+            // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+            // => 34 -> 0x22
+
+            $addressMode = "02";
+            $targetShortAddress = $Command['address'];
+            $sourceEndpoint = "01";
+            if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+            $profileID = "0104";
+            $clusterID = $Command['clusterId'];
+
+            $securityMode = "02"; // ???
+            $radius = "30";
+            // $dataLength = define later
+
+            $frameControlAPS = "40";   // APS Control Field
+            // If Ack Request 0x40 If no Ack then 0x00
+            // Avec 0x40 j'ai un default response
+
+            $frameControlZCL = "10";   // ZCL Control Field
+            // Disable Default Response + Not Manufacturer Specific
+
+            $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+
+            $transqactionSequenceNumber = "1A"; // to be reviewed
+            $commandWriteAttribute = "02";
+
+            $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+
+            $dataType = $Command['attributeType'];
+            $attributValue = $Command['value'];
+
+            // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+            $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
@@ -1798,8 +1876,13 @@
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
             if ( (isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
             {
-                // function setParam3($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param)
                 $this->setParamXiaomi( $dest, $Command );
+            }
+            
+            // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
+            if ( (isset($Command['WriteAttributeRequestActivateDimmer'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
+            {
+                $this->setParam4( $dest, $Command );
             }
 
             // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2730,6 +2813,29 @@
                                          "value" => $consigneHex,
                                          // "repeat" => $parameters['repeat'],
 
+                                         );
+                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        break;
+                        //----------------------------------------------------------------------------
+                    case "WriteAttributeRequestActivateDimmer":
+                        $fields = preg_split("/[=&]+/", $msg);
+                        if (count($fields) > 1) {
+                            $parameters = proper_parse_str( $msg );
+                        }
+                        // $keywords = preg_split("/[=&]+/", $msg);
+                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+
+                        $Command = array(
+                                         "WriteAttributeRequestActivateDimmer" => "1",
+                                         "address" => $address,
+                                         // "Proprio" => $keywords[1],
+                                         "clusterId" => $parameters['clusterId'],
+                                         // "attributeId" => $keywords[5],
+                                         "attributeId" => $parameters['attributeId'],
+                                         // "attributeType" => $keywords[7],
+                                         "attributeType" => $parameters['attributeType'],
+                                         // "value" => $keywords[9],
+                                         "value" => $parameters['value'],
                                          );
                         $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                         break;

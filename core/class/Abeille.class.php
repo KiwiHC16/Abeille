@@ -896,6 +896,23 @@
             else {
                 log::add('Abeille', 'error', 'deamon stop: Abeille, Tache cron introuvable');
             }
+    
+            msg_remove_queue ( msg_get_queue(queueKeyAbeilleToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyAbeilleToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeyAbeilleToTimer) );
+            msg_remove_queue ( msg_get_queue(queueKeyParserToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyParserToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeyParserToLQI) );
+            msg_remove_queue ( msg_get_queue(queueKeyCmdToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyCmdToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeyTimerToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyLQIToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyLQIToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeyXmlToAbeille) );
+            msg_remove_queue ( msg_get_queue(queueKeyXmlToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeyFormToCmd) );
+            msg_remove_queue ( msg_get_queue(queueKeySerieToParser) );
+            msg_remove_queue ( msg_get_queue(queueKeyParserToCmdSemaphore) );
             
             log::add('Abeille', 'debug', 'deamon stop: OUT -------------------------------');
             

@@ -1371,7 +1371,7 @@
             $lqi                  = hexdec(substr($payload, 48, 2));
             $Depth                = hexdec(substr($payload, 46, 2));
             $bitMapOfAttributes   = substr($payload, 50, 2); // to be $this->decoded
-            $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
+            // $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
 
             $data =
             "NeighbourTableEntries="       .substr($payload, 4, 2)

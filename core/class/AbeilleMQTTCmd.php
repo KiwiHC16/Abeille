@@ -124,6 +124,7 @@
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "processCmd"          => 0, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
+                              "sendCmdAck"          => 0, // Debug fct sendCmdAck
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
                               "sendCmdToZigate"     => 1, // Mise en place des class

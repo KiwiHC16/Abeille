@@ -34,7 +34,8 @@
     
     $nohup 	= "/usr/bin/nohup";
     $socat 	= "/usr/bin/socat";
-    $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+    // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+    $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     
     if ( $serial != $WifiLink ) {
         deamonlog('info','Pas de connection wifi donc je ne fais rien, et je n aurais pas du être lancé.');

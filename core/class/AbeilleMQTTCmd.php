@@ -60,6 +60,8 @@
             $this->queueKeyFormToCmd              = msg_get_queue(queueKeyFormToCmd);
             $this->queueKeyParserToCmdSemaphore   = msg_get_queue(queueKeyParserToCmdSemaphore);
             
+            $this->mqttMessageQueue               = array();
+            
             $this->zigateAvailabe                 = 1; // On suppose que la zigate est dispo pour démarrer.
         }
 

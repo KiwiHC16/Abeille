@@ -72,8 +72,32 @@
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate ainsi que le port (IP:Port(9999/23)). 9999 est le port du module wifi zigate par dafaut, mettre 23 si vous utilisez ESP-Link.">{{IP (IP:Port) de Zigate Wifi : }}</label>
+                    <div class="col-sm-4">
+                        <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
+                    </div>
+                </div>
+                
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 2: }}</label>
+                    <div class="col-lg-4">
+                        <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort2">
+                            <option value="none" >{{Aucun}}</option>
+                            <option value="/tmp/zigate2" >{{WIFI}}</option>
+                            <!--option value="auto">{{Auto}}</option-->
+                            <?php
+                                foreach (jeedom::getUsbMapping('', true) as $name => $value) {
+                                    echo '<option value="'.$name.'">'.$name.' ('.$value.')</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate ainsi que le port (IP:Port(9999/23)). 9999 est le port du module wifi zigate par dafaut, mettre 23 si vous utilisez ESP-Link.">{{IP (IP:Port) de Zigate Wifi : }}</label>
                         <div class="col-sm-4">
-                            <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
+                            <input class="configKey form-control" data-l1key="IpWifiZigate2" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
                         </div>
                 </div>
             </div>

@@ -708,6 +708,7 @@
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
             if ( (self::getParameters()['AbeilleSerialPort'] == '/tmp/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
+            if ( (self::getParameters()['AbeilleSerialPort2'] == '/tmp/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
             $return['nbProcessExpected'] = $nbProcessExpected;
             
             
@@ -785,6 +786,10 @@
             $dirdeamon = dirname(__FILE__)."/../../core/class/";
             
             if ($param['onlyTimer'] != 'Y') {
+                $deamon0 = "AbeilleSerialRead.php";
+                $paramdeamon0 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $log0 = " > ".log::getPathToLog(substr($deamon0, 0, (strrpos($deamon0, "."))));
+                
                 $deamon1 = "AbeilleSerialRead.php";
                 $paramdeamon1 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
@@ -802,10 +807,22 @@
                 $paramdeamon5 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
                 $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
                 
+                $deamon6 = "AbeilleSocat.php";
+                $paramdeamon6 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
+                $log6 = " > ".log::getPathToLog(substr($deamon6, 0, (strrpos($deamon6, "."))));
+                
                 // ----------------
                 
                 if ($param['AbeilleSerialPort'] == "/tmp/zigate") {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
+                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+                    exec($cmd.' 2>&1 &');
+                    
+                    sleep(5);
+                }
+                
+                if ($param['AbeilleSerialPort2'] == "/tmp/zigate2") {
+                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon6." ".$paramdeamon6.$log6;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
                     

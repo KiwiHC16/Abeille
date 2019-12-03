@@ -1,0 +1,17 @@
+{
+  "0006-06-0000": {
+    "isVisible": 1,
+    "name": "etat switch 3",
+    "order": 7,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "generic_type": "LIGHT_STATE",
+    "invertBinary": "1",
+    "template": "light",
+    "configuration": {
+      "uniqId": "5c07sdsc766236b4",
+      "visibilityCategory": "All"
+    }
+  }
+}

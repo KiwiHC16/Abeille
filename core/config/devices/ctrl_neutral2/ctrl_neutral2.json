@@ -19,6 +19,7 @@
       "include3 2 2 2": "etatCharge2",
       "include3 2 2 2 2": "etatSW1",
       "include3 2 2 2 2 2": "etatSW2",
+      "include3 2 2 2 2 2 3": "etatSW3",
       "include3 2 2 2 2 2 2": "On1",
       "include3 2 2 2 2 2 2 2": "Off1",
       "include3 2 2 2 2 2 2 2 2": "Toggle1",

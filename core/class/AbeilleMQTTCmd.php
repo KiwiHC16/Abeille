@@ -656,7 +656,12 @@
             }
             return $mess;
         }
-
+        
+        function sendCmd( $dest, $cmd, $len, $datas='') {
+            $this->cmdQueue[] = array( 'time'=>0, 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
+        }
+        
         function writeToDest( $f, $dest, $cmd, $len, $datas) {
             fwrite($f,pack("H*","01"));
             fwrite($f,pack("H*",$this->transcode($cmd))); //MSG TYPE
@@ -669,11 +674,6 @@
                 fwrite($f,pack("H*",$this->transcode($this->getChecksum($cmd,$len,"00")))); //checksum
             }
             fwrite($f,pack("H*","03"));
-        }
-
-        function sendCmd( $dest, $cmd, $len, $datas='') {
-            $this->cmdQueue[] = array( 'time'=>0, 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
         }
 
         function sendCmdToZigate( $dest, $cmd, $len, $datas) {
@@ -693,7 +693,7 @@
             fclose($f);
 
         }
-
+        
         function processCmdQueueToZigate() {
             if ( !isset( $this->cmdQueue) )     return;                                     // si la queue n existe pas je passe mon chemin
             if ( count( $this->cmdQueue ) < 1 ) return;                                     // si la queue est vide je passe mon chemin

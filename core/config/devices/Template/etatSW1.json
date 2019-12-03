@@ -5,12 +5,12 @@
     "order": 6,
     "isHistorized": "1",
     "Type": "info",
-    "subType": "binary",
-    "generic_type": "LIGHT_STATE",
+    "subType": "numeric",
+    "generic_type": "",
     "invertBinary": "1",
-    "template": "light",
+    "template": "badge",
     "configuration": {
-	"uniqId": "5c07c766235db",
+      "uniqId": "5c07c766235db",
       "visibilityCategory": "All"
     }
   }

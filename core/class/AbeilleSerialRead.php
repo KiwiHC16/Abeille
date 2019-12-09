@@ -7,6 +7,8 @@
      * Get information from selected port (/dev/ttyUSB0 pour TTL ou socat pour WIFI), transcode data from binary to hex.
      * and write it to FIFO file.
      *
+     * /usr/bin/php /var/www/html/plugins/Abeille/core/class/../../core/class/AbeilleSerialRead.php /tmp/zigate debug
+     *
      */
 
 
@@ -92,7 +94,9 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         } else {
             if ($car == "03") {
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
-                if (msg_send( $queueKeySerieToParser, 1, $trame."\n", false, false)) {
+                $trameToSend = array( 'dest'=>basename($serial), 'trame'=>$trame );
+                // $trameToSend = basename($serial).'|'.$trame ;
+                if (msg_send( $queueKeySerieToParser, 1, json_encode($trameToSend), false, false)) {
                     deamonlog('info', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): '.json_encode($trame));
                 }
                 else {

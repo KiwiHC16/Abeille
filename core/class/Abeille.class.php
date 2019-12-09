@@ -1261,7 +1261,7 @@
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
             // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
-            if (!preg_match("(^Abeille|^Ruche|^CmdCreate)", $message->topic)) {
+            if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^ttyUSB0)", $message->topic)) {
                 // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
                 return;
             }

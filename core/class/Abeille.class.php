@@ -874,9 +874,10 @@
             
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
-            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "" );
-            
-            sleep(2);
+            log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 : '.basename($param['AbeilleSerialPort']));
+            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort']) );
+            log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 : '.basename($param['AbeilleSerialPort2']));
+            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort2']) );
             
             // Send a message to AbeilleMQTTCmd to start ZigBee Network
             log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee ********');
@@ -1072,9 +1073,9 @@
             $return['AbeillePass']          = config::byKey('mqttPass', 'Abeille', 'jeedom');
             $return['AbeilleTopic']         = config::byKey('mqttTopic', 'Abeille', '#');
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
+            $return['AbeilleSerialPort2']   = config::byKey('AbeilleSerialPort2', 'Abeille');
             $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
-            $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
             
@@ -1698,35 +1699,39 @@
         }
         
         public function createRuche($message = null) {
-            $elogic = self::byLogicalId("Abeille/Ruche", 'Abeille');
-            $parameters_info = self::getParameters();
             
+            $dest = $message->payload;
+            $elogic = self::byLogicalId( $dest."/Ruche", 'Abeille');
             if (is_object($elogic)) {
                 log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
                 return;
             }
             // Creation de la ruche
-            log::add('Abeille', 'info', 'objet ruche : creation par model');
+            log::add('Abeille', 'info', 'objet ruche : creation par model de '.$dest."/Ruche" );
             
+            
+            /*
             $cmdId = end($topicArray);
             $key = count($topicArray) - 1;
             unset($topicArray[$key]);
             $addr = end($topicArray);
             // nodeid est le topic sans le dernier champ
             $nodeid = implode($topicArray, '/');
-            
+            */
+
             message::add( "Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.", '', 'Abeille/Abeille' );
+            $parameters_info = self::getParameters();
             $elogic = new Abeille();
             //id
-            $elogic->setName("Ruche");
-            $elogic->setLogicalId("Abeille/Ruche");
+            $elogic->setName("Ruche-".$dest);
+            $elogic->setLogicalId($dest."/Ruche");
             if ($parameters_info['AbeilleParentId'] > 0) {
                 $elogic->setObject_id($parameters_info['AbeilleParentId']);
             } else {
                 $elogic->setObject_id(jeeObject::rootObject()->getId());
             }
             $elogic->setEqType_name('Abeille');
-            $elogic->setConfiguration('topic', "Abeille/Ruche");
+            $elogic->setConfiguration('topic', $dest."/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
             $elogic->setIsVisible("0");
@@ -1734,7 +1739,7 @@
             // eqReal_id
             $elogic->setIsEnable("1");
             // status
-            $elogic->setTimeout(15); // timeout en minutes
+            $elogic->setTimeout(60); // timeout en minutes
             // $elogic->setCategory();
             // display
             // order
@@ -2041,7 +2046,7 @@
                 // Demande la creation de la ruche
             case "2":
                 $message->topic = "CmdRuche/Ruche/CreateRuche";
-                $message->payload = "";
+                $message->payload = "ttyUSB0";
                 Abeille::message($message);
                 break;
                 
@@ -2244,6 +2249,10 @@
                
             case "20":
                 Abeille::cronDaily();
+                break;
+                
+            case "21":
+                var_dump( Abeille::getParameters() );
                 break;
                 
         } // switch

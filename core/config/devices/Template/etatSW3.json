@@ -1,8 +1,8 @@
 {
-  "0006-04-0000": {
+  "0006-06-0000": {
     "isVisible": 1,
-    "name": "etat switch 1",
-    "order": 6,
+    "name": "etat switch 3",
+    "order": 7,
     "isHistorized": "1",
     "Type": "info",
     "subType": "numeric",
@@ -10,7 +10,7 @@
     "invertBinary": "1",
     "template": "badge",
     "configuration": {
-      "uniqId": "5c07c766235db",
+      "uniqId": "5c07sdsc766236b4",
       "visibilityCategory": "All"
     }
   }

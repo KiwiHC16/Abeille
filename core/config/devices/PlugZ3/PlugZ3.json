@@ -1,0 +1,29 @@
+{
+  "PlugZ3": {
+    "nameJeedom": "Plug Z3 Ledvance",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07dsc766df25d94",
+      "icone": "PlugZ3",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etat",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier",
+      "include25": "Group-Membership",
+      "include26": "BindToZigateEtat",
+      "include28": "setReportEtat"
+    }
+  }
+}

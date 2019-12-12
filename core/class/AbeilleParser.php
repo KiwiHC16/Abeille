@@ -1032,6 +1032,11 @@
             $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
+        function decode8011( $dest, $payload, $ln, $qos, $dummy)
+        {
+            $this->deamonlog('debug',';type; 8011; (No info on this commande)');
+        }
+        
         function decode8014( $dest, $payload, $ln, $qos, $dummy)
         {
             $this->deamonlog('debug',';type; 8014; ( “Permit join” status response)(Processed->MQTT)'

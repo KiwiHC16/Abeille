@@ -2421,7 +2421,8 @@
                 return;
             }
 
-            if ($type != "CmdAbeille") {
+            // if ($type != "CmdAbeille") {
+            if (!preg_match("(^Cmd)", $message->topic)) {
                 if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> CmdAbeille donc ce n est pas pour moi, no action.');
                 return;
             }

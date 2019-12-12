@@ -308,8 +308,9 @@
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         $name = $eqLogic->getName();
-        $shortAddress = str_replace("Abeille/", "", $eqLogic->getLogicalId());
-        $shortAddress = ($name == 'Ruche') ? "0000" : $shortAddress;
+        $topicArray = explode("/", $eqLogic->getLogicalId());
+        $shortAddress = $topicArray[1];
+        $shortAddress = ( preg_match("(Ruche)", $name) ) ? "0000" : $shortAddress;
         // $knownNE_FromAbeille[$name] = $shortAddress;
         $knownNE_FromAbeille[$shortAddress] = $name;
     }

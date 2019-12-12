@@ -323,45 +323,7 @@
     
     benLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
     //lqiLog('debug', '---------: definition et connection a mosquitto');
-    
-    /*
-    // https://github.com/mgdm/Mosquitto-PHP
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html
-    
-    $client = new Mosquitto\Client("LQI_Connection");
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onConnect
-    $client->onConnect('connect');
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onDisconnect
-    $client->onDisconnect('disconnect');
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onSubscribe
-    $client->onSubscribe('subscribe');
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::onMessage
-    $client->onMessage('message');
-    
-    $client->onLog('logmq');
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setWill
-    $client->setWill('/LQI', "Client died :-(", $qos, 0);
-    
-    // http://mosquitto-php.readthedocs.io/en/latest/client.html#Mosquitto\Client::setReconnectDelay
-    $client->setReconnectDelay(1, 120, 1);
-    
-    
-    $client->setCredentials( $username, $password );
-    
-    //lqiLog('debug', 'Connect to MQTT');
-    $client->connect( $server, $port, 60 );
-    
-    sleep(2);
-    
-    echo "Sub to: ->".substr($abeilleParameters['AbeilleTopic'],0,-1)."LQI/#"."<-\n";
-    $client->subscribe( substr($abeilleParameters['AbeilleTopic'],0,-1)."LQI/#", $qos ); // !auto: Subscribe to root topic
-        */
-     
+         
     // Let's start with the Coordinator
     benLog( "---------: Let s start with the Coordinator");
     //lqiLog('debug', '---------: Let s start with the Coordinator');

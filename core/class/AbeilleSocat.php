@@ -33,17 +33,20 @@
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
     
     $nohup 	= "/usr/bin/nohup";
+    $sudo   = "/usr/bin/sudo";
     $socat 	= "/usr/bin/socat";
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     
-    if ( $serial != $WifiLink ) {
+    if (!preg_match("(^/dev/zigate)", $serial)) {
+    // if ( $serial != $WifiLink ) {
         deamonlog('info','Pas de connection wifi donc je ne fais rien, et je n aurais pas du être lancé.');
         exit(1);
     }
     
     deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
     
+    // Boucle sur le lancement de socat et des que socat est lancé bloque la boucle pendant l'execution.
     while (1) {
         
         deamonlog('Info','Creation de la connection wifi.');
@@ -58,8 +61,8 @@
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
         // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
         
-        $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-        $cmd = $socat." ".$parameters ;
+        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+        $cmd = $sudo." ".$socat." ".$parameters ;
         deamonlog('Info','Command: '.$cmd);
         // $cmd = $cmd . ' 2>&1 &';
         $cmd = $cmd . ' 2>&1';

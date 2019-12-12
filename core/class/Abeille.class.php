@@ -688,7 +688,7 @@
         }
         
         public static function deamon_info() {
-            $debug_deamon_info = 0;
+            $debug_deamon_info = 1;
             
             if ($debug_deamon_info) log::add('Abeille', 'debug', '**deamon info: IN**');
             
@@ -720,9 +720,9 @@
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected = 0; // Comptons les process prevus.
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
-            if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 3; } // Parser + SerialRead + MQTTCmd
-            if ( (self::getParameters()['AbeilleSerialPort'] == '/dev/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
-            if ( (self::getParameters()['AbeilleSerialPort2'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // Socat
+            if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 2; } // Parser + MQTTCmd
+            if ( (self::getParameters()['AbeilleSerialPort'] == '/dev/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( (self::getParameters()['AbeilleSerialPort2'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             $return['nbProcessExpected'] = $nbProcessExpected;
             
             
@@ -801,11 +801,11 @@
             
             if ($param['onlyTimer'] != 'Y') {
                 $deamon0 = "AbeilleSerialRead.php";
-                $paramdeamon0 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon0 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log0 = " > ".log::getPathToLog(substr($deamon0, 0, (strrpos($deamon0, "."))));
                 
                 $deamon1 = "AbeilleSerialRead.php";
-                $paramdeamon1 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon1 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
                 
                 $deamon2 = "AbeilleParser.php";
@@ -861,6 +861,9 @@
                     }
                 }
                 
+                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon0." ".$paramdeamon0.$log0;
+                log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
+                exec($cmd.' 2>&1 &');
                 
                 $cmd = $nohup." ".$php." ".$dirdeamon.$deamon1." ".$paramdeamon1.$log1;
                 log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
@@ -1093,6 +1096,7 @@
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
+            $return['IpWifiZigate2']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.2');
             
             // Testons la validité de la configuration
             // Pas de port alors que je ne suis pas en mode timer only.

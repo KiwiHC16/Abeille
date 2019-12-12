@@ -58,7 +58,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
     $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
     
-    deamonlog('info','Starting reading port '.$serial.' and transcoding to '.$in.' with log level '.$requestedlevel);
+    deamonlog('info','Starting reading port '.$serial.' and transcoding to queueKeySerieToParser with log level '.$requestedlevel);
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
@@ -66,6 +66,8 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         exec(system::getCmdSudo().'touch '.$serial.'; chmod 777 '.$serial.' > /dev/null 2>&1');
     }
 
+    exec(system::getCmdSudo().' chmod 777 '.$serial.' > /dev/null 2>&1');
+    
     if (!file_exists($serial)) {
         deamonlog('error','Error: Fichier '.$serial.' n existe pas');
         exit(1);

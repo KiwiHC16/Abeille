@@ -83,7 +83,7 @@
                     <div class="col-lg-4">
                         <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort2">
                             <option value="none" >{{Aucun}}</option>
-                            <option value="/dev/zigate2" >{{WIFI}}</option>
+                            <option value="/dev/zigate2" >{{WIFI2}}</option>
                             <!--option value="auto">{{Auto}}</option-->
                             <?php
                                 foreach (jeedom::getUsbMapping('', true) as $name => $value) {

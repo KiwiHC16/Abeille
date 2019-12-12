@@ -21,7 +21,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         define('queueKeySerieToParser',     822);
     
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead',$message);
+        Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead', $message);
     }
 
     function _exec($cmd, &$out = null)

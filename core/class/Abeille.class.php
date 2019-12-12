@@ -814,11 +814,11 @@
             if ($param['onlyTimer'] != 'Y') {
                 $deamon0 = "AbeilleSerialRead.php";
                 $paramdeamon0 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                $log0 = " > ".log::getPathToLog(substr($deamon0, 0, (strrpos($deamon0, "."))));
+                $log0 = " > ".log::getPathToLog(substr($deamon0, 0, (strrpos($deamon0, "."))))."0";
                 
                 $deamon1 = "AbeilleSerialRead.php";
                 $paramdeamon1 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))));
+                $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))))."1";
                 
                 $deamon2 = "AbeilleParser.php";
                 $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
@@ -828,14 +828,13 @@
                 $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
                 
-                
                 $deamon5 = "AbeilleSocat.php";
                 $paramdeamon5 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
-                $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))));
+                $log5 = " > ".log::getPathToLog(substr($deamon5, 0, (strrpos($deamon5, "."))))."5";
                 
                 $deamon6 = "AbeilleSocat.php";
                 $paramdeamon6 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
-                $log6 = " > ".log::getPathToLog(substr($deamon6, 0, (strrpos($deamon6, "."))));
+                $log6 = " > ".log::getPathToLog(substr($deamon6, 0, (strrpos($deamon6, "."))))."6";
                 
                 // ----------------
                 

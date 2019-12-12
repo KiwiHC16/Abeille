@@ -838,7 +838,7 @@
             if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT) Dest: '.$dest.' Short: '.$ShortAddress.' Ext Addr: '.$ExtendedAddress.' PAN Id: '.$PAN_ID.' Ext PAN Id: '.$Ext_PAN_ID.' Channel: '.$Channel); }
             
             // Envoie Short Address
-            $SrcAddr = $dest."/Ruche";
+            $SrcAddr = "Ruche";
             $ClusterId = "Short";
             $AttributId = "Addr";
             $data = $ShortAddress;
@@ -846,7 +846,7 @@
             // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; ZiGate Short Address: '.$ShortAddress); }
 
             // Envoie Extended Address
-            $SrcAddr = $dest."/Ruche";
+            $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $data = $ExtendedAddress;
@@ -854,7 +854,7 @@
             // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; IEEE Address: '.$ExtendedAddress); }
 
             // Envoie PAN ID
-            $SrcAddr = $dest."/Ruche";
+            $SrcAddr = "Ruche";
             $ClusterId = "PAN";
             $AttributId = "ID";
             $data = $PAN_ID;
@@ -862,7 +862,7 @@
             // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; PAN ID: '.$PAN_ID); }
 
             // Envoie Ext PAN ID
-            $SrcAddr = $dest."/Ruche";
+            $SrcAddr = "Ruche";
             $ClusterId = "Ext_PAN";
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
@@ -870,7 +870,7 @@
             // if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
 
             // Envoie Channel
-            $SrcAddr = $dest."/Ruche";
+            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Channel";
             $data = $Channel;

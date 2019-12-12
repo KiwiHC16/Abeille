@@ -208,7 +208,11 @@
                     <div id="div_routingTable">
                         <span>
                             <span class="" style="padding: 3px 20px;">
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache"><i class="fa fa-refresh" ></i>Get LQI</a>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache1"><i class="fa fa-refresh" ></i>Get LQI Z1</a>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache2"><i class="fa fa-refresh" ></i>Get LQI Z2</a>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache3"><i class="fa fa-refresh" ></i>Get LQI Z3</a>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache4"><i class="fa fa-refresh" ></i>Get LQI Z4</a>
+                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache5"><i class="fa fa-refresh" ></i>Get LQI Z5</a>
                             </span>
                             Get LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
 

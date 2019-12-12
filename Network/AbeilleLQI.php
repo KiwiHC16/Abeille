@@ -47,7 +47,7 @@
     function benLog($message = "")
     {
         global $debugKiwi;
-        if ($debugKiwi && strlen($message) > 0) echo $message . "\n";
+        if ($debugKiwi && strlen($message) > 0) echo $message . "<br>\n";
     }
     
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -178,7 +178,7 @@
      + *
      + * Ask NE at address to provide LQI from its table at index index
      + */
-    function mqqtPublishLQI( $destAddr, $index )
+    function mqqtPublishLQI( $serial, $destAddr, $index )
     {
         // global $abeilleParameters;
         // $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
@@ -187,7 +187,7 @@
         
         $msgAbeille = new MsgAbeille;
         
-        $msgAbeille->message['topic'] = "CmdAbeille/Ruche/Management_LQI_request";
+        $msgAbeille->message['topic'] = "Cmd".$serial."/Ruche/Management_LQI_request";
         $msgAbeille->message['payload'] = "address=" . $destAddr . "&StartIndex=" . $index;
         
         benLog("publishLQI: ".json_encode($msgAbeille));
@@ -218,13 +218,13 @@
         return 'Cluster ID: ' . $cluster . '-' . $GLOBALS['clusterTab']["0x" . $cluster];
     }
     
-    function collectInformation($client, $NE)
+    function collectInformation( $serial, $client, $NE)
     {
         $indexTable = 0;
         
         while ($GLOBALS['NE_continue']) {
 
-            mqqtPublishLQI( $NE, sprintf("%'.02x", $indexTable) );
+            mqqtPublishLQI( $serial, $NE, sprintf("%'.02x", $indexTable) );
             
             $indexTable++;
             // if ($indexTable > count($GLOBALS['knownNE'])+10) {
@@ -262,18 +262,20 @@
     $debugKiwi = 1;
     $abeilleParameters = Abeille::getParameters();
     
-    /*
-    $serial         = $abeilleParameters["AbeilleSerialPort"];
-    $server         = $abeilleParameters["AbeilleAddress"];             // change if necessary
-    $port           = $abeilleParameters["AbeillePort"];                // change if necessary
-    $username       = $abeilleParameters["AbeilleUser"];                // set your username
-    $password       = $abeilleParameters["AbeillePass"];                // set your password
-    $client_id      = "AbeilleLQI";                                     // make sure this is unique for connecting to sever - you could use uniqid()
-    $qos            = $abeilleParameters["AbeilleQos"];
-    $requestedlevel = "debug";
-    */
-    
     benLog('Start Main');
+    
+    benLog('Get[zigate] = '.$_GET['zigate'] );
+    if ( $_GET['zigate']<1 or $_GET['zigate']>5 ) {
+        benLog("Mauvaise valeur de zigate !!!!");
+        return;
+    }
+    
+    if ( $_GET['zigate'] == 1 ) $port = ""; else $port = $_GET['zigate'];
+    
+    $serial = $abeilleParameters[ "AbeilleSerialPort".$port ];
+    $serial = substr( $serial, 5 );
+    
+    benLog( $serial );
     
     benLog( "abeilleParameters: ".json_encode($abeilleParameters) );
     
@@ -388,7 +390,7 @@
                 $NE_continue = 1;
                 benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
                 sleep(5);
-                collectInformation($client, $currentNeAddress);
+                collectInformation( $serial, $client, $currentNeAddress);
                 $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;
             } else {
                 // echo "Already done\n";

@@ -24,8 +24,36 @@ $("#tab_route").off("click").on("click", function () {
 });
 
 
-$(".btn.refreshCache").off("click").on("click", function () {
-    updateZigBeeJsonCache();
+$(".btn.refreshCache1").off("click").on("click", function () {
+    updateZigBeeJsonCache(1);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache2").off("click").on("click", function () {
+    updateZigBeeJsonCache(2);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache3").off("click").on("click", function () {
+    updateZigBeeJsonCache(3);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache4").off("click").on("click", function () {
+    updateZigBeeJsonCache(4);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache5").off("click").on("click", function () {
+    updateZigBeeJsonCache(5);
     setTimeout(function () {
         $('#div_networkZigbeeAlert').hide()
     }, 5000);
@@ -42,13 +70,13 @@ $("#nodeTo").off().change(function () {
 });
 
 
-function updateZigBeeJsonCache() {
+function updateZigBeeJsonCache(ZigateNb) {
     //show progress in AlertDiv
     setTimeout(function () {
         updateAlertFromZigBeeJsonLog(true);
     }, 2000);
     $.ajax({
-            url: "/plugins/Abeille/Network/AbeilleLQI.php",
+            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+ZigateNb,
             async: true,
             error: function (jqXHR, status, error) {
                 //console.log("updateZigBeeJsonCache error status: " + status);

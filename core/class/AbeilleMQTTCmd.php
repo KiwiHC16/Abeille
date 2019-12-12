@@ -124,6 +124,7 @@
                               "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
                               "processCmd"          => 0, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
                               "sendCmdAck"          => 0, // Debug fct sendCmdAck
@@ -658,6 +659,10 @@
         }
         
         function sendCmd( $dest, $cmd, $len, $datas='') {
+            if ( $dest == "none" ) {
+                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je ne mets pas la commande dans la queue car la dest est none" ); }
+                return; // on ne process pas les commande pour les zigate qui n existe pas.
+            }
             $this->cmdQueue[] = array( 'time'=>0, 'retry'=>$this->maxRetry, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
             if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
         }
@@ -688,7 +693,7 @@
             }
 
             if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$dest.'-'.$cmd.'-'.$len.'-'.$datas); }
-            $f=fopen($dest,"w");
+            $f=fopen("/dev/".$dest,"w");
             $this->writeToDest( $f, $dest, $cmd, $len, $datas);
             fclose($f);
 
@@ -721,10 +726,12 @@
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
         }
 
-        function processCmd($Command) {
+        function processCmd( $Command ) {
             if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function");
 
-            $dest = $this->parameters_info["AbeilleSerialPort"];
+            // $dest = $this->parameters_info["AbeilleSerialPort"];
+            $dest = $Command['dest'];
+            $this->deamonlog("debug", "processCmd fct - begin processCmd function, dest: ".$dest);
 
             if (!isset($Command)) {
                 if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - processCmd Command not set return");
@@ -946,7 +953,7 @@
                     // $CommandAdditionelle['permitJoin'] = "permitJoin";
                     // $CommandAdditionelle['permitJoin'] = "Status";
                     // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                    $this->publishMosquitto( queueKeyCmdToCmd, "CmdAbeille/Ruche/permitJoin", "Status" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, "Cmd".$dest."/Ruche/permitJoin", "Status" );
                 }
             }
 
@@ -1844,8 +1851,8 @@
                 // getParam($dest,$address, $Command['clusterId'], "0000" );
                 //getParam($dest,$address, $Command['clusterId'], "0000" );
                 // sleep(1);
-                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
 
             // setLevelStop
@@ -2161,8 +2168,8 @@
                 // $attribute = "0000";
                 // getParam($dest,$address, $Command['clusterId'], $attribute);
                 // sleep(2);
-                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmdAbeille/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
 
             }
 
@@ -2415,20 +2422,24 @@
 
             list($type, $address, $action) = explode('/', $topic);
 
-            if ($type == "TempoCmdAbeille") {
-                if ( $this->debug['procmsg'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue.");
+            // if ($type == "TempoCmdAbeille") {
+            if (preg_match("(^TempoCmd)", $type)) {
+                if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue.");
                 $this->addTempoCmdAbeille( $topic, $msg);
                 return;
             }
 
             // if ($type != "CmdAbeille") {
-            if (!preg_match("(^Cmd)", $message->topic)) {
-                if ( $this->debug['procmsg'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> CmdAbeille donc ce n est pas pour moi, no action.');
+            if (!preg_match("(^Cmd)", $type)) {
+                if ( $this->debug['procmsg2'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
-            if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
-            if ( $this->debug['procmsg'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+            $dest = substr( $type, 3 );
+            $this->deamonlog('warning','procmsg fct - Msg Received: Dest: '.$dest);
+            
+            if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
+            if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
 
@@ -3402,6 +3413,7 @@
                     case "ReadAttributeRequest":
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
+                                         "dest"         => $dest,
                                          "address"      => $parameters['address'],
                                          "clusterId"    => $parameters['clusterId'],
                                          "attributeId"  => $parameters['attributId'],
@@ -3416,6 +3428,7 @@
                     case "bindShort":
                         $Command = array(
                                          "bindShort"                => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
@@ -3429,6 +3442,7 @@
                     case "setReport":
                         $Command = array(
                                          "setReport"                => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
                                          "ClusterId"                => $parameters['ClusterId'],
@@ -3444,6 +3458,7 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "getGroupMembership"       => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          );
@@ -3455,6 +3470,7 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "addGroup"                 => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3467,6 +3483,7 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "removeGroup"              => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3480,6 +3497,7 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "viewScene"                => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3492,6 +3510,7 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "storeScene"               => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3504,6 +3523,7 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "recallScene"              => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3521,6 +3541,7 @@
 
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
+                                         "dest"                     => $dest,
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
@@ -3535,7 +3556,8 @@
                     case "addScene":
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
-                                         "addScene"                => "1",
+                                         "addScene"                 => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3549,6 +3571,7 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "getSceneMembership"       => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3560,6 +3583,7 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "removeSceneAll"           => "1",
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3574,12 +3598,16 @@
 
                     // Si une string simple
                     if (count($keywords) == 1) {
-                        $Command = array($action => $msg);
+                        $Command = array(
+                                         $action => $msg,
+                                         "dest" => $dest,
+                                         );
                     } // Si une command type get http param1=value1&param2=value2
                     if (count($keywords) == 2) {
                         // $this->deamonlog('debug', '2 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          );
                     }
@@ -3587,6 +3615,7 @@
                         // $this->deamonlog('debug', '4 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          $keywords[2] => $keywords[3],
                                          );
@@ -3595,6 +3624,7 @@
                         // $this->deamonlog('debug', '6 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          $keywords[2] => $keywords[3],
                                          $keywords[4] => $keywords[5],
@@ -3604,6 +3634,7 @@
                         // $this->deamonlog('debug', '8 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          $keywords[2] => $keywords[3],
                                          $keywords[4] => $keywords[5],
@@ -3614,6 +3645,7 @@
                         // $this->deamonlog('debug', '10 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          $keywords[2] => $keywords[3],
                                          $keywords[4] => $keywords[5],
@@ -3625,6 +3657,7 @@
                         // $this->deamonlog('debug', '12 arguments command');
                         $Command = array(
                                          $action => $action,
+                                         "dest" => $dest,
                                          $keywords[0] => $keywords[1],
                                          $keywords[2] => $keywords[3],
                                          $keywords[4] => $keywords[5],
@@ -3641,7 +3674,7 @@
 
             if ( $this->debug['procmsg'] ) $this->deamonlog('debug','procmsg fct - calling processCmd with Command parameters: '.json_encode($Command));
 
-            $this->processCmd($Command);
+            $this->processCmd( $Command );
 
             return;
         }

@@ -679,6 +679,9 @@
                 // log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'])."/Ruche/permitJoin", "Status" );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/permitJoin", "Status" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort3'])."/Ruche/permitJoin", "Status" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort4'])."/Ruche/permitJoin", "Status" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort5'])."/Ruche/permitJoin", "Status" );
             } else {
                 // log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
             }
@@ -721,8 +724,17 @@
             $nbProcessExpected = 0; // Comptons les process prevus.
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 2; } // Parser + MQTTCmd
-            if ( (self::getParameters()['AbeilleSerialPort'] == '/dev/zigate') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( (self::getParameters()['AbeilleSerialPort']  == '/dev/zigate' ) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( (self::getParameters()['AbeilleSerialPort2'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( (self::getParameters()['AbeilleSerialPort3'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( (self::getParameters()['AbeilleSerialPort4'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( (self::getParameters()['AbeilleSerialPort5'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            
+            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort' ])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort2'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort3'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort4'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort5'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
             $return['nbProcessExpected'] = $nbProcessExpected;
             
             
@@ -1092,11 +1104,17 @@
             $return['AbeilleTopic']         = config::byKey('mqttTopic', 'Abeille', '#');
             $return['AbeilleSerialPort']    = config::byKey('AbeilleSerialPort', 'Abeille');
             $return['AbeilleSerialPort2']   = config::byKey('AbeilleSerialPort2', 'Abeille');
+            $return['AbeilleSerialPort3']   = config::byKey('AbeilleSerialPort3', 'Abeille');
+            $return['AbeilleSerialPort4']   = config::byKey('AbeilleSerialPort4', 'Abeille');
+            $return['AbeilleSerialPort5']   = config::byKey('AbeilleSerialPort5', 'Abeille');
             $return['AbeilleQos']           = config::byKey('mqttQos', 'Abeille', '0');
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
             $return['IpWifiZigate2']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.2');
+            $return['IpWifiZigate3']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.3');
+            $return['IpWifiZigate4']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.4');
+            $return['IpWifiZigate5']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.5');
             
             // Testons la validité de la configuration
             // Pas de port alors que je ne suis pas en mode timer only.

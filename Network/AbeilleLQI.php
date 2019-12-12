@@ -312,6 +312,7 @@
         $shortAddress = $topicArray[1];
         $shortAddress = ( preg_match("(Ruche)", $name) ) ? "0000" : $shortAddress;
         // $knownNE_FromAbeille[$name] = $shortAddress;
+        if ( preg_match("(Ruche)", $name) ) $name = "Ruche";
         $knownNE_FromAbeille[$shortAddress] = $name;
     }
     

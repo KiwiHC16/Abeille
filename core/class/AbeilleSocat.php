@@ -36,7 +36,9 @@
     $sudo   = "/usr/bin/sudo";
     $socat 	= "/usr/bin/socat";
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-    $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
+    // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
+    $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
+    
     
     if (!preg_match("(^/dev/zigate)", $serial)) {
     // if ( $serial != $WifiLink ) {

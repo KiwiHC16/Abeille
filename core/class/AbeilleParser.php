@@ -358,6 +358,7 @@
             
         }
 
+        /*
         function mqqtPublishAnnounce( $SrcAddr, $data)
         {
             // Abeille / short addr / Annonce -> data
@@ -366,7 +367,7 @@
             $errorcode = 0;
             $blocking = false;
                                  
-            $msgAbeille->message = array( 'topic' => "CmdAbeille/".$SrcAddr."/Annonce", 'payload' => $data, );
+            $msgAbeille->message = array( 'topic' => "Cmd".$SrcAddr."/Annonce", 'payload' => $data, );
             
             if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublishAnnounce) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
@@ -385,7 +386,7 @@
             $errorcode = 0;
             $blocking = false;
                                  
-            $msgAbeille->message = array( 'topic' => "CmdAbeille/".$SrcAddr."/AnnonceProfalux", 'payload' => $data, );
+            $msgAbeille->message = array( 'topic' => "Cmd".$SrcAddr."/AnnonceProfalux", 'payload' => $data, );
             
             if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
                 // $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
@@ -395,6 +396,7 @@
                 $this->deamonlog("debug","(fct mqqtPublishAnnounceProfalux) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
             }
         }
+         */
 
         function procmsg($topic, $payload)
         {
@@ -632,10 +634,10 @@
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish( $dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
-            $this->mqqtPublishFctToCmd(      "CmdAbeille/".$dest."/Ruche/ActiveEndPoint",                  "address=".$dest."/".$SrcAddr );
-             $this->mqqtPublishFctToCmd("TempoCmdAbeille/".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$dest."/".$SrcAddr );
-             $this->mqqtPublishFctToCmd("TempoCmdAbeille/".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$dest."/".$SrcAddr );
-             $this->mqqtPublishFctToCmd("TempoCmdAbeille/".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$dest."/".$SrcAddr );
+            $this->mqqtPublishFctToCmd(      "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$SrcAddr );
+             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$SrcAddr );
             
             $this->actionQueue[] = array( 'when'=>time()+15, 'what'=>'mqqtPublish', 'parm0'=>$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
             
@@ -1268,15 +1270,15 @@
                              . '; Endpoint Count : '  .substr($payload, 8, 2)
                              . '; Endpoint List :'    .$endPointList             );
             
-            $this->mqqtPublishFctToCmd("CmdAbeille/'.$dest.'/Ruche/getName",                                          "address=".$dest.'/'.$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("CmdAbeille/'.$dest.'/Ruche/getLocation",                                      "address=".$dest.'/'.$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmdAbeille/'.$dest.'/Ruche/getName&time=".(time()+2),                    "address=".$dest.'/'.$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmdAbeille/'.$dest.'/Ruche/getLocation&time=".(time()+2),                "address=".$dest.'/'.$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmdAbeille/'.$dest.'/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$dest.'/'.$SrcAddr.'&endPoint='.           $EP );
-            $this->mqqtPublishFctToCmd("TempoCmdAbeille/'.$dest.'/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$dest.'/'.$SrcAddr.'&endPoint='.           $EP );
+            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getLocation&time=".(time()+2),                "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$SrcAddr.'&endPoint='.           $EP );
             
-            $this->actionQueue[] = array( 'when'=>time()+8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
-            $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE', 'addr'=>$dest.'/'.$SrcAddr );
+            $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
+            $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
             
         }
 
@@ -1422,18 +1424,13 @@
 
             // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
             // Ca ne va marcher que pour les équipements en eveil.
-            // CmdAbeille/Ruche/getName address=bbf5&destinationEndPoint=0B
+            // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
             if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
                 $this->deamonlog('debug', ';Type; 804E; (Management LQI response)(decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
 
-                /*
-                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=01", $this->parameters_info['AbeilleQos']);
-                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=03", $this->parameters_info['AbeilleQos']);
-                $this->client->publish(substr($this->parameters_info['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/getName",    "address=".$NeighbourAddr."&destinationEndPoint=0B", $this->parameters_info['AbeilleQos']);
-                 */
-                $this->mqqtPublishFctToCmd( "CmdAbeille/".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
-                $this->mqqtPublishFctToCmd( "CmdAbeille/".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
-                $this->mqqtPublishFctToCmd( "CmdAbeille/".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=0B" );
+                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
+                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
+                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=0B" );
                                 
             }
 

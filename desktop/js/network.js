@@ -396,7 +396,7 @@ function network_links() {
         }
         else {
             $('#div_networkZigbeeAlert').showAlert({
-                message: '{{Action réalisée avec succès}}',
+                message: '{{Données récupérées avec succès}}',
                 level: 'success'
             });
             setTimeout(function () {
@@ -453,9 +453,11 @@ function network_links() {
                 tbody += '<td id="neId">';
                 tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
                 tbody += '</td>';
+                
                 tbody += '<td id="neName">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
                 tbody += '</td>';
+               
                 //Process Voisine to jeedom Id
                 nodeJName = nodes[nodeFromJson].Voisine;
                 //zigbee LQI result is not null
@@ -464,29 +466,31 @@ function network_links() {
                 if (nodeJId == 'undefined' || nodeJId == null) {
                     nodeJId = 'not found in jeedom DB';
                 }
-
-
                 //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
+                
                 tbody += '<td id="vid">';
                 tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
                 tbody += '</td>';
+                
                 tbody += '<td id="vname">';
                 tbody += nodes[nodeFromJson].Voisine_Name;
                 tbody += '</td>';
+                
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
                 tbody += '</td>';
+                
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
                 tbody += '</td>';
+                
                 tbody += '<td id="lqi">';
-               
                 // tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '  ';
-               tbody += (nodes[nodeFromJson].LinkQualityDec <=  50) ? '<span class="label label-danger"  style="font-size : 1em;" >' : '';
-               tbody += ((nodes[nodeFromJson].LinkQualityDec > 50)&&(nodes[nodeFromJson].LinkQualityDec <= 100)) ? '<span class="label label-warning" style="font-size : 1em;">'  : '';
-               tbody += (nodes[nodeFromJson].LinkQualityDec >  100) ? '<span class="label label-success" style="font-size : 1em;">'  : '';
-            
+                tbody += (nodes[nodeFromJson].LinkQualityDec <=  50) ? '<span class="label label-danger"  style="font-size : 1em;" >' : '';
+                tbody += ((nodes[nodeFromJson].LinkQualityDec > 50)&&(nodes[nodeFromJson].LinkQualityDec <= 100)) ? '<span class="label label-warning" style="font-size : 1em;">'  : '';
+                tbody += (nodes[nodeFromJson].LinkQualityDec >  100) ? '<span class="label label-success" style="font-size : 1em;">'  : '';
                 tbody += nodes[nodeFromJson].LinkQualityDec +'</span></td>';
+                
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
                 tbody += '</td>';

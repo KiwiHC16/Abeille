@@ -140,7 +140,7 @@
         public $zigateAvailabe = 1;         // Si on pense la zigate dispo ou non.
         public $timeLastAck = 0;            // When I got the last Ack from Zigate
         public $timeLastAckTimeOut = 1;     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
-        public $maxRetry = 9;               // Abeille will try to send the message max x times
+        public $maxRetry = 3;               // Abeille will try to send the message max x times
 
         function __construct($client_id) {
             global $argv;
@@ -2449,6 +2449,7 @@
                     case "managementNetworkUpdateRequest":
                         $Command = array(
                                          "managementNetworkUpdateRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          );
                         break;
@@ -2458,6 +2459,7 @@
                             // $this->deamonlog('info', 'Preparation de la commande annonce pour EP');
                             $Command = array(
                                              "ReadAttributeRequest" => "1",
+                                             "dest" => $dest,
                                              "address" => $address,
                                              "clusterId" => "0000",
                                              "attributeId" => "0005",
@@ -2469,6 +2471,7 @@
                                 // $this->deamonlog('info', 'Preparation de la commande annonce pour default');
                                 $Command = array(
                                                  "ReadAttributeRequest" => "1",
+                                                 "dest" => $dest,
                                                  "address" => $address,
                                                  "clusterId" => "0000",
                                                  "attributeId" => "0005",
@@ -2479,6 +2482,7 @@
                                 // $this->deamonlog('info', 'Preparation de la commande annonce pour Hue');
                                 $Command = array(
                                                  "ReadAttributeRequestHue" => "1",
+                                                 "dest" => $dest,
                                                  "address" => $address,
                                                  "clusterId" => "0000",
                                                  "attributeId" => "0005",
@@ -2489,6 +2493,7 @@
                                 // $this->deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
                                 $Command = array(
                                                  "ReadAttributeRequestOSRAM" => "1",
+                                                 "dest" => $dest,
                                                  "address" => $address,
                                                  "clusterId" => "0000",
                                                  "attributeId" => "0005",
@@ -2503,6 +2508,7 @@
                             $this->deamonlog('info', 'Preparation de la commande annonce pour default');
                             $Command = array(
                                              "ReadAttributeRequest" => "1",
+                                             "dest" => $dest,
                                              "address" => $address,
                                              "clusterId" => "0000",
                                              "attributeId" => "0010",
@@ -2522,6 +2528,7 @@
                             $parameters = proper_parse_str( $msg );
                             $Command = array(
                                              "onoff" => "1",
+                                             "dest" => $dest,
                                              "addressMode" => "02",
                                              "address" => $address,
                                              "destinationEndpoint" => $parameters['EP'],
@@ -2534,6 +2541,7 @@
 
                             $Command = array(
                                              "onoff" => "1",
+                                             "dest" => $dest,
                                              "addressMode" => "02",
                                              "address" => $address,
                                              "destinationEndpoint" => "01",
@@ -2555,6 +2563,7 @@
                         $Command = array(
                                          "onoff" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "02",
                                          "action" => $actionId,
@@ -2574,6 +2583,7 @@
                         $Command = array(
                                          "onoff" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "03",
                                          "action" => $actionId,
@@ -2593,6 +2603,7 @@
                         $Command = array(
                                          "onoff" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "0B",
                                          "action" => $actionId,
@@ -2612,6 +2623,7 @@
                         $Command = array(
                                          "onoff" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "03",
                                          "action" => $actionId,
@@ -2622,6 +2634,7 @@
                         $Command = array(
                                          "UpGroup" => "1",
                                          "addressMode" => "01",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "01", // Set but not send on radio
                                          "step" => $msg,
@@ -2632,6 +2645,7 @@
                         $Command = array(
                                          "DownGroup" => "1",
                                          "addressMode" => "01",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "01", // Set but not send on radio
                                          "step" => $msg,
@@ -2651,6 +2665,7 @@
                         $Command = array(
                                          "onoff" => "1",
                                          "addressMode" => "01",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "01", // Set but not send on radio
                                          "action" => $actionId,
@@ -2668,6 +2683,7 @@
                         // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2694,6 +2710,7 @@
                         // Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=03010000&repeat=1
                         $Command = array(
                                          "WriteAttributeRequestVibration" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2725,6 +2742,7 @@
 
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2755,6 +2773,7 @@
 
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2785,6 +2804,7 @@
 
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2815,6 +2835,7 @@
 
                         $Command = array(
                                          "WriteAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "Proprio" => $parameters['Proprio'],
@@ -2842,6 +2863,7 @@
 
                         $Command = array(
                                          "WriteAttributeRequestActivateDimmer" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          // "Proprio" => $keywords[1],
                                          "clusterId" => $parameters['clusterId'],
@@ -2864,6 +2886,7 @@
                         if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
+                                         "dest" => $dest,
                                          "address"      => $address,
                                          "clusterId"    => $parameters['clusterId'],   // Don't change the speeling here but in the template
                                          "attributeId"  => $parameters['attributeId'],
@@ -2877,6 +2900,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "ReadAttributeRequestHue" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "clusterId" => $keywords[1],
                                          "attributeId" => $keywords[3],
@@ -2887,6 +2911,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "ReadAttributeRequestOSRAM" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "clusterId" => $keywords[1],
                                          "attributeId" => $keywords[3],
@@ -2900,6 +2925,7 @@
                             $Command = array(
                                              "setLevel"             => "1",
                                              "addressMode"          => "02",
+                                             "dest" => $dest,
                                              "address"              => $address,
                                              "destinationEndpoint"  => $parameters['EP'],
                                              "Level"                => intval($parameters['Level'] * 255 / 100),
@@ -2918,6 +2944,7 @@
                             $Command = array(
                                              "setLevel"             => "1",
                                              "addressMode"          => "02",
+                                             "dest" => $dest,
                                              "address"              => $address,
                                              "destinationEndpoint"  => $parameters['EP'],
                                              "Level"                => $parameters['Level'],
@@ -2934,6 +2961,7 @@
                         $Command = array(
                                          "setLevel" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "03",
                                          "Level" => intval($keywords[1] * 255 / 100),
@@ -2972,6 +3000,7 @@
                         $Command = array(
                                          "setLevel" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "01",
                                          "Level" => $level,
@@ -2984,6 +3013,7 @@
                         $Command = array(
                                          "setLevelStop" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "sourceEndpoint" => "01",
                                          "destinationEndpoint" => "01",
@@ -2995,6 +3025,7 @@
                         $Command = array(
                                          "setLevelStop" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "sourceEndpoint" => "01",
                                          "destinationEndpoint" => "0B",
@@ -3006,6 +3037,7 @@
                         $Command = array(
                                          "setLevel" => "1",
                                          "addressMode" => "02",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "0B",
                                          "Level" => intval($keywords[1] * 255 / 100),
@@ -3018,6 +3050,7 @@
                         $Command = array(
                                          "setLevel" => "1",
                                          "addressMode" => "01",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "destinationEndpoint" => "01",
                                          "Level" => intval($keywords[1] * 255 / 100),
@@ -3032,6 +3065,7 @@
                             $Command = array(
                                              "setColour"            => "1",
                                              "addressMode"          => "02",
+                                             "dest" => $dest,
                                              "address"              => $address,
                                              "X"                    => $parameters['X'],
                                              "Y"                    => $parameters['Y'],
@@ -3066,6 +3100,7 @@
 
                         $Command = array(
                                          "setColourRGB" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "R" => $rouge,
                                          "G" => $vert,
@@ -3096,6 +3131,7 @@
 
                         $Command = array(
                                          "setColourRGB" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "R" => $parameters['color']/100*255,
                                          "G" => $vert/100*255,
@@ -3126,6 +3162,7 @@
 
                         $Command = array(
                                          "setColourRGB" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "R" => $rouge/100*255,
                                          "G" => $parameters['color']/100*255,
@@ -3156,6 +3193,7 @@
 
                         $Command = array(
                                          "setColourRGB" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "R" => $rouge/100*255,
                                          "G" => $vert/100*255,
@@ -3168,6 +3206,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "setColour" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "X" => $keywords[1],
                                          "Y" => $keywords[3],
@@ -3179,6 +3218,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "setColour" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "X" => $keywords[1],
                                          "Y" => $keywords[3],
@@ -3209,6 +3249,7 @@
                         $Command = array(
                                          "setTemperature"       => "1",
                                          "addressMode"          => "02",
+                                         "dest" => $dest,
                                          "address"              => $address,
                                          "temperature"          => $temperatureConsigne,
                                          "destinationEndPoint"  => $parameters['EP'],
@@ -3240,6 +3281,7 @@
                         $Command = array(
                                          "setTemperature"       => "1",
                                          "addressMode"          => "01",
+                                         "dest" => $dest,
                                          "address"              => $address,
                                          "temperature"          => $temperatureConsigne,
                                          "destinationEndPoint"  => $parameters['EP'],
@@ -3258,6 +3300,7 @@
 
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
+                                         "dest" => $dest,
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
@@ -3272,6 +3315,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "Management_LQI_request" => "1",
+                                         "dest" => $dest,
                                          "address" => $keywords[1],
                                          "StartIndex" => $keywords[3],
                                          );
@@ -3281,6 +3325,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "IEEE_Address_request" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "shortAddress" => $keywords[1],
                                          );
@@ -3293,6 +3338,7 @@
                         }
                         $Command = array(
                                          "identifySend" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "duration" => $parameters['duration'],
                                          "DestinationEndPoint" => $parameters['EP'],
@@ -3303,6 +3349,7 @@
                         $keywords = preg_split("/[=&]+/", $msg);
                         $Command = array(
                                          "identifySend" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          "duration" => "0010", // $keywords[1]
                                          "DestinationEndPoint" => "0B",
@@ -3312,6 +3359,7 @@
                     case "getGroupMembership":
                         $Command = array(
                                          "getGroupMembership" => "1",
+                                         "dest" => $dest,
                                          "address" => $address,
                                          );
                         break;
@@ -3323,6 +3371,7 @@
                         }
                         $Command = array(
                                          "bindShort"                => "1",
+                                         "dest" => $dest,
                                          "address"                  => $address,
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
@@ -3340,6 +3389,7 @@
 
                         $Command = array(
                                          "setReport"                => "1",
+                                         "dest" => $dest,
                                          "address"                  => $address,
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
                                          "ClusterId"                => $parameters['ClusterId'],
@@ -3357,6 +3407,7 @@
 
                         $Command = array(
                                          "setReport"                => "1",
+                                         "dest" => $dest,
                                          "address"                  => $address,
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
                                          "ClusterId"                => $parameters['ClusterId'],
@@ -3376,6 +3427,7 @@
 
                         $Command = array(
                                          "WindowsCovering"          => "1",
+                                         "dest" => $dest,
                                          "address"                  => $address,
                                          "clusterCommand"           => $parameters['clusterCommand'],
                         );
@@ -3389,6 +3441,7 @@
 
                         $Command = array(
                                          "WindowsCoveringGroup"     => "1",
+                                         "dest" => $dest,
                                          "address"                  => $address,
                                          "clusterCommand"           => $parameters['clusterCommand'],
                         );
@@ -3414,6 +3467,7 @@
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
                                          "dest"         => $dest,
+                                         "dest" => $dest,
                                          "address"      => $parameters['address'],
                                          "clusterId"    => $parameters['clusterId'],
                                          "attributeId"  => $parameters['attributId'],

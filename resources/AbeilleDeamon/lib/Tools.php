@@ -171,7 +171,7 @@ class Tools
 
         $json = json_decode($content, true);
 
-        self::deamonlogFilter( "DEBUG", 'Abeille', 'Tools', "AbeilleTools: nb line " . strlen($content) );
+        // self::deamonlogFilter( "DEBUG", 'Abeille', 'Tools', "AbeilleTools: nb line " . strlen($content) );
 
         return $json;
     }

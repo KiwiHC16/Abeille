@@ -783,6 +783,8 @@
             
             self::deamon_stop();
             
+            sleep(5); // leave time for socat to restart in case of monit setup.
+            
             message::removeAll('Abeille', '');
             message::removeAll('Abeille', 'Abeille/Demon');
             message::removeAll('Abeille', 'Abeille/cron');
@@ -916,15 +918,19 @@
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
             log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 : '.basename($param['AbeilleSerialPort']));
-            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort']) );
+            // Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort']) );
+            Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille" );
+            if ( $param['AbeilleSerialPort2'] != "none" ) {
             log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 : '.basename($param['AbeilleSerialPort2']));
             Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort2']) );
+            }
             
             // Send a message to AbeilleMQTTCmd to start ZigBee Network
             log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee ********');
             Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'])."/Ruche/startNetwork", "StartNetwork" );
+            if ( $param['AbeilleSerialPort2'] != "none" ) {
             Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/startNetwork", "StartNetwork" );
-            
+            }
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
             
             return true;

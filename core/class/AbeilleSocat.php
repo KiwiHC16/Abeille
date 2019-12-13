@@ -38,6 +38,7 @@
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
+    deamonlog('info','Attention certain systemes acceptent l option rawer pour socat et pas d autres. Modifiez la commande en fonction de votre systeme en mettant rawer ou raw dans le fichier AbeilleSocat.php ligne 40');
     
     
     if (!preg_match("(^/dev/zigate)", $serial)) {

@@ -813,8 +813,11 @@
             
             if ($param['onlyTimer'] != 'Y') {
                 $deamon0 = "AbeilleSerialRead.php";
-                $paramdeamon0 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                // $paramdeamon0 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon0 = '/dev/Abeille'.' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log0 = " > ".log::getPathToLog(substr($deamon0, 0, (strrpos($deamon0, "."))))."0";
+                exec(system::getCmdSudo().'ln -s '.$param['AbeilleSerialPort'].' /dev/Abeille');
+                // ymlink( $param['AbeilleSerialPort'], "/dev/Abeille" );
                 
                 $deamon1 = "AbeilleSerialRead.php";
                 $paramdeamon1 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));

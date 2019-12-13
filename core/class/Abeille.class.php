@@ -730,11 +730,11 @@
             if ( (self::getParameters()['AbeilleSerialPort4'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( (self::getParameters()['AbeilleSerialPort5'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             
-            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort' ])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort2'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort3'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort4'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty)", self::getParameters()['AbeilleSerialPort5'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort' ])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort2'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort3'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort4'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort5'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
             $return['nbProcessExpected'] = $nbProcessExpected;
             
             
@@ -821,11 +821,13 @@
                 $log1 = " > ".log::getPathToLog(substr($deamon1, 0, (strrpos($deamon1, "."))))."1";
                 
                 $deamon2 = "AbeilleParser.php";
-                $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                // $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon2 = log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
                 
                 $deamon3 = "AbeilleMQTTCmd.php";
-                $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                // $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
                 
                 $deamon5 = "AbeilleSocat.php";
@@ -838,7 +840,7 @@
                 
                 // ----------------
                 
-                if ($param['AbeilleSerialPort'] == "/dev/zigate") {
+                if ( ($param['AbeilleSerialPort'] == "/dev/zigate") or ($param['AbeilleSerialPort'] == "/dev/monitZigate1") ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon5." ".$paramdeamon5.$log5;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -846,7 +848,7 @@
                     sleep(5);
                 }
                 
-                if ($param['AbeilleSerialPort2'] == "/dev/zigate2") {
+                if ( ($param['AbeilleSerialPort2'] == "/dev/zigate2") or ($param['AbeilleSerialPort'] == "/dev/monitZigate2") ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon6." ".$paramdeamon6.$log6;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -854,8 +856,12 @@
                     sleep(5);
                 }
                 
-                log::add('Abeille','debug','deamon_start: Port serie defini dans la configuration. ->'.$param['AbeilleSerialPort'].'<-');
-                if ( $return['AbeilleSerialPort'] != "/dev/zigate" ) $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
+                log::add('Abeille','debug','deamon_start: Port serie 1 defini dans la configuration. ->'.$param['AbeilleSerialPort'].'<-');
+                log::add('Abeille','debug','deamon_start: Port serie 2 defini dans la configuration. ->'.$param['AbeilleSerialPort2'].'<-');
+                log::add('Abeille','debug','deamon_start: Port serie 3 defini dans la configuration. ->'.$param['AbeilleSerialPort3'].'<-');
+                log::add('Abeille','debug','deamon_start: Port serie 4 defini dans la configuration. ->'.$param['AbeilleSerialPort4'].'<-');
+                log::add('Abeille','debug','deamon_start: Port serie 5 defini dans la configuration. ->'.$param['AbeilleSerialPort5'].'<-');
+                // if ( $return['AbeilleSerialPort'] != "/dev/zigate" ) $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
                 
                 // J ai un port et je ne suis pas en mode Timer
                 if ( ($param['AbeilleSerialPort'] != 'none') && ($param['onlyTimer'] != "Y") ) {
@@ -872,13 +878,17 @@
                     }
                 }
                 
-                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon0." ".$paramdeamon0.$log0;
-                log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
-                exec($cmd.' 2>&1 &');
+                if ( $param['AbeilleSerialPort'] != "none" ) {
+                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon0." ".$paramdeamon0.$log0;
+                    log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
+                    exec($cmd.' 2>&1 &');
+                }
                 
-                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon1." ".$paramdeamon1.$log1;
-                log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
-                exec($cmd.' 2>&1 &');
+                if ( $param['AbeilleSerialPort2'] != "none" ) {
+                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon1." ".$paramdeamon1.$log1;
+                    log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
+                    exec($cmd.' 2>&1 &');
+                }
                 
                 $cmd = $nohup." ".$php." ".$dirdeamon.$deamon2." ".$paramdeamon2.$log2;
                 log::add('Abeille', 'debug', 'Start deamon Parser: '.$cmd);
@@ -1298,7 +1308,7 @@
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
             // CmdCreate -> pour la creation des objets depuis la ruche par exemple pour tester les modeles
-            if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^ttyUSB|^zigate)", $message->topic)) {
+            if (!preg_match("(^Abeille|^Ruche|^CmdCreate|^ttyUSB|^zigate|^monitZigate)", $message->topic)) {
                 // log::add('Abeille', 'debug', 'message: this is not a ' . $Filter . ' message: topic: ' . $message->topic . ' message: ' . $message->payload);
                 return;
             }

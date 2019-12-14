@@ -66,6 +66,9 @@
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                 }
+                                foreach (ls('/dev/', 'tty*') as $value) {
+                                    echo '<option value="/dev/' . $value . '">/dev/' . $value . '</option>';
+                                }
                             ?>
                         </select>
                     </div>
@@ -91,6 +94,9 @@
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                 }
+                                foreach (ls('/dev/', 'tty*') as $value) {
+                                    echo '<option value="/dev/' . $value . '">/dev/' . $value . '</option>';
+                                }
                             ?>
                         </select>
                     </div>
@@ -114,6 +120,9 @@
                            <?php
                                foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                    echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
+                               }
+                               foreach (ls('/dev/', 'tty*') as $value) {
+                                   echo '<option value="/dev/' . $value . '">/dev/' . $value . '</option>';
                                }
                            ?>
                        </select>
@@ -139,6 +148,9 @@
                                foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                    echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                }
+                               foreach (ls('/dev/', 'tty*') as $value) {
+                                   echo '<option value="/dev/' . $value . '">/dev/' . $value . '</option>';
+                               }
                            ?>
                        </select>
                    </div>
@@ -162,6 +174,9 @@
                            <?php
                                foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                    echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
+                               }
+                               foreach (ls('/dev/', 'tty*') as $value) {
+                                   echo '<option value="/dev/' . $value . '">/dev/' . $value . '</option>';
                                }
                            ?>
                        </select>

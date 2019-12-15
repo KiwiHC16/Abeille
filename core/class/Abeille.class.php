@@ -837,26 +837,24 @@
                 log::add('Abeille','debug','deamon_start: Port serie 4 defini dans la configuration. ->'.$param['AbeilleSerialPort4'].'<-');
                 log::add('Abeille','debug','deamon_start: Port serie 5 defini dans la configuration. ->'.$param['AbeilleSerialPort5'].'<-');
 
-                exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'].' > /dev/null 2>&1');
-
                 $deamon21 = "AbeilleSocat.php";
                 $paramdeamon21 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
                 $log21 = " > ".log::getPathToLog(substr($deamon21, 0, (strrpos($deamon21, "."))))."1";
 
                 $deamon22 = "AbeilleSocat.php";
-                $paramdeamon22 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
+                $paramdeamon22 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
                 $log22 = " > ".log::getPathToLog(substr($deamon22, 0, (strrpos($deamon22, "."))))."2";
 
                 $deamon23 = "AbeilleSocat.php";
-                $paramdeamon23 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate3'];
+                $paramdeamon23 = $param['AbeilleSerialPort3'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate3'];
                 $log23 = " > ".log::getPathToLog(substr($deamon23, 0, (strrpos($deamon23, "."))))."3";
 
                 $deamon24 = "AbeilleSocat.php";
-                $paramdeamon24 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate4'];
+                $paramdeamon24 = $param['AbeilleSerialPort4'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate4'];
                 $log24 = " > ".log::getPathToLog(substr($deamon24, 0, (strrpos($deamon24, "."))))."4";
 
                 $deamon25 = "AbeilleSocat.php";
-                $paramdeamon25 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate5'];
+                $paramdeamon25 = $param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate5'];
                 $log25 = " > ".log::getPathToLog(substr($deamon25, 0, (strrpos($deamon25, "."))))."5";
 
 

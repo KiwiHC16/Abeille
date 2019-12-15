@@ -38,7 +38,7 @@
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
-    
+    deamonlog('info','Attention certain systemes acceptent l option rawer pour socat et pas d autres. Modifiez la commande en fonction de votre systeme en mettant rawer ou raw dans le fichier AbeilleSocat.php');
     
     if (!preg_match("(^/dev/zigate)", $serial)) {
     // if ( $serial != $WifiLink ) {
@@ -49,7 +49,7 @@
     deamonlog('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
     
     // Boucle sur le lancement de socat et des que socat est lancé bloque la boucle pendant l'execution.
-    while (1) {
+    // while (1) {
         
         deamonlog('Info','Creation de la connection wifi.');
 	//
@@ -70,9 +70,9 @@
         $cmd = $cmd . ' 2>&1';
         
         exec( $cmd );
-        deamonlog('Info','Arret de Socat on relance dans 1 minute.');
-        sleep(60);
-    }
+        //deamonlog('Info','Arret de Socat on relance dans 1 minute.');
+       // sleep(60);
+    //}
     
     deamonlog('info','Fin script AbeilleSocat');
     

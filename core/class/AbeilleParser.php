@@ -347,13 +347,13 @@
 
         function __construct() {
             global $argv;
-
+            
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
 
-            // $this->requestedlevel = $argv[7];
-            // $this->requestedlevel = '' ? 'none' : $argv[7];
-            $this->requestedlevel = "debug";
+                        // $this->requestedlevel = $argv[7];
+            $this->requestedlevel = '' ? 'none' : $argv[1];
+            $GLOBALS['requestedlevel'] = $this->requestedlevel ;
             
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
@@ -2858,23 +2858,18 @@
         $LQI = array();
         $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
         
-        
-        
         $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
         $max_msg_size = 512;
-        
+        $msg_type = NULL;
         
         while (true) {
             
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
                 // $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
-                $msg_type = NULL;
-                $msg = NULL;
+            
+                $data = json_decode( $dataJson );
+                $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
             }
-            
-            $data = json_decode( $dataJson );
-            $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
-            
             // $AbeilleParser->processAnnonce($NE);
             // $AbeilleParser->cleanUpNE($NE);
             $AbeilleParser->processActionQueue();

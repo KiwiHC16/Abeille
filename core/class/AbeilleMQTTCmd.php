@@ -148,8 +148,8 @@
             if ($this->debug["AbeilleMQTTCmdClass"]) $this->deamonlog("debug", "AbeilleMQTTCmd constructor");
             $this->parameters_info = Abeille::getParameters();
 
-            $this->requestedlevel = $argv[7];
-            $this->requestedlevel = '' ? 'none' : $argv[7];
+            // $this->requestedlevel = $argv[7];
+            $this->requestedlevel = '' ? 'none' : $argv[1];
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
             parent::__construct($client_id, $this->parameters_info["AbeilleUser"], $this->parameters_info["AbeillePass"], $this->parameters_info["AbeilleAddress"], $this->parameters_info["AbeillePort"], $this->parameters_info["AbeilleTopic"], $this->parameters_info["AbeilleQos"], $this->debug["AbeilleMQTTCmdClass"] );

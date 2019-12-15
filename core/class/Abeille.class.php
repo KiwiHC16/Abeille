@@ -454,16 +454,6 @@
             log::add('Abeille', 'debug', 'Check Zigate Presence');
             
             $param = self::getParameters();
-            if ($param['onlyTimer'] == 'N') {
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-            } else {
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/SW-SDK", "TimerMode" );
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
-            }
             
             //--------------------------------------------------------
             // Refresh Ampoule Ikea Bind et set Report
@@ -611,6 +601,37 @@
             // Cron tourne toutes les minutes
             // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
             $param = self::getParameters();
+            
+            // https://github.com/jeelabs/esp-link
+            // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
+            // so I need to create a minimum of traffic, so pull zigate every minutes
+            if ($param['onlyTimer'] == 'N') {
+                if ($param['AbeilleSerialPort']!="none") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                }
+                if ($param['AbeilleSerialPort2']!="none") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                }
+                if ($param['AbeilleSerialPort3']!="none") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort3'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort3'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                }
+                if ($param['AbeilleSerialPort4']!="none") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort4'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort4'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                }
+                if ($param['AbeilleSerialPort5']!="none") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort5'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort5'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                }
+                
+            } else {
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/SW-SDK", "TimerMode" );
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
+            }
             
             $eqLogics = self::byType('Abeille');
             

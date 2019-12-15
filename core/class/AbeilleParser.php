@@ -1560,7 +1560,7 @@
             // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
             // Ca ne va marcher que pour les équipements en eveil.
             // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
-            if ( !Abeille::byLogicalId( 'Abeille/'.$NeighbourAddr, 'Abeille') ) {
+            if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') ) {
                 $this->deamonlog('debug', ';Type; 804E; (Management LQI response)(decoded but Not Processed): trouvé '.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
 
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
@@ -1569,7 +1569,7 @@
                                 
             }
 
-            $this->mqqtPublishCmdFct( "Abeille/".$NeighbourAddr."/IEEE-Addr", $NeighbourIEEEAddress);
+            $this->mqqtPublishCmdFct( $dest."/".$NeighbourAddr."/IEEE-Addr", $NeighbourIEEEAddress);
                  // Abeille / short addr / Cluster ID - Attr ID -> data
             
         }
@@ -2693,7 +2693,7 @@
             $AttributId = "8702";
             $data       = substr($payload, 8, 4);
 
-            if ( Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( 'Abeille/'.$data, 'Abeille' )->getHumanName(true);
+            if ( Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' )->getHumanName(true);
             // message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être joint." );
 
             $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);

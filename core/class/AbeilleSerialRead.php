@@ -56,7 +56,8 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     $requestedlevel=''?'none':$argv[2];
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
-    $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
+    $queueKeySerieToParser    = msg_get_queue(queueKeySerieToParser);
+    $queueKeySerieToParserSem = sem_get(queueKeySerieToParser);
     
     deamonlog('info','Starting reading port '.$serial.' and transcoding to queueKeySerieToParser with log level '.$requestedlevel);
 
@@ -98,12 +99,14 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
                 $trameToSend = array( 'dest'=>basename($serial), 'trame'=>$trame );
                 // $trameToSend = basename($serial).'|'.$trame ;
+                sem_acquire( $queueKeySerieToParserSem );
                 if (msg_send( $queueKeySerieToParser, 1, json_encode($trameToSend), false, false)) {
                     deamonlog('info', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): '.json_encode($trame));
                 }
                 else {
                     deamonlog('error', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): Could not send Msg');
                 }
+                sem_release( $queueKeySerieToParserSem );
             } else {
                 if ($car == "02") {
                     $transcodage = true;

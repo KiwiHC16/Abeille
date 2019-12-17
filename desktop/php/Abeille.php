@@ -8,7 +8,7 @@ $eqLogics = eqLogic::byType('Abeille');
 
 $ruche = new Abeille();
 $commandIEEE = new AbeilleCmd();
-if ( $ruche->byLogicalId('Abeille/Ruche', 'Abeille') ) { $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId(); }
+if ( $ruche->byLogicalId('ttyUSB1/Ruche', 'Abeille') ) { $rucheId = $ruche->byLogicalId('ttyUSB1/Ruche', 'Abeille')->getId(); }
 
 
 $parameters_info = Abeille::getParameters();
@@ -363,7 +363,12 @@ td.two {
       </td>
   </tr><tr>
     <td>
-      <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXXXXXX"> <input type="submit" name="submitButton" value="Set Channel Mask"></br>
+      <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
+            <input type="submit" name="submitButton" value="Set Channel Mask Z1">
+            <input type="submit" name="submitButton" value="Set Channel Mask Z2">
+            <input type="submit" name="submitButton" value="Set Channel Mask Z3">
+            <input type="submit" name="submitButton" value="Set Channel Mask Z4">
+            <input type="submit" name="submitButton" value="Set Channel Mask Z5"></br>
         <i>Pour l instant le mask doit être défini à la main, je verrai comment faire une belle interface plus tard. Vous devez definir les canaux qui sont authorisés pour la zigate. Si 1 canal authorisé, si 0 canal pas authorisé.</br>
         Au démarrage la zigate choisira parmi ces canaux en fonction de sa mesure d occupation du canal.</br>
         Dans le zigbee vous avez les canaux 11 à 26 disponibles.</br>
@@ -376,8 +381,20 @@ td.two {
         Pour convertir le binaire en hexa vous avez: https://www.binaryhexconverter.com/binary-to-hex-converter</br>
         </br>
         </i>
-      <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXXXXXX"> <input type="submit" name="submitButton" value="Set Extended PANID"></br>
-      <label>Tx Power</label>       <input type="text" name="TxPowerValue"  placeholder="XX">   <input type="submit" name="submitButton" value="TxPower"></br>
+      <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
+        <input type="submit" name="submitButton" value="Set Extended PANID Z1">
+        <input type="submit" name="submitButton" value="Set Extended PANID Z2">
+        <input type="submit" name="submitButton" value="Set Extended PANID Z3">
+        <input type="submit" name="submitButton" value="Set Extended PANID Z4">
+        <input type="submit" name="submitButton" value="Set Extended PANID Z5"></br>
+
+      <label>Tx Power</label>
+        <input type="text" name="TxPowerValue"  placeholder="XX">
+        <input type="submit" name="submitButton" value="TxPower Z1">
+        <input type="submit" name="submitButton" value="TxPower Z2">
+        <input type="submit" name="submitButton" value="TxPower Z3">
+        <input type="submit" name="submitButton" value="TxPower Z4">
+        <input type="submit" name="submitButton" value="TxPower Z5"></br>
     </td>
   </tr>
 </table>

@@ -9,27 +9,27 @@ $eqLogics = eqLogic::byType('Abeille');
     $ruche = new Abeille();
     $commandIEEE = new AbeilleCmd();
     
-    $dest = Abeille::getParameters()['AbeilleSerialPort'];
-    if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    $dest = basename(Abeille::getParameters()['AbeilleSerialPort']);
+    if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
     
-    $dest2 = Abeille::getParameters()['AbeilleSerialPort2'];
+    $dest2 = basename(Abeille::getParameters()['AbeilleSerialPort2']);
     if ( $dest2 != "none" ) {
-        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId2 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId2 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
     }
     
-    $dest3 = Abeille::getParameters()['AbeilleSerialPort3'];
+    $dest3 = basename(Abeille::getParameters()['AbeilleSerialPort3']);
     if ( $dest3 != "none" ) {
-        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId3 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId3 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
     }
         
-    $dest4 = Abeille::getParameters()['AbeilleSerialPort4'];
+    $dest4 = basename(Abeille::getParameters()['AbeilleSerialPort4']);
     if ( $dest4 != "none" ) {
-        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId4 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId4 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
     }
     
-    $dest5 = Abeille::getParameters()['AbeilleSerialPort5'];
+    $dest5 = basename(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
-        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId5 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
     }
 
 $parameters_info = Abeille::getParameters();
@@ -424,6 +424,8 @@ td.two {
 
 
             <legend><i class="fa fa-cog"></i> {{ZiGate}}</legend>
+            <br>
+            ZiGate 1<br>
             <table class="one">
                 <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time')->execCmd();} ?>         </td></tr>
                 <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
@@ -437,7 +439,8 @@ td.two {
                 <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel')->execCmd();} ?></td></tr>
                 <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')){  if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
-
+            <br>
+            ZiGate 2<br>
             <table class="one">
                 <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-Time'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-Time')->execCmd();} ?>         </td></tr>
                 <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-TimeStamp'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
@@ -451,7 +454,8 @@ td.two {
                 <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Channel')->execCmd();} ?></td></tr>
                 <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'permitJoin-Status')){  if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
-
+            <br>
+            ZiGate 3<br>
             <table class="one">
                 <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-Time')->execCmd();} ?>         </td></tr>
                 <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
@@ -465,7 +469,8 @@ td.two {
                 <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId3 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Channel')->execCmd();} ?></td></tr>
                 <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId3 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
-
+            <br>
+            ZiGate 4<br>
             <table class="one">
                 <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-Time')->execCmd();} ?>         </td></tr>
                 <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
@@ -479,7 +484,8 @@ td.two {
                 <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId4 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Channel')->execCmd();} ?></td></tr>
                 <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId4 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
-
+            <br>
+            ZiGate 5<br>
             <table class="one">
                 <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-Time')->execCmd();} ?>         </td></tr>
                 <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>

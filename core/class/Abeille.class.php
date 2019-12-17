@@ -684,16 +684,12 @@
             }
             
             // Si Inclusion status est à 1 on demande un Refresh de l information
-            if (self::checkInclusionStatus() == "01") {
-                // log::add('Abeille', 'debug', 'Inclusion Status est a 01 donc on demande de rafraichir l info.');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'])."/Ruche/permitJoin", "Status" );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/permitJoin", "Status" );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort3'])."/Ruche/permitJoin", "Status" );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort4'])."/Ruche/permitJoin", "Status" );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort5'])."/Ruche/permitJoin", "Status" );
-            } else {
-                // log::add('Abeille', 'debug', 'Inclusion Status est a 00 donc on ne demande pas de rafraichir l info.');
-            }
+            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort'] ) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'] )."/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort2']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort3']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort3'])."/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort4']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort4'])."/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort5']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort5'])."/Ruche/permitJoin", "Status" );
+           
             
             // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
             
@@ -1367,7 +1363,7 @@
             return -1;
         }
         
-        public static function checkInclusionStatus() {
+        public static function checkInclusionStatus($dest) {
             // Return: Inclusion status or -1 if error
             $ruche = Abeille::byLogicalId( $dest.'/Ruche', 'Abeille');
             
@@ -2033,7 +2029,7 @@
     
     class AbeilleCmd extends cmd {
         public function execute($_options = null) {
-            log::add('Abeille', 'Debug', 'execute function with options ->'.json_encode($_options).'<-');
+            log::add('Abeille', 'Debug', 'execute ->'.$this->getType().'<- function with options ->'.json_encode($_options).'<-');
             switch ($this->getType()) {
                 case 'action' :
                     //
@@ -2060,9 +2056,11 @@
                             }
                         }
                     }
+                    log::add('Abeille', 'Debug', 'topic: '.$topic);
                     
                     $topicArray = explode("/", $topic );
-                    $dest = $topicArray[0];
+                    $dest = substr($topicArray[0],3);
+                    
                     
                     /* ------------------------------ */
                     // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
@@ -2075,6 +2073,7 @@
                     $request = $this->getConfiguration('request', '1');
                     // request: c'est le payload dans la page de configuration pour une commande
                     // C est les parametres de la commande pour la zigate
+                    log::add('Abeille', 'Debug', 'request: '.$request);
                     
                     /* ------------------------------ */
                     // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
@@ -2180,6 +2179,8 @@
                     
                     $msgAbeille->message['topic'] = $topic;
                     $msgAbeille->message['payload'] = $request;
+                    
+                    log::add('Abeille', 'Debug', 'topic: '.$topic.' request: '.$request);
                     
                     if ( strpos( $topic, "CmdTimer" ) === 0 ) {
                         $queueKeyAbeilleToTimer = msg_get_queue(queueKeyAbeilleToTimer);
@@ -2365,7 +2366,7 @@
                 // Check Inclusion status
             case "7":
                 echo "Check inclusion status\n";
-                echo Abeille::checkInclusionStatus();
+                echo Abeille::checkInclusionStatus(Abeille::getParameters()['AbeilleSerialPort']);
                 
                 break;
                 

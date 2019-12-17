@@ -320,19 +320,79 @@
                 }
                 break;
                 
-            case 'TxPower':
+            case 'TxPower Z1':
                 echo "TxPower request processing";
-                sendMessageFromFormToCmd('CmdAbeille/Ruche/TxPower', $_POST['TxPowerValue'] );
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort']).'/Ruche/TxPower', $_POST['TxPowerValue'] );
                 break;
                 
-            case 'Set Channel Mask':
+            case 'TxPower Z2':
+                echo "TxPower request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort2']).'/Ruche/TxPower', $_POST['TxPowerValue'] );
+                break;
+                
+            case 'TxPower Z3':
+                echo "TxPower request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort3']).'/Ruche/TxPower', $_POST['TxPowerValue'] );
+                break;
+                
+            case 'TxPower Z4':
+                echo "TxPower request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort4']).'/Ruche/TxPower', $_POST['TxPowerValue'] );
+                break;
+                
+            case 'TxPower Z5':
+                echo "TxPower request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort5']).'/Ruche/TxPower', $_POST['TxPowerValue'] );
+                break;
+                
+            case 'Set Channel Mask Z1':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('CmdAbeille/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort']).'/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
-            case 'Set Extended PANID':
+            case 'Set Channel Mask Z2':
+                echo "Set Channel Mask request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort2']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                break;
+                
+            case 'Set Channel Mask Z3':
+                echo "Set Channel Mask request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort3']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                break;
+                
+            case 'Set Channel Mask Z4':
+                echo "Set Channel Mask request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort4']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                break;
+                
+            case 'Set Channel Mask Z5':
+                echo "Set Channel Mask request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort5']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                break;
+                
+            case 'Set Extended PANID Z1':
                 echo "Set Extended PANID request processing";
-                sendMessageFromFormToCmd('CmdAbeille/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort']).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                break;
+                
+            case 'Set Extended PANID Z2':
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort2']).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                break;
+                
+            case 'Set Extended PANID Z3':
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort3']).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                break;
+                
+            case 'Set Extended PANID Z4':
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort4']).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                break;
+                
+            case 'Set Extended PANID Z5':
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort5']).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
                 break;
         }
 

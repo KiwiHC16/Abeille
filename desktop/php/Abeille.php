@@ -6,10 +6,31 @@ if (!isConnect('admin')) {
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
-$ruche = new Abeille();
-$commandIEEE = new AbeilleCmd();
-if ( $ruche->byLogicalId('ttyUSB1/Ruche', 'Abeille') ) { $rucheId = $ruche->byLogicalId('ttyUSB1/Ruche', 'Abeille')->getId(); }
-
+    $ruche = new Abeille();
+    $commandIEEE = new AbeilleCmd();
+    
+    $dest = Abeille::getParameters()['AbeilleSerialPort'];
+    if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    
+    $dest2 = Abeille::getParameters()['AbeilleSerialPort2'];
+    if ( $dest2 != "none" ) {
+        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId2 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    }
+    
+    $dest3 = Abeille::getParameters()['AbeilleSerialPort3'];
+    if ( $dest3 != "none" ) {
+        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId3 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    }
+        
+    $dest4 = Abeille::getParameters()['AbeilleSerialPort4'];
+    if ( $dest4 != "none" ) {
+        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId4 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    }
+    
+    $dest5 = Abeille::getParameters()['AbeilleSerialPort5'];
+    if ( $dest5 != "none" ) {
+        if ( $ruche->byLogicalId( basename( $dest.'/Ruche', 'Abeille') ) ) { $rucheId5 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    }
 
 $parameters_info = Abeille::getParameters();
 
@@ -404,19 +425,76 @@ td.two {
 
             <legend><i class="fa fa-cog"></i> {{ZiGate}}</legend>
             <table class="one">
-                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time')->execCmd();} ?>         </td></tr>
-                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
-                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-Application'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-Application')->execCmd();} ?></td></tr>
-                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-SDK'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-SDK')->execCmd();} ?></td></tr>
-                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Status'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Status')->execCmd();} ?></td></tr>
-                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Short-Addr'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Short-Addr')->execCmd();} ?></td></tr>
-                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'PAN-ID'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'PAN-ID')->execCmd();} ?></td></tr>
-                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
-                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();} ?></td></tr>
-                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel')->execCmd();} ?></td></tr>
-                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-Application'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-SDK'))           { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Status'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Short-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'PAN-ID'))           { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'Network-Channel')->execCmd();} ?></td></tr>
+                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId && $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')){  if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
             </table>
-            <i>Ce tableau n'est pas automatiquement rafraichi, il est mis à jour à l ouverture de la page.</i>
+
+            <table class="one">
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-Time'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-TimeStamp'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'SW-Application'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'SW-SDK'))           { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Status'))   { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Short-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'PAN-ID'))           { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Ext_PAN-ID'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'IEEE-Addr'))        { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'Network-Channel')->execCmd();} ?></td></tr>
+                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId2 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'permitJoin-Status')){  if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId2, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
+            </table>
+
+            <table class="one">
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'SW-Application'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'SW-SDK'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Status'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Short-Addr'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'PAN-ID'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Ext_PAN-ID'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId3 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'IEEE-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId3 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'Network-Channel')->execCmd();} ?></td></tr>
+                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId3 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId3, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
+            </table>
+
+            <table class="one">
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'SW-Application'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'SW-SDK'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Status'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Short-Addr'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'PAN-ID'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Ext_PAN-ID'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId4 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'IEEE-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId4 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'Network-Channel')->execCmd();} ?></td></tr>
+                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId4 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId4, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
+            </table>
+
+            <table class="one">
+                <tr><td class="one">Last</td>           <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-Time'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-Time')->execCmd();} ?>         </td></tr>
+                <tr><td class="one">Last Stamps</td>    <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-TimeStamp'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Time-TimeStamp')->execCmd();} ?>    </td></tr>
+                <tr><td class="one">SW</td>             <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'SW-Application'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'SW-Application')->execCmd();} ?></td></tr>
+                <tr><td class="one">SDK</td>            <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'SW-SDK'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'SW-SDK')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Status</td> <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Network-Status'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Network-Status')->execCmd();} ?></td></tr>
+                <tr><td class="one">Short address</td>  <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Short-Addr'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Short-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">PAN Id</td>         <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'PAN-ID'))          { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">Extended PAN Id</td><td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Ext_PAN-ID'))      { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Ext_PAN-ID')->execCmd();} ?></td></tr>
+                <tr><td class="one">IEEE address</td>   <td class="one"><?php if ($rucheId5 && $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'IEEE-Addr'))       { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'IEEE-Addr')->execCmd();} ?></td></tr>
+                <tr><td class="one">Network Channel</td><td class="one"><?php if ($rucheId5 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Network-Channel'))  { echo $commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'Network-Channel')->execCmd();} ?></td></tr>
+                <tr><td class="one">Inclusion</td>      <td class="one"><?php if ($rucheId5 &&$commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'permitJoin-Status')){ if ($commandIEEE->byEqLogicIdAndLogicalId($rucheId5, 'permitJoin-Status')->execCmd()) echo "Oui"; else echo "Non";} ?></td></tr>
+            </table>
+
+            <i>Ces tableau ne sont pas automatiquement rafraichi, il est mis à jour à l ouverture de la page.</i>
             <br>
             <br>
 

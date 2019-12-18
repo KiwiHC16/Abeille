@@ -196,7 +196,7 @@
             //          1 – Yes
             //          0 – No
             
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
             
             $cmd                    = "0110";
 
@@ -247,7 +247,7 @@
              1 - from client to server
              */
 
-            $priority = $Command('priority');
+            $priority = $Command'priority'];
             
             $cmd = "0110";
             $lenth = "000E";
@@ -277,7 +277,7 @@
             $this->deamonlog('debug',"command setParam2");
             // Msg Type = 0x0530
             
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
             
             $cmd = "0530";
 
@@ -349,7 +349,7 @@
 
             $this->deamonlog('debug',"command setParam3");
 
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
             
             $cmd = "0530";
 
@@ -439,7 +439,7 @@
 
             $this->deamonlog('debug',"command setParam4");
 
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
             
             $cmd = "0530";
 
@@ -602,7 +602,7 @@
         function getParamHue($priority,$dest,$address,$clusterId,$attributeId) {
             $this->deamonlog('debug','getParamHue');
             
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
 
             $cmd = "0100";
             $lenth = "000E";
@@ -630,7 +630,7 @@
         function getParamOSRAM($priority,$dest,$address,$clusterId,$attributeId) {
             $this->deamonlog('debug','getParamOSRAM');
 
-            $priority = $Command('priority');
+            $priority = $Command['priority'];
             
             $cmd = "0100";
             $lenth = "000E";

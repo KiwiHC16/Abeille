@@ -50,10 +50,10 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
     /* -------------------------------------------------------------------- */
 
-
-    $serial = $argv[1];
-    $requestedlevel=$argv[2];
-    $requestedlevel=''?'none':$argv[2];
+    $abeille        = $argv[1];
+    $serial         = $argv[2];
+    $requestedlevel = $argv[3];
+    
     $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
 
     $queueKeySerieToParser    = msg_get_queue(queueKeySerieToParser);
@@ -102,7 +102,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
         } else {
             if ($car == "03") {
                 deamonlog('debug',date("Y-m-d H:i:s").' -> '.$trame);
-                $trameToSend = array( 'dest'=>basename($serial), 'trame'=>$trame );
+                $trameToSend = array( 'dest'=>$abeille, 'trame'=>$trame );
                 // $trameToSend = basename($serial).'|'.$trame ;
                 sem_acquire( $queueKeySerieToParserSem );
                 if (msg_send( $queueKeySerieToParser, 1, json_encode($trameToSend), false, false)) {

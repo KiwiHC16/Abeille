@@ -602,24 +602,24 @@
             // so I need to create a minimum of traffic, so pull zigate every minutes
             if ($param['onlyTimer'] == 'N') {
                 if ($param['AbeilleSerialPort']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort2']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort2'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille2/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille2/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort3']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort3'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort3'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille3/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille3/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort4']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort4'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort4'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille3/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille4/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort5']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort5'])."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmd".basename($param['AbeilleSerialPort5'])."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille5/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille5/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
 
             } else {
@@ -689,11 +689,11 @@
             }
 
             // Si Inclusion status est à 1 on demande un Refresh de l information
-            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort'] ) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'] )."/Ruche/permitJoin", "Status" );
-            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort2']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/permitJoin", "Status" );
-            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort3']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort3'])."/Ruche/permitJoin", "Status" );
-            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort4']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort4'])."/Ruche/permitJoin", "Status" );
-            if (self::checkInclusionStatus( basename($param['AbeilleSerialPort5']) ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort5'])."/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( "Abeille"  ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( "Abeille2" ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille2/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( "Abeille3" ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille3/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( "Abeille4" ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille4/Ruche/permitJoin", "Status" );
+            if (self::checkInclusionStatus( "Abeille5" ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille5/Ruche/permitJoin", "Status" );
 
 
             // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
@@ -855,25 +855,25 @@
 
 
                 $deamon11 = "AbeilleSerialRead.php";
-                $paramdeamon11 = $param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon11 = 'Abeille '.$param['AbeilleSerialPort'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 // $paramdeamon0 = '/dev/Abeille'.' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log11 = " > ".log::getPathToLog(substr($deamon11, 0, (strrpos($deamon11, "."))))."1";
                 // exec(system::getCmdSudo().'ln -s '.$param['AbeilleSerialPort'].' /dev/Abeille');
 
                 $deamon12 = "AbeilleSerialRead.php";
-                $paramdeamon12 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon12 = 'Abeille2 '.$param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log12 = " > ".log::getPathToLog(substr($deamon12, 0, (strrpos($deamon12, "."))))."2";
 
                 $deamon13 = "AbeilleSerialRead.php";
-                $paramdeamon13 = $param['AbeilleSerialPort3'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon13 = 'Abeille3 '.$param['AbeilleSerialPort3'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log13 = " > ".log::getPathToLog(substr($deamon13, 0, (strrpos($deamon13, "."))))."3";
 
                 $deamon14 = "AbeilleSerialRead.php";
-                $paramdeamon1 = $param['AbeilleSerialPort4'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon14 = 'Abeille4 '.$param['AbeilleSerialPort4'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log14 = " > ".log::getPathToLog(substr($deamon14, 0, (strrpos($deamon14, "."))))."4";
 
                 $deamon15 = "AbeilleSerialRead.php";
-                $paramdeamon15 = $param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon15 = 'Abeille5 '.$param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
                 $log15 = " > ".log::getPathToLog(substr($deamon15, 0, (strrpos($deamon15, "."))))."5";
 
 
@@ -1041,38 +1041,38 @@
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
             if ( $param['AbeilleSerialPort'] != "none" ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 : '.basename($param['AbeilleSerialPort']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort']) );
+                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 (Abeille): '.basename($param['AbeilleSerialPort']));
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 1 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort'])."/Ruche/startNetwork", "StartNetwork" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille/Ruche/startNetwork", "StartNetwork" );
             }
 
             if ( $param['AbeilleSerialPort2'] != "none" ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 : '.basename($param['AbeilleSerialPort2']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort2']) );
+                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 (Abeille2): '.basename($param['AbeilleSerialPort2']));
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille2" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 2 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort2'])."/Ruche/startNetwork", "StartNetwork" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille2/Ruche/startNetwork", "StartNetwork" );
             }
 
             if ( $param['AbeilleSerialPort3'] != "none" ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 3 : '.basename($param['AbeilleSerialPort3']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort3']) );
+                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 3 (Abeille3): '.basename($param['AbeilleSerialPort3']));
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille3" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 3 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort3'])."/Ruche/startNetwork", "StartNetwork" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille3/Ruche/startNetwork", "StartNetwork" );
             }
 
             if ( $param['AbeilleSerialPort4'] != "none" ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 4 : '.basename($param['AbeilleSerialPort4']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort4']) );
+                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 4 (Abeille4): '.basename($param['AbeilleSerialPort4']));
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille4" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 4 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort4'])."/Ruche/startNetwork", "StartNetwork" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille4/Ruche/startNetwork", "StartNetwork" );
             }
 
             if ( $param['AbeilleSerialPort5'] != "none" ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 5 : '.basename($param['AbeilleSerialPort5']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", basename($param['AbeilleSerialPort5']) );
+                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 5 (Abeille5): '.basename($param['AbeilleSerialPort5']));
+                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, "CmdRuche/Ruche/CreateRuche", "Abeille5" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 5 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "Cmd".basename($param['AbeilleSerialPort5'])."/Ruche/startNetwork", "StartNetwork" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, "CmdAbeille5/Ruche/startNetwork", "StartNetwork" );
             }
 
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
@@ -1080,6 +1080,29 @@
             return true;
         }
 
+        public static function mapAbeillePort( $Abeille ) {
+            
+            $param = self::getParameters();
+            
+            if ( $Abeille == "Abeille"  )  return basename($param['AbeilleSerialPort' ]);
+            if ( $Abeille == "Abeille2" )  return basename($param['AbeilleSerialPort2']);
+            if ( $Abeille == "Abeille3" )  return basename($param['AbeilleSerialPort3']);
+            if ( $Abeille == "Abeille4" )  return basename($param['AbeilleSerialPort4']);
+            if ( $Abeille == "Abeille5" )  return basename($param['AbeilleSerialPort5']);
+            
+        }
+        
+        public static function mapPortAbeille ( $port ) {
+            
+            $param = self::getParameters();
+            
+            if ( $port == $param['AbeilleSerialPort' ] )  return "Abeille";
+            if ( $port == $param['AbeilleSerialPort2'] )  return "Abeille2";
+            if ( $port == $param['AbeilleSerialPort3'] )  return "Abeille3";
+            if ( $port == $param['AbeilleSerialPort4'] )  return "Abeille4";
+            if ( $port == $param['AbeilleSerialPort5'] )  return "Abeille5";
+        }
+        
         public static function deamon_stop() {
             log::add('Abeille', 'debug', 'deamon stop: IN -------------KIWI------------------');
             // Stop socat if exist

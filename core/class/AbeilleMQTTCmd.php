@@ -691,10 +691,12 @@
                 $this->writeToDest( $f, $dest, $cmd, $len, $datas);
                 fclose($f);
             }
-
-            if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$dest.'-'.$cmd.'-'.$len.'-'.$datas); }
-            $f=fopen("/dev/".$dest,"w");
-            $this->writeToDest( $f, $dest, $cmd, $len, $datas);
+            
+            $destSerial = Abeille::mapAbeillePort( $dest );
+            
+            if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }
+            $f=fopen( "/dev/".$destSerial,"w");
+            $this->writeToDest( $f, $destSerial, $cmd, $len, $datas);
             fclose($f);
 
         }
@@ -728,10 +730,11 @@
 
         function processCmd( $Command ) {
             if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function");
-
-            // $dest = $this->parameters_info["AbeilleSerialPort"];
+            
+            $this->deamonlog("debug", "processCmd fct - begin processCmd function, Command: ".json_encode($Command) );
+            // $dest = Abeille::mapPortAbeille($Command['dest']);
+            // $this->deamonlog("debug", "processCmd fct - begin processCmd function, dest: ".$dest);
             $dest = $Command['dest'];
-            $this->deamonlog("debug", "processCmd fct - begin processCmd function, dest: ".$dest);
 
             if (!isset($Command)) {
                 if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - processCmd Command not set return");

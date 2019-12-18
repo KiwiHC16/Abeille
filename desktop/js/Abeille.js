@@ -205,6 +205,67 @@ $('#bt_include').on('click', function () {
                     }
                     );
 
+$('#bt_include2').on('click', function () {
+                      console.log("bt_include2");
+                      var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                      xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                      xmlhttpMQTTSendIncludeResult = this.responseText;
+                      }
+                      };
+
+                      xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille2_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                      xmlhttpMQTTSendInclude.send();
+                      $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                      }
+                      );
+                      
+$('#bt_include3').on('click', function () {
+                      console.log("bt_include3");
+                      var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                      xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                      xmlhttpMQTTSendIncludeResult = this.responseText;
+                      }
+                      };
+
+                      xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille3_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                      xmlhttpMQTTSendInclude.send();
+                      $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                      }
+                      );
+                      
+$('#bt_include4').on('click', function () {
+                      console.log("bt_include4");
+                      var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                      xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                      xmlhttpMQTTSendIncludeResult = this.responseText;
+                      }
+                      };
+
+                      xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille4_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                      xmlhttpMQTTSendInclude.send();
+                      $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                      }
+                      );
+                      
+$('#bt_include4').on('click', function () {
+                      console.log("bt_include4");
+                      var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                      xmlhttpMQTTSendInclude.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                      xmlhttpMQTTSendIncludeResult = this.responseText;
+                      }
+                      };
+
+                      xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille5_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                      xmlhttpMQTTSendInclude.send();
+                      $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                      }
+                      );
+                          
+                          
 $('#bt_exclude').on('click', function () {
                     console.log("bt_exclude");
 // To be defined

@@ -2765,7 +2765,7 @@
         {
             $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery'  );
 
-            $abeille = Abeille::byLogicalId( $dest.'/'.$short,'Abeille');
+            $abeille = Abeille::byLogicalId( $short,'Abeille');
 
             if ( $abeille ) {
                 $arr = array(1, 2);
@@ -2800,7 +2800,7 @@
                                            'LivoloSwitchTrick1',                    'LivoloSwitchTrick2', 'LivoloSwitchTrick3', 'LivoloSwitchTrick4',
                                            );
 
-            $abeille = Abeille::byLogicalId( $dest.'/'.$short,'Abeille');
+            $abeille = Abeille::byLogicalId( $short,'Abeille');
 
             if ( $abeille) {
                 $arr = array(1, 2);

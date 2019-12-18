@@ -2066,8 +2066,8 @@
 
                 $this->deamonlog('debug',"Update eqLogic table for new object");
                 $sql =          "update `eqLogic` SET ";
-                $sql = $sql .   "name = 'Abeille-".$new."-New' , logicalId = 'Abeille/".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
-                $sql = $sql .   "where  eqType_name = 'Abeille' and logicalId = 'Abeille/".$old."' and configuration like '%".$old."%'";
+                $sql = $sql .   "name = 'Abeille-".$new."-New' , logicalId = '".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
+                $sql = $sql .   "where  eqType_name = 'Abeille' and logicalId = '".$old."' and configuration like '%".$old."%'";
                 $this->deamonlog('debug',"sql: ".$sql);
                 DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 

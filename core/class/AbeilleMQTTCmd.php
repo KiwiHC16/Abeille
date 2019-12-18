@@ -124,7 +124,7 @@
             $now=time();
             foreach ($this->mqttMessageQueue as $key => $mqttMessage) {
                 // deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - 0: '.$mqttMessage[0] );
-                if ($mqttMessage[0]<$now) {
+                if ($mqttMessage['time']<$now) {
                     $this->publishMosquitto( queueKeyCmdToCmd, $mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['msg']  );
                     if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'execTempoCmdAbeille - mqttMessageQueue - one less: '.$key.' -> '.json_encode($this->mqttMessageQueue[$key]) );
                     unset($this->mqttMessageQueue[$key]);
@@ -139,7 +139,7 @@
     class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
-                              "tempo"               => 0, // Debug tempo queue
+                              "tempo"               => 1, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"            => 1, // Debug fct procmsg avec un seul msg

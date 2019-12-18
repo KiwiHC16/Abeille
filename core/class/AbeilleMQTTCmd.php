@@ -247,7 +247,7 @@
              1 - from client to server
              */
 
-            $priority = $Command'priority'];
+            $priority = $Command['priority'];
             
             $cmd = "0110";
             $lenth = "000E";

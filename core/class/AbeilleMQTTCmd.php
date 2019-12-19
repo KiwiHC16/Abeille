@@ -731,10 +731,10 @@
                 fclose($f);
             }
             
-            $destSerial = Abeille::mapAbeillePort( $dest );
+            $destSerial = "/dev/".Abeille::mapAbeillePort( $dest );
             
             if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }
-            $f=fopen( "/dev/".$destSerial,"w");
+            $f=fopen( $destSerial,"w");
             $this->writeToDest( $f, $destSerial, $cmd, $len, $datas);
             fclose($f);
 
@@ -1953,7 +1953,7 @@
 
             if ( (isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']) )
             {
-                $this->getParam( $Command['priority'], $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
+                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
             }
             else
             {
@@ -2345,7 +2345,7 @@
                 // $this->deamonlog('debug','Get Name from: '.$Command['address']);
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->getParam( $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'], "0000" );
+                $this->getParam( $priority, $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'], "0000" );
             }
 
             if ( isset($Command['getLocation']) && isset($Command['address']) )
@@ -2353,7 +2353,7 @@
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
                 // $this->deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
-                $this->getParam( $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'], "0000" );
+                $this->getParam( $priority, $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'], "0000" );
             }
 
             if ( isset($Command['setLocation']) && isset($Command['address']) )

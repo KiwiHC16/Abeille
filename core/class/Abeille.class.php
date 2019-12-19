@@ -1034,7 +1034,8 @@
             }
 
             $deamon4 = "AbeilleMQTTCmdTimer.php";
-            $paramdeamon4 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort']. ' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel( log::getLogLevel('Abeille') );
+            // $paramdeamon4 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort']. ' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel( log::getLogLevel('Abeille') );
+            $paramdeamon4 = log::convertLogLevel( log::getLogLevel('Abeille') );
             $log4 = " > ".log::getPathToLog(substr($deamon4, 0, (strrpos($deamon4, "."))));
 
             $cmd = $nohup." ".$php." ".$dirdeamon.$deamon4." ".$paramdeamon4.$log4;

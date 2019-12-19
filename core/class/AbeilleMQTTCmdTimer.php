@@ -45,8 +45,8 @@
             if ($this->debug["AbeilleTimerClass"]) $this->deamonlog("debug", "AbeilleTimer constructor");
             $this->parameters_info = Abeille::getParameters();
             
-            $this->requestedlevel = $argv[7];
-            $this->requestedlevel = '' ? 'none' : $argv[7];
+            // $this->requestedlevel = $argv[7];
+            $this->requestedlevel = '' ? 'none' : $argv[1];
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
             
             $this->RefreshWidgetRate = 5; // s

@@ -1970,7 +1970,8 @@
                 // echo "ReadAttributeRequest pour address: " . $Command['address'] . "\n";
                 // if ( $Command['ReadAttributeRequest']==1 )
                 //{
-                $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
+                // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
+                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
                 //}
             }
 

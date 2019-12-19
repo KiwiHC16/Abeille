@@ -48,9 +48,10 @@
     define('queueKeySerieToParser',         822);
     define('queueKeyParserToCmdSemaphore',  999);
     
-    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    define('priorityInclusion',     2); // Message important car le temps est compté pour identifier certains équipements
-    define('priorityInterrogation', 3); // Message pour recuperer des etats, valeurs
+    define('priorityNeWokeUp',      1); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
+    define('priorityUserCmd',       2); // Action utiliateur qui doit avoir une sensation de temps réel
+    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
+    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
     
 
     Class MsgAbeille {
@@ -1802,8 +1803,11 @@
             // Si l objet n existe pas et je recoie une commande => je drop la cmd
             // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
             if (!is_object($elogic)) {
-                log::add( 'Abeille', 'debug', "L equipement $addr n existe pas dans Jeedom, je ne process pas la commande." );
-
+                log::add( 'Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne process pas la commande, j'eesaye d interroger l equipement pour le créer." );
+                // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM" );
                 return;
             }
 

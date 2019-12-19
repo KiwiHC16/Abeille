@@ -192,7 +192,7 @@
         
         benLog("publishLQI: ".json_encode($msgAbeille));
         
-        if (msg_send( $queueKeyLQIToCmd, 1, $msgAbeille, true, false)) {
+        if (msg_send( $queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false)) {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
         }
         else {
@@ -272,8 +272,9 @@
     
     if ( $_GET['zigate'] == 1 ) $port = ""; else $port = $_GET['zigate'];
     
-    $serial = $abeilleParameters[ "AbeilleSerialPort".$port ];
-    $serial = substr( $serial, 5 );
+    // $serial = $abeilleParameters[ "AbeilleSerialPort".$port ];
+    // $serial = substr( $serial, 5 );
+    $serial = "Abeille".$port;
     
     benLog( $serial );
     

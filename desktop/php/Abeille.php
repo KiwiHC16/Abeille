@@ -14,22 +14,22 @@ $eqLogics = eqLogic::byType('Abeille');
     
     $dest2 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort2']);
     if ( $dest2 != "none" ) {
-        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId2 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) { $rucheId2 = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId(); }
     }
     
     $dest3 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort3']);
     if ( $dest3 != "none" ) {
-        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId3 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) { $rucheId3 = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId(); }
     }
         
     $dest4 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort4']);
     if ( $dest4 != "none" ) {
-        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId4 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) { $rucheId4 = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId(); }
     }
     
     $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
-        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId(); }
     }
 
 $parameters_info = Abeille::getParameters();

@@ -780,15 +780,11 @@
 
             // ******************************************************************************************************************
             // Remove temporary files
-            $FileLock = dirname(__FILE__).'/../../AbeilleLQI_MapData.json.lock';
-            if (file_exists($FileLock)) {
-                $content = file_get_contents($FileLock);
-                log::add('Abeille', 'debug', $DataFile.' content: '.$content);
-                if (strpos("_".$content, "done") != 1) {
-                    unlink( $FileLock );
-                    log::add('Abeille', 'debug', 'Deleting '.$FileLock );
-                }
-            }
+            $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
+            
+            unlink( $FileLock );
+            log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+            
 
             return;
         }
@@ -1551,12 +1547,18 @@
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Cherche l objet par sa ref short Address et la commande
+            
+            // log::add('Abeille', 'debug', 'Looking for nodeId: '.$nodeid );
             $elogic = self::byLogicalId($nodeid, 'Abeille');
+            
+            // log::add('Abeille', 'debug', 'Looking for cmd of nodeId: '.$cmdId );
             if (is_object($elogic)) {
                 $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
             }
+            
+            // log::add('Abeille', 'debug', 'I should have the cmd now' );
+            
             $objetConnu = 0;
-
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
             if ( !is_object($elogic)
@@ -1771,31 +1773,42 @@
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE
             // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
+            // log::add('Abeille', 'debug', 'Je devrais entrer dans la rechcher' );
             if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") ) {
+                // log::add('Abeille', 'debug', 'Je lance la recherche' );
+                // 0 : Short Address is aligned with the one received
+                // Short : Short Address is NOT aligned with the one received
+                // -1 : Error Nothing found
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
+                // log::add('Abeille', 'debug', 'J ai fini la recherche avec resultat : '.$ShortFound );
                 if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
-
+                    
                     $elogic = self::byLogicalId( $dest."/".$ShortFound, 'Abeille');
-
-                        log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
-                        // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
-                        message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '', 'Abeille/Abeille' );
-
-                        // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
-                        log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
-                        $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
-
-                        $elogic->setLogicalId( $dest."/".$addr );
-
-                        $elogic->setConfiguration('topic', $dest."/".$addr);
-
-                        $elogic->save();
-
-                        // Il faut aussi mettre a jour la commande short address
+                    
+                    if (!is_object( $elogic )) {
+                        log::add('Abeille', 'debug', 'Un objet trouve avec l adresse IEEE mais n est pas sur la bonne zigate.' );
+                        return;
+                    }
+                    
+                    log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
+                    // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
+                    message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '', 'Abeille/Abeille' );
+                    
+                    // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
+                    log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
+                    $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
+                    
+                    $elogic->setLogicalId( $dest."/".$addr );
+                    
+                    $elogic->setConfiguration('topic', $dest."/".$addr);
+                    
+                    $elogic->save();
+                    
+                    // Il faut aussi mettre a jour la commande short address
                     Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr );
-
+                    
                 }
-
+                log::add('Abeille', 'debug', 'Voila j ai fini' );
                 return;
             }
 

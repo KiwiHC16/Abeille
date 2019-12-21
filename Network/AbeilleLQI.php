@@ -62,6 +62,7 @@
         $max_msg_size = 512;
         
         if (msg_receive( $queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+            $message = new stdClass();
             $message->topic = $msg->message['topic'];
             $message->payload = $msg->message['payload'];
         }
@@ -106,8 +107,12 @@
         
         $topicArray = explode("/", $message->topic);
         $parameters['Voisine'] = $topicArray[1];
+        if ( isset($knownNE_local[$parameters['Voisine']]) ) {
         $parameters['Voisine_Name'] = $knownNE_local[$parameters['Voisine']]; // array_search($topicArray[1], $knownNE_local); //$knownNE_local[$parameters['Voisine']];
-        
+        }
+        else {
+            $parameters['Voisine_Name'] = $parameters['Voisine'];
+        }
         // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
         
         // Decode Bitmap Attribut
@@ -193,7 +198,7 @@
         benLog("publishLQI: ".json_encode($msgAbeille));
         
         if (msg_send( $queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false)) {
-            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode(msg_stat_queue($msgAbeille)));
+            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode($msgAbeille));
         }
         else {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Could not send Msg');
@@ -218,7 +223,7 @@
         return 'Cluster ID: ' . $cluster . '-' . $GLOBALS['clusterTab']["0x" . $cluster];
     }
     
-    function collectInformation( $serial, $client, $NE)
+    function collectInformation( $serial, $NE )
     {
         $indexTable = 0;
         
@@ -263,6 +268,9 @@
     $abeilleParameters = Abeille::getParameters();
     
     benLog('Start Main');
+    
+    // Pour lancer en ligne de commande
+    // $_GET['zigate']=2;
     
     benLog('Get[zigate] = '.$_GET['zigate'] );
     if ( $_GET['zigate']<1 or $_GET['zigate']>5 ) {
@@ -335,10 +343,6 @@
     $NE_All_BuildFromLQI = array();
     $NE_All_BuildFromLQI["0000"] = array("LQI_Done" => 0);
     
-    //exists in knownNE
-    //collectInformation($client, $NE);
-    // $NE_All[$NE]['LQI_Done'] = 1;
-    
     // Let's start at least with 0000
     $NE_All_continue = 1;   // Controle le while sur la liste des NE
     $NE_continue = 1;       // controle la boucle sur l interrogation de la table des voisines d un NE particulier
@@ -393,7 +397,7 @@
                 $NE_continue = 1;
                 benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
                 sleep(5);
-                collectInformation( $serial, $client, $currentNeAddress);
+                collectInformation( $serial, $currentNeAddress);
                 $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;
             } else {
                 // echo "Already done\n";

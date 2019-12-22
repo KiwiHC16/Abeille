@@ -3641,6 +3641,8 @@
                         break;
 
                     case "setReport":
+                        if ( !isset($parameters['targetEndpoint']) )    { $parameters['targetEndpoint'] = "01"; }
+                        if ( !isset($parameters['MaxInterval']) )       { $parameters['MaxInterval']    = "0"; }
                         $Command = array(
                                          "setReport"                => "1",
                                          "priority" => $priority,

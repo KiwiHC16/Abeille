@@ -1300,9 +1300,9 @@
             $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             $return['IpWifiZigate']         = config::byKey('IpWifiZigate', 'Abeille', '192.168.4.1');
             $return['IpWifiZigate2']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.2');
-            $return['IpWifiZigate3']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.3');
-            $return['IpWifiZigate4']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.4');
-            $return['IpWifiZigate5']        = config::byKey('IpWifiZigate2', 'Abeille', '192.168.4.5');
+            $return['IpWifiZigate3']        = config::byKey('IpWifiZigate3', 'Abeille', '192.168.4.3');
+            $return['IpWifiZigate4']        = config::byKey('IpWifiZigate4', 'Abeille', '192.168.4.4');
+            $return['IpWifiZigate5']        = config::byKey('IpWifiZigate5', 'Abeille', '192.168.4.5');
 
             // Testons la validité de la configuration
             // Pas de port alors que je ne suis pas en mode timer only.

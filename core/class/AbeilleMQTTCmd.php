@@ -813,7 +813,14 @@
                 return;
             }
 
-            $priority = $Command['priority'];
+            if ( isset($Command['priority']) ) {
+                $priority = $Command['priority'];
+            }
+            else {
+                $this->deamonlog('debug',"processCmd fct - priority not defined !!!");
+                $priority = 4;
+            }
+            
             $dest = $Command['dest'];
             
             if ( isset($Command['getVersion']) )
@@ -3512,6 +3519,7 @@
                         }
                         $Command = array(
                                          "bindShort"                => "1",
+                                         "priority" => $priority,
                                          "dest" => $dest,
                                          "address"                  => $address,
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],

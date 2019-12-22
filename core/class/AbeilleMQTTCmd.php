@@ -36,8 +36,9 @@
 
                             "15" => "ZPS_EVENT_ERROR Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message",
 
-			    "80" => "Code inconnu",
-			    "a6" => "Code inconnu",
+                            "80" => "Code inconnu",
+                            "a6" => "Code inconnu",
+                            "c2" => "Code inconnu",
                             );
 
         public $queueKeyAbeilleToCmd;

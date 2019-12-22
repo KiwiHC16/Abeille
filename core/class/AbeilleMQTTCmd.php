@@ -711,6 +711,15 @@
                 return; // on ne process pas les commande pour les zigate qui n existe pas.
             }
             
+            if ( is_null($priority) ) {
+                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "priority is null, rejecting the command" ); }
+                return; // on ne process pas les commande pour les zigate qui n existe pas.
+            }
+            
+            if ( ($priority < 0) || ($priority > 5) ) {
+                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "priority out of range (rejecting the command): ".$priority ); }
+                return; // on ne process pas les commande pour les zigate qui n existe pas.
+            }
             // received = time when the commande was added to the queue
             // time = when the commande was ssend to the zigate last time
             // retry = nombre de tentative restante

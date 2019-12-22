@@ -35,6 +35,8 @@
                             "05" => "Stack already started (no new configuration accepted)",
 
                             "15" => "ZPS_EVENT_ERROR Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message",
+
+			    "a6" => "Code inconnu",
                             );
 
         public $queueKeyAbeilleToCmd;
@@ -379,7 +381,17 @@
             $addressMode = "02";
             $targetShortAddress = $Command['address'];
             $sourceEndpoint = "01";
-            if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+	    if ( isset($Command['destinationEndpoint']) ) { 
+            	if ( $Command['destinationEndpoint']>1 ) { 
+			$destinationEndpoint = $Command['destinationEndpoint']; 
+		} 
+		else { 
+			$destinationEndpoint = "01"; 
+		} // $destinationEndPoint; // "01";
+	    } 
+            else {
+			$destinationEndpoint = "01"; 
+	    }
 
             $profileID = "0104";
             $clusterID = $Command['clusterId'];
@@ -763,7 +775,7 @@
                 // Le nombre de retry est épuisé donc je ne remet pas la commande dans la queue et j'en profite pour ordonner la queue pour traiter les priorités
                 // https://www.php.net/manual/en/function.array-multisort.php
                 if ( count($this->cmdQueue) > 1 ) {
-                    $prio       = array_column( $this->cmdQueue,'prio');
+                    $prio       = array_column( $this->cmdQueue,'priority');
                     $received   = array_column( $this->cmdQueue,'received');
                     array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
                 }

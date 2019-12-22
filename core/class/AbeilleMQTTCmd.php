@@ -1245,7 +1245,17 @@
                 $addressMode            = "02";                     // 01 = short
                 $targetShortAddress     = $Command['address'];
                 // $sourceEndpoint         = "01";
-                if ( hexdec($Command['sourceEndpoint'])>1 ) { $sourceEndpoint = $Command['sourceEndpoint']; } else { $sourceEndpoint = "01"; }
+		if ( isset( $Command['sourceEndpoint'] ) ) {
+                	if ( hexdec($Command['sourceEndpoint'])>1 ) { 
+				$sourceEndpoint = $Command['sourceEndpoint']; 
+			} 
+			else { 
+				$sourceEndpoint = "01"; 
+			}
+		}
+		else {
+				$sourceEndpoint = "01"; 
+		}
                 // $targetEndpoint    = "01";
                 if ( hexdec($Command['targetEndpoint'])>1 ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
                 $ClusterId              = $Command['ClusterId'];
@@ -1264,8 +1274,8 @@
                 //$AttributeId            = "0000";
 
                 // $MinInterval            = "0000";
-                if ( strlen($Command['MinInterval'])>0 ) { $MinInterval = $Command['MinInterval']; } else { $MinInterval = "0000"; }
-                if ( strlen($Command['MaxInterval'])>0 ) { $MaxInterval = $Command['MaxInterval']; } else { $MaxInterval = "0000"; }
+                if ( isset($Command['MinInterval']) ) { $MinInterval = $Command['MinInterval']; } else { $MinInterval = "0000"; }
+                if ( isset($Command['MaxInterval']) ) { $MaxInterval = $Command['MaxInterval']; } else { $MaxInterval = "0000"; }
                 $Timeout                = "0000";
                 $Change                 = "00";
 
@@ -2473,7 +2483,7 @@
         function procmsg( $message ) {
 
             if ( $this->debug['procmsg1'] ) $this->deamonlog("debug", "----------");
-            if ( $this->debug['procmsg1'] ) $this->deamonlog("debug", "procmsg fct - message: ". json_encode($message) );
+            if ( $this->debug['procmsg1'] ) $this->deamonlog("info", "procmsg fct - message: ". json_encode($message) );
 
             $parameters_info = Abeille::getParameters();
 

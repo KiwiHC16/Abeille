@@ -3,7 +3,7 @@
     "name": "Version",
     "order": 0,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -18,7 +18,7 @@
     "name": "Start Network",
     "order": 1,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -30,7 +30,7 @@
     "name": "get Network Status",
     "order": 2,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -54,10 +54,10 @@
     }
   },
   "Inclusion Status": {
-    "name": "Inclusion Status",
+    "name": "Get Inclusion Status",
     "order": 4,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -69,7 +69,7 @@
     }
   },
   "permitJoin-Status": {
-    "name": "Permit Join Status",
+    "name": "Inclusion Status",
     "order": 5,
     "isHistorized": "0",
     "isVisible": "1",
@@ -85,7 +85,7 @@
     "name": "Mgt Leave",
     "order": 6,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -102,7 +102,7 @@
     "name": "Remove",
     "order": 7,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -119,7 +119,7 @@
     "name": "Add Group",
     "order": 8,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -135,7 +135,7 @@
     "name": "Remove Group",
     "order": 9,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -152,7 +152,7 @@
     "name": "getGroupMemberShip",
     "order": 10,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -169,7 +169,7 @@
     "name": "storeScene",
     "order": 11,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -186,7 +186,7 @@
     "name": "recallScene",
     "order": 12,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -203,7 +203,7 @@
     "name": "sceneGroupRecall",
     "order": 13,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -220,7 +220,7 @@
     "name": "Add Scene",
     "order": 14,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -236,7 +236,7 @@
     "name": "Remove Scene",
     "order": 15,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -253,7 +253,7 @@
     "name": "Remove Scene All",
     "order": 16,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -270,7 +270,7 @@
     "name": "viewScene",
     "order": 17,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -287,7 +287,7 @@
     "name": "getSceneMemberShip",
     "order": 18,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -304,7 +304,7 @@
     "name": "Bind",
     "order": 19,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -321,7 +321,7 @@
     "name": "BindShort",
     "order": 20,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -338,7 +338,7 @@
     "name": "setReport",
     "order": 21,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -355,7 +355,7 @@
     "name": "Get Name",
     "order": 22,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -372,7 +372,7 @@
     "name": "Get Location",
     "order": 23,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -389,7 +389,7 @@
     "name": "Set Location",
     "order": 24,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -406,7 +406,7 @@
     "name": "Write Attribut",
     "order": 25,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -423,7 +423,7 @@
     "name": "Get Attribut",
     "order": 26,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -440,7 +440,7 @@
     "name": "Liste Equipements",
     "order": 27,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -552,7 +552,7 @@
     "name": "Network Status Request (Not implemented)",
     "order": 38,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -564,7 +564,7 @@
     "name": "joinLeave",
     "order": 39,
     "isHistorized": "1",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -574,7 +574,7 @@
     "name": "ActiveEndPoint",
     "order": 40,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -592,7 +592,7 @@
     "name": "SimpleDescriptorRequest",
     "order": 41,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -610,7 +610,7 @@
     "name": "Reset",
     "order": 42,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -625,7 +625,7 @@
     "name": "Erase Persistent Data",
     "order": 43,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -640,7 +640,7 @@
     "name": "Factory New Reset",
     "order": 44,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -655,7 +655,7 @@
     "name": "Replace Equipement",
     "order": 45,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -672,7 +672,7 @@
     "name": "Last Bind",
     "order": 46,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -682,7 +682,7 @@
     "name": "Last Report",
     "order": 47,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -692,7 +692,7 @@
     "name": "IEEE Address Request",
     "order": 48,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -709,7 +709,7 @@
     "name": "Network Address Request",
     "order": 49,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -726,7 +726,7 @@
     "name": "LQI",
     "order": 50,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "message",
     "configuration": {
@@ -743,7 +743,7 @@
     "name": "Set Time",
     "order": 51,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -755,7 +755,7 @@
     "name": "Get Time",
     "order": 52,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -767,7 +767,7 @@
     "name": "ZiGate-Time",
     "order": 53,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -777,7 +777,7 @@
     }
   },
   "Group-Membership": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "Groups",
     "order": 54,
     "isHistorized": "0",
@@ -794,7 +794,7 @@
     "name": "APS Data Confirm Fail",
     "order": 55,
     "isHistorized": "1",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -804,7 +804,7 @@
     "name": "Send Message Status",
     "order": 56,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
@@ -814,7 +814,7 @@
     "name": "Set Power (0dBm)",
     "order": 57,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -826,7 +826,7 @@
     "name": "Set Power (-9dBm)",
     "order": 58,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -838,7 +838,7 @@
     "name": "Set Power (-20dBm)",
     "order": 59,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -850,7 +850,7 @@
     "name": "Set Power (-32dBm)",
     "order": 60,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -862,7 +862,7 @@
     "name": "Get Power",
     "order": 61,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
@@ -874,7 +874,7 @@
     "name": "ZiGate-Power",
     "order": 62,
     "isHistorized": "0",
-    "isVisible": "1",
+    "isVisible": "0",
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",

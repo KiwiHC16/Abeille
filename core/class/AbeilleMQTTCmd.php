@@ -3946,7 +3946,8 @@
                 $this->zigateAvailabe = 0;      // Je dis que la Zigate n est pas dispo
                 $this->timeLastAck = time();    // Je garde la date de ce mauvais Ack
             }
-            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
+            // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack" );
             if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
         }
         

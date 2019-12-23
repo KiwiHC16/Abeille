@@ -1849,7 +1849,7 @@
 
                 $IEEE = $cmdlogic->execCmd();
                 if ($IEEE == $value) {
-                    log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
+                    // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
                     return;
                 }
 

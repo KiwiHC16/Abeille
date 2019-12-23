@@ -143,7 +143,7 @@
     class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
-                              "tempo"               => 1, // Debug tempo queue
+                              "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"            => 1, // Debug fct procmsg avec un seul msg

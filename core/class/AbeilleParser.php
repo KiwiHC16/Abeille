@@ -2678,7 +2678,7 @@
             
             $this->deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
                              . '; dest: '.$dest
-                             . '; Status : '.$status.' ('.$allErrorCode[$status][1].'->'.$allErrorCode[$status][2].')'
+                             . '; Status : '.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                              . '; Source Endpoint : '.substr($payload, 2, 2)
                              . '; Destination Endpoint : '.substr($payload, 4, 2)
                              . '; Destination Mode : '.substr($payload, 6, 2)

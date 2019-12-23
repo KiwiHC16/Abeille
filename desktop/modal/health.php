@@ -31,6 +31,7 @@
         <th>{{Module}}</th>
         <th>{{Name}}</th>
         <th>{{ID}}</th>
+        <th>{{Ruche}}</th>
         <th>{{Address}}</th>
         <th>{{IEEE}}</th>
         <th>{{Statut}}</th>
@@ -54,9 +55,14 @@
             
             // ID
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getId().'</span></td>';
-
+            
+            $parts = explode("/", $eqLogic->getLogicalId());
+            
+            // Ruche
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$parts[0].'</span></td>';
+            
             // Short Address
-            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.substr($eqLogic->getLogicalId(),8).'</span></td>';
+            echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$parts[1].'</span></td>';
             
             // IEEE
             

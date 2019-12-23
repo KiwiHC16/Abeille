@@ -730,7 +730,7 @@
             if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
                     log::add('Abeille', 'warning', 'deamon_info: cron not running');
-                    message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
+                    // message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
                     $return['state'] = "nok";
                 }
             }
@@ -1981,12 +1981,12 @@
             $elogic->setConfiguration('topic', $dest."/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
-            $elogic->setIsVisible("0");
+            $elogic->setIsVisible("1");
             $elogic->setConfiguration('icone', "Ruche");
             // eqReal_id
             $elogic->setIsEnable("1");
             // status
-            $elogic->setTimeout(60); // timeout en minutes
+            $elogic->setTimeout(5); // timeout en minutes
             // $elogic->setCategory();
             // display
             // order
@@ -1998,30 +1998,31 @@
             $elogic->save();
 
             $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
-            $i = 100;
-
-            //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-            $items = Tools::getDeviceNameFromJson('Abeille');
-
-            foreach ($items as $item) {
-                $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(
-                                                                            Tools::getTrimmedValueForJsonFiles($item),
-                                                                            'Abeille'
-                                                                            );
-                // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-                foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-                    $rucheCommandList[$objetId] = array(
-                                                        "name" => $objetId,
-                                                        "order" => $i++,
-                                                        "isVisible" => "0",
-                                                        "isHistorized" => "0",
-                                                        "Type" => "action",
-                                                        "subType" => "other",
-                                                        "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
-                                                        );
+            
+            // Only needed for debug and dev so by default it's not done.
+            if (0) {
+                $i = 100;
+                
+                //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
+                $items = Tools::getDeviceNameFromJson('Abeille');
+                
+                foreach ($items as $item) {
+                    $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices( Tools::getTrimmedValueForJsonFiles($item), 'Abeille' );
+                    // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+                    foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+                        $rucheCommandList[$objetId] = array(
+                                                            "name" => $objetId,
+                                                            "order" => $i++,
+                                                            "isVisible" => "0",
+                                                            "isHistorized" => "0",
+                                                            "Type" => "action",
+                                                            "subType" => "other",
+                                                            "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
+                                                            );
+                    }
                 }
+                // print_r($rucheCommandList);
             }
-            // print_r($rucheCommandList);
 
             //Create ruche object and commands
             foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {

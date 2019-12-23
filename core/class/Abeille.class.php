@@ -1011,7 +1011,7 @@
                      exec($cmd.' 2>&1 &');
                  }
 
-                if ( $param['AbeilleSerialPort4'] != "none" ) {
+                if ( $param['AbeilleSerialPort5'] != "none" ) {
                      exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort5'].' > /dev/null 2>&1');
                      $cmd = $nohup." ".$php." ".$dirdeamon.$deamon15." ".$paramdeamon15.$log15;
                      log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);

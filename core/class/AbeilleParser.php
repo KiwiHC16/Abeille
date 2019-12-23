@@ -1157,7 +1157,7 @@
             $AttributId = "Status";
             if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
             if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
-            if( substr($payload, 0, 2) == "04" ) { $data = "Network already formed, not starting it again."; }
+            if( substr($payload, 0, 2) == "04" ) { $data = "Network (already) formed."; }
             if( substr($payload, 0, 2) > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
             $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
 

@@ -732,7 +732,8 @@
             // retry = nombre de tentative restante
             // priority = priority du message
             $this->cmdQueue[] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
+            // if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue) ); }
         }
         
         function writeToDest( $f, $dest, $cmd, $len, $datas) {
@@ -3920,7 +3921,8 @@
             
             if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
             if (isset($this->statusText[$msg['status']])) {
-                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
+                // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
+                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: " );
             }
             else {
                 if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));

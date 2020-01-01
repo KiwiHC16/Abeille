@@ -32,6 +32,7 @@ Lancement des operations.
         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
         data: {
             action: 'updateFirmwarePiZiGate',
+            fwfile:  <?php echo $_GET['fwfile']; ?>,
         },
         dataType: 'json',
         global: false,

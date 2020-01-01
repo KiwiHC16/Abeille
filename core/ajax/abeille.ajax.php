@@ -55,7 +55,7 @@ try {
     }
 
     if (init('action') == 'updateFirmwarePiZiGate') {
-        abeille::updateFirmwarePiZiGate(false);
+        abeille::updateFirmwarePiZiGate(false,init('fwfile'));
         ajax::success();
     }
     

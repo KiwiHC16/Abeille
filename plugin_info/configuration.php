@@ -274,7 +274,7 @@
                     <div class="col-lg-5">
                         <select style="width:150px" id ="ZiGateFirmwareVersion">
                             <?php
-                                foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', 'ZiGate*.bin') as $value) {
+                                foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
                                     echo '<option value=' . $value . '>' . $value . '</option>';
                                 }
                             ?>

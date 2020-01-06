@@ -784,6 +784,7 @@
             $cmd = array_shift($this->cmdQueue);    // Je recupere la premiere commande
             $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
             $cmd['retry']--;                        // Je reduis le nombre de retry restant
+            $cmd['priority']++;                     // Je reduis la priorité car
             $cmd['time']=time();                    // Je mets l'heure a jour
             
             if ($cmd['retry']>0) {

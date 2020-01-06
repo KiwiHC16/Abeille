@@ -272,7 +272,14 @@
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
                     <div class="col-lg-5">
-                        <a class="btn btn-warning" id="bt_updateFrimware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
+                        <select style="width:150px" id ="ZiGateFirmwareVersion">
+                            <?php
+                                foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
+                                    echo '<option value=' . $value . '>' . $value . '</option>';
+                                }
+                            ?>
+                        </select>
+                        <a class="btn btn-warning" id="bt_updateFirmware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
                     </div>
                 </div>
 
@@ -419,11 +426,11 @@ $('#bt_installS0').on('click',function(){
                                         });
                         })
 
-$('#bt_updateFrimware').on('click',function(){
-                              bootbox.confirm('{{Vous êtes sur le point de programmer la zigate.<br> Voulez vous continuer ?}}', function (result) {
+$('#bt_updateFirmware').on('click',function(){
+                              bootbox.confirm('{{Vous êtes sur le point de programmer la PiZigate avec le firmware ' + document.getElementById("ZiGateFirmwareVersion").value + '.<br> Voulez vous continuer ?}}', function (result) {
                                               if (result) {
-                                              $('#md_modal2').dialog({title: "{{Programmation de la zigate}}"});
-                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFrimware.abeille').dialog('open');
+                                              $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
+                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFrimware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value +  '\"').dialog('open');
                                               }
                                               });
                               })

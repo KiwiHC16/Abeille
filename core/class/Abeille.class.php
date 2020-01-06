@@ -144,17 +144,21 @@
             if ($GLOBALS['debugKIWI']) echo "installSocat end\n";
         }
 
-        public static function updateFirmwarePiZiGate($_background = true) {
+        public static function updateFirmwarePiZiGate($_background = true,$fwfile) {
             if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate start\n";
             log::add('Abeille', 'debug', 'Starting updateFirmwarePiZiGate');
             log::remove('Abeille_updateFirmwarePiZiGate');
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate Start');
             // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
+            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'stop deamon');
+            self::deamon_stop(); // Arrêt du demon
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh ' . $fwfile . '  >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
             if ($_background) $cmd .= ' &';
             if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_updateFirmwarePiZiGate', 'info', $cmd);
             shell_exec($cmd);
+            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'start deamon');
+            self::deamon_start(); // Redemarrage du demon
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate End');
             if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate end\n";
         }

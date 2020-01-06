@@ -787,17 +787,21 @@
             $cmd['priority']++;                     // Je reduis la priorité car
             $cmd['time']=time();                    // Je mets l'heure a jour
             
+            // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
             if ($cmd['retry']>0) {
                 array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
             }
             else {
-                // Le nombre de retry est épuisé donc je ne remet pas la commande dans la queue et j'en profite pour ordonner la queue pour traiter les priorités
-                // https://www.php.net/manual/en/function.array-multisort.php
-                if ( count($this->cmdQueue) > 1 ) {
-                    $prio       = array_column( $this->cmdQueue,'priority');
-                    $received   = array_column( $this->cmdQueue,'received');
-                    array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
-                }
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("info", "La commande n a plus de retry, elle est drop: ".json_encode($cmd)); }
+            }
+            
+            // J'en profite pour ordonner la queue pour traiter les priorités
+            // https://www.php.net/manual/en/function.array-multisort.php
+            if ( count($this->cmdQueue) > 1 ) {
+                $prio       = array_column( $this->cmdQueue,'priority');
+                $received   = array_column( $this->cmdQueue,'received');
+                array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
+                
             }
             
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie: ".json_encode($this->cmdQueue) ); }

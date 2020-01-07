@@ -529,7 +529,7 @@
 
         }
 
-        function getParam($priority, $dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
+        function getParam($priority,$dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
             /*
              <address mode: uint8_t>
              <target short address: uint16_t>
@@ -1948,11 +1948,6 @@
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
 
-                // getParam($dest,$address, $Command['clusterId'] );
-                // sleep(1);
-                // getParam($dest,$address, $Command['clusterId'], "0000" );
-                //getParam($dest,$address, $Command['clusterId'], "0000" );
-                // sleep(1);
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
                 
@@ -2023,7 +2018,7 @@
                 // if ( $Command['ReadAttributeRequest']==1 )
                 //{
                 // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
-                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
+                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B", "0000" );
                 //}
             }
 
@@ -2035,7 +2030,7 @@
                 // if ( $Command['ReadAttributeRequest']==1 )
                 //{
                 // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
-                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03" );
+                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03", "0000" );
                 //}
             }
 
@@ -2270,10 +2265,6 @@
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
 
-                // Get the state of the equipement as IKEA Bulb don't send back their state.
-                // $attribute = "0000";
-                // getParam($dest,$address, $Command['clusterId'], $attribute);
-                // sleep(2);
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
 

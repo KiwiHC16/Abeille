@@ -1034,7 +1034,7 @@
 
         function decode8011( $dest, $payload, $ln, $qos, $dummy)
         {
-            $this->deamonlog('debug',';type; 8011; (No info on this commande)');
+            $this->deamonlog('debug',';type; 8011; (APS_DATA_ACK)(Not Processed)');
         }
         
         function decode8014( $dest, $payload, $ln, $qos, $dummy)

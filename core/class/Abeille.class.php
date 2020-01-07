@@ -1052,6 +1052,8 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 1 ********');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille/Ruche/startNetwork", "StartNetwork" );
+                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 1 ********');
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille/Ruche/setTimeServer", "" );
             }
 
             if ( $param['AbeilleSerialPort2'] != "none" ) {
@@ -1059,6 +1061,8 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille2" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 2 ********');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille2/Ruche/startNetwork", "StartNetwork" );
+                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 2 ********');
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille2/Ruche/setTimeServer", "" );
             }
 
             if ( $param['AbeilleSerialPort3'] != "none" ) {
@@ -1066,6 +1070,8 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille3" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 3 ********');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille3/Ruche/startNetwork", "StartNetwork" );
+                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 3 ********');
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille3/Ruche/setTimeServer", "" );
             }
 
             if ( $param['AbeilleSerialPort4'] != "none" ) {
@@ -1073,6 +1079,8 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille4" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 4 ********');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille4/Ruche/startNetwork", "StartNetwork" );
+                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 4 ********');
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille4/Ruche/setTimeServer", "" );
             }
 
             if ( $param['AbeilleSerialPort5'] != "none" ) {
@@ -1080,6 +1088,8 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille5" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 5 ********');
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille5/Ruche/startNetwork", "StartNetwork" );
+                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 5 ********');
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille5/Ruche/setTimeServer", "" );
             }
 
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');

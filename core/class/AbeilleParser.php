@@ -2261,7 +2261,7 @@
                 // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
                 // Xiaomi Bouton V2 Carré
                 if (($AttributId == "ff01") && ($AttributSize == "001a")) {
-                    $this->deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
@@ -2274,7 +2274,7 @@
 
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
                 elseif (($AttributId == "ff01") && ($AttributSize == "001b")) {
-                    $this->deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall 1 Switch, Gaz Sensor)" );
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall 1 Switch, Gaz Sensor)" );
                     // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -2289,7 +2289,7 @@
 
                 // Xiaomi Door Sensor V2
                 elseif (($AttributId == "ff01") && ($AttributSize == "001d")) {
-                    $this->deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Door Sensor)" );
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat           = substr($payload, 80, 2);
@@ -2303,7 +2303,7 @@
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
                 elseif (($AttributId == "ff01") && ($AttributSize == "001f")) {
-                    $this->deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond/Wall 2 Switch)');
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond/Wall 2 Switch)');
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
@@ -2336,7 +2336,7 @@
                 // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
 
                 elseif (($AttributId == 'ff01') && ($AttributSize == "0021")) {
-                    $this->deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)');
 
                     $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
                     $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
@@ -2363,7 +2363,7 @@
 
                 // Xiaomi capteur Inondation
                 elseif (($AttributId == 'ff01') && ($AttributSize == "0022")) {
-                    $this->deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Inondation)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Inondation)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
@@ -2389,7 +2389,7 @@
 
                 // Xiaomi capteur temperature carré V2
                 elseif (($AttributId == 'ff01') && ($AttributSize == "0025")) {
-                    $this->deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Carré)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
@@ -2414,7 +2414,7 @@
 
                 // Xiaomi Smoke Sensor
                 elseif (($AttributId == 'ff01') && ($AttributSize == "0028")) {
-                    $this->deamonlog('debug','Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Sensor Smoke)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Sensor Smoke)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
@@ -2429,7 +2429,7 @@
                 // Xiaomi Cube
                 // Xiaomi capteur Inondation
                 elseif (($AttributId == 'ff01') && ($AttributSize == "002a")) {
-                    $this->deamonlog('debug',';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Cube)');
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Cube)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
@@ -2476,7 +2476,7 @@
                 elseif (($AttributId == "ff01") && (($AttributSize == "0031") || ($AttributSize == "002b") )) {
                     $logMessage = "";
                     // $this->deamonlog('debug', ';Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
-                    $logMessage .= ";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)";
+                    $logMessage .= ";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)";
 
                     $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
 
@@ -2487,9 +2487,9 @@
                     $consoValue = $conso[1];
 
                     // $this->mqqtPublish($SrcAddr,$ClusterId,$AttributId,'$this->decoded as OnOff-Puissance-Conso',$qos);
-                    $this->mqqtPublish( $dest."/".$SrcAddr, 'Xiaomi',  '0006-00-0000',     $onOff,             $qos);
-                    $this->mqqtPublish( $dest."/".$SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
-                    $this->mqqtPublish( $dest."/".$SrcAddr, 'tbd',     '--conso--',        $consoValue,        $qos);
+                    $this->mqqtPublish( $dest."/".$SrcAddr, '0006',  '-01-0000',        $onOff,             $qos);
+                    $this->mqqtPublish( $dest."/".$SrcAddr, 'tbd',   '--puissance--',   $puissanceValue,    $qos);
+                    $this->mqqtPublish( $dest."/".$SrcAddr, 'tbd',   '--conso--',       $consoValue,        $qos);
 
                     $logMessage .= ';OnOff: '.$onOff.';Puissance: '.$puissanceValue.';Consommation: '.$consoValue;
                     $this->deamonlog('debug', $logMessage);
@@ -2511,7 +2511,7 @@
                 // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
                 // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
                 elseif (($AttributId == "ff01") && ($AttributSize == "00XX")) {
-                    $this->deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Bouton Carre)" );
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
@@ -2526,7 +2526,7 @@
                 elseif (($AttributId == "ff02")) {
                     // Non decodé a ce stade
                     // $this->deamonlog("debug", "Champ 0xFF02 non $this->decode a ce stade");
-                    $this->deamonlog("debug",";Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (IR V1)" );
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (IR V1)" );
 
                     $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
 

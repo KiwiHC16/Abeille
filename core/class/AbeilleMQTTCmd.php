@@ -143,7 +143,7 @@
     class AbeilleMQTTCmd extends AbeilleMQTTCmdQueue {
         public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
-                              "tempo"               => 1, // Debug tempo queue
+                              "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
@@ -732,7 +732,8 @@
             // retry = nombre de tentative restante
             // priority = priority du message
             $this->cmdQueue[] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
+            // if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue) ); }
         }
         
         function writeToDest( $f, $dest, $cmd, $len, $datas) {
@@ -783,19 +784,24 @@
             $cmd = array_shift($this->cmdQueue);    // Je recupere la premiere commande
             $this->sendCmdToZigate( $cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas'] );    // J'envoie la premiere commande récupérée
             $cmd['retry']--;                        // Je reduis le nombre de retry restant
+            $cmd['priority']++;                     // Je reduis la priorité car
             $cmd['time']=time();                    // Je mets l'heure a jour
             
+            // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
             if ($cmd['retry']>0) {
                 array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
             }
             else {
-                // Le nombre de retry est épuisé donc je ne remet pas la commande dans la queue et j'en profite pour ordonner la queue pour traiter les priorités
-                // https://www.php.net/manual/en/function.array-multisort.php
-                if ( count($this->cmdQueue) > 1 ) {
-                    $prio       = array_column( $this->cmdQueue,'priority');
-                    $received   = array_column( $this->cmdQueue,'received');
-                    array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
-                }
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("info", "La commande n a plus de retry, elle est drop: ".json_encode($cmd)); }
+            }
+            
+            // J'en profite pour ordonner la queue pour traiter les priorités
+            // https://www.php.net/manual/en/function.array-multisort.php
+            if ( count($this->cmdQueue) > 1 ) {
+                $prio       = array_column( $this->cmdQueue,'priority');
+                $received   = array_column( $this->cmdQueue,'received');
+                array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
+                
             }
             
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie: ".json_encode($this->cmdQueue) ); }
@@ -3920,7 +3926,8 @@
             
             if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
             if (isset($this->statusText[$msg['status']])) {
-                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
+                // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
+                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: " );
             }
             else {
                 if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
@@ -3946,7 +3953,8 @@
                 $this->zigateAvailabe = 0;      // Je dis que la Zigate n est pas dispo
                 $this->timeLastAck = time();    // Je garde la date de ce mauvais Ack
             }
-            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
+            // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack" );
             if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
         }
         

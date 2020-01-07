@@ -347,27 +347,27 @@
                 
             case 'Set Channel Mask Z1':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
             case 'Set Channel Mask Z2':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort2']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille2/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
             case 'Set Channel Mask Z3':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort3']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille3/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
             case 'Set Channel Mask Z4':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort4']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille4/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
             case 'Set Channel Mask Z5':
                 echo "Set Channel Mask request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort5']).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille5/Ruche/setChannelMask', $_POST['channelMask'] );
                 break;
                 
             case 'Set Extended PANID Z1':

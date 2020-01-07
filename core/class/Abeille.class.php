@@ -144,17 +144,21 @@
             if ($GLOBALS['debugKIWI']) echo "installSocat end\n";
         }
 
-        public static function updateFirmwarePiZiGate($_background = true) {
+        public static function updateFirmwarePiZiGate($_background = true,$fwfile) {
             if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate start\n";
             log::add('Abeille', 'debug', 'Starting updateFirmwarePiZiGate');
             log::remove('Abeille_updateFirmwarePiZiGate');
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate Start');
             // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
+            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'stop deamon');
+            self::deamon_stop(); // Arrêt du demon
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh ' . $fwfile . '  >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
             if ($_background) $cmd .= ' &';
             if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_updateFirmwarePiZiGate', 'info', $cmd);
             shell_exec($cmd);
+            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'start deamon');
+            self::deamon_start(); // Redemarrage du demon
             log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate End');
             if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate end\n";
         }
@@ -620,12 +624,12 @@
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille3/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort4']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille3/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille4/Ruche/getVersion&time="      .(time()+20), "Version"          );
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille4/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
                 if ($param['AbeilleSerialPort5']!="none") {
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille5/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, "TempoCmdAbeille5/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille5/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
                 }
 
             } else {
@@ -730,7 +734,7 @@
             if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 if ( !cron::byClassAndFunction('Abeille', 'deamon')->running() ) {
                     log::add('Abeille', 'warning', 'deamon_info: cron not running');
-                    message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
+                    // message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
                     $return['state'] = "nok";
                 }
             }
@@ -1011,7 +1015,7 @@
                      exec($cmd.' 2>&1 &');
                  }
 
-                if ( $param['AbeilleSerialPort4'] != "none" ) {
+                if ( $param['AbeilleSerialPort5'] != "none" ) {
                      exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort5'].' > /dev/null 2>&1');
                      $cmd = $nohup." ".$php." ".$dirdeamon.$deamon15." ".$paramdeamon15.$log15;
                      log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
@@ -1849,7 +1853,7 @@
 
                 $IEEE = $cmdlogic->execCmd();
                 if ($IEEE == $value) {
-                    log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
+                    // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
                     return;
                 }
 
@@ -1981,12 +1985,12 @@
             $elogic->setConfiguration('topic', $dest."/Ruche");
             $elogic->setConfiguration('type', 'topic');
             $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
-            $elogic->setIsVisible("0");
+            $elogic->setIsVisible("1");
             $elogic->setConfiguration('icone', "Ruche");
             // eqReal_id
             $elogic->setIsEnable("1");
             // status
-            $elogic->setTimeout(60); // timeout en minutes
+            $elogic->setTimeout(5); // timeout en minutes
             // $elogic->setCategory();
             // display
             // order
@@ -1998,30 +2002,31 @@
             $elogic->save();
 
             $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
-            $i = 100;
-
-            //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-            $items = Tools::getDeviceNameFromJson('Abeille');
-
-            foreach ($items as $item) {
-                $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(
-                                                                            Tools::getTrimmedValueForJsonFiles($item),
-                                                                            'Abeille'
-                                                                            );
-                // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-                foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-                    $rucheCommandList[$objetId] = array(
-                                                        "name" => $objetId,
-                                                        "order" => $i++,
-                                                        "isVisible" => "0",
-                                                        "isHistorized" => "0",
-                                                        "Type" => "action",
-                                                        "subType" => "other",
-                                                        "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
-                                                        );
+            
+            // Only needed for debug and dev so by default it's not done.
+            if (0) {
+                $i = 100;
+                
+                //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
+                $items = Tools::getDeviceNameFromJson('Abeille');
+                
+                foreach ($items as $item) {
+                    $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices( Tools::getTrimmedValueForJsonFiles($item), 'Abeille' );
+                    // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+                    foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+                        $rucheCommandList[$objetId] = array(
+                                                            "name" => $objetId,
+                                                            "order" => $i++,
+                                                            "isVisible" => "0",
+                                                            "isHistorized" => "0",
+                                                            "Type" => "action",
+                                                            "subType" => "other",
+                                                            "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate"=>"0" ),
+                                                            );
+                    }
                 }
+                // print_r($rucheCommandList);
             }
-            // print_r($rucheCommandList);
 
             //Create ruche object and commands
             foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {

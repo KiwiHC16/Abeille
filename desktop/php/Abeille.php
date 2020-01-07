@@ -29,7 +29,7 @@ $eqLogics = eqLogic::byType('Abeille');
     
     $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
-        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId(); }
     }
 
 $parameters_info = Abeille::getParameters();

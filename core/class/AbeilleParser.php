@@ -1157,7 +1157,7 @@
             $AttributId = "Status";
             if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
             if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
-            if( substr($payload, 0, 2) == "04" ) { $data = "Network already formed, not starting it again."; }
+            if( substr($payload, 0, 2) == "04" ) { $data = "Network (already) formed."; }
             if( substr($payload, 0, 2) > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
             $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
 
@@ -2678,7 +2678,7 @@
             
             $this->deamonlog('debug', ';type; 8702; (APS Data Confirm Fail)'
                              . '; dest: '.$dest
-                             . '; Status : '.$status.' ('.$allErrorCode[$status][1].'->'.$allErrorCode[$status][2].')'
+                             . '; Status : '.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                              . '; Source Endpoint : '.substr($payload, 2, 2)
                              . '; Destination Endpoint : '.substr($payload, 4, 2)
                              . '; Destination Mode : '.substr($payload, 6, 2)

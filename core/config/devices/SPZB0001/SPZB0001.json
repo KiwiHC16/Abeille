@@ -45,7 +45,9 @@
       "include25 2 3 2": "spiritHostFlagsDefaultSet",
       "include25 2 3 2 2": "spiritHostFlagsBoostSet",
       "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
-      "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet"
+      "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
+      "include25 2 3 2 2 2 2 2": "spiritUnknown1",
+      "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
     }
   }
 }

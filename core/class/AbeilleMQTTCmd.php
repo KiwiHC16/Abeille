@@ -792,7 +792,7 @@
                 array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
             }
             else {
-                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("info", "La commande n a plus de retry, elle est drop: ".json_encode($cmd)); }
+                $this->deamonlog("info", "La commande n a plus de retry, on la drop: ".json_encode($cmd)); 
             }
             
             // J'en profite pour ordonner la queue pour traiter les priorités

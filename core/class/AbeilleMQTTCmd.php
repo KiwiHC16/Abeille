@@ -147,9 +147,11 @@
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg3"            => 0, // Debug fct procmsg avec un seul msg
                               "processCmd"          => 0, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
-                              "sendCmdAck"          => 0, // Debug fct sendCmdAck
+                              "cmdQueue"            => 1, // Debug cmdQueue
+                              "sendCmdAck"          => 1, // Debug fct sendCmdAck
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
                               "sendCmdToZigate"     => 1, // Mise en place des class
@@ -732,8 +734,8 @@
             // retry = nombre de tentative restante
             // priority = priority du message
             $this->cmdQueue[] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            // if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue)."): ".json_encode($this->cmdQueue) ); }
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd:".count($this->cmdQueue) ); }
+            if ( $this->debug['cmdQueue'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue - Nb Cmd:".count($this->cmdQueue)." -> ".json_encode($this->cmdQueue) ); }
+            // if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd):".count($this->cmdQueue) ); }
         }
         
         function writeToDest( $f, $dest, $cmd, $len, $datas) {
@@ -789,29 +791,21 @@
             
             // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
             if ($cmd['retry']>0) {
-                array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure et un retry -1
+                array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
             }
             else {
                 $this->deamonlog("info", "La commande n a plus de retry, on la drop: ".json_encode($cmd)); 
             }
             
-            // J'en profite pour ordonner la queue pour traiter les priorités
-            // https://www.php.net/manual/en/function.array-multisort.php
-            if ( count($this->cmdQueue) > 1 ) {
-                $prio       = array_column( $this->cmdQueue,'priority');
-                $received   = array_column( $this->cmdQueue,'received');
-                array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
-                
-            }
+            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue) ); }
             
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie: ".json_encode($this->cmdQueue) ); }
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
         }
 
         function processCmd( $Command ) {
             if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function");
             
-            $this->deamonlog("debug", "processCmd fct - begin processCmd function, Command: ".json_encode($Command) );
+            if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function, Command: ".json_encode($Command) );
             // $dest = Abeille::mapPortAbeille($Command['dest']);
             // $this->deamonlog("debug", "processCmd fct - begin processCmd function, dest: ".$dest);
 
@@ -2244,7 +2238,7 @@
             // ON / OFF one object
             if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
             {
-                $this->deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']);
+                if ( $this->debug['processCmd'] ) $this->deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2520,24 +2514,21 @@
 
             list($type, $address, $action) = explode('/', $topic);
 
-            // if ($type == "TempoCmdAbeille") {
             if (preg_match("(^TempoCmd)", $type)) {
-                if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue.");
+                if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue Tempo.");
                 $this->addTempoCmdAbeille( $topic, $msg, $priority);
                 return;
             }
 
-            // if ($type != "CmdAbeille") {
             if (!preg_match("(^Cmd)", $type)) {
                 if ( $this->debug['procmsg2'] ) $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
             $dest = substr( $type, 3 );
-            $this->deamonlog('warning','procmsg fct - Msg Received: Dest: '.$dest);
             
-            if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
-            if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+            if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
+            if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
 
@@ -3912,7 +3903,6 @@
             $msg = NULL;
             $max_msg_size = 512;
             
-            // Traite tous les Ack recus
             if ( !msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) ) return; // Si pas de message je passe mon chemin
             
             if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
@@ -3929,16 +3919,32 @@
             // SQN semble s'incrementer à chaque commande
             // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
             
-            $cmd = array_slice( $this->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
+            // $cmd = array_slice( $this->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
             
-            if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry'] <= 0 ) ) {
+            // if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry'] <= 0 ) ) {
+            // ou si retry tombe à 0
+            if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") ) {
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
                 // ou si conf alors que stack demarrée
-                // ou si retry tombe à 0
                 array_shift( $this->cmdQueue ); // Je vire la commande
                 $this->zigateAvailabe = 1;      // Je dis que la Zigate est dispo
                 $this->timeLastAck = 0;
+                
+                // Je tri la queue pour preparer la prochaine commande
+                if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue) ); }
+                
+                 
+                 // J'en profite pour ordonner la queue pour traiter les priorités
+                 // https://www.php.net/manual/en/function.array-multisort.php
+                 if ( count($this->cmdQueue) > 1 ) {
+                     $prio       = array_column( $this->cmdQueue,'priority');
+                     $received   = array_column( $this->cmdQueue,'received');
+                     array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
+                 }
+                 
+                 if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres tri          : ".json_encode($this->cmdQueue) ); }
+
             }
             else {
                 $this->zigateAvailabe = 0;      // Je dis que la Zigate n est pas dispo
@@ -3956,10 +3962,9 @@
             $now = time();
             $delta = $now-$this->timeLastAck;
             if ( $delta > $this->timeLastAckTimeOut ) {
-                if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai plas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck); }
+                if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai pas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck . " donc je considère la zigate dispo....."); }
                 $this->zigateAvailabe = 1;
                 $this->timeLastAck = 0;
-                if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai plas de Ack (Status) depuis ".$this->timeLastAckTimeOut." secondes donc je considère la zigate dispo....."); }
             }
         }
         

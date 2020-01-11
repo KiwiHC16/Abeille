@@ -2303,7 +2303,7 @@
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
                 elseif (($AttributId == "ff01") && ($AttributSize == "001f")) {
-                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond/Wall 2 Switch)');
+                    $this->deamonlog("debug",";Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Temperature Rond/Wall 2 Switch)");
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];

@@ -3938,9 +3938,10 @@
                  // J'en profite pour ordonner la queue pour traiter les priorités
                  // https://www.php.net/manual/en/function.array-multisort.php
                  if ( count($this->cmdQueue) > 1 ) {
+                     $retry      = array_column( $this->cmdQueue,'retry'   );
                      $prio       = array_column( $this->cmdQueue,'priority');
                      $received   = array_column( $this->cmdQueue,'received');
-                     array_multisort( $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
+                     array_multisort( $retry, SORT_DESC, $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
                  }
                  
                  if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres tri          : ".json_encode($this->cmdQueue) ); }

@@ -48,8 +48,8 @@
     define('queueKeySerieToParser',         822);
     define('queueKeyParserToCmdSemaphore',  999);
     
-    define('priorityNeWokeUp',      1); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    define('priorityUserCmd',       2); // Action utiliateur qui doit avoir une sensation de temps réel
+    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
+    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
     define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
     define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
     

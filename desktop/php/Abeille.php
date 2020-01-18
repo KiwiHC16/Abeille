@@ -192,7 +192,7 @@ td.two {
 </style>
 
 <label>Groupes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="https://abeilledocsphinx.readthedocs.io/fr/latest/Groups.html"><i class="fas fa-book"></i>Documentation</a>
+<a class="btn btn-primary btn-xs" target="_blank" href="http://http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
 <table><tr><td class="two">
 
         <table class="one">

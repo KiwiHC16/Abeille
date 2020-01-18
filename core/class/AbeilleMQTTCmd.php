@@ -147,7 +147,7 @@
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg3"            => 0, // Debug fct procmsg avec un seul msg
+                              "procmsg3"            => 1, // Debug fct procmsg avec un seul msg
                               "processCmd"          => 0, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
                               "cmdQueue"            => 1, // Debug cmdQueue
@@ -1269,17 +1269,17 @@
                 $addressMode            = "02";                     // 01 = short
                 $targetShortAddress     = $Command['address'];
                 // $sourceEndpoint         = "01";
-		if ( isset( $Command['sourceEndpoint'] ) ) {
-                	if ( hexdec($Command['sourceEndpoint'])>1 ) { 
-				$sourceEndpoint = $Command['sourceEndpoint']; 
-			} 
-			else { 
-				$sourceEndpoint = "01"; 
-			}
-		}
-		else {
-				$sourceEndpoint = "01"; 
-		}
+                if ( isset( $Command['sourceEndpoint'] ) ) {
+                    if ( hexdec($Command['sourceEndpoint'])>1 ) {
+                        $sourceEndpoint = $Command['sourceEndpoint'];
+                    }
+                    else {
+                        $sourceEndpoint = "01";
+                    }
+                }
+                else {
+                    $sourceEndpoint = "01";
+                }
                 // $targetEndpoint    = "01";
                 if ( hexdec($Command['targetEndpoint'])>1 ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
                 $ClusterId              = $Command['ClusterId'];
@@ -3597,7 +3597,7 @@
             } // if $address != "Ruche"
             else { // $address == "Ruche"
                 $done = 0;
-
+$this->deamonlog("debug", 'procmsg fct - getGroupMembership: ' );
                 // Crée les variables dans la chaine et associe la valeur.
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -3608,9 +3608,8 @@
                     case "ReadAttributeRequest":
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
-                                         "priority" => $priority,
-                                         "dest"         => $dest,
-                                         "dest" => $dest,
+                                         "priority"     => $priority,
+                                         "dest"         => $parameters['dest'],
                                          "address"      => $parameters['address'],
                                          "clusterId"    => $parameters['clusterId'],
                                          "attributeId"  => $parameters['attributId'],
@@ -3625,8 +3624,8 @@
                     case "bindShort":
                         $Command = array(
                                          "bindShort"                => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
@@ -3642,8 +3641,8 @@
                         if ( !isset($parameters['MaxInterval']) )       { $parameters['MaxInterval']    = "0"; }
                         $Command = array(
                                          "setReport"                => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
                                          "ClusterId"                => $parameters['ClusterId'],
@@ -3659,8 +3658,8 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "getGroupMembership"       => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          );
@@ -3672,8 +3671,8 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "addGroup"                 => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3686,8 +3685,8 @@
                         if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "removeGroup"              => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3701,8 +3700,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "viewScene"                => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3715,8 +3714,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "storeScene"               => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3729,8 +3728,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "recallScene"              => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3748,8 +3747,8 @@
 
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
@@ -3765,8 +3764,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "addScene"                 => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3780,8 +3779,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "getSceneMembership"       => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3793,8 +3792,8 @@
                         if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                         $Command = array(
                                          "removeSceneAll"           => "1",
-                                         "priority" => $priority,
-                                         "dest"                     => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $parameters['dest'],
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],

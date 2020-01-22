@@ -52,6 +52,8 @@
                     <p><i>La ZiGate possede trois types possibles de modules pour etre connecté au système Jeedom.</i></p>
                     <p><i>Un module USB / PiZigate(GPIO) ou un module Wifi. Si vous êtes en wifi choisissez WIFI ici et indiquez dans le champ IP:Port les informations du module WIFI.</i></p>
                     <p><i>Si vous êtes en USB, choisissez le port USB du type ttyUSBx sur lequel la ZiGate est branchée. Pour PiZiGate choisissez le port série /dev/ttyS0.</i></p>
+                    <p><i>Il faut au minimum une zigate sur le premier port.</i></p>
+                    <p><i>Bien mettre les zigates non utilisées sur la valeur Aucun sinon le demon risque de ne pas demarrer.</i></p>
                 </div>
 
                 <div class="form-group">

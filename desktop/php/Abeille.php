@@ -755,6 +755,13 @@ td.two {
                                 </div>
 
                                 <div class="form-group">
+                                <label class="col-sm-3 control-label">{{on time (s)}}</label>
+                                <div class="col-sm-3">
+                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>
+                                </div>
+                                </div>
+
+                                <div class="form-group">
                                    <label class="col-sm-3 control-label">{{Zigate}}</label>
                                    <div class="col-sm-3">
                                        <select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Zigate" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>

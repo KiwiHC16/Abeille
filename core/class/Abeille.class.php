@@ -1659,6 +1659,9 @@
                 if (isset($objetConfiguration['Groupe'])) {
                     $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
                 }
+                if (isset($objetConfiguration['onTime'])) {
+                    $elogic->setConfiguration('onTime', $objetConfiguration['onTime']);
+                }
                 if (isset($objetConfiguration['Zigate'])) {
                     $elogic->setConfiguration('Zigate', $objetConfiguration['Zigate']);
                 }
@@ -2202,6 +2205,11 @@
 
                     /* ------------------------------ */
                     // Je fais les remplacement dans les parametres
+                    if (strpos($request, '#onTime#') > 0) {
+                        $onTimeHex = sprintf("%04s",dechex($NE->getConfiguration("onTime")*10));
+                        $request = str_replace( "#onTime#", $onTimeHex, $request );
+                    }
+                    
                     if (strpos($request, '#addrIEEE#') > 0) {
                         $ruche = new Abeille();
                         $commandIEEE = new AbeilleCmd();

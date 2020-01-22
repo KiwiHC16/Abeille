@@ -115,6 +115,7 @@
 
             $this->mqttMessageQueue[] = array( 'time'=>$time, 'priority'=>$priority, 'topic'=>$topic, 'msg'=>$msg );
             if ( $this->debug['tempo'] ) $this->deamonlog('debug', 'addTempoCmdAbeille - mqttMessageQueue: '.json_encode($this->mqttMessageQueue) );
+            if ( count($this->mqttMessageQueue) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue tempo.' );
 
             return;
         }
@@ -146,16 +147,17 @@
                               "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
                               "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg3"            => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg2"            => 0, // Debug fct procmsg avec un seul msg
+                              "procmsg3"            => 0, // Debug fct procmsg avec un seul msg
                               "processCmd"          => 0, // Debug fct processCmd
                               "sendCmd"             => 1, // Debug fct sendCmd
-                              "cmdQueue"            => 1, // Debug cmdQueue
+                              "cmdQueue"            => 0, // Debug cmdQueue
                               "sendCmdAck"          => 1, // Debug fct sendCmdAck
+                              "sendCmdAck2"         => 0, // Debug fct sendCmdAck
                               "transcode"           => 0, // Debug transcode fct
                               "AbeilleMQTTCmdClass" => 0, // Mise en place des class
                               "sendCmdToZigate"     => 1, // Mise en place des class
-                              "traiteLesAckRecus"   => 1, // Nouvelle Gestion des Ack
+                              "traiteLesAckRecus"   => 0, // Nouvelle Gestion des Ack
                               );
 
         public $parameters_info;
@@ -736,6 +738,8 @@
             $this->cmdQueue[] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
             if ( $this->debug['cmdQueue'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue - Nb Cmd:".count($this->cmdQueue)." -> ".json_encode($this->cmdQueue) ); }
             // if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "Je mets la commande dans la queue (Nb Cmd):".count($this->cmdQueue) ); }
+            if ( count($this->cmdQueue) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue.' );
+            
         }
         
         function writeToDest( $f, $dest, $cmd, $len, $datas) {
@@ -777,7 +781,7 @@
             if ( count( $this->cmdQueue ) < 1 ) return;                                     // si la queue est vide je passe mon chemin
             if ( $this->zigateAvailabe == 0 )   return;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
             
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
+            if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "--------------------"); }
             if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue) ); }
             
             $this->zigateAvailabe = 0;    // Je considere la zigate pas dispo car je lui envoie une commande
@@ -794,12 +798,12 @@
                 array_unshift( $this->cmdQueue, $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
             }
             else {
-                $this->deamonlog("info", "La commande n a plus de retry, on la drop: ".json_encode($cmd)); 
+                if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("info", "La commande n a plus de retry, on la drop: ".json_encode($cmd)); }
             }
             
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue) ); }
+            if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue) ); }
             
-            if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "--------------------"); }
+            if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "--------------------"); }
         }
 
         function processCmd( $Command ) {
@@ -1912,12 +1916,12 @@
                 if ( $Command['Level']<16 )
                 {
                     $level = "0".dechex($Command['Level']);
-                    $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
+                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
                 }
                 else
                 {
                     $level = dechex($Command['Level']);
-                    $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
+                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
                 }
 
                 // $duration = "00" . $Command['duration'];
@@ -2497,7 +2501,7 @@
 
         function procmsg( $message ) {
 
-            if ( $this->debug['procmsg1'] ) $this->deamonlog("debug", "----------");
+            if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", "----------");
             if ( $this->debug['procmsg1'] ) $this->deamonlog("info", "procmsg fct - message: ". json_encode($message) );
 
             $parameters_info = Abeille::getParameters();

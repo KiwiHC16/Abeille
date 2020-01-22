@@ -13,6 +13,8 @@
       "mainEP": "#EP#"
     },
     "Commandes": {
+      "include3 2": "onGroupTimed",
+      "include3 2 2": "offGroupTimed",
       "include1": "offGroup",
       "include2": "toggleGroup",
       "include3": "onGroup",

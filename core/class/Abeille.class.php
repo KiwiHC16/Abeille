@@ -1659,6 +1659,9 @@
                 if (isset($objetConfiguration['Groupe'])) {
                     $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
                 }
+                if (isset($objetConfiguration['Zigate'])) {
+                    $elogic->setConfiguration('Zigate', $objetConfiguration['Zigate']);
+                }
                 if (isset($objetConfiguration['protocol'])) {
                     $elogic->setConfiguration('protocol', $objetConfiguration['protocol']);
                 }
@@ -2120,6 +2123,13 @@
                             }
                         }
                     }
+                    
+                    if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
+                        if ( $NE->getConfiguration('Zigate') > 1 ) {
+                            $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
+                        }
+                    }
+                    
                     log::add('Abeille', 'Debug', 'topic: '.$topic);
 
                     $topicArray = explode("/", $topic );

@@ -297,7 +297,7 @@ $('#bt_createRemote').on('click', function () {
                          }
                          };
 
-                         xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_TRADFRIremotecontrol_0000-0005&payload=TRADFRIremotecontrol", false); // False pour bloquer sur la recuperation du fichier
+                         xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
                          xmlhttpMQTTSendTimer.send();
                          // location.reload(true);
                          $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});

@@ -8,25 +8,25 @@ $eqLogics = eqLogic::byType('Abeille');
 
     $ruche = new Abeille();
     $commandIEEE = new AbeilleCmd();
-    
+
     $dest = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort']);
     if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
-    
+
     $dest2 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort2']);
     if ( $dest2 != "none" ) {
         if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) { $rucheId2 = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId(); }
     }
-    
+
     $dest3 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort3']);
     if ( $dest3 != "none" ) {
         if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) { $rucheId3 = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId(); }
     }
-        
+
     $dest4 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort4']);
     if ( $dest4 != "none" ) {
         if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) { $rucheId4 = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId(); }
     }
-    
+
     $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
         if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId(); }
@@ -134,10 +134,10 @@ $parameters_info = Abeille::getParameters();
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
-                
+
                 // find opacity
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-                
+
                 // Find icone
                 $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
                 if (in_array($test, $files, 0)) {
@@ -145,7 +145,7 @@ $parameters_info = Abeille::getParameters();
                 } else {
                     $path = 'Abeille_icon';
                 }
-                
+
                 // Affichage
                 echo '<div class="eqLogicDisplayCardB">';
                     echo '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
@@ -662,7 +662,7 @@ td.two {
                                 placeholder="{{Position sur l axe vertical (0 en haut - 1000 en bas)}}"/>
                             </div>
                         </div>
-                                
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Position Z}}</label>
                             <div class="col-sm-3">
@@ -741,8 +741,8 @@ td.two {
                                 </div>
                                 </div>
 
-
                                 <hr>
+
                                 <div class="form-group">
                                 <label class="col-sm-3 control-label">{{Telecommande}}</label>
                                 </div>
@@ -754,7 +754,20 @@ td.two {
                                 </div>
                                 </div>
 
-                                
+                                <div class="form-group">
+                                   <label class="col-sm-3 control-label">{{Zigate}}</label>
+                                   <div class="col-sm-3">
+                                       <select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Zigate" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
+                                           <option value="1" selected>{{Zigate1}}</option>
+                                           <option value="2"         >{{Zigate2}}</option>
+                                           <option value="3"         >{{Zigate3}}</option>
+                                           <option value="4"         >{{Zigate4}}</option>
+                                           <option value="5"         >{{Zigate5}}</option>
+                                       </select>
+                                  </div>
+                                </div>
+
+
                     </fieldset>
                 </form>
             </div>

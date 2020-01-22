@@ -1710,7 +1710,7 @@
             // 2: 'click', 1: 'hold', 3: 'release'
 
             $this->deamonlog('debug', ';Type; 8085; (Remote button pressed (ClickHoldRelease) a group response)(decoded but Not Processed)'
-                             . '; dest: '.$dest
+                             . '; dest: '          .$dest
                              . '; SQN: '           .substr($payload, 0, 2)
                              . '; endPoint: '      .substr($payload, 2, 2)
                              . '; clusterId: '     .substr($payload, 4, 4)
@@ -1738,7 +1738,7 @@
             // <cmd: uint8>                 -> 2
 
             $this->deamonlog('debug', ';Type; 8095; (Remote button pressed (ONOFF_UPDATE) a group response)(decoded but Not Processed)'
-                             . '; dest: '.$dest
+                             . '; dest: '         .$dest
                              . '; SQN: '          .substr($payload, 0, 2)
                              . '; endPoint: '     .substr($payload, 2, 2)
                              . '; clusterId: '    .substr($payload, 4, 4)
@@ -1751,7 +1751,7 @@
             $AttributId     = "Middle";
             $data           = substr($payload,14, 2);
 
-            $this->mqqtPublish( $source, $ClusterId, $AttributId, $data);
+            $this->mqqtPublish( $dest .'/'.$source, $ClusterId, $AttributId, $data);
         }
         //----------------------------------------------------------------------------------------------------------------
         ##TODO

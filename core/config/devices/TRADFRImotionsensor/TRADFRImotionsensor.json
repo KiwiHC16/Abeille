@@ -13,7 +13,8 @@
       "mainEP": "#EP#"
     },
     "Commandes": {
-      "include3 2": "onGroupTimed",
+      "include3 2": "Click-Middle",
+      "include3 2 3": "onGroupTimed",
       "include3 2 2": "offGroupTimed",
       "include1": "offGroup",
       "include2": "toggleGroup",

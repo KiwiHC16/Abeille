@@ -60,7 +60,7 @@
                     <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
                     <div class="col-lg-4">
                         <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
-                            <option value="none" >{{Aucun}}</option>
+                            <option value="none" selected>{{Aucun}}</option>
                             <option value="/dev/zigate" >{{WIFI1}}</option>
                             <option value="/dev/monitZigate1" >{{Monit1}}</option>
                             <!--option value="auto">{{Auto}}</option-->
@@ -88,7 +88,7 @@
                     <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 2: }}</label>
                     <div class="col-lg-4">
                         <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort2">
-                            <option value="none" >{{Aucun}}</option>
+                            <option value="none" selected>{{Aucun}}</option>
                             <option value="/dev/zigate2" >{{WIFI2}}</option>
                             <option value="/dev/monitZigate2" >{{Monit2}}</option>
                             <!--option value="auto">{{Auto}}</option-->
@@ -115,7 +115,7 @@
                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 3: }}</label>
                    <div class="col-lg-4">
                        <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort3">
-                           <option value="none" >{{Aucun}}</option>
+                           <option value="none" selected>{{Aucun}}</option>
                            <option value="/dev/zigate3" >{{WIFI3}}</option>
                            <option value="/dev/monitZigate3" >{{Monit3}}</option>
                            <!--option value="auto">{{Auto}}</option-->
@@ -142,7 +142,7 @@
                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 4: }}</label>
                    <div class="col-lg-4">
                        <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort4">
-                           <option value="none" >{{Aucun}}</option>
+                           <option value="none" selected>{{Aucun}}</option>
                            <option value="/dev/zigate4" >{{WIFI4}}</option>
                            <option value="/dev/monitZigate4" >{{Monit4}}</option>
                            <!--option value="auto">{{Auto}}</option-->
@@ -169,7 +169,7 @@
                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 5: }}</label>
                    <div class="col-lg-4">
                        <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort5">
-                           <option value="none" >{{Aucun}}</option>
+                           <option value="none" selected>{{Aucun}}</option>
                            <option value="/dev/zigate5" >{{WIFI5}}</option>
                            <option value="/dev/monitZigate5" >{{Monit5}}</option>
                            <!--option value="auto">{{Auto}}</option-->

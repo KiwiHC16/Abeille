@@ -1,0 +1,21 @@
+{
+  "offGroupTimed": {
+    "name": "OffTimed",
+    "order": 0,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c7sds6624hf493",
+      "topic": "CmdAbeille/#addrGroup#/OnOffGroupTimed",
+      "request": "action=Off&onTime=0258&offWaitTime=0000",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "icon": "<i class=\"icon jeedom2-bulb19\"></i>"
+    }
+  }
+}

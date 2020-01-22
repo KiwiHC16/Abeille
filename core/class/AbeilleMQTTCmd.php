@@ -2239,7 +2239,7 @@
 
             }
 
-            // ON / OFF one object
+            // ON / OFF with no effects
             if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
             {
                 if ( $this->debug['processCmd'] ) $this->deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']);
@@ -2248,10 +2248,10 @@
                 // <source endpoint: uint8_t>
                 // <destination endpoint: uint8_t>
                 // <command ID: uint8_t>
-                // Command Id
-                // 0 - Off
-                // 1 - On
-                // 2 - Toggle
+                    // Command Id
+                    // 0 - Off
+                    // 1 - On
+                    // 2 - Toggle
 
                 $cmd = "0092";
                 $lenth = "0006";
@@ -2265,6 +2265,44 @@
 
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+
+            }
+            
+            // On / Off Timed Send
+            if ( isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']) )
+            {
+                if ( $this->debug['processCmd'] ) $this->deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'] );
+                // <address mode: uint8_t>    Status
+                // <target short address: uint16_t>
+                // <source endpoint: uint8_t>
+                // <destination endpoint: uint8_t>
+                // <onoff: uint8_t>
+                // <on time: uint16_t>
+                // <off time: uint16_t>
+                    // On / Off:
+                    // 0 = Off
+                    // 1 = On
+                    // Time: Seconds
+
+                $cmd = "0093";
+                // $lenth = "0006";
+                $addressMode = $Command['addressMode'];
+                $address = $Command['address'];
+                $sourceEndpoint = "01";
+                $destinationEndpoint = $Command['destinationEndpoint'];
+                $action = $Command['action'];
+                $onTime = $Command['onTime'];
+                $offWaitTime = $Command['offWaitTime'];
+
+                $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action.$onTime.$offWaitTime;
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
 
             }
 
@@ -2779,6 +2817,29 @@
                                          "action" => $actionId,
                                          );
                         break;
+                        //----------------------------------------------------------------------------
+                        case "OnOffGroupTimed":
+                            $fields = preg_split("/[=&]+/", $msg);
+                            if (count($fields) > 1) $parameters = proper_parse_str( $msg );
+                                
+                            if ($parameters['action'] == "On") {
+                                $actionId = "01";
+                            }
+                            if ($parameters['action'] == "Off") {
+                                $actionId = "00";
+                            }
+                            $Command = array(
+                                             "OnOffTimed"           => "1",
+                                             "addressMode"          => "01",
+                                             "priority"             => $priority,
+                                             "dest"                 => $dest,
+                                             "address"              => $address,
+                                             "destinationEndpoint"  => "01", // Set but not send on radio
+                                             "action"               => $actionId,
+                                             "onTime"               => $parameters['onTime'],
+                                             "offWaitTime"          => $parameters['offWaitTime'],
+                                             );
+                            break;
                         //----------------------------------------------------------------------------
                     case "WriteAttributeRequest":
                         $fields = preg_split("/[=&]+/", $msg);

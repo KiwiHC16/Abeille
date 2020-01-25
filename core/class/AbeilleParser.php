@@ -332,8 +332,8 @@
                                  'e2' => array( 'Time - UTCTime', 4 ),
                                  // 0xe3 - 0xe7 Reserved
                                  'e8' => array( 'Identifier - Cluster ID', 2 ),
-                                 'e8' => array( 'Identifier - Attribute ID', 2 ),
-                                 'e8' => array( 'Identifier - BACnet OID', 4 ),
+                                 'e9' => array( 'Identifier - Attribute ID', 2 ),
+                                 'ea' => array( 'Identifier - BACnet OID', 4 ),
                                  // 0xeb-0xef Reserved
                                  'f0' => array( 'Miscellaneous - IEEE address', 8 ),
                                  'f1' => array( 'Miscellaneous - 128 bit security key', 16 ),

@@ -1,6 +1,6 @@
 {
   "TRADFRImotionsensor": {
-    "nameJeedom": "IKEA TRADFRI Detecteur Presence (Type: E1525)",
+    "nameJeedom": "IKEA TRADFRI Detecteur Presence (Type: E1525 / E1745)",
     "timeout": "60",
     "Categorie": {
       "light": "1"

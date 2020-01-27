@@ -10,26 +10,41 @@ $eqLogics = eqLogic::byType('Abeille');
     $commandIEEE = new AbeilleCmd();
 
     $dest = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort']);
-    if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) { $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId(); }
+    if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) {
+        $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
+        $rucheName[' '] = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getHumanName();
+    }
 
     $dest2 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort2']);
     if ( $dest2 != "none" ) {
-        if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) { $rucheId2 = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) {
+            $rucheId2 = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId();
+            $rucheName['2'] = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getHumanName();
+        }
     }
 
     $dest3 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort3']);
     if ( $dest3 != "none" ) {
-        if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) { $rucheId3 = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) {
+            $rucheId3 = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId();
+            $rucheName['3'] = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getHumanName();
+        }
     }
 
     $dest4 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort4']);
     if ( $dest4 != "none" ) {
-        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) { $rucheId4 = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) {
+            $rucheId4 = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId();
+            $rucheName['4'] = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getHumanName();
+        }
     }
 
     $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
-        if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) { $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId(); }
+        if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) {
+            $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId();
+            $rucheName['5'] = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getHumanName();
+        }
     }
 
 $parameters_info = Abeille::getParameters();
@@ -128,35 +143,60 @@ $parameters_info = Abeille::getParameters();
         <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
         <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogicB" />
 
-        <div class="eqLogicThumbnailContainer">
-
-            <?php
+<?php
+    foreach (array( '', '2', '3', '4', '5') as $zigateId) {
+        
+        if ( Abeille::getParameters()['AbeilleSerialPort'.$zigateId] != "none" ) {
+            
+            echo '<legend><i class="fa fa-cog"></i>Zigate'.$zigateId . ' - ' . $rucheName[$zigateId] . '</legend>';
+            echo '<div id="bt_include'.$zigateId.'" ><img src="plugins/Abeille/images/inclusion.png" > Ici se trouve les équipements connectés à la zigate.</div>';
+            
+            echo '<div class="eqLogicThumbnailContainer">';
+            
+            /*
+             echo '<div class="eqLogicDisplayCardB" id="bt_include'.$zigateId.'/>';
+             echo    '<input type="checkbox" name="Abeille"'.$zigateId.' />';
+             echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+             
+             echo '</div>';
+             echo '</div>';
+             */
+            
+            
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
-
-                // find opacity
-                $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-
-                // Find icone
-                $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                if (in_array($test, $files, 0)) {
-                    $path = 'node_' . $eqLogic->getConfiguration('icone');
-                } else {
-                    $path = 'Abeille_icon';
-                }
-
-                // Affichage
-                echo '<div class="eqLogicDisplayCardB">';
-                    echo '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
-                    echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-                        echo '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td<</tr></table>';
+                
+                list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
+                if ( $net == 'Abeille'. $zigateId) {
+                    
+                    // find opacity
+                    $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+                    
+                    // Find icone
+                    $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+                    if (in_array($test, $files, 0)) {
+                        $path = 'node_' . $eqLogic->getConfiguration('icone');
+                    } else {
+                        $path = 'Abeille_icon';
+                    }
+                    
+                    // Affichage
+                    echo '<div class="eqLogicDisplayCardB">';
+                    echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
+                    echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+                    echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
                     echo '</div>';
-                echo '</div>';
+                    echo '</div>';
+                }
             }
-            ?>
+            echo ' </div>';
+        }
+    }
+?>
 
-        </div>
+       
+
 
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 

@@ -743,18 +743,21 @@
             //check running deamon /!\ if using sudo nbprocess x2
             $nbProcessExpected = 0; // Comptons les process prevus.
             $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
+            
+            $param = self::getParameters();
+            
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 2; } // Parser + MQTTCmd
-            if ( (self::getParameters()['AbeilleSerialPort']  == '/dev/zigate' ) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
-            if ( (self::getParameters()['AbeilleSerialPort2'] == '/dev/zigate2') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
-            if ( (self::getParameters()['AbeilleSerialPort3'] == '/dev/zigate3') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
-            if ( (self::getParameters()['AbeilleSerialPort4'] == '/dev/zigate4') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
-            if ( (self::getParameters()['AbeilleSerialPort5'] == '/dev/zigate5') && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort']  == '/dev/zigate' ) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort2'] == '/dev/zigate2') && ($param['AbeilleActiver2']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort3'] == '/dev/zigate3') && ($param['AbeilleActiver3']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort4'] == '/dev/zigate4') && ($param['AbeilleActiver4']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort5'] == '/dev/zigate5') && ($param['AbeilleActiver5']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
 
-            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort' ])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort2'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort3'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort4'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", self::getParameters()['AbeilleSerialPort5'])) && (self::getParameters()['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort' ])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort2'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort3'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort4'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort5'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
             $return['nbProcessExpected'] = $nbProcessExpected;
 
 
@@ -896,14 +899,14 @@
 
                 // ----------------
 
-                if ( $param['AbeilleSerialPort'] == "/dev/zigate" ) {
+                if ( ($param['AbeilleSerialPort'] == "/dev/zigate") and ($param['AbeilleActiver1']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
                     sleep(5);
                 }
 
-                if ( $param['AbeilleSerialPort2'] == "/dev/zigate2" ) {
+                if ( ($param['AbeilleSerialPort2'] == "/dev/zigate2") and ($param['AbeilleActiver2']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon22." ".$paramdeamon22.$log22;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -911,14 +914,14 @@
                 }
 
 
-                if ( $param['AbeilleSerialPort3'] == "/dev/zigate3" ) {
+                if ( ($param['AbeilleSerialPort3'] == "/dev/zigate3") and ($param['AbeilleActiver3']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon23." ".$paramdeamon23.$log23;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
                     sleep(5);
                 }
 
-                if ( $param['AbeilleSerialPort4'] == "/dev/zigate4" ) {
+                if ( ($param['AbeilleSerialPort4'] == "/dev/zigate4") and ($param['AbeilleActiver4']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon24." ".$paramdeamon24.$log24;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -926,7 +929,7 @@
                 }
 
 
-                if ( $param['AbeilleSerialPort5'] == "/dev/zigate5" ) {
+                if ( ($param['AbeilleSerialPort5'] == "/dev/zigate5") and ($param['AbeilleActiver5']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon25." ".$paramdeamon25.$log25;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -934,7 +937,7 @@
                 }
 
 
-                if ( $param['AbeilleSerialPort'] != 'none' ) {
+                if ( ($param['AbeilleSerialPort'] != 'none') and ($param['AbeilleActiver1']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -944,7 +947,7 @@
                     }
                 }
 
-                if ( $param['AbeilleSerialPort2'] != 'none' ) {
+                if ( ($param['AbeilleSerialPort2'] != 'none') and ($param['AbeilleActiver2']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort2'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort2'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort2'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -954,7 +957,7 @@
                     }
                 }
 
-                if ( $param['AbeilleSerialPort3'] != 'none' ) {
+                if ( ($param['AbeilleSerialPort3'] != 'none') and ($param['AbeilleActiver3']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort3'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort3'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort3'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -964,7 +967,7 @@
                     }
                 }
 
-                if ( $param['AbeilleSerialPort4'] != 'none' ) {
+                if ( ($param['AbeilleSerialPort4'] != 'none') and ($param['AbeilleActiver4']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort4'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort4'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort4'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -974,7 +977,7 @@
                     }
                 }
 
-                if ( $param['AbeilleSerialPort5'] != 'none' ) {
+                if ( ($param['AbeilleSerialPort5'] != 'none') and ($param['AbeilleActiver5']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort5'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort5'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort5'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -986,7 +989,7 @@
 
 
 
-                if ( $param['AbeilleSerialPort'] != "none" ) {
+                if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver1']=='Y') ) {
                     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'].' > /dev/null 2>&1');
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon11." ".$paramdeamon11.$log11;
                     log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
@@ -994,28 +997,28 @@
                 }
 
 
-                if ( $param['AbeilleSerialPort2'] != "none" ) {
+                if ( ($param['AbeilleSerialPort2'] != "none") and ($param['AbeilleActiver2']=='Y') ) {
                     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort2'].' > /dev/null 2>&1');
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon12." ".$paramdeamon12.$log12;
                     log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
                     exec($cmd.' 2>&1 &');
                 }
 
-                if ( $param['AbeilleSerialPort3'] != "none" ) {
+                if ( ($param['AbeilleSerialPort3'] != "none") and ($param['AbeilleActiver3']=='Y') ) {
                      exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort3'].' > /dev/null 2>&1');
                      $cmd = $nohup." ".$php." ".$dirdeamon.$deamon13." ".$paramdeamon13.$log13;
                      log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
                      exec($cmd.' 2>&1 &');
                  }
 
-                if ( $param['AbeilleSerialPort4'] != "none" ) {
+                if ( ($param['AbeilleSerialPort4'] != "none") and ($param['AbeilleActiver4']=='Y') ) {
                      exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort4'].' > /dev/null 2>&1');
                      $cmd = $nohup." ".$php." ".$dirdeamon.$deamon14." ".$paramdeamon14.$log14;
                      log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
                      exec($cmd.' 2>&1 &');
                  }
 
-                if ( $param['AbeilleSerialPort5'] != "none" ) {
+                if ( ($param['AbeilleSerialPort5'] != "none") and ($param['AbeilleActiver5']=='Y') ) {
                      exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort5'].' > /dev/null 2>&1');
                      $cmd = $nohup." ".$php." ".$dirdeamon.$deamon15." ".$paramdeamon15.$log15;
                      log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
@@ -1047,7 +1050,7 @@
 
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
-            if ( $param['AbeilleSerialPort'] != "none" ) {
+            if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver1']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 (Abeille): '.basename($param['AbeilleSerialPort']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 1 ********');
@@ -1056,7 +1059,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille/Ruche/setTimeServer", "" );
             }
 
-            if ( $param['AbeilleSerialPort2'] != "none" ) {
+            if ( ($param['AbeilleSerialPort2'] != "none") and ($param['AbeilleActiver2']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 (Abeille2): '.basename($param['AbeilleSerialPort2']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille2" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 2 ********');
@@ -1065,7 +1068,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille2/Ruche/setTimeServer", "" );
             }
 
-            if ( $param['AbeilleSerialPort3'] != "none" ) {
+            if ( ($param['AbeilleSerialPort3'] != "none") and ($param['AbeilleActiver3']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 3 (Abeille3): '.basename($param['AbeilleSerialPort3']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille3" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 3 ********');
@@ -1074,7 +1077,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille3/Ruche/setTimeServer", "" );
             }
 
-            if ( $param['AbeilleSerialPort4'] != "none" ) {
+            if ( ($param['AbeilleSerialPort4'] != "none") and ($param['AbeilleActiver4']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 4 (Abeille4): '.basename($param['AbeilleSerialPort4']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille4" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 4 ********');
@@ -1083,7 +1086,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille4/Ruche/setTimeServer", "" );
             }
 
-            if ( $param['AbeilleSerialPort5'] != "none" ) {
+            if ( ($param['AbeilleSerialPort5'] != "none") and ($param['AbeilleActiver5']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 5 (Abeille5): '.basename($param['AbeilleSerialPort5']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille5" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 5 ********');
@@ -1317,6 +1320,11 @@
             $return['IpWifiZigate3']        = config::byKey('IpWifiZigate3', 'Abeille', '192.168.4.3');
             $return['IpWifiZigate4']        = config::byKey('IpWifiZigate4', 'Abeille', '192.168.4.4');
             $return['IpWifiZigate5']        = config::byKey('IpWifiZigate5', 'Abeille', '192.168.4.5');
+            $return['AbeilleActiver1']      = config::byKey('AbeilleActiver1', 'Abeille', 'N');
+            $return['AbeilleActiver2']      = config::byKey('AbeilleActiver2', 'Abeille', 'N');
+            $return['AbeilleActiver3']      = config::byKey('AbeilleActiver3', 'Abeille', 'N');
+            $return['AbeilleActiver4']      = config::byKey('AbeilleActiver4', 'Abeille', 'N');
+            $return['AbeilleActiver5']      = config::byKey('AbeilleActiver5', 'Abeille', 'N');
 
             // Testons la validité de la configuration
             // Pas de port alors que je ne suis pas en mode timer only.

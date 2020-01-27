@@ -98,6 +98,15 @@
                     </div>
                 </div>
                
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver1">
+                            <option value="N">{{Desactiver}}</option>
+                            <option value="Y">{{Activer}}</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
                 <div class="form-group">
@@ -132,6 +141,15 @@
                         </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver2">
+                            <option value="N">{{Desactiver}}</option>
+                            <option value="Y">{{Activer}}</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
                 <div class="form-group">
@@ -166,6 +184,15 @@
                        </div>
                </div>
 
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver3">
+                            <option value="N">{{Desactiver}}</option>
+                            <option value="Y">{{Activer}}</option>
+                        </select>
+                    </div>
+                </div>
 
             <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
               <div class="form-group">
@@ -200,6 +227,16 @@
                        </div>
                </div>
 
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver4">
+                            <option value="N">{{Desactiver}}</option>
+                            <option value="Y">{{Activer}}</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du cinquieme réseau zigbee : }}</label>
@@ -232,6 +269,16 @@
                            <input class="configKey form-control" data-l1key="IpWifiZigate5" style="margin-top:5px" placeholder="192.168.4.5:9999"/>
                        </div>
                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
+                    <div class="col-lg-4">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver5">
+                            <option value="N">{{Desactiver}}</option>
+                            <option value="Y">{{Activer}}</option>
+                        </select>
+                    </div>
+                </div>
 
             </div>
 <hr>

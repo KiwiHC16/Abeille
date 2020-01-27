@@ -22,6 +22,14 @@
         include_file('desktop', '404', 'php');
         die();
     }
+    
+    $ruche = new Abeille();
+    $i = 1;
+    foreach ( array( '', '2', '3', '4', '5' ) as $zigateNumber ) {
+        if ( $ruche->byLogicalId( 'Abeille'.$zigateNumber.'/Ruche', 'Abeille') ) {
+            $rucheName[$i++] = $ruche->byLogicalId( 'Abeille'.$zigateNumber.'/Ruche', 'Abeille')->getName();
+        }
+    }
 ?>
 
 
@@ -56,8 +64,15 @@
                     <p><i>Bien mettre les zigates non utilisées sur la valeur Aucun sinon le demon risque de ne pas demarrer.</i></p>
                 </div>
 
+                <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du premier réseau zigbee : }}</label>
+                    <?php echo $rucheName['1']; ?>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
+    
                     <div class="col-lg-4">
                         <select class="configKey form-control col-sm-2" data-l1key="AbeilleSerialPort">
                             <option value="none" selected>{{Aucun}}</option>
@@ -82,7 +97,13 @@
                         <input class="configKey form-control" data-l1key="IpWifiZigate" style="margin-top:5px" placeholder="192.168.4.1:9999"/>
                     </div>
                 </div>
-                
+               
+
+                <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du second réseau zigbee : }}</label>
+                    <?php echo $rucheName['2']; ?>
+                </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 2: }}</label>
@@ -109,6 +130,13 @@
                         <div class="col-sm-4">
                             <input class="configKey form-control" data-l1key="IpWifiZigate2" style="margin-top:5px" placeholder="192.168.4.2:9999"/>
                         </div>
+                </div>
+
+
+                <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du troisieme réseau zigbee : }}</label>
+                    <?php echo $rucheName['3']; ?>
                 </div>
 
                 <div class="form-group">
@@ -138,6 +166,13 @@
                        </div>
                </div>
 
+
+            <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
+              <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du quatrieme réseau zigbee : }}</label>
+                <?php echo $rucheName['4']; ?>
+              </div>
+
               <div class="form-group">
                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 4: }}</label>
                    <div class="col-lg-4">
@@ -164,6 +199,12 @@
                            <input class="configKey form-control" data-l1key="IpWifiZigate4" style="margin-top:5px" placeholder="192.168.4.4:9999"/>
                        </div>
                </div>
+
+                <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du cinquieme réseau zigbee : }}</label>
+                    <?php echo $rucheName['5']; ?>
+                </div>
 
                <div class="form-group">
                    <label class="col-lg-4 control-label data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port 5: }}</label>

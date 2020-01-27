@@ -151,8 +151,8 @@ $parameters_info = Abeille::getParameters();
         if ( Abeille::getParameters()['AbeilleSerialPort'.$zigateId] != "none" ) {
             
             if ( '-'.$zigateId.'-' == '--' ) $zigateIdName = 1; else $zigateIdName = $zigateId;
-            echo '<legend><i class="fa fa-cog"></i>Zigate'.$zigateId . ' - ' . $rucheName[$zigateIdName] . '</legend>';
-            echo '<div id="bt_include'.$zigateId.'" ><img src="plugins/Abeille/images/inclusion.png" > Ici se trouve les équipements connectés à la zigate.</div>';
+            echo '';
+            echo '<div id="bt_include'.$zigateId.'" ><i class="fa fa-plus-circle"></i> Zigate'.$zigateId . ' - ' . $rucheName[$zigateIdName] . '</div>';
             
             echo '<div class="eqLogicThumbnailContainer">';
             

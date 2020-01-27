@@ -10,15 +10,17 @@ $eqLogics = eqLogic::byType('Abeille');
     $commandIEEE = new AbeilleCmd();
 
     $dest = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort']);
-    if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) {
-        $rucheId  = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
-        $rucheName[' '] = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getHumanName();
+    if ( $dest != "none" ) {
+        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) {
+            $rucheId        = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
+            $rucheName['1'] = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getHumanName();
+        }
     }
 
     $dest2 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort2']);
     if ( $dest2 != "none" ) {
         if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) {
-            $rucheId2 = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId();
+            $rucheId2       = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId();
             $rucheName['2'] = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getHumanName();
         }
     }
@@ -26,7 +28,7 @@ $eqLogics = eqLogic::byType('Abeille');
     $dest3 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort3']);
     if ( $dest3 != "none" ) {
         if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) {
-            $rucheId3 = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId();
+            $rucheId3       = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId();
             $rucheName['3'] = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getHumanName();
         }
     }
@@ -34,7 +36,7 @@ $eqLogics = eqLogic::byType('Abeille');
     $dest4 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort4']);
     if ( $dest4 != "none" ) {
         if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) {
-            $rucheId4 = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId();
+            $rucheId4       = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId();
             $rucheName['4'] = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getHumanName();
         }
     }
@@ -42,7 +44,7 @@ $eqLogics = eqLogic::byType('Abeille');
     $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
     if ( $dest5 != "none" ) {
         if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) {
-            $rucheId5 = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId();
+            $rucheId5       = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId();
             $rucheName['5'] = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getHumanName();
         }
     }
@@ -148,7 +150,8 @@ $parameters_info = Abeille::getParameters();
         
         if ( Abeille::getParameters()['AbeilleSerialPort'.$zigateId] != "none" ) {
             
-            echo '<legend><i class="fa fa-cog"></i>Zigate'.$zigateId . ' - ' . $rucheName[$zigateId] . '</legend>';
+            if ( '-'.$zigateId.'-' == '--' ) $zigateIdName = 1; else $zigateIdName = $zigateId;
+            echo '<legend><i class="fa fa-cog"></i>Zigate'.$zigateId . ' - ' . $rucheName[$zigateIdName] . '</legend>';
             echo '<div id="bt_include'.$zigateId.'" ><img src="plugins/Abeille/images/inclusion.png" > Ici se trouve les équipements connectés à la zigate.</div>';
             
             echo '<div class="eqLogicThumbnailContainer">';

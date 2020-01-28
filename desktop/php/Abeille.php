@@ -121,14 +121,14 @@ $outils = array(
 
 <label>Groupes</label>
 <a class="btn btn-primary btn-xs" target="_blank" href="http://http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
-<table><tr><td class="two">
+<table><tr><td>
 
-        <table class="one">
+        <table border="1" style="border:1px">
           <thead>
             <tr>
-                <th class="one">{{Module}}</th>
-                <th class="one">{{Telecommande}}</th>
-                <th class="one">{{Membre}}</th>
+                <th>{{Module}}</th>
+                <th>{{Telecommande}}</th>
+                <th>{{Membre}}</th>
             </tr>
           </thead>
           <tbody>
@@ -170,7 +170,7 @@ $outils = array(
           </tbody>
         </table>
 
-</td><td class="two">
+</td><td>
 
         <table>
             <tr>
@@ -202,12 +202,12 @@ $outils = array(
 <a class="btn btn-primary btn-xs" target="_blank" href="https://abeilledocsphinx.readthedocs.io/fr/latest/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
 <table class="one"><tr><td class="two">
 
-            <table class="one">
+            <table>
             <thead>
             <tr>
-            <th class="one">{{Module}}</th>
-            <th class="one">{{Telecommande}}</th>
-            <th class="one">{{Membre}}</th>
+            <th>{{Module}}</th>
+            <th>{{Telecommande}}</th>
+            <th>{{Membre}}</th>
             </tr>
             </thead>
             <tbody>
@@ -249,18 +249,18 @@ $outils = array(
             </tbody>
             </table>
 
-      </td><td class="two">
-          <table class="one">
+      </td><td>
+          <table>
             <tr>
-                <td class="one">
+                <td>
                     <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
                     <input type="text" name="groupIdScene1" placeholder="XXXX">
                     <br>
                     <input type="submit" name="submitButton" value="Get Scene Membership">
                     <input type="submit" name="submitButton" value="Remove All Scene">
                 </td>
-            </tr><tr class="one">
-                </td><td class="one">
+            </tr><tr>
+                </td><td>
                     <label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
                     <label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
                     <br>
@@ -369,7 +369,7 @@ $outils = array(
             echo '<br>';
             echo 'ZiGate '.$zigateId.'<br>';
             $rucheId = Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')->getId();
-            echo '<table>';
+            echo '<table border="1" style="border:1px">';
             foreach ( $params as $key=>$param ){
                 
                 

@@ -3662,7 +3662,7 @@
             } // if $address != "Ruche"
             else { // $address == "Ruche"
                 $done = 0;
-$this->deamonlog("debug", 'procmsg fct - getGroupMembership: ' );
+                $this->deamonlog("debug", 'procmsg fct - Pour La Ruche ' );
                 // Crée les variables dans la chaine et associe la valeur.
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

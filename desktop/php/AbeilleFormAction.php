@@ -250,7 +250,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'TxPower Z'.$zigateId ) {
                 echo "TxPower request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort'.$zigateId]).'/Ruche/TxPower', $_POST['TxPowerValue'] );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/TxPower', $_POST['TxPowerValue'] );
             }
         }
                 
@@ -258,7 +258,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
                 echo "TxPower request processing";
-                sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort'.$zigateId]).'/Ruche/setChannelMask', $_POST['channelMask'] );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setChannelMask', $_POST['channelMask'] );
             }
         }
                 
@@ -266,7 +266,7 @@
         foreach ( $zigateIds as $zigateId ) {
           if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
                   echo "TxPower request processing";
-              sendMessageFromFormToCmd('Cmd'.basename(Abeille::getParameters()['AbeilleSerialPort'.$zigateId]).'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+              sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
           }
         }
 

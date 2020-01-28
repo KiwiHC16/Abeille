@@ -72,8 +72,8 @@
                             <?php
                                 echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$key.'">';
                                 echo '<option value="none" selected>{{Aucun}}</option>';
-                                echo '<option value="/dev/zigate" >{{WIFI'.$key.'}}</option>';
-                                echo '<option value="/dev/monitZigate1" >{{Monit'.$key.'}}</option>';
+                                echo '<option value="/dev/zigate'.$key.'" >{{WIFI'.$key.'}}</option>';
+                                echo '<option value="/dev/monitZigate'.$key.'" >{{Monit'.$key.'}}</option>';
                             
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';

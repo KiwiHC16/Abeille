@@ -92,17 +92,7 @@ $outils = array(
             echo '<div id="bt_include'.$zigateId.'" ><i class="fa fa-plus-circle"></i> Zigate'.$zigateId . ' - ' . $rucheName[$zigateIdName] . '</div>';
             
             echo '<div class="eqLogicThumbnailContainer">';
-            
-            /*
-             echo '<div class="eqLogicDisplayCardB" id="bt_include'.$zigateId.'/>';
-             echo    '<input type="checkbox" name="Abeille"'.$zigateId.' />';
-             echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-             
-             echo '</div>';
-             echo '</div>';
-             */
-            
-            
+
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {

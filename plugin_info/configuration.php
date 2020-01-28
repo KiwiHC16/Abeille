@@ -69,11 +69,12 @@
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
                     <div class="col-lg-4">
-                            <?php echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$key.'">'; ?>
-                            <option value="none" selected>{{Aucun}}</option>
-                            <?php echo '<option value="/dev/zigate" >{{WIFI'.$key.'}}</option>';
-                            <?php echo '<option value="/dev/monitZigate1" >{{Monit'.$key.'}}</option>';
                             <?php
+                                echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$key.'">';
+                                echo '<option value="none" selected>{{Aucun}}</option>';
+                                echo '<option value="/dev/zigate" >{{WIFI'.$key.'}}</option>';
+                                echo '<option value="/dev/monitZigate1" >{{Monit'.$key.'}}</option>';
+                            
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                 }

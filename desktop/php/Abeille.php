@@ -8,6 +8,7 @@ $eqLogics = eqLogic::byType('Abeille');
 
 $zigateIds = array( '', '2', '3', '4', '5' );
     
+    $parametersAbeille = Abeille::getParameters();
 
 ?>
 
@@ -291,26 +292,15 @@ $outils = array(
 <hr>
 
 <table>
-<tr>
-    <td>
-        Modele
-    </td>
-</tr><tr>
-    <td>
-        <input type="submit" name="submitButton" value="Apply Template">
-    </td>
-  </tr><tr>
-      <td>
-        <input type="submit" name="submitButton" value="Get Infos from NE">
-      </td>
-  </tr><tr>
+    <tr>
     <td>
       <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
-            <input type="submit" name="submitButton" value="Set Channel Mask Z1">
-            <input type="submit" name="submitButton" value="Set Channel Mask Z2">
-            <input type="submit" name="submitButton" value="Set Channel Mask Z3">
-            <input type="submit" name="submitButton" value="Set Channel Mask Z4">
-            <input type="submit" name="submitButton" value="Set Channel Mask Z5"></br>
+<?php
+    foreach ( $zigateIds as $zigateId ) {
+        echo '<input type="submit" name="submitButton" value="Set Channel Mask Z'.$zigateId.'">';
+    }
+    ?>
+           </br>
         <i>Pour l instant le mask doit être défini à la main, je verrai comment faire une belle interface plus tard. Vous devez definir les canaux qui sont authorisés pour la zigate. Si 1 canal authorisé, si 0 canal pas authorisé.</br>
         Au démarrage la zigate choisira parmi ces canaux en fonction de sa mesure d occupation du canal.</br>
         Dans le zigbee vous avez les canaux 11 à 26 disponibles.</br>
@@ -324,19 +314,23 @@ $outils = array(
         </br>
         </i>
       <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
-        <input type="submit" name="submitButton" value="Set Extended PANID Z1">
-        <input type="submit" name="submitButton" value="Set Extended PANID Z2">
-        <input type="submit" name="submitButton" value="Set Extended PANID Z3">
-        <input type="submit" name="submitButton" value="Set Extended PANID Z4">
-        <input type="submit" name="submitButton" value="Set Extended PANID Z5"></br>
+<?php
+foreach ( $zigateIds as $zigateId ) {
+    if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Extended PANID Z'.$zigateId.'">';
+    }
+}
+?>
+</br>
 
       <label>Tx Power</label>
         <input type="text" name="TxPowerValue"  placeholder="XX">
-        <input type="submit" name="submitButton" value="TxPower Z1">
-        <input type="submit" name="submitButton" value="TxPower Z2">
-        <input type="submit" name="submitButton" value="TxPower Z3">
-        <input type="submit" name="submitButton" value="TxPower Z4">
-        <input type="submit" name="submitButton" value="TxPower Z5"></br>
+<?php
+foreach ( $zigateIds as $zigateId ) {
+    echo '<input type="submit" name="submitButton" value="TxPower Z'.$zigateId.'">';
+}
+?>
+</br>
     </td>
   </tr>
 </table>

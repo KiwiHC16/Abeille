@@ -287,17 +287,6 @@ $outils = array(
 </div>
 
 <br>
-<ol>
-    <li>
-    "Get Scene Membership" interroge l équipement pour avoir les scenes associées à un groupe mais Abeille ne peut traiter la réponse incomplète. La modification est en cours de dev cote firmware zigate et ne fonctionnent pas a ce stade. Par contre en attendant vous pouvez voir passer la réponse dans le log AbeilleParser message "Scene Membership"
-    </li>
-    <li>
-    "View Scene" interroge l équipement pour avoir les détails d une scene mais Abeille ne peut traiter la réponse incomplète. La modification est en cours de dev cote firmware zigate et ne fonctionnent pas a ce stade. Par contre en attendant vous pouvez voir passer la réponse dans le log AbeilleParser message "Scene View"
-    </li>
-    <li>
-    "scene Group Recal" n est pas encore fonctionnelle.
-    </li>
-</ol>
 
 <hr>
 <!-- Gestion des parametres Zigate -->

@@ -1946,7 +1946,7 @@
             }
 
             if (is_object($elogic) && !is_object($cmdlogic)) {
-                log::add('Abeille', 'debug', "Objet existe mais pas la commande, je passe.");
+                log::add('Abeille', 'debug', "fct message Topic: Objet existe mais pas la commande, je passe ->".$message->topic."<- Value ->".$message->payload."<-");
                 return;
             }
             log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");

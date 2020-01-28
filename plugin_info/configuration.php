@@ -25,13 +25,6 @@
     
     $zigateIds = array( ''=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5' );
     
-    $ruche = new Abeille();
-    $i = 1;
-    foreach ( $zigateIds as $key=>$zigateNumber ) {
-        if ( $ruche->byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille') ) {
-            $rucheName[$i++] = $ruche->byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille')->getName();
-        }
-    }
 ?>
 
 
@@ -52,8 +45,6 @@
                 </div>
             </div>
 
-
-<hr>
             <legend><i class="fa fa-list-alt"></i> {{Connection}}</legend>
             <a class="btn btn-success" id="bt_Connection_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_Connection_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
@@ -66,9 +57,10 @@
                     <p><i>Bien mettre les zigates non utilisées sur la valeur Aucun sinon le demon risque de ne pas demarrer.</i></p>
                 </div>
 <?php
-foreach ( $zigateIds as $key=>$zigateId ) {
+                foreach ( $zigateIds as $key=>$zigateId ) {
     ?>
-                <div class="form-group"><label class="col-lg-4 control-label">-----</label></div>
+                <div class="form-group"><label class="col-lg-4 control-label">-----</label>
+                </div>
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du réseau zigbee : }}</label>
                     <?php if (Abeille::byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille')) {echo Abeille::byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille')->getHumanName();} ?>
@@ -76,7 +68,6 @@ foreach ( $zigateIds as $key=>$zigateId ) {
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
-    
                     <div class="col-lg-4">
                             <?php echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$zigateId.'">'; ?>
                             <option value="none" selected>{{Aucun}}</option>
@@ -113,7 +104,7 @@ foreach ( $zigateIds as $key=>$zigateId ) {
 <?php
 }
 ?>
-             
+             </div>
 <hr>
             <legend><i class="fa fa-list-alt"></i> {{Parametre}}</legend>
             <a class="btn btn-success" id="bt_parametre_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_parametre_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
@@ -142,6 +133,7 @@ foreach ( $zigateIds as $key=>$zigateId ) {
                         </select>
                     </div>
                 </div>
+                Merci de garder la valeur "Mode Timer seulement" sur "Non" car cette option va disparaitre.
 
 
                 

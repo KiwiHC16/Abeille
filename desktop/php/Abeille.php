@@ -7,8 +7,8 @@ sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
 $zigateIds = array( '', '2', '3', '4', '5' );
-    
-    $parametersAbeille = Abeille::getParameters();
+
+$parametersAbeille = Abeille::getParameters();
 
 ?>
 
@@ -121,9 +121,12 @@ $outils = array(
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 
 <label>Groupes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
-<table><tr><td>
+<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
 
+<div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
+<div id="leftMargin" style="float: left; width:10%;">.
+</div>
+<div id="leftThing" style="float: left; width:40%;">
         <table border="1" style="border:1px">
           <thead>
             <tr>
@@ -170,9 +173,10 @@ $outils = array(
         ?>
           </tbody>
         </table>
+</div>
 
-</td><td>
 
+<div id="rightThing" style="float: left; width:40%;">
         <table>
             <tr>
                 <td align="center">
@@ -194,15 +198,20 @@ $outils = array(
                 </td>
             </tr>
           </table>
+</div>
 
-</td></tr></table>
+</div>
 
 <hr>
 
 <label>Scenes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="https://abeilledocsphinx.readthedocs.io/fr/latest/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
-<table class="one"><tr><td class="two">
+<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
 
+
+<div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
+<div id="leftMargin" style="float: left; width:10%;">.
+</div>
+<div id="leftThing" style="float: left; width:40%;">
             <table>
             <thead>
             <tr>
@@ -249,8 +258,8 @@ $outils = array(
                 ?>
             </tbody>
             </table>
-
-      </td><td>
+</div>
+<div id="rightThing" style="float: left; width:40%;">
           <table>
             <tr>
                 <td>
@@ -274,8 +283,9 @@ $outils = array(
                 </td>
             </tr>
           </table>
+</div>
+</div>
 
-</td></tr></table>
 <br>
 <ol>
     <li>
@@ -290,30 +300,23 @@ $outils = array(
 </ol>
 
 <hr>
+<!-- Gestion des parametres Zigate -->
+<legend><i class="fa fa-cogs"></i> {{Gestion des parametres radio Zigate}}</legend>
 
-<table>
-    <tr>
-    <td>
-      <label>Channel Mask</label>   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
+<label>Channel Mask</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i>Documentation</a></br>
+Channel Mask:   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
 <?php
     foreach ( $zigateIds as $zigateId ) {
-        echo '<input type="submit" name="submitButton" value="Set Channel Mask Z'.$zigateId.'">';
+        if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
+            echo '<input type="submit" name="submitButton" value="Set Channel Mask Z'.$zigateId.'">';
+        }
     }
     ?>
-           </br>
-        <i>Pour l instant le mask doit être défini à la main, je verrai comment faire une belle interface plus tard. Vous devez definir les canaux qui sont authorisés pour la zigate. Si 1 canal authorisé, si 0 canal pas authorisé.</br>
-        Au démarrage la zigate choisira parmi ces canaux en fonction de sa mesure d occupation du canal.</br>
-        Dans le zigbee vous avez les canaux 11 à 26 disponibles.</br>
-        Le mask couvre les canaux 0 à 31. De ce fait il faut positionner à 0 les canaux 0 à 10 et les canaux 27 à 31, on commence par canal 31 et on fini par canal 0 => 00000xxxxxxxxxxxxxxxx00000000000</br>
-        Les x étant les canaux 26 à 11. Si vous voulez tous les activer alors le mask vaut: 00000111111111111111100000000000 (en Hexa: 0x07FFF800)</br>
-        Si vous ne voulez que le canal 26 alors ca donne: 00000100000000000000000000000000 (en Hexa: 0x04000000)</br>
-        Si vous ne voulez que le canal 20 alors ca donne: 00000000000100000000000000000000 (en Hexa: 0x00100000)</br>
-        Si vous ne voulez que le canal 15 alors ca donne: 00000000000000001000000000000000 (en Hexa: 0x00008000)</br>
-        Dans le champ il faut mettre la valeur en hexa. Il faut bien 8 digit sans le 0x devant.</br>
-        Pour convertir le binaire en hexa vous avez: https://www.binaryhexconverter.com/binary-to-hex-converter</br>
-        </br>
-        </i>
-      <label>Extended PANID</label> <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
+</br>
+</br>
+
+<label>Extended PANID</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html"><i class="fas fa-book"></i>Documentation</a></br>
+Extended PANID: <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
 <?php
 foreach ( $zigateIds as $zigateId ) {
     if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
@@ -322,18 +325,19 @@ foreach ( $zigateIds as $zigateId ) {
 }
 ?>
 </br>
+</br>
 
-      <label>Tx Power</label>
-        <input type="text" name="TxPowerValue"  placeholder="XX">
+<label>Tx Power</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html"><i class="fas fa-book"></i>Documentation</a></br>
+Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
 <?php
 foreach ( $zigateIds as $zigateId ) {
-    echo '<input type="submit" name="submitButton" value="TxPower Z'.$zigateId.'">';
+    if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="TxPower Z'.$zigateId.'">';
+    }
 }
 ?>
 </br>
-    </td>
-  </tr>
-</table>
+</br>
 
 <hr>
 

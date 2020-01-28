@@ -747,17 +747,17 @@
             $param = self::getParameters();
             
             if (self::getParameters()['onlyTimer'] == 'N') { $nbProcessExpected += 2; } // Parser + MQTTCmd
-            if ( ($param['AbeilleSerialPort']  == '/dev/zigate' ) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
+            if ( ($param['AbeilleSerialPort']  == '/dev/zigate' ) && ($param['AbeilleActiver']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( ($param['AbeilleSerialPort2'] == '/dev/zigate2') && ($param['AbeilleActiver2']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( ($param['AbeilleSerialPort3'] == '/dev/zigate3') && ($param['AbeilleActiver3']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( ($param['AbeilleSerialPort4'] == '/dev/zigate4') && ($param['AbeilleActiver4']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
             if ( ($param['AbeilleSerialPort5'] == '/dev/zigate5') && ($param['AbeilleActiver5']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected+=2; } // Socat + SerialRead
 
-            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort' ])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort2'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort3'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort4'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
-            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort5'])) && ($param['AbeilleActiver1']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort' ])) && ($param['AbeilleActiver']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort2'])) && ($param['AbeilleActiver2']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort3'])) && ($param['AbeilleActiver3']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort4'])) && ($param['AbeilleActiver4']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
+            if ( (preg_match("(tty|monit)", $param['AbeilleSerialPort5'])) && ($param['AbeilleActiver5']=='Y') && ($param['onlyTimer'] == 'N') ) { $nbProcessExpected++; } // SerialRead
             $return['nbProcessExpected'] = $nbProcessExpected;
 
 
@@ -899,7 +899,7 @@
 
                 // ----------------
 
-                if ( ($param['AbeilleSerialPort'] == "/dev/zigate") and ($param['AbeilleActiver1']=='Y') ) {
+                if ( ($param['AbeilleSerialPort'] == "/dev/zigate") and ($param['AbeilleActiver']=='Y') ) {
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
                     log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
                     exec($cmd.' 2>&1 &');
@@ -937,7 +937,7 @@
                 }
 
 
-                if ( ($param['AbeilleSerialPort'] != 'none') and ($param['AbeilleActiver1']=='Y') ) {
+                if ( ($param['AbeilleSerialPort'] != 'none') and ($param['AbeilleActiver']=='Y') ) {
                     if (@!file_exists($param['AbeilleSerialPort'])) {
                         log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort'] );
                         message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
@@ -989,7 +989,7 @@
 
 
 
-                if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver1']=='Y') ) {
+                if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver']=='Y') ) {
                     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'].' > /dev/null 2>&1');
                     $cmd = $nohup." ".$php." ".$dirdeamon.$deamon11." ".$paramdeamon11.$log11;
                     log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
@@ -1050,7 +1050,7 @@
 
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
-            if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver1']=='Y') ) {
+            if ( ($param['AbeilleSerialPort'] != "none") and ($param['AbeilleActiver']=='Y') ) {
                 log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 (Abeille): '.basename($param['AbeilleSerialPort']));
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" );
                 log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 1 ********');
@@ -1320,7 +1320,7 @@
             $return['IpWifiZigate3']        = config::byKey('IpWifiZigate3', 'Abeille', '192.168.4.3');
             $return['IpWifiZigate4']        = config::byKey('IpWifiZigate4', 'Abeille', '192.168.4.4');
             $return['IpWifiZigate5']        = config::byKey('IpWifiZigate5', 'Abeille', '192.168.4.5');
-            $return['AbeilleActiver1']      = config::byKey('AbeilleActiver1', 'Abeille', 'N');
+            $return['AbeilleActiver' ]      = config::byKey('AbeilleActiver',  'Abeille', 'N');
             $return['AbeilleActiver2']      = config::byKey('AbeilleActiver2', 'Abeille', 'N');
             $return['AbeilleActiver3']      = config::byKey('AbeilleActiver3', 'Abeille', 'N');
             $return['AbeilleActiver4']      = config::byKey('AbeilleActiver4', 'Abeille', 'N');

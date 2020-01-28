@@ -101,7 +101,7 @@
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
                     <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver1">
+                        <select style="width:auto" class="configKey form-control" data-l1key="AbeilleActiver">
                             <option value="N">{{Desactiver}}</option>
                             <option value="Y">{{Activer}}</option>
                         </select>

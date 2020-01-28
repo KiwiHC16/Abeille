@@ -23,7 +23,7 @@
         die();
     }
     
-    $zigateIds = array( ''=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5' );
+    $zigateIds = array( '1'=>'', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5' );
     
 ?>
 
@@ -63,13 +63,13 @@
                 </div>
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du réseau zigbee : }}</label>
-                    <?php if (Abeille::byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille')) {echo Abeille::byLogicalId( 'Abeille'.$key.'/Ruche', 'Abeille')->getHumanName();} ?>
+                    <?php if (Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')) {echo Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')->getHumanName();} ?>
                 </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
                     <div class="col-lg-4">
-                            <?php echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$zigateId.'">'; ?>
+                            <?php echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$key.'">'; ?>
                             <option value="none" selected>{{Aucun}}</option>
                             <option value="/dev/zigate" >{{WIFI1}}</option>
                             <option value="/dev/monitZigate1" >{{Monit1}}</option>

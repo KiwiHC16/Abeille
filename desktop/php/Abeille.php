@@ -9,50 +9,18 @@ $eqLogics = eqLogic::byType('Abeille');
     $ruche = new Abeille();
     $commandIEEE = new AbeilleCmd();
 
-    $dest = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort']);
-    if ( $dest != "none" ) {
-        if ( $ruche->byLogicalId( $dest.'/Ruche', 'Abeille') ) {
-            $rucheId        = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
-            $rucheName['1'] = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getHumanName();
+    foreach ( array( '', '2', '3', '4', '5' ) as $destId ) {
+        $dest = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort'.$destId]);
+        if ( $dest != "none" ) {
+            if ( $ruche->byLogicalId( $dest.$destId.'/Ruche', 'Abeille') ) {
+                $rucheId        = $ruche->byLogicalId( $dest.$destId.'/Ruche', 'Abeille')->getId();
+                $rucheName['1'] = $ruche->byLogicalId( $dest.$destId.'/Ruche', 'Abeille')->getHumanName();
+            }
         }
     }
-
-    $dest2 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort2']);
-    if ( $dest2 != "none" ) {
-        if ( $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille') ) {
-            $rucheId2       = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getId();
-            $rucheName['2'] = $ruche->byLogicalId( $dest2.'/Ruche', 'Abeille')->getHumanName();
-        }
-    }
-
-    $dest3 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort3']);
-    if ( $dest3 != "none" ) {
-        if ( $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille') ) {
-            $rucheId3       = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getId();
-            $rucheName['3'] = $ruche->byLogicalId( $dest3.'/Ruche', 'Abeille')->getHumanName();
-        }
-    }
-
-    $dest4 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort4']);
-    if ( $dest4 != "none" ) {
-        if ( $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille') ) {
-            $rucheId4       = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getId();
-            $rucheName['4'] = $ruche->byLogicalId( $dest4.'/Ruche', 'Abeille')->getHumanName();
-        }
-    }
-
-    $dest5 = Abeille::mapPortAbeille(Abeille::getParameters()['AbeilleSerialPort5']);
-    if ( $dest5 != "none" ) {
-        if ( $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille') ) {
-            $rucheId5       = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getId();
-            $rucheName['5'] = $ruche->byLogicalId( $dest5.'/Ruche', 'Abeille')->getHumanName();
-        }
-    }
-
-$parameters_info = Abeille::getParameters();
-
 ?>
 
+<!-- Barre verticale de recherche à gauche de la page  -->
 <div class="row row-overflow">
     <div class="col-lg-2 col-sm-3 col-sm-4">
         <div class="bs-sidebar">
@@ -69,19 +37,23 @@ $parameters_info = Abeille::getParameters();
         </div>
     </div>
 
-<div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
+<!-- Barre d outils horizontale  -->
+<?php
+$outils = array(
+                'remote'    => array( 'bouton'=>'bt_createRemote',         'icon'=>'fa-gamepad',       'text'=>'{{Télécommande}}' ),
+                'health'    => array( 'bouton'=>'bt_healthAbeille',        'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
+                'netList'   => array( 'bouton'=>'bt_networkAbeilleList',   'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
+                'net'       => array( 'bouton'=>'bt_networkAbeille',       'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
+                'graph'     => array( 'bouton'=>'bt_graph',                'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
+                'compat'    => array( 'bouton'=>'bt_listeCompatibilite',   'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
+                'inconnu'   => array( 'bouton'=>'bt_Inconnu',              'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
+                );
+    ?>
+    <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
 
         <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
 
         <div class="eqLogicThumbnailContainer">
-
-            <div class="cursor" id="bt_createRemote" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">
-                <center>
-                    <i class="fa fa-gamepad" style="font-size : 6em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Télécommande}}</center></span>
-            </div>
-
             <div class="cursor eqLogicAction" data-action="gotoPluginConf"
                  style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
                 <center>
@@ -90,55 +62,20 @@ $parameters_info = Abeille::getParameters();
                 <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
             </div>
 
-            <div class="cursor" id="bt_healthAbeille"
-                 style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-medkit" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Santé}}</center></span>
-            </div>
-
-            <div class="cursor" id="bt_networkAbeilleList"
-                style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-sitemap" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network List</center></span>
-            </div>
-
-            <div class="cursor" id="bt_networkAbeille"
-                style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-map" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Network Graph</center></span>
-            </div>
-
-            <div class="cursor" id="bt_graph"
-                style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-flask" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Graph</center></span>
-            </div>
-
-            <div class="cursor" id="bt_listeCompatibilite" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-align-left" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Compatibilite</center></span>
-            </div>
-
-            <div class="cursor" id="bt_Inconnu" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-paperclip" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>Inconnu</center></span>
-            </div>
-
+<?php
+    foreach ( $outils as $key=>$outil ) {
+            echo '<div class="cursor" id="'.$outil['bouton'].'" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">';
+            echo '  <center>';
+            echo '      <i class="fa '.$outil['icon'].'" style="font-size : 6em;color:#767676;"></i>';
+            echo '  </center>';
+            echo '  <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>'.$outil['text'].'</center></span>';
+            echo '</div>';
+    }
+?>
 
         </div>
 
+<!-- Icones de toutes les abeilles  -->
         <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
 
 

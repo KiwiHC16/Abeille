@@ -39,5 +39,5 @@ atlassian-ide-plugin.xml
 .nfs*
 
 LqiStorage.db
-Network/AbeilleLQI_MapData.json
-Network/AbeilleLQI_MapData.json.lock
+AbeilleLQI_MapData.json
+AbeilleLQI_MapData.json.lock

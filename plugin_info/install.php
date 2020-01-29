@@ -42,6 +42,12 @@ function Abeille_update() {
     config::remove('affichageNetwork', 'Abeille');
     config::remove('affichageTime', 'Abeille');
     config::remove('IpWifiZigate', 'Abeille');
+    config::remove('AbeilleAddress', 'Abeille');
+    config::remove('AbeilleConId', 'Abeille');
+    config::remove('AbeillePort', 'Abeille');
+    config::remove('mqttPass', 'Abeille');
+    config::remove('mqttTopic', 'Abeille');
+    config::remove('mqttUser', 'Abeille');
     
     
     // Passe les abeilles de "Abeille" à "Abeille1"
@@ -75,5 +81,4 @@ function Abeille_remove() {
     message::add("Abeille","plugin désinstallé");
 }
 
-    Abeille_update();
 ?>

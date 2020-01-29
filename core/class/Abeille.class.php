@@ -614,27 +614,12 @@
             // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
             // so I need to create a minimum of traffic, so pull zigate every minutes
             if ($param['onlyTimer'] == 'N') {
-                if ($param['AbeilleSerialPort1']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
-                if ($param['AbeilleSerialPort2']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille2/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille2/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
-                if ($param['AbeilleSerialPort3']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille3/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille3/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
-                if ($param['AbeilleSerialPort4']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille4/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille4/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
-                if ($param['AbeilleSerialPort5']!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille5/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille5/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
-
+				foreach ( $zigateIds as $key=>$zigateId ) {
+					if ($param['AbeilleSerialPort'.$key]!="none") {
+						Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$key."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+						Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$key."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
+					}
+				}
             } else {
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille/Ruche/SW-SDK", "TimerMode" );
                 Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
@@ -935,58 +920,17 @@
                     sleep(5);
                 }
 
-
-                if ( ($param['AbeilleSerialPort1'] != 'none') and ($param['AbeilleActiver']=='Y') ) {
-                    if (@!file_exists($param['AbeilleSerialPort1'])) {
-                        log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort1'] );
-                        message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort1'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-                        $return['parametersCheck']="nok";
-                        $return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-                        return false;
-                    }
-                }
-
-                if ( ($param['AbeilleSerialPort2'] != 'none') and ($param['AbeilleActiver2']=='Y') ) {
-                    if (@!file_exists($param['AbeilleSerialPort2'])) {
-                        log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort2'] );
-                        message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort2'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-                        $return['parametersCheck']="nok";
-                        $return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-                        return false;
-                    }
-                }
-
-                if ( ($param['AbeilleSerialPort3'] != 'none') and ($param['AbeilleActiver3']=='Y') ) {
-                    if (@!file_exists($param['AbeilleSerialPort3'])) {
-                        log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort3'] );
-                        message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort3'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-                        $return['parametersCheck']="nok";
-                        $return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-                        return false;
-                    }
-                }
-
-                if ( ($param['AbeilleSerialPort4'] != 'none') and ($param['AbeilleActiver4']=='Y') ) {
-                    if (@!file_exists($param['AbeilleSerialPort4'])) {
-                        log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort4'] );
-                        message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort4'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-                        $return['parametersCheck']="nok";
-                        $return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-                        return false;
-                    }
-                }
-
-                if ( ($param['AbeilleSerialPort5'] != 'none') and ($param['AbeilleActiver5']=='Y') ) {
-                    if (@!file_exists($param['AbeilleSerialPort5'])) {
-                        log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort5'] );
-                        message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort5'], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-                        $return['parametersCheck']="nok";
-                        $return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-                        return false;
-                    }
-                }
-
-
+				foreach ( $zigateIds as $key=>$zigateId ) {
+					if ( ($param['AbeilleSerialPort'.$key] != 'none') and ($param['AbeilleActiver'.$key]=='Y') ) {
+						if (@!file_exists($param['AbeilleSerialPort'.$key])) {
+							log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort'.$key] );
+							message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort'.$key], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
+							$return['parametersCheck']="nok";
+							$return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
+							return false;
+						}
+					}
+				}
 
                 if ( ($param['AbeilleSerialPort1'] != "none") and ($param['AbeilleActiver']=='Y') ) {
                     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort1'].' > /dev/null 2>&1');
@@ -1050,51 +994,18 @@
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
             
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
-            if ( ($param['AbeilleSerialPort1'] != "none") and ($param['AbeilleActiver']=='Y') ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 1 (Abeille): '.basename($param['AbeilleSerialPort1']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 1 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille/Ruche/startNetwork", "StartNetwork" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 1 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille/Ruche/setTimeServer", "" );
-            }
-
-            if ( ($param['AbeilleSerialPort2'] != "none") and ($param['AbeilleActiver2']=='Y') ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 2 (Abeille2): '.basename($param['AbeilleSerialPort2']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille2" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 2 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille2/Ruche/startNetwork", "StartNetwork" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 2 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille2/Ruche/setTimeServer", "" );
-            }
-
-            if ( ($param['AbeilleSerialPort3'] != "none") and ($param['AbeilleActiver3']=='Y') ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 3 (Abeille3): '.basename($param['AbeilleSerialPort3']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille3" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 3 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille3/Ruche/startNetwork", "StartNetwork" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 3 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille3/Ruche/setTimeServer", "" );
-            }
-
-            if ( ($param['AbeilleSerialPort4'] != "none") and ($param['AbeilleActiver4']=='Y') ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 4 (Abeille4): '.basename($param['AbeilleSerialPort4']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille4" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 4 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille4/Ruche/startNetwork", "StartNetwork" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 4 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille4/Ruche/setTimeServer", "" );
-            }
-
-            if ( ($param['AbeilleSerialPort5'] != "none") and ($param['AbeilleActiver5']=='Y') ) {
-                log::add('Abeille', 'debug', 'deamon_start: ***** ruche 5 (Abeille5): '.basename($param['AbeilleSerialPort5']));
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille5" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee 5 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille5/Ruche/startNetwork", "StartNetwork" );
-                log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee 5 ********');
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille5/Ruche/setTimeServer", "" );
-            }
-
+			
+			foreach ( $zigateIds as $key=>$zigateId ) {
+				if ( ($param['AbeilleSerialPort'.$key] != "none") and ($param['AbeilleActiver'.$key]=='Y') ) {
+					log::add('Abeille', 'debug', 'deamon_start: ***** ruche '.$key.' (Abeille): '.basename($param['AbeilleSerialPort'.$key]));
+					Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$zigateId );
+					log::add('Abeille', 'debug', 'deamon_start: ***** Demarrage du réseau Zigbee '.$key.' ********');
+					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zigateId."/Ruche/startNetwork", "StartNetwork" );
+					log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee '.$key.' ********');
+					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zigateId."/Ruche/setTimeServer", "" );
+				}
+			}
+			
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
 
             return true;

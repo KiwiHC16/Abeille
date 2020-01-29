@@ -1,12 +1,13 @@
 <?php
-
+    if(0){
 if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
+    }
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
-$zigateIds = array( '', '2', '3', '4', '5' );
+$zigateNb = 5;
 
 $parametersAbeille = Abeille::getParameters();
 
@@ -75,11 +76,11 @@ $outils = array(
         <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogicB" />
 
 <?php
-    foreach ( $zigateIds as $zigateId) {
-        
-        if ( Abeille::getParameters()['AbeilleSerialPort'.$zigateId] != "none" ) {
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    
+        if ( Abeille::getParameters()['AbeilleSerialPort'.$i] != "none" ) {
             
-            echo '<div id="bt_include'.$zigateId.'" > Zigate'.$zigateId . ' - ' . Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')->getHumanName() . ' <i class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i> </div>';
+            echo '<div id="bt_include'.$i.'" > Zigate'.$i . ' - ' . Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName() . ' <i class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i> </div>';
             
             echo '<div class="eqLogicThumbnailContainer">';
 
@@ -88,7 +89,7 @@ $outils = array(
             foreach ($eqLogics as $eqLogic) {
                 
                 list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
-                if ( $net == 'Abeille'. $zigateId) {
+                if ( $net == 'Abeille'. $i) {
                     
                     // find opacity
                     $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
@@ -295,9 +296,9 @@ $outils = array(
 <label>Channel Mask</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i>Documentation</a></br>
 Channel Mask:   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
 <?php
-    foreach ( $zigateIds as $zigateId ) {
-        if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
-            echo '<input type="submit" name="submitButton" value="Set Channel Mask Z'.$zigateId.'">';
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+        if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+            echo '<input type="submit" name="submitButton" value="Set Channel Mask Z'.$i.'">';
         }
     }
     ?>
@@ -307,9 +308,9 @@ Channel Mask:   <input type="text" name="channelMask"   placeholder="XXXXXXXX">
 <label>Extended PANID</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html"><i class="fas fa-book"></i>Documentation</a></br>
 Extended PANID: <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
 <?php
-foreach ( $zigateIds as $zigateId ) {
-    if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
-        echo '<input type="submit" name="submitButton" value="Set Extended PANID Z'.$zigateId.'">';
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Extended PANID Z'.$i.'">';
     }
 }
 ?>
@@ -319,9 +320,9 @@ foreach ( $zigateIds as $zigateId ) {
 <label>Tx Power</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html"><i class="fas fa-book"></i>Documentation</a></br>
 Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
 <?php
-foreach ( $zigateIds as $zigateId ) {
-    if ( $parametersAbeille['AbeilleActiver'.$zigateId] == 'Y' ) {
-        echo '<input type="submit" name="submitButton" value="TxPower Z'.$zigateId.'">';
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="TxPower Z'.$i.'">';
     }
 }
 ?>
@@ -351,11 +352,11 @@ foreach ( $zigateIds as $zigateId ) {
                    'Inclusion'          => 'permitJoin-Status',
                    );
     
-    foreach ( $zigateIds as $zigateId ) {
-        if ( is_object(Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')) ) {
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+        if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
             echo '<br>';
-            echo 'ZiGate '.$zigateId.'<br>';
-            $rucheId = Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')->getId();
+            echo 'ZiGate '.$i.'<br>';
+            $rucheId = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getId();
             echo '<table border="1" style="border:1px">';
             foreach ( $params as $key=>$param ){
                 

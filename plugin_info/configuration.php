@@ -23,7 +23,7 @@
         die();
     }
     
-    $zigateIds = array( '1'=>'', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5' );
+    $zigateNb = 5;
     
 ?>
 
@@ -57,23 +57,23 @@
                     <p><i>Bien mettre les zigates non utilisées sur la valeur Aucun sinon le demon risque de ne pas demarrer.</i></p>
                 </div>
 <?php
-                foreach ( $zigateIds as $key=>$zigateId ) {
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
     ?>
                 <div class="form-group"><label class="col-lg-4 control-label">-----</label>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nom donné à la ruche qui controle ce réseau zigbee">{{Nom du réseau zigbee : }}</label>
-                    <?php if (Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')) {echo Abeille::byLogicalId( 'Abeille'.$zigateId.'/Ruche', 'Abeille')->getHumanName();} ?>
+                    <?php if (Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) {echo Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();} ?>
                 </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Choisissez le port serie ou le mode WIFI">{{Abeille Serial Port : }}</label>
                     <div class="col-lg-4">
                             <?php
-                                echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$key.'">';
+                                echo '<select class="configKey form-control col-sm-12" data-l1key="AbeilleSerialPort'.$i.'">';
                                 echo '<option value="none" selected>{{Aucun}}</option>';
-                                echo '<option value="/dev/zigate'.$key.'" >{{WIFI'.$key.'}}</option>';
-                                echo '<option value="/dev/monitZigate'.$key.'" >{{Monit'.$key.'}}</option>';
+                                echo '<option value="/dev/zigate'.$i.'" >{{WIFI'.$i.'}}</option>';
+                                echo '<option value="/dev/monitZigate'.$i.'" >{{Monit'.$i.'}}</option>';
                             
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
@@ -89,14 +89,14 @@
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Adresse IP de la zigate ainsi que le port (IP:Port(9999/23)). 9999 est le port du module wifi zigate par dafaut, mettre 23 si vous utilisez ESP-Link.">{{IP (IP:Port) de Zigate Wifi : }}</label>
                     <div class="col-sm-4">
-                    <?php echo '<input class="configKey form-control" data-l1key="IpWifiZigate'.$key.'" style="margin-top:5px" placeholder="192.168.4.1:9999"/>'; ?>
+                    <?php echo '<input class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" style="margin-top:5px" placeholder="192.168.4.1:9999"/>'; ?>
                     </div>
                 </div>
                
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
                     <div class="col-lg-4">
-                        <?php echo '<select class="configKey form-control" col-sm-10 data-l1key="AbeilleActiver'.$key.'">'; ?>
+                        <?php echo '<select class="configKey form-control" col-sm-10 data-l1key="AbeilleActiver'.$i.'">'; ?>
                             <option value="N">{{Desactiver}}</option>
                             <option value="Y">{{Activer}}</option>
                         </select>

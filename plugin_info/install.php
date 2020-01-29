@@ -34,17 +34,7 @@ function Abeille_install() {
 
 function Abeille_update() {
     message::add('Abeille', 'Mise à jour en cours...', null, null);
-    $cron = cron::byClassAndFunction('Abeille', 'deamon');
-    if (!is_object($cron)) {
-        $cron = new cron();
-        $cron->setClass('Abeille');
-        $cron->setFunction('deamon');
-        $cron->setEnable(1);
-        $cron->setDeamon(1);
-        $cron->setSchedule('* * * * *');
-        $cron->setTimeout('1440');
-        $cron->save();
-    }
+
     message::removeAll('Abeille');
     message::add('Abeille', 'Mise à jour terminée', null, null);
 }
@@ -61,5 +51,6 @@ function Abeille_remove() {
     message::removeAll("Abeille");
     message::add("Abeille","plugin désinstallé");
 }
+
 
 ?>

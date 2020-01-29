@@ -33,8 +33,31 @@ function Abeille_install() {
 }
 
 function Abeille_update() {
+
     message::add('Abeille', 'Mise à jour en cours...', null, null);
 
+    // Clean Config
+    config::remove('AbeilleSerialPort', 'Abeille');
+    config::remove('affichageCmdAdd', 'Abeille');
+    config::remove('affichageNetwork', 'Abeille');
+    config::remove('affichageTime', 'Abeille');
+    config::remove('IpWifiZigate', 'Abeille');
+    
+    
+    // Passe les abeilles de "Abeille" à "Abeille1"
+    foreach ( Abeille::byType('Abeille') as $abeilleNumber=>$abeille ) {
+        if (preg_match("(Abeille/)", $abeille->getLogicalId())) {
+            // echo $abeille->getLogicalId() . " -> " . str_replace("Abeille/", "Abeille1/", $abeille->getLogicalId()) . "\n";
+            $abeille->setName(str_replace("Abeille-", "Abeille1-", $abeille->getName()));
+            $abeille->setLogicalId(str_replace("Abeille/", "Abeille1/", $abeille->getLogicalId()));
+            echo $abeille->getConfiguration('topic') . " -> " . str_replace('Abeille/', 'Abeille1/', $abeille->getConfiguration('topic')) . "\n";
+            $abeille->setConfiguration( 'topic', str_replace('Abeille/', 'Abeille1/', $abeille->getConfiguration('topic')));
+            $abeille->save();
+        }
+    }
+    
+    
+    
     message::removeAll('Abeille');
     message::add('Abeille', 'Mise à jour terminée', null, null);
 }
@@ -52,5 +75,5 @@ function Abeille_remove() {
     message::add("Abeille","plugin désinstallé");
 }
 
-
+    Abeille_update();
 ?>

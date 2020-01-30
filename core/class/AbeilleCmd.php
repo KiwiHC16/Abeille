@@ -19,7 +19,7 @@
                 echo "[".date("Y-m-d H:i:s").'][AbeilleMQTTCmd][DEBUG.KIWI] '.$message."\n";
             }
             else {
-                $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleMQTTCmd', $message);
+                $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleCmd', $message);
             }
         }
     }

@@ -4053,7 +4053,7 @@
                 $now = time();
                 $delta = $now-$this->timeLastAck[$i];
                 if ( $delta > $this->timeLastAckTimeOut[$i] ) {
-                    if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai pas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck . " donc je considère la zigate dispo....."); }
+                    if ( $this->debug['sendCmdAck'] ) {$this->deamonlog("debug", "Je n'ai pas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck[$i] . " donc je considère la zigate dispo....."); }
                     $this->zigateAvailable[$i] = 1;
                     $this->timeLastAck[$i] = 0;
                 }

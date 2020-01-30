@@ -799,11 +799,12 @@
         
         function processCmdQueueToZigate() {
             
-            for ($i=1; $i<=1; $i++) {
-                if ( !isset( $this->cmdQueue[$i]) )     return;                                     // si la queue n existe pas je passe mon chemin
-                if ( count( $this->cmdQueue[$i] ) < 1 ) return;                                     // si la queue est vide je passe mon chemin
-                if ( $this->zigateAvailable[$i] == 0 )   return;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
-                if ( $this->debug['processCmdQueueToZigate'] ) { $this->deamonlog("debug", "processCmdQueueToZigate fct - start y a des truc a faire"); }
+            for ( $i=1; $i<=$this->zigateNb; $i++) {
+                // $this->deamonlog("debug", "processCmdQueueToZigate fct - start avec la queue : ".$i);
+                if ( !isset( $this->cmdQueue[$i]) )     continue;                                     // si la queue n existe pas je passe mon chemin
+                if ( count( $this->cmdQueue[$i] ) < 1 ) continue;                                     // si la queue est vide je passe mon chemin
+                if ( $this->zigateAvailable[$i] == 0 )   continue;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
+                // if ( $this->debug['processCmdQueueToZigate'] ) { $this->deamonlog("debug", "processCmdQueueToZigate fct - start y a des truc a faire dans la queue : ".$i); }
                 if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "--------------------"); }
                 if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]) ); }
                 
@@ -4104,10 +4105,10 @@
         echo "Let s start\n";
 
         $AbeilleCmd = new AbeilleCmd($argv[1]);
-        echo "AbeilleCmd construit\n";
+        // echo "AbeilleCmd construit\n";
         
         while ( true ) {
-
+            // echo "loop\n";
             $AbeilleCmd->traiteLesAckRecus();
             
             $AbeilleCmd->timeOutSurLesAck();

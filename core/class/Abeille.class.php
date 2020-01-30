@@ -408,7 +408,7 @@
                     if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, ooooooooooo: '.$parameters['AbeilleSerialPort'.$i]);
                 }
                 if ($debug_deamon_info) log::add( 'Abeille', 'info', 'deamon_info: ---------found '.$nbProcess.' running / '.$nbProcessExpected.' expected.' );
-                if ($debug_deamon_info) message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.' running /'.$nbProcessExpected.' expected.','','Abeille/Demon' );
+                // if ($debug_deamon_info) message::add( 'Abeille', 'Warning: deamon_info: found '.$nbProcess.' running /'.$nbProcessExpected.' expected.','','Abeille/Demon' );
                 $return['state'] = "nok";
             }
 
@@ -1595,7 +1595,16 @@
 
     class AbeilleCmd extends cmd {
         public function execute($_options = null) {
+            
             log::add('Abeille', 'Debug', 'execute ->'.$this->getType().'<- function with options ->'.json_encode($_options).'<-');
+            
+            // cmdId : 12676 est le level d une ampoule
+            // la cmdId 12680 a pour value 12676
+            // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
+            // On le voit dans le log avec:
+            // [2020-01-30 03:39:22][DEBUG] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
+            if ( isset($_options['cmdIdUpdated']) ) return;
+            
             switch ($this->getType()) {
                 case 'action' :
                     //

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /* This file is part of Jeedom.
  *
@@ -48,6 +48,7 @@ function Abeille_update() {
     config::remove('mqttPass', 'Abeille');
     config::remove('mqttTopic', 'Abeille');
     config::remove('mqttUser', 'Abeille');
+    config::remove('onlyTimer', 'Abeille');
     
     
     // Passe les abeilles de "Abeille" à "Abeille1"

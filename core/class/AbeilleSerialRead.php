@@ -17,8 +17,6 @@ require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
 include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-
-        define('queueKeySerieToParser',     822);
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead', $message);

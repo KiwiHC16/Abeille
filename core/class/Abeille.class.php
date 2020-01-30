@@ -24,8 +24,8 @@
     // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
     // 1: Abeille
     // 2: AbeilleParser -> Parser
-    // 3: AbeilleMQTTCmd -> Cmd
-    // 4: AbeilleTimer  -> Timer
+    // 3: AbeilleCmd -> Cmd
+    // 4: 
     // 5: AbeilleLQI -> LQI
     // 6: xmlhttpMQTTSend -> xml
     // 7: queueKeyFormToCmd -> Form
@@ -35,13 +35,13 @@
     // 221: means AbeilleParser to(2) Abeille
     define('queueKeyAbeilleToAbeille',      121);
     define('queueKeyAbeilleToCmd',          123);
-    define('queueKeyAbeilleToTimer',        124);
+
     define('queueKeyParserToAbeille',       221);
     define('queueKeyParserToCmd',           223);
     define('queueKeyParserToLQI',           225);
     define('queueKeyCmdToAbeille',          321);
     define('queueKeyCmdToCmd',              323);
-    define('queueKeyTimerToAbeille',        421);
+
     define('queueKeyLQIToAbeille',          521);
     define('queueKeyLQIToCmd',              523);
     define('queueKeyXmlToAbeille',          621);
@@ -82,364 +82,48 @@
             return $return;
         }
 
-        public static function syncconfAbeille($_background = true) {
-            if ($GLOBALS['debugKIWI']) echo "syncconfAbeille start\n";
-            log::add('Abeille', 'debug', 'Starting syncconfAbeille');
-            log::remove('Abeille_syncconf');
-            log::add('Abeille_syncconf', 'info', 'syncconfAbeille Start');
-            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
+		public static function execShellCmd( $cmdToExec, $text ) {
+			if ($GLOBALS['debugKIWI']) echo $text." start\n";
+            log::add('Abeille', 'debug', 'Starting '.$text);
+            log::remove('Abeille_'.$text);
+            log::add('Abeille_'.$text, 'info', $text.' Start');
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
             if ($_background) $cmd .= ' &';
             if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_syncconf', 'info', $cmd);
+            log::add('Abeille_'.$text, 'info', $cmd);
             shell_exec($cmd);
-            log::add('Abeille_syncconf', 'info', 'syncconfAbeille End');
-            if ($GLOBALS['debugKIWI']) echo "syncconfAbeille end\n";
+            log::add('Abeille_'.$text, 'info', 'End'.$text);
+            if ($GLOBALS['debugKIWI']) echo $text." end\n";
+		}
+		
+        public static function syncconfAbeille($_background = true) {
+			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille" );
         }
 
         public static function installGPIO($_background = true) {
-            if ($GLOBALS['debugKIWI']) echo "installGPIO start\n";
-            log::add('Abeille', 'debug', 'Starting installGPIO');
-            log::remove('Abeille_installGPIO');
-            log::add('Abeille_installGPIO', 'info', 'installGPIO Start');
-            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/installGPIO.sh >> ' . log::getPathToLog('Abeille_installGPIO') . ' 2>&1';
-            if ($_background) {
-                $cmd .= ' &';
-            }
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_installGPIO', 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_installGPIO', 'info', 'installGPIO End');
-            if ($GLOBALS['debugKIWI']) echo "installGPIO end\n";
+			Abeille::execShellCmd( "installGPIO.sh", "installGPIO" );
         }
 
         public static function installS0($_background = true) {
-            if ($GLOBALS['debugKIWI']) echo "installS0 start\n";
-            log::add('Abeille', 'debug', 'Starting installS0');
-            log::remove('Abeille_installS0');
-            log::add('Abeille_installS0', 'info', 'installS0 Start');
-            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/installS0.sh >> ' . log::getPathToLog('Abeille_installS0') . ' 2>&1';
-            if ($_background) {
-                $cmd .= ' &';
-            }
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_installS0', 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_installS0', 'info', 'installS0 End');
-            if ($GLOBALS['debugKIWI']) echo "installS0 end\n";
+			Abeille::execShellCmd( "installS0.sh", "installS0" );
         }
 
         public static function installSocat($_background = true) {
-            if ($GLOBALS['debugKIWI']) echo "installS0 start\n";
-            log::add('Abeille', 'debug', 'Starting installSocat');
-            log::remove('Abeille_installSocat');
-            log::add('Abeille_installSocat', 'info', 'installSocat Start');
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/installSocat.sh >> ' . log::getPathToLog('Abeille_installSocat') . ' 2>&1';
-            if ($_background) {
-                $cmd .= ' &';
-            }
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_installSocat', 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_installSocat', 'info', 'installSocat End');
-            if ($GLOBALS['debugKIWI']) echo "installSocat end\n";
+			Abeille::execShellCmd( "installSocat.sh", "installSocat" );
         }
 
         public static function updateFirmwarePiZiGate($_background = true,$fwfile) {
-            if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate start\n";
-            log::add('Abeille', 'debug', 'Starting updateFirmwarePiZiGate');
-            log::remove('Abeille_updateFirmwarePiZiGate');
-            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate Start');
-            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'stop deamon');
-            self::deamon_stop(); // Arrêt du demon
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/updateFrimware.sh ' . $fwfile . '  >> ' . log::getPathToLog('Abeille_updateFirmwarePiZiGate') . ' 2>&1';
-            if ($_background) $cmd .= ' &';
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_updateFirmwarePiZiGate', 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'start deamon');
-            self::deamon_start(); // Redemarrage du demon
-            log::add('Abeille_updateFirmwarePiZiGate', 'info', 'updateFirmwarePiZiGate End');
-            if ($GLOBALS['debugKIWI']) echo "updateFirmwarePiZiGate end\n";
+			self::deamon_stop(); // Arrêt du demon
+			Abeille::execShellCmd( "updateFrimware.sh", "updateFrimware" );
+			self::deamon_start(); // Redemarrage du demon
         }
 
         public static function resetPiZiGate($_background = true) {
-            if ($GLOBALS['debugKIWI']) echo "resetPiZiGate start\n";
-            log::add('Abeille', 'debug', 'Starting resetPiZiGate');
-            log::remove('Abeille_resetPiZiGate');
-            log::add('Abeille_resetPiZiGate', 'info', 'resetPiZiGate Start');
-            // $cmd = system::getCmdSudo() .' /bin/bash ' . dirname(__FILE__) . '/../../resources/syncconf.sh >> ' . log::getPathToLog('Abeille_syncconf') . ' 2>&1';
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/resetPiZigate.sh >> ' . log::getPathToLog('Abeille_resetPiZiGate') . ' 2>&1';
-            if ($_background) {
-                $cmd .= ' &';
-            }
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_resetPiZiGate', 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_resetPiZiGate', 'info', 'resetPiZiGate End');
-            if ($GLOBALS['debugKIWI']) echo "resetPiZiGate end\n";
-        }
-
-        public static function testUpdateCommand( $fp, $parameter, $template, $NE ) {
-            if ( isset($template) ) {
-                if ( $template==$NE ) {
-                    fwrite($fp, " - parameter identical, no change: \t\t\t'".$parameter."'\n" );
-                    return 0;
-                }
-                else {
-                    fwrite($fp, " ---------> parameter different, will be updated \t'".$parameter."': '".$NE."' -> '".$template. "'\n" );
-                    return 1;
-                }
-            }
-            else {
-                fwrite($fp, " - parameter is not in the template, no change : \t'".$parameter."'\n" );
-                return 0;
-            }
-            return 0;
+			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate" );
         }
 
         public static function updateConfigAbeille($abeilleIdFilter = false) {
-            if ($GLOBALS['debugKIWI']) echo "updateConfigAbeille start\n";
-            log::add('Abeille', 'debug', 'Starting updateConfigAbeille');
-
-            $fp = fopen(log::getPathToLog('Abeille_updateConfig'), 'w');
-            fwrite($fp, "Starting updateConfigAbeille\n");
-            if (isset($abeilleId)) fwrite($fp, "Device Id: ".$abeilleId."\n");
-
-            $abeilles = Abeille::byType('Abeille');
-            foreach ( $abeilles as $abeilleNumber=>$abeille ) {
-                if ( (($abeilleIdFilter==false) || ($abeilleIdFilter==$abeille->getId())) && ($abeille->getName()!='Ruche') ) {
-                    fwrite($fp, "Device Id en cours: ".$abeille->getId()."\n");
-
-                    unset( $templateName );
-
-                    if ( $abeille->getConfiguration('uniqId') ) {
-                        $templateId = $abeille->getConfiguration('uniqId');
-                        // TODO : from $templateId identify $templateName
-                    }
-
-                    if ( !isset($templateName)) {
-                        foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
-                            if ( $cmd->getName() == 'nom' ) {
-                                if (strlen($cmd->execCmd())>1) {
-                                    $templateName = $cmd->execCmd();
-                                }
-                            }
-                        }
-                    }
-
-                    if ( strpos($templateName, "sensor_86sw2")>2 ) { $templateName="lumi.sensor_86sw2"; }
-
-                    if ( !isset($templateName) ) {
-                        $iconeToTemplate = array ( "CLA60RGBWOSRAM"=>"CLA60RGBWOSRAM",
-                                                  "OSRAMClassicA60RGBW"=>"ClassicA60RGBW",
-                                                  "OSRAMClassicA60Wclear-LIGHTIFY"=>"ClassicA60Wclear-LIGHTIFY",
-                                                  "Connectedoutlet"=>"Connectedoutlet",
-                                                  "ctrl_neutral1"=>"ctrl_neutral1",
-                                                  "ctrl_neutral2"=>"ctrl_neutral2",
-                                                  "Dimmerswitchwoneutral"=>"Dimmerswitchwoneutral",
-                                                  "GLEDOPTO"=>"GLEDOPTO",
-                                                  "GLEDOPTODualWhiteAndColor"=>"GL-S-004Z",
-                                                  "HueGo"=>"LLC020",
-                                                  "HueWhite"=>"LWB006",
-                                                  "HueWhite"=>"LWB010",
-                                                  "PAR1650TW"=>"PAR1650TW",
-                                                  "XiaomiPrise"=>"plug",
-                                                  "OsramLightify"=>"Plug01",
-                                                  "OsramLightifyplug01OutDoor"=>"plug01OutDoor",
-                                                  "XiaomiBouton"=>"remote.b1acn01",
-                                                  "RWL021"=>"RWL021",
-                                                  "XiaomiButtonSW861"=>"sensor_86sw2",
-                                                  "sensor_cube"=>"sensor_cube",
-                                                  "sensor_cube"=>"sensor_cube.aqgl01",
-                                                  "XiaomiTemperatureRond"=>"sensor_ht",
-                                                  "XiaomiPorte1"=>"sensor_magnet",
-                                                  "XiaomiPorte"=>"sensor_magnet.aq2",
-                                                  "XiaomiInfraRouge"=>"sensor_motion",
-                                                  "XiaomiInfraRouge2"=>"sensor_motion.aq2",
-                                                  "XiaomiSensorGaz"=>"sensor_natgas",
-                                                  "XiaomiSensorSmoke"=>"sensor_smoke",
-                                                  "XiaomiBouton1"=>"sensor_switch",
-                                                  "XiaomiBouton"=>"sensor_switch.aq2",
-                                                  "Xiaomiwleak_aq1"=>"sensor_wleak.aq1",
-                                                  "Timer"=>"Timer",
-                                                  "TRADFRIbulbE14Wopch400lm"=>"TRADFRIbulbE14Wopch400lm",
-                                                  "IkeaTradfriBulbE14WSOpal400lm"=>"TRADFRIbulbE14WSopal400lm",
-                                                  "TRADFRIbulbE27CWSopal600lm"=>"TRADFRIbulbE27CWSopal600lm",
-                                                  "IkeaTradfriBulbE27Opal1000lm"=>"TRADFRIbulbE27opal1000lm",
-                                                  "IkeaTradfriBulbE27Opal1000lm"=>"TRADFRIbulbE27Wopal1000lm",
-                                                  "IkeaTradfriBulbE27WOpal1000lm2"=>"TRADFRIbulbE27Wopal1000lm2",
-                                                  "IkeaTRADFRIbulbE27WSopal980lm"=>"TRADFRIbulbE27WSopal980lm",
-                                                  "IkeaTradfriBulbGU10W400lm"=>"TRADFRIbulbGU10W400lm",
-                                                  "IkeaTRADFRIbulbGU10WS400lm"=>"TRADFRIbulbGU10WS400lm",
-                                                  "TRADFRIcontroloutlet"=>"TRADFRIcontroloutlet",
-                                                  "IkeaTradfriMotionSensor"=>"TRADFRImotionsensor",
-                                                  "IkeaTradfri5BtnRond"=>"TRADFRIremotecontrol",
-                                                  "TRADFRItransformer10W"=>"TRADFRItransformer10W",
-                                                  "TRADFRItransformer30W"=>"TRADFRItransformer30W",
-                                                  "IkeaTradfriDimmer"=>"TRADFRIwirelessdimmer",
-                                                  "XiaomiVibration"=>"vibration.aq1",
-                                                  "voletProFalux"=>"volet",
-                                                  "XiaomiTemperatureCarre"=>"weather",
-                                                  "ZLO-DimmableLight"=>"ZLO-DimmableLight",
-                                                  "ZLO-ExtendedColor"=>"ZLO-ExtendedColor",
-                                                  "ZLO-LTOSensor"=>"ZLO-LTOSensor",
-                                                  "ZLO-OccupancySensor"=>"ZLO-OccupancySensor" );
-
-                        $templateName = $iconeToTemplate[$abeille->getConfiguration( 'icone' )];
-                    }
-
-                    $templateName = str_replace("lumi.","",$templateName);
-                    $templateName = str_replace(" ","",$templateName);
-
-                    // $abeille = abeille::byId( $cmd->getEqLogic_id() );
-                    $template = tools::getJSonConfigFilebyDevicesTemplate( $templateName );
-                    $templateJSON = json_encode( $template );
-                    if ( isset($template[$templateName]['configuration']["mainEP"]) ) {
-                        $templateJSON = str_replace("#EP#", $template[$templateName]['configuration']["mainEP"], $templateJSON);
-                    }
-                    else {
-                        $templateJSON = str_replace("#EP#", "01", $templateJSON);
-                    }
-                    $template = json_decode( $templateJSON, true );
-                    $templateMain = $template[$templateName]; // passe par une variable intermediaire pour simplifier l ecriture
-                    $templateMainConfig = $template[$templateName]['configuration']; // passe par une variable intermediaire pour simplifier l ecriture
-
-                    if ($GLOBALS['debugKIWI']) echo "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ->".$templateName."<-\n";
-                    fwrite($fp, "-------------------------------------------------------------------\n");
-                    fwrite($fp, "Abeille Id: ".$abeille->getId()." - Abeille Name: ".$abeille->getName()." template: ".$templateName."\n" );
-
-
-                    // id
-                    // name: don't touch the name which could have been define by user
-                    // logicalId
-                    // generic_type
-                    // object_id
-                    // eqType_name
-                    // eqReal_id
-                    // isVisible
-                    // isEnable
-
-                    // configuration
-                    // topic
-                    // type
-                    // uniqId
-                    if ( self::testUpdateCommand($fp, "uniqId", $templateMainConfig["uniqId"], $abeille->getConfiguration("uniqId") ) ) { $abeille->setConfiguration( "uniqId", $templateMainConfig["uniqId"] ); }
-                    // icone
-                    if ( self::testUpdateCommand($fp, "icone", $templateMainConfig["icone"], $abeille->getConfiguration("icone") ) ) { $abeille->setConfiguration( "icone", $templateMainConfig["icone"] ); }
-                    // battery_type
-                    if ( self::testUpdateCommand($fp, "battery_type", $templateMainConfig["battery_type"], $abeille->getConfiguration("battery_type") ) ) { $abeille->setConfiguration( "battery_type", $templateMainConfig["battery_type"] ); }
-                    // Groupe
-                    // mainEP
-                    if ( self::testUpdateCommand($fp, "mainEP", $templateMainConfig["mainEP"], $abeille->getConfiguration("mainEP") ) ) { $abeille->setConfiguration( "mainEP", $templateMainConfig["mainEP"] ); }
-                    // createtime
-                    // positionX
-                    // positionY
-                    // updatetime
-                    // poll
-                    if ( self::testUpdateCommand($fp, "poll", $templateMainConfig["poll"], $abeille->getConfiguration("poll") ) ) { $abeille->setConfiguration( "poll", $templateMainConfig["poll"] ); }
-
-                    // timeout
-                    if ( self::testUpdateCommand($fp, "timeout", $templateMain["timeout"], $abeille->getTimeout("timeout") ) ) { $abeille->setTimeout( $templateMain["timeout"] ); }
-
-                    // category
-                    // display
-                    // order
-                    // if ( self::testUpdateCommand($fp, "order", $templateMain["order"], $abeille->getOrder("order") ) ) { $abeille->setOrder( $templateMain["order"] ); }
-                    // comment
-                    // status
-
-                    $abeille->save();
-                    // -----------------------------------------------------------------------------------------------------------------------
-                    foreach ( $abeille->getCmd() as $cmdNumber=>$cmd ) {
-                        // Je cherche la commande correspondante dans le template sur la base du nom donné à la commande
-                        unset($templateCmd);
-                        foreach ($template[$templateName]["Commandes"] as $cmdClusterFormat=>$templateCmdTmp) {
-                            if ( $cmd->getName()==$templateCmdTmp['name'] ) {
-                                $templateCmdId = $cmdClusterFormat;
-                                $templateCmd = $template[$templateName]["Commandes"][$cmdClusterFormat];
-                                $templateCmdConfig = $templateCmd['configuration'];
-                            }
-                        }
-
-                        if ($GLOBALS['debugKIWI']) {
-                            echo "\n".$templateCmdId."\n";
-                            var_dump($templateCmd);
-                            var_dump($templateCmdConfig);
-                        }
-
-                        if (isset($templateCmd)) {
-                            // if ($GLOBALS['debugKIWI']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()."\n";
-                            fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()."\n" );
-                            // id
-                            // logicalId: sujet convert par les commande topic.
-                            // if ( self::testUpdateCommand($fp, "logicalId",              $templateCmd['logicalId'],                      $cmd->getLogicalId() ) )                            { $cmd->setLogicalId($templateCmd['logicalId']);        }
-                            // generic_type: type for homebridge
-                            if ( self::testUpdateCommand($fp, "generic_type",           $templateCmd['generic_type'],                   $cmd->getGeneric_type() ) )                         { $cmd->setGeneric_type($templateCmd['generic_type']);  }
-                            // eqType: 'Abeille' so no change
-                            // name: comme c est le critere de comparaison, ca reste le meme.
-                            // order
-                            if ( self::testUpdateCommand($fp, "order",                  $templateCmd['order'],                          $cmd->getOrder() ) )                                { $cmd->setOrder($templateCmd['order']);                }
-                            // type: on va considere que ca ne change pas
-                            // subType: on va considere que ca ne change pas
-                            // eqLogic_id: on va considere que ca ne change pas
-                            // isHistorized
-                            if ( self::testUpdateCommand($fp, "isHistorized",           $templateCmd['isHistorized'],                   $cmd->getIsHistorized() ) )                         { $cmd->setIsHistorized($templateCmd['isHistorized']);  }
-                            // unite
-                            if ( self::testUpdateCommand($fp, "unite",                  $templateCmd['unite'],                          $cmd->getUnite() ) )                                { $cmd->setUnite($templateCmd['unite']);                }
-                            // configuration
-                            // topic
-                            if ( self::testUpdateCommand($fp, "topic",                  $templateCmdConfig['topic'],                   $cmd->getConfiguration('topic') ) )                 { $cmd->setConfiguration( 'topic',                  $templateCmdConfig['topic']); $cmd->setLogicalId($templateCmdId); }
-                            // request
-                            if ( self::testUpdateCommand($fp, "request",                $templateCmdConfig['request'],                  $cmd->getConfiguration('request') ) )               { $cmd->setConfiguration( 'request',                $templateCmdConfig['request']);     }
-                            // AbeilleRejectValue
-                            if ( self::testUpdateCommand($fp, "AbeilleRejectValue",     $templateCmdConfig['AbeilleRejectValue'],       $cmd->getConfiguration('AbeilleRejectValue') ) )    { $cmd->setConfiguration( 'AbeilleRejectValue',     $templateCmdConfig['AbeilleRejectValue']);     }
-                            // returnStateValue
-                            if ( self::testUpdateCommand($fp, "returnStateValue",       $templateCmdConfig['returnStateValue'],         $cmd->getConfiguration('returnStateValue') ) )      { $cmd->setConfiguration( 'returnStateValue',       $templateCmdConfig['returnStateValue']);       }
-                            // returnStateTime
-                            if ( self::testUpdateCommand($fp, "returnStateTime",        $templateCmdConfig['returnStateTime'],          $cmd->getConfiguration('returnStateTime') ) )       { $cmd->setConfiguration( 'returnStateTime',        $templateCmdConfig['returnStateTime']);        }
-                            // repeatEventManagement
-                            if ( self::testUpdateCommand($fp, "repeatEventManagement",  $templateCmdConfig['repeatEventManagement'],    $cmd->getConfiguration('repeatEventManagement') ) ) { $cmd->setConfiguration( 'repeatEventManagement',  $templateCmdConfig['repeatEventManagement']);  }
-                            // visibilityCategory
-                            if ( self::testUpdateCommand($fp, "visibilityCategory",     $templateCmdConfig['visibilityCategory'],       $cmd->getConfiguration('visibilityCategory') ) )    { $cmd->setConfiguration( 'visibilityCategory',     $templateCmdConfig['visibilityCategory']);     }
-                            // visibiltyTemplate
-                            if ( self::testUpdateCommand($fp, "visibiltyTemplate",      $templateCmdConfig['visibiltyTemplate'],        $cmd->getConfiguration('visibiltyTemplate') ) )     { $cmd->setConfiguration( 'visibiltyTemplate',      $templateCmdConfig['visibiltyTemplate']);      }
-                            // minValue
-                            if ( self::testUpdateCommand($fp, "minValue",               $templateCmdConfig['minValue'],                 $cmd->getConfiguration('minValue') ) )              { $cmd->setConfiguration( 'minValue',               $templateCmdConfig['minValue']);               }
-                            // maxValue
-                            if ( self::testUpdateCommand($fp, "maxValue",               $templateCmdConfig['maxValue'],                 $cmd->getConfiguration('maxValue') ) )              { $cmd->setConfiguration( 'maxValue',               $templateCmdConfig['maxValue']);               }
-                            // calculValueOffset
-                            if ( self::testUpdateCommand($fp, "calculValueOffset",      $templateCmdConfig['calculValueOffset'],        $cmd->getConfiguration('calculValueOffset') ) )     { $cmd->setConfiguration( 'calculValueOffset',      $templateCmdConfig['calculValueOffset']);      }
-                            // template
-                            // display
-                            // html
-                            // value
-                            // isVisible
-                            if ( self::testUpdateCommand($fp, "isVisible",              $templateCmd['isVisible'],                      $cmd->getIsVisible() ) )                            { $cmd->setIsVisible($templateCmd['isVisible']);        }
-                            // alert
-
-                            $cmd->save();
-                        }
-                        else {
-                            // if ($GLOBALS['debugKIWI']) echo "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template\n";
-                            fwrite($fp, " \n---\nCmd Name: ".$cmd->getName()." ===================================> not found in template\n" );
-                            log::add('Abeille', 'debug', "Abeille Name: ".$abeille->getName()." - Cmd Name: ".$cmd->getName()." not found in template");
-                            // $cmd->setName("Cmd_not_in_template_".$cmd->getName());
-                        } // if (isset($templateCmd))
-
-                    } // foreach ( $abeille->getCmd() as $cmdId=>$cmd )
-                } // if ( $cmd->getName() == "nom" )
-            } // foreach ( $cmds as $cmdId=>$cmd )
-
-            // log::add('updateConfigAbeille', 'info', 'updateConfigAbeille End');
-            fwrite($fp, "Ending updateConfigAbeille\n");
-            log::add('Abeille', 'debug', 'updateConfigAbeille end');
-            if ($GLOBALS['debugKIWI']) echo "updateConfigAbeille end\n";
-
-            fclose($fp);
+           
         }
 
         public static function cronDaily() {
@@ -551,24 +235,6 @@
                         if (strlen($eqLogic->getConfiguration("mainEP"))>1) {
                             Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP") );
                         }
-                        // Cette partie devrait disparaitre, elle existe depuis le debut car je ne comprenais pas bien le fonctionnement
-                        else {
-                            if ($eqLogic->getConfiguration("protocol") == "") {
-                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
-                            }
-                            if ($eqLogic->getConfiguration("protocol") == "Hue") {
-                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), "Hue" );
-                            }
-                            if ($eqLogic->getConfiguration("protocol") == "OSRAM") {
-                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), "OSRAM" );
-                            }
-                            if ($eqLogic->getConfiguration("protocol") == "Profalux") {
-                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), "AnnonceProfalux" );
-                            }
-                            if ($eqLogic->getConfiguration("protocol") == "LEGRAND") {
-                                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), "Default" );
-                            }
-                        }
                     }
                 }
             }
@@ -585,7 +251,7 @@
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "15") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
-                        $i=$i+1;
+                        $i=$i++;
                         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
                     }
 
@@ -595,11 +261,7 @@
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum","Abeille/cron" );
             }
 
-            log::add(
-                     'Abeille',
-                     'debug',
-                     'Ending cron15 ------------------------------------------------------------------------------------------------------------------------'
-                     );
+            log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
         }
@@ -613,18 +275,13 @@
             // https://github.com/jeelabs/esp-link
             // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
             // so I need to create a minimum of traffic, so pull zigate every minutes
-            if ($param['onlyTimer'] == 'N') {
-                for ( $i=1; $i<=$zigateNb; $i++ ) {
-					if ($param['AbeilleSerialPort'.$i]!="none") {
-						Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-						Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-					}
+		
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				if ($param['AbeilleSerialPort'.$i]!="none") {
+					// Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
 				}
-            } else {
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille/Ruche/SW-SDK", "TimerMode" );
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille/Ruche/Time-TimeStamp", time() );         // TimeStamp
-                Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille/Ruche/Time-Time", date("Y-m-d H:i:s") ); // 2018-10-06 03:13:31
-            }
+			}
 
             $eqLogics = self::byType('Abeille');
 
@@ -729,9 +386,8 @@
             //check running deamon /!\ if using sudo nbprocess x2
 
             $nbProcessExpected = 0; // Comptons les process prevus.
-            $nbProcessExpected++;   // Process AbeilleTimer quoi qu'il arrive
             $nbProcessExpected++;   // Parser
-            $nbProcessExpected++;   // MQTTCmd
+            $nbProcessExpected++;   // Cmd
             for ( $i=1; $i<=$zigateNb; $i++ ) {
                 if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, aaaaaaaa: '.$parameters['AbeilleSerialPort'.$i]);
                 if ($parameters['AbeilleActiver'.$i]=='Y') {
@@ -743,7 +399,7 @@
 
 
             // Combien de demons tournent ?
-            exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output1 );
+            exec("ps -e -o '%p;%a' --cols=10000 | grep -v awk | awk '/Abeille(Parser|SerialRead|Cmd|Socat).php /' | cut -d ';'  -f 1 | wc -l", $output1 );
 
             $nbProcess = $output1[0];
             $return['nbProcess'] = $nbProcess;
@@ -820,130 +476,121 @@
             $php = "/usr/bin/php";
             $dirdeamon = dirname(__FILE__)."/../../core/class/";
 
-            if ($param['onlyTimer'] != 'Y') {
+            
 
-                for ( $i=1; $i<=$zigateNb; $i++ ) {
-                    log::add('Abeille','debug','deamon_start: Port serie '.$i.' defini dans la configuration. ->'.$param['AbeilleSerialPort'.$i].'<-');
-                }
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				log::add('Abeille','debug','deamon_start: Port serie '.$i.' defini dans la configuration. ->'.$param['AbeilleSerialPort'.$i].'<-');
+			}
 
-                $deamon21 = "AbeilleSocat.php";
-                $paramdeamon21 = $param['AbeilleSerialPort1'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
-                $log21 = " > ".log::getPathToLog(substr($deamon21, 0, (strrpos($deamon21, "."))))."1";
+			$deamon21 = "AbeilleSocat.php";
+			$paramdeamon21 = $param['AbeilleSerialPort1'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'];
+			$log21 = " > ".log::getPathToLog(substr($deamon21, 0, (strrpos($deamon21, "."))))."1";
 
-                $deamon22 = "AbeilleSocat.php";
-                $paramdeamon22 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
-                $log22 = " > ".log::getPathToLog(substr($deamon22, 0, (strrpos($deamon22, "."))))."2";
+			$deamon22 = "AbeilleSocat.php";
+			$paramdeamon22 = $param['AbeilleSerialPort2'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate2'];
+			$log22 = " > ".log::getPathToLog(substr($deamon22, 0, (strrpos($deamon22, "."))))."2";
 
-                $deamon23 = "AbeilleSocat.php";
-                $paramdeamon23 = $param['AbeilleSerialPort3'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate3'];
-                $log23 = " > ".log::getPathToLog(substr($deamon23, 0, (strrpos($deamon23, "."))))."3";
+			$deamon23 = "AbeilleSocat.php";
+			$paramdeamon23 = $param['AbeilleSerialPort3'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate3'];
+			$log23 = " > ".log::getPathToLog(substr($deamon23, 0, (strrpos($deamon23, "."))))."3";
 
-                $deamon24 = "AbeilleSocat.php";
-                $paramdeamon24 = $param['AbeilleSerialPort4'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate4'];
-                $log24 = " > ".log::getPathToLog(substr($deamon24, 0, (strrpos($deamon24, "."))))."4";
+			$deamon24 = "AbeilleSocat.php";
+			$paramdeamon24 = $param['AbeilleSerialPort4'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate4'];
+			$log24 = " > ".log::getPathToLog(substr($deamon24, 0, (strrpos($deamon24, "."))))."4";
 
-                $deamon25 = "AbeilleSocat.php";
-                $paramdeamon25 = $param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate5'];
-                $log25 = " > ".log::getPathToLog(substr($deamon25, 0, (strrpos($deamon25, "."))))."5";
-
-
-                for ( $i=1; $i<=$zigateNb; $i++ ) {
-                    $deamon[10+$i] = "AbeilleSerialRead.php";
-                    $paramdeamon[10+$i] = 'Abeille '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                    // $paramdeamon0 = '/dev/Abeille'.' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                    $log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], "."))))."1";
-                    // exec(system::getCmdSudo().'ln -s '.$param['AbeilleSerialPort'].' /dev/Abeille');
-                }
-                
-                $deamon2 = "AbeilleParser.php";
-                // $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                $paramdeamon2 = log::convertLogLevel(log::getLogLevel('Abeille'));
-                $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
-
-                $deamon3 = "AbeilleMQTTCmd.php";
-                // $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                $paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
-                $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
-
-                // ----------------
-
-                if ( ($param['AbeilleSerialPort1'] == "/dev/zigate") and ($param['AbeilleActiver']=='Y') ) {
-                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
-                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
-                    exec($cmd.' 2>&1 &');
-                    sleep(5);
-                }
-
-                if ( ($param['AbeilleSerialPort2'] == "/dev/zigate2") and ($param['AbeilleActiver2']=='Y') ) {
-                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon22." ".$paramdeamon22.$log22;
-                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
-                    exec($cmd.' 2>&1 &');
-                    sleep(5);
-                }
+			$deamon25 = "AbeilleSocat.php";
+			$paramdeamon25 = $param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate5'];
+			$log25 = " > ".log::getPathToLog(substr($deamon25, 0, (strrpos($deamon25, "."))))."5";
 
 
-                if ( ($param['AbeilleSerialPort3'] == "/dev/zigate3") and ($param['AbeilleActiver3']=='Y') ) {
-                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon23." ".$paramdeamon23.$log23;
-                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
-                    exec($cmd.' 2>&1 &');
-                    sleep(5);
-                }
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				$deamon[10+$i] = "AbeilleSerialRead.php";
+				$paramdeamon[10+$i] = 'Abeille '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+				// $paramdeamon0 = '/dev/Abeille'.' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], "."))))."1";
+				// exec(system::getCmdSudo().'ln -s '.$param['AbeilleSerialPort'].' /dev/Abeille');
+			}
+			
+			$deamon2 = "AbeilleParser.php";
+			// $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+			$paramdeamon2 = log::convertLogLevel(log::getLogLevel('Abeille'));
+			$log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
 
-                if ( ($param['AbeilleSerialPort4'] == "/dev/zigate4") and ($param['AbeilleActiver4']=='Y') ) {
-                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon24." ".$paramdeamon24.$log24;
-                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
-                    exec($cmd.' 2>&1 &');
-                    sleep(5);
-                }
+			$deamon3 = "AbeilleCmd.php";
+			// $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+			$paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
+			$log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
+
+			// ----------------
+
+			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate") and ($param['AbeilleActiver']=='Y') ) {
+				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
+				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+				exec($cmd.' 2>&1 &');
+				sleep(5);
+			}
+
+			if ( ($param['AbeilleSerialPort2'] == "/dev/zigate2") and ($param['AbeilleActiver2']=='Y') ) {
+				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon22." ".$paramdeamon22.$log22;
+				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+				exec($cmd.' 2>&1 &');
+				sleep(5);
+			}
 
 
-                if ( ($param['AbeilleSerialPort5'] == "/dev/zigate5") and ($param['AbeilleActiver5']=='Y') ) {
-                    $cmd = $nohup." ".$php." ".$dirdeamon.$deamon25." ".$paramdeamon25.$log25;
-                    log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
-                    exec($cmd.' 2>&1 &');
-                    sleep(5);
-                }
+			if ( ($param['AbeilleSerialPort3'] == "/dev/zigate3") and ($param['AbeilleActiver3']=='Y') ) {
+				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon23." ".$paramdeamon23.$log23;
+				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+				exec($cmd.' 2>&1 &');
+				sleep(5);
+			}
 
-				for ( $i=1; $i<=$zigateNb; $i++ ) {
-					if ( ($param['AbeilleSerialPort'.$i] != 'none') and ($param['AbeilleActiver'.$i]=='Y') ) {
-						if (@!file_exists($param['AbeilleSerialPort'.$i])) {
-							log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort'.$i] );
-							message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort'.$i], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
-							$return['parametersCheck']="nok";
-							$return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
-							return false;
-						}
+			if ( ($param['AbeilleSerialPort4'] == "/dev/zigate4") and ($param['AbeilleActiver4']=='Y') ) {
+				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon24." ".$paramdeamon24.$log24;
+				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+				exec($cmd.' 2>&1 &');
+				sleep(5);
+			}
+
+
+			if ( ($param['AbeilleSerialPort5'] == "/dev/zigate5") and ($param['AbeilleActiver5']=='Y') ) {
+				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon25." ".$paramdeamon25.$log25;
+				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
+				exec($cmd.' 2>&1 &');
+				sleep(5);
+			}
+
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				if ( ($param['AbeilleSerialPort'.$i] != 'none') and ($param['AbeilleActiver'.$i]=='Y') ) {
+					if (@!file_exists($param['AbeilleSerialPort'.$i])) {
+						log::add('Abeille','warning','deamon_start: serialPort n existe pas: '.$param['AbeilleSerialPort'.$i] );
+						message::add('Abeille','Warning: le port serie vers la zigate n existe pas: '.$param['AbeilleSerialPort'.$i], "Vérifier la connection de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
+						$return['parametersCheck']="nok";
+						$return['parametersCheck_message'] = __('Le port n existe pas (zigate déconnectée ?)', __FILE__);
+						return false;
 					}
 				}
+			}
 
-                for ( $i=1; $i<=$zigateNb; $i++ ) {
-                    if ( ($param['AbeilleSerialPort'.$i] != "none") and ($param['AbeilleActiver'.$i]=='Y') ) {
-                        exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-                        $cmd = $nohup." ".$php." ".$dirdeamon.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
-                        log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
-                        exec($cmd.' 2>&1 &');
-                    }
-                }
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				if ( ($param['AbeilleSerialPort'.$i] != "none") and ($param['AbeilleActiver'.$i]=='Y') ) {
+					exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
+					$cmd = $nohup." ".$php." ".$dirdeamon.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
+					log::add('Abeille', 'debug', 'Start deamon SerialRead: '.$cmd);
+					exec($cmd.' 2>&1 &');
+				}
+			}
 
-                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon2." ".$paramdeamon2.$log2;
-                log::add('Abeille', 'debug', 'Start deamon Parser: '.$cmd);
-                exec($cmd.' 2>&1 &');
+			$cmd = $nohup." ".$php." ".$dirdeamon.$deamon2." ".$paramdeamon2.$log2;
+			log::add('Abeille', 'debug', 'Start deamon Parser: '.$cmd);
+			exec($cmd.' 2>&1 &');
 
 
-                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
-                log::add('Abeille', 'debug', 'Start deamon MQTT: '.$cmd);
-                exec($cmd.' 2>&1 &');
+			$cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
+			log::add('Abeille', 'debug', 'Start deamon Cmd: '.$cmd);
+			exec($cmd.' 2>&1 &');
 
-            }
-
-            $deamon4 = "AbeilleMQTTCmdTimer.php";
-            // $paramdeamon4 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort']. ' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel( log::getLogLevel('Abeille') );
-            $paramdeamon4 = log::convertLogLevel( log::getLogLevel('Abeille') );
-            $log4 = " > ".log::getPathToLog(substr($deamon4, 0, (strrpos($deamon4, "."))));
-
-            $cmd = $nohup." ".$php." ".$dirdeamon.$deamon4." ".$paramdeamon4.$log4;
-            log::add('Abeille', 'debug', 'Start deamon Timer: '.$cmd);
-            exec($cmd.' 2>&1 &');
+		
 
             sleep(2);
 
@@ -995,7 +642,7 @@
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
 
             // Stop other deamon
-            exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|MQTTCmd|MQTTCmdTimer|Socat).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
             log::add('Abeille', 'debug', 'deamon stop: Killing deamons: '.implode($output, '!'));
             system::kill($output, true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
@@ -1014,13 +661,11 @@
 
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToCmd) );
-            msg_remove_queue ( msg_get_queue(queueKeyAbeilleToTimer) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToLQI) );
             msg_remove_queue ( msg_get_queue(queueKeyCmdToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyCmdToCmd) );
-            msg_remove_queue ( msg_get_queue(queueKeyTimerToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyLQIToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyLQIToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeyXmlToAbeille) );
@@ -1080,7 +725,6 @@
             try {
                 $queueKeyAbeilleToAbeille   = msg_get_queue(queueKeyAbeilleToAbeille);
                 $queueKeyParserToAbeille    = msg_get_queue(queueKeyParserToAbeille);
-                $queueKeyTimerToAbeille     = msg_get_queue(queueKeyTimerToAbeille);
                 $queueKeyCmdToAbeille       = msg_get_queue(queueKeyCmdToAbeille);
                 $queueKeyXmlToAbeille       = msg_get_queue(queueKeyXmlToAbeille);
 
@@ -1115,16 +759,6 @@
                         log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyParserToAbeille issue: '.$errorcodeMsg);
                     }
 
-                    if (msg_receive( $queueKeyTimerToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
-                        $message->topic = $msg->message['topic'];
-                        $message->payload = $msg->message['payload'];
-                        self::message($message);
-                        $msg_type = NULL;
-                        $msg = NULL;
-                    }
-                    if ( ($errorcodeMsg!=42) and ($errorcodeMsg!=0) ) {
-                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyTimerToAbeille issue: '.$errorcodeMsg);
-                    }
 
                     if (msg_receive( $queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
                         $message->topic = $msg->message['topic'];
@@ -1166,45 +800,53 @@
 
             //Most Fields are defined with default values
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
-            $return['onlyTimer']            = config::byKey('onlyTimer', 'Abeille', 'N');
             
             for ( $i=1; $i<=$zigateNb; $i++ ) {
-                $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', '/dev/ttyUSB0');
+                $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', 'none');
                 $return['IpWifiZigate'.$i]        = config::byKey('IpWifiZigate'.$i,        'Abeille', '192.168.0.1');
                 $return['AbeilleActiver'.$i ]     = config::byKey('AbeilleActiver'.$i,      'Abeille', 'N');
             }
-
+			
+			return $return;
+			
+		public static function checkParameters() {
+            $zigateNb = 5;
+			
             // Testons la validité de la configuration
-            // Pas de port alors que je ne suis pas en mode timer only.
-            if ( ($return['AbeilleSerialPort1'] == 'none') && ($return['onlyTimer'] != "Y") ) {
-                log::add('Abeille','debug','getParameters: serialPort n est pas défini: '.$return['AbeilleSerialPort1']);
-                message::add('Abeille','Warning: Le port série n est pas défini dans la configuration: '.$return['AbeilleSerialPort1'],'','Abeille/Demon');
+			$atLeastOneZigateActiveWithOnePortDefined = 0;
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				if ($return['AbeilleActiver'.$i ]=='Y') {
+					if ($return['AbeilleSerialPort'.$i]!='none') {
+						$atLeastOneZigateActiveWithOnePortDefined++;
+					}
+				}
+			}
+			if ( $atLeastOneZigateActiveWithOnePortDefined > 0 ) {
+				log::add('Abeille','debug','checkParameters: aucun serialPort n est pas défini/actif.');
+                message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.','Abeille/Demon');
                 $return['parametersCheck']="nok";
-                $return['parametersCheck_message'] = __('Le port n est pas configuré', __FILE__);
-                return $return;
-            }
+                $return['parametersCheck_message'] = __('Le port n est pas défini/actif', __FILE__);
+				return $return;
+			}
 
-            // Port Zigate en Wifi et pas en mode Timer
-            if ( ($return['AbeilleSerialPort1'] == "/dev/zigate") && ($return['onlyTimer'] != "Y") ) {
-                return $return;
-            }
-
-            // if ( $return['AbeilleSerialPort'] != "/dev/zigate" ) $return['AbeilleSerialPort'] = jeedom::getUsbMapping($return['AbeilleSerialPort']);
-
-            // J ai un port et je ne suis pas en mode Timer
-            if ( ($return['AbeilleSerialPort1'] != 'none') && ($return['onlyTimer'] != "Y") ) {
-                if (@!file_exists($return['AbeilleSerialPort1'])) {
-                    log::add('Abeille','debug','getParameters: Le port série choisi n existe pas: '.$return['AbeilleSerialPort1']);
-                    message::add('Abeille','Warning: Le port série choisi n existe pas: '.$return['AbeilleSerialPort1'],'','Abeille/Demon');
-                    $return['parametersCheck']="nok";
-                    $return['parametersCheck_message'] = __('Le port série choisi n existe pas (zigate déconnectée ?)', __FILE__);
-                    return $return;
-                } else {
-                    if (substr(decoct(fileperms($return['AbeilleSerialPort1'])), -4) != "0777") {
-                        exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort1'].' > /dev/null 2>&1');
-                    }
-                }
-            }
+            // Vérifions l existence des ports
+			for ( $i=1; $i<=$zigateNb; $i++ ) {
+				if ($return['AbeilleActiver'.$i ]=='Y') {
+					if ($return['AbeilleSerialPort'.$i] != 'none') {
+						if (@!file_exists($return['AbeilleSerialPort'.$i])) {
+							log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i]);
+							message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'','Abeille/Demon');
+							$return['parametersCheck']="nok";
+							$return['parametersCheck_message'] = __('Le port série '.$return['AbeilleSerialPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
+							return $return;
+						} else {
+							if (substr(decoct(fileperms($return['AbeilleSerialPort'.$i])), -4) != "0777") {
+								exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
+							}
+						}
+					}
+				}
+			}
 
             return $return;
         }
@@ -1477,7 +1119,7 @@
 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 // Creation de l objet Abeille
-                // Exemple pour les objets créés par les commandes Ruche, e.g. Timer
+                // Exemple pour les objets créés par les commandes Ruche.
                 if (strlen($addr) != 4) {
                     $index = rand(1000, 9999);
                     $addr = $addr."-".$index;
@@ -1970,18 +1612,13 @@
                     if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
                         $topic = $this->getConfiguration('topic');
                     } else {
-                        if (strpos("_".$this->getConfiguration('topic'), "CmdTimer") == 1) {
-                            $topic = $this->getConfiguration('topic');
-                        } else {
-                            if (strpos("_".$this->getConfiguration('topic'), "CmdCreate") == 1) {
-                                $topic = $this->getConfiguration('topic');
-                            } else {
-                                $topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
-                                // $topic = $this->getConfiguration('topic');
-
-                            }
-                        }
-                    }
+						if (strpos("_".$this->getConfiguration('topic'), "CmdCreate") == 1) {
+							$topic = $this->getConfiguration('topic');
+						} else {
+							$topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
+						}
+					}
+                    
                     
                     if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
                         if ( $NE->getConfiguration('Zigate') > 1 ) {
@@ -2012,51 +1649,6 @@
                     // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                     if ( strpos( $request,"#addrGroup#" )>0 ) {
                         $request = str_replace( "#addrGroup#", $NE->getConfiguration("Groupe"), $request );
-                    }
-
-                    /* ------------------------------ */
-                    // Je fais les remplacement pour le timer
-                    if ( strpos( $request,"#TimerActionStart#" )>0 ) {
-                        $request = str_replace( "#TimerActionStart#", $NE->getConfiguration("TimerActionStart"), $request );
-                    }
-
-                    if ( strpos( $request,"#TimerDuration#" )>0 ) {
-                        if ( $NE->getConfiguration("TimerDuration") ) {
-                            $request = str_replace( "#TimerDuration#", $NE->getConfiguration("TimerDuration"), $request );
-                        }
-                        else {
-                            $request = str_replace( "#TimerDuration#", "60", $request );
-                        }
-                    }
-
-                    if ( strpos( $request,"#TimerRampUp#" )>0 ) {
-                        if ( $NE->getConfiguration("TimerRampUp") ) {
-                            $request = str_replace( "#TimerRampUp#", $NE->getConfiguration("TimerRampUp"), $request );
-                        }
-                        else {
-                            $request = str_replace( "#TimerRampUp#", "1", $request  );
-                        }
-                    }
-
-                    if ( strpos( $request,"#TimerRampDown#" )>0 ) {
-                        if ( $NE->getConfiguration("TimerRampDown") ) {
-                            $request = str_replace( "#TimerRampDown#", $NE->getConfiguration("TimerRampDown"), $request );
-                        }
-                        else {
-                            $request = str_replace( "#TimerRampDown#", "1", $request );
-                        }
-                    }
-
-                    if ( strpos( $request,"#TimerActionRamp#" )>0 ) {
-                        $request = str_replace( "#TimerActionRamp#", $NE->getConfiguration("TimerActionRamp"), $request );
-                    }
-
-                    if ( strpos( $request,"#TimerActionStop#" )>0 ) {
-                        $request = str_replace( "#TimerActionStop#", $NE->getConfiguration("TimerActionStop"), $request );
-                    }
-
-                    if ( strpos( $request,"#TimerActionCancel#" )>0 ) {
-                        $request = str_replace( "#TimerActionCancel#", $NE->getConfiguration("TimerActionCancel"), $request );
                     }
 
                     /* ------------------------------ */
@@ -2120,16 +1712,7 @@
 
                     log::add('Abeille', 'Debug', 'topic: '.$topic.' request: '.$request);
 
-                    if ( strpos( $topic, "CmdTimer" ) === 0 ) {
-                        $queueKeyAbeilleToTimer = msg_get_queue(queueKeyAbeilleToTimer);
-                        if (msg_send( $queueKeyAbeilleToTimer, 1, $msgAbeille, true, false)) {
-                            log::add('Abeille', 'debug', '(CmdTimer) Msg sent: '.json_encode($msgAbeille));
-                        }
-                        else {
-                            log::add('Abeille', 'debug', '(CmdTimer) Could not send Msg');
-                        }
-                    }
-                    else if ( strpos( $topic, "CmdCreate" ) === 0 ) {
+					if ( strpos( $topic, "CmdCreate" ) === 0 ) {
                         $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
                         if (msg_send( $queueKeyAbeilleToAbeille, 1, $msgAbeille, true, false)) {
                             log::add('Abeille', 'debug', '(CmdCreate) Msg sent: '.json_encode($msgAbeille));

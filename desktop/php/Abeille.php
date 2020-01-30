@@ -7,7 +7,7 @@ if (!isConnect('admin')) {
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
-$zigateNb = 5;
+$zigateNb = config::byKey('zigateNb', 'Abeille', '1');;
 
 $parametersAbeille = Abeille::getParameters();
 

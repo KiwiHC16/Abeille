@@ -23,7 +23,7 @@
         die();
     }
     
-    $zigateNb = 5;
+    $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
     
 ?>
 
@@ -56,6 +56,14 @@
                     <p><i>Il faut au minimum une zigate sur le premier port.</i></p>
                     <p><i>Bien mettre les zigates non utilisées sur la valeur Aucun sinon le demon risque de ne pas demarrer.</i></p>
                 </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nombre de zigate (si vous changez cette valeur, sauvegarder et recharger la page.">{{Nombre de zigate : }}</label>
+                <div class="col-sm-4">
+                <?php echo '<input class="configKey form-control" data-l1key="zigateNb" style="margin-top:5px" placeholder="1"/>'; ?>
+                </div>
+            </div>
+
 <?php
     for ( $i=1; $i<=$zigateNb; $i++ ) {
     ?>

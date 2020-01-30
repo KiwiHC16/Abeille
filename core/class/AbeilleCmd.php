@@ -62,7 +62,7 @@
         public $zigateNb;
         public $zigateAvailable = array();
 
-        function __construct($debug, $zigateNb) {
+        function __construct($debug) {
             if ($debug) $this->deamonlog("debug", "AbeilleCmdQueue constructor start");
             
             if ($debug) $this->deamonlog("debug", "Recuperation des queues de messages");
@@ -77,11 +77,6 @@
             
             $this->tempoMessageQueue               = array();
             
-            $this->zigateNb = $zigateNb;
-            
-            for ($i=1; $i<=$this->zigateNb; $i++) {
-                $this->zigateAvailable[$i] = 1; // On suppose que la zigate est dispo pour démarrer.
-            }
             if ($debug) $this->deamonlog("debug", "AbeilleCmdQueue constructor end");
         }
 
@@ -193,9 +188,9 @@
             
             $this->requestedlevel = $debugLevel;
 
-            $this->zigateNb = $this->parameters_info['zigateNb'];
+            $this->zigateNb = config::byKey('zigateNb', 'Abeille', '1');
             
-            parent::__construct( $this->debug["AbeilleCmdClass"], $this->zigateNb );
+            parent::__construct( $this->debug["AbeilleCmdClass"] );
             
             for ( $i=1; $i<=$this->zigateNb; $i++ ) {
                 $this->zigateAvailable[$i] = 1;
@@ -805,9 +800,9 @@
         function processCmdQueueToZigate() {
             
             for ($i=1; $i<=1; $i++) {
-                // if ( !isset( $this->cmdQueue[$i]) )     return;                                     // si la queue n existe pas je passe mon chemin
-                // if ( count( $this->cmdQueue[$i] ) < 1 ) return;                                     // si la queue est vide je passe mon chemin
-                // if ( $this->zigateAvailable[$i] == 0 )   return;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
+                if ( !isset( $this->cmdQueue[$i]) )     return;                                     // si la queue n existe pas je passe mon chemin
+                if ( count( $this->cmdQueue[$i] ) < 1 ) return;                                     // si la queue est vide je passe mon chemin
+                if ( $this->zigateAvailable[$i] == 0 )   return;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
                 if ( $this->debug['processCmdQueueToZigate'] ) { $this->deamonlog("debug", "processCmdQueueToZigate fct - start y a des truc a faire"); }
                 if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "--------------------"); }
                 if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]) ); }
@@ -3996,14 +3991,17 @@
             
             if ( !msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) ) return; // Si pas de message je passe mon chemin
             
-            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
+            $i = str_replace( 'Abeille', '', $msg['dest'] );
+            
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "traiteLesAckRecus fct - *************" );
             if (isset($this->statusText[$msg['status']])) {
                 // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
-                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: " );
+                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "traiteLesAckRecus fct - Message 8000 status recu: ".$msg['status']." -> ".$this->statusText[$msg['status']]." cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$i])." message(s) en attente: " );
             }
             else {
-                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue)." message(s) en attente: ".json_encode($this->cmdQueue));
+                if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "traiteLesAckRecus fct - Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$i])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
             }
+            
             // [2019-10-31 13:17:37][AbeilleCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
             // type: 8000 : message status en retour d'une commande envoyée à la zigate
             // status: 00 : Ok commande bien recue par la zigate / 15: ???
@@ -4018,33 +4016,33 @@
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
                 // ou si conf alors que stack demarrée
-                array_shift( $this->cmdQueue ); // Je vire la commande
-                $this->zigateAvailabe = 1;      // Je dis que la Zigate est dispo
-                $this->timeLastAck = 0;
+                array_shift( $this->cmdQueue[$i] ); // Je vire la commande
+                $this->zigateAvailable[$i] = 1;      // Je dis que la Zigate est dispo
+                $this->timeLastAck[$i] = 0;
                 
                 // Je tri la queue pour preparer la prochaine commande
-                if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue) ); }
+                if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue[$i]) ); }
                 
                  
                  // J'en profite pour ordonner la queue pour traiter les priorités
                  // https://www.php.net/manual/en/function.array-multisort.php
-                 if ( count($this->cmdQueue) > 1 ) {
-                     $retry      = array_column( $this->cmdQueue,'retry'   );
-                     $prio       = array_column( $this->cmdQueue,'priority');
-                     $received   = array_column( $this->cmdQueue,'received');
-                     array_multisort( $retry, SORT_DESC, $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue );
+                 if ( count($this->cmdQueue[$i]) > 1 ) {
+                     $retry      = array_column( $this->cmdQueue[$i],'retry'   );
+                     $prio       = array_column( $this->cmdQueue[$i],'priority');
+                     $received   = array_column( $this->cmdQueue[$i],'received');
+                     array_multisort( $retry, SORT_DESC, $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue[$i] );
                  }
                  
-                 if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres tri          : ".json_encode($this->cmdQueue) ); }
+                 if ( $this->debug['traiteLesAckRecus'] ) { $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres tri          : ".json_encode($this->cmdQueue[$i]) ); }
 
             }
             else {
-                $this->zigateAvailabe = 0;      // Je dis que la Zigate n est pas dispo
-                $this->timeLastAck = time();    // Je garde la date de ce mauvais Ack
+                $this->zigateAvailable[$i] = 0;      // Je dis que la Zigate n est pas dispo
+                $this->timeLastAck[$i] = time();    // Je garde la date de ce mauvais Ack
             }
             // if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack: ".json_encode($this->cmdQueue) );
-            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "J'ai ".count($this->cmdQueue)." commande(s) pour la zigate apres reception de ce Ack" );
-            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "*************" );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres reception de ce Ack" );
+            if ( $this->debug['traiteLesAckRecus'] ) $this->deamonlog("debug", "traiteLesAckRecus fct - *************" );
         }
         
         function timeOutSurLesAck() {

@@ -853,7 +853,7 @@
                 // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
             }
             else {
-                $this->deamonlog("debug","(fct decode8000) could not add message to queue (queueKeyParserToCmdSemaphore): ".json_encode($msgAbeille));
+                $this->deamonlog("debug","(fct decode8000) could not add message to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
             }
         }
 

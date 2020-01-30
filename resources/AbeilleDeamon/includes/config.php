@@ -2,4 +2,38 @@
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath=realpath(dirname(__FILE__).'/../../');
     $WifiLink = "/dev/zigate";
+    
+    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
+    // 1: Abeille
+    // 2: AbeilleParser -> Parser
+    // 3: AbeilleCmd -> Cmd
+    // 4:
+    // 5: AbeilleLQI -> LQI
+    // 6: xmlhttpMQTTSend -> xml
+    // 7: queueKeyFormToCmd -> Form
+    // 8: serie -> Serie
+    // 9: Semaphore entre Parser et MQTTSend
+
+    // 221: means AbeilleParser to(2) Abeille
+    define('queueKeyAbeilleToAbeille',      121);
+    define('queueKeyAbeilleToCmd',          123);
+
+    define('queueKeyParserToAbeille',       221);
+    define('queueKeyParserToCmd',           223);
+    define('queueKeyParserToLQI',           225);
+    define('queueKeyCmdToAbeille',          321);
+    define('queueKeyCmdToCmd',              323);
+
+    define('queueKeyLQIToAbeille',          521);
+    define('queueKeyLQIToCmd',              523);
+    define('queueKeyXmlToAbeille',          621);
+    define('queueKeyXmlToCmd',              623);
+    define('queueKeyFormToCmd',             723);
+    define('queueKeySerieToParser',         822);
+    define('queueKeyParserToCmdSemaphore',  999);
+    
+    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
+    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
+    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
+    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
 ?>

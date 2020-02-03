@@ -86,7 +86,7 @@
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                 }
-                                foreach (ls('/dev/', 'ttyUSB*') as $value) {
+                                foreach (ls('/dev/', 'tty*') as $value) {
                                     echo '<option value="/dev/' . $value . '">' . $value . '</option>';
                                 }
                             ?>

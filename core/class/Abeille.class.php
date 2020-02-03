@@ -503,9 +503,7 @@
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				$deamon[10+$i] = "AbeilleSerialRead.php";
                 $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-				// $paramdeamon0 = '/dev/Abeille'.' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], "."))))."1";
-				// exec(system::getCmdSudo().'ln -s '.$param['AbeilleSerialPort'].' /dev/Abeille');
+				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
 			}
 			
 			$deamon2 = "AbeilleParser.php";

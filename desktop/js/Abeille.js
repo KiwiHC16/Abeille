@@ -190,7 +190,7 @@ $('#bt_startZigbee').on('click', function () {
                     }
                     );
 
-$('#bt_include').on('click', function () {
+$('#bt_include1').on('click', function () {
                     console.log("bt_include");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();
                     xmlhttpMQTTSendInclude.onreadystatechange = function() {
@@ -199,7 +199,7 @@ $('#bt_include').on('click', function () {
                     }
                     };
 
-                    xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
+                    xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille1_Ruche_SetPermit&payload=Inclusion", true); // False pour bloquer sur la recuperation du fichier
                     xmlhttpMQTTSendInclude.send();
                     $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
                     }

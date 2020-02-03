@@ -30,7 +30,7 @@
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
     define('queueKeySerieToParser',         822);
-    define('queueKeyParserToCmdSemaphore',  999);
+    define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
     
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
     define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler

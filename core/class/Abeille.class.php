@@ -423,13 +423,14 @@
 
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
             
+            // ******************************************************************************************************************
+            // Remove temporary files
+            $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
+            unlink( $FileLock );
+            log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+            
             if ( config::byKey('DbVersion', 'Abeille', '') == '' ) {
-                // ******************************************************************************************************************
-                // Remove temporary files
-                $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
-                unlink( $FileLock );
-                log::add('Abeille', 'debug', 'Deleting '.$FileLock );
-                
+
                 // ******************************************************************************************************************
                 // Update Abeille instance from previous version from Abeille/ to Abeille1/
                 $from   = "Abeille";
@@ -443,7 +444,11 @@
                         $abeille->save();
                     }
                 }
-
+                config::save( 'zigateNb', '1', 'Abeille' );
+                config::save( 'IpWifiZigate1', '', 'Abeille' );
+                config::save( 'deamonAutoMode', '1', 'Abeille' );
+                config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
+                config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
                 config::save( 'DbVersion', '20200225', 'Abeille' );
             }
             

@@ -445,10 +445,16 @@
                     }
                 }
                 config::save( 'zigateNb', '1', 'Abeille' );
-                config::save( 'IpWifiZigate1', '', 'Abeille' );
                 config::save( 'deamonAutoMode', '1', 'Abeille' );
                 config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
-                config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
+                if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
+                    config::save( 'AbeilleSerialPort', '/dev/zigate1', 'Abeille' );
+                    config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );
+                }
+                else {
+                    config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
+                }
+                config::remove( 'AbeilleSerialPort', 'Abeille' );
                 config::save( 'DbVersion', '20200225', 'Abeille' );
             }
             

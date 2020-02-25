@@ -17,12 +17,6 @@
         }
     }
     
-    // Chemin vers les zigates
-    $usbPath  = config::byKey('AbeilleSerialPort',  'Abeille', '{{Inconnu}}');
-    $usbPath2 = config::byKey('AbeilleSerialPort2', 'Abeille', '{{Inconnu}}');
-    $usbPath3 = config::byKey('AbeilleSerialPort3', 'Abeille', '{{Inconnu}}');
-    $usbPath4 = config::byKey('AbeilleSerialPort4', 'Abeille', '{{Inconnu}}');
-    $usbPath5 = config::byKey('AbeilleSerialPort5', 'Abeille', '{{Inconnu}}');
     $eqLogics = eqLogic::byType('Abeille');
     
     // Node Count
@@ -155,7 +149,15 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading"><h4 class="panel-title">{{Système}}</h4></div>
                         <div class="panel-body">
-                            <p>{{Chemin du contrôleur Zigbee :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $usbPath.", ".$usbPath2.", ".$usbPath3.", ".$usbPath4.", ".$usbPath5 ?></span> </p>
+
+                            <p>{{Chemin du contrôleur Zigbee :}}
+                                <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;">
+<?php                           for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                    echo config::byKey('AbeilleSerialPort'.$i, 'Abeille', '{{Inconnu}}').", ";
+                                }
+?>
+                                </span>
+                            </p>
                             <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $nbDaemons ?></span> </p>
                         </div>
                     </div>
@@ -208,11 +210,10 @@
                     <div id="div_routingTable">
                         <span>
                             <span class="" style="padding: 3px 20px;">
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache1"><i class="fa fa-refresh" ></i>Get LQI Z1</a>
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache2"><i class="fa fa-refresh" ></i>Get LQI Z2</a>
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache3"><i class="fa fa-refresh" ></i>Get LQI Z3</a>
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache4"><i class="fa fa-refresh" ></i>Get LQI Z4</a>
-                                <a data-action="refreshNetworkCache" class="btn btn-success refreshCache5"><i class="fa fa-refresh" ></i>Get LQI Z5</a>
+<?php                       for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                echo '<a data-action="refreshNetworkCache" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Get LQI Z'.$i.'</a>';
+                            }
+    ?>
                             </span>
                             Get LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
 

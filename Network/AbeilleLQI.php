@@ -44,7 +44,7 @@
     }
 */
     
-    function benLog($message = "")
+    function KiwiLog($message = "")
     {
         global $debugKiwi;
         if ($debugKiwi && strlen($message) > 0) echo $message . "<br>\n";
@@ -57,7 +57,7 @@
         global $abeilleParameters;
         global $queueKeyParserToLQI;
         
-        benLog("Check if message");
+        KiwiLog("Check if message");
         
         $max_msg_size = 512;
         
@@ -70,12 +70,12 @@
             return;
         }
         
-        benLog("Message: ".json_encode( $message ) );
+        KiwiLog("Message: ".json_encode( $message ) );
         
         $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
         $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
          
-        benLog("Message Topic: ".$message->topic);
+        KiwiLog("Message Topic: ".$message->topic);
         
         if (strpos( "_".$message->topic, "LQI") != 1) {
             echo "LQI not\n";
@@ -195,7 +195,7 @@
         $msgAbeille->message['topic'] = "Cmd".$serial."/Ruche/Management_LQI_request";
         $msgAbeille->message['payload'] = "address=" . $destAddr . "&StartIndex=" . $index;
         
-        benLog("publishLQI: ".json_encode($msgAbeille));
+        KiwiLog("publishLQI: ".json_encode($msgAbeille));
         
         if (msg_send( $queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false)) {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode($msgAbeille));
@@ -263,30 +263,26 @@
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
      /*--------------------------------------------------------------------------------------------------*/
+    // Bouton GetLQI(x)
+    // refreshNetworkCache refreshCache(x) dans desktop/modal/network.php -> desktop/js/network.js -> updateZigBeeJsonCache(x) -> AbeilleLQI.php?zigate=(x)
+    // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
+    
+    // $_GET['zigate']=1;
     
     $debugKiwi = 1;
     $abeilleParameters = Abeille::getParameters();
     
-    benLog('Start Main');
+    KiwiLog('Start Main');
     
-    // Pour lancer en ligne de commande
-    // $_GET['zigate']=2;
-    
-    benLog('Get[zigate] = '.$_GET['zigate'] );
     if ( $_GET['zigate']<1 or $_GET['zigate']>5 ) {
-        benLog("Mauvaise valeur de zigate !!!!");
+        KiwiLog("Mauvaise valeur de zigate !!!!");
         return;
     }
     
-    if ( $_GET['zigate'] == 1 ) $port = ""; else $port = $_GET['zigate'];
+    $serial = "Abeille".$_GET['zigate'];
     
-    // $serial = $abeilleParameters[ "AbeilleSerialPort".$port ];
-    // $serial = substr( $serial, 5 );
-    $serial = "Abeille".$port;
-    
-    benLog( $serial );
-    
-    benLog( "abeilleParameters: ".json_encode($abeilleParameters) );
+    KiwiLog( $serial );
+    KiwiLog( "abeilleParameters: ".json_encode($abeilleParameters) );
     
     $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
@@ -297,10 +293,10 @@
     
     if (file_exists($FileLock)) {
         $content = file_get_contents($FileLock);
-        benLog($FileLock . ' content: ' . $content);
+        KiwiLog($FileLock . ' content: ' . $content);
         if (strpos("_".$content, "done") != 1) {
             echo 'Oops, une collecte est déja en cours... Veuillez attendre la fin de l\'opération';
-            benLog('debug', 'Une collecte est probablement en cours, fichier lock present, exit.');
+            KiwiLog('debug', 'Une collecte est probablement en cours, fichier lock present, exit.');
             exit;
         }
     }
@@ -325,20 +321,20 @@
         $knownNE_FromAbeille[$shortAddress] = $name;
     }
     
-    benLog("NE connus pas Abeille");
-    benLog( json_encode($knownNE_FromAbeille) );
-    benLog( "----------------------------------");
+    KiwiLog("NE connus pas Abeille");
+    KiwiLog( json_encode($knownNE_FromAbeille) );
+    KiwiLog( "----------------------------------");
     
     
     // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
     
     $LQI = array();
     
-    benLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
+    KiwiLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
     //lqiLog('debug', '---------: definition et connection a mosquitto');
          
     // Let's start with the Coordinator
-    benLog( "---------: Let s start with the Coordinator");
+    KiwiLog( "---------: Let s start with the Coordinator");
     //lqiLog('debug', '---------: Let s start with the Coordinator');
     $NE_All_BuildFromLQI = array();
     $NE_All_BuildFromLQI["0000"] = array("LQI_Done" => 0);
@@ -356,8 +352,8 @@
         // Let's continue with Routers found
         // foreach ($knownNE as $name => $neAddress) {
         foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
-            benLog("=============================================================");
-            benLog("Start Loop");
+            KiwiLog("=============================================================");
+            KiwiLog("Start Loop");
             
             //-----------------------------------------------------------------------------
             // Estimation du travail restant et info dans le fichier lock
@@ -368,7 +364,7 @@
                     $done++;
                 }
             }
-            benLog("AbeilleLQI main: " . $done . " of " . $total);
+            KiwiLog("AbeilleLQI main: " . $done . " of " . $total);
             
             //-----------------------------------------------------------------------------
             
@@ -387,15 +383,15 @@
                 exit;
             }
             
-            benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
-            benLog( json_encode($NE_All_BuildFromLQI) );
+            KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
+            KiwiLog( json_encode($NE_All_BuildFromLQI) );
             
             if ($currentNeStatus['LQI_Done'] == 0) {
                 // echo "Let s do\n";
                 // $NE = $neAddress;
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                benLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
+                KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
                 sleep(5);
                 collectInformation( $serial, $currentNeAddress);
                 $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;

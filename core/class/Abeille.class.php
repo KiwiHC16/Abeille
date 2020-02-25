@@ -418,7 +418,7 @@
         }
 
         public static function deamon_start_cleanup($message = null) {
-            // This function is used to run some cleanup before the demon start, or update the database du to data change needed.
+            // This function is used to run some cleanup before the demon start, or update the database due to data change needed.
             $debug = 0;
 
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
@@ -426,10 +426,22 @@
             // ******************************************************************************************************************
             // Remove temporary files
             $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
-            
             unlink( $FileLock );
             log::add('Abeille', 'debug', 'Deleting '.$FileLock );
             
+            // ******************************************************************************************************************
+            // Update Abeille instance from previous version from Abeille/ to Abeille1/
+            $from   = "Abeille";
+            $to     = "Abeille1";
+            $abeilles = Abeille::byType('Abeille');
+            foreach ( $abeilles as $abeilleId=>$abeille) {
+                if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
+                    $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
+                    $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
+                    $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
+                    $abeille->save();
+                }
+            }
 
             return;
         }
@@ -439,6 +451,8 @@
             // bt_startDeamon -> jeedom.plugin.deamonStart -> plugin.class.js: deamonStart -> ore/ajax/plugin.ajax.php(deamonStart) -> $plugin->deamon_start(init('forceRestart', 0))
             log::add('Abeille', 'debug', 'deamon start: IN -----------Starting --------------------');
 
+            $param = self::getParameters();
+            
             self::deamon_stop();
 
             log::add('Abeille', 'debug', "Attention du lien");
@@ -448,8 +462,8 @@
             message::removeAll('Abeille', 'Abeille/Demon');
             message::removeAll('Abeille', 'Abeille/cron');
             message::removeAll('Abeille', 'Abeille/Abeille');
-
-            $param = self::getParameters();
+            
+            self::deamon_start_cleanup();
 
             if (self::dependancy_info()['state'] != 'ok') {
                 message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.", 'Abeille/Demon');
@@ -465,15 +479,11 @@
 
             cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-            self::deamon_start_cleanup();
-
             // Start other deamons
 
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
             $dirdeamon = dirname(__FILE__)."/../../core/class/";
-
-            
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				log::add('Abeille','debug','deamon_start: Port serie '.$i.' defini dans la configuration. ->'.$param['AbeilleSerialPort'.$i].'<-');
@@ -498,7 +508,6 @@
 			$deamon25 = "AbeilleSocat.php";
 			$paramdeamon25 = $param['AbeilleSerialPort5'].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate5'];
 			$log25 = " > ".log::getPathToLog(substr($deamon25, 0, (strrpos($deamon25, "."))))."5";
-
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				$deamon[10+$i] = "AbeilleSerialRead.php";
@@ -531,7 +540,6 @@
 				exec($cmd.' 2>&1 &');
 				sleep(5);
 			}
-
 
 			if ( ($param['AbeilleSerialPort3'] == "/dev/zigate3") and ($param['AbeilleActiver3']=='Y') ) {
 				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon23." ".$paramdeamon23.$log23;
@@ -1989,24 +1997,27 @@
 
             case "22":
                 echo "Debut case 22\n";
-                $from = "Abeille";
-                $to = "monitZigate1";
+                $from   = "Abeille1";
+                $to     = "Abeille3";
                 $abeilles = Abeille::byType('Abeille');
                 foreach ( $abeilles as $abeilleId=>$abeille) {
                     // var_dump($abeille->getCmd());
                     // var_dump($abeille);
                     echo $abeille->getId()."-> ".$abeille->getLogicalId()."\n";
-                    if ( !preg_match("(^".$from."/T)", $abeille->getLogicalId() )) {
+                    if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
                         echo "to process: ".str_replace($from,$to,$abeille->getLogicalId())."\n";
                         $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
+                        
+                        echo "Name: ".$abeille->getName()." - ";
+                        $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
+                        echo "Name: ".$abeille->getName()."\n";
 
-                        echo "Conf: ".$abeille->getConfiguration('topic')."\n";
+                        echo "Conf: ".$abeille->getConfiguration('topic')." - ";
                         $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
                         echo "Conf: ".$abeille->getConfiguration('topic')."\n";
 
                         $abeille->save();
                     }
-                    //return;
                 }
                 echo "\n";
                 break;

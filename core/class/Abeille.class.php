@@ -422,27 +422,31 @@
             $debug = 0;
 
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
-
-            // ******************************************************************************************************************
-            // Remove temporary files
-            $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
-            unlink( $FileLock );
-            log::add('Abeille', 'debug', 'Deleting '.$FileLock );
             
-            // ******************************************************************************************************************
-            // Update Abeille instance from previous version from Abeille/ to Abeille1/
-            $from   = "Abeille";
-            $to     = "Abeille1";
-            $abeilles = Abeille::byType('Abeille');
-            foreach ( $abeilles as $abeilleId=>$abeille) {
-                if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
-                    $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
-                    $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
-                    $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
-                    $abeille->save();
+            if ( config::byKey('DbVersion', 'Abeille', '') == '' ) {
+                // ******************************************************************************************************************
+                // Remove temporary files
+                $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
+                unlink( $FileLock );
+                log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+                
+                // ******************************************************************************************************************
+                // Update Abeille instance from previous version from Abeille/ to Abeille1/
+                $from   = "Abeille";
+                $to     = "Abeille1";
+                $abeilles = Abeille::byType('Abeille');
+                foreach ( $abeilles as $abeilleId=>$abeille) {
+                    if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
+                        $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
+                        $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
+                        $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
+                        $abeille->save();
+                    }
                 }
-            }
 
+                config::save( 'DbVersion', '20200225', 'Abeille' );
+            }
+            
             return;
         }
 

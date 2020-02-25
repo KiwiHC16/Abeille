@@ -448,7 +448,7 @@
                 config::save( 'deamonAutoMode', '1', 'Abeille' );
                 config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
                 if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
-                    config::save( 'AbeilleSerialPort', '/dev/zigate1', 'Abeille' );
+                    config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
                     config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );
                 }
                 else {

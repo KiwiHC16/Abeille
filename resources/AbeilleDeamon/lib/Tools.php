@@ -109,7 +109,11 @@ class Tools
         $deviceCmds = array();
         $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
 
-        if (!is_file($deviceFilename)) { return; }
+        if (!is_file($deviceFilename)) {
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename not found: ' . $deviceFilename . ' will send back default template.');
+            $device = 'defaultUnknown';
+            $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        }
 
         $content = file_get_contents($deviceFilename);
 

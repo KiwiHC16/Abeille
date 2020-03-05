@@ -542,7 +542,7 @@
 
 			// ----------------
 
-			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate1") and ($param['AbeilleActiver1']=='Y') ) {
+			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate") and ($param['AbeilleActiver1']=='Y') ) {
 				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
 				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
 				exec($cmd.' 2>&1 &');
@@ -1089,7 +1089,6 @@
             
             // log::add('Abeille', 'debug', 'I should have the cmd now' );
             
-            $objetConnu = 0;
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
             if ( !is_object($elogic)
@@ -1125,16 +1124,9 @@
                 $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
                 log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
 
-                //Due to various kind of naming of devices, json object is either named as value or $trimmedvalue. We need to know which one to use.
-                if (array_key_exists($value, $AbeilleObjetDefinition) || array_key_exists( $trimmedValue, $AbeilleObjetDefinition )) {
-                    $objetConnu = 1;
-                    $jsonName = array_key_exists($value, $AbeilleObjetDefinition) ? $value : $trimmedValue;
-                    log::add( 'Abeille', 'info', 'objet: '.$value.' recherché comme '.$trimmedValue.' peut etre cree car je connais ce type d objet.' );
-                } else {
-                    log::add( 'Abeille', 'info', 'objet: '.$value.' recherché comme '.$trimmedValue.' ne peut pas etre creer car je ne connais pas ce type d objet.' );
-                    // log::add('Abeille', 'debug', 'objet: '.json_encode($AbeilleObjetDefinition));
-                    return;
-                }
+                
+                if ( array_key_exists( $trimmedValue, $AbeilleObjetDefinition) )   { $jsonName = $trimmedValue; }
+                if ( array_key_exists('defaultUnknown', $AbeilleObjetDefinition) ) { $jsonName = 'defaultUnknown'; }
 
                 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 // Creation de l objet Abeille
@@ -1148,13 +1140,8 @@
                 message::add( "Abeille", "Création d un nouvel objet Abeille (".$nodeid.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.",'','Abeille/Abeille' );
                 $elogic = new Abeille();
                 //id
-                if ($objetConnu) {
-                    // $name = "Abeille-".$addr;
-                    // $name = "Abeille-" . $addr . '-' . $jsonName;
-                    $name = $Filter."-".$addr;
-                } else {
-                    $name = "Abeille-".$addr.'-'.$jsonName."-Type d objet inconnu (!JSON)";
-                }
+
+                $name = $Filter."-".$addr;
                 $elogic->setName($name);
                 $elogic->setLogicalId($nodeid);
                 $elogic->setObject_id($parameters_info['AbeilleParentId']);
@@ -1163,6 +1150,7 @@
                 $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
 
                 $objetConfiguration = $objetDefSpecific["configuration"];
+                log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
                 $elogic->setConfiguration('topic', $nodeid);
                 $elogic->setConfiguration('type', $type);
                 $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
@@ -1170,6 +1158,7 @@
                 $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
                 $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
                 $elogic->setConfiguration('type', $type);
+
                 if (isset($objetConfiguration['battery_type'])) {
                     $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
                 }

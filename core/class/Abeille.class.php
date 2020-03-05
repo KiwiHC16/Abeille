@@ -542,7 +542,7 @@
 
 			// ----------------
 
-			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate") and ($param['AbeilleActiver1']=='Y') ) {
+			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate1") and ($param['AbeilleActiver1']=='Y') ) {
 				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
 				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
 				exec($cmd.' 2>&1 &');

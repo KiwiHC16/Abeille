@@ -49,19 +49,13 @@ gpio mode 2 out
 
 # Passage en mode 'flash'
 gpio write 2 0
-
 sleep 1
-
 gpio write 0 0
-
 sleep 1
-
 gpio write 0 1
-
 sleep 1
 
 # gpio write 2 1
-
 # sleep 1
 
 sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/$1 -s $2 2>&1
@@ -78,13 +72,9 @@ echo "Redemarrage de la PiZiGate"
 
 # Passage en mode 'prod'
 gpio write 2 1
-
 sleep 1
-
 gpio write 0 0
-
 sleep 1
-
 gpio write 0 1
 
 echo " = Fin"

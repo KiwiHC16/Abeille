@@ -33,6 +33,7 @@ Lancement des operations.
         data: {
             action: 'updateFirmwarePiZiGate',
             fwfile:  <?php echo $_GET['fwfile']; ?>,
+            zgport:  <?php echo $_GET['zgport']; ?>,
         },
         dataType: 'json',
         global: false,
@@ -45,7 +46,7 @@ Lancement des operations.
 
 function updatelog(){
     jeedom.log.autoupdate({
-                log: 'Abeille_updateFirmwarePiZiGate',
+                log: 'Abeille_updateFirmware',
                 display: $('#pre_abeilleUpdateFirmware'),
                 search: $('#in_abeilleLogSearch'),
                 control: $('#bt_abeilleLogStopStart'),

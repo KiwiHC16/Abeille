@@ -196,9 +196,18 @@
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
                     <div class="col-lg-5">
+                        <select style="width:150px" id ="ZiGatePort">
+                            <?php
+                                /* TODO: How to select default port ? */
+                                foreach (ls('/dev/', 'tty*') as $value) {
+                                    echo '<option value="/dev/' . $value . '">' . $value . '</option>';
+                                }
+                            ?>
+                        </select>
                         <select style="width:150px" id ="ZiGateFirmwareVersion">
                             <?php
                                 foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
+                                    echo '<option value=' . $value . '>' . $value . '</option>';
                                     echo '<option value=' . $value . '>' . $value . '</option>';
                                 }
                             ?>
@@ -351,13 +360,13 @@ $('#bt_installS0').on('click',function(){
                         })
 
 $('#bt_updateFirmware').on('click',function(){
-                              bootbox.confirm('{{Vous êtes sur le point de programmer la PiZigate avec le firmware ' + document.getElementById("ZiGateFirmwareVersion").value + '.<br> Voulez vous continuer ?}}', function (result) {
-                                              if (result) {
-                                              $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFrimware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value +  '\"').dialog('open');
-                                              }
-                                              });
-                              })
+    bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
+            }
+        });
+    })
 
 $('#bt_resetPiZigate').on('click',function(){
                            bootbox.confirm('{{Vous êtes sur le point de reset (HW) la zigate.<br> Voulez vous continuer ?}}', function (result) {

@@ -18,12 +18,12 @@
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    
+
     // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
     // 1: Abeille
     // 2: AbeilleParser -> Parser
     // 3: AbeilleCmd -> Cmd
-    // 4: 
+    // 4:
     // 5: AbeilleLQI -> LQI
     // 6: xmlhttpMQTTSend -> xml
     // 7: queueKeyFormToCmd -> Form
@@ -47,13 +47,13 @@
     define('queueKeyFormToCmd',             723);
     define('queueKeySerieToParser',         822);
     define('queueKeyParserToCmdSemaphore',  999);
-    
+
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
     define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
     define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
     define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-    
-        
+
+
 
     Class MsgAbeille {
         /*
@@ -93,7 +93,7 @@
             log::add('Abeille_'.$text, 'info', 'End'.$text);
             if ($GLOBALS['debugKIWI']) echo $text." end\n";
 		}
-		
+
         public static function syncconfAbeille($_background = true) {
 			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille" );
         }
@@ -110,9 +110,10 @@
 			Abeille::execShellCmd( "installSocat.sh", "installSocat" );
         }
 
-        public static function updateFirmwarePiZiGate($_background = true,$fwfile) {
+        public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
 			self::deamon_stop(); // Arrêt du demon
-			Abeille::execShellCmd( "updateFrimware.sh", "updateFrimware" );
+            $cmd = "updateFirmware.sh " . $fwfile . " " . $zgport;
+			Abeille::execShellCmd( $cmd, "updateFirmware" );
 			self::deamon_start(); // Redemarrage du demon
         }
 
@@ -121,7 +122,7 @@
         }
 
         public static function updateConfigAbeille($abeilleIdFilter = false) {
-           
+
         }
 
         public static function cronDaily() {
@@ -272,7 +273,7 @@
             // https://github.com/jeelabs/esp-link
             // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
             // so I need to create a minimum of traffic, so pull zigate every minutes
-		
+
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				if ($param['AbeilleSerialPort'.$i]!="none") {
 					// Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
@@ -403,7 +404,7 @@
 
             if ( ($nbProcess != $nbProcessExpected) ) {
                 // if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, nombre de demons: '.$output1[0]);
-                
+
                 for ( $i=1; $i<=$parameters['zigateNb']; $i++ ) {
                     if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info, ooooooooooo: '.$parameters['AbeilleSerialPort'.$i]);
                 }
@@ -422,13 +423,13 @@
             $debug = 0;
 
             log::add('Abeille', 'debug', 'deamon_start_cleanup: Debut des modifications si nécessaire');
-            
+
             // ******************************************************************************************************************
             // Remove temporary files
             $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
             unlink( $FileLock );
             log::add('Abeille', 'debug', 'Deleting '.$FileLock );
-            
+
             if ( config::byKey('DbVersion', 'Abeille', '') == '' ) {
 
                 // ******************************************************************************************************************
@@ -457,7 +458,7 @@
                 config::remove( 'AbeilleSerialPort', 'Abeille' );
                 config::save( 'DbVersion', '20200225', 'Abeille' );
             }
-            
+
             return;
         }
 
@@ -467,7 +468,7 @@
             log::add('Abeille', 'debug', 'deamon start: IN -----------Starting --------------------');
 
             $param = self::getParameters();
-            
+
             self::deamon_stop();
 
             log::add('Abeille', 'debug', "Attention du lien");
@@ -477,7 +478,7 @@
             message::removeAll('Abeille', 'Abeille/Demon');
             message::removeAll('Abeille', 'Abeille/cron');
             message::removeAll('Abeille', 'Abeille/Abeille');
-            
+
             self::deamon_start_cleanup();
 
             if (self::dependancy_info()['state'] != 'ok') {
@@ -529,7 +530,7 @@
                 $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
 				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
 			}
-			
+
 			$deamon2 = "AbeilleParser.php";
 			// $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
 			$paramdeamon2 = log::convertLogLevel(log::getLogLevel('Abeille'));
@@ -608,14 +609,14 @@
 			log::add('Abeille', 'debug', 'Start deamon Cmd: '.$cmd);
 			exec($cmd.' 2>&1 &');
 
-		
+
 
             sleep(2);
 
             // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-            
+
             log::add('Abeille', 'debug', 'deamon_start: ***** Envoi de la creation de ruche par défaut ********');
-			
+
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				if ( ($param['AbeilleSerialPort'.$i] != "none") and ($param['AbeilleActiver'.$i]=='Y') ) {
 					log::add('Abeille', 'debug', 'deamon_start: ***** ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
@@ -626,30 +627,30 @@
 					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "" );
 				}
 			}
-			
+
             log::add('Abeille', 'debug', 'deamon start: OUT --------------- all done ----------------');
 
             return true;
         }
 
         public static function mapAbeillePort( $Abeille ) {
-           
+
             $param = self::getParameters();
-            
+
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
                 if ( $Abeille == "Abeille".$i )  return basename($param['AbeilleSerialPort'.$i ]);
             }
         }
-        
+
         public static function mapPortAbeille ( $port ) {
 
             $param = self::getParameters();
-            
+
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
                 if ( $port == $param['AbeilleSerialPort'.$i ] )  return "Abeille".$i;
             }
         }
-        
+
         public static function deamon_stop() {
             log::add('Abeille', 'debug', 'deamon stop: IN -------------KIWI------------------');
             // Stop socat if exist
@@ -810,7 +811,7 @@
         }
 
         public static function getParameters() {
-            
+
             $return = array();
             $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
             $return['parametersCheck_message'] = "";
@@ -818,24 +819,24 @@
             //Most Fields are defined with default values
             $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
             $return['zigateNb']             = config::byKey('zigateNb', 'Abeille', '1');
-            
+
             for ( $i=1; $i<=$return['zigateNb']; $i++ ) {
                 $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', 'none');
                 $return['IpWifiZigate'.$i]        = config::byKey('IpWifiZigate'.$i,        'Abeille', '192.168.0.1');
                 $return['AbeilleActiver'.$i ]     = config::byKey('AbeilleActiver'.$i,      'Abeille', 'N');
             }
-			
+
 			return $return;
         }
-			
+
 		public static function checkParameters() {
 			// return 1 si Ok, 0 si erreur
             $param = Abeille::getParameters();
-            
+
             if ( !isset($param['zigateNb']) ) { return 0; }
             if ( $param['zigateNb'] < 1 ) { return 0; }
             if ( $param['zigateNb'] > 9 ) { return 0; }
-            
+
             // Testons la validité de la configuration
 			$atLeastOneZigateActiveWithOnePortDefined = 0;
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
@@ -1078,15 +1079,15 @@
 
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Cherche l objet par sa ref short Address et la commande
-            
+
             // log::add('Abeille', 'debug', 'Looking for nodeId: '.$nodeid );
             $elogic = self::byLogicalId($nodeid, 'Abeille');
-            
+
             // log::add('Abeille', 'debug', 'Looking for cmd of nodeId: '.$cmdId );
             if (is_object($elogic)) {
                 $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
             }
-            
+
             // log::add('Abeille', 'debug', 'I should have the cmd now' );
             
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1308,31 +1309,31 @@
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
                 // log::add('Abeille', 'debug', 'J ai fini la recherche avec resultat : '.$ShortFound );
                 if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
-                    
+
                     $elogic = self::byLogicalId( $dest."/".$ShortFound, 'Abeille');
-                    
+
                     if (!is_object( $elogic )) {
                         log::add('Abeille', 'debug', 'Un objet trouve avec l adresse IEEE mais n est pas sur la bonne zigate.' );
                         return;
                     }
-                    
+
                     log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
                     // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
                     message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '', 'Abeille/Abeille' );
-                    
+
                     // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
                     log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
                     $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
-                    
+
                     $elogic->setLogicalId( $dest."/".$addr );
-                    
+
                     $elogic->setConfiguration('topic', $dest."/".$addr);
-                    
+
                     $elogic->save();
-                    
+
                     // Il faut aussi mettre a jour la commande short address
                     Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr );
-                    
+
                 }
                 log::add('Abeille', 'debug', 'Voila j ai fini' );
                 return;
@@ -1524,14 +1525,14 @@
             $elogic->save();
 
             $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
-            
+
             // Only needed for debug and dev so by default it's not done.
             if (0) {
                 $i = 100;
-                
+
                 //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
                 $items = Tools::getDeviceNameFromJson('Abeille');
-                
+
                 foreach ($items as $item) {
                     $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices( Tools::getTrimmedValueForJsonFiles($item), 'Abeille' );
                     // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
@@ -1605,16 +1606,16 @@
 
     class AbeilleCmd extends cmd {
         public function execute($_options = null) {
-            
+
             log::add('Abeille', 'Debug', 'execute ->'.$this->getType().'<- function with options ->'.json_encode($_options).'<-');
-            
+
             // cmdId : 12676 est le level d une ampoule
             // la cmdId 12680 a pour value 12676
             // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
             // On le voit dans le log avec:
             // [2020-01-30 03:39:22][DEBUG] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
             if ( isset($_options['cmdIdUpdated']) ) return;
-            
+
             switch ($this->getType()) {
                 case 'action' :
                     //
@@ -1635,8 +1636,8 @@
 							$topic = "Cmd".$NE->getConfiguration('topic')."/".$this->getConfiguration('topic');
 						}
 					}
-                    
-                    
+
+
                     if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
                         // if ( $NE->getConfiguration('Zigate') > 1 ) {
                         //     $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
@@ -1645,7 +1646,7 @@
                         $destNE = str_replace( "Abeille", "", $topicNEArray[0]);
                         $topic = str_replace( "CmdAbeille", "CmdAbeille".$destNE, $topic );
                     }
-                    
+
                     log::add('Abeille', 'Debug', 'topic: '.$topic);
 
                     $topicArray = explode("/", $topic );
@@ -1677,7 +1678,7 @@
                         $onTimeHex = sprintf("%04s",dechex($NE->getConfiguration("onTime")*10));
                         $request = str_replace( "#onTime#", $onTimeHex, $request );
                     }
-                    
+
                     if (strpos($request, '#addrIEEE#') > 0) {
                         $ruche = new Abeille();
                         $commandIEEE = new AbeilleCmd();
@@ -2014,7 +2015,7 @@
                     if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
                         echo "to process: ".str_replace($from,$to,$abeille->getLogicalId())."\n";
                         $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
-                        
+
                         echo "Name: ".$abeille->getName()." - ";
                         $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
                         echo "Name: ".$abeille->getName()."\n";

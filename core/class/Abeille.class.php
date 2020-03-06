@@ -1036,7 +1036,7 @@
             if (sizeof($topicArray) != 3) return;
 
             list( $Filter, $addr, $cmdId) = explode("/", $message->topic);
-            if ($Filter == "CmdCreate") $Filter = "Abeille";
+            if ( preg_match("(^CmdCreate)", $message->topic) ) { $Filter = str_replace( "CmdCreate", "", $Filter) ; }
             $dest = $Filter;
 
             if ( $addr == "0000" ) $addr = "Ruche";
@@ -1638,9 +1638,12 @@
                     
                     
                     if (strpos("_".$this->getConfiguration('topic'), "CmdAbeille") == 1) {
-                        if ( $NE->getConfiguration('Zigate') > 1 ) {
-                            $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
-                        }
+                        // if ( $NE->getConfiguration('Zigate') > 1 ) {
+                        //     $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
+                        // }
+                        $topicNEArray = explode("/", $NE->getConfiguration("topic") );
+                        $destNE = str_replace( "Abeille", "", $topicNEArray[0]);
+                        $topic = str_replace( "CmdAbeille", "CmdAbeille".$destNE, $topic );
                     }
                     
                     log::add('Abeille', 'Debug', 'topic: '.$topic);

@@ -33,7 +33,6 @@ $parametersAbeille = Abeille::getParameters();
 <!-- Barre d outils horizontale  -->
 <?php
 $outils = array(
-                'remote'    => array( 'bouton'=>'bt_createRemote',         'icon'=>'fa-gamepad',       'text'=>'{{Télécommande}}' ),
                 'health'    => array( 'bouton'=>'bt_healthAbeille',        'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
                 'netList'   => array( 'bouton'=>'bt_networkAbeilleList',   'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
                 'net'       => array( 'bouton'=>'bt_networkAbeille',       'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
@@ -80,7 +79,9 @@ $outils = array(
     
         if ( Abeille::getParameters()['AbeilleSerialPort'.$i] != "none" ) {
             
-            echo '<div id="bt_include'.$i.'" > Zigate'.$i . ' - ' . Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName() . ' <i class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i> </div>';
+            echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
+            echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
+            echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
             
             echo '<div class="eqLogicThumbnailContainer">';
 
@@ -647,20 +648,6 @@ Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
                                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>
                                 </div>
                                 </div>
-
-                                <div class="form-group">
-                                   <label class="col-sm-3 control-label">{{Zigate}}</label>
-                                   <div class="col-sm-3">
-                                       <select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Zigate" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
-                                           <option value="1" selected>{{Zigate1}}</option>
-                                           <option value="2"         >{{Zigate2}}</option>
-                                           <option value="3"         >{{Zigate3}}</option>
-                                           <option value="4"         >{{Zigate4}}</option>
-                                           <option value="5"         >{{Zigate5}}</option>
-                                       </select>
-                                  </div>
-                                </div>
-
 
                     </fieldset>
                 </form>

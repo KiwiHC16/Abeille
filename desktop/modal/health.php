@@ -70,18 +70,23 @@
             $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
             
             if ( $commandIEEE ) {
-                if ( $eqLogic->getConfiguration('icone') == "Timer" ) {
-                    $addrIEEE = "na";
-                }
-                else {
-                    $addrIEEE = $commandIEEE->execCmd();
+                $addrIEEE = $commandIEEE->execCmd();
+                if (strlen($addrIEEE) > 2 ) {
                     $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
                 }
             }
-            else {
-                $addrIEEE = "-";
+
+            if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
+                $addrIEEE = "na";
             }
-            echo '<td>'.$addrIEEE.'</td>';
+            
+            if ( strlen($addrIEEE) == 16 || $addrIEEE=="na") {
+                echo '<td><span class="label label-success" style="font-size : 1em; cursor : default;">'.$addrIEEE.'</span></td>';
+            }
+            else {
+                echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">'.Missing.'</span></td>';
+            }
+
 
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue
@@ -99,8 +104,12 @@
             echo '<td>'.$status.'</td>';
 
             // Derniere Comm
-            $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
-            //if ($eqLogic->getStatus('state') == '-') { $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">-</span>'; }
+            if ( strlen($eqLogic->getStatus('lastCommunication'))>2 ) {
+                $lastComm = '<span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
+            }
+            else {
+                $lastComm = '<span class="label label-warning" style="font-size : 1em; cursor : default;">No message received !!</span>';
+            }
             echo '<td>'.$lastComm.'</td>';
 
             // Depuis

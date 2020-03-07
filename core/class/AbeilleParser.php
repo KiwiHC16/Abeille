@@ -1301,7 +1301,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug',';type; 8041; (IEEE Address response)(decoded but Not Processed)'
+            $this->deamonlog('debug',';type; 8041; (IEEE Address response)(Processed->MQTT)'
                              . '; dest: '.$dest
                              . '; SQN : '                                    .substr($payload, 0, 2)
                              . '; Status : '                                 .substr($payload, 2, 2)
@@ -1317,6 +1317,12 @@
             for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
                 $this->deamonlog('debug',';type; 8041;associated devices: '    .substr($payload, (28 + $i), 4) );
             }
+            
+            $SrcAddr = substr($payload,20, 4);
+            $ClusterId = "IEEE";
+            $AttributId = "Addr";
+            $data = substr($payload, 4,16);
+            $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
         function decode8042( $dest, $payload, $ln, $qos, $dummy)

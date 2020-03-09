@@ -208,7 +208,6 @@
                             <?php
                                 foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
                                     echo '<option value=' . $value . '>' . $value . '</option>';
-                                    echo '<option value=' . $value . '>' . $value . '</option>';
                                 }
                             ?>
                         </select>

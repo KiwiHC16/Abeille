@@ -42,7 +42,7 @@ function Abeille_update() {
         // Update Abeille instance from previous version from Abeille/ to Abeille1/
         // Ruche
         $from   = "zigate";
-        $to     = "zigate1";
+        $to     = "Abeille1";
         $abeilles = Abeille::byType('Abeille');
         foreach ( $abeilles as $abeilleId=>$abeille) {
             if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {

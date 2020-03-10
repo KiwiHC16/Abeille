@@ -128,5 +128,4 @@ function Abeille_remove() {
     message::add("Abeille","plugin désinstallé");
 }
 
-    Abeille_update();
 ?>

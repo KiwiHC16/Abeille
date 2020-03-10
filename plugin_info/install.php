@@ -65,7 +65,9 @@ function Abeille_update() {
             }
         }
         config::save( 'zigateNb', '1', 'Abeille' );
+        
         config::save( 'deamonAutoMode', '1', 'Abeille' );
+        
         config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
         config::save( 'AbeilleActiver2', 'N', 'Abeille' );
         config::save( 'AbeilleActiver3', 'N', 'Abeille' );
@@ -76,6 +78,7 @@ function Abeille_update() {
         config::save( 'AbeilleActiver8', 'N', 'Abeille' );
         config::save( 'AbeilleActiver9', 'N', 'Abeille' );
         config::save( 'AbeilleActiver10', 'N', 'Abeille' );
+        
         if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
             config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
             config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );

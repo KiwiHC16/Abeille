@@ -79,12 +79,17 @@ function Abeille_update() {
         config::save( 'AbeilleActiver9', 'N', 'Abeille' );
         config::save( 'AbeilleActiver10', 'N', 'Abeille' );
         
-        if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
+        $port1 = config::byKey('AbeilleSerialPort', 'Abeille', '');
+        $addr1 = config::byKey('IpWifiZigate',      'Abeille', '');
+        echo "port1: ".$port1;
+        echo "addr1: ".$addr1;
+        
+        if ( ($port1 == '/tmp/zigate') || ($port1 == '/dev/zigate') ) {
             config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
-            config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );
+            config::save( 'IpWifiZigate1', $addr1, 'Abeille' );
         }
         else {
-            config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
+            config::save( 'AbeilleSerialPort1', $port1, 'Abeille' );
         }
         config::save( 'DbVersion', '20200225', 'Abeille' );
     }
@@ -123,4 +128,5 @@ function Abeille_remove() {
     message::add("Abeille","plugin désinstallé");
 }
 
+    Abeille_update();
 ?>

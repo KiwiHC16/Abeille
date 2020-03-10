@@ -434,6 +434,19 @@
 
                 // ******************************************************************************************************************
                 // Update Abeille instance from previous version from Abeille/ to Abeille1/
+		// Ruche
+                $from   = "zigate";
+                $to     = "zigate1";
+                $abeilles = Abeille::byType('Abeille');
+                foreach ( $abeilles as $abeilleId=>$abeille) {
+                    if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
+                        $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
+                        $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
+                        $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
+                        $abeille->save();
+                    }
+                }
+		// Abeille
                 $from   = "Abeille";
                 $to     = "Abeille1";
                 $abeilles = Abeille::byType('Abeille');
@@ -448,6 +461,15 @@
                 config::save( 'zigateNb', '1', 'Abeille' );
                 config::save( 'deamonAutoMode', '1', 'Abeille' );
                 config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
+                config::save( 'AbeilleActiver2', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver3', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver4', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver5', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver6', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver7', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver8', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver9', 'N', 'Abeille' );
+                config::save( 'AbeilleActiver10', 'N', 'Abeille' );
                 if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
                     config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
                     config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );
@@ -456,6 +478,7 @@
                     config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
                 }
                 config::remove( 'AbeilleSerialPort', 'Abeille' );
+                config::remove( 'IpWifiZigate', 'Abeille' );
                 config::save( 'DbVersion', '20200225', 'Abeille' );
             }
 
@@ -527,7 +550,7 @@
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				$deamon[10+$i] = "AbeilleSerialRead.php";
-                $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                		$paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
 				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
 			}
 
@@ -543,7 +566,7 @@
 
 			// ----------------
 
-			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate") and ($param['AbeilleActiver1']=='Y') ) {
+			if ( ($param['AbeilleSerialPort1'] == "/dev/zigate1") and ($param['AbeilleActiver1']=='Y') ) {
 				$cmd = $nohup." ".$php." ".$dirdeamon.$deamon21." ".$paramdeamon21.$log21;
 				log::add('Abeille', 'debug', 'Start deamon socat: '.$cmd);
 				exec($cmd.' 2>&1 &');

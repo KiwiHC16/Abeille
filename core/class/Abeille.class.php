@@ -430,58 +430,7 @@
             unlink( $FileLock );
             log::add('Abeille', 'debug', 'Deleting '.$FileLock );
 
-            if ( config::byKey('DbVersion', 'Abeille', '') == '' ) {
-
-                // ******************************************************************************************************************
-                // Update Abeille instance from previous version from Abeille/ to Abeille1/
-		// Ruche
-                $from   = "zigate";
-                $to     = "zigate1";
-                $abeilles = Abeille::byType('Abeille');
-                foreach ( $abeilles as $abeilleId=>$abeille) {
-                    if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
-                        $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
-                        $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
-                        $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
-                        $abeille->save();
-                    }
-                }
-		// Abeille
-                $from   = "Abeille";
-                $to     = "Abeille1";
-                $abeilles = Abeille::byType('Abeille');
-                foreach ( $abeilles as $abeilleId=>$abeille) {
-                    if ( preg_match("/^".$from."\//", $abeille->getLogicalId() )) {
-                        $abeille->setLogicalId( str_replace($from,$to,$abeille->getLogicalId()) );
-                        $abeille->setName(str_replace( $from, $to, $abeille->getName()) );
-                        $abeille->setConfiguration('topic', str_replace( $from, $to, $abeille->getConfiguration('topic') ) );
-                        $abeille->save();
-                    }
-                }
-                config::save( 'zigateNb', '1', 'Abeille' );
-                config::save( 'deamonAutoMode', '1', 'Abeille' );
-                config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
-                config::save( 'AbeilleActiver2', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver3', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver4', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver5', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver6', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver7', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver8', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver9', 'N', 'Abeille' );
-                config::save( 'AbeilleActiver10', 'N', 'Abeille' );
-                if ( config::byKey('AbeilleSerialPort', 'Abeille', '') == '/tmp/zigate' ) {
-                    config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
-                    config::save( 'IpWifiZigate1', config::byKey('IpWifiZigate', 'Abeille', ''), 'Abeille' );
-                }
-                else {
-                    config::save( 'AbeilleSerialPort1', config::byKey('AbeilleSerialPort', 'Abeille', ''), 'Abeille' );
-                }
-                config::remove( 'AbeilleSerialPort', 'Abeille' );
-                config::remove( 'IpWifiZigate', 'Abeille' );
-                config::save( 'DbVersion', '20200225', 'Abeille' );
-            }
-
+ 
             return;
         }
 

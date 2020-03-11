@@ -16,34 +16,6 @@
     require_once("../resources/AbeilleDeamon/includes/fifo.php");
     require_once("../resources/AbeilleDeamon/includes/function.php");
     
-    /*
-    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
-    // 1: Abeille
-    // 2: AbeilleParser -> Parser
-    // 3: AbeilleMQTTCmd -> Cmd
-    // 4: AbeilleTimer  -> Timer
-    // 5: AbeilleLQI -> LQI
-    
-    // 221: means AbeilleParser to(2) Abeille
-    define('queueKeyAbeilleToAbeille',  121);
-    define('queueKeyAbeilleToCmd',      123);
-    define('queueKeyAbeilleToTimer',    124);
-    define('queueKeyCmdToAbeille',      321);
-    define('queueKeyParserToAbeille',   221);
-    define('queueKeyParserToCmd',       223);
-    define('queueKeyCmdToCmd',          323);
-    define('queueKeyTimerToAbeille',    421);
-    define('queueKeyLQIToCmd',          523);
-    define('queueKeyParserToLQI',       223);
-    
-    Class MsgAbeille {
-        public $message = array(
-                                'topic' => 'Coucou',
-                                'payload' => 'me voici',
-                                );
-    }
-*/
-    
     function KiwiLog($message = "")
     {
         global $debugKiwi;
@@ -203,10 +175,7 @@
         else {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Could not send Msg');
         }
-
-        
     }
-    
     
     function hex2str($hex)
     {
@@ -237,27 +206,19 @@
             if ($indexTable > 30) {
                 $GLOBALS['NE_continue'] = 0;
             }
-            // usleep(100);
-            // $client->loop(5000);
+
             for ($i = 1; $i <= 3; $i++) {
                 message();
                 sleep(1);
             }
             
-            
-            
         }
         // On vide les derniers messages qui trainent
-        sleep(1);
-        message();
-        // $client->loop(5000);
-        sleep(1);
-        message();
-        // $client->loop(5000);
-        sleep(1);
-        message();
-        // $client->loop(5000);
-        
+        for ($i = 1; $i <= 3; $i++) {
+            message();
+            sleep(1);
+        }
+
     }
     
     /*--------------------------------------------------------------------------------------------------*/
@@ -267,7 +228,7 @@
     // refreshNetworkCache refreshCache(x) dans desktop/modal/network.php -> desktop/js/network.js -> updateZigBeeJsonCache(x) -> AbeilleLQI.php?zigate=(x)
     // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
     
-    // $_GET['zigate']=1;
+    $_GET['zigate']=1;
     
     $debugKiwi = 1;
     $abeilleParameters = Abeille::getParameters();
@@ -281,13 +242,10 @@
     
     $serial = "Abeille".$_GET['zigate'];
     
-    KiwiLog( $serial );
-    KiwiLog( "abeilleParameters: ".json_encode($abeilleParameters) );
-    
     $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
     
-    $DataFile = "AbeilleLQI_MapData.json";
+    $DataFile = "AbeilleLQI_MapData".$serial.".json";
     $FileLock = $DataFile . ".lock";
     $nbwritten = 0;
     
@@ -312,34 +270,23 @@
     $knownNE_FromAbeille = array();
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
-        $name = $eqLogic->getName();
-        $topicArray = explode("/", $eqLogic->getLogicalId());
-        $shortAddress = $topicArray[1];
-        $shortAddress = ( preg_match("(Ruche)", $name) ) ? "0000" : $shortAddress;
-        // $knownNE_FromAbeille[$name] = $shortAddress;
-        if ( preg_match("(Ruche)", $name) ) $name = "Ruche";
-        $knownNE_FromAbeille[$shortAddress] = $name;
+        $knownNE_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
     }
     
-    KiwiLog("NE connus pas Abeille");
-    KiwiLog( json_encode($knownNE_FromAbeille) );
-    KiwiLog( "----------------------------------");
-    
-    
-    // $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
-    
+    KiwiLog( "NE connus pas Abeille:\n".json_encode($knownNE_FromAbeille) );
+
     $LQI = array();
     
     KiwiLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
-    //lqiLog('debug', '---------: definition et connection a mosquitto');
          
     // Let's start with the Coordinator
     KiwiLog( "---------: Let s start with the Coordinator");
-    //lqiLog('debug', '---------: Let s start with the Coordinator');
+
     $NE_All_BuildFromLQI = array();
-    $NE_All_BuildFromLQI["0000"] = array("LQI_Done" => 0);
     
-    // Let's start at least with 0000
+    // Let's start at least with Ruche
+    $NE_All_BuildFromLQI["Abeille".$_GET['zigate']."/Ruche"] = array("LQI_Done" => 0);
+    
     $NE_All_continue = 1;   // Controle le while sur la liste des NE
     $NE_continue = 1;       // controle la boucle sur l interrogation de la table des voisines d un NE particulier
     
@@ -387,8 +334,6 @@
             KiwiLog( json_encode($NE_All_BuildFromLQI) );
             
             if ($currentNeStatus['LQI_Done'] == 0) {
-                // echo "Let s do\n";
-                // $NE = $neAddress;
                 $NE_All_continue = 1;
                 $NE_continue = 1;
                 KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
@@ -417,22 +362,6 @@
         echo "Oops! Error creating json file...\n";
     }
     
-    // Formating pour la doc asciidoc
-    if (0) {
-        // echo "<table>\n";
-        // echo "<tr><td>NE</td><td>Voisine</td><td>Relation</td><td>Profondeur</td><td>LQI</td></tr>\n";
-        echo "|NE|Voisine|Relation|Profondeur|LQI\n";
-        
-        foreach ($LQI as $key => $voisine) {
-            // echo "<tr>";
-            // echo "<td>".$voisine['NE']."</td><td>".$voisine['Voisine']."</td><td>".$voisine['Relationship']."</td><td>".$voisine['Depth']."</td><td>".$voisine['LinkQualityDec']."</td>";
-            
-            echo "|" . $voisine['NE'] . "|" . $voisine['NE_Name'] . "|" . $voisine['Voisine'] . "|" . "|" . $voisine['Voisine_Name'] . "|" . $voisine['Relationship'] . "|" . $voisine['Depth'] . "|" . $voisine['LinkQualityDec'] . "\n";
-            
-            // echo "</tr>\n";
-        }
-        // echo "</table>\n";
-    }
     
     // print_r( $NE_All );
     // print_r( $voisine );

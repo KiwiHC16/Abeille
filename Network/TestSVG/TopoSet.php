@@ -17,12 +17,15 @@
     
     foreach ( $AbeilleTopo as $key=>$abeille ) {
         // echo "Key: " . $key . "->";
+        /*
         if ( $key == "0000" ) {
             $id = "Abeille/Ruche";
         }
         else {
             $id = "Abeille/".$key;
         }
+         */
+        $id = $key;
         // echo $id."->";
         
         // echo "\n";

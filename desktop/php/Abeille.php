@@ -80,7 +80,9 @@ $outils = array(
         if ( Abeille::getParameters()['AbeilleSerialPort'.$i] != "none" ) {
             
             if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {  echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName(); }
+            echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
+            echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
             
             echo '<div class="eqLogicThumbnailContainer">';

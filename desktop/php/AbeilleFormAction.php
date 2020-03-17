@@ -2,7 +2,7 @@
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     require_once dirname(__FILE__).'/../../core/class/Abeille.class.php';
         
-    $zigateIds = array( '', '2', '3', '4', '5' );
+    $zigateIds = array( '1', '2', '3', '4', '5' );
     
     function sendMessageFromFormToCmd( $topic, $payload ) {
         
@@ -257,17 +257,17 @@
         // Set Channel Mask
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
-                echo "TxPower request processing";
+                echo "Set Channel Mask processing: Zigate Id: ".$zigateId." Channel mask: ".$_POST['channelMask'];
                 sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setChannelMask', $_POST['channelMask'] );
             }
         }
                 
         // Set Extended PANID
         foreach ( $zigateIds as $zigateId ) {
-          if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
-                  echo "TxPower request processing";
+            if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
+                  echo "Set Extended PANID request processing";
               sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
-          }
+            }
         }
 
     } catch (Exception $e) {

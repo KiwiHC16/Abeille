@@ -1817,7 +1817,7 @@
                 $data = $address . $IeeeAddress . $requestType . $startIndex ;
                 $lenth = "000C"; // A verifier
 
-                $this->deamonlog('debug','IEEE_Address_request: '.$data . ' - ' . $lenth  );
+                $this->deamonlog('debug','Network_Address_request: '.$data . ' - ' . $lenth  );
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
             }

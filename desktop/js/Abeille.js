@@ -339,28 +339,6 @@ $('#bt_include10').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
                           }
                           );
-                          
-$('#bt_exclude').on('click', function () {
-                    console.log("bt_exclude");
-// To be defined
-                    }
-                    );
-
-$('#bt_createTimer').on('click', function () {
-                        console.log("bt_createTimer");
-                        var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-                        xmlhttpMQTTSendTimer.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                        xmlhttpMQTTSendTimerResult = this.responseText;
-                        }
-                        };
-
-                        xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_Timer_0000-0005&payload=Timer", false); // False pour bloquer sur la recuperation du fichier
-                        xmlhttpMQTTSendTimer.send();
-                        // location.reload(true);
-                        $('#div_alert').showAlert({message: '{{Un nouveau Timer est en création.}}', level: 'success'});
-                        }
-                        );
 
 $('#bt_createRemote1').on('click', function () {
                          console.log("bt_createRemote1");
@@ -522,29 +500,6 @@ $('#bt_createRemote10').on('click', function () {
                           }
                           );
 
-$("#bt_TimerActionStart").on('click', function () {
-                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                 document.getElementById("idTimerActionStart").value = result.human;
-                                               });
-                                             });
-
-$("#bt_TimerActionRamp").on('click', function () {
-                                            jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                               document.getElementById("idTimerActionRamp").value = result.human;
-                                             });
-                                           });
-
-$("#bt_TimerActionStop").on('click', function () {
-                                             jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                document.getElementById("idTimerActionStop").value = result.human;
-                                              });
-                                            });
-
-$("#bt_TimerActionCancel").on('click', function () {
-                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                 document.getElementById("idTimerActionCancel").value = result.human;
-                                               });
-                                             });
 
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});

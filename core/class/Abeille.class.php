@@ -110,11 +110,30 @@
 			Abeille::execShellCmd( "installSocat.sh", "installSocat" );
         }
 
+        /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
         public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
-			self::deamon_stop(); // Arrêt du demon
-            $cmd = "updateFirmware.sh " . $fwfile . " " . $zgport;
-			Abeille::execShellCmd( $cmd, "updateFirmware" );
-			self::deamon_start(); // Redemarrage du demon
+            log::add('Abeille', 'debug', 'Démarrage updateFirmware(' . $fwfile . ', ' . $zgport . ')');
+            log::remove('Abeille_updateFirmware');
+
+            log::add('Abeille_updateFirmware', 'info', 'Vérification des paramètres');
+            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport . " -check";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            exec($cmd, $out, $status);
+            if ($status != 0)
+                return $status; // Something wrong with parameters
+
+            log::add('Abeille_updateFirmware', 'info', 'Arret du démon');
+            self::deamon_stop(); // Stopping daemon
+
+            log::add('Abeille_updateFirmware', 'info', 'Programming');
+            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport;
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            exec($cmd, $out, $status);
+
+            log::add('Abeille_updateFirmware', 'info', 'Redémarrage du démon');
+            self::deamon_start(); // Restarting daemon
+
+            return $status; // If not 0, programmation failed
         }
 
         public static function resetPiZiGate($_background = true) {
@@ -430,7 +449,7 @@
             unlink( $FileLock );
             log::add('Abeille', 'debug', 'Deleting '.$FileLock );
 
- 
+
             return;
         }
 
@@ -1061,7 +1080,7 @@
             }
 
             // log::add('Abeille', 'debug', 'I should have the cmd now' );
-            
+
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
             if ( !is_object($elogic)
@@ -1097,7 +1116,7 @@
                 $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
                 log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
 
-                
+
                 if ( array_key_exists( $trimmedValue, $AbeilleObjetDefinition) )   { $jsonName = $trimmedValue; }
                 if ( array_key_exists('defaultUnknown', $AbeilleObjetDefinition) ) { $jsonName = 'defaultUnknown'; }
 

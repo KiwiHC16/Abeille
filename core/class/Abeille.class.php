@@ -80,7 +80,7 @@
             return $return;
         }
 
-		public static function execShellCmd( $cmdToExec, $text ) {
+		public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
 			if ($GLOBALS['debugKIWI']) echo $text." start\n";
             log::add('Abeille', 'debug', 'Starting '.$text);
             log::remove('Abeille_'.$text);
@@ -95,21 +95,21 @@
 		}
 
         public static function syncconfAbeille($_background = true) {
-			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille" );
+			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
         }
 
         public static function installGPIO($_background = true) {
-			Abeille::execShellCmd( "installGPIO.sh", "installGPIO" );
+			Abeille::execShellCmd( "installGPIO.sh", "installGPIO", $_background );
         }
 
         public static function installS0($_background = true) {
-			Abeille::execShellCmd( "installS0.sh", "installS0" );
+			Abeille::execShellCmd( "installS0.sh", "installS0", $_background );
         }
 
         public static function installSocat($_background = true) {
-			Abeille::execShellCmd( "installSocat.sh", "installSocat" );
+			Abeille::execShellCmd( "installSocat.sh", "installSocat", $_background );
         }
-
+    
         /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
         public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
             log::add('Abeille', 'debug', 'Démarrage updateFirmware(' . $fwfile . ', ' . $zgport . ')');
@@ -137,9 +137,27 @@
         }
 
         public static function resetPiZiGate($_background = true) {
-			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate" );
+			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate", $_background );
         }
 
+        public static function tryToGetIEEE() {
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+                if ( $commandIEEE ) {
+                    $addrIEEE = $commandIEEE->execCmd();
+                    if (strlen($addrIEEE) < 2 ) {
+                        list( $dest, $NE) = explode('/', $eqLogic->getLogicalId());
+                        log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
+                        echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                        $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
+                        echo "Cmd: ".$cmd."\n";
+                        exec($cmd, $out, $status);
+                    }
+                }
+            }
+        }
+        
         public static function updateConfigAbeille($abeilleIdFilter = false) {
 
         }
@@ -169,6 +187,10 @@
             log::add('Abeille', 'debug', 'Check Zigate Presence');
 
             $param = self::getParameters();
+            
+            //--------------------------------------------------------
+            // Pull IEEE
+            self::tryToGetIEEE();
 
             //--------------------------------------------------------
             // Refresh Ampoule Ikea Bind et set Report
@@ -180,9 +202,7 @@
             foreach ($eqLogics as $eqLogic) {
                 // log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
                 if (strpos("_".$eqLogic->getConfiguration("icone"), "IkeaTradfriBulb") > 0) {
-                    $topicArray = explode("/", $eqLogic->getLogicalId());
-                    $dest = $topicArray[0];
-                    $addr = $topicArray[1];
+                    list( $dest, $addr) = explode("/", $eqLogic->getLogicalId());
                     $i=$i+1;
 
                     $ruche = new Abeille();
@@ -295,7 +315,7 @@
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				if ($param['AbeilleSerialPort'.$i]!="none") {
-					// Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
 					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
 				}
 			}
@@ -306,8 +326,7 @@
             // log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
             $i = 0;
             foreach ($eqLogics as $eqLogic) {
-                $dest = explode("/", $eqLogic->getLogicalId())[1];
-                $address = explode("/", $eqLogic->getLogicalId())[1];
+                list( $dest, $address)  = explode("/", $eqLogic->getLogicalId());
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
@@ -2019,6 +2038,9 @@
                     }
                 }
                 echo "\n";
+                break;
+            case "23":
+                Abeille::tryToGetIEEE();
                 break;
 
         } // switch

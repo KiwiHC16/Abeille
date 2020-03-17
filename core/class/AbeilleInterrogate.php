@@ -43,10 +43,11 @@
     $timeOut = 60; // min
     $timeEnd = time() + $timeOut*60;
 
-    $addressShort = $argv[1];
+    $dest = $argv[1];
+    $addressShort = $argv[2];
     
     while ( time() < $timeEnd ) {
-        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille1/Ruche/IEEE_Address_request", "address=".$addressShort."&shortAddress=".$addressShort );
+        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/IEEE_Address_request", "address=".$addressShort."&shortAddress=".$addressShort );
         echo ".";
         sleep( 5 );
     }

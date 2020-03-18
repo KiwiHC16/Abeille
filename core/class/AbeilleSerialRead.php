@@ -109,7 +109,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
                 else {
                     deamonlog('error', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): Could not send Msg');
                 }
-                sem_release( $queueKeySerieToParserSem );
+                // sem_release( $queueKeySerieToParserSem );
             } else {
                 if ($car == "02") {
                     $transcodage = true;

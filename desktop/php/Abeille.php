@@ -332,6 +332,90 @@ Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
 </br>
 </br>
 
+<label>Set Time</label> </br>
+Set Time:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="SetTime Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Get Time</label> </br>
+Get Time:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="getTime Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Set Led On</label> </br>
+Set Led On:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="SetLedOn Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Set Led Off</label> </br>
+Set Led Off:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="SetLedOff Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Set Certification CE</label> </br>
+Set Certification CE:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Certification CE Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Set Certification FCC</label> </br>
+Set Certification FCC:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Certification FCC Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
+<label>Start Zigbee Network</label> </br>
+Start Zigbee Network:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Start Network Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
 <hr>
 
 <!-- Affichage des informations reseau zigate  -->
@@ -353,6 +437,7 @@ Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
                    'IEEE address'       => 'IEEE-Addr',
                    'Network Channel'    => 'Network-Channel',
                    'Inclusion'          => 'permitJoin-Status',
+                    'Time (Faites un getTime)' => 'ZiGate-Time',
                    );
     
     for ( $i=1; $i<=$zigateNb; $i++ ) {
@@ -362,8 +447,6 @@ Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
             $rucheId = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getId();
             echo '<table border="1" style="border:1px">';
             foreach ( $params as $key=>$param ){
-                
-                
                 if ( is_object(AbeilleCmd::byEqLogicIdAndLogicalId($rucheId, $param)) ) {
                     $command = AbeilleCmd::byEqLogicIdAndLogicalId($rucheId, $param);
                     echo '<tr><td>'.$key.'</td>       <td align="center">' . $command->execCmd() . '</td></tr>';
@@ -413,45 +496,7 @@ Tx Power: <input type="text" name="TxPowerValue"  placeholder="XX">
                 </td>
             </tr>
 
-            <tr>
-                <td>
-                    <div id="bt_setTimeServer">
-                        <a class="btn btn-success" data-action="setTimeServer"><i class="fa fa-sign-in"></i>{{Set Time}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div id="bt_getTimeServer">
-                        <a class="btn btn-success" data-action="getTimeServer"><i class="fa fa-sign-out"></i>{{Get Time}}</a>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div id="bt_setOnZigateLed">
-                        <a class="btn btn-success" data-action="setOnZigateLed"><i class="fa fa-sign-in"></i>{{Allume Led}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div id="bt_setOffZigateLed">
-                        <a class="btn btn-success" data-action="setOffZigateLed"><i class="fa fa-sign-out"></i>{{Eteint Led}}</a>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div id="bt_setCertificationCE">
-                        <a class="btn btn-success" data-action="setCertificationCE"><i class="fa fa-sign-in"></i>{{Certification CE}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div id="bt_setCertificationFCC">
-                        <a class="btn btn-success" data-action="setCertificationFCC"><i class="fa fa-sign-out"></i>{{Certification FCC}}</a>
-                    </div>
-                </td>
-            </tr>
-
+   
         </table>
 
         </form>

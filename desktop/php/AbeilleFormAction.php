@@ -265,8 +265,64 @@
         // Set Extended PANID
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
-                  echo "Set Extended PANID request processing";
-              sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+            }
+        }
+        
+        // Set Time
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetTime Z'.$zigateId ) {
+                echo "SetTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setTimeServer', "time=".time() );
+            }
+        }
+                                       
+        // Get Time
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'getTime Z'.$zigateId ) {
+                echo "getTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/getTimeServer', "" );
+            }
+        }
+        
+        // setOnZigateLed
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetLedOn Z'.$zigateId ) {
+                echo "SetTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setOnZigateLed', "" );
+            }
+        }
+                                       
+        // setOffZigateLed
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetLedOff Z'.$zigateId ) {
+                echo "getTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setOffZigateLed', "" );
+            }
+        }
+        
+        // Set Certification CE
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {
+                echo "Set Certification CE";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setCertificationCE', "" );
+            }
+        }
+                                       
+        // Set Certification FCC
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Certification FCC Z'.$zigateId ) {
+                echo "Set Certification FCC";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setCertificationFCC', "" );
+            }
+        }
+        
+        // startNetwork
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
+                echo "Start Network";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/startNetwork', "StartNetwork" );
             }
         }
 

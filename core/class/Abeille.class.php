@@ -2044,6 +2044,14 @@
             case "23":
                 Abeille::tryToGetIEEE();
                 break;
+            case "24":
+                // Debug:   log::level::Abeille    {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"} => 100 / debug
+                // Default: log::level::Abeille    {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"} => 100 / debug
+                // Info:    log::level::Abeille    {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"} => 200 / info
+                echo log::getLogLevel('Abeille')."\n";
+                echo log::convertLogLevel(log::getLogLevel('Abeille'))."\n";
+                
+                break;
 
         } // switch
 

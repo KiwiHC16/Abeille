@@ -153,7 +153,7 @@
     }
 
     class AbeilleCmd extends AbeilleCmdQueue {
-        public $debug = array( "cli"                => 1, // commande line mode or jeedom
+        public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
                               "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
@@ -4128,7 +4128,7 @@
     }
     catch (Exception $e) {
         $AbeilleCmd->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
-        $AbeilleCmd->deamonlog('info', 'Fin du script');
+        $AbeilleCmd->deamonlog( 'info', 'Fin du script');
     }
 
     unset($AbeilleCmd);

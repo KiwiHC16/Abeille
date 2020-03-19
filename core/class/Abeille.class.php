@@ -1029,6 +1029,7 @@
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
             if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
+            if ( $value=="TRADFRI Signal Repeater" ) $value = "TRADFRI signal repeater";
 
             $type = 'topic';         // type = topic car pas json
 
@@ -1089,8 +1090,7 @@
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
                 
-                // Cas tres particuliers
-                if ( $trimmedValue == "TRADFRISignalRepeater" ) { $trimmedValue = "TRADFRIsignalrepeater"; }
+                
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);

@@ -756,9 +756,14 @@
             // retry = nombre de tentative restante
             // priority = priority du message
             $i = str_replace( 'Abeille', '', $dest );
-            $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
-            if ( count($this->cmdQueue[$i]) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue de la zigate: '.$i );
+            if ( ($i>0) && ($i<11) ) {
+                $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
+                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
+                if ( count($this->cmdQueue[$i]) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue de la zigate: '.$i );
+            }
+            else {
+                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je recois un message pour une queue qui n est pas valide: ->".$i."<-"); }
+            }
             
         }
         
@@ -2591,7 +2596,7 @@
             $dest = str_replace( 'Cmd', '',  $type );
             
             if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
-            if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+            if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
 
@@ -3685,7 +3690,7 @@
             } // if $address != "Ruche"
             else { // $address == "Ruche"
                 $done = 0;
-                $this->deamonlog("debug", 'procmsg fct - Pour La Ruche ' );
+                $this->deamonlog("debug", 'procmsg fct - Pour La Ruche - (Ln: '.__LINE__.')' );
                 // Crée les variables dans la chaine et associe la valeur.
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

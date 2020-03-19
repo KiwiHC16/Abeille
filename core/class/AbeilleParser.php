@@ -1522,6 +1522,7 @@
             //  (0-Parent 1-Child 2-Sibling)
             //  bit 6-7 Rx On When Idle status
             //  (1-On 0-Off)
+            // <Src Address : uint16_t> ( only from v3.1a) => Cette valeur est tres surprenante. Ne semble pas valide ou je ne la comprend pas.
 
             // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
 
@@ -1532,14 +1533,15 @@
                              . '; Neighbour Table Entries: '      .substr($payload, 4, 2)
                              . '; Neighbour Table List Count: '   .substr($payload, 6, 2)
                              . '; Start Index: '                  .substr($payload, 8, 2)
-                             . '; NWK Address: '                  .substr($payload, 10, 4)
-                             . '; Extended PAN ID: '              .substr($payload, 14,16)
-                             . '; IEEE Address: '                 .substr($payload, 30,16)
-                             . '; Depth: '                 .hexdec(substr($payload, 46, 2))
-                             . '; Link Quality: '          .hexdec(substr($payload, 48, 2))
-                             . '; Bit map of attributes: '        .substr($payload, 50, 2)   );
+                             . '; NWK Address: '                  .substr($payload,10, 4)
+                             . '; Extended PAN ID: '              .substr($payload,14,16)
+                             . '; IEEE Address: '                 .substr($payload,30,16)
+                             . '; Depth: '                 .hexdec(substr($payload,46, 2))
+                             . '; Link Quality: '          .hexdec(substr($payload,48, 2))
+                             . '; Bit map of attributes: '        .substr($payload,50, 2)
+                             . '; Src Address: '                  .substr($payload,52, 4) );
 
-            $srcAddress           = 'Not Available Yet Due To ZiGate';
+            $srcAddress           = substr($payload, 52, 4);
             $index                = substr($payload, 8, 2);
             $NeighbourAddr        = substr($payload, 10, 4);
             $NeighbourIEEEAddress = substr($payload, 30,16);
@@ -1549,7 +1551,8 @@
             // $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
 
             $data =
-            "NeighbourTableEntries="       .substr($payload, 4, 2)
+            "srcAddress="                   .substr($payload,52, 4)
+            ."&NeighbourTableEntries="      .substr($payload, 4, 2)
             ."&Index="                      .substr($payload, 8, 2)
             ."&ExtendedPanId="              .substr($payload,14,16)
             ."&IEEE_Address="               .substr($payload,30,16)

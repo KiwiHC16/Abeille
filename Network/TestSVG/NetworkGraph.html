@@ -4,9 +4,9 @@
 console.log("Begin --------------");
 
 var myVoisinesOrg;
-var names;
+var topo;
 var networkInformation = "";
-var networkInformationProgress = "Workping";
+var networkInformationProgress = "Processing";
 var TopoSetReply = "";
 
 var a = 10;
@@ -18,7 +18,7 @@ var Destination = "All";
 var Parameter = "LinkQualityDec";
 var Hierarchy = "All";
 
-var myJSON = '{ "0000": { "name": "Ruche", "x": 500, "y": 500, "color": "Red", "positionDefined":"Yes", "Type":"Coordinator" } }';
+var myJSON = '{}';
 
 var myObjOrg = JSON.parse(myJSON);
 var myObjNew = JSON.parse(myJSON);
@@ -31,7 +31,7 @@ function getVoisinesJSON() {
         }
     };
 
-    xmlhttp.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttp.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json", false); // False pour bloquer sur la recuperation du fichier
     xmlhttp.send();
 }
 
@@ -39,31 +39,13 @@ function getTopoJSON() {
     var xmlhttpGetTopo = new XMLHttpRequest();
     xmlhttpGetTopo.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            names = JSON.parse(this.responseText);
+            topo = JSON.parse(this.responseText);
         }
     };
 
     xmlhttpGetTopo.open("GET", "/plugins/Abeille/Network/TestSVG/TopoGet.php", false); // False pour bloquer sur la recuperation du fichier
     xmlhttpGetTopo.send();
 }
-/*
-function setTopoJSONOld(Topo) {
-    var xmlhttpSetTopo = new XMLHttpRequest();
-    var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
-
-    console.log("setTopoJSON function: ".Topo);
-    xmlhttpSetTopo.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            TopoSetReply = this.responseText;
-            console.log("setTopoReply: ".TopoSetReply);
-        }
-    };
-
-    console.log("Request: ".request);
-    xmlhttpSetTopo.open("GET", requestTopo+Topo, false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpSetTopo.send();
-}
-*/
 
 function setTopoJSON(Topo) {
     // console.log("Coucou");
@@ -122,7 +104,7 @@ function refreshNetworkInformationProgress() {
             // console.log("Debug - Progress:"+networkInformationProgress);
         }
     };
-    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock?"+d.getTime(), true);
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json.lock?"+d.getTime(), true);
     xmlhttpRefreshNetworkInformationProgress.send();
 }
 
@@ -294,7 +276,9 @@ function dessineLesVoisinesV2(offsetX,includeGroup) {
 
     for (voisines in myVoisinesOrg.data) {
 
-        var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
+        //var NE = myVoisinesOrg.data[voisines].NE;
+        var NE = myVoisinesOrg.data[voisines].NE;
+        var voisine = myVoisinesOrg.data[voisines].Voisine;
 
         if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==myVoisinesOrg.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
             var X1=0; var X2=0; var Y1=0; var Y2=0;
@@ -351,8 +335,8 @@ function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
     for (shortAddress in myObj) {
         X = myObj[shortAddress].x + offsetX;
         Y = myObj[shortAddress].y;
-        if( (typeof names[0][shortAddress] === "object") && (names[0][shortAddress] !== null) ) {
-            lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+names[0][shortAddress].logicalId+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+        if( (typeof topo[shortAddress] === "object") && (topo[shortAddress] !== null) ) {
+            lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+topo[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
         }
         else {
             lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
@@ -406,34 +390,38 @@ function refreshNetworkCollectionProgress() {
 // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
 // Idem pour la couleur
 function myJSON_AddAbeillesFromJeedom() {
-    // console.log("Names: "+JSON.stringify(names));
-    for (name in names[0]) {
+    // console.log("topo: "+JSON.stringify(topo));
+    for (logicalId in topo) {
+        // console.log("logicalId: "+logicalId);
 
-        if (name!="0000") {
-            myObjOrg[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-            myObjNew[name] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+        myObjOrg[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+        myObjNew[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
 
-            // console.log("Name: "+name+" "+JSON.stringify(names[0][name]));
+        // console.log("logicalId: "+logicalId+" -> "+JSON.stringify(topo[logicalId]));
+       myObjOrg[logicalId].objectName = topo[logicalId].objectName;
+       myObjNew[logicalId].objectName = topo[logicalId].objectName;
+                                                   
+        myObjOrg[logicalId].name = topo[logicalId].name;
+        myObjNew[logicalId].name = topo[logicalId].name;
 
-            myObjOrg[name].name = names[0][name].name;
-            myObjNew[name].name = names[0][name].name;
-        }
 
-        myObjOrg[name].x = names[0][name].positionX;
-        myObjNew[name].x = names[0][name].positionX;
+        myObjOrg[logicalId].x = topo[logicalId].positionX;
+        myObjNew[logicalId].x = topo[logicalId].positionX;
 
-        myObjOrg[name].y = names[0][name].positionY;
-        myObjNew[name].y = names[0][name].positionY;
+        myObjOrg[logicalId].y = topo[logicalId].positionY;
+        myObjNew[logicalId].y = topo[logicalId].positionY;
 
-        if ( (names[0][name].positionX>0) && (names[0][name].positionY>0) ) {
-            myObjOrg[name].positionDefined = "Yes";
-            myObjNew[name].positionDefined = "Yes";
+        if ( (topo[logicalId].positionX>0) && (topo[logicalId].positionY>0) ) {
+            myObjOrg[logicalId].positionDefined = "Yes";
+            myObjNew[logicalId].positionDefined = "Yes";
         }
         else {
-            myObjOrg[name].positionDefined = "No";
-            myObjNew[name].positionDefined = "No";
+            myObjOrg[logicalId].positionDefined = "No";
+            myObjNew[logicalId].positionDefined = "No";
         }
     }
+                                                   
+    console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 }
 
 // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
@@ -451,13 +439,13 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
             myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
 
-            if ( typeof names[0][myVoisinesOrg.data[voisines].NE] === "undefined" ) {
+            if ( typeof topo[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
                 myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
                 myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
             }
             else {
-                myObjOrg[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
-                myObjNew[myVoisinesOrg.data[voisines].NE].name = names[0][myVoisinesOrg.data[voisines].NE].name;
+                myObjOrg[myVoisinesOrg.data[voisines].NE].name = topo[myVoisinesOrg.data[voisines].NE].name;
+                myObjNew[myVoisinesOrg.data[voisines].NE].name = topo[myVoisinesOrg.data[voisines].NE].name;
             }
 
         }
@@ -473,13 +461,13 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
             myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
 
-            if ( typeof names[0][myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+            if ( typeof topo[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
                 myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
                 myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
             }
             else {
-                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
-                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
             }
         }
         else {
@@ -489,13 +477,13 @@ function myJSON_AddMissing() {
             myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
             myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
 
-            if ( typeof names[0][myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+            if ( typeof topo[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
                 myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
                 myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
             }
             else {
-                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
-                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = names[0][myVoisinesOrg.data[voisines].Voisine].name;
+                myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
+                myObjNew[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
             }
         }
     }
@@ -514,8 +502,8 @@ function refreshAll() {
 }
 
 function rucheCentered() {
-    myObjNew["0000"].x = center.X;
-    myObjNew["0000"].y = center.Y;
+    myObjNew["Abeille1/Ruche"].x = center.X;
+    myObjNew["Abeille1/Ruche"].y = center.Y;
     refreshAll("All");
 }
 
@@ -536,6 +524,11 @@ function restore() {
     refreshAll("All");
 }
 
+function selectRuche(form) {
+   Ruche = form.list.value;
+   refreshAll();
+}
+                                                   
 function selectSource(form) {
     Source = form.list.value;
     refreshAll();
@@ -557,14 +550,29 @@ function selectParent(form) {
     refreshAll();
 }
 
+function filtreRuche() {
+   document.write( '<FORM NAME="myformRuche" ACTION="" METHOD="GET">');
+   document.write( '<SELECT NAME="list" >');
+   document.write( '<OPTION value="All" selected>All</OPTION>');
+   document.write( '<OPTION value="None" >None</OPTION>');
+                                                   
+   document.write( '<OPTION value="Abeille1" >Ruche 1</OPTION>');
+   document.write( '<OPTION value="Abeille2" >Ruche 2</OPTION>');
+
+   document.write( '</SELECT>');
+   document.write( '</br>');
+   document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectRuche(this.form)"/>');
+   document.write( '</FORM>');
+}
+                                                   
 function filtreSource() {
     document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
     document.write( '<SELECT NAME="list" >');
     document.write( '<OPTION value="All" selected>All</OPTION>');
     document.write( '<OPTION value="None" >None</OPTION>');
 
-    for (shortAddress in names[0]) {
-        document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
+    for (shortAddress in topo) {
+        document.write( '<OPTION value="'+shortAddress+'" >'+topo[shortAddress].name+'</OPTION>');
     }
 
     document.write( '</SELECT>');
@@ -579,9 +587,9 @@ function filtreDestination() {
     document.write( '<OPTION value="All" selected>All</OPTION>');
     document.write( '<OPTION value="None" >None</OPTION>');
 
-    for (shortAddress in names[0]) {
+    for (shortAddress in topo) {
         // console.log("Name: " + JSON.stringify(shortAddress));
-        document.write( '<OPTION value="'+shortAddress+'" >'+names[0][shortAddress].name+'</OPTION>');
+        document.write( '<OPTION value="'+shortAddress+'" >'+topo[shortAddress].name+'</OPTION>');
     }
 
     document.write( '</SELECT>');
@@ -665,8 +673,9 @@ document.write( '</svg></br>' );
 
 
 document.write( '<table><tr>' );
-document.write( '<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
+document.write( '<tr><td>Ruche</td><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
 
+document.write( '<td>' );   filtreRuche();          document.write( '</td>' );
 document.write( '<td>' );   filtreSource();         document.write( '</td>' );
 document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
 document.write( '<td>' );   filtreDetails();        document.write( '</td>' );
@@ -712,8 +721,8 @@ setInterval(function() {
            }, 1000); // ms
 
 // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
-// console.log("Name list: "+JSON.stringify(names));
-// console.log("Name 1: " + JSON.stringify(names[0]["0000"]));
+// console.log("Name list: "+JSON.stringify(topo));
+// console.log("Name 1: " + JSON.stringify(topo["0000"]));
 
 console.log("End --------------");
 

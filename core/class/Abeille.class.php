@@ -1088,6 +1088,9 @@
 
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
+                
+                // Cas tres particuliers
+                if ( $trimmedValue == "TRADFRISignalRepeater" ) { $trimmedValue = "TRADFRIsignalrepeater"; }
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);

@@ -18,11 +18,11 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 ?>
-<div id='div_resetPiZiGateAbeilleAlert' style="display: none;"></div>
+<div id='div_resetPiZigateAbeilleAlert' style="display: none;"></div>
 <a class="btn btn-warning pull-right" data-state="1" id="bt_abeilleLogStopStart"><i class="fa fa-pause"></i> {{Pause}}</a>
 <input class="form-control pull-right" id="in_abeilleLogSearch" style="width : 300px;" placeholder="{{Rechercher}}"/>
 <br/><br/><br/>
-<pre id='pre_abeilleResetPiZiGate' style='overflow: auto; height: 90%;with:90%;'>
+<pre id='pre_abeilleResetPiZigate' style='overflow: auto; height: 90%;with:90%;'>
 Lancement des operations.
 </pre>
 
@@ -36,21 +36,19 @@ Lancement des operations.
         dataType: 'json',
         global: false,
         error: function (request, status, error) {
-            handleAjaxError(request, status, error, $('#div_resetPiZiGateAbeilleAlert'));
+            handleAjaxError(request, status, error, $('#div_resetPiZigateAbeilleAlert'));
         },
         success: function () {
         }
     });
 
-function updatelog(){
-    jeedom.log.autoupdate({
-                log: 'Abeille_UpdateFirmware',
-                display: $('#pre_abeilleResetPiZiGate'),
-                search: $('#in_abeilleLogSearch'),
-                control: $('#bt_abeilleLogStopStart'),
-            });
-}
-
-setTimeout(updatelog,5000);
-
+	function updatelog(){
+		jeedom.log.autoupdate({
+			log: 'Abeille_resetPiZigate',
+			display: $('#pre_abeilleResetPiZigate'),
+			search: $('#in_abeilleLogSearch'),
+			control: $('#bt_abeilleLogStopStart'),
+		});
+	}
+	setTimeout(updatelog,5000);
 </script>

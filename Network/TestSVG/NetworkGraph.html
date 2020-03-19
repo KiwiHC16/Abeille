@@ -13,6 +13,7 @@ var a = 10;
 var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
 var center = JSON.parse(centerJSON);
 
+var Ruche = "Abeille1";
 var Source = "All";
 var Destination = "All";
 var Parameter = "LinkQualityDec";
@@ -31,7 +32,7 @@ function getVoisinesJSON() {
         }
     };
 
-    xmlhttp.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttp.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapData"+Ruche+".json", false); // False pour bloquer sur la recuperation du fichier
     xmlhttp.send();
 }
 
@@ -104,7 +105,7 @@ function refreshNetworkInformationProgress() {
             // console.log("Debug - Progress:"+networkInformationProgress);
         }
     };
-    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json.lock?"+d.getTime(), true);
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapData"+Ruche+".json.lock?"+d.getTime(), true);
     xmlhttpRefreshNetworkInformationProgress.send();
 }
 
@@ -489,8 +490,18 @@ function myJSON_AddMissing() {
     }
 }
 
-function refreshAll() {
-    // console.log("function refreshAll: "+ Source + "-" + Destination + "-" + Parameter + "-" + Hierarchy );
+function refreshAll(mode) {
+    console.log("function refreshAll: "+ mode );
+                                                   
+   if ( mode == "All" ) {
+       getVoisinesJSON();
+       getTopoJSON();
+
+       myJSON_AddAbeillesFromJeedom();
+       // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+       myJSON_AddMissing();
+       // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+   }
 
     document.getElementById("legend").innerHTML = dessineLaLegende("No");
     document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
@@ -502,9 +513,9 @@ function refreshAll() {
 }
 
 function rucheCentered() {
-    myObjNew["Abeille1/Ruche"].x = center.X;
-    myObjNew["Abeille1/Ruche"].y = center.Y;
-    refreshAll("All");
+    myObjNew[Ruche+"/Ruche"].x = center.X;
+    myObjNew[Ruche+"/Ruche"].y = center.Y;
+    refreshAll();
 }
 
 function placementAuto() {
@@ -521,12 +532,12 @@ function restore() {
     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
     myObjOld = JSON.parse( localStorage.getItem('myObjNew') );
     myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
-    refreshAll("All");
+    refreshAll();
 }
 
 function selectRuche(form) {
    Ruche = form.list.value;
-   refreshAll();
+   refreshAll("All");
 }
                                                    
 function selectSource(form) {
@@ -553,8 +564,6 @@ function selectParent(form) {
 function filtreRuche() {
    document.write( '<FORM NAME="myformRuche" ACTION="" METHOD="GET">');
    document.write( '<SELECT NAME="list" >');
-   document.write( '<OPTION value="All" selected>All</OPTION>');
-   document.write( '<OPTION value="None" >None</OPTION>');
                                                    
    document.write( '<OPTION value="Abeille1" >Ruche 1</OPTION>');
    document.write( '<OPTION value="Abeille2" >Ruche 2</OPTION>');

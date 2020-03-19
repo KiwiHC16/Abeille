@@ -59,7 +59,7 @@
         // Si je recois des message vide c'est que je suis à la fin de la table et je demande l arret de l envoie des requetes LQI et je dis que le NE a ete interrogé
         if ($parameters['BitmapOfAttributes'] == "") {
             $NE_continue = 0;
-            $NE_All_BuildFromLQI[$NE] = array("LQI_Done" => 1);
+            $NE_All_BuildFromLQI[$NE] = array("LQI_Scan_Done" => 1);
             return;
         }
         
@@ -72,6 +72,7 @@
         }
         
         list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
+        if ( $voisineAddr == "0000" ) $voisineAddr = "Ruche";
         $parameters['Voisine'] = $dest . "/" . $voisineAddr;
         if ( isset($knownNE_FromAbeille[$parameters['Voisine']]) ) {
             $parameters['Voisine_Name'] = $knownNE_FromAbeille[$parameters['Voisine']];
@@ -94,7 +95,7 @@
             $parameters['Type'] = "Router";
             if (isset($NE_All_BuildFromLQI[$parameters['Voisine']])) { // deja dans la list donc on ne fait rien
             } else {
-                $NE_All_BuildFromLQI[$parameters['Voisine']] = array("LQI_Done" => 0);
+                $NE_All_BuildFromLQI[$parameters['Voisine']] = array("LQI_Scan_Done" => 0);
             }
         }
         if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02) {
@@ -206,6 +207,10 @@
     $debugKiwiCli = 1; // if called form shell
     if ( $debugKiwiCli ) $_GET['zigate']=1;
     
+    $LQI = array();
+    $knownNE_FromAbeille = array();
+    $NE_All_BuildFromLQI = array();
+    
     $abeilleParameters = Abeille::getParameters();
     
     KiwiLog('Start Main');
@@ -243,26 +248,20 @@
     }
     
     // On recupere les infos d'Abeille
-    $knownNE_FromAbeille = array();
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         $knownNE_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
     }
     
-    KiwiLog( "NE connus pas Abeille:\n".json_encode($knownNE_FromAbeille) );
-
-    $LQI = array();
+    // Let's start at least with Ruche
+    $NE_All_BuildFromLQI[$serial."/Ruche"] = array("LQI_Scan_Done" => 0);
+    $NE_All_BuildFromLQI["Abeille1/233a"] = array("LQI_Scan_Done" => 0);
+    
+    KiwiLog( "NE connus pas Abeille: ".json_encode($knownNE_FromAbeille) );
+    KiwiLog( "NE to scan: ".json_encode($NE_All_BuildFromLQI) );
     
     KiwiLog( "DEBUT: ".date(DATE_RFC2822)."<br>");
-         
-    // Let's start with the Coordinator
-    KiwiLog( "---------: Let s start with the Coordinator");
 
-    $NE_All_BuildFromLQI = array();
-    
-    // Let's start at least with Ruche
-    $NE_All_BuildFromLQI["Abeille".$_GET['zigate']."/Ruche"] = array("LQI_Done" => 0);
-    
     $NE_All_continue = 1;   // Controle le while sur la liste des NE
     $NE_continue = 1;       // controle la boucle sur l interrogation de la table des voisines d un NE particulier
     
@@ -276,7 +275,7 @@
         // foreach ($knownNE as $name => $neAddress) {
         foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
             KiwiLog("=============================================================");
-            KiwiLog("Start Loop");
+            KiwiLog("Start Loop with : ".$currentNeAddress);
             
             list( $serial, $addr ) = explode( '/', $currentNeAddress) ;
             if ( $addr == "Ruche" ) { $addr = "0000"; }
@@ -286,7 +285,7 @@
             $total = count($NE_All_BuildFromLQI);
             $done = 0;
             foreach ($NE_All_BuildFromLQI as $neAddressProgress => $neStatusProgress) {
-                if ($neStatusProgress['LQI_Done'] == 1) {
+                if ($neStatusProgress['LQI_Scan_Done'] == 1) {
                     $done++;
                 }
             }
@@ -310,12 +309,12 @@
             
             KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );
             
-            if ($currentNeStatus['LQI_Done'] == 0) {
+            if ($currentNeStatus['LQI_Scan_Done'] == 0) {
                 $NE_All_continue = 1;
                 $NE_continue = 1;
                 KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $serial . ' - ' . $addr  . " -> Je lance la collecte");
                 collectInformation( $serial, $addr );
-                $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;
+                $NE_All_BuildFromLQI[$NE]['LQI_Scan_Done'] = 1;
                 sleep(5);
             } else {
                 // echo "Already done\n";

@@ -13,7 +13,7 @@
     echo '</head>';
     echo '<body>';
     
-    
+    if ( isset( $_GET['zigateId']) )    { $zigateId     = $_GET['zigateId']; }        else { $zigateId  = "1"; }
     if ( isset( $_GET['GraphType']) )   { $GraphType    = $_GET['GraphType']; }       else { $NE        = "Default"; }
     if ( isset( $_GET['NE']) )          { $NE           = $_GET['NE']; }              else { $NE        = "All"; }
     if ( isset( $_GET['NE2']) )         { $NE2          = $_GET['NE2']; }             else { $NE2       = "None"; }
@@ -35,11 +35,11 @@
     */
     
     // -----------------------------------------------------------------------------------------------------------
-    $DataFile = "AbeilleLQI_MapData.json";
+    $DataFile = "tmp/AbeilleLQI_MapDataAbeille".$zigateId.".json";
     
     if ( $Cache == "Refresh Cache" ) {
         // Ici on n'utilise pas le cache donc on lance la collecte
-        require_once("AbeilleLQI.php");
+        include_once("AbeilleLQI.php");
     }
     
     // Maintenant on doit avoir le chier disponible avec les infos

@@ -360,21 +360,21 @@ $('#bt_installS0').on('click',function(){
 
 $('#bt_updateFirmware').on('click',function(){
     bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
-            if (result) {
-                $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
-            }
-        });
-    })
+		if (result) {
+			$('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
+			$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
+		}
+	});
+})
 
 $('#bt_resetPiZigate').on('click',function(){
-                           bootbox.confirm('{{Vous êtes sur le point de reset (HW) la zigate.<br> Voulez vous continuer ?}}', function (result) {
-                                           if (result) {
-                                           $('#md_modal2').dialog({title: "{{Reset (HW) de la zigate}}"});
-                                           $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
-                                           }
-                                           });
-                           })
+	bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br> Voulez vous continuer ?}}', function (result) {
+		if (result) {
+			$('#md_modal2').dialog({title: "{{Reset (HW) de la PiZigate}}"});
+			$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
+		}
+   });
+})
 
 
 

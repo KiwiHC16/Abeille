@@ -10,11 +10,11 @@
      *
      */
     
-    require_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
-    require_once("../resources/AbeilleDeamon/lib/Tools.php");
-    require_once("../resources/AbeilleDeamon/includes/config.php");
-    require_once("../resources/AbeilleDeamon/includes/fifo.php");
-    require_once("../resources/AbeilleDeamon/includes/function.php");
+    include_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
+    include_once("../resources/AbeilleDeamon/lib/Tools.php");
+    include_once("../resources/AbeilleDeamon/includes/config.php");
+    include_once("../resources/AbeilleDeamon/includes/fifo.php");
+    include_once("../resources/AbeilleDeamon/includes/function.php");
     
     function KiwiLog($message = "")
     {
@@ -23,13 +23,16 @@
     }
     
     // ---------------------------------------------------------------------------------------------------------------------------
-    function message()
-    {
-        global $qos;
+    function message() {
+        global $LQI;
         global $abeilleParameters;
         global $queueKeyParserToLQI;
+        global $NE_All_BuildFromLQI;
+        global $knownNE_FromAbeille;
+        global $NE;
+        global $NE_continue;
         
-        KiwiLog("Check if message");
+        // KiwiLog("Check if message");
         
         $max_msg_size = 512;
         
@@ -42,13 +45,8 @@
             return;
         }
         
-        KiwiLog("Message: ".json_encode( $message ) );
-        
-        $NE_All_local = &$GLOBALS['NE_All_BuildFromLQI'];
-        $knownNE_local = &$GLOBALS['knownNE_FromAbeille'];
+        KiwiLog("Got Message (Ln: ".__LINE__."): ".json_encode( $message ) );
          
-        KiwiLog("Message Topic: ".$message->topic);
-        
         if (strpos( "_".$message->topic, "LQI") != 1) {
             echo "LQI not\n";
             return;
@@ -56,31 +54,27 @@
         
         // Crée les variables dans la chaine et associe la valeur.
         $parameters = proper_parse_str($message->payload);
+        unset($parameters['srcAddress']); // remove this info that looks strange and I don t understand it so create confusion.
         
-        // Si je recois des message vide c'est que je suis à la fin de la table et je demande l arret de l envoie des requetes LQI
-        // et je dis que le NE a ete interrogé
+        // Si je recois des message vide c'est que je suis à la fin de la table et je demande l arret de l envoie des requetes LQI et je dis que le NE a ete interrogé
         if ($parameters['BitmapOfAttributes'] == "") {
-            $GLOBALS['NE_continue'] = 0;
-            // check si le NE existe deja, si oui je le marque fait, sinon je l ajoute à la liste pour le prochain passage
-            if (isset($NE_All_local[$GLOBALS['NE']])) {
-                $NE_All_local[$GLOBALS['NE']] = array("LQI_Done" => 0);
-            } else {
-                $NE_All_local[$GLOBALS['NE']] = array("LQI_Done" => 1);
-            }
-            
+            $NE_continue = 0;
+            $NE_All_BuildFromLQI[$NE] = array("LQI_Done" => 1);
             return;
         }
         
-        $parameters['NE'] = $GLOBALS['NE'];
-        $parameters['NE_Name'] = ($parameters['NE'] == '0000') ? 'Ruche' : $knownNE_local[$parameters['NE']];
+        $parameters['NE'] = $NE;
+        $parameters['NE_Name'] = $knownNE_FromAbeille[$NE];
+        list( $dest, $addr ) = explode( '/', $NE );
+
         if (strlen($parameters['NE_Name']) == 0) {
             $parameters['NE_Name'] = "Inconnu-" . $parameters['IEEE_Address'];
         }
         
-        $topicArray = explode("/", $message->topic);
-        $parameters['Voisine'] = $topicArray[1];
-        if ( isset($knownNE_local[$parameters['Voisine']]) ) {
-        $parameters['Voisine_Name'] = $knownNE_local[$parameters['Voisine']]; // array_search($topicArray[1], $knownNE_local); //$knownNE_local[$parameters['Voisine']];
+        list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
+        $parameters['Voisine'] = $dest . "/" . $voisineAddr;
+        if ( isset($knownNE_FromAbeille[$parameters['Voisine']]) ) {
+            $parameters['Voisine_Name'] = $knownNE_FromAbeille[$parameters['Voisine']];
         }
         else {
             $parameters['Voisine_Name'] = $parameters['Voisine'];
@@ -98,9 +92,9 @@
         }
         if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01) {
             $parameters['Type'] = "Router";
-            if (isset($NE_All_local[$parameters['Voisine']])) { // deja dans la list donc on ne fait rien
+            if (isset($NE_All_BuildFromLQI[$parameters['Voisine']])) { // deja dans la list donc on ne fait rien
             } else {
-                $NE_All_local[$parameters['Voisine']] = array("LQI_Done" => 0);
+                $NE_All_BuildFromLQI[$parameters['Voisine']] = array("LQI_Done" => 0);
             }
         }
         if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02) {
@@ -138,34 +132,17 @@
         
         $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
         
-        // print_r( $parameters );
-        
-        $GLOBALS['LQI'][] = $parameters;
-        
-        // Envoie de l'adresse IEEE a Abeille pour completer les objets.
-        // e.g. Abeille/d45e/IEEE-Addr
-        // $mqtt = $GLOBALS['client'];
-        //$mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."Abeille/" . $parameters['Voisine'] . "/IEEE-Addr", $parameters['IEEE_Address'], $qos);
+        $LQI[] = $parameters;
         
     }
     
-    
-    /*
-     + * Send a mosquitto message to jeedom
-     + *
-     + * Ask NE at address to provide LQI from its table at index index
-     + */
-    function mqqtPublishLQI( $serial, $destAddr, $index )
-    {
-        // global $abeilleParameters;
-        // $mqtt->publish(substr($abeilleParameters['AbeilleTopic'],0,-1)."CmdAbeille/Ruche/Management_LQI_request", "address=" . $destAddr . "&StartIndex=" . $index, $qos);
-        
+    function mqqtPublishLQI( $dest, $addr, $index ) {
         global $queueKeyLQIToCmd;
         
         $msgAbeille = new MsgAbeille;
         
-        $msgAbeille->message['topic'] = "Cmd".$serial."/Ruche/Management_LQI_request";
-        $msgAbeille->message['payload'] = "address=" . $destAddr . "&StartIndex=" . $index;
+        $msgAbeille->message['topic'] = "Cmd".$dest."/Ruche/Management_LQI_request";
+        $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
         
         KiwiLog("publishLQI: ".json_encode($msgAbeille));
         
@@ -177,8 +154,7 @@
         }
     }
     
-    function hex2str($hex)
-    {
+    function hex2str($hex) {
         $str = '';
         for ($i = 0; $i < strlen($hex); $i += 2) {
             $str .= chr(hexdec(substr($hex, $i, 2)));
@@ -187,18 +163,16 @@
         return $str;
     }
     
-    function displayClusterId($cluster)
-    {
+    function displayClusterId($cluster) {
         return 'Cluster ID: ' . $cluster . '-' . $GLOBALS['clusterTab']["0x" . $cluster];
     }
     
-    function collectInformation( $serial, $NE )
-    {
+    function collectInformation( $serial, $addr ) {
         $indexTable = 0;
         
         while ($GLOBALS['NE_continue']) {
 
-            mqqtPublishLQI( $serial, $NE, sprintf("%'.02x", $indexTable) );
+            mqqtPublishLQI( $serial, $addr, sprintf("%'.02x", $indexTable) );
             
             $indexTable++;
             // if ($indexTable > count($GLOBALS['knownNE'])+10) {
@@ -228,9 +202,10 @@
     // refreshNetworkCache refreshCache(x) dans desktop/modal/network.php -> desktop/js/network.js -> updateZigBeeJsonCache(x) -> AbeilleLQI.php?zigate=(x)
     // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
     
-    $_GET['zigate']=1;
-    
     $debugKiwi = 1;
+    $debugKiwiCli = 1; // if called form shell
+    if ( $debugKiwiCli ) $_GET['zigate']=1;
+    
     $abeilleParameters = Abeille::getParameters();
     
     KiwiLog('Start Main');
@@ -245,7 +220,8 @@
     $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
     
-    $DataFile = "AbeilleLQI_MapData".$serial.".json";
+    $dir = "tmp/";
+    $DataFile = $dir."AbeilleLQI_MapData".$serial.".json";
     $FileLock = $DataFile . ".lock";
     $nbwritten = 0;
     
@@ -302,6 +278,9 @@
             KiwiLog("=============================================================");
             KiwiLog("Start Loop");
             
+            list( $serial, $addr ) = explode( '/', $currentNeAddress) ;
+            if ( $addr == "Ruche" ) { $addr = "0000"; }
+            
             //-----------------------------------------------------------------------------
             // Estimation du travail restant et info dans le fichier lock
             $total = count($NE_All_BuildFromLQI);
@@ -313,8 +292,14 @@
             }
             KiwiLog("AbeilleLQI main: " . $done . " of " . $total);
             
-            //-----------------------------------------------------------------------------
+            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
+            if ($nbwritten<1) {
+                unlink($FileLock);
+                echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
+                exit;
+            }
             
+            //-----------------------------------------------------------------------------
             // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
             $NE = $currentNeAddress;
             
@@ -323,23 +308,15 @@
                 $name = "Inconnu-" . $currentNeAddress;
             }
             
-            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
-            if ($nbwritten<1) {
-                unlink($FileLock);
-                echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
-                exit;
-            }
-            
-            KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress );
-            KiwiLog( json_encode($NE_All_BuildFromLQI) );
+            KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );
             
             if ($currentNeStatus['LQI_Done'] == 0) {
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $currentNeAddress  . " -> Je lance la collecte");
-                sleep(5);
-                collectInformation( $serial, $currentNeAddress);
+                KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $serial . ' - ' . $addr  . " -> Je lance la collecte");
+                collectInformation( $serial, $addr );
                 $NE_All_BuildFromLQI[$NE]['LQI_Done'] = 1;
+                sleep(5);
             } else {
                 // echo "Already done\n";
             }

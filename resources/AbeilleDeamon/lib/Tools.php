@@ -235,6 +235,8 @@ class Tools
         if ($dh = opendir($devicesDir)) {
             while ( ($deviceDir = readdir($dh)) !== false) {
                 try {
+                    if ( !(($deviceDir == ".") || ($deviceDir == "..") || ($deviceDir == "listeCompatibilite.php") || ($deviceDir == "Template")) ) {
+                        
                     $file = $deviceDir.".json";
 
                     $content = file_get_contents($devicesDir . $deviceDir . DIRECTORY_SEPARATOR . $file);
@@ -247,7 +249,7 @@ class Tools
                         //echo 'file:' .$file.' / nom: ' . $found . " \n";
                         array_push($return, $found);
                     }
-
+                    }
                 } catch (Exception $e) {
                     log::add($logger, 'error', 'Cannot read content of file ' . $file);
                 }

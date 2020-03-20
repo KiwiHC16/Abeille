@@ -22,7 +22,7 @@ fi
 hash gpio 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "ERREUR: Commande 'gpio' manquante !"
-    echo "        Le package WiringPi est probablement mal install�."
+    echo "        Le package WiringPi est probablement mal installé."
     error=1
 fi
 if [ ! -e ${PROG} ]; then
@@ -32,6 +32,11 @@ if [ ! -e ${PROG} ]; then
 fi
 if [ $error != 0 ]; then
     exit 1
+fi
+
+# Si check seulement on quitte ici
+if [ $# -gt 2 ] && [ $3 == "-check" ]; then
+    exit 0
 fi
 
 echo "Lancement de la programmation du firmware"
@@ -60,12 +65,14 @@ sleep 1
 
 sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/$1 -s $2 2>&1
 if [ $? != 0 ]; then
-    echo " = ERREUR: Programmation abandonn�e"
-    exit 2
+    echo " - ERREUR: Programmation impossible"
+    status=2
+else
+    echo " - Programmation faite"
+    status=0
 fi
-echo " - Programmation faite"
 
-echo "Redemarrage de la PiZiGate"
+echo "Redémarrage de la PiZiGate"
 
 # gpio mode 0 out
 # gpio mode 2 out
@@ -77,4 +84,14 @@ gpio write 0 0
 sleep 1
 gpio write 0 1
 
-echo " = Fin"
+echo ""
+
+if [ $status  -eq 0 ]; then
+    echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
+else
+    echo "*** ATTENTION !!! "
+    echo "*** Quelque chose s'est mal passé."
+    echo "*** Veuillez verifier le log ci dessus."
+fi
+exit $status
+

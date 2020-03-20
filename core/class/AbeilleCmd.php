@@ -153,7 +153,7 @@
     }
 
     class AbeilleCmd extends AbeilleCmdQueue {
-        public $debug = array( "cli"                => 1, // commande line mode or jeedom
+        public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
                               "tempo"               => 0, // Debug tempo queue
                               "procmsg"             => 0, // Debug fct procmsg
@@ -756,6 +756,7 @@
             // retry = nombre de tentative restante
             // priority = priority du message
             $i = str_replace( 'Abeille', '', $dest );
+
             if ( ($i>0) && ($i<11) ) {
                 $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
@@ -1822,7 +1823,7 @@
                 $data = $address . $IeeeAddress . $requestType . $startIndex ;
                 $lenth = "000C"; // A verifier
 
-                $this->deamonlog('debug','IEEE_Address_request: '.$data . ' - ' . $lenth  );
+                $this->deamonlog('debug','Network_Address_request: '.$data . ' - ' . $lenth  );
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
             }
@@ -2596,6 +2597,7 @@
             $dest = str_replace( 'Cmd', '',  $type );
             
             if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg);
+
             if ( $this->debug['procmsg3'] ) $this->deamonlog("debug", 'procmsg fct - (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
@@ -3601,8 +3603,8 @@
                         }
                         $Command = array(
                                          "bindShort"                => "1",
-                                         "priority" => $priority,
-                                         "dest" => $dest,
+                                         "priority"                 => $priority,
+                                         "dest"                     => $dest,
                                          "address"                  => $address,
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
@@ -3702,7 +3704,7 @@
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
                                          "priority"     => $priority,
-                                         "dest"         => $parameters['dest'],
+                                         "dest"         => $dest,
                                          "address"      => $parameters['address'],
                                          "clusterId"    => $parameters['clusterId'],
                                          "attributeId"  => $parameters['attributId'],
@@ -3718,7 +3720,7 @@
                         $Command = array(
                                          "bindShort"                => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
@@ -3735,7 +3737,7 @@
                         $Command = array(
                                          "setReport"                => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "targetEndpoint"           => $parameters['targetEndpoint'],
                                          "ClusterId"                => $parameters['ClusterId'],
@@ -3752,7 +3754,7 @@
                         $Command = array(
                                          "getGroupMembership"       => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          );
@@ -3765,7 +3767,7 @@
                         $Command = array(
                                          "addGroup"                 => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3779,7 +3781,7 @@
                         $Command = array(
                                          "removeGroup"              => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupAddress"             => $parameters['groupAddress'],
@@ -3794,7 +3796,7 @@
                         $Command = array(
                                          "viewScene"                => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3808,7 +3810,7 @@
                         $Command = array(
                                          "storeScene"               => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3822,7 +3824,7 @@
                         $Command = array(
                                          "recallScene"              => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3841,7 +3843,7 @@
                         $Command = array(
                                          "sceneGroupRecall"         => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                          // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
@@ -3858,7 +3860,7 @@
                         $Command = array(
                                          "addScene"                 => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3873,7 +3875,7 @@
                         $Command = array(
                                          "getSceneMembership"       => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -3886,7 +3888,7 @@
                         $Command = array(
                                          "removeSceneAll"           => "1",
                                          "priority"                 => $priority,
-                                         "dest"                     => $parameters['dest'],
+                                         "dest"                     => $dest,
                                          "address"                  => $parameters['address'],
                                          "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                          "groupID"                  => $parameters['groupID'],
@@ -4133,7 +4135,7 @@
     }
     catch (Exception $e) {
         $AbeilleCmd->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
-        $AbeilleCmd->deamonlog('info', 'Fin du script');
+        $AbeilleCmd->deamonlog( 'info', 'Fin du script');
     }
 
     unset($AbeilleCmd);

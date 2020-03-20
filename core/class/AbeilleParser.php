@@ -10,12 +10,12 @@
 
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    require_once dirname(__FILE__).'/Abeille.class.php';
-    require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once dirname(__FILE__).'/Abeille.class.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
 
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',
@@ -769,10 +769,10 @@
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$SrcAddr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$SrcAddr );
             
-            $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>"Abeille/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>"Abeille/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>"Abeille/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>"Abeille/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
             
         }
         

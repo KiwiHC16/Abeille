@@ -87,109 +87,6 @@ $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=NetworkGraph').dialog('open');
                               });
 
-$('#bt_setTimeServer').on('click', function () {
-                          console.log("bt_setTimeServer");
-                          var d = new Date();
-                          var n = Math.round(d.getTime()/1000);
-                          console.log(n);
-                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                          if (this.readyState == 4 && this.status == 200) {
-                          xmlhttpMQTTSendIncludeResult = this.responseText;
-                          }
-                          };
-
-                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setTimeServer&payload=time="+n, true); // False pour bloquer sur la recuperation du fichier
-                          xmlhttpMQTTSendInclude.send();
-                          $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
-                          });
-
-
-$('#bt_getTimeServer').on('click', function () {
-                          console.log("bt_getTimeServer");
-                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                          if (this.readyState == 4 && this.status == 200) {
-                          xmlhttpMQTTSendIncludeResult = this.responseText;
-                          }
-                          };
-
-                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_getTimeServer&payload=", true); // False pour bloquer sur la recuperation du fichier
-                          xmlhttpMQTTSendInclude.send();
-                          $('#div_alert').showAlert({message: '{{Envoie de l heure a la zigate fait.}}', level: 'success'});
-                          });
-
-$('#bt_setOnZigateLed').on('click', function () {
-                          console.log("bt_setOnZigateLed");
-                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                          if (this.readyState == 4 && this.status == 200) {
-                          xmlhttpMQTTSendIncludeResult = this.responseText;
-                          }
-                          };
-
-                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOnZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
-                          xmlhttpMQTTSendInclude.send();
-                          $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
-                          });
-
-$('#bt_setOffZigateLed').on('click', function () {
-                          console.log("bt_setOffZigateLed");
-                          var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                          xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                          if (this.readyState == 4 && this.status == 200) {
-                          xmlhttpMQTTSendIncludeResult = this.responseText;
-                          }
-                          };
-
-                          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setOffZigateLed&payload=", true); // False pour bloquer sur la recuperation du fichier
-                          xmlhttpMQTTSendInclude.send();
-                          $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
-                          });
-
-$('#bt_setCertificationCE').on('click', function () {
-                           console.log("bt_setCertificationCE");
-                           var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                           xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                           if (this.readyState == 4 && this.status == 200) {
-                           xmlhttpMQTTSendIncludeResult = this.responseText;
-                           }
-                           };
-
-                           xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationCE&payload=", true); // False pour bloquer sur la recuperation du fichier
-                           xmlhttpMQTTSendInclude.send();
-                           $('#div_alert').showAlert({message: '{{Demande Led On.}}', level: 'success'});
-                           });
-
-$('#bt_setCertificationFCC').on('click', function () {
-                            console.log("bt_setCertificationFCC");
-                            var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                            xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                            xmlhttpMQTTSendIncludeResult = this.responseText;
-                            }
-                            };
-
-                            xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_setCertificationFCC&payload=", true); // False pour bloquer sur la recuperation du fichier
-                            xmlhttpMQTTSendInclude.send();
-                            $('#div_alert').showAlert({message: '{{Demande Led Off.}}', level: 'success'});
-                            });
-
-$('#bt_startZigbee').on('click', function () {
-                    console.log("bt_startZigbee");
-                    var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                    xmlhttpMQTTSendInclude.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                    xmlhttpMQTTSendIncludeResult = this.responseText;
-                    }
-                    };
-
-                    xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille_Ruche_startNetwork&payload=StartNetwork", true); // False pour bloquer sur la recuperation du fichier
-                    xmlhttpMQTTSendInclude.send();
-                    $('#div_alert').showAlert({message: '{{Démarrage du réseau zigbee demandé.}}', level: 'success'});
-                    }
-                    );
-
 $('#bt_include1').on('click', function () {
                     console.log("bt_include1");
                     var xmlhttpMQTTSendInclude = new XMLHttpRequest();
@@ -339,28 +236,6 @@ $('#bt_include10').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
                           }
                           );
-                          
-$('#bt_exclude').on('click', function () {
-                    console.log("bt_exclude");
-// To be defined
-                    }
-                    );
-
-$('#bt_createTimer').on('click', function () {
-                        console.log("bt_createTimer");
-                        var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-                        xmlhttpMQTTSendTimer.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                        xmlhttpMQTTSendTimerResult = this.responseText;
-                        }
-                        };
-
-                        xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreate_Timer_0000-0005&payload=Timer", false); // False pour bloquer sur la recuperation du fichier
-                        xmlhttpMQTTSendTimer.send();
-                        // location.reload(true);
-                        $('#div_alert').showAlert({message: '{{Un nouveau Timer est en création.}}', level: 'success'});
-                        }
-                        );
 
 $('#bt_createRemote1').on('click', function () {
                          console.log("bt_createRemote1");
@@ -522,29 +397,6 @@ $('#bt_createRemote10').on('click', function () {
                           }
                           );
 
-$("#bt_TimerActionStart").on('click', function () {
-                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                 document.getElementById("idTimerActionStart").value = result.human;
-                                               });
-                                             });
-
-$("#bt_TimerActionRamp").on('click', function () {
-                                            jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                               document.getElementById("idTimerActionRamp").value = result.human;
-                                             });
-                                           });
-
-$("#bt_TimerActionStop").on('click', function () {
-                                             jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                document.getElementById("idTimerActionStop").value = result.human;
-                                              });
-                                            });
-
-$("#bt_TimerActionCancel").on('click', function () {
-                                              jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
-                                                 document.getElementById("idTimerActionCancel").value = result.human;
-                                               });
-                                             });
 
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});

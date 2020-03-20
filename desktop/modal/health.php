@@ -72,7 +72,12 @@
             if ( $commandIEEE ) {
                 $addrIEEE = $commandIEEE->execCmd();
                 if (strlen($addrIEEE) > 2 ) {
-                    $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
+                    if (isset($IEEE_Table[$addrIEEE])) {
+                        $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
+                    }
+                    else {
+                        $IEEE_Table[$addrIEEE] = 1;
+                    }
                 }
             }
 
@@ -84,7 +89,7 @@
                 echo '<td><span class="label label-success" style="font-size : 1em; cursor : default;">'.$addrIEEE.'</span></td>';
             }
             else {
-                echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">'.Missing.'</span></td>';
+                echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">Missing</span></td>';
             }
 
 

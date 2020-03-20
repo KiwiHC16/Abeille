@@ -16,44 +16,9 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-
-    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
-    // 1: Abeille
-    // 2: AbeilleParser -> Parser
-    // 3: AbeilleCmd -> Cmd
-    // 4:
-    // 5: AbeilleLQI -> LQI
-    // 6: xmlhttpMQTTSend -> xml
-    // 7: queueKeyFormToCmd -> Form
-    // 8: serie -> Serie
-    // 9: Semaphore entre Parser et MQTTSend
-
-    // 221: means AbeilleParser to(2) Abeille
-    define('queueKeyAbeilleToAbeille',      121);
-    define('queueKeyAbeilleToCmd',          123);
-
-    define('queueKeyParserToAbeille',       221);
-    define('queueKeyParserToCmd',           223);
-    define('queueKeyParserToLQI',           225);
-    define('queueKeyCmdToAbeille',          321);
-    define('queueKeyCmdToCmd',              323);
-
-    define('queueKeyLQIToAbeille',          521);
-    define('queueKeyLQIToCmd',              523);
-    define('queueKeyXmlToAbeille',          621);
-    define('queueKeyXmlToCmd',              623);
-    define('queueKeyFormToCmd',             723);
-    define('queueKeySerieToParser',         822);
-    define('queueKeyParserToCmdSemaphore',  999);
-
-    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
-    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-
-
 
     Class MsgAbeille {
         /*
@@ -80,7 +45,7 @@
             return $return;
         }
 
-		public static function execShellCmd( $cmdToExec, $text ) {
+		public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
 			if ($GLOBALS['debugKIWI']) echo $text." start\n";
             log::add('Abeille', 'debug', 'Starting '.$text);
             log::remove('Abeille_'.$text);
@@ -95,32 +60,71 @@
 		}
 
         public static function syncconfAbeille($_background = true) {
-			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille" );
+			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
         }
 
         public static function installGPIO($_background = true) {
-			Abeille::execShellCmd( "installGPIO.sh", "installGPIO" );
+			Abeille::execShellCmd( "installGPIO.sh", "installGPIO", $_background );
         }
 
         public static function installS0($_background = true) {
-			Abeille::execShellCmd( "installS0.sh", "installS0" );
+			Abeille::execShellCmd( "installS0.sh", "installS0", $_background );
         }
 
         public static function installSocat($_background = true) {
-			Abeille::execShellCmd( "installSocat.sh", "installSocat" );
+			Abeille::execShellCmd( "installSocat.sh", "installSocat", $_background );
         }
-
+    
+        /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
         public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
-			self::deamon_stop(); // Arrêt du demon
-            $cmd = "updateFirmware.sh " . $fwfile . " " . $zgport;
-			Abeille::execShellCmd( $cmd, "updateFirmware" );
-			self::deamon_start(); // Redemarrage du demon
+            log::add('Abeille', 'debug', 'Démarrage updateFirmware(' . $fwfile . ', ' . $zgport . ')');
+            log::remove('Abeille_updateFirmware');
+
+            log::add('Abeille_updateFirmware', 'info', 'Vérification des paramètres');
+            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport . " -check";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            exec($cmd, $out, $status);
+            if ($status != 0)
+                return $status; // Something wrong with parameters
+
+            log::add('Abeille_updateFirmware', 'info', 'Arret du démon');
+            self::deamon_stop(); // Stopping daemon
+
+            log::add('Abeille_updateFirmware', 'info', 'Programming');
+            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport;
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            exec($cmd, $out, $status);
+
+            log::add('Abeille_updateFirmware', 'info', 'Redémarrage du démon');
+            self::deamon_start(); // Restarting daemon
+
+            return $status; // If not 0, programmation failed
         }
 
         public static function resetPiZiGate($_background = true) {
-			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate" );
+			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate", $_background );
         }
 
+        public static function tryToGetIEEE() {
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+                if ( $commandIEEE ) {
+                    $addrIEEE = $commandIEEE->execCmd();
+                    if (strlen($addrIEEE) < 2 ) {
+                        list( $dest, $NE) = explode('/', $eqLogic->getLogicalId());
+                        if (strlen($NE) == 4) {
+                            log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
+                            echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                            $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
+                            echo "Cmd: ".$cmd."\n";
+                            exec($cmd, $out, $status);
+                        }
+                    }
+                }
+            }
+        }
+        
         public static function updateConfigAbeille($abeilleIdFilter = false) {
 
         }
@@ -150,6 +154,10 @@
             log::add('Abeille', 'debug', 'Check Zigate Presence');
 
             $param = self::getParameters();
+            
+            //--------------------------------------------------------
+            // Pull IEEE
+            self::tryToGetIEEE();
 
             //--------------------------------------------------------
             // Refresh Ampoule Ikea Bind et set Report
@@ -161,9 +169,7 @@
             foreach ($eqLogics as $eqLogic) {
                 // log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
                 if (strpos("_".$eqLogic->getConfiguration("icone"), "IkeaTradfriBulb") > 0) {
-                    $topicArray = explode("/", $eqLogic->getLogicalId());
-                    $dest = $topicArray[0];
-                    $addr = $topicArray[1];
+                    list( $dest, $addr) = explode("/", $eqLogic->getLogicalId());
                     $i=$i+1;
 
                     $ruche = new Abeille();
@@ -276,7 +282,7 @@
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				if ($param['AbeilleSerialPort'.$i]!="none") {
-					// Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
 					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
 				}
 			}
@@ -287,8 +293,7 @@
             // log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
             $i = 0;
             foreach ($eqLogics as $eqLogic) {
-                $dest = explode("/", $eqLogic->getLogicalId())[1];
-                $address = explode("/", $eqLogic->getLogicalId())[1];
+                list( $dest, $address)  = explode("/", $eqLogic->getLogicalId());
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
                         log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
@@ -430,7 +435,7 @@
             unlink( $FileLock );
             log::add('Abeille', 'debug', 'Deleting '.$FileLock );
 
- 
+
             return;
         }
 
@@ -1024,6 +1029,7 @@
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
             if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
+            if ( $value=="TRADFRI Signal Repeater" ) $value = "TRADFRI signal repeater";
 
             $type = 'topic';         // type = topic car pas json
 
@@ -1061,7 +1067,7 @@
             }
 
             // log::add('Abeille', 'debug', 'I should have the cmd now' );
-            
+
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
             if ( !is_object($elogic)
@@ -1083,6 +1089,8 @@
 
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
+                
+                
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
@@ -1097,7 +1105,7 @@
                 $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
                 log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
 
-                
+
                 if ( array_key_exists( $trimmedValue, $AbeilleObjetDefinition) )   { $jsonName = $trimmedValue; }
                 if ( array_key_exists('defaultUnknown', $AbeilleObjetDefinition) ) { $jsonName = 'defaultUnknown'; }
 
@@ -2000,6 +2008,17 @@
                     }
                 }
                 echo "\n";
+                break;
+            case "23":
+                Abeille::tryToGetIEEE();
+                break;
+            case "24":
+                // Debug:   log::level::Abeille    {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"} => 100 / debug
+                // Default: log::level::Abeille    {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"} => 100 / debug
+                // Info:    log::level::Abeille    {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"} => 200 / info
+                echo log::getLogLevel('Abeille')."\n";
+                echo log::convertLogLevel(log::getLogLevel('Abeille'))."\n";
+                
                 break;
 
         } // switch

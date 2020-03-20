@@ -2,7 +2,7 @@
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     require_once dirname(__FILE__).'/../../core/class/Abeille.class.php';
         
-    $zigateIds = array( '', '2', '3', '4', '5' );
+    $zigateIds = array( '1', '2', '3', '4', '5' );
     
     function sendMessageFromFormToCmd( $topic, $payload ) {
         
@@ -257,17 +257,73 @@
         // Set Channel Mask
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
-                echo "TxPower request processing";
+                echo "Set Channel Mask processing: Zigate Id: ".$zigateId." Channel mask: ".$_POST['channelMask'];
                 sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setChannelMask', $_POST['channelMask'] );
             }
         }
                 
         // Set Extended PANID
         foreach ( $zigateIds as $zigateId ) {
-          if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
-                  echo "TxPower request processing";
-              sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
-          }
+            if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
+                echo "Set Extended PANID request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setExtendedPANID', $_POST['extendedPanId'] );
+            }
+        }
+        
+        // Set Time
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetTime Z'.$zigateId ) {
+                echo "SetTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setTimeServer', "time=".time() );
+            }
+        }
+                                       
+        // Get Time
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'getTime Z'.$zigateId ) {
+                echo "getTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/getTimeServer', "" );
+            }
+        }
+        
+        // setOnZigateLed
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetLedOn Z'.$zigateId ) {
+                echo "SetTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setOnZigateLed', "" );
+            }
+        }
+                                       
+        // setOffZigateLed
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'SetLedOff Z'.$zigateId ) {
+                echo "getTime request processing";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setOffZigateLed', "" );
+            }
+        }
+        
+        // Set Certification CE
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {
+                echo "Set Certification CE";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setCertificationCE', "" );
+            }
+        }
+                                       
+        // Set Certification FCC
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Certification FCC Z'.$zigateId ) {
+                echo "Set Certification FCC";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setCertificationFCC', "" );
+            }
+        }
+        
+        // startNetwork
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
+                echo "Start Network";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/startNetwork', "StartNetwork" );
+            }
         }
 
     } catch (Exception $e) {

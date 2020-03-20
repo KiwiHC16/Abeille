@@ -12,11 +12,10 @@
      */
 
 
-require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-require_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-
-include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead', $message);
@@ -109,7 +108,7 @@ include dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
                 else {
                     deamonlog('error', 'Msg sent queueKeySerieToParser ('.queueKeySerieToParser.'): Could not send Msg');
                 }
-                sem_release( $queueKeySerieToParserSem );
+                // sem_release( $queueKeySerieToParserSem );
             } else {
                 if ($car == "02") {
                     $transcodage = true;

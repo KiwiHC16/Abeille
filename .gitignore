@@ -37,6 +37,7 @@ atlassian-ide-plugin.xml
 ._*
 **/._*
 .nfs*
+*.bak
 
 LqiStorage.db
 AbeilleLQI_MapData.json

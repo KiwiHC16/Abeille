@@ -1,30 +1,37 @@
 <script type="text/javascript">
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     
-    console.log("Begin --------------");
+console.log("Begin --------------");
+
+//-----------------------------------------------------------------------
+// Global Variables
+//-----------------------------------------------------------------------
+var myVoisinesOrg;
+var topo;
+var networkInformation = "";
+var networkInformationProgress = "Processing";
+var TopoSetReply = "";
+
+var a = 10;
+var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
+var center = JSON.parse(centerJSON);
+
+var Ruche = "Abeille1";
+var Source = "All";
+var Destination = "All";
+var Parameter = "LinkQualityDec";
+var Hierarchy = "All";
+
+var myJSON = '{}';
+
+var myObjOrg = JSON.parse(myJSON);
+var myObjNew = JSON.parse(myJSON);
     
-    var myVoisinesOrg;
-    var topo;
-    var networkInformation = "";
-    var networkInformationProgress = "Processing";
-    var TopoSetReply = "";
+//-----------------------------------------------------------------------
+// Functions
+//-----------------------------------------------------------------------
     
-    var a = 10;
-    var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
-    var center = JSON.parse(centerJSON);
-    
-    var Ruche = "Abeille1";
-    var Source = "All";
-    var Destination = "All";
-    var Parameter = "LinkQualityDec";
-    var Hierarchy = "All";
-    
-    var myJSON = '{}';
-    
-    var myObjOrg = JSON.parse(myJSON);
-    var myObjNew = JSON.parse(myJSON);
-    
-    function getVoisinesJSON() {
+function getVoisinesJSON() {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -656,6 +663,9 @@ function saveAbeilles() {
 
 const queryString = window.location.search;
 console.log(queryString);
+res = queryString.substr(1);
+console.log(res);
+if (res.length>2) Ruche = res;
 
 getVoisinesJSON();
 getTopoJSON();
@@ -673,6 +683,7 @@ document.write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' );
 document.write( '</head>');
 
 document.write( '<body>');
+document.write( 'Zigate selectionnee:'+Ruche);
 document.write( '<p id="demo"></p>');
 document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
 
@@ -686,13 +697,14 @@ document.write( dessineLesAbeilles("Yes") );
 
 document.write( '</svg></br>' );
 
-
+document.write( '<table><tr>' );
+for (let i = 1; i <= 10; i++) {
+    document.write( '<td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.html?Abeille'+i+'\'" /></td>' );
+}
+document.write( '</tr></table>' );
 
 document.write( '<table><tr>' );
-document.write( '<tr><td>Ruche</td><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
-
-
-document.write( '<td><input id="btntest" type="button" value="Check" onclick="window.location.href = \'http://abeille/plugins/Abeille/Network/TestSVG/NetworkGraph.html?Ruche=Abeille2\'" /></td>' );
+document.write( '<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
 document.write( '<td>' );   filtreSource();         document.write( '</td>' );
 document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
 document.write( '<td>' );   filtreDetails();        document.write( '</td>' );

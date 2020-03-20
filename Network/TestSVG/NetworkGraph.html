@@ -352,8 +352,8 @@ function setPosition(mode) {
     var nbAbeille = Object.keys(myObjNew).length
     for (abeille in myObjNew) {
         if ( (myObjNew[abeille].positionDefined == "No") && (mode=="Auto") ) {
-            X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
-            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
+            X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+            Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
 
             myObjOrg[abeille].x = X;
             myObjOrg[abeille].y = Y;
@@ -365,8 +365,8 @@ function setPosition(mode) {
             iAbeille++;
         }
         if ( mode=="AutoForce" ) {
-            X = center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille);
-            Y = center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille);
+            X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeillenb/Abeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+            Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeillenb/Abeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
 
             myObjOrg[abeille].x = X;
             myObjOrg[abeille].y = Y;
@@ -424,7 +424,7 @@ function myJSON_AddAbeillesFromJeedom() {
                                                    
     console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 }
-
+                                                   
 // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
 // On parcourt las voisines et à chaque nouvelle abeille on l'ajoute à myObjOrg et myObjNew
 // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
@@ -650,6 +650,13 @@ function saveAbeilles() {
     setTopoJSON(JSON.stringify(myObjNew));
 }
 
+//-----------------------------------------------------------------------
+// MAIN
+//-----------------------------------------------------------------------
+                                                   
+const queryString = window.location.search;
+console.log(queryString);
+                                                   
 getVoisinesJSON();
 getTopoJSON();
 
@@ -684,7 +691,8 @@ document.write( '</svg></br>' );
 document.write( '<table><tr>' );
 document.write( '<tr><td>Ruche</td><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
 
-document.write( '<td>' );   filtreRuche();          document.write( '</td>' );
+                                                  
+document.write( '<td><input id="btntest" type="button" value="Check" onclick="window.location.href = \'http://abeille/plugins/Abeille/Network/TestSVG/NetworkGraph.html?Ruche=Abeille2\'" /></td>' );
 document.write( '<td>' );   filtreSource();         document.write( '</td>' );
 document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
 document.write( '<td>' );   filtreDetails();        document.write( '</td>' );

@@ -44,9 +44,9 @@
 
     try {
 
-        echo "_POST: ".json_encode( $_POST )."<br>\n";
-        echo "Group: ".$_POST['groupID'].$_POST['groupIdScene1'].$_POST['groupIdScene2']."<br>\n";
-        echo "Action: ".$_POST['submitButton']."<br>\n";
+        // echo "_POST: ".json_encode( $_POST )."<br>\n";
+        // echo "Group: ".$_POST['groupID'].$_POST['groupIdScene1'].$_POST['groupIdScene2']."<br>\n";
+        // echo "Action: ".$_POST['submitButton']."<br>\n";
 
         switch ($_POST['submitButton']) {
 

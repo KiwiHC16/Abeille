@@ -1,12 +1,16 @@
 
-echo "Redémarrage de la PiZiGate"
+echo "Execution de '$(basename $0)'"
 
+echo "Vérification de l'installation WiringPi"
 hash gpio 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "= ERREUR: Commande 'gpio' manquante !"
     echo "=         Le package WiringPi est probablement mal installé."
     exit 1
 fi
+echo "= Ok"
+
+echo "Redémarrage de la PiZiGate"
 
 # Memo connexion PiZiGate
 # port 0 = RESET
@@ -22,5 +26,5 @@ gpio write 0 0
 sleep 1
 gpio write 0 1
 
-echo "= Terminé. Vous pouvez fermer cette fenêtre de log."
+echo "= Ok. Vous pouvez fermer cette fenêtre de log."
 exit 0

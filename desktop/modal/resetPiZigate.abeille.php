@@ -42,13 +42,13 @@ Lancement des operations.
         }
     });
 
-	function updatelog(){
-		jeedom.log.autoupdate({
-			log: 'Abeille_resetPiZigate',
-			display: $('#pre_abeilleResetPiZigate'),
-			search: $('#in_abeilleLogSearch'),
-			control: $('#bt_abeilleLogStopStart'),
-		});
-	}
-	setTimeout(updatelog,5000);
+    function updatelog(){
+        jeedom.log.autoupdate({
+            log: 'Abeille_PiZigate',
+            display: $('#pre_abeilleResetPiZigate'),
+            search: $('#in_abeilleLogSearch'),
+            control: $('#bt_abeilleLogStopStart'),
+        });
+    }
+    setTimeout(updatelog,5000);
 </script>

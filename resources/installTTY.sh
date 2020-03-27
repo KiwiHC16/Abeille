@@ -1,4 +1,11 @@
-echo "Lancement de la configuration du port serie ttyS0"
+echo "Execution de '$(basename $0)'"
+
+echo "Test préliminaire"
+if [ ! -e /boot/config.txt ]; then
+    echo "= ERREUR: Ce script ne semble pas compatible avec votre plateforme."
+    exit 1
+fi
+echo "= Ok"
 
 echo "Mise a jour du systeme Raspbian"
 sudo apt-get -y update
@@ -17,6 +24,7 @@ echo "enable_uart=1" >> /boot/config.txt.new
 mv /boot/config.txt.new /boot/config.txt
 END
 
+# TODO: To be enhanced. Should focus on used TTY only
 echo "Arret des processus console sur port serie"
 echo "RPI2"
 sudo systemctl stop serial-getty@ttyAMA0.service
@@ -35,6 +43,6 @@ sed -e "s/console=serial[a-zA-Z]*[0-9]*,115200 //" /boot/cmdline.txt > /boot/cmd
 mv /boot/cmdline.txt.new /boot/cmdline.txt
 END2
 
-echo "Vous devez redemarrer votre RPI"
-
-echo "Fin"
+echo "= Ok"
+echo "= Redémarrez votre RPI pour que les modifications soient prises en compte."
+exit 0

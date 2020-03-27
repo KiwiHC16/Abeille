@@ -22,17 +22,15 @@
         include_file('desktop', '404', 'php');
         die();
     }
-    
+
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
-    
+
 ?>
 
 
 <form class="form-horizontal">
-
-        <fieldset>
-
-            <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
+    <fieldset>
+        <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
 
 
             <div>
@@ -82,7 +80,7 @@
                                 echo '<option value="none" selected>{{Aucun}}</option>';
                                 echo '<option value="/dev/zigate'.$i.'" >{{WIFI'.$i.'}}</option>';
                                 echo '<option value="/dev/monitZigate'.$i.'" >{{Monit'.$i.'}}</option>';
-                            
+
                                 foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                                     echo '<option value="'.$value.'">'.$name.' ('.$value.')</option>';
                                 }
@@ -100,7 +98,7 @@
                     <?php echo '<input class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" style="margin-top:5px" placeholder="192.168.4.1:9999"/>'; ?>
                     </div>
                 </div>
-               
+
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="Activer ou desactiver l utilisation de cette zigate.">{{Activer}}</label>
                     <div class="col-lg-4">
@@ -145,7 +143,7 @@
                 Merci de garder la valeur "Mode Timer seulement" sur "Non" car cette option va disparaitre.
 
 
-                
+
             </div>
 
             <hr>
@@ -169,69 +167,93 @@
 <hr>
 
 
-            <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
-            <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
+        <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
+        <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
 
-            <div id="PiZigate">
-                <div>
-                    <p><i>La PiZiGate est installée sur les pin GPIO du raspberry pi. Sur un RPI2, par defaut le port /dev/ttyAMA0 est disponible et utilisable. Sur un RPI3, il faut activer le port serie /dev/ttyS0.</i></p>
-                    <p><i>Il faut aussi avoir le logiciel Wiring Pi installé pour faire un reset de la PiZIGate ou la programmer.</i></p>
-                    <p><i>Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.</i></p>
-                </div>
+        <div id="PiZigate">
+            <div>
+                <p><i>La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.</i></p>
+                <p><i>Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.</i></p>
+                <p><i>Attention l'accès aux GPIOs ne se fait pas depuis un container sous Docker (si vous savez faire alors donnez moi la combine). Dans ce cas faites les manipulations à la main depuis le host.</i></p>
+                <!-- TODO: Possible known ports should be moved to "Connection" section.
+                <p><i>La PiZiGate est installée sur les pin GPIO du raspberry pi. Sur un RPI2, par defaut le port /dev/ttyAMA0 est disponible et utilisable. Sur un RPI3, il faut activer le port serie /dev/ttyS0.</i></p>
+                <p><i>Il faut aussi avoir le logiciel Wiring Pi installé pour faire un reset de la PiZIGate ou la programmer.</i></p>
+                <p><i>Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.</i></p>
+                -->
+            </div>
 
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Installation de WiringPI qui permet de controller les GPIO du RPI.">{{Installation de Wiring Pi}}</label>
-                    <div class="col-lg-5">
-                        <a class="btn btn-warning" id="bt_installGPIO"><i class="fa fa-refresh"></i> {{Installer}}</a>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Configuration du RPI pour avoir acces au port serie ttyS0 (Reboot a faire apres execution).">{{Activation ttyS0}}</label>
-                    <div class="col-lg-5">
-                        <a class="btn btn-warning" id="bt_installS0"><i class="fa fa-refresh"></i> {{Activer}}</a>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
-                    <div class="col-lg-5">
-                        <select style="width:150px" id ="ZiGatePort">
-                            <?php
-                                /* TODO: How to select default port ? */
-                                foreach (ls('/dev/', 'tty*') as $value) {
-                                    echo '<option value="/dev/' . $value . '">' . $value . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <select style="width:150px" id ="ZiGateFirmwareVersion">
-                            <?php
-                                foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
-                                    echo '<option value=' . $value . '>' . $value . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <a class="btn btn-warning" id="bt_updateFirmware"><i class="fa fa-refresh"></i> {{Programmer}}</a>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
-                    <div class="col-lg-5">
-                        <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
-                    </div>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="WiringPI est nécéssaire pour controller les GPIO.">{{Installation de WiringPi}}</label>
+                <div class="col-lg-5">
+                    <a class="WiringPiStatus" title="Status du package">
+                        <span class="label label-danger" style="font-size:1em;">?</span>
+                    </a>
+                    <a class="btn btn-warning" id="bt_checkWiringPi" title="Vérification de l'installation"><i class="fa fa-refresh"></i> {{Retester}}</a>
+                    <a class="btn btn-warning" id="bt_installWiringPi" title="Installation du package"><i class="fa fa-refresh"></i> {{Installer}}</a>
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Port TTY de communication avec la PiZigate">{{Port TTY}}</label>
+                <div class="col-lg-5">
+                    <select style="width:150px" id="ZiGatePort">
+                        <?php
+							/* Selecting default port.
+                               TODO: Currently choosing first port but missing a way to confirm it is PiZigate */
+							if ($zigateNb == 0)
+								echo '<option value="none" selected>{{aucun}}</option>';
+							else {
+								for ($i=1; $i<=$zigateNb; $i++) {
+									$port = config::byKey('AbeilleSerialPort' . $i, 'Abeille', '');
+									if ($i == 1)
+										echo '<option value="' . $port . '" selected>' . $port . '</option>';
+									else
+										echo '<option value="' . $port . '">' . $port . '</option>';
+								}
+							}
+							// $port1 = config::byKey('AbeilleSerialPort1', 'Abeille', '');
+							// echo '<option value="none" selected>{{aucun}}</option>';
+                            // foreach (ls('/dev/', 'tty*') as $value) {
+								// $port = "/dev/" . $value;
+								// if ($port == $port1)
+									// echo '<option value="/dev/' . $value . '" selected>' . $value . '</option>';
+								// else
+									// echo '<option value="/dev/' . $value . '">' . $value . '</option>';
+                            // }
+                        ?>
+                    </select>
+                    <a class="TTYStatus" title="Status communication">
+                        <span class="label label-danger" style="font-size:1em;">?</span>
+                    </a>
+                    <a class="btn btn-warning" id="bt_checkTTY" title="Test de communication"><i class="fa fa-refresh"></i> {{Tester}}</a>
+                    <a class="btn btn-warning" id="bt_installTTY" title="Tentative d'activation du port"><i class="fa fa-refresh"></i> {{Activer}}</a>
+                </div>
+            </div>
 
-<hr>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
+                <div class="col-lg-5">
+                    <select style="width:150px" id ="ZiGateFirmwareVersion">
+                        <?php
+                            foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
+                                echo '<option value=' . $value . '>' . $value . '</option>';
+                            }
+                        ?>
+                    </select>
+                    <a class="btn btn-warning" id="bt_updateFirmware" title="Programmation du FW selectionné"><i class="fa fa-refresh"></i> {{Programmer}}</a>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
+                <div class="col-lg-5">
+                    <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
+                </div>
+            </div>
+        </div>
 
-
-
-
-         </fieldset>
-
+        <hr>
+    </fieldset>
 </form>
 
 <script>
@@ -256,19 +278,16 @@ $('#bt_show').on('click', function () {
                  }
                  );
 
-$('#bt_pizigate_hide').on('click', function () {
-                 // console.log("bt_hide");
-                 // To be defined
-                 $("#PiZigate").hide();
-                 }
-                 );
+    $('#bt_pizigate_hide').on('click', function () {
+            $("#PiZigate").hide();
+        }
+    );
 
-$('#bt_pizigate_show').on('click', function () {
-                 // console.log("bt_test");
-                 // To be defined
-                 $("#PiZigate").show();
-                 }
-                 );
+    $('#bt_pizigate_show').on('click', function () {
+            $("#bt_checkWiringPi").click(); // Force WiringPi check
+            $("#PiZigate").show();
+        }
+    );
 
 $('#bt_zigatewifi_show').on('click', function () {
         // console.log("bt_test");
@@ -340,43 +359,82 @@ $('#bt_installSocat').on('click',function(){
 })
 
 
-$('#bt_installGPIO').on('click',function(){
-                           bootbox.confirm('{{Vous êtes sur le point d installer Wiring Pi (http://wiringpi.com), cela peut provoquer des conflits avec d autres gestionnaires des pin GPIO.<br> Voulez vous continuer ?}}', function (result) {
-                                           if (result) {
-                                           $('#md_modal2').dialog({title: "{{Installation Wiring Pi}}"});
-                                           $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installGPIO.abeille').dialog('open');
-                                           }
-                                           });
-                           })
+    $('#bt_checkWiringPi').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'checkWiringPi',
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'checkWiringPi' !<br>Votre installation semble corrompue.");
+            },
+            success: function (res) {
+                if (res.result == 0)
+                    $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                else
+                    $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+            }
+        });
+    })
 
-$('#bt_installS0').on('click',function(){
-                        bootbox.confirm('{{Vous êtes sur le point d activer le port serie pour le RPI3. Cela va modifier le mode par defaut avec la console sur ce port. <br> Voulez vous continuer ?}}', function (result) {
-                                        if (result) {
-                                        $('#md_modal2').dialog({title: "{{Activation ttyS0}}"});
-                                        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installS0.abeille').dialog('open');
-                                        }
-                                        });
-                        })
+    $('#bt_installWiringPi').on('click', function() {
+        bootbox.confirm('{{Vous êtes sur le point d installer WiringPi (http://wiringpi.com) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Installation de WiringPi}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installWiringPi.abeille').dialog('open');
+            }
+        });
+    })
 
-$('#bt_updateFirmware').on('click',function(){
-    bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
-		if (result) {
-			$('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-			$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
-		}
-	});
-})
+    $('#bt_checkTTY').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'checkTTY',
+				zgport: document.getElementById("ZiGatePort").value,
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'checkTTY' !<br>Votre installation semble corrompue.");
+            },
+            success: function (res) {
+                if (res.result == 0)
+                    $('.TTYStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                else
+                    $('.TTYStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+            }
+        });
+    })
 
-$('#bt_resetPiZigate').on('click',function(){
-	bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br> Voulez vous continuer ?}}', function (result) {
-		if (result) {
-			$('#md_modal2').dialog({title: "{{Reset (HW) de la PiZigate}}"});
-			$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
-		}
-   });
-})
+    $('#bt_installTTY').on('click',function(){
+        bootbox.confirm('{{Vous êtes sur le point d\'activer le port ' + document.getElementById("ZiGatePort").value + '.<br>Cela pourrait supprimer la console sur ce port.<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Activation TTY}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installTTY.abeille').dialog('open');
+            }
+        });
+    })
 
+	$('#bt_updateFirmware').on('click',function(){
+		bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
+			if (result) {
+				$('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
+				$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
+			}
+		});
+	})
 
-
+	$('#bt_resetPiZigate').on('click',function(){
+		bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
+			if (result) {
+				$('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
+				$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
+			}
+	   });
+	})
 </script>
-

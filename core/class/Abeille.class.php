@@ -496,6 +496,14 @@
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
 
+			/* Configuring GPIO for PiZigate case.
+			   TODO: Should be done only if PiZigate is present to avoid any unexpected side effect. */
+			/* PiZigate reminder (using 'WiringPi'):
+			   - port 0 = RESET
+			   - port 2 = FLASH
+			   - Production mode: FLASH=1, RESET=0 then 1 */
+			exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+
             cron::byClassAndFunction('Abeille', 'deamon')->run();
 
             // Start other deamons

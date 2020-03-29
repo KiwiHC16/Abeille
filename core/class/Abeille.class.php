@@ -63,46 +63,72 @@
 			Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
         }
 
-        public static function installGPIO($_background = true) {
-			Abeille::execShellCmd( "installGPIO.sh", "installGPIO", $_background );
-        }
-
-        public static function installS0($_background = true) {
-			Abeille::execShellCmd( "installS0.sh", "installS0", $_background );
-        }
-
         public static function installSocat($_background = true) {
-			Abeille::execShellCmd( "installSocat.sh", "installSocat", $_background );
+            Abeille::execShellCmd( "installSocat.sh", "installSocat", $_background );
         }
-    
+
+        public static function checkWiringPi($_background = true) {
+            $cmdToExec = "checkWiringPi.sh";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
+            exec($cmd, $out, $status);
+            return $status; // Return script status (0=OK)
+        }
+        public static function installWiringPi($_background = true) {
+            $cmdToExec = "installWiringPi.sh";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            exec($cmd, $out, $status);
+            return $status; // Return script status (0=OK)
+        }
+
+        public static function checkTTY($_background = true, $zgport) {
+            log::remove('Abeille_PiZigate');
+            log::add('Abeille_PiZigate', 'default', 'Arret du démon');
+            self::deamon_stop(); // Stopping daemon
+            $cmdToExec = "checkTTY.sh " . $zgport;
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            exec($cmd, $out, $status);
+            log::add('Abeille_PiZigate', 'default', 'Redémarrage du démon');
+            self::deamon_start(); // Restarting daemon
+            return $status; // Return script status (0=OK)
+        }
+        public static function installTTY($_background = true) {
+            $cmdToExec = "installTTY.sh";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            exec($cmd, $out, $status);
+            return $status; // Return script status (0=OK)
+        }
+
         /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
         public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
             log::add('Abeille', 'debug', 'Démarrage updateFirmware(' . $fwfile . ', ' . $zgport . ')');
-            log::remove('Abeille_updateFirmware');
 
-            log::add('Abeille_updateFirmware', 'info', 'Vérification des paramètres');
+            log::remove('Abeille_PiZigate');
+            log::add('Abeille_PiZigate', 'info', 'Vérification des paramètres');
             $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport . " -check";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
             exec($cmd, $out, $status);
             if ($status != 0)
                 return $status; // Something wrong with parameters
 
-            log::add('Abeille_updateFirmware', 'info', 'Arret du démon');
+            log::add('Abeille_PiZigate', 'info', 'Arret du démon');
             self::deamon_stop(); // Stopping daemon
 
-            log::add('Abeille_updateFirmware', 'info', 'Programming');
+            log::add('Abeille_PiZigate', 'info', 'Programming');
             $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport;
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_updateFirmware') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
             exec($cmd, $out, $status);
 
-            log::add('Abeille_updateFirmware', 'info', 'Redémarrage du démon');
+            log::add('Abeille_PiZigate', 'info', 'Redémarrage du démon');
             self::deamon_start(); // Restarting daemon
 
             return $status; // If not 0, programmation failed
         }
 
         public static function resetPiZiGate($_background = true) {
-			Abeille::execShellCmd( "resetPiZigate.sh", "resetPiZigate", $_background );
+            $cmdToExec = "resetPiZigate.sh";
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            exec($cmd, $out, $status);
+            return $status; // Return script status (0=OK)
         }
 
         public static function tryToGetIEEE() {
@@ -124,7 +150,7 @@
                 }
             }
         }
-        
+
         public static function updateConfigAbeille($abeilleIdFilter = false) {
 
         }
@@ -154,7 +180,7 @@
             log::add('Abeille', 'debug', 'Check Zigate Presence');
 
             $param = self::getParameters();
-            
+
             //--------------------------------------------------------
             // Pull IEEE
             self::tryToGetIEEE();
@@ -469,6 +495,14 @@
                 message::add("Abeille", "deamon_start: Tache cron introuvable", "Est un  bug dans Abeille ?", "Abeille/Demon");
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
+
+			/* Configuring GPIO for PiZigate case.
+			   TODO: Should be done only if PiZigate is present to avoid any unexpected side effect. */
+			/* PiZigate reminder (using 'WiringPi'):
+			   - port 0 = RESET
+			   - port 2 = FLASH
+			   - Production mode: FLASH=1, RESET=0 then 1 */
+			exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
 
             cron::byClassAndFunction('Abeille', 'deamon')->run();
 
@@ -1089,8 +1123,8 @@
 
                 // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
-                
-                
+
+
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
@@ -2018,7 +2052,7 @@
                 // Info:    log::level::Abeille    {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"} => 200 / info
                 echo log::getLogLevel('Abeille')."\n";
                 echo log::convertLogLevel(log::getLogLevel('Abeille'))."\n";
-                
+
                 break;
 
         } // switch

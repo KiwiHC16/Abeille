@@ -30,12 +30,12 @@
       echo "EP: ".$EP."<br>\n";
 
       // Get Name
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/ActiveEndPoint',           'dest='.$dest.'&address='.$address                             );
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/SimpleDescriptorRequest',  'dest='.$dest.'&address='.$address.'&endPoint='.$EP            );
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/IEEE_Address_request',     'dest='.$dest.'&address='.$address                             );
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/getName',                  'dest='.$dest.'&address='.$address.'&destinationEndPoint='.$EP );
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/getLocation',              'dest='.$dest.'&address='.$address.'&destinationEndPoint='.$EP );
-      sendMessageFromFormToCmd('CmdAbeille/Ruche/getGroupMembership',       'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/ActiveEndPoint',           'address='.$address                             );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/SimpleDescriptorRequest',  'address='.$address.'&endPoint='.$EP            );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/IEEE_Address_request',     'address='.$address                             );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
+      sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getGroupMembership',       'address='.$address.'&DestinationEndPoint='.$EP );
       // sendMessageFromFormToCmd('CmdAbeille/Ruche/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
       // sendMessageFromFormToCmd('CmdAbeille/Ruche/ReadAttributeRequest', 'address='.$address.'&DestinationEndPoint='.$EP'.'&ClusterId='.$clusterId'.'&attributId='.$attributId'.'&Proprio='.$proprio', 0);
 
@@ -58,9 +58,9 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/addGroup',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/addGroup',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
                         sleep(1);
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/getGroupMembership', 'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
                         sleep(1);
                     }
                 }
@@ -73,7 +73,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/commissioningGroupAPS',           'dest='.$dest.'&address='.$address.'&groupId='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/commissioningGroupAPS',           'address='.$address.'&groupId='.$_POST['group'] );
                     }
                 }
                 break;
@@ -85,9 +85,9 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/removeGroup',        'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
                         sleep(1);
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/getGroupMembership', 'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
                         sleep(1);
                     }
                 }
@@ -103,7 +103,7 @@
                         echo "Address: ".$address."<br>";
                         $EP = $device->getConfiguration('mainEP');
                         echo "Id: ".$EP."<br>";
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/getGroupMembership', 'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
                     }
                 }
                 
@@ -117,7 +117,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/viewScene',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/viewScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
 
                     }
                 }
@@ -130,7 +130,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/storeScene',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/storeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
 
                     }
                 }
@@ -143,7 +143,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/recallScene',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/recallScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
                     }
                 }
                 break;
@@ -156,12 +156,12 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/sceneGroupRecall',       'dest='.$dest.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/sceneGroupRecall',       'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
                     }
                 }
                 }
                 else {
-                    sendMessageFromFormToCmd('CmdAbeille/Ruche/sceneGroupRecall',       'dest='.$dest.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                    sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/sceneGroupRecall',           'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
                 }
                 break;
 
@@ -172,7 +172,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/addScene',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'].'&sceneName=aa' );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/addScene',               'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'].'&sceneName=aa' );
                     }
                 }
                 break;
@@ -184,7 +184,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/removeScene',           'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/removeScene',            'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
                     }
                 }
                 break;
@@ -197,7 +197,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/getSceneMembership',     'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/getSceneMembership',      'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'] );
                     }
                 }
                 break;
@@ -209,7 +209,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('CmdAbeille/Ruche/removeSceneAll',         'dest='.$dest.'&address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/removeSceneAll',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene1'] );
                     }
                 }
                 break;

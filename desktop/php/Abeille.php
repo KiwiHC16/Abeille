@@ -184,6 +184,7 @@ $outils = array(
         <table>
             <tr>
                 <td align="center">
+                    <input type="submit" name="submitButton" value="Get Infos from NE">
                     <input type="submit" name="submitButton" value="Get Group">
                 </td>
             </tr>

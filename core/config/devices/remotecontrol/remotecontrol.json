@@ -14,7 +14,7 @@
     },
     "Commandes": {
       "include1": "offGroup",
-      "include1 2": "offGroup",
+      "include1 2": "onGroup",
       "include2": "toggleGroup",
       "include3": "onGroupTimed",
       "include3 2": "offGroupTimed",

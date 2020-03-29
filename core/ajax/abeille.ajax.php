@@ -39,18 +39,28 @@ try {
         ajax::success();
     }
 
-    if (init('action') == 'installGPIO') {
-        abeille::installGPIO(false);
-        ajax::success();
-    }
-
-    if (init('action') == 'installS0') {
-        abeille::installS0(false);
-        ajax::success();
-    }
-
     if (init('action') == 'installSocat') {
         abeille::installSocat(false);
+        ajax::success();
+    }
+
+    if (init('action') == 'checkWiringPi') {
+        $status = abeille::checkWiringPi(false);
+        ajax::success(json_encode($status));
+    }
+
+    if (init('action') == 'installWiringPi') {
+        abeille::installWiringPi(false);
+        ajax::success();
+    }
+
+    if (init('action') == 'checkTTY') {
+        $status = abeille::checkTTY(false, init('zgport'));
+        ajax::success(json_encode($status));
+    }
+
+    if (init('action') == 'installTTY') {
+        abeille::installTTY(false);
         ajax::success();
     }
 

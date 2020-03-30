@@ -11,7 +11,7 @@
 
 
 
-<p>Ci dessous la liste des informations inconnues et de ce fait non gérées par Abaeille.</p>
+<p>Ci dessous la liste des informations inconnues remontant du reseau zigbee et de ce fait non gérées par Abeille.</p>
 <p>L'idée est de collecter ces informations pour améliorer les modèles ou le code.</p>
 <p>-------------------------------------</p>
 <?php

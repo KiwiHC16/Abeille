@@ -83,7 +83,8 @@ $('#bt_listeCompatibilite').on('click', function () {
                            });
 
 $('#bt_Inconnu').on('click', function () {
-                          window.open("plugins/Abeille/resources/AbeilleDeamon/Debug/inconnu.php");
+                        $('#md_modal').dialog({title: "{{Inconnu}}"});
+                        $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=inconnu').dialog('open');
                           });
 
 $('#bt_networkAbeilleNew').on('click', function () {

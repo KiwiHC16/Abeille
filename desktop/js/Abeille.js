@@ -79,7 +79,8 @@ $('#bt_graph').on('click', function () {
                                });
 
 $('#bt_listeCompatibilite').on('click', function () {
-                           window.open("plugins/Abeille/core/config/devices/listeCompatibilite.php");
+                               $('#md_modal').dialog({title: "{{Liste Compatibilite}}"});
+                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=listeCompatibilite').dialog('open');
                            });
 
 $('#bt_Inconnu').on('click', function () {

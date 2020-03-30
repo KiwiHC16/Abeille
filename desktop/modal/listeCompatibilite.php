@@ -66,15 +66,28 @@
     //----------------------------------------------------------------------------------------------------
     
     // Recupere les info.
-    foreach ( glob( '*/*.json') as $file ) {
-        if ( explode('/',$file)[0] == "Template" ) {
+    foreach ( glob( '/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file ) {
+        // echo $file."\n";
+        // echo basename(dirname($file));
+        if ( basename(dirname($file)) == "Template" ) {
             continue;
         }
         
-        $name = explode('/',$file)[0];
+        $name = basename($file, ".json");
+        // echo $name."\n";
         $contentJSON = file_get_contents( $file );
         $content = JSON_decode( $contentJSON, true );
         $resultIcone[] = array( 'name'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
+        
+        /*
+        echo "File:\n";
+        var_dump( $file );
+        echo "Content:\n";
+        var_dump( $content );
+        echo "resultIcone:\n";
+        var_dump( $resultIcone );
+        */
+        
         foreach ( $content[$name]['Commandes'] as $include ) {
             $resultRaw[] = array( 'name'=>$content[$name]["nameJeedom"], 'nameZigbee'=>$name, 'fonction'=>$include );
             $result[] = "<tr><td>".$content[$name]["nameJeedom"]."</td><td>".$name."</td><td>".$include."</td></tr>";

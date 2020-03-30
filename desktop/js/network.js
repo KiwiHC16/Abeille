@@ -61,8 +61,48 @@ $(".btn.afficheCache9").off("click").on("click", function () {
     network_links(9);
 });
 
-$(".btn.afficheCache10").off("click").on("click", function () {
+$(".btn.afficheNetworkCache10").off("click").on("click", function () {
     network_links(10);
+});
+
+$(".btn.afficheNetworkCache1").off("click").on("click", function () {
+    network_display(1);
+});
+
+$(".btn.afficheNetworkCache2").off("click").on("click", function () {
+    network_display(2);
+});
+
+$(".btn.afficheNetworkCache3").off("click").on("click", function () {
+    network_display(3);
+});
+
+$(".btn.afficheNetworkCache4").off("click").on("click", function () {
+    network_display(4);
+});
+
+$(".btn.afficheNetworkCache5").off("click").on("click", function () {
+    network_display(5);
+});
+
+$(".btn.afficheNetworkCache6").off("click").on("click", function () {
+    network_display(6);
+});
+
+$(".btn.afficheNetworkCache7").off("click").on("click", function () {
+    network_display(7);
+});
+
+$(".btn.afficheNetworkCache8").off("click").on("click", function () {
+    network_display(8);
+});
+
+$(".btn.afficheNetworkCache9").off("click").on("click", function () {
+    network_display(9);
+});
+
+$(".btn.afficheNetworkCache10").off("click").on("click", function () {
+    network_display(10);
 });
 
 $(".btn.refreshCache1").off("click").on("click", function () {
@@ -314,8 +354,15 @@ function network_display(zigateX) {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
         }
         else {
+                 
+            // On parcours le json ligne à ligne
+            // On regarde la source et l'ajoute a la table nodes si pas deja existante
+            // on regarde la voisine et l ajoute à la table nodes si pas deja existante
+            // On prend la voisine et on la met dans la liste link des voisines: astuce: aTemp et push.
+                 
+            console.log('Visiblement j ai un json a utiliser');
             //process the json array
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'});
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'})
             json.data.sort(function (a, b) {
                 if (a.Voisin_Name == b.Voisin_Name) {
                     return 0;
@@ -332,61 +379,72 @@ function network_display(zigateX) {
 
             var nodes = [], currentJsonNode, aTemp;
 
-
             for (var nodeFromJson in json.data) {
                 currentJsonNode = json.data[nodeFromJson];
+                console.log('current node: '+JSON.stringify(currentJsonNode));
                 //console.log('Parsing: ' + currentJsonNode.NE_Name + '/' + currentJsonNode.Voisine_Name + ' * ' + currentJsonNode.Type); // this will show the info it in firebug console
                 // Step 2. We add nodes and edges to the graph:
                 //Add node if not already existing
 
                 //Handle ZigBee name error
-                if (null == currentJsonNode.Voisine_Name) {
+                if (currentJsonNode.Voisine_Name == null) {
                     currentJsonNode.Voisine_Name = currentJsonNode.IEEE_Address;
+                    console.log('current node - voisine name empty - so I give IEEE as a name');
                 }
 
-                if (null == currentJsonNode.NE) {
+                if (currentJsonNode.NE == null) {
                     currentJsonNode.NE = currentJsonNode.IEEE_Address;
+                    console.log('current node - NE name empty - so I give IEEE as a name');
                 }
 
                 //Populate only undefined nodes as nodes a repeated if routers exist
-                if ('undefined' == typeof(nodes[currentJsonNode.NE_Name])) {
-                    nodes[currentJsonNode.NE_Name] = {};
-                    nodes[currentJsonNode.NE_Name].name = currentJsonNode.NE_Name;
-                    nodes[currentJsonNode.NE_Name].links = [];
-                    nodes[currentJsonNode.NE_Name].route = currentJsonNode.NeighbourTableEntries;
+                if ( typeof(nodes[currentJsonNode.NE]) == 'undefined' ) {
+                    nodes[currentJsonNode.NE]       = {};
+                    nodes[currentJsonNode.NE].NE    = currentJsonNode.NE;
+                    nodes[currentJsonNode.NE].name  = currentJsonNode.NE_Name;
+                    nodes[currentJsonNode.NE].links = [];
+                    // nodes[currentJsonNode.NE].route = currentJsonNode.NeighbourTableEntries;
+                    console.log('current node - It s a new node so I create it in the table from source : '+JSON.stringify(nodes[currentJsonNode.NE]));
+                    // console.log('nodes  tables is : '+JSON.stringify(nodes)); // String-keyed array elements are not enumerable and make no sense in JSON
+                                                                                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
                 }
+
+                if ( typeof(nodes[currentJsonNode.Voisine]) == 'undefined' ) {
+                    nodes[currentJsonNode.Voisine]          = {};
+                    nodes[currentJsonNode.Voisine].NE       = currentJsonNode.Voisine;
+                    nodes[currentJsonNode.Voisine].name     = currentJsonNode.Voisine_Name;
+                    nodes[currentJsonNode.Voisine].links    = [];
+                    nodes[currentJsonNode.Voisine].route    = 1;
+                    nodes[currentJsonNode.Voisine].lqi      = currentJsonNode.LinkQualityDec;
+                    nodes[currentJsonNode.Voisine].Type     = currentJsonNode.Type;
+                    console.log('current node - It s a new node so I create it in the table from voisine : '+JSON.stringify(nodes[currentJsonNode.Voisine]));
+                }
+                 
                 //Add Voisine as link to NE
-                aTemp = nodes[currentJsonNode.NE_Name].links;
-                aTemp.push(currentJsonNode.Voisine_Name);
-
-                if ('undefined' == typeof(nodes[currentJsonNode.Voisine_Name])) {
-                    nodes[currentJsonNode.Voisine_Name] = {};
-                    nodes[currentJsonNode.Voisine_Name].links = [];
-                    nodes[currentJsonNode.Voisine_Name].route = 1;
-                    nodes[currentJsonNode.Voisine_Name].lqi = currentJsonNode.LinkQualityDec;
-                    nodes[currentJsonNode.Voisine_Name].name = currentJsonNode.Voisine_Name;
-                }
-                // voisine_name should have the Type of the node.
-                nodes[currentJsonNode.Voisine_Name].Type = currentJsonNode.Type;
-
+                aTemp = nodes[currentJsonNode.NE].links;
+                aTemp.push(currentJsonNode.Voisine);
+                console.log('Nouvelles voisines : '+JSON.stringify(aTemp));
             }
 
-            nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
+            // maintenant que l on a toutes les informations dans nodes on va créer le graph.
+            // https://github.com/anvaka/VivaGraphJS
+                 
+            // On defini le type par defaut de la zigate
+            // nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
+            console.log('node ruche ('+zigateX+'): '+JSON.stringify(nodes['Abeille'+zigateX+'/Ruche']));
+            nodes['Abeille'+zigateX+'/Ruche'].Type = 'Coordinator';
+
 
             for (node in nodes) {
 
-                //console.log('Adding node: name: ' + nodes[node].name + ' route: ' + nodes[node].route +
-                //    ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
-
-                graph.addNode(node, {
-                        name: nodes[node].name, route: nodes[node].route,
-                        Quality: nodes[node].lqi, Type: nodes[node].Type
-                    }
-                );
+                console.log('Adding node: '+node+' name: ' + nodes[node].name + ' route: ' + nodes[node].route + ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
+                // graph.addNode( node, { name: nodes[node].name, route: nodes[node].route, Quality: nodes[node].lqi, Type: nodes[node].Type } );
+                // graph.addNode( node, nodes[node].name ); // graph but all NE are yellow
+                 graph.addNode( node, { name: nodes[node].name, Type: nodes[node].Type } ); // nodeId, { node.data }
+                 
                 for (link in nodes[node].links) {
-
                     if (nodes[node].name != null && nodes[node].links[link] != null) {
-                        //console.log('adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
+                        console.log('adding link: ' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
                         graph.addLink(node, nodes[node].links[link]);
                     } else {
                         console.log('not adding link:' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
@@ -394,44 +452,62 @@ function network_display(zigateX) {
                 }
 
                 // Step 3. Render the graph.
-                var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 10,
-                    highlightRelatedNodes = function (nodeId, isOn) {
-                        graph.forEachLinkedNode(nodeId, function (node, link) {
-                            var linkUI = graphics.getLinkUI(link.id);
-                            if (linkUI) {
-                                linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
-                            }
-                        });
-                    };
+                console.log('Render the graph.');
+                var graphics = Viva.Graph.View.svgGraphics();
+                var nodeSize = 10;
+                 
+                // Je ne sais pas ce que cela fait mais si pas present alors erreur dans log console Safari.
+                 /*
+                var highlightRelatedNodes = function (nodeId, isOn) {
+                                                graph.forEachLinkedNode(nodeId, function (node, link) {
+                                                                                    var linkUI = graphics.getLinkUI(link.id);
+                                                                                    if (linkUI) {
+                                                                                        linkUI.attr('stroke', isOn ? '#FF0000' : '#B7B7B7');
+                                                                                    }
+                                                                                                    });
+                                                                    };
+                  */
+                  
 
                 //
                 graphics.node(function (node) {
-                    var nodeshape = 'rect';
-                    var nodecolor = '#E5E500', nodeSize = 10;
+                    var nodeSize = 10;
+                              
+                    var nodecolor = '#E5E500';
                     if (typeof node.data != 'undefined') {
-                        nodecolor = (node.data.Type == 'Coordinator') ? '#a65ba6' : nodecolor;
-                        nodecolor = (node.data.Type == 'End Device') ? '#7BCC7B' : nodecolor;
-                        nodecolor = (node.data.Type == 'Router') ? '#00a2e8' : nodecolor;
+                        if (node.data.Type == 'Coordinator')    { nodecolor = '#a65ba6'; }
+                        if (node.data.Type == 'End Device')     { nodecolor = '#7BCC7B'; }
+                        if (node.data.Type == 'Router')         { nodecolor = '#00a2e8'; }
                     }
-                    var ui = Viva.Graph.svg('g'),
-                        svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.id),
-                        img = Viva.Graph.svg(nodeshape)
-                            .attr("width", nodeSize)
-                            .attr("height", nodeSize)
-                            .attr("fill", nodecolor);
+                    
+                    var ui = Viva.Graph.svg('g');
+                    var img = Viva.Graph.svg('rect').attr("width", nodeSize).attr("height", nodeSize).attr("fill", nodecolor);
+                              
+                    var svgText = Viva.Graph.svg('text').attr('y', '0px').text('?');
+                    if (typeof node.data != 'undefined') {
+                        if (typeof node.data.Type != 'undefined') {
+                            console.log('Txt: '+JSON.stringify(node.data.Type));
+                            svgText = Viva.Graph.svg('text').attr('y', '0px').text(node.data.name);
+                        }
+                    }
+
                     ui.append(svgText);
                     ui.append(img);
+                              
+                              /*
                     $(ui).hover(function (node) {
-                        var nodeText = 'name: '
-                        /*+ node.data.name + ', route: ' + node.data.route +
+                        var nodeText = 'name: ';
+                        + node.data.name + ', route: ' + node.data.route +
                                                    ', Quality: ' + node.data.lqi + ', Type: ' + node.data.Type;
-                                                   */
+                                                   
                         $('#nodeName').html(nodeText);
 
                         highlightRelatedNodes(node.id, true);
                     }, function () {
                         highlightRelatedNodes(node.id, false);
                     });
+                 */
+                 
                     return ui;
                 }).placeNode(function (nodeUI, pos) {
                     nodeUI.attr('transform',
@@ -441,24 +517,12 @@ function network_display(zigateX) {
                 });
 
                 var idealLength = 100;
-                var layout = Viva.Graph.Layout.forceDirected(graph, {
-                    springLength: idealLength,
-                    springCoeff: 0.0008,
-                    stableThreshold: 0.9,
-                    dragCoeff: 0.009,
-                    gravity: -1.2,
-                    thetaCoeff: 0.8
-                });
+                var layout = Viva.Graph.Layout.forceDirected(graph, { springLength: idealLength, springCoeff: 0.0008, stableThreshold: 0.9, dragCoeff: 0.009, gravity: -1.2, thetaCoeff: 0.8 });
 
                 //remove previous one
                 $('#graph_network svg').remove();
 
-                var renderer = Viva.Graph.View.renderer(graph, {
-                    layout: layout,
-                    graphics: graphics,
-                    prerender: 10,
-                    container: document.getElementById('graph_network')
-                });
+                var renderer = Viva.Graph.View.renderer(graph, { layout: layout, graphics: graphics, prerender: 10, container: document.getElementById('graph_network') });
                 renderer.run();
                 /*setTimeout(function () {
                     renderer.pause();
@@ -480,7 +544,7 @@ function network_display(zigateX) {
     request.always(function (data) {
         window.setTimeout(function () {
             $('#div_networkZigbeeAlert').hide()
-        }, 3000);
+        }, 10000);
     });
 };
 

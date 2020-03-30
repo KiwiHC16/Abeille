@@ -187,6 +187,16 @@
 <!-- tab Graph -->
 
                 <div id="graph_network" class="tab-pane">
+
+                    <br>
+                    <span class="" style="padding: 3px 20px;">
+<?php
+                    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                    }
+?>
+                    </span>
+
                     <table class="table table-bordered table-condensed"
                            style="width: 700px;position:fixed;margin-top : 25px;">
                         <thead>
@@ -217,7 +227,9 @@
 
                         </tbody>
                     </table>
+
                     <span id="graph-node-name" style="width: 100%;height: 100%"></span>
+
                 </div>
 
 

@@ -304,4 +304,24 @@
     </div> <!-- div class="container-fluid" -->
 </div> <!-- div class='network' nid='' id="div_templateNetwork" -->
 
+
+
+<script type="text/javascript">
+    <?php
+    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+        echo '$(".btn.afficheCache'.$i.'").off("click").on("click", function () { network_links('.$i.'); });';
+    }
+        
+    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+        echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });';
+    }
+        
+    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+        echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });';
+    }
+?>
+
+</script>
+
+
 <?php include_file('desktop', 'network', 'js', 'Abeille'); ?>

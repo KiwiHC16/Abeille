@@ -4,6 +4,7 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
     }
+    
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
@@ -33,12 +34,13 @@ $parametersAbeille = Abeille::getParameters();
 <!-- Barre d outils horizontale  -->
 <?php
 $outils = array(
-                'health'    => array( 'bouton'=>'bt_healthAbeille',        'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
-                'netList'   => array( 'bouton'=>'bt_networkAbeilleList',   'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
-                'net'       => array( 'bouton'=>'bt_networkAbeille',       'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
-                'graph'     => array( 'bouton'=>'bt_graph',                'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
-                'compat'    => array( 'bouton'=>'bt_listeCompatibilite',   'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
-                'inconnu'   => array( 'bouton'=>'bt_Inconnu',              'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
+                'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
+                'netList'   => array( 'bouton'=>'bt_networkAbeilleList',    'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
+                'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
+                'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
+                'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
+                'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
+                'support'   => array( 'bouton'=>'bt_getCompleteAbeilleConf','icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
                 );
     ?>
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">

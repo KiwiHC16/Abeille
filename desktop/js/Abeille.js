@@ -59,6 +59,11 @@ $('#bt_healthAbeille').on('click', function () {
                           $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');
                           });
 
+$('#bt_getCompleteAbeilleConf').on('click', function () {
+                            $('#md_modal').dialog({title: "{{Support}}"});
+                            $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=getCompleteAbeilleConf').dialog('open');
+                            });
+
 $('#bt_networkAbeilleList').on('click', function () {
                                $('#md_modal').dialog({title: "{{Réseau Abeille}}"});
                                $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=network').dialog('open');

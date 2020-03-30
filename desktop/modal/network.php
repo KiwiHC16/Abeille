@@ -143,13 +143,17 @@
                             <span class="" style="padding: 3px 20px;">
 <?php
                             for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
+                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                                }
                             }
     ?>
                             </span><br><span class="" style="padding: 3px 20px;">
 <?php
                             for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                echo '<a data-action="refreshNetworkCache" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Refresh LQI Z'.$i.'</a>';
+                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
+                                    echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Refresh LQI Z'.$i.'</a>';
+                                }
                             }
     ?>
                             </span>
@@ -309,15 +313,15 @@
 <script type="text/javascript">
     <?php
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.afficheCache'.$i.'").off("click").on("click", function () { network_links('.$i.'); });';
+        echo '$(".btn.afficheCache'.$i.'").off("click").on("click", function () { network_links('.$i.'); });'."\n";
     }
         
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });';
+        echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });'."\n";
     }
         
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });';
+        echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
     }
 ?>
 

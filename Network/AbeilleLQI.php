@@ -203,9 +203,9 @@
     // refreshNetworkCache refreshCache(x) dans desktop/modal/network.php -> desktop/js/network.js -> updateZigBeeJsonCache(x) -> AbeilleLQI.php?zigate=(x)
     // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
     
-    $debugKiwi = 1;
+    $debugKiwi = 0;
     $debugKiwiCli = 1; // if called form shell
-    if ( $debugKiwiCli ) $_GET['zigate']=1;
+    // if ( $debugKiwiCli ) $_GET['zigate']=1;
     
     $LQI = array();
     $knownNE_FromAbeille = array();

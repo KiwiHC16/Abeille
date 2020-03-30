@@ -35,14 +35,13 @@ $("#nodeTo").off().change(function () {
     filterColumnOnValue(value, 2);
 });
 
-
-function updateZigBeeJsonCache(ZigateX) {
+function updateZigBeeJsonCache(zigateX) {
     //show progress in AlertDiv
     setTimeout(function () {
-        updateAlertFromZigBeeJsonLog(true);
+        updateAlertFromZigBeeJsonLog(true, zigateX);
     }, 2000);
     $.ajax({
-            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+ZigateX,
+            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+zigateX,
             async: true,
             error: function (jqXHR, status, error) {
                 //console.log("updateZigBeeJsonCache error status: " + status);
@@ -125,11 +124,10 @@ function getAbeilleLog(_autoUpdate, _log) {
     });
 }
 
-
-function updateAlertFromZigBeeJsonLog(_autoUpdate) {
+function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
     $.ajax({
         type: 'GET',
-        url: '/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json.lock',
+        url: '/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
         dataType: 'html',
         global: false,
         cache: false,
@@ -181,7 +179,6 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
     })
     ;
 }
-
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display(zigateX) {

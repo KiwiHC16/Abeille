@@ -14,15 +14,56 @@
  * along with Plugin Abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$("#tab_route").off("click").on("click", function () {
+    network_links(1);
+});
 
 $("#tab_graph").off("click").on("click", function () {
-    network_display();
+    network_display(1);
 });
 
-$("#tab_route").off("click").on("click", function () {
-    network_links();
+$("#tab_summary").off("click").on("click", function () {
 });
 
+$(".btn.afficheCache1").off("click").on("click", function () {
+    network_links(1);
+});
+
+$(".btn.afficheCache2").off("click").on("click", function () {
+    network_links(2);
+});
+
+$(".btn.afficheCache3").off("click").on("click", function () {
+    network_links(3);
+});
+
+$(".btn.afficheCache4").off("click").on("click", function () {
+    network_links(4);
+});
+
+$(".btn.afficheCache5").off("click").on("click", function () {
+    network_links(5);
+});
+
+$(".btn.afficheCache6").off("click").on("click", function () {
+    network_links(6);
+});
+
+$(".btn.afficheCache7").off("click").on("click", function () {
+    network_links(7);
+});
+
+$(".btn.afficheCache8").off("click").on("click", function () {
+    network_links(8);
+});
+
+$(".btn.afficheCache9").off("click").on("click", function () {
+    network_links(9);
+});
+
+$(".btn.afficheCache10").off("click").on("click", function () {
+    network_links(10);
+});
 
 $(".btn.refreshCache1").off("click").on("click", function () {
     updateZigBeeJsonCache(1);
@@ -59,6 +100,41 @@ $(".btn.refreshCache5").off("click").on("click", function () {
     }, 5000);
 });
 
+$(".btn.refreshCache6").off("click").on("click", function () {
+    updateZigBeeJsonCache(6);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache7").off("click").on("click", function () {
+    updateZigBeeJsonCache(7);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache8").off("click").on("click", function () {
+    updateZigBeeJsonCache(8);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache9").off("click").on("click", function () {
+    updateZigBeeJsonCache(9);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
+$(".btn.refreshCache10").off("click").on("click", function () {
+    updateZigBeeJsonCache(10);
+    setTimeout(function () {
+        $('#div_networkZigbeeAlert').hide()
+    }, 5000);
+});
+
 $("#nodeFrom").off().change(function () {
     var value = $(this).val();
     filterColumnOnValue(value, 0);
@@ -70,13 +146,13 @@ $("#nodeTo").off().change(function () {
 });
 
 
-function updateZigBeeJsonCache(ZigateNb) {
+function updateZigBeeJsonCache(ZigateX) {
     //show progress in AlertDiv
     setTimeout(function () {
         updateAlertFromZigBeeJsonLog(true);
     }, 2000);
     $.ajax({
-            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+ZigateNb,
+            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+ZigateX,
             async: true,
             error: function (jqXHR, status, error) {
                 //console.log("updateZigBeeJsonCache error status: " + status);
@@ -163,7 +239,7 @@ function getAbeilleLog(_autoUpdate, _log) {
 function updateAlertFromZigBeeJsonLog(_autoUpdate) {
     $.ajax({
         type: 'GET',
-        url: '/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock',
+        url: '/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille1.json.lock',
         dataType: 'html',
         global: false,
         cache: false,
@@ -218,13 +294,13 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate) {
 
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....
-function network_display() {
+function network_display(zigateX) {
     // Step 1. We create a graph object.
     var graph = Viva.Graph.graph();
 
     // Load JSON-encoded data from the server using a GET HTTP request.
     var request = $.ajax({
-        url: "plugins/Abeille/Network/AbeilleLQI_MapData.json",
+        url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
         cache: false
     });
@@ -408,10 +484,10 @@ function network_display() {
     });
 };
 
-function network_links() {
+function network_links(zigateX) {
 
     var jqXHR = $.ajax({
-        url: "/plugins/Abeille/Network/AbeilleLQI_MapData.json",
+        url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
         cache: false
     });
@@ -594,7 +670,7 @@ function network_links() {
     jqXHR.always(function (json, textStatus, jqXHR) {
         setTimeout(function () {
             $('#div_networkZigbeeAlert').hide()
-        }, 2000);
+        }, 10000);
     })
 
 }

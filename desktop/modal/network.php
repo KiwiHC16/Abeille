@@ -115,57 +115,76 @@
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
 <!--script type="text/javascript" src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
-
+<!-- Bandeau pour afficher les messages d alerte -->
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
 
+<!-- Affichage de tous les Tab. -->
 <div class='network' nid='' id="div_templateNetwork">
     <div class="container-fluid">
         <div id="content">
+
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
-                <li class="active"> <a href="#summary_network"                          data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
-                <li id="tab_graph"> <a href="#graph_network"                            data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
-                <li id="tab_route"> <a href="#route_network"                            data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
+                <li class="active"  id="tab_route">     <a href="#route_network"              data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
+                <li                 id="tab_graph">     <a href="#graph_network"              data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
+                <li                 id="tab_summary">   <a href="#summary_network"            data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
+                <li                 id="tab_test1">     <a href="#test1"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Test1}}                 </a></li>
+                <li                 id="tab_test2">     <a href="#test2"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Test2}}                 </a></li>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
-                <div class="tab-pane active" id="summary_network">
-                    <br>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Informations}}</h4></div>
-                        <div class="panel-body">
-                            <p>{{Réseau démarré le}} <span class="zigBNetworkAttr label label-default" style="font-size : 1em;" data-l1key="startTime"><?php echo $startTime ?></span> <span class="zigBNetworkAttr label label-default" data-l1key="awakedDelay" style="font-size : 1em;"></span></p>
-                            <p>{{Le réseau contient}} <b><span class="zigBNetworkAttr" data-l1key="nodesCount"></span><?php echo $nodesCount ?> </b> {{noeuds dont }} <?php echo $nodesCount-$timerCount ?> {{noeuds zigbee (zigate(s) incluse(s)) et }} <?php echo $timerCount ?> {{timers}}</p>
-                            <p>{{Voisins :}}<span class="zigBNetworkAttr label-default" data-l1key="neighbors" style="font-size : 1em;"><?php echo $neighbors ?></span></p>
-                        </div>
-                    </div>
 
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Etat}}</h4></div>
-                        <div class="panel-body">
-                            <p><span class="zigBNetworkAttr" data-l1key="state"></span> {{Etat actuel :}} <span class="zigBNetworkAttr label label-default" data-l1key="stateDescription" style="font-size : 1em;"><?php echo $status ?></span></p>
-                        </div>
-                    </div>
 
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Système}}</h4></div>
-                        <div class="panel-body">
+<!-- tab table des noeuds -->
 
-                            <p>{{Chemin du contrôleur Zigbee :}}
-                                <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;">
-<?php                           for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                    echo config::byKey('AbeilleSerialPort'.$i, 'Abeille', '{{Inconnu}}').", ";
-                                }
-?>
-                                </span>
-                            </p>
-                            <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $nbDaemons ?></span> </p>
-                        </div>
+                <div id="route_network" class="tab-pane active">
+                    <br/>
+                    <div id="div_routingTable">
+                        <span>
+                            <span class="" style="padding: 3px 20px;">
+<?php
+                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                            }
+    ?>
+                            </span><br><span class="" style="padding: 3px 20px;">
+<?php
+                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                echo '<a data-action="refreshNetworkCache" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Refresh LQI Z'.$i.'</a>';
+                            }
+    ?>
+                            </span>
+                            Refresh LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
+
+                             <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
+                            <select class="filterSource" id="nodeFrom"> </select>
+
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">Destinataire </label>
+                            <select class="filterRecipient" id="nodeTo"> </select>
+
+                        </span>
+
+                        <table class="table table-condensed tablesorter" id="table_routingTable">
+                            <thead>
+                            <tr>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Name}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Name}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Profondeur}}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{LQI }}</th>
+                                <th class="header" data-toggle="tooltip" title="Trier par">{{Type }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-
-
-
+<!-- tab Graph -->
 
                 <div id="graph_network" class="tab-pane">
                     <table class="table table-bordered table-condensed"
@@ -202,53 +221,75 @@
                 </div>
 
 
+<!-- tab resume -->
 
 
+                <div id="summary_network" class="tab-pane" >
+                    <br>
 
-                <div id="route_network" class="tab-pane">
-                    <br/>
-                    <div id="div_routingTable">
-                        <span>
-                            <span class="" style="padding: 3px 20px;">
-<?php                       for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                echo '<a data-action="refreshNetworkCache" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Get LQI Z'.$i.'</a>';
-                            }
-    ?>
-                            </span>
-                            Get LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
-
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
-                            <select class="filterSource" id="nodeFrom"> </select>
-
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">Destinataire </label>
-                            <select class="filterRecipient" id="nodeTo"> </select>
-
-                        </span>
-
-                        <table class="table table-condensed tablesorter" id="table_routingTable">
-                            <thead>
-                            <tr>
-                                <th class="header">{{ID}}</th>
-                                <th class="header">{{Name}}</th>
-                                <th class="header">{{Voisine}}</th>
-                                <th class="header">{{Voisine_Name}}</th>
-                                <th class="header">{{Relation}}</th>
-                                <th class="header">{{Profondeur}}</th>
-                                <th class="header">{{LQI }}</th>
-                                <th class="header">{{Type }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h4 class="panel-title">{{Informations}}</h4></div>
+                        <div class="panel-body">
+                            <p>{{Réseau démarré le}} <span class="zigBNetworkAttr label label-default" style="font-size : 1em;" data-l1key="startTime"><?php echo $startTime ?></span> <span class="zigBNetworkAttr label label-default" data-l1key="awakedDelay" style="font-size : 1em;"></span></p>
+                            <p>{{Le réseau contient}} <b><span class="zigBNetworkAttr" data-l1key="nodesCount"></span><?php echo $nodesCount ?> </b> {{noeuds dont }} <?php echo $nodesCount-$timerCount ?> {{noeuds zigbee (zigate(s) incluse(s)) et }} <?php echo $timerCount ?> {{timers}}</p>
+                            <p>{{Voisins :}}<span class="zigBNetworkAttr label-default" data-l1key="neighbors" style="font-size : 1em;"><?php echo $neighbors ?></span></p>
+                        </div>
                     </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h4 class="panel-title">{{Etat}}</h4></div>
+                        <div class="panel-body">
+                            <p><span class="zigBNetworkAttr" data-l1key="state"></span> {{Etat actuel :}} <span class="zigBNetworkAttr label label-default" data-l1key="stateDescription" style="font-size : 1em;"><?php echo $status ?></span></p>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h4 class="panel-title">{{Système}}</h4></div>
+                        <div class="panel-body">
+
+                            <p>{{Chemin du contrôleur Zigbee :}}
+                                <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;">
+<?php                           for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                    echo config::byKey('AbeilleSerialPort'.$i, 'Abeille', '{{Inconnu}}').", ";
+                                }
+?>
+                                </span>
+                            </p>
+                            <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $nbDaemons ?></span> </p>
+                        </div>
+                    </div>
+
+                    
+
+
+                </div>
+
+<!-- tab future usage -->
+
+                <div id="test1" class="tab-pane" >
+                    test1
+                </div>
+
+<!-- tab future usage -->
+
+                <div id="test2" class="tab-pane" >
+                    test2
                 </div>
 
 
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- tab fin -->
+
+
+
+
+
+
+
+
+            </div> <!-- div id="network-tab-content" class="tab-content" -->
+        </div> <!-- div id="content" -->
+    </div> <!-- div class="container-fluid" -->
+</div> <!-- div class='network' nid='' id="div_templateNetwork" -->
 
 <?php include_file('desktop', 'network', 'js', 'Abeille'); ?>

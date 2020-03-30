@@ -68,7 +68,7 @@ function updateZigBeeJsonCache(zigateX) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
                     network_links();
-                    updateAlertFromZigBeeJsonLog(false);
+                    updateAlertFromZigBeeJsonLog(false, zigateX);
                 }
                 $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
                 window.setTimeout(function () {
@@ -132,8 +132,9 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
         global: false,
         cache: false,
         error: function (request, status, error) {
-            //console.log("updateAlertFromZigBeeJsonLog error status: " + status);
-            //console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
+            console.log("updateAlertFromZigBeeJsonLog url: " + url);
+            console.log("updateAlertFromZigBeeJsonLog error status: " + status);
+            console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
             $('#div_networkZigbeeAlert').showAlert({
                 message: "Error, cannot read status file, please refresh cache.",
                 level: 'danger'
@@ -165,7 +166,7 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
                 _autoUpdate = data.toLowerCase().includes("done")?0:1;
                 if (_autoUpdate) {
                     setTimeout(function () {
-                        updateAlertFromZigBeeJsonLog(_autoUpdate);
+                        updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX);
                     }, 1000);
                 }
                 // when LQI request is done, alertDiv is hidden.

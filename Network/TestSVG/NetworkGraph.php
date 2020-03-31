@@ -695,7 +695,7 @@ document.write( '</svg></br>' );
 
 document.write( '<table><tr>' );
 for (let i = 1; i <= 10; i++) {
-    document.write( '<td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.html?Abeille'+i+'\'" /></td>' );
+    document.write( '<td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'+i+'\'" /></td>' );
 }
 document.write( '</tr></table>' );
 

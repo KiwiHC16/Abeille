@@ -24,6 +24,10 @@ var Hierarchy = "All";
 
 var myJSON = '{}';
 
+// myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
+// On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
+// On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
+// Idem pour la couleur
 var myObjOrg = JSON.parse(myJSON);
 var myObjNew = JSON.parse(myJSON);
     
@@ -61,7 +65,7 @@ function setTopoJSON(Topo) {
     var requestTopoURL = "/plugins/Abeille/Network/TestSVG/TopoSet.php";
     // var param = encodeURIComponent(Topo);
     var param = "TopoJSON="+Topo;
-    // console.log(requestTopo);
+    // console.log(param);
     // console.log(Topo);
     // console.log(requestTopo+Topo);
     var xmlhttpSetTopo = new XMLHttpRequest();
@@ -393,10 +397,6 @@ function refreshNetworkCollectionProgress() {
     document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
 }
 
-// myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
-// On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
-// On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
-// Idem pour la couleur
 function myJSON_AddAbeillesFromJeedom() {
     // console.log("topo: "+JSON.stringify(topo));
     for (logicalId in topo) {
@@ -432,10 +432,6 @@ function myJSON_AddAbeillesFromJeedom() {
     console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 }
 
-// myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
-// On parcourt las voisines et à chaque nouvelle abeille on l'ajoute à myObjOrg et myObjNew
-// On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
-// Idem pour la couleur
 function myJSON_AddMissing() {
     var color = "";
     

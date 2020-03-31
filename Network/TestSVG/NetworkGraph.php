@@ -688,8 +688,14 @@ Zigate selectionnee: Ruche
 <p id="demo"></p>
 <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
 
-<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>
-
+<?php
+    if (file_exists("/var/www/html/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
+        echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
+    }
+    else {
+        echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>';
+    }
+?>
 <script>
 document.write( dessineLaLegende("Yes") );
 document.write( dessineLesVoisinesV2(0,"Yes") );

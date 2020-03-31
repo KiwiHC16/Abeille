@@ -1,6 +1,6 @@
 <?php
     $target_dir = "images/";
-    $target_file = $target_dir . "AbeilleLQI_MapData.png";
+    $target_file = $target_dir . "AbeilleLQI_MapData_Perso.png";
     
     $uploadOk = 1;
     

@@ -71,7 +71,7 @@ $('#bt_networkAbeilleList').on('click', function () {
                                });
 
 $('#bt_networkAbeille').on('click', function () {
-                           window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.html");
+                           window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.php");
                            });
 
 $('#bt_graph').on('click', function () {

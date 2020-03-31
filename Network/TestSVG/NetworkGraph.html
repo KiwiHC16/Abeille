@@ -398,28 +398,28 @@ function refreshNetworkCollectionProgress() {
 }
 
 function myJSON_AddAbeillesFromJeedom() {
-    // console.log("topo: "+JSON.stringify(topo));
+    console.log("topo: "+JSON.stringify(topo));
     for (logicalId in topo) {
-        // console.log("logicalId: "+logicalId);
+        console.log("logicalId: "+logicalId);
         
         myObjOrg[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
         myObjNew[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
         
-        // console.log("logicalId: "+logicalId+" -> "+JSON.stringify(topo[logicalId]));
+        console.log("logicalId: "+logicalId+" -> "+JSON.stringify(topo[logicalId]));
         myObjOrg[logicalId].objectName = topo[logicalId].objectName;
         myObjNew[logicalId].objectName = topo[logicalId].objectName;
         
         myObjOrg[logicalId].name = topo[logicalId].name;
         myObjNew[logicalId].name = topo[logicalId].name;
         
+        console.log("logicalId: "+logicalId+" -> x: "+topo[logicalId].X);
+        myObjOrg[logicalId].x = topo[logicalId].X;
+        myObjNew[logicalId].x = topo[logicalId].X;
         
-        myObjOrg[logicalId].x = topo[logicalId].positionX;
-        myObjNew[logicalId].x = topo[logicalId].positionX;
+        myObjOrg[logicalId].y = topo[logicalId].Y;
+        myObjNew[logicalId].y = topo[logicalId].Y;
         
-        myObjOrg[logicalId].y = topo[logicalId].positionY;
-        myObjNew[logicalId].y = topo[logicalId].positionY;
-        
-        if ( (topo[logicalId].positionX>0) && (topo[logicalId].positionY>0) ) {
+        if ( (topo[logicalId].X>0) && (topo[logicalId].Y>0) ) {
             myObjOrg[logicalId].positionDefined = "Yes";
             myObjNew[logicalId].positionDefined = "Yes";
         }
@@ -712,7 +712,7 @@ document.write( '<button id="rucheCentered" onclick="rucheCentered()"   >Ruche C
 document.write( '<button id="placementAuto" onclick="placementAuto()"   >Placement Auto</button>');
 document.write( '<button id="save"          onclick="save()"            >local save</button>');
 document.write( '<button id="restore"       onclick="restore()"         >local restore</button>');
-document.write( '<button id="save"          onclick="saveAbeilles()"    >abeilles save</button>');
+document.write( '<button id="save"          onclick="saveAbeilles()"    >save</button>');
 document.write( '</td></tr></table>' );
 
 document.write( '<table><tr><td>' );
@@ -720,7 +720,7 @@ document.write( '<button id="Refresh" onclick="refreshNetworkInformation()">Refr
 document.write( '</td><td>' );
 document.write( '<p id="refreshInformation">'+networkInformationProgress+'</p>' );
 document.write( '</td><td>' );
-document.write( '<button id="ReLoadThePage" onclick="ReLoad()">ReLoadThePage</button>');
+document.write( '<button id="ReLoadThePage" onclick="ReLoad()">Rafraichir le graphe.</button>');
 document.write( '</td></tr></table>' );
 
 document.write( '<br>');

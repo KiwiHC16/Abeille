@@ -1,3 +1,7 @@
+<?php
+    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+?>
+
 <script type="text/javascript">
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     
@@ -696,12 +700,15 @@ document.write( dessineLesAbeilles("Yes") );
 
 </svg></br>
 
+Selectionner la Zigate a afficher:</br>
 <table><tr>
-<script>
-for (let i = 1; i <= 10; i++) {
-    <td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'+i+'\'" /></td>
+<?php
+for ($i=1; $i<=10; $i++) {
+    if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
+        echo '<td><input id="btntest" type="button" value="Zigate '.$i.'" onclick="window.location.href = "/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'.$i.'" /></td>';
+    }
 }
-</script>
+?>
 </tr></table>
 
 <table><tr>

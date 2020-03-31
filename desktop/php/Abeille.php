@@ -4,7 +4,7 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
     }
-    
+
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
@@ -84,19 +84,19 @@ $outils = array(
             echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
             echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
-            
+
             echo '<div class="eqLogicThumbnailContainer">';
 
             $dir = dirname(__FILE__) . '/../../images/';
             $files = scandir($dir);
             foreach ($eqLogics as $eqLogic) {
-                
+
                 list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
                 if ( $net == 'Abeille'. $i) {
-                    
+
                     // find opacity
                     $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-                    
+
                     // Find icone
                     $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
                     if (in_array($test, $files, 0)) {
@@ -104,7 +104,7 @@ $outils = array(
                     } else {
                         $path = 'Abeille_icon';
                     }
-                    
+
                     // Affichage
                     echo '<div class="eqLogicDisplayCardB">';
                     echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
@@ -116,11 +116,11 @@ $outils = array(
             }
             echo ' </div>';
         }
-        
+
     }
 ?>
 
-       
+
 
 <!-- Gestion des groupes et des scenes  -->
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
@@ -441,7 +441,7 @@ Start Zigbee Network:
                    'Inclusion'          => 'permitJoin-Status',
                     'Time (Faites un getTime)' => 'ZiGate-Time',
                    );
-    
+
     for ( $i=1; $i<=$zigateNb; $i++ ) {
         if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
             echo '<br>';
@@ -459,10 +459,10 @@ Start Zigbee Network:
         echo '</br>';
     }
 ?>
-            
-            
-         
-            
+
+
+
+
             <br>
 
             <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
@@ -498,7 +498,7 @@ Start Zigbee Network:
                 </td>
             </tr>
 
-   
+
         </table>
 
         </form>
@@ -746,6 +746,25 @@ Start Zigbee Network:
         document.icon_visu.src = text;
     });
 
+<?php
+for ($i = 1; $i <= 10; $i++) {
+  ?>
+  $('#bt_include<?php echo $i;?>').on('click', function ()  {
+                                                console.log("bt_include<?php echo $i;?>");
+                                                var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+                                                xmlhttpMQTTSendInclude.onreadystatechange = function()  {
+                                                                                                          if (this.readyState == 4 && this.status == 200) {
+                                                                                                            xmlhttpMQTTSendIncludeResult = this.responseText;
+                                                                                                          }
+                                                                                                        };
+                                                xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_Ruche_SetPermit&payload=Inclusion", true);
+                                                xmlhttpMQTTSendInclude.send();
+                                                $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                                              }
 
+                                      );
+  <?php
+}
+?>
 
 </script>

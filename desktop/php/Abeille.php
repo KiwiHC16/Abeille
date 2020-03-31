@@ -8,7 +8,7 @@ if (!isConnect('admin')) {
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
 
-$zigateNb = config::byKey('zigateNb', 'Abeille', '1');;
+$zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 
 $parametersAbeille = Abeille::getParameters();
 
@@ -78,9 +78,7 @@ $outils = array(
 
 <?php
     for ( $i=1; $i<=$zigateNb; $i++ ) {
-    
-        if ( Abeille::getParameters()['AbeilleSerialPort'.$i] != "none" ) {
-            
+        if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
             if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {  echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName(); }
             echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
@@ -118,6 +116,7 @@ $outils = array(
             }
             echo ' </div>';
         }
+        
     }
 ?>
 

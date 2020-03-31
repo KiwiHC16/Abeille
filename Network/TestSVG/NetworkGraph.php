@@ -672,74 +672,80 @@ myJSON_AddMissing();
 // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 
 setPosition("Auto");
+</script>
 
-document.write( '<html>');
-document.write( '<head>');
-document.write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' );
-document.write( '</head>');
+<html>
+<head>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+</head>
 
-document.write( '<body>');
-document.write( 'Zigate selectionnee:'+Ruche);
-document.write( '<p id="demo"></p>');
-document.write( '<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">' );
+<body>
+Zigate selectionnee: Ruche
+<p id="demo"></p>
+<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
 
-document.write( '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>');
+<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>
 
+<script>
 document.write( dessineLaLegende("Yes") );
 document.write( dessineLesVoisinesV2(0,"Yes") );
 document.write( dessineLesTextes(10,"Yes") );
 document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
 document.write( dessineLesAbeilles("Yes") );
+</script>
 
-document.write( '</svg></br>' );
+</svg></br>
 
-document.write( '<table><tr>' );
+<table><tr>
+<script>
 for (let i = 1; i <= 10; i++) {
-    document.write( '<td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'+i+'\'" /></td>' );
+    <td><input id="btntest" type="button" value="Zigate '+i+'" onclick="window.location.href = \'/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'+i+'\'" /></td>
 }
-document.write( '</tr></table>' );
+</script>
+</tr></table>
 
-document.write( '<table><tr>' );
-document.write( '<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>' );
-document.write( '<td>' );   filtreSource();         document.write( '</td>' );
-document.write( '<td>' );   filtreDestination();    document.write( '</td>' );
-document.write( '<td>' );   filtreDetails();        document.write( '</td>' );
-document.write( '<td>' );   filtreParent();         document.write( '</td>' );
-document.write( '</tr></table>' );
+<table><tr>
+<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>
+<td>   <script>filtreSource(); </script>        </td>
+<td>   <script>filtreDestination();</script>    </td>
+<td>   <script>filtreDetails();  </script>      </td>
+<td>   <script>filtreParent();  </script>       </td>
+</tr></table>
 
-document.write( '<table><tr><td>' );
-document.write( '<button id="rucheCentered" onclick="rucheCentered()"   >Ruche Centered</button>');
-document.write( '<button id="placementAuto" onclick="placementAuto()"   >Placement Auto</button>');
-document.write( '<button id="save"          onclick="save()"            >local save</button>');
-document.write( '<button id="restore"       onclick="restore()"         >local restore</button>');
-document.write( '<button id="save"          onclick="saveAbeilles()"    >save</button>');
-document.write( '</td></tr></table>' );
+<table><tr><td>
+<button id="rucheCentered" onclick="rucheCentered()"   >Ruche Centered</button>
+<button id="placementAuto" onclick="placementAuto()"   >Placement Auto</button>
+<button id="save"          onclick="save()"            >local save</button>
+<button id="restore"       onclick="restore()"         >local restore</button>
+<button id="save"          onclick="saveAbeilles()"    >save</button>
+</td></tr></table>
 
-document.write( '<table><tr><td>' );
-document.write( '<button id="Refresh" onclick="refreshNetworkInformation()">Refresh Network Information</button>');
-document.write( '</td><td>' );
-document.write( '<p id="refreshInformation">'+networkInformationProgress+'</p>' );
-document.write( '</td><td>' );
-document.write( '<button id="ReLoadThePage" onclick="ReLoad()">Rafraichir le graphe.</button>');
-document.write( '</td></tr></table>' );
+<table><tr><td>
+<button id="Refresh" onclick="refreshNetworkInformation()">Refresh Network Information</button>
+</td><td>
+<p id="refreshInformation">'+networkInformationProgress+'</p>
+</td><td>
+<button id="ReLoadThePage" onclick="ReLoad()">Rafraichir le graphe.</button>
+</td></tr></table>
 
-document.write( '<br>');
+<br>
 
-document.write( '<form action="upload.php" method="post" enctype="multipart/form-data">' );
-document.write( '<table><tr><td>' )
-document.write( 'Select image to upload:<br>' );
-document.write( '</td><td>' );
-document.write( '<input type="file" name="fileToUpload" id="fileToUpload"/>' );
-document.write( '</td><td>' );
-document.write( '<input type="submit" value="Upload Image" name="submit"/>' );
-document.write( '</td><td>' );
-document.write( '<p>(L image doit etre au format png)</p>' );
-document.write( '</td></tr></table>' );
-document.write( '</form>' );
+<form action="upload.php" method="post" enctype="multipart/form-data">
+<table><tr><td>
+Select image to upload:<br>
+</td><td>
+<input type="file" name="fileToUpload" id="fileToUpload"/>
+</td><td>
+<input type="submit" value="Upload Image" name="submit"/>
+</td><td>
+<p>(L image doit etre au format png)</p>
+</td></tr></table>
+</form>
 
-document.write( '</body>' );
-document.write( '</html>' );
+</body>
+</html>
 
+<script>
 setInterval(function() {
             refreshNetworkCollectionProgress();
             // console.log("function refreshNetworkCollectionProgress");
@@ -751,4 +757,4 @@ setInterval(function() {
             
             console.log("End --------------");
             
-    </script>
+</script>

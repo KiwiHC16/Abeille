@@ -22,7 +22,8 @@
         include_file('desktop', '404', 'php');
         die();
     }
-
+    
+    $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
 
 ?>
@@ -58,7 +59,13 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Nombre de zigate (si vous changez cette valeur, sauvegarder et recharger la page.">{{Nombre de zigate : }}</label>
                 <div class="col-sm-4">
-                <?php echo '<input class="configKey form-control" data-l1key="zigateNb" style="margin-top:5px" placeholder="1"/>'; ?>
+                    <select class="configKey form-control col-sm-12" data-l1key="zigateNb">
+                    <?php
+                        for ( $i=1; $i<=$zigateNbMax; $i++ ) {
+                            echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                        }
+                        ?>
+                    </select>
                 </div>
             </div>
 

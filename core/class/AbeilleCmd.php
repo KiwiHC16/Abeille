@@ -796,11 +796,15 @@
             $i = str_replace( 'Abeille', '', $dest );
             $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1');
             
-            if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }
-            $f=fopen( $destSerial,"w");
-            $this->writeToDest( $f, $destSerial, $cmd, $len, $datas);
-            fclose($f);
-
+            if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
+                if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }
+                $f=fopen( $destSerial,"w");
+                $this->writeToDest( $f, $destSerial, $cmd, $len, $datas);
+                fclose($f);
+            }
+            else {
+                if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }
+            }
         }
         
         function processCmdQueueToZigate() {

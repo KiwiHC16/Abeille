@@ -72,8 +72,8 @@
             if ( $commandIEEE ) {
                 $addrIEEE = $commandIEEE->execCmd();
                 if (strlen($addrIEEE) > 2 ) {
-                    if (in_array($addrIEEE, $IEEE_Table)) {
-                        $IEEE_Table[$addrIEEE] = $IEEE_Table[$addrIEEE] + 1;
+                    if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
+                        $IEEE_Table[$addrIEEE] += 1;
                     }
                     else {
                         $IEEE_Table[$addrIEEE] = 1;

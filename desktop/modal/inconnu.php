@@ -15,7 +15,7 @@
 <p>L'idée est de collecter ces informations pour améliorer les modèles ou le code.</p>
 <p>-------------------------------------</p>
 <?php
-$cmd = "grep inconnu /var/www/html/log/Abeille";
+$cmd = "grep -e 'Objet existe mais pas la commande' /var/www/html/log/Abeille | grep -v 'ff01' ";
 
 exec($cmd, $output);
 

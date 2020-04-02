@@ -12,6 +12,7 @@
     },
     "Commandes": {
       "include1": "SW",
+      "include1 2": "BasicApplicationVersion",
       "include2": "societe",
       "include3": "nom",
       "include4": "etat",

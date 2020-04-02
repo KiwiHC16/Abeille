@@ -1,0 +1,17 @@
+{
+  "0000-#EP#-0001": {
+    "isVisible": 0,
+    "name": "Application-Version",
+    "order": 0,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07cgfdgf766243fa",
+      "visibilityCategory": "Network",
+      "topic": "0000-#EP#-0001"
+    }
+  }
+}

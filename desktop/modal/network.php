@@ -140,15 +140,8 @@
                     <br/>
                     <div id="div_routingTable">
                         <span>
+
                             <span class="" style="padding: 3px 20px;">
-<?php
-                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
-                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
-                                }
-                            }
-    ?>
-                            </span><br><span class="" style="padding: 3px 20px;">
 <?php
                             for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
                                 if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
@@ -157,6 +150,23 @@
                             }
     ?>
                             </span>
+
+                            <span class="" style="padding: 3px 20px;">
+                            <br> . <br>
+                            </span>
+
+                            <span class="" style="padding: 3px 20px;">
+<?php
+                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
+                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                                }
+                            }
+    ?>
+                            </span>
+                            
+                            <br>
+
                             Refresh LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
 
                              <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>

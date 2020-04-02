@@ -373,9 +373,14 @@
             }
 
             // Si Inclusion status est à 1 on demande un Refresh de l information
+            // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
+            $count = 0;
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
                 if (self::checkInclusionStatus( "Abeille".$i  ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/permitJoin", "Status" );
+                $count++;
             }
+            if ( $count > 1 ) message::add("Abeille","Danger vous avez plusieurs ZIgate en mode inclusion. L equipement peut se joindre a l un ou l autre resau zigbee.","Vérifier sur quel reseau se joint l equipement." );
+
 
             // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
 

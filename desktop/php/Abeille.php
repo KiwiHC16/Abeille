@@ -83,6 +83,8 @@ $outils = array(
             echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
             echo "&nbsp&nbsp&nbsp";
+            echo '<i id="bt_include_stop'.$i.'" class="fa fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
+            echo "&nbsp&nbsp&nbsp";
             echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
 
             echo '<div class="eqLogicThumbnailContainer">';
@@ -759,11 +761,32 @@ for ($i = 1; $i <= 10; $i++) {
                                                                                                         };
                                                 xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_Ruche_SetPermit&payload=Inclusion", true);
                                                 xmlhttpMQTTSendInclude.send();
-                                                $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate doit se mettre à clignoter.}}', level: 'success'});
+                                                $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.}}', level: 'success'});
                                               }
 
                                       );
   <?php
+}
+?>
+   
+<?php
+for ($i = 1; $i <= 10; $i++) {
+ ?>
+ $('#bt_include_stop<?php echo $i;?>').on('click', function ()  {
+                                               console.log("bt_include_stop<?php echo $i;?>");
+                                               var xmlhttpMQTTSendIncludeStop = new XMLHttpRequest();
+                                               xmlhttpMQTTSendIncludeStop.onreadystatechange = function()  {
+                                                                                                         if (this.readyState == 4 && this.status == 200) {
+                                                                                                           xmlhttpMQTTSendIncludeResultStop = this.responseText;
+                                                                                                         }
+                                                                                                       };
+                                               xmlhttpMQTTSendIncludeStop.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_Ruche_SetPermit&payload=InclusionStop", true);
+                                               xmlhttpMQTTSendIncludeStop.send();
+                                               $('#div_alert').showAlert({message: '{{Arret mode inclusion demandé. La zigate <?php echo $i;?> doit arreter de clignoter.}}', level: 'success'});
+                                             }
+
+                                     );
+ <?php
 }
 ?>
 

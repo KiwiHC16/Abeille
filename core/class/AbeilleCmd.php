@@ -1043,10 +1043,41 @@
             {
                 if ($Command['SetPermit']=="Inclusion")
                 {
-
                     $cmd = "0049";
                     $lenth = "0004";
                     $data = "FFFCFE00";
+                    // <target short address: uint16_t>
+                    // <interval: uint8_t>
+                    // <TCsignificance: uint8_t>
+
+                    // Target address: May be address of gateway node or broadcast (0xfffc)
+                    // Interval:
+                    // 0 = Disable Joining 1 – 254 = Time in seconds to allow joins 255 = Allow all joins
+                    // TCsignificance:
+                    // 0 = No change in authentication 1 = Authentication policy as spec
+
+                    // 09:08:29.156 -> 01 02 10 49 02 10 02 14 50 FF FC 1E 02 10 03
+                    // 01 : Start
+                    // 02 10 49: 00 49: Permit Joining request Msg Type = 0x0049
+                    // 02 10 02 14: Length:
+                    // 50: Chrksum
+                    // FF FC:<target short address: uint16_t>
+                    // 1E: <interval: uint8_t>
+                    // 02 10: <TCsignificance: uint8_t> 00
+
+                    // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
+                    $this->sendCmd($priority,$dest,$cmd,$lenth,$data); //1E = 30 secondes
+
+                    // $CommandAdditionelle['permitJoin'] = "permitJoin";
+                    // $CommandAdditionelle['permitJoin'] = "Status";
+                    // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/permitJoin", "Status" );
+                }
+                if ($Command['SetPermit']=="InclusionStop")
+                {
+                    $cmd = "0049";
+                    $lenth = "0004";
+                    $data = "FFFC0000";
                     // <target short address: uint16_t>
                     // <interval: uint8_t>
                     // <TCsignificance: uint8_t>

@@ -74,7 +74,7 @@ $outils = array(
 
 
         <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
-        <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogicB" />
+        
 
 <?php
     for ( $i=1; $i<=$zigateNb; $i++ ) {

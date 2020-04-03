@@ -839,7 +839,7 @@
             $AttributId = "8000";
             $data       = $this->displayStatus($status);
 
-            $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            // $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
             
             $msgAbeille = array ('dest'         => $dest,
                                  'type'         => "8000",

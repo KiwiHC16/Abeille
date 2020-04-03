@@ -1,19 +1,4 @@
 <?php
-    /* This file is part of Jeedom.
-     *
-     * Jeedom is free software: you can redistribute it and/or modify
-     * it under the terms of the GNU General Public License as published by
-     * the Free Software Foundation, either version 3 of the License, or
-     * (at your option) any later version.
-     *
-     * Jeedom is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-     * GNU General Public License for more details.
-     *
-     * You should have received a copy of the GNU General Public License
-     * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
-     */
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
@@ -22,23 +7,25 @@
         throw new Exception('401 Unauthorized');
     }
      */
+
+    
     $eqLogics = Abeille::byType('Abeille');
 ?>
 
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
-    <tr>
-        <th>{{Module}}</th>
-        <th>{{Name}}</th>
-        <th>{{ID}}</th>
-        <th>{{Ruche}}</th>
-        <th>{{Address}}</th>
-        <th>{{IEEE}}</th>
-        <th>{{Statut}}</th>
-        <th>{{Dernière communication}}</th>
-        <th>{{Depuis (h)}}</th>
-        <th>{{Date création}}</th>
-    </tr>
+        <tr>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Module}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Name}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Address}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Statut}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière communication}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Date création}}</th>
+        </tr>
     </thead>
     <tbody>
     <?php
@@ -141,3 +128,5 @@ foreach ($IEEE_Table as $IEEE=>$IEEE_Device) {
     if ($IEEE_Device>1) { echo "L'adresse ->".$IEEE."<- est dupliquée ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
 }
     ?>
+
+<?php include_file('desktop', 'health', 'js', 'Abeille'); ?>

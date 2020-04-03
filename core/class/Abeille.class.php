@@ -374,12 +374,14 @@
 
             // Si Inclusion status est à 1 on demande un Refresh de l information
             // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
-            $count = 0;
+            $count = array();
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if (self::checkInclusionStatus( "Abeille".$i  ) == "01") Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/permitJoin", "Status" );
-                $count++;
+                if (self::checkInclusionStatus( "Abeille".$i  ) == "01") {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/permitJoin", "Status" );
+                    $count[] = $i;
+                }
             }
-            if ( $count > 1 ) message::add("Abeille","Danger vous avez plusieurs ZIgate en mode inclusion. L equipement peut se joindre a l un ou l autre resau zigbee.","Vérifier sur quel reseau se joint l equipement." );
+            if ( count($count) > 1 ) message::add("Abeille","Danger vous avez plusieurs Zigate en mode inclusion: ".json_encode($count).". L equipement peut se joindre a l un ou l autre resau zigbee.","Vérifier sur quel reseau se joint l equipement." );
 
 
             // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
@@ -950,7 +952,7 @@
             if ( $ruche ) {
                 // echo "Join status collection\n";
                 $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
-                if ($cmdJoinStatus) {
+                if ( $cmdJoinStatus ) {
                     return $cmdJoinStatus->execCmd();
                 }
             }

@@ -2423,6 +2423,20 @@
                     // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
 
                 }
+                
+                // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
+                elseif (($AttributId == 'ff01') && ($AttributSize == "0026")) {
+                    $this->deamonlog('debug',';Type; 8102; Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Xiaomi bouton Aqara Wireless Switch V3)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    $this->deamonlog('debug', ';Type; 8102;'.$SrcAddr.': Voltage: '      .$voltage.' Pourcent: '.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
+                    $this->mqqtPublish( $dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish( $dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+
+                }
 
                 // Xiaomi Smoke Sensor
                 elseif (($AttributId == 'ff01') && ($AttributSize == "0028")) {

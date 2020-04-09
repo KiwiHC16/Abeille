@@ -32,8 +32,12 @@
     define('queueKeySerieToParser',         822);
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
     
+    define('priorityMin',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
     define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
     define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
     define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
+    define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
+    define('priorityMax',           5);
+    
 ?>

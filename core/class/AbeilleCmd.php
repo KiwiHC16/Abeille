@@ -148,22 +148,22 @@
     }
 
     class AbeilleCmdL2 extends AbeilleCmdQueue {
-        public $debug = array( "cli"                => 0, // commande line mode or jeedom
-                              "Checksum"            => 0, // Debug checksum calculation
-                              "tempo"               => 0, // Debug tempo queue
-                              "procmsg"             => 0, // Debug fct procmsg
-                              "procmsg1"            => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg2"            => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg3"            => 1, // Debug fct procmsg avec un seul msg
-                              "processCmd"          => 1, // Debug fct processCmd
-                              "sendCmd"             => 1, // Debug fct sendCmd
-                              "cmdQueue"            => 0, // Debug cmdQueue
-                              "sendCmdAck"          => 1, // Debug fct sendCmdAck
-                              "sendCmdAck2"         => 1, // Debug fct sendCmdAck
-                              "transcode"           => 0, // Debug transcode fct
-                              "AbeilleCmdClass"     => 1, // Mise en place des class
-                              "sendCmdToZigate"     => 1, // Mise en place des class
-                              "traiteLesAckRecus"   => 1, // Nouvelle Gestion des Ack
+        public $debug = array( "cli"                    => 0, // commande line mode or jeedom
+                              "Checksum"                => 0, // Debug checksum calculation
+                              "tempo"                   => 0, // Debug tempo queue
+                              "procmsg"                 => 0, // Debug fct procmsg
+                              "procmsg1"                => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg2"                => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg3"                => 1, // Debug fct procmsg avec un seul msg
+                              "processCmd"              => 1, // Debug fct processCmd
+                              "sendCmd"                 => 1, // Debug fct sendCmd
+                              "cmdQueue"                => 0, // Debug cmdQueue
+                              "sendCmdAck"              => 1, // Debug fct sendCmdAck
+                              "sendCmdAck2"             => 1, // Debug fct sendCmdAck
+                              "transcode"               => 0, // Debug transcode fct
+                              "AbeilleCmdClass"         => 1, // Mise en place des class
+                              "sendCmdToZigate"         => 1, // Mise en place des class
+                              "traiteLesAckRecus"       => 1, // Nouvelle Gestion des Ack
                               "processCmdQueueToZigate" => 1,
                               );
 
@@ -401,17 +401,18 @@
             $addressMode = "02";
             $targetShortAddress = $Command['address'];
             $sourceEndpoint = "01";
-	    if ( isset($Command['destinationEndpoint']) ) { 
-            	if ( $Command['destinationEndpoint']>1 ) { 
-			$destinationEndpoint = $Command['destinationEndpoint']; 
-		} 
-		else { 
-			$destinationEndpoint = "01"; 
-		} // $destinationEndPoint; // "01";
-	    } 
+            
+            if ( isset($Command['destinationEndpoint']) ) {
+                    if ( $Command['destinationEndpoint']>1 ) {
+                $destinationEndpoint = $Command['destinationEndpoint'];
+            }
             else {
-			$destinationEndpoint = "01"; 
-	    }
+                $destinationEndpoint = "01";
+            } // $destinationEndPoint; // "01";
+            }
+                else {
+                $destinationEndpoint = "01";
+            }
 
             $profileID = "0104";
             $clusterID = $Command['clusterId'];
@@ -845,13 +846,30 @@
                 if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - processCmd Command not set return");
                 return;
             }
-
+            
             if ( isset($Command['priority']) ) {
-                $priority = $Command['priority'];
+                if ( isset($Command['address']) ) {
+                    $NE = Abeille::byLogicalId( $Command['dest'].'/'.$Command['address'], 'Abeille' );
+                    if ( $NE->getIsEnable() ) {
+                        if ( ( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
+                            $priority = priorityLostNE;
+                        }
+                        else {
+                            $priority = $Command['priority'];
+                        }
+                    }
+                    else {
+                        if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - NE desactive, je ne fais rien.");
+                        return;
+                    }
+                }
+                else {
+                    $priority = $Command['priority'];
+                }
             }
             else {
                 $this->deamonlog('debug',"processCmd fct - priority not defined !!!");
-                $priority = 4;
+                $priority = priorityInterrogation;
             }
             
             $dest = $Command['dest'];
@@ -4137,7 +4155,7 @@
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleCmd.php debug
-
+    
     try {
         echo "Let s start\n";
 

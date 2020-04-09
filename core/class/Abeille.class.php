@@ -140,11 +140,13 @@
                     if (strlen($addrIEEE) < 2 ) {
                         list( $dest, $NE) = explode('/', $eqLogic->getLogicalId());
                         if (strlen($NE) == 4) {
-                            log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
-                            echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                            $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
-                            echo "Cmd: ".$cmd."\n";
-                            exec($cmd, $out, $status);
+                            if ( $eqLogic->getIsEnable() ) {
+                                log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
+                                echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                                $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
+                                echo "Cmd: ".$cmd."\n";
+                                exec($cmd, $out, $status);
+                            }
                         }
                     }
                 }

@@ -14,14 +14,7 @@
     
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
-    Class MsgAbeille {
-        /*
-        public $message = array(
-                                // 'topic' => 'Coucou class Abeille',
-                                // 'payload' => 'me voici creation message',
-                                );
-         */
-    }
+    include_once dirname(__FILE__).'/AbeilleMsg.php';
     
     class debug extends Tools {
         function deamonlog($loglevel = 'NONE', $message = "")
@@ -154,7 +147,7 @@
         }
     }
 
-    class AbeilleCmd extends AbeilleCmdQueue {
+    class AbeilleCmdL2 extends AbeilleCmdQueue {
         public $debug = array( "cli"                => 0, // commande line mode or jeedom
                               "Checksum"            => 0, // Debug checksum calculation
                               "tempo"               => 0, // Debug tempo queue
@@ -4148,22 +4141,22 @@
     try {
         echo "Let s start\n";
 
-        $AbeilleCmd = new AbeilleCmd($argv[1]);
+        $AbeilleCmdL2 = new AbeilleCmdL2($argv[1]);
         // echo "AbeilleCmd construit\n";
         
         while ( true ) {
             // echo "loop\n";
-            $AbeilleCmd->traiteLesAckRecus();
+            $AbeilleCmdL2->traiteLesAckRecus();
             
-            $AbeilleCmd->timeOutSurLesAck();
+            $AbeilleCmdL2->timeOutSurLesAck();
             
             // Traite toutes les commandes zigate en attente
-            $AbeilleCmd->processCmdQueueToZigate();
+            $AbeilleCmdL2->processCmdQueueToZigate();
 
-            $AbeilleCmd->recupereTousLesMessagesVenantDesAutresThreads();
+            $AbeilleCmdL2->recupereTousLesMessagesVenantDesAutresThreads();
 
             // Recuperes tous les messages en attente sur timer
-            $AbeilleCmd->execTempoCmdAbeille();
+            $AbeilleCmdL2->execTempoCmdAbeille();
 
             // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s
@@ -4171,10 +4164,10 @@
 
     }
     catch (Exception $e) {
-        $AbeilleCmd->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
-        $AbeilleCmd->deamonlog( 'info', 'Fin du script');
+        $AbeilleCmdL2->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
+        $AbeilleCmdL2->deamonlog( 'info', 'Fin du script');
     }
 
-    unset($AbeilleCmd);
+    unset($AbeilleCmdL2);
     ?>
  

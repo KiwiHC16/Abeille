@@ -24,14 +24,7 @@
     
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
-    Class MsgAbeille {
-        /*
-        public $message = array(
-                                // 'topic' => 'Coucou class Abeille',
-                                // 'payload' => 'me voici creation message',
-                                );
-         */
-    }
+    include_once dirname(__FILE__).'/AbeilleMsg.php';
 
     class Abeille extends eqLogic {
 

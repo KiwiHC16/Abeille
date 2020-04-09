@@ -13,9 +13,12 @@
 
 
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
+    
+    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
     
     function deamonlog($loglevel='NONE',$message=""){
         Tools::deamonlogFilter($loglevel,'Abeille', 'AbeilleSerialRead', $message);

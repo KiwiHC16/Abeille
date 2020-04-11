@@ -463,9 +463,12 @@
 
             // ******************************************************************************************************************
             // Remove temporary files
-            $FileLock = '/var/www/html/plugins/Abeille/Network/AbeilleLQI_MapData.json.lock';
-            unlink( $FileLock );
-            log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+                $FileLock = '/var/www/html/plugins/Abeille/Network/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
+                unlink( $FileLock );
+                log::add('Abeille', 'debug', 'Deleting '.$FileLock );
+            }
+            
 
 
             return;

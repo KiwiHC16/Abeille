@@ -38,6 +38,10 @@
     define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
     define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
     define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    define('priorityMax',           5);
+    define('priorityMax',           5); // est egale aux max des priorités définies.
+    
+    define('maxNbOfZigate',        10);
+    
+    define('maxRetryDefault',       3);
     
 ?>

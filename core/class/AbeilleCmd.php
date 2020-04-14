@@ -167,11 +167,11 @@
                               "processCmdQueueToZigate" => 1,
                               );
 
-        public $cmdQueue;                   // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
-        public $zigateAvailable = array();         // Si on pense la zigate dispo ou non.
+        public $cmdQueue;                         // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
+        public $zigateAvailable = array();        // Si on pense la zigate dispo ou non.
         public $timeLastAck = array();            // When I got the last Ack from Zigate
         public $timeLastAckTimeOut = array();     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
-        public $maxRetry = 3;               // Abeille will try to send the message max x times
+        public $maxRetry = maxRetryDefault;       // Abeille will try to send the message max x times
         
         public $zigateNb;
         
@@ -726,7 +726,7 @@
         }
         
         function sendCmd($priority, $dest, $cmd, $len, $datas='') {
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - dest: " . json_encode($dest) . " cmd: ".json_encode($cmd) ); }
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - dest: " . json_encode($dest) . " cmd: ".json_encode($cmd). " priority: ".json_encode($priority) ); }
             if ( $dest == "none" ) {
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je ne mets pas la commande dans la queue car la dest est none" ); }
                 return; // on ne process pas les commande pour les zigate qui n existe pas.
@@ -737,12 +737,13 @@
                 return;
             }
             
-            if ( $priority < 0 ) {
+            if ( $priority < priorityMin ) {
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - priority out of range (rejecting the command): ".$priority ); }
                 return;
             }
             
-            if ( $priority > 5 ) {
+            // A chaque retry la priority increase d'un.
+            if ( $priority > (priorityMax+priorityMax) ) {
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - priority out of range (rejecting the command): ".$priority ); }
                 return;
             }
@@ -753,7 +754,7 @@
             // priority = priority du message
             $i = str_replace( 'Abeille', '', $dest );
 
-            if ( ($i>0) && ($i<11) ) {
+            if ( ($i>0) && ($i<=maxNbOfZigate) ) {
                 $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
                 if ( count($this->cmdQueue[$i]) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue de la zigate: '.$i );
@@ -838,7 +839,6 @@
         }
 
         function processCmd( $Command ) {
-            if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function");
             
             if ( $this->debug['processCmd'] ) $this->deamonlog("debug", "processCmd fct - begin processCmd function, Command: ".json_encode($Command) );
 
@@ -850,17 +850,24 @@
             if ( isset($Command['priority']) ) {
                 if ( isset($Command['address']) ) {
                     $NE = Abeille::byLogicalId( $Command['dest'].'/'.$Command['address'], 'Abeille' );
-                    if ( $NE->getIsEnable() ) {
-                        if ( ( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
-                            $priority = priorityLostNE;
+                    if ( $NE ) {
+                        if ( $NE->getIsEnable() ) {
+                            if ( ( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
+                                $this->deamonlog('debug',"processCmd fct - NE en Time Out alors je mets la priorite au minimum.");
+                                $priority = priorityLostNE;
+                            }
+                            else {
+                                $priority = $Command['priority'];
+                            }
                         }
                         else {
-                            $priority = $Command['priority'];
+                            $this->deamonlog('debug',"processCmd fct - NE desactive, je ne fais rien.");
+                            return;
                         }
                     }
                     else {
-                        if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - NE desactive, je ne fais rien.");
-                        return;
+                        $this->deamonlog('debug',"processCmd fct - NE introuvable, probablement une annonce, j envoie la commande.");
+                        $priority = $Command['priority'];
                     }
                 }
                 else {

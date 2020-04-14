@@ -727,6 +727,13 @@
         
         function sendCmd($priority, $dest, $cmd, $len, $datas='') {
             if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - dest: " . json_encode($dest) . " cmd: ".json_encode($cmd). " priority: ".json_encode($priority) ); }
+            
+            $i = str_replace( 'Abeille', '', $dest );
+            if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'N' ) {
+                $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate est desactivee." );
+                return;
+            }
+            
             if ( $dest == "none" ) {
                 if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je ne mets pas la commande dans la queue car la dest est none" ); }
                 return; // on ne process pas les commande pour les zigate qui n existe pas.
@@ -752,7 +759,7 @@
             // time = when the commande was ssend to the zigate last time
             // retry = nombre de tentative restante
             // priority = priority du message
-            $i = str_replace( 'Abeille', '', $dest );
+            
 
             if ( ($i>0) && ($i<=maxNbOfZigate) ) {
                 $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );

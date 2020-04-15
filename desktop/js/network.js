@@ -37,7 +37,7 @@ $("#nodeTo").off().change(function () {
 
 function updateZigBeeJsonCache(zigateX) {
     // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
-    //show progress in AlertDiv
+    // Show progress in AlertDiv
     setTimeout(function () {
         updateAlertFromZigBeeJsonLog(true, zigateX);
     }, 2000);
@@ -54,7 +54,7 @@ function updateZigBeeJsonCache(zigateX) {
                 });
                 window.setTimeout(function () {
                     $('#div_networkZigbeeAlert').hide()
-                }, 5000);
+                }, 10000);
 
             },
             success: function (data, status, jqhr) {

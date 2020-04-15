@@ -82,7 +82,7 @@
         else {
             $parameters['Voisine_Name'] = $parameters['Voisine'];
         }
-        $parameters['Voisine_Objet'] = 'tat'
+        $parameters['Voisine_Objet'] = 'tat';
         // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
         
         // Decode Bitmap Attribut
@@ -208,7 +208,7 @@
     
     $debugKiwi = 0;
     $debugKiwiCli = 1; // if called form shell
-    // if ( $debugKiwiCli ) $_GET['zigate']=1;
+    if ( $debugKiwiCli ) $_GET['zigate']=1;
     
     $LQI = array();
     $knownNE_FromAbeille = array();
@@ -218,7 +218,7 @@
     
     KiwiLog('Start Main');
     
-    if ( $_GET['zigate']<1 or $_GET['zigate']>5 ) {
+    if ( $_GET['zigate']<1 or $_GET['zigate']>maxNbOfZigate ) {
         KiwiLog("Mauvaise valeur de zigate !!!!");
         return;
     }
@@ -258,7 +258,6 @@
     
     // Let's start at least with Ruche
     $NE_All_BuildFromLQI[$serial."/Ruche"] = array("LQI_Scan_Done" => 0);
-    $NE_All_BuildFromLQI["Abeille1/233a"] = array("LQI_Scan_Done" => 0);
     
     KiwiLog( "NE connus pas Abeille: ".json_encode($knownNE_FromAbeille) );
     KiwiLog( "NE to scan: ".json_encode($NE_All_BuildFromLQI) );
@@ -294,13 +293,6 @@
             }
             KiwiLog("AbeilleLQI main: " . $done . " of " . $total);
             
-            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
-            if ($nbwritten<1) {
-                unlink($FileLock);
-                echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
-                exit;
-            }
-            
             //-----------------------------------------------------------------------------
             // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
             $NE = $currentNeAddress;
@@ -308,6 +300,13 @@
             $name = $knownNE_FromAbeille[$currentNeAddress];
             if (strlen($name) == 0) {
                 $name = "Inconnu-" . $currentNeAddress;
+            }
+            
+            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
+            if ($nbwritten<1) {
+                unlink($FileLock);
+                echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
+                exit;
             }
             
             KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );

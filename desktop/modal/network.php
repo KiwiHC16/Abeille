@@ -134,7 +134,7 @@
             <div id="network-tab-content" class="tab-content">
 
 
-<!-- tab table des noeuds -->
+<!-- tab Table des noeuds -->
 
                 <div id="route_network" class="tab-pane active">
                     <br/>
@@ -182,8 +182,10 @@
                             <thead>
                                 <tr>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{NE_Objet}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Name}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Objet}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Name}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Profondeur}}</th>
@@ -198,7 +200,7 @@
                     </div>
                 </div>
 
-<!-- tab Graph -->
+<!-- tab Graphique du réseau -->
 
                 <div id="graph_network" class="tab-pane">
 
@@ -247,7 +249,7 @@
                 </div>
 
 
-<!-- tab resume -->
+<!-- tab Résumé -->
 
 
                 <div id="summary_network" class="tab-pane" >

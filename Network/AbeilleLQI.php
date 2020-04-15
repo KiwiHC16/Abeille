@@ -65,6 +65,8 @@
         
         $parameters['NE'] = $NE;
         $parameters['NE_Name'] = $knownNE_FromAbeille[$NE];
+        $parameters['NE_Objet'] = 'toto';
+        
         list( $dest, $addr ) = explode( '/', $NE );
 
         if (strlen($parameters['NE_Name']) == 0) {
@@ -80,6 +82,7 @@
         else {
             $parameters['Voisine_Name'] = $parameters['Voisine'];
         }
+        $parameters['Voisine_Objet'] = 'tat'
         // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
         
         // Decode Bitmap Attribut

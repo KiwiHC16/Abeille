@@ -36,6 +36,7 @@ $("#nodeTo").off().change(function () {
 });
 
 function updateZigBeeJsonCache(zigateX) {
+    // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
     //show progress in AlertDiv
     setTimeout(function () {
         updateAlertFromZigBeeJsonLog(true, zigateX);
@@ -397,7 +398,7 @@ function network_display(zigateX) {
 };
 
 function network_links(zigateX) {
-
+    // Generate la table qui est affichée dans le modale tab "Table des noeids".
     var jqXHR = $.ajax({
         url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
@@ -469,6 +470,10 @@ function network_links(zigateX) {
                 tbody += '<td id="neId">';
                 tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
                 tbody += '</td>';
+               
+                tbody += '<td id="neName">';
+                tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Objet + '</i></div>';
+                tbody += '</td>';
                 
                 tbody += '<td id="neName">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
@@ -488,6 +493,10 @@ function network_links(zigateX) {
                 tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
                 tbody += '</td>';
                 
+                tbody += '<td id="vname">';
+                tbody += nodes[nodeFromJson].Voisine_Objet;
+                tbody += '</td>';
+               
                 tbody += '<td id="vname">';
                 tbody += nodes[nodeFromJson].Voisine_Name;
                 tbody += '</td>';

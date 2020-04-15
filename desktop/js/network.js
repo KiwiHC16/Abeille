@@ -68,7 +68,7 @@ function updateZigBeeJsonCache(zigateX) {
                 if (data.indexOf("successfully") >= 0) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
-                    network_links();
+                    network_links(zigateX);
                     updateAlertFromZigBeeJsonLog(false, zigateX);
                 }
                 $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
@@ -398,7 +398,7 @@ function network_display(zigateX) {
 };
 
 function network_links(zigateX) {
-    // Generate la table qui est affichée dans le modale tab "Table des noeids".
+    // Generate la table qui est affichée dans le modale tab "Table des noeuds".
     var jqXHR = $.ajax({
         url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
@@ -468,14 +468,14 @@ function network_links(zigateX) {
 
                 //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
                 tbody += '<td id="neId">';
-                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodeJName + '</span> ';
+                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJName + '">' + nodeJName + '</span> ';
                 tbody += '</td>';
                
                 tbody += '<td id="neName">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Objet + '</i></div>';
                 tbody += '</td>';
                 
-                tbody += '<td id="neName">';
+                tbody += '<td id="neObjet">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
                 tbody += '</td>';
                
@@ -490,10 +490,10 @@ function network_links(zigateX) {
                 //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
                 
                 tbody += '<td id="vid">';
-                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJId + '">' + nodes[nodeFromJson].Voisine + '</span>';
+                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodes[nodeFromJson].Voisine + '">' + nodes[nodeFromJson].Voisine + '</span>';
                 tbody += '</td>';
                 
-                tbody += '<td id="vname">';
+                tbody += '<td id="vObjet">';
                 tbody += nodes[nodeFromJson].Voisine_Objet;
                 tbody += '</td>';
                

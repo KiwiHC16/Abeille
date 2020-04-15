@@ -29,6 +29,7 @@
         global $queueKeyParserToLQI;
         global $NE_All_BuildFromLQI;
         global $knownNE_FromAbeille;
+        global $knownObject_FromAbeille;
         global $NE;
         global $NE_continue;
         
@@ -65,12 +66,13 @@
         
         $parameters['NE'] = $NE;
         $parameters['NE_Name'] = $knownNE_FromAbeille[$NE];
-        $parameters['NE_Objet'] = 'toto';
+        $parameters['NE_Objet'] = $knownObject_FromAbeille[$NE];
         
         list( $dest, $addr ) = explode( '/', $NE );
 
         if (strlen($parameters['NE_Name']) == 0) {
             $parameters['NE_Name'] = "Inconnu-" . $parameters['IEEE_Address'];
+            $parameters['NE_Objet'] = "Inconnu";
         }
         
         list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
@@ -78,11 +80,13 @@
         $parameters['Voisine'] = $dest . "/" . $voisineAddr;
         if ( isset($knownNE_FromAbeille[$parameters['Voisine']]) ) {
             $parameters['Voisine_Name'] = $knownNE_FromAbeille[$parameters['Voisine']];
+            $parameters['Voisine_Objet'] = $knownObject_FromAbeille[$parameters['Voisine']];
         }
         else {
             $parameters['Voisine_Name'] = $parameters['Voisine'];
+            $parameters['Voisine_Objet'] = "Inconnu";
         }
-        $parameters['Voisine_Objet'] = 'tat';
+
         // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
         
         // Decode Bitmap Attribut
@@ -210,9 +214,10 @@
     $debugKiwiCli = 1; // if called form shell
     if ( $debugKiwiCli ) $_GET['zigate']=1;
     
-    $LQI = array();
-    $knownNE_FromAbeille = array();
-    $NE_All_BuildFromLQI = array();
+    $LQI                        = array();
+    $knownNE_FromAbeille        = array();
+    $knownObject_FromAbeille    = array();
+    $NE_All_BuildFromLQI        = array();
     
     $abeilleParameters = Abeille::getParameters();
     
@@ -254,7 +259,9 @@
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         $knownNE_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
+        $knownObject_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getObject()->getName();
     }
+    if ( $debugKiwiCli ) { echo json_encode($knownObject_FromAbeille)."\n"; }
     
     // Let's start at least with Ruche
     $NE_All_BuildFromLQI[$serial."/Ruche"] = array("LQI_Scan_Done" => 0);

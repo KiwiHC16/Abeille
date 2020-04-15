@@ -72,58 +72,21 @@
         }
         public static function installWiringPi($_background = true) {
             $cmdToExec = "installWiringPi.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
-        public static function checkTTY($_background = true, $zgport) {
-            log::remove('Abeille_PiZigate');
-            log::add('Abeille_PiZigate', 'default', 'Arret du démon');
-            self::deamon_stop(); // Stopping daemon
-            $cmdToExec = "checkTTY.sh " . $zgport;
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
-            exec($cmd, $out, $status);
-            log::add('Abeille_PiZigate', 'default', 'Redémarrage du démon');
-            self::deamon_start(); // Restarting daemon
-            return $status; // Return script status (0=OK)
-        }
         public static function installTTY($_background = true) {
             $cmdToExec = "installTTY.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
-        }
-
-        /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
-        public static function updateFirmwarePiZiGate($_background = true, $fwfile, $zgport) {
-            log::add('Abeille', 'debug', 'Démarrage updateFirmware(' . $fwfile . ', ' . $zgport . ')');
-
-            log::remove('Abeille_PiZigate');
-            log::add('Abeille_PiZigate', 'info', 'Vérification des paramètres');
-            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport . " -check";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
-            exec($cmd, $out, $status);
-            if ($status != 0)
-                return $status; // Something wrong with parameters
-
-            log::add('Abeille_PiZigate', 'info', 'Arret du démon');
-            self::deamon_stop(); // Stopping daemon
-
-            log::add('Abeille_PiZigate', 'info', 'Programming');
-            $cmdToExec = "updateFirmware.sh " . $fwfile . " " . $zgport;
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
-            exec($cmd, $out, $status);
-
-            log::add('Abeille_PiZigate', 'info', 'Redémarrage du démon');
-            self::deamon_start(); // Restarting daemon
-
-            return $status; // If not 0, programmation failed
         }
 
         public static function resetPiZiGate($_background = true) {
             $cmdToExec = "resetPiZigate.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('Abeille_PiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }

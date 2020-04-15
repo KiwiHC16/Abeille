@@ -224,9 +224,6 @@
                         <tr>
                             <td class="typeCoordinator-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
                             <td>Coordinateur</td>
-
-                            <td class="typeAlert-color" style="width: 35px"><i class="fa fa-ambulance fa-2x"></i></td>
-                            <td>Warning: chaque nom d objet doit être unique<a href="https://github.com/KiwiHC16/Abeille/issues/458">(voir ici)</a></td>
                         </tr>
                         <tr>
                             <td class="typeEndDevice-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>

@@ -8,18 +8,18 @@
 echo "Execution de '$(basename $0)'"
 
 if [ $# -lt 1 ]; then
-	echo "= ERREUR: Port manquant !"
-	exit 1
+    echo "= ERREUR: Port manquant !"
+    exit 1
 fi
 PORT=$1
 
-echo "Configuration du port ${PORT}"
-stty -F ${PORT} 115200 -parity cs8 -cstopb
-if [ $? -ne 0 ]; then
-    echo "= ERREUR: Mauvais port ?"
-    exit 2
-fi
-echo "= Ok"
+# echo "Configuration du port ${PORT}"
+# stty -F ${PORT} 115200 -parity cs8 -cstopb
+# if [ $? -ne 0 ]; then
+    # echo "= ERREUR: Mauvais port ?"
+    # exit 2
+# fi
+# echo "= Ok"
 
 # Zigate reminder: START=0x01 MsgType2B Len2B Chksm Data LQI STOP=0x03
 #   Get version: code 0x0010
@@ -41,7 +41,7 @@ echo "- Reçu ${#ANSWER} bytes:${ANSWER2}"
 ANSWER3=""
 for C in ${ANSWER2}
 do
-	ANSWER3="${ANSWER3}\\x$C"
+    ANSWER3="${ANSWER3}\\x$C"
 done
 if [ "${ANSWER3}" != "${GETVERSIONEXPECTED}" ]; then
     echo "= ERROR: Mauvaise réponse reçue de la Zigate."

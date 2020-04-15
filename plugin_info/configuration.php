@@ -22,7 +22,7 @@
         include_file('desktop', '404', 'php');
         die();
     }
-    
+
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
 
@@ -176,7 +176,6 @@
 
         <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
         <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
-
         <div id="PiZigate">
             <div>
                 <p><i>La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.</i></p>
@@ -201,35 +200,26 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Port TTY de communication avec la PiZigate">{{Port TTY}}</label>
+                <label class="col-lg-4 control-label">{{Port TTY}}</label>
                 <div class="col-lg-5">
-                    <select style="width:150px" id="ZiGatePort">
+                    <select style="width:150px" id="ZiGatePort" data-toggle="tooltip" title="Port de communication avec la PiZigate">
                         <?php
-							/* Selecting default port.
+                            /* Selecting default port.
                                TODO: Currently choosing first port but missing a way to confirm it is PiZigate */
-							if ($zigateNb == 0)
-								echo '<option value="none" selected>{{aucun}}</option>';
-							else {
-								for ($i=1; $i<=$zigateNb; $i++) {
-									$port = config::byKey('AbeilleSerialPort' . $i, 'Abeille', '');
-									if ($i == 1)
-										echo '<option value="' . $port . '" selected>' . $port . '</option>';
-									else
-										echo '<option value="' . $port . '">' . $port . '</option>';
-								}
-							}
-							// $port1 = config::byKey('AbeilleSerialPort1', 'Abeille', '');
-							// echo '<option value="none" selected>{{aucun}}</option>';
-                            // foreach (ls('/dev/', 'tty*') as $value) {
-								// $port = "/dev/" . $value;
-								// if ($port == $port1)
-									// echo '<option value="/dev/' . $value . '" selected>' . $value . '</option>';
-								// else
-									// echo '<option value="/dev/' . $value . '">' . $value . '</option>';
-                            // }
+                            if ($zigateNb == 0)
+                                echo '<option value="none" selected>{{aucun}}</option>';
+                            else {
+                                for ($i=1; $i<=$zigateNb; $i++) {
+                                    $port = config::byKey('AbeilleSerialPort' . $i, 'Abeille', '');
+                                    if ($i == 1)
+                                        echo '<option value="' . $port . '" selected>' . $port . '</option>';
+                                    else
+                                        echo '<option value="' . $port . '">' . $port . '</option>';
+                                }
+                            }
                         ?>
                     </select>
-                    <a class="TTYStatus" title="Status communication">
+                    <a class="TTYStatus" title="Status de communication sur ce port">
                         <span class="label label-danger" style="font-size:1em;">?</span>
                     </a>
                     <a class="btn btn-warning" id="bt_checkTTY" title="Test de communication"><i class="fa fa-refresh"></i> {{Tester}}</a>
@@ -238,23 +228,30 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de programmer la PiZiGate.">{{Programmer la PiZiGate}}</label>
+                <label class="col-lg-4 control-label">{{Firmware}}</label>
                 <div class="col-lg-5">
-                    <select style="width:150px" id ="ZiGateFirmwareVersion">
+                    <a class="CurrentFirmware" title="Version du firmware actuel">
+                        <span class="label label-danger" style="font-size:1em;">?</span>
+                    </a>
+                    <a class="btn btn-warning" id="bt_readFW" title="Lecture de la version du FW">
+                        <i class="fa fa-refresh"></i>
+                        {{Lire}}
+                    </a>
+                    <select style="width:150px" id ="ZiGateFirmwareVersion" title="Firmwares disponibles">
                         <?php
                             foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
                                 echo '<option value=' . $value . '>' . $value . '</option>';
                             }
                         ?>
                     </select>
-                    <a class="btn btn-warning" id="bt_updateFirmware" title="Programmation du FW selectionné"><i class="fa fa-refresh"></i> {{Programmer}}</a>
+                    <a class="btn btn-warning" id="bt_updateFirmware" title="Programmation du FW selectionné"><i class="fa fa-refresh"></i> {{Mettre à jour}}</a>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Permet de faire un reset (HW) de la PiZigate.">{{Reset (HW) PiZiGate}}</label>
+                <label class="col-lg-4 control-label">{{Reset (HW) PiZigate}}</label>
                 <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_resetPiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
+                    <a class="btn btn-warning" id="bt_resetPiZigate" title="Reset HW de la PiZigate"><i class="fa fa-refresh"></i> {{Reset}}</a>
                 </div>
             </div>
         </div>
@@ -284,17 +281,6 @@ $('#bt_show').on('click', function () {
                  $("#paramMosquitto").show();
                  }
                  );
-
-    $('#bt_pizigate_hide').on('click', function () {
-            $("#PiZigate").hide();
-        }
-    );
-
-    $('#bt_pizigate_show').on('click', function () {
-            $("#bt_checkWiringPi").click(); // Force WiringPi check
-            $("#PiZigate").show();
-        }
-    );
 
 $('#bt_zigatewifi_show').on('click', function () {
         // console.log("bt_test");
@@ -339,13 +325,13 @@ $('#bt_Connection_show').on('click', function () {
                            );
 
 $('#bt_syncconfigAbeille').on('click',function(){
-		bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {
-				if (result) {
-					$('#md_modal2').dialog({title: "{{Téléchargement des configurations}}"});
-					$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=syncconf.abeille').dialog('open');
-					}
-		});
-	});
+        bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {
+                if (result) {
+                    $('#md_modal2').dialog({title: "{{Téléchargement des configurations}}"});
+                    $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=syncconf.abeille').dialog('open');
+                    }
+        });
+    });
 
 $('#bt_updateConfigAbeille').on('click',function(){
                               bootbox.confirm('{{Etes-vous sûr de vouloir mettre à jour les équipements avec les dernières configurations des modules ?<br>Si vous avez des modifications locales, il est possible qu elles seront perdues.}}', function (result) {
@@ -365,6 +351,15 @@ $('#bt_installSocat').on('click',function(){
     });
 })
 
+
+    $('#bt_pizigate_hide').on('click', function () {
+        $("#PiZigate").hide();
+    });
+
+    $('#bt_pizigate_show').on('click', function () {
+        $("#bt_checkWiringPi").click(); // Force WiringPi check
+        $("#PiZigate").show();
+    });
 
     $('#bt_checkWiringPi').on('click', function() {
         $.ajax({
@@ -402,21 +397,31 @@ $('#bt_installSocat').on('click',function(){
             url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
             data: {
                 action: 'checkTTY',
-				zgport: document.getElementById("ZiGatePort").value,
+                zgport: document.getElementById("ZiGatePort").value,
             },
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
                 bootbox.alert("ERREUR 'checkTTY' !<br>Votre installation semble corrompue.");
             },
-            success: function (res) {
-                if (res.result == 0)
+            success: function (json_res) {
+                $res = JSON.parse(json_res.result);
+                if ($res.status == 0) {
                     $('.TTYStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                else
+                    $fw = $res.fw;
+                    $label = '<span class="label label-success" style="font-size:1em;">' + $fw + '</span>';
+                    $('.CurrentFirmware').empty().append($label);
+                } else {
                     $('.TTYStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    $('.CurrentFirmware').empty().append('<span class="label label-danger" style="font-size:1em;">?</span>');
+                }
             }
         });
-    })
+    });
+    $('#bt_readFW').on('click', function() {
+        /* Click on 'read FW' as same effect than 'check TTY' */
+        $('#bt_checkTTY').click();
+    });
 
     $('#bt_installTTY').on('click',function(){
         bootbox.confirm('{{Vous êtes sur le point d\'activer le port ' + document.getElementById("ZiGatePort").value + '.<br>Cela pourrait supprimer la console sur ce port.<br> Voulez vous continuer ?}}', function (result) {
@@ -427,21 +432,21 @@ $('#bt_installSocat').on('click',function(){
         });
     })
 
-	$('#bt_updateFirmware').on('click',function(){
-		bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
-			if (result) {
-				$('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-				$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
-			}
-		});
-	})
+    $('#bt_updateFirmware').on('click',function(){
+        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
+            }
+        });
+    })
 
-	$('#bt_resetPiZigate').on('click',function(){
-		bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
-			if (result) {
-				$('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-				$('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
-			}
-	   });
-	})
+    $('#bt_resetPiZigate').on('click',function(){
+        bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
+            }
+       });
+    })
 </script>

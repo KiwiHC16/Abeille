@@ -714,6 +714,19 @@
 
             $fct = "decode".$type;
             // $this->deamonlog('debug','Calling function: '.$fct);
+            
+            //  if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none' ) == $ExtendedAddress ) {
+            //               config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
+            
+            $commandAcceptedUntilZigateIdentified = array( "decode8009", "decode8024", "decode8000" );
+            
+            // On vérifie que l on est sur la bonne zigate.
+            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
+                if ( !in_array($fct, $commandAcceptedUntilZigateIdentified) ) {
+                    return;
+                }
+            }
+            
             if ( method_exists($this, $fct) ) {
                 $this->$fct( $dest, $payload, $ln, $qos, $param1); }
             else {
@@ -972,6 +985,18 @@
             $Channel            = hexdec(substr($payload,40, 2));
 
             if ($this->debug['8009']) { $this->deamonlog('debug',';type; 8009; (Network State response)(Processed->MQTT) Dest: '.$dest.' Short: '.$ShortAddress.' Ext Addr: '.$ExtendedAddress.' PAN Id: '.$PAN_ID.' Ext PAN Id: '.$Ext_PAN_ID.' Channel: '.$Channel); }
+            
+            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
+                config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
+            }
+            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == $ExtendedAddress ) {
+                config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
+            }
+            else {
+                config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), -1,   'Abeille');
+                message::add("Abeille", "La zigate ".$dest." detectee ne semble pas etre la bonne (IEEE qui remonte: ".$ExtendedAddress." alors que j ai en memoire: ".config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 )."). Je la bloque pour ne pas créer de soucis.", "Verifiez que les zigates sont bien sur le bon port tty par example suite  a un reboot..", 'Abeille/Demon');
+                return;
+            }
             
             // Envoie Short Address
             $SrcAddr = "Ruche";

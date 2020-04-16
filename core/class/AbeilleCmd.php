@@ -183,7 +183,7 @@
             
             $this->requestedlevel = $debugLevel;
 
-            $this->zigateNb = config::byKey('zigateNb', 'Abeille', '1');
+            $this->zigateNb = config::byKey('zigateNb', 'Abeille', '1', 1);
             
             parent::__construct( $this->debug["AbeilleCmdClass"] );
             
@@ -729,8 +729,13 @@
             if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - dest: " . json_encode($dest) . " cmd: ".json_encode($cmd). " priority: ".json_encode($priority) ); }
             
             $i = str_replace( 'Abeille', '', $dest );
-            if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'N' ) {
+            if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {
                 $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate est desactivee." );
+                return;
+            }
+            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1)); }
+            if ( config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1) == '-1' ) {
+                $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
                 return;
             }
             
@@ -798,7 +803,7 @@
             }
             
             $i = str_replace( 'Abeille', '', $dest );
-            $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1');
+            $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
             
             if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
                 if ( $this->debug['sendCmdToZigate'] ) { $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas); }

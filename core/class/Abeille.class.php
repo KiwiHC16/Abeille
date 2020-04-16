@@ -70,6 +70,7 @@
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
+        
         public static function installWiringPi($_background = true) {
             $cmdToExec = "installWiringPi.sh";
             $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
@@ -426,12 +427,19 @@
 
             // ******************************************************************************************************************
             // Remove temporary files
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+            for ( $i=1; $i<=config::byKey( 'zigateNb', 'Abeille', '1', 1 ); $i++ ) {
                 $FileLock = '/var/www/html/plugins/Abeille/Network/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
                 unlink( $FileLock );
                 log::add('Abeille', 'debug', 'Deleting '.$FileLock );
             }
             
+            // Desactive les Zigate pour eviter de discuster avec une zigate sur le mauvais port
+            // AbeilleIEEE_Ok = -1 si la Zigate detectée n est pas la bonne
+            //     "          =  0 pour demarrer
+            //     "          =  1 Si la zigate detectée est la bonne
+            for ( $i=1; $i<=config::byKey( 'zigateNb', 'Abeille', '1', 1 ); $i++ ) {
+                config::save( "AbeilleIEEE_Ok".$i, 0,   'Abeille');
+            }
 
 
             return;
@@ -445,9 +453,6 @@
             $param = self::getParameters();
 
             self::deamon_stop();
-
-            log::add('Abeille', 'debug', "Attention du lien");
-            // sleep(30); // leave time for socat to restart in case of monit setup.
 
             message::removeAll('Abeille', '');
             message::removeAll('Abeille', 'Abeille/Demon');
@@ -510,7 +515,7 @@
 
 			for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
 				$deamon[10+$i] = "AbeilleSerialRead.php";
-                		$paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+                $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
 				$log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
 			}
 
@@ -608,6 +613,8 @@
 					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork" );
 					log::add('Abeille', 'debug', 'deamon_start: ***** Set Time réseau Zigbee '.$i.' ********');
 					Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "" );
+                    log::add('Abeille', 'debug', 'deamon_start: ***** getNetworkStatus '.$i.' ********');
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus" );
 				}
 			}
 
@@ -800,13 +807,13 @@
             $return['parametersCheck_message'] = "";
 
             //Most Fields are defined with default values
-            $return['AbeilleParentId']      = config::byKey('AbeilleParentId', 'Abeille', '1');
-            $return['zigateNb']             = config::byKey('zigateNb', 'Abeille', '1');
+            $return['AbeilleParentId']      = config::byKey('AbeilleParentId',  'Abeille', '1', 1);
+            $return['zigateNb']             = config::byKey('zigateNb',         'Abeille', '1', 1);
 
             for ( $i=1; $i<=$return['zigateNb']; $i++ ) {
-                $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', 'none');
-                $return['IpWifiZigate'.$i]        = config::byKey('IpWifiZigate'.$i,        'Abeille', '192.168.0.1');
-                $return['AbeilleActiver'.$i ]     = config::byKey('AbeilleActiver'.$i,      'Abeille', 'N');
+                $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', 'none',          1 );
+                $return['IpWifiZigate'.$i]        = config::byKey('IpWifiZigate'.$i,        'Abeille', '192.168.0.1',   1 );
+                $return['AbeilleActiver'.$i ]     = config::byKey('AbeilleActiver'.$i,      'Abeille', 'N',             1 );
             }
 
 			return $return;

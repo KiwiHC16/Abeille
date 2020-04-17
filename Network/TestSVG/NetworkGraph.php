@@ -667,6 +667,7 @@ res = queryString.substr(1);
 console.log(res);
 if (res.length>2) Ruche = res;
 
+
 getVoisinesJSON();
 getTopoJSON();
 
@@ -684,7 +685,7 @@ setPosition("Auto");
 </head>
 
 <body>
-Zigate selectionnee: Ruche
+Zigate selectionnee: <script>document.write(res);</script>
 <p id="demo"></p>
 <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
 
@@ -711,10 +712,13 @@ Selectionner la Zigate a afficher:</br>
 <?php
 for ($i=1; $i<=10; $i++) {
     if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
-        echo '<td><input id="btntest" type="button" value="Zigate '.$i.'" onclick="window.location.href = "/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille'.$i.'" /></td>';
+        ?>
+        <td><input id="btntest" type="button" value="Zigate <?php echo $i; ?>" onclick="window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille<?php echo $i; ?>'" /></td>
+<?php
     }
 }
 ?>
+
 </tr></table>
 
 <table><tr>

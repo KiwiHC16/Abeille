@@ -380,8 +380,8 @@ function setPosition(mode) {
             iAbeille++;
         }
         if ( mode=="AutoForce" ) {
-            X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeillenb/Abeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-            Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeillenb/Abeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+            X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+            Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
             
             myObjOrg[abeille].x = X;
             myObjOrg[abeille].y = Y;

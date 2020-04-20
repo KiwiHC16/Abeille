@@ -1,30 +1,30 @@
 {
-  "volet": {
-    "nameJeedom": "Volet ProFalux",
+  "TRADFRIbulbE14WSopal600lm": {
+    "nameJeedom": "TRADFRI bulb E14 White Spectre opal 600lm",
     "timeout": "60",
     "Categorie": {
-      "automatism": "1"
+      "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07c7662688a",
-      "icone": "voletProFalux",
+      "uniqId": "5c07c766202zh",
+      "icone": "TRADFRIbulbE14WSopal600lm",
       "mainEP": "#EP#"
     },
     "Commandes": {
       "include1": "nom",
       "include2": "societe",
       "include3": "SW",
-      "include4": "ZCLVersion",
-      "include5": "dateCode",
-      "include6": "location",
-      "include7": "etatVolet",
-      "include8": "levelVolet",
-      "include9": "onVolet",
-      "include10": "offVolet",
-      "include11": "toggleVolet",
-      "include12": "setLevelVolet",
-      "include12 2": "moveToLiftAndTiltBSO",
-      "include13": "levelVoletStop",
+      "include4": "etatLight",
+      "include5": "levelLight",
+      "include8": "On",
+      "include9": "Off",
+      "include10": "Toggle",
+      "include11": "setLevel",
+      "include37": "2200K",
+      "include38": "2700K",
+      "include39": "4000K",
+      "include40": "temperatureLight",
+      "include40 2 2": "setTemperatureLight",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",

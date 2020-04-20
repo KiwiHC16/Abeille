@@ -1,0 +1,27 @@
+{
+  "TS0011": {
+    "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch",
+    "timeout": "60",
+    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1092",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5ceosfqsds766ssdgdfzsddzze5d44",
+      "icone": "TS0011",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etatCharge0",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier"
+    }
+  }
+}

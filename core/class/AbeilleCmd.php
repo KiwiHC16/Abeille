@@ -2049,6 +2049,72 @@
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
 
+            if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )
+            {
+                $this->deamonlog('debug',"command moveToLiftAndTiltBSO");
+
+                $cmd = "0530";
+
+                // <address mode: uint8_t>              -> 1
+                // <target short address: uint16_t>     -> 2
+                // <source endpoint: uint8_t>           -> 1
+                // <destination endpoint: uint8_t>      -> 1
+
+                // <profile ID: uint16_t>               -> 2
+                // <cluster ID: uint16_t>               -> 2
+
+                // <security mode: uint8_t>             -> 1
+                // <radius: uint8_t>                    -> 1
+                // <data length: uint8_t>               -> 1
+                //                                                                                12 -> 0x0C
+                // <data: auint8_t>
+                // 19 ZCL Control Field
+                // 01 ZCL SQN
+                // 41 Commad Id: Get Group Id Response
+                // 01 Total
+                // 00 Start Index
+                // 01 Count
+                // 00 Group Type
+                // 001B Group Id
+
+                $addressMode            = $Command['addressMode'];
+                $targetShortAddress     = $Command['address'];
+                $sourceEndpoint         = "01";
+                $destinationEndpoint    = "01";
+                $profileID              = "0104";
+                $clusterID              = "0008";
+                $securityMode           = "02";
+                $radius                 = "1E";
+
+                $zclControlField        = "11";
+                $transactionSequence    = "01";
+                $cmdId                  = "10";  // Cmd Proprio Profalux
+                $option                 = "02";  // Je ne touche que le Tilt
+                $Lift                   = "00";  // Not used
+                $Tilt                   = "2D";  // 2D move to 45deg
+                $transitionTime         = "FFFF";
+                // $startIndex             = "00";
+                // $count                  = "01";
+                // $groupId                = reverse_hex($Command['groupId']);
+                // $groupType              = "00";
+
+                $data2 = $zclControlField . $transactionSequence . $cmdId . $option . $Lift . $Tilt . $transitionTime ;
+
+                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+                $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+
+                $data = $data1 . $data2;
+                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            }
+            
             // setLevelStop
             if ( isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']) )
             {
@@ -3259,18 +3325,21 @@
                         $b = 1.8571429;
                         $c = 0;
 
-                        $keywords = preg_split("/[=&]+/", $msg);
+                        $fields = preg_split("/[=&]+/", $msg);
+                        if (count($fields) > 1) {
+                            $parameters = proper_parse_str( $msg );
+                        }
 
                         // $level255 = intval($keywords[1] * 255 / 100);
                         // $this->deamonlog('debug', 'level255: '.$level255);
 
-                        $levelSlider = $keywords[1];                // Valeur entre 0 et 100
+                        $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
 
                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
 
                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
-                        $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+c;
+                        $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+$c;
                         $level = $levelPourcent * 255;
                         $level = min( max( round( $level), 0), 255);
 
@@ -3284,8 +3353,51 @@
                                          "address" => $address,
                                          "destinationEndpoint" => "01",
                                          "Level" => $level,
-                                         "duration" => $keywords[3],
+                                         "duration" => $parameters['duration'],
                                          );
+                        break;
+                        //----------------------------------------------------------------------------
+                    case "moveToLiftAndTiltBSO":
+                                      // Pour un get level (level de 0 à 255):
+                         // a=0.00081872
+                         // b=0.2171167
+                         // c=-8.60201639
+                         // level = level * level * a + level * b + c
+
+                         $a = -0.8571429;
+                         $b = 1.8571429;
+                         $c = 0;
+
+                         $fields = preg_split("/[=&]+/", $msg);
+                         if (count($fields) > 1) {
+                             $parameters = proper_parse_str( $msg );
+                         }
+
+                         // $level255 = intval($keywords[1] * 255 / 100);
+                         // $this->deamonlog('debug', 'level255: '.$level255);
+
+                         $inclinaisonSlider = $parameters['Inclinaison'];                // Valeur entre 0 et 100
+                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
+
+                         $inclinaisonSliderPourcent = $inclinaisonSlider/100;    // Valeur entre 0 et 1
+
+                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
+                         $inclinaisonPourcent = $a*$inclinaisonSliderPourcent*$inclinaisonSliderPourcent+$b*$inclinaisonSliderPourcent+$c;
+                         $inclinaison = $inclinaisonPourcent * 255;
+                         $inclinaison = min( max( round( $inclinaison), 0), 255);
+
+                         $this->deamonlog('debug', 'inclinaison Slider: '.$inclinaisonSlider.' inclinaison calcule: '.$inclinaisonPourcent.' inclinaison envoye: '.$inclinaison);
+
+                         $Command = array(
+                                          "moveToLiftAndTiltBSO" => "1",
+                                          "addressMode" => "02",
+                                          "priority" => $priority,
+                                          "dest" => $dest,
+                                          "address" => $address,
+                                          "destinationEndpoint" => "01",
+                                          "inclinaison" => $inclinaison,
+                                          "duration" => $parameters['duration'],
+                                          );
                         break;
                         //----------------------------------------------------------------------------
                     case "setLevelStop":

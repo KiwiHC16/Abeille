@@ -2053,62 +2053,66 @@
             {
                 $this->deamonlog('debug',"command moveToLiftAndTiltBSO");
 
-                $cmd = "0081";
-                // 11:53:06.479 -> 01 02 10 81 02 10 02 19 C6 02 12 83 DF 02 11 02 11 02 11 AA 02 10 BB 03
-                //                 01 02 10 81 02 10 02 19 d7 02 12 83 df 02 11 02 11 02 11 02 11 02 11 03
-                //
-                // 02 83 DF 01 01 01 ff 00 BB
-                //
-                // 01: Start
-                // 02 10 81: Msg Type: 00 81 -> Move To Level
-                // 02 10 02 19: Lenght
-                // C6: CRC
-                // 02 12: <address mode: uint8_t> : 02
-                // 83 DF: <target short address: uint16_t> 83 DF (Lampe Z Ikea)
-                // 02 11: <source endpoint: uint8_t>: 01
-                // 02 11: <destination endpoint: uint8_t>: 01
-                // 02 11: <onoff : uint8_t>: 01
-                // AA: <Level: uint8_t > AA Value I put to identify easely: Level to reach
-                // 02 10 BB: <Transition Time: uint16_t>: 00BB Value I put to identify easely: Transition duration
-                $addressMode = $Command['addressMode'];
-                $address = $Command['address'];
-                $sourceEndpoint = "01";
-                $destinationEndpoint = $Command['destinationEndpoint'];
-                $onoff = "01";
-                if ( $Command['inclinaison']<16 )
-                {
-                    $level = "0".dechex($Command['inclinaison']);
-                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
-                }
-                else
-                {
-                    $level = dechex($Command['inclinaison']);
-                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
-                }
+                $cmd = "0530";
 
-                // $duration = "00" . $Command['duration'];
-                if ( $Command['duration']<16 )
-                {
-                    $duration = "0".dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
-                }
-                else
-                {
-                    $duration = dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
-                }
-                $duration = "00" . $duration;
+                // <address mode: uint8_t>              -> 1
+                // <target short address: uint16_t>     -> 2
+                // <source endpoint: uint8_t>           -> 1
+                // <destination endpoint: uint8_t>      -> 1
 
-                // 11:53:06.543 <- 01 80 00 00 04 53 00 56 00 81 03
-                // 11:53:06.645 <- 01 81 01 00 06 DD 56 01 00 08 04 00 03
-                // 8 16 8 8 8 8 16
-                // 2  4 2 2 2 2  4 = 18/2d => 9d => 0x09
-                $lenth = "0009";
+                // <profile ID: uint16_t>               -> 2
+                // <cluster ID: uint16_t>               -> 2
 
-                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
-                // echo "data: " . $data . "\n";
+                // <security mode: uint8_t>             -> 1
+                // <radius: uint8_t>                    -> 1
+                // <data length: uint8_t>               -> 1
+                //                                                                                12 -> 0x0C
+                // <data: auint8_t>
+                // 19 ZCL Control Field
+                // 01 ZCL SQN
+                // 41 Commad Id: Get Group Id Response
+                // 01 Total
+                // 00 Start Index
+                // 01 Count
+                // 00 Group Type
+                // 001B Group Id
+
+                $addressMode            = $Command['addressMode'];
+                $targetShortAddress     = $Command['address'];
+                $sourceEndpoint         = "01";
+                $destinationEndpoint    = "01";
+                $profileID              = "0104";
+                $clusterID              = "0008";
+                $securityMode           = "02";
+                $radius                 = "1E";
+
+                $zclControlField        = "11";
+                $transactionSequence    = "01";
+                $cmdId                  = "10";  // Cmd Proprio Profalux
+                $option                 = "02";  // Je ne touche que le Tilt
+                $Lift                   = "00";  // Not used
+                $Tilt                   = "2D";  // 2D move to 45deg
+                $transitionTime         = "FFFF";
+                // $startIndex             = "00";
+                // $count                  = "01";
+                // $groupId                = reverse_hex($Command['groupId']);
+                // $groupType              = "00";
+
+                $data2 = $zclControlField . $transactionSequence . $cmdId . $option . $Lift . $Tilt . $transitionTime ;
+
+                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+                $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+
+                $data = $data1 . $data2;
+                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
-
-      
             }
             
             // setLevelStop

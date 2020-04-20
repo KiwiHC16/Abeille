@@ -2049,6 +2049,68 @@
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
 
+            if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['Level']) && isset($Command['duration']) )
+            {
+                $this->deamonlog('debug',"command moveToLiftAndTiltBSO");
+
+                $cmd = "0081";
+                // 11:53:06.479 -> 01 02 10 81 02 10 02 19 C6 02 12 83 DF 02 11 02 11 02 11 AA 02 10 BB 03
+                //                 01 02 10 81 02 10 02 19 d7 02 12 83 df 02 11 02 11 02 11 02 11 02 11 03
+                //
+                // 02 83 DF 01 01 01 ff 00 BB
+                //
+                // 01: Start
+                // 02 10 81: Msg Type: 00 81 -> Move To Level
+                // 02 10 02 19: Lenght
+                // C6: CRC
+                // 02 12: <address mode: uint8_t> : 02
+                // 83 DF: <target short address: uint16_t> 83 DF (Lampe Z Ikea)
+                // 02 11: <source endpoint: uint8_t>: 01
+                // 02 11: <destination endpoint: uint8_t>: 01
+                // 02 11: <onoff : uint8_t>: 01
+                // AA: <Level: uint8_t > AA Value I put to identify easely: Level to reach
+                // 02 10 BB: <Transition Time: uint16_t>: 00BB Value I put to identify easely: Transition duration
+                $addressMode = $Command['addressMode'];
+                $address = $Command['address'];
+                $sourceEndpoint = "01";
+                $destinationEndpoint = $Command['destinationEndpoint'];
+                $onoff = "01";
+                if ( $Command['Level']<16 )
+                {
+                    $level = "0".dechex($Command['Level']);
+                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
+                }
+                else
+                {
+                    $level = dechex($Command['Level']);
+                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
+                }
+
+                // $duration = "00" . $Command['duration'];
+                if ( $Command['duration']<16 )
+                {
+                    $duration = "0".dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
+                }
+                else
+                {
+                    $duration = dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
+                }
+                $duration = "00" . $duration;
+
+                // 11:53:06.543 <- 01 80 00 00 04 53 00 56 00 81 03
+                // 11:53:06.645 <- 01 81 01 00 06 DD 56 01 00 08 04 00 03
+                // 8 16 8 8 8 8 16
+                // 2  4 2 2 2 2  4 = 18/2d => 9d => 0x09
+                $lenth = "0009";
+
+                $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
+                // echo "data: " . $data . "\n";
+
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+
+      
+            }
+            
             // setLevelStop
             if ( isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']) )
             {
@@ -3259,12 +3321,15 @@
                         $b = 1.8571429;
                         $c = 0;
 
-                        $keywords = preg_split("/[=&]+/", $msg);
+                        $fields = preg_split("/[=&]+/", $msg);
+                        if (count($fields) > 1) {
+                            $parameters = proper_parse_str( $msg );
+                        }
 
                         // $level255 = intval($keywords[1] * 255 / 100);
                         // $this->deamonlog('debug', 'level255: '.$level255);
 
-                        $levelSlider = $keywords[1];                // Valeur entre 0 et 100
+                        $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
 
                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
@@ -3284,8 +3349,51 @@
                                          "address" => $address,
                                          "destinationEndpoint" => "01",
                                          "Level" => $level,
-                                         "duration" => $keywords[3],
+                                         "duration" => $parameters['duration'],
                                          );
+                        break;
+                        //----------------------------------------------------------------------------
+                    case "moveToLiftAndTiltBSO":
+                                      // Pour un get level (level de 0 à 255):
+                         // a=0.00081872
+                         // b=0.2171167
+                         // c=-8.60201639
+                         // level = level * level * a + level * b + c
+
+                         $a = -0.8571429;
+                         $b = 1.8571429;
+                         $c = 0;
+
+                         $fields = preg_split("/[=&]+/", $msg);
+                         if (count($fields) > 1) {
+                             $parameters = proper_parse_str( $msg );
+                         }
+
+                         // $level255 = intval($keywords[1] * 255 / 100);
+                         // $this->deamonlog('debug', 'level255: '.$level255);
+
+                         $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
+                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
+
+                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
+
+                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
+                         $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent;
+                         $level = $levelPourcent * 255;
+                         $level = min( max( round( $level), 0), 255);
+
+                         $this->deamonlog('debug', 'level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
+
+                         $Command = array(
+                                          "moveToLiftAndTiltBSO" => "1",
+                                          "addressMode" => "02",
+                                          "priority" => $priority,
+                                          "dest" => $dest,
+                                          "address" => $address,
+                                          "destinationEndpoint" => "01",
+                                          "Level" => $level,
+                                          "duration" => $parameters['duration'],
+                                          );
                         break;
                         //----------------------------------------------------------------------------
                     case "setLevelStop":

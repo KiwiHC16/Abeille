@@ -211,7 +211,7 @@
     // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
     
     $debugKiwi = 0;
-    $debugKiwiCli = 1; // if called form shell
+    $debugKiwiCli = 0; // if called form shell
     if ( $debugKiwiCli ) $_GET['zigate']=1;
     
     $LQI                        = array();

@@ -1,0 +1,19 @@
+{
+  "Level": {
+    "isVisible": 1,
+    "name": "Inclinaison",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "value": "Inclinaison",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c7qqjkf6624df9",
+      "topic": "moveToLiftAndTiltBSO",
+      "request": "EP=01&Inclinaison=#slider#&duration=10",
+      "visibilityCategory": "All"
+    }
+  }
+}

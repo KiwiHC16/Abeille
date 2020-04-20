@@ -6,7 +6,7 @@
       "automatism": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662688a",
+      "uniqId": "5c07c7662688a",
       "icone": "voletProFalux",
       "mainEP": "#EP#"
     },
@@ -23,6 +23,7 @@
       "include10": "offVolet",
       "include11": "toggleVolet",
       "include12": "setLevelVolet",
+      "include12 2": "moveToLiftAndTiltBSO",
       "include13": "levelVoletStop",
       "include19": "getEtat",
       "include20": "getLevel",

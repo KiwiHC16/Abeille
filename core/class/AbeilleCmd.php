@@ -2049,7 +2049,7 @@
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
 
-            if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['Level']) && isset($Command['duration']) )
+            if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )
             {
                 $this->deamonlog('debug',"command moveToLiftAndTiltBSO");
 
@@ -2075,14 +2075,14 @@
                 $sourceEndpoint = "01";
                 $destinationEndpoint = $Command['destinationEndpoint'];
                 $onoff = "01";
-                if ( $Command['Level']<16 )
+                if ( $Command['inclinaison']<16 )
                 {
-                    $level = "0".dechex($Command['Level']);
+                    $level = "0".dechex($Command['inclinaison']);
                     // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
                 }
                 else
                 {
-                    $level = dechex($Command['Level']);
+                    $level = dechex($Command['inclinaison']);
                     // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
                 }
 
@@ -3335,7 +3335,7 @@
                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
 
                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
-                        $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+c;
+                        $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent+$c;
                         $level = $levelPourcent * 255;
                         $level = min( max( round( $level), 0), 255);
 
@@ -3372,17 +3372,17 @@
                          // $level255 = intval($keywords[1] * 255 / 100);
                          // $this->deamonlog('debug', 'level255: '.$level255);
 
-                         $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
+                         $inclinaisonSlider = $parameters['Inclinaison'];                // Valeur entre 0 et 100
                          // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
 
-                         $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
+                         $inclinaisonSliderPourcent = $inclinaisonSlider/100;    // Valeur entre 0 et 1
 
                          // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
-                         $levelPourcent = $a*$levelSliderPourcent*$levelSliderPourcent+$b*$levelSliderPourcent;
-                         $level = $levelPourcent * 255;
-                         $level = min( max( round( $level), 0), 255);
+                         $inclinaisonPourcent = $a*$inclinaisonSliderPourcent*$inclinaisonSliderPourcent+$b*$inclinaisonSliderPourcent+$c;
+                         $inclinaison = $inclinaisonPourcent * 255;
+                         $inclinaison = min( max( round( $inclinaison), 0), 255);
 
-                         $this->deamonlog('debug', 'level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
+                         $this->deamonlog('debug', 'inclinaison Slider: '.$inclinaisonSlider.' inclinaison calcule: '.$inclinaisonPourcent.' inclinaison envoye: '.$inclinaison);
 
                          $Command = array(
                                           "moveToLiftAndTiltBSO" => "1",
@@ -3391,7 +3391,7 @@
                                           "dest" => $dest,
                                           "address" => $address,
                                           "destinationEndpoint" => "01",
-                                          "Level" => $level,
+                                          "inclinaison" => $inclinaison,
                                           "duration" => $parameters['duration'],
                                           );
                         break;

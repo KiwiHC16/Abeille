@@ -1,6 +1,7 @@
+#! /bin/bash
+
 ###
-### Check if Zigate is responding properly to "Get Version" command.
-### Allows to confirm that port & communication are ok.
+### Check TTY port and proper access to Zigate.
 ### WARNING: This script expects that daemon is stoppped to
 ###          not disturb Zigate answer.
 ###
@@ -12,6 +13,35 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 PORT=$1
+
+echo "Vérifications du port '${PORT}'"
+
+# Port exists ?
+if [ ! -e ${PORT} ]; then
+    echo "= ERREUR: Le port ${PORT} n'existe pas !"
+    exit 2
+fi
+
+# Is port already used ?
+FIELDS=`lsof -Fcn ${PORT}`
+if [ "${FIELDS}" == "" ]; then
+    echo "= Ok, le port semble libre."
+else
+    CMD=""
+    for f in ${FIELDS};
+    do
+        if [[ "$f" != "c"* ]]; then
+            continue
+        fi
+        CMD=${f:1}
+    done
+    echo "= ERREUR: Port utilisé par la commande '${CMD}'."
+    echo "=         Le port doit être libéré pour permettre le dialogue avec la Zigate."
+    exit 3
+fi
+
+# Zigate communication check now done from PHP
+exit 0
 
 # echo "Configuration du port ${PORT}"
 # stty -F ${PORT} 115200 -parity cs8 -cstopb

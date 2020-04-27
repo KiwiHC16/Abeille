@@ -14,16 +14,22 @@
       "mainEP": "#EP#"
     },
     "Commandes": {
-      "include3 2": "Click-Middle",
-      "include3 2 3": "onGroupTimed",
-      "include3 2 2": "offGroupTimed",
-      "include1": "offGroup",
-      "include2": "toggleGroup",
-      "include3": "onGroup",
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include4": "offGroup",
+      "include4 2": "offGroupTimed",
+      "include5": "toggleGroup",
+      "include6": "onGroup",
+      "include6 2": "onGroupTimed",
+      "include7": "Click-Middle",
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie"
+      "include11": "setReportBatterie",
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild"
     }
   }
 }

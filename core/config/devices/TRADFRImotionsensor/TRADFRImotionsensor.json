@@ -1,6 +1,6 @@
 {
   "TRADFRImotionsensor": {
-    "nameJeedom": "IKEA TRADFRI Detecteur de mouvement",
+    "nameJeedom": "TRADFRI Detecteur de mouvement",
     "timeout": "60",
     "Comment": "Ref. IKEA E1525 / E1745",
     "Categorie": {

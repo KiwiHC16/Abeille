@@ -26,7 +26,7 @@ class Tools
         if ( $logLevelPluginJson[   '1000'] ) return 0;
         if ( $logLevelPluginJson['default'] ) return 1; // This one is set to 1 but should be found from conf
     }
-    
+
     /**
      * Convert log level string to number to compare more easily.
      *
@@ -35,7 +35,6 @@ class Tools
      */
      public static function getNumberFromLevel($loglevel) {
 
-         
          $niveau = array(
                          "NONE" => 0,
                          "ERROR" => 1,
@@ -67,7 +66,8 @@ class Tools
         #$iRequested=Tools::getNumberFromLevel($GLOBALS['requestedlevel']);
         #fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '['.strtoupper($loglevel). '='.$iLog.']/[' . strtoupper($GLOBALS['requestedlevel']) . '='.$iRequested. ']' . PHP_EOL);
         if (Tools::getNumberFromLevel($loglevel) <= Tools::getPluginLogLevel($pluginName)) {
-            fwrite(STDOUT,  '['.date('Y-m-d H:i:s').']['.$loggerName . '][' . $loglevel . ']' . $message . PHP_EOL);
+            // fwrite(STDOUT,  '['.date('Y-m-d H:i:s').']['.$loggerName . '][' . $loglevel . ']' . $message . PHP_EOL);
+            fwrite(STDOUT,  '['.date('Y-m-d H:i:s').'][' . $loglevel . '] ' . $message . PHP_EOL);
         }
     }
 
@@ -236,7 +236,7 @@ class Tools
             while ( ($deviceDir = readdir($dh)) !== false) {
                 try {
                     if ( !(($deviceDir == ".") || ($deviceDir == "..") || ($deviceDir == "listeCompatibilite.php") || ($deviceDir == "Template")) ) {
-                        
+
                     $file = $deviceDir.".json";
 
                     $content = file_get_contents($devicesDir . $deviceDir . DIRECTORY_SEPARATOR . $file);

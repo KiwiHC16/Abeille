@@ -651,7 +651,7 @@
             return $return;
         }
 
-        function protocolDatas( $dest, $datas,  $qos, $clusterTab, &$LQI) {
+        function protocolDatas( $dest, $datas, $qos, $clusterTab, &$LQI) {
             // datas: trame complete recue sur le port serie sans le start ni le stop.
             // 01: 01 Start
             // 02-03: Msg Type
@@ -721,7 +721,7 @@
             if ( method_exists($this, $fct) ) {
                 $this->$fct( $dest, $payload, $ln, $qos, $param1); }
             else {
-                $this->deamonlog('debug', 'Message \''.type.'\' ignoré (non supporté)');
+                $this->deamonlog('debug', 'Message \''.$type.'\' ignoré (non supporté)');
             }
 
             return $tab;
@@ -1053,21 +1053,23 @@
 
         function decode8014( $dest, $payload, $ln, $qos, $dummy)
         {
-            $this->deamonlog('debug', 'Type=8014/Permit join status response: PermitJoinStatus='.substr($payload, 0, 2));
-
             // “Permit join” status
             // response Msg Type=0x8014
-
             // 0 - Off 1 - On
             //<Status: bool_t>
             // Envoi Status
 
+            $data = substr($payload, 0, 2);
+
+            $this->deamonlog('debug', 'Type=8014/Permit join status response: PermitJoinStatus='.$data);
+            if ($data == "01")
+                $this->deamonlog('info', 'Zigate en mode INCLUSION');
+            else
+                $this->deamonlog('info', 'Fin du mode incluson');
+
             $SrcAddr = "Ruche";
             $ClusterId = "permitJoin";
             $AttributId = "Status";
-
-            $data = substr($payload, 0, 2);
-
             $this->mqqtPublish( $dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -1352,6 +1354,12 @@
             global $profileTable;
             global $deviceInfo;
 
+            $SrcAddr    = substr($payload, 4, 4);
+            $EPoint     = substr($payload,10, 2);
+            $profile    = substr($payload,12, 4);
+            $deviceId   = substr($payload,16, 4);
+            $InClusterCount = substr($payload,22, 2); // Number of input clusters
+
             $this->deamonlog('debug', 'Type=8043/Simple Descriptor Response'
                              . ': Dest='.$dest
                              . ', SQN='             .substr($payload, 0, 2)
@@ -1361,20 +1369,15 @@
                              . ', EndPoint='        .substr($payload,10, 2)
                              . ', Profile='         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
                              . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[substr($payload,12, 4)][substr($payload,16, 4)] .')'
-                             . ', BitField='        .substr($payload,20, 2)
-                             . ', InClusterCount='  .substr($payload,22, 2)   );
+                             . ', BitField='        .substr($payload,20, 2));
 
-            $SrcAddr    = substr($payload, 4, 4);
-            $EPoint     = substr($payload,10, 2);
-            $profile    = substr($payload,12, 4);
-            $deviceId   = substr($payload,16, 4);
-
+            $this->deamonlog('debug','  InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', '  In cluster='    .substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
+                $this->deamonlog('debug', '  InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
             }
-            $this->deamonlog('debug','  OutClusterCount='  .substr($payload,24+$i, 2));
+            $this->deamonlog('debug','  OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', '  Out cluster='    .substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+                $this->deamonlog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
             }
 
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];

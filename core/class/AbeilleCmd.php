@@ -294,7 +294,7 @@
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
         }
-
+        
         function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio) {
             $this->deamonlog('debug',"command setParam2");
             // Msg Type = 0x0530
@@ -2194,6 +2194,44 @@
                 //}
             }
 
+            if ( isset($Command['writeAttributeRequestIAS_WD']) ) {
+                    $this->deamonlog('debug',"command writeAttributeRequestIAS_WD");
+                    // Msg Type = 0x0111
+                    
+                    $priority = $Command['priority'];
+                    
+                    $cmd = "0111";
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <direction: uint8_t>
+                    // <manufacturer specific: uint8_t>
+                    // <manufacturer id: uint16_t>
+                    // <Warning Mode: uint8_t>
+                    // <Warning Duration: uint16_t>
+                    // <Strobe duty cycle : uint8_t>
+                    // <Strobe level : uint8_t>
+                    
+                    $addressMode = "02";
+                    $targetShortAddress = $Command['address'];
+                    $sourceEndpoint = "01";
+                    $destinationEndpoint = "01";
+                    $direction = "01";
+                    $manufacturerSpecific = "00";
+                    $manufacturerId = "0000";
+                    $warningMode = "04";        // 14, 24, 34: semble faire le meme son meme si la doc indique: Burglar, Fire, Emergency / 04: que le flash
+                    $warningDuration = "0002"; // en seconde
+                    // $strobeDutyCycle = "01";
+                    // $strobeLevel = "F0";
+                    
+                    $data = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $direction . $manufacturerSpecific . $manufacturerId . $warningMode . $warningDuration; // . $strobeDutyCycle . $strobeLevel;
+                    
+                    $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                    
+                    $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            }
+            
             if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
             {
                 $this->deamonlog('debug',"Add a group to a device");
@@ -3862,6 +3900,21 @@
                                          "clusterCommand"           => $parameters['clusterCommand'],
                         );
                         break;
+                        //----------------------------------------------------------------------------
+                        case "writeAttributeRequestIAS_WD":
+                        $fields = preg_split("/[=&]+/", $msg);
+                          if (count($fields) > 1) {
+                              $parameters = proper_parse_str( $msg );
+                          }
+
+                        $Command = array(
+                                         "writeAttributeRequestIAS_WD"     => "1",
+                                         "priority"                        => $priority,
+                                         "dest"                            => $dest,
+                                         "address"                         => $address,
+                        );
+                        break;
+                        
                         //----------------------------------------------------------------------------
 
                     default:

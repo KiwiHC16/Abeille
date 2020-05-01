@@ -1,0 +1,21 @@
+{
+  "writeAttributeRequestIAS_WD": {
+    "isVisible": 1,
+    "name": "Alarm",
+    "order": 43,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "DONT",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c766sdsd251f1",
+      "topic": "writeAttributeRequestIAS_WD",
+      "request": "EP=#EP"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

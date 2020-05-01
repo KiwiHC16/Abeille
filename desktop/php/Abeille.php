@@ -69,60 +69,68 @@ $outils = array(
 
         </div>
 
-<!-- Icones de toutes les abeilles  -->
-        <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
-
-
-        <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
-        
+    <!-- Icones de toutes les abeilles  -->
+    <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
+    <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
 <?php
+    $NbOfZigatesON = 0; // Number of enabled zigates
     for ( $i=1; $i<=$zigateNb; $i++ ) {
-        if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
-            if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {  echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName(); }
-            echo "&nbsp&nbsp&nbsp";
-            echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
-            echo "&nbsp&nbsp&nbsp";
-            echo '<i id="bt_include_stop'.$i.'" class="fa fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
-            echo "&nbsp&nbsp&nbsp";
-            echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
+        if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
+            continue; // This Zigate is not enabled
 
-            echo '<div class="eqLogicThumbnailContainer">';
-
-            $dir = dirname(__FILE__) . '/../../images/';
-            $files = scandir($dir);
-            foreach ($eqLogics as $eqLogic) {
-
-                list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
-                if ( $net == 'Abeille'. $i) {
-
-                    // find opacity
-                    $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-
-                    // Find icone
-                    $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                    if (in_array($test, $files, 0)) {
-                        $path = 'node_' . $eqLogic->getConfiguration('icone');
-                    } else {
-                        $path = 'Abeille_icon';
-                    }
-
-                    // Affichage
-                    echo '<div class="eqLogicDisplayCardB">';
-                    echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
-                    echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-                    echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
-                    echo '</div>';
-                    echo '</div>';
-                }
-            }
-            echo ' </div>';
+        $NbOfZigatesON++;
+        if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {
+            echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
         }
+        echo "&nbsp&nbsp&nbsp";
+        echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
+        echo "&nbsp&nbsp&nbsp";
+        echo '<i id="bt_include_stop'.$i.'" class="fa fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
+        echo "&nbsp&nbsp&nbsp";
+        echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
 
+        echo '<div class="eqLogicThumbnailContainer">';
+
+        $dir = dirname(__FILE__) . '/../../images/';
+        $files = scandir($dir);
+        foreach ($eqLogics as $eqLogic) {
+            list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
+            if ( $net == 'Abeille'. $i) {
+                // find opacity
+                $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+
+                // Find icone
+                $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+                if (in_array($test, $files, 0)) {
+                    $path = 'node_' . $eqLogic->getConfiguration('icone');
+                } else {
+                    $path = 'Abeille_icon';
+                }
+
+                // Affichage
+                echo '<div class="eqLogicDisplayCardB">';
+                echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
+                echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+                echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
+                echo '</div>';
+                echo '</div>';
+            }
+        }
+        echo ' </div>';
+    }
+    if ($NbOfZigatesON == 0) { // No Zigate to display. Why ?
+        echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
+        echo "   <span style=\"color:red\">";
+        if ($zigateNb == 0)
+            echo "Aucune Zigate n'est définie !";
+        else
+            echo "Aucune Zigate n'est activée !";
+        echo "   </span><br>";
+        echo "    Veuillez aller à la page de configuration pour corriger.<br><br>";
+        echo "</div>";
     }
 ?>
-
-
 
 <!-- Gestion des groupes et des scenes  -->
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
@@ -768,7 +776,7 @@ for ($i = 1; $i <= 10; $i++) {
   <?php
 }
 ?>
-   
+
 <?php
 for ($i = 1; $i <= 10; $i++) {
  ?>

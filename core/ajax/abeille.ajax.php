@@ -67,13 +67,13 @@ try {
         log::add('AbeillePiZigate', 'debug', 'Arret du démon');
         abeille::deamon_stop(); // Stopping daemon
 
-        /* 'checkTTY' script no longer required.
-           Replaced by 'zg_GetVersion()' */
-        // $cmdToExec = "checkTTY.sh " . $zgPort;
-        // $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
-        // exec($cmd, $out, $status);
-        $status = 0;
+        /* Checks port exists and is not already used */
+        $cmdToExec = "checkTTY.sh " . $zgPort;
+        $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+        exec($cmd, $out, $status);
+        // $status = 0;
 
+        /* Read Zigate FW version */
         $version = 0; // FW version
         if ($status == 0) {
             $status = zg_GetVersion($zgPort, $version);

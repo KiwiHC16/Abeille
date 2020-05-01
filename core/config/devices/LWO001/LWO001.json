@@ -1,30 +1,26 @@
 {
-  "volet": {
-    "nameJeedom": "Volet ProFalux",
+  "LWO001": {
+    "nameJeedom": "Philips Hue White E27 Globe",
+    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1097",
     "timeout": "60",
     "Categorie": {
-      "automatism": "1"
+      "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07c7662688a",
-      "icone": "voletProFalux",
-      "mainEP": "#EP#"
+      "uniqId": "5c07c76dssdfdfsd620939dsfdsfhbkbfdvh316",
+      "icone": "LWO001",
+      "mainEP": "0B"
     },
     "Commandes": {
       "include1": "nom",
       "include2": "societe",
       "include3": "SW",
-      "include4": "ZCLVersion",
-      "include5": "dateCode",
-      "include6": "location",
-      "include7": "etatVolet",
-      "include8": "levelVolet",
-      "include9": "onVolet",
-      "include10": "offVolet",
-      "include11": "toggleVolet",
-      "include12": "setLevelVolet",
-      "include12 2": "moveToLiftAndTiltBSO",
-      "include13": "levelVoletStop",
+      "include4": "etatLight",
+      "include5": "levelLight",
+      "include8": "On",
+      "include9": "Off",
+      "include10": "Toggle",
+      "include11": "setLevel",
       "include19": "getEtat",
       "include20": "getLevel",
       "include21": "getManufacturerName",

@@ -65,5 +65,27 @@
       "Paramètres": "Parameters",
       "Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.": "Join mode requested. The zigate <?php echo $i;?> will flash for 4 minutes.",
       "Arret mode inclusion demandé. La zigate <?php echo $i;?> doit arreter de clignoter.": "Stop join mode requested. The zigate <?php echo $i;?> will stop flashing."
+    },
+    "plugins\/Abeille\/desktop\/js\/Abeille.js": {
+      "Santé Abeille": "Bee Health",
+      "Support": "Support",
+      "Réseau Abeille": "Bee Network",
+      "Liste Compatibilite": "Compatibility list",
+      "Inconnu": "Unknown",
+      "Graph Abeille": "Bee chart",
+      "Une nouvelle Telecommande est en création.": "A new remote is being setup",
+      "Nom de l\\'info": "Data name",
+      "Topic": "Topic",
+      "Unité": "Unit",
+      "Historiser": "Historize",
+      "Afficher": "Display",
+      "Inverser": "Invert",
+      "Min": "Min",
+      "Max": "Max",
+      "Tester": "Test",
+      "La valeur de la commande vaut par défaut la commande": "The value of the command is the default for the command",
+      "Payload": "Payload",
+      "Rechercher équipement": "Find device",
+      "Retain flag": "Retain flag"
     }
 }

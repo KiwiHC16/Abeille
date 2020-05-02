@@ -135,5 +135,18 @@
       "Programmation de la PiZigate": "Flash PiZigate",
       "Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?": "You are about to reset the PiZigate HW. <br>Do you want to continue ?",
       "Reset HW de la PiZigate": "PiZigate HW reset"
+  },
+  "plugins\/Abeille\/desktop\/modal\/health.php": {
+    "Module": "Device",
+    "Name": "Name",
+    "ID": "ID",
+    "Ruche": "Hive",
+    "Address": "Address",
+    "IEEE": "IEEE",
+    "Statut": "State",
+    "Dernière communication": "Last communication",
+    "Depuis (h)": "Since (h)",
+    "Date création": "Creation date",
+    "OK": "OK"
   }
 }

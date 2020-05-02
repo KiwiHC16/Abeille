@@ -74,6 +74,28 @@ $outils = array(
     <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
 <?php
+    /* Display beehive or bee card */
+    function displayBeeCard($eqLogic, $files) {
+        // find opacity
+        $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+
+        // Find icone
+        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+        if (in_array($test, $files, 0)) {
+            $path = 'node_' . $eqLogic->getConfiguration('icone');
+        } else {
+            $path = 'Abeille_icon';
+        }
+
+        // Affichage
+        echo '<div class="eqLogicDisplayCardB">';
+        echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
+        echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+        echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
+        echo    '</div>';
+        echo '</div>';
+    }
+
     $NbOfZigatesON = 0; // Number of enabled zigates
     for ( $i=1; $i<=$zigateNb; $i++ ) {
         if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
@@ -94,32 +116,24 @@ $outils = array(
 
         $dir = dirname(__FILE__) . '/../../images/';
         $files = scandir($dir);
+        /* Display beehive card then bee cards */
         foreach ($eqLogics as $eqLogic) {
-            list( $net, $addr ) = explode( "/", $eqLogic->getLogicalId());
-            if ( $net == 'Abeille'. $i) {
-                // find opacity
-                $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-
-                // Find icone
-                $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-                if (in_array($test, $files, 0)) {
-                    $path = 'node_' . $eqLogic->getConfiguration('icone');
-                } else {
-                    $path = 'Abeille_icon';
-                }
-
-                // Affichage
-                echo '<div class="eqLogicDisplayCardB">';
-                echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
-                echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-                echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
-                echo '</div>';
-                echo '</div>';
-            }
+            if ($eqLogic->getLogicalId() != "Abeille".$i."/Ruche")
+                continue;
+            displayBeeCard($eqLogic, $files);
+        }
+        foreach ($eqLogics as $eqLogic) {
+            $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
+            list( $net, $addr ) = explode( "/", $eqLogicId);
+            if ( $net != 'Abeille'. $i)
+                continue;
+            if ($eqLogicId == "Abeille".$i."/Ruche")
+                continue; // Skipping beehive
+            displayBeeCard($eqLogic, $files);
         }
         echo ' </div>';
     }
-    if ($NbOfZigatesON == 0) { // No Zigate to display. Why ?
+    if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !
         echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
         echo "   <span style=\"color:red\">";
         if ($zigateNb == 0)

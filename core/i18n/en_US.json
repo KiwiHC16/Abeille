@@ -180,5 +180,11 @@
       "Chemin du contrôleur Zigbee :": "Zigbee controller path :",
       "Inconnu": "Unknown",
       "Nombre de démons lancés :": "Number of started deamons :"
+  },
+  "plugins\/Abeille\/desktop\/modal\/inconnu.php": {
+    "Inconnu ...": "Unknown ...",
+    "Ci-dessous la liste des informations inconnues remontant du reseau zigbee et de ce fait non gérées par Abeille.": "Below is the list of all the unknown data collected from the zigbee network and not handled by Abeille.",
+    "Collecter ces informations permettrait d\\'améliorer le code d\\'Abeille.": "Gathering this data could help improve Abeille's code.",
+    "Liste vide": "List empty"
   }
 }

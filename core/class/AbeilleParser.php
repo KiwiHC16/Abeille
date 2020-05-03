@@ -694,7 +694,8 @@
 
             //verification du CRC
             if (hexdec($crc) != $crctmp) {
-                $this->deamonlog('error','ERREUR de CRC ! (calculé='.$crctmp.', attendu='.$crc.'). Réception pas fiable.');
+                $this->deamonlog('error', 'ERREUR de CRC ! (calculé='.$crctmp.', attendu='.hexdec($crc).'). Message ignoré.');
+                return -1;
             }
 
             //Traitement PAYLOAD
@@ -2270,7 +2271,7 @@
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat           = substr($payload, 80, 2);
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', DoorV2Voltage='   .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', DoorV2Etat='      .$etat);
+                    $this->deamonlog('debug', '  DoorV2Voltage='   .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', DoorV2Etat='      .$etat);
 
                     $this->mqqtPublish( $dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
                     $this->mqqtPublish( $dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ));
@@ -2367,7 +2368,7 @@
                     $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', ff01/25: Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', ff01/25: Temperature='.$temperature.', ff01/25: Humidity='.$humidity.', ff01/25: Pression='.$pression);
+                    $this->deamonlog('debug', '  Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity.', Pression='.$pression);
                     // $this->deamonlog('debug', 'ff01/25: Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'ff01/25: Pression: '     .$pression);

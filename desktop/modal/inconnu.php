@@ -6,13 +6,13 @@
 <html>
 <body>
 
-<h1>Inconnu...</h1>
+<h1>{{Inconnu ...}}</h1>
 
 
 
 
-<p>Ci dessous la liste des informations inconnues remontant du reseau zigbee et de ce fait non gérées par Abeille.</p>
-<p>L'idée est de collecter ces informations pour améliorer les modèles ou le code.</p>
+<p>{{Ci-dessous la liste des informations inconnues remontant du reseau zigbee et de ce fait non gérées par Abeille.}}</p>
+<p>{{Collecter ces informations permettrait d'améliorer le code d'Abeille.}}</p>
 <p>-------------------------------------</p>
 <?php
 $cmd = "grep -e 'Objet existe mais pas la commande' /var/www/html/log/Abeille | grep -v 'ff01' ";
@@ -20,7 +20,7 @@ $cmd = "grep -e 'Objet existe mais pas la commande' /var/www/html/log/Abeille | 
 exec($cmd, $output);
 
 if ( count($output) == 0 ) {
-  echo "Liste vide";
+  echo "{{Liste vide}}";
   }
 else {
   foreach ( $output as $line ) {

@@ -186,5 +186,13 @@
     "Ci-dessous la liste des informations inconnues remontant du reseau zigbee et de ce fait non gérées par Abeille.": "Below is the list of all the unknown data collected from the zigbee network and not handled by Abeille.",
     "Collecter ces informations permettrait d\\'améliorer le code d\\'Abeille.": "Gathering this data could help improve Abeille's code.",
     "Liste vide": "List empty"
+  },
+  "plugins\/Abeille\/desktop\/modal\/listeCompatibilite.php": {
+    "Equipments": "Devices",
+    "Equipements et fonctions associées": "Devices & associated functions",
+    "Nom": "Name",
+    "Nom Zigbee": "Zigbee name",
+    "Fonction": "Function",
+    "Fonctions utilisées": "Used functions"
   }
 }

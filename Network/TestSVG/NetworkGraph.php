@@ -1,5 +1,5 @@
 <?php
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 ?>
 
 <script type="text/javascript">
@@ -99,17 +99,18 @@ function setTopoJSON(Topo) {
 
 }
 
-function refreshNetworkInformation() {
-    var xmlhttpRefreshNetworkInformation = new XMLHttpRequest();
-    xmlhttpRefreshNetworkInformation.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            networkInformation = this.responseText;
-            console.log("Debug - refreshNetworkInformation function:"+networkInformation);
-        }
-    };
-    xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/Network/AbeilleLQI.php", true);
-    xmlhttpRefreshNetworkInformation.send();
-}
+    /* Launch network scan for current Zigate */
+    function refreshNetworkInformation() {
+        var xmlhttpRefreshNetworkInformation = new XMLHttpRequest();
+        xmlhttpRefreshNetworkInformation.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                networkInformation = this.responseText;
+                console.log("refreshNetworkInformation(): " + networkInformation);
+            }
+        };
+        xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/Network/AbeilleLQI.php?zigate=" + ZigateX, true);
+        xmlhttpRefreshNetworkInformation.send();
+    }
 
 function refreshNetworkInformationProgress() {
     var d = new Date();
@@ -396,11 +397,13 @@ function setPosition(mode) {
     }
 }
 
-function refreshNetworkCollectionProgress() {
-    refreshNetworkInformationProgress();
-    console.log("Debug - function - refreshNetworkCollectionProgress - "+networkInformationProgress);
-    document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
-}
+    /* Refresh status of ongoing network scan */
+    function refreshNetworkCollectionProgress() {
+        refreshNetworkInformationProgress();
+        console.log("refreshNetworkCollectionProgress(): " + networkInformationProgress);
+        // document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
+        document.getElementById("refreshInformation").value = networkInformationProgress;
+    }
 
 function myJSON_AddAbeillesFromJeedom() {
     console.log("topo: "+JSON.stringify(topo));
@@ -569,18 +572,20 @@ function selectParent(form) {
     refreshAll();
 }
 
-function filtreRuche() {
-    document.write( '<FORM NAME="myformRuche" ACTION="" METHOD="GET">');
-    document.write( '<SELECT NAME="list" >');
+    /* Really used ?
+    function filtreRuche() {
+        document.write( '<FORM NAME="myformRuche" ACTION="" METHOD="GET">');
+        document.write( '<SELECT NAME="list" >');
 
-    document.write( '<OPTION value="Abeille1" >Ruche 1</OPTION>');
-    document.write( '<OPTION value="Abeille2" >Ruche 2</OPTION>');
+        document.write( '<OPTION value="Abeille1" >Ruche 1</OPTION>');
+        document.write( '<OPTION value="Abeille2" >Ruche 2</OPTION>');
 
-    document.write( '</SELECT>');
-    document.write( '</br>');
-    document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectRuche(this.form)"/>');
-    document.write( '</FORM>');
-}
+        document.write( '</SELECT>');
+        document.write( '</br>');
+        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectRuche(this.form)"/>');
+        document.write( '</FORM>');
+    }
+    */
 
 function filtreSource() {
     document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
@@ -593,7 +598,7 @@ function filtreSource() {
     }
 
     document.write( '</SELECT>');
-    document.write( '</br>');
+    // document.write( '</br>');
     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectSource(this.form)"/>');
     document.write( '</FORM>');
 }
@@ -610,7 +615,7 @@ function filtreDestination() {
     }
 
     document.write( '</SELECT>');
-    document.write( '</br>');
+    // document.write( '</br>');
     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDestination(this.form)"/>');
     document.write( '</FORM>');
 }
@@ -626,7 +631,7 @@ function filtreDetails() {
     }
 
     document.write( '</SELECT>');
-    document.write( '</br>');
+    // document.write( '</br>');
     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDetails(this.form)"/>');
     document.write( '</FORM>');
 }
@@ -643,7 +648,7 @@ function filtreParent() {
     }
 
     document.write( '</SELECT>');
-    document.write( '</br>');
+    // document.write( '</br>');
     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectParent(this.form)">');
     document.write( '</FORM>');
 }
@@ -658,121 +663,160 @@ function saveAbeilles() {
     setTopoJSON(JSON.stringify(myObjNew));
 }
 
-//-----------------------------------------------------------------------
-// MAIN
-//-----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
+    // MAIN
+    //-----------------------------------------------------------------------
 
-const queryString = window.location.search;
-console.log(queryString);
-res = queryString.substr(1);
-console.log(res);
-if (res.length>2) Ruche = res;
+    const queryString = window.location.search;
+    console.log("URL params=" + queryString);
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('zigate')) {
+        ZigateX = urlParams.get('zigate');
+        Ruche = "Abeille" + ZigateX;
+    } else {
+        ZigateX = 1;
+        Ruche = "Abeille1";
+    }
+    // res = queryString.substr(1);
+    // console.log("res=" + res);
+    // if (res.length > 2) Ruche = res;
+    // console.log("Ruche=" + Ruche);
 
+    getVoisinesJSON();
+    getTopoJSON();
+    myJSON_AddAbeillesFromJeedom();
+    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+    myJSON_AddMissing();
+    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 
-getVoisinesJSON();
-getTopoJSON();
-
-myJSON_AddAbeillesFromJeedom();
-// console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-myJSON_AddMissing();
-// console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-
-setPosition("Auto");
+    setPosition("Auto");
 </script>
 
 <html>
 <head>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 </head>
 
 <body>
-Zigate selectionnee: <script>document.write(res);</script>
-<p id="demo"></p>
-<svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
-
-<?php
-    if (file_exists("/var/www/html/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
-        echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
+    <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
+        Placement réseau
+    </div>
+    <?php
+    $zigateNb = config::byKey('zigateNb', 'Abeille', 1); // Warning: number of zigates and not zigate number.
+    // Reading URL parameter: "...?zigate=X", where X is zigate number
+    if (isset($_GET['zigate']))
+        $ZigateX = $_GET['zigate'];
+    else
+        $ZigateX = 1; // Default = zigate1
+    echo "<script>console.log(\"ZigateX=" . $ZigateX . "\")</script>";
+    ?>
+    <style>
+    td {
+        border: 1px solid black;
     }
-    else {
-        echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>';
-    }
-?>
-<script>
-document.write( drawLegend("Yes") );
-document.write( dessineLesVoisinesV2(0,"Yes") );
-document.write( dessineLesTextes(10,"Yes") );
-document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
-document.write( dessineLesAbeilles("Yes") );
-</script>
+    </style>
+    <table>
+        <tr>
+            <td>
+            Zigate
+            </td>
+            <td>
+                <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
+                <?php
+                for ($i=1; $i<=$zigateNb; $i++) {
+                    if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
+                        continue;
+                    if ($i == $ZigateX)
+                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?zigate=" . $i . "'\" />";
+                    else
+                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?zigate=" . $i . "'\" />";
+                }
+                ?>
+            </td>
+        </tr>
+            <td>
+            Filtre
+            </td>
+            <td>
+                <table><tr>
+                    <td>Source</td><td>Destination</td><td>Paramètre</td><td>Relation</td></tr>
+                    <td>   <script>filtreSource(); </script>        </td>
+                    <td>   <script>filtreDestination();</script>    </td>
+                    <td>   <script>filtreDetails();  </script>      </td>
+                    <td>   <script>filtreParent();  </script>       </td>
+                </tr></table>
+            </td>
+        <tr>
+            <td>
+            Actions
+            </td>
+            <td>
+                <button id="ReLoadThePage" onclick="ReLoad()">Rafraichir</button>
+                <button id="Refresh" onclick="refreshNetworkInformation()">Réinterroger le réseau</button>
+                <input id="refreshInformation" type="text" value="" readonly size=40 />
+                <button id="rucheCentered" onclick="rucheCentered()"   >Centrer ruche</button>
+                <button id="placementAuto" onclick="placementAuto()"   >Placement auto</button>
+            </td>
+        <tr>
+        <tr>
+            <td>
+            Image
+            </td>
+            <td>
+                <form action="upload.php" method="post" enctype="multipart/form-data">
+                    <table><tr><td>
+                    Image (format PNG)<br>
+                    </td><td>
+                    <input type="file" name="fileToUpload" id="fileToUpload" accept=".png"/>
+                    </td><td>
+                    <input type="submit" value="Installer" name="submit"/>
+                    </td>
+                    </tr></table>
+                </form>
+            </td>
+        <tr>
+    </table>
 
-</svg></br>
-
-Selectionner la Zigate a afficher:</br>
-<table><tr>
-<?php
-for ($i=1; $i<=10; $i++) {
-    if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
+    <!-- <p id="demo"></p> -->
+    <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
+        <?php
+            if (file_exists("/var/www/html/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
+                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
+            }
+            else {
+                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png" ></image>';
+            }
         ?>
-        <td><input id="btntest" type="button" value="Zigate <?php echo $i; ?>" onclick="window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?Abeille<?php echo $i; ?>'" /></td>
-<?php
-    }
-}
-?>
-
-</tr></table>
-
-<table><tr>
-<tr><td>Source</td><td>Destination</td><td>Parametre</td><td>Relation</td></tr>
-<td>   <script>filtreSource(); </script>        </td>
-<td>   <script>filtreDestination();</script>    </td>
-<td>   <script>filtreDetails();  </script>      </td>
-<td>   <script>filtreParent();  </script>       </td>
-</tr></table>
+        <script>
+        document.write( drawLegend("Yes") );
+        document.write( dessineLesVoisinesV2(0,"Yes") );
+        document.write( dessineLesTextes(10,"Yes") );
+        document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
+        document.write( dessineLesAbeilles("Yes") );
+        </script>
+    </svg>
+    </br>
 
 <table><tr><td>
-<button id="rucheCentered" onclick="rucheCentered()"   >Ruche Centered</button>
-<button id="placementAuto" onclick="placementAuto()"   >Placement Auto</button>
 <button id="save"          onclick="save()"            >local save</button>
 <button id="restore"       onclick="restore()"         >local restore</button>
 <button id="save"          onclick="saveAbeilles()"    >save</button>
 </td></tr></table>
 
-<table><tr><td>
-<button id="Refresh" onclick="refreshNetworkInformation()">Refresh Network Information</button>
-</td><td>
-<p id="refreshInformation">'+networkInformationProgress+'</p>
-</td><td>
-<button id="ReLoadThePage" onclick="ReLoad()">Rafraichir le graphe.</button>
-</td></tr></table>
-
-<br>
-
-<form action="upload.php" method="post" enctype="multipart/form-data">
-<table><tr><td>
-Select image to upload:<br>
-</td><td>
-<input type="file" name="fileToUpload" id="fileToUpload"/>
-</td><td>
-<input type="submit" value="Upload Image" name="submit"/>
-</td><td>
-<p>(L image doit etre au format png)</p>
-</td></tr></table>
-</form>
-
 </body>
 </html>
 
 <script>
-setInterval(function() {
+    setInterval(
+        function() {
             refreshNetworkCollectionProgress();
-            // console.log("function refreshNetworkCollectionProgress");
-            }, 1000); // ms
+        }, 
+        1000  // ms
+    );
 
-            // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
-            // console.log("Name list: "+JSON.stringify(topo));
-            // console.log("Name 1: " + JSON.stringify(topo["0000"]));
+    // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
+    // console.log("Name list: "+JSON.stringify(topo));
+    // console.log("Name 1: " + JSON.stringify(topo["0000"]));
 
-            console.log("End --------------");
-
+    console.log("End --------------");
 </script>

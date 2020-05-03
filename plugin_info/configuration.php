@@ -137,20 +137,6 @@
                     </div>
                 </div>
 
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="onlyTimer">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                        </select>
-                    </div>
-                </div>
-                Merci de garder la valeur "Mode Timer seulement" sur "Non" car cette option va disparaitre.
-
-
-
             </div>
 
             <hr>
@@ -192,7 +178,7 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="WiringPI est nécéssaire pour controller les GPIO.">{{Installation de WiringPi}}</label>
                 <div class="col-lg-5">
                     <a class="WiringPiStatus" title="Status du package">
-                        <span class="label label-danger" style="font-size:1em;">?</span>
+                        <span class="label label-success" style="font-size:1em;">-?-</span>
                     </a>
                     <a class="btn btn-warning" id="bt_checkWiringPi" title="Vérification de l'installation"><i class="fa fa-refresh"></i> {{Retester}}</a>
                     <a class="btn btn-warning" id="bt_installWiringPi" title="Installation du package"><i class="fa fa-refresh"></i> {{Installer}}</a>
@@ -220,7 +206,7 @@
                         ?>
                     </select>
                     <a class="TTYStatus" title="Status de communication sur ce port">
-                        <span class="label label-danger" style="font-size:1em;">?</span>
+                        <span class="label label-success" style="font-size:1em;">-?-</span>
                     </a>
                     <a class="btn btn-warning" id="bt_checkTTY" title="Test de communication"><i class="fa fa-refresh"></i> {{Tester}}</a>
                     <a class="btn btn-warning" id="bt_installTTY" title="Tentative d'activation du port"><i class="fa fa-refresh"></i> {{Activer}}</a>
@@ -231,7 +217,7 @@
                 <label class="col-lg-4 control-label">{{Firmware}}</label>
                 <div class="col-lg-5">
                     <a class="CurrentFirmware" title="Version du firmware actuel">
-                        <span class="label label-danger" style="font-size:1em;">?</span>
+                        <span class="label label-success" style="font-size:1em;">-?-</span>
                     </a>
                     <a class="btn btn-warning" id="bt_readFW" title="Lecture de la version du FW">
                         <i class="fa fa-refresh"></i>

@@ -137,20 +137,6 @@
                     </div>
                 </div>
 
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Le plugin Abeille possede des objets Timer. Si vous ne voulez utiliser que les Timers sans avoir de Zigate connectée mettre Oui. Ce mode permet de ne pas lancer les demons pour la ZiGate et n avoir que les timers.">{{Mode Timer seulement}}</label>
-                    <div class="col-lg-4">
-                        <select style="width:auto" class="configKey form-control" data-l1key="onlyTimer">
-                            <option value="Y">{{Oui}}</option>
-                            <option value="N">{{Non}}</option>
-                        </select>
-                    </div>
-                </div>
-                Merci de garder la valeur "Mode Timer seulement" sur "Non" car cette option va disparaitre.
-
-
-
             </div>
 
             <hr>

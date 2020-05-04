@@ -194,5 +194,13 @@
     "Nom Zigbee": "Zigbee name",
     "Fonction": "Function",
     "Fonctions utilisées": "Used functions"
+  },
+  "plugins\/Abeille\/desktop\/modal\/getCompleteAbeilleConf.php": {
+    "Extraction de toutes les informations necessaires à l\\'analyse du plugin.": "List of all the information needed to test the plugin.",
+    "Version": "Version",
+    "Configuration du plugin": "Plugin configuration",
+    "Liste des cron": "Cron list",
+    "Liste des abeilles": "Bee list",
+    "Liste des commandes": "Command list"
   }
 }

@@ -214,5 +214,13 @@
     "Liste des cron": "Cron list",
     "Liste des abeilles": "Bee list",
     "Liste des commandes": "Command list"
+  },
+  "plugins\/Abeille\/desktop\/modal\/healthShort.php": {
+    "Module": "Module",
+    "Statut": "Status",
+    "Depuis (h)": "Since (h)",
+    "OK": "OK",
+    "Time Out Last Communication": "Time Out Last Communication",
+    "L\\'adresse $IEEE est dupliqué ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE": "Anomaly: The $IEEE address is duplicated. There must be only one IEEE adddress."
   }
 }

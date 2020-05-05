@@ -1,6 +1,6 @@
 <?php
 
-    /* This file is part of Jeedom.
+   /* This file is part of Jeedom.
     *
     * Jeedom is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -25,24 +25,32 @@
 
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
-
 ?>
-
 
 <form class="form-horizontal">
     <fieldset>
         <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
-
-
-            <div>
-                <p><i>{{En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.}}</i></p>
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="Version Abeille.">{{Version Abeille : }}</label>
-                    <div class="col-lg-4">
-                        Master
-                    </div>
+        <div>
+            <p><i> En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.</i></p>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="Version d'Abeille.">{{Version Abeille : }}</label>
+                <div class="col-lg-4">
+                    Master
                 </div>
             </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label" data-toggle="tooltip" title="Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante.">{{Objet Parent : }}</label>
+            <div class="col-lg-4">
+                <select class="configKey form-control" data-l1key="AbeilleParentId">
+                    <?php
+                        foreach (jeeObject::all() as $object) {
+                            echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
 
             <legend><i class="fa fa-list-alt"></i> {{Connection}}</legend>
             <a class="btn btn-success" id="bt_Connection_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_Connection_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
@@ -119,26 +127,6 @@
 }
 ?>
              </div>
-<hr>
-            <legend><i class="fa fa-list-alt"></i> {{Parametre}}</legend>
-            <a class="btn btn-success" id="bt_parametre_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_parametre_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
-
-            <div id="Parametre">
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Tous les objets crées seront des enfants de l'objet selectionné. Les objets sont définis dans le menu principal de Jeedom: Outils->Objets. Les objets representent les pieces de la maison par exemple.}}">{{Objet Parent}}</label>
-                    <div class="col-lg-4">
-                        <select class="configKey form-control" data-l1key="AbeilleParentId">
-                            <?php
-                                foreach (jeeObject::all() as $object) {
-                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                                }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-
             <hr>
             <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
             <a class="btn btn-success" id="bt_zigatewifi_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_zigatewifi_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
@@ -248,53 +236,41 @@
 
 <script>
 
-$("#paramMosquitto").hide();
+// $("#paramMosquitto").hide();
 $("#PiZigate").hide();
-$("#Parametre").hide();
+// $("#Parametre").hide();
 $("#Connection").hide();
 $("#zigatewifi").hide();
 
-$('#bt_hide').on('click', function () {
-                    // console.log("bt_hide");
-                    // To be defined
-                 $("#paramMosquitto").hide();
-                    }
-                    );
+// $('#bt_hide').on('click', function () {
+                 // $("#paramMosquitto").hide();
+                    // }
+                    // );
 
-$('#bt_show').on('click', function () {
-                 // console.log("bt_test");
-                 // To be defined
-                 $("#paramMosquitto").show();
-                 }
-                 );
+// $('#bt_show').on('click', function () {
+                 // $("#paramMosquitto").show();
+                 // }
+                 // );
 
 $('#bt_zigatewifi_show').on('click', function () {
-        // console.log("bt_test");
-        // To be defined
         $("#zigatewifi").show();
     }
 );
 
 $('#bt_zigatewifi_hide').on('click', function () {
-        // console.log("bt_hide");
-        // To be defined
         $("#zigatewifi").hide();
     }
 );
 
-$('#bt_parametre_hide').on('click', function () {
-                          // console.log("bt_hide");
-                          // To be defined
-                          $("#Parametre").hide();
-                          }
-                          );
+// $('#bt_parametre_hide').on('click', function () {
+                          // $("#Parametre").hide();
+                          // }
+                          // );
 
-$('#bt_parametre_show').on('click', function () {
-                          // console.log("bt_test");
-                          // To be defined
-                          $("#Parametre").show();
-                          }
-                          );
+// $('#bt_parametre_show').on('click', function () {
+                          // $("#Parametre").show();
+                          // }
+                          // );
 
 $('#bt_Connection_hide').on('click', function () {
                            // console.log("bt_hide");

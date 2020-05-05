@@ -222,5 +222,14 @@
     "OK": "OK",
     "Time Out Last Communication": "Time Out Last Communication",
     "L\\'adresse $IEEE est dupliqué ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE": "Anomaly: The $IEEE address is duplicated. There must be only one IEEE adddress."
+  },
+  "plugins\/Abeille\/Netowrk\/AbeilleLQI_Map.php": {
+    "Le fichier contenant les informations réseau n\\'existe pas, faites un Refresh Cache puis Submit.": "The file containing network data inexistant, please Refresh Cache and Submit.",
+    "Liste des équipements trouvés dans le réseau mais inconnus dans Jeedom: ": "List of unknown devices found in the network: ",
+    "Abeille Network Graph": "Abeille Network Chart",
+    "Attention: les équipements sans position seront positionnés sur le cercle par defaut donc les distances ne seront pas représentative des distances réelles.": "Warning: devices without a position will be postionned by default on the circle. Distances for theses devices will not properly represent real distances.",
+    "Batterie": "Battery",
+    "Routeur": "Router",
+    "Inconnu par Jeedom": "Unrecognized by Jeedom"
   }
 }

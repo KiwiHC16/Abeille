@@ -74,8 +74,8 @@
         exit(1);
     }
 
-    _exec("stty -F ".$serial." sane", $out);
-    _exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
+    exec("stty -F ".$serial." sane", $out);
+    exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
     
     // Si le lien tombe a l ouverture de $serial c est peut etre par ce que le serveur n'est pas dispo.
     // Il semblerai que le lien pts soit créé même si la liaison n'est pas établie.
@@ -86,13 +86,11 @@
     $test = "";
     
     while (true) {
-        
         if (!file_exists($serial)) {
             deamonlog('error','CRITICAL Fichier '.$serial.' n existe pas');
             fclose($f);
             exit(1);
         }
-         
 
         $car = fread($f, 01);
 

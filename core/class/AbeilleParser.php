@@ -2792,6 +2792,7 @@
         }
 
         function processActionQueue() {
+            if ( !($this->actionQueue) ) return;
             if ( count($this->actionQueue) < 1 ) return;
 
             foreach ( $this->actionQueue as $key=>$action ) {

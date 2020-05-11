@@ -16,7 +16,7 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
+include_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function Abeille_install() {
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
@@ -32,12 +32,15 @@ function Abeille_install() {
     }
 }
 
-function Abeille_update() {
+/* Check and update configuration DB if required.
+   Note: This function can be called before daemons startup. Useful for
+     GIT users & developpers. */
+function updateConfigDB() {
 
-    message::add('Abeille', 'Mise à jour en cours...', null, null);
-    
-    if ( config::byKey('DbVersion', 'Abeille', '') == '' ) {
-        
+    /* Version 20200225 changes:
+       - Added multi-zigate support */
+    if (config::byKey('DbVersion', 'Abeille', '') == '') {
+
         // ******************************************************************************************************************
         // Update Abeille instance from previous version from Abeille/ to Abeille1/
         // Ruche
@@ -65,9 +68,9 @@ function Abeille_update() {
             }
         }
         config::save( 'zigateNb', '1', 'Abeille' );
-        
+
         config::save( 'deamonAutoMode', '1', 'Abeille' );
-        
+
         config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
         config::save( 'AbeilleActiver2', 'N', 'Abeille' );
         config::save( 'AbeilleActiver3', 'N', 'Abeille' );
@@ -78,12 +81,12 @@ function Abeille_update() {
         config::save( 'AbeilleActiver8', 'N', 'Abeille' );
         config::save( 'AbeilleActiver9', 'N', 'Abeille' );
         config::save( 'AbeilleActiver10', 'N', 'Abeille' );
-        
+
         $port1 = config::byKey('AbeilleSerialPort', 'Abeille', '');
         $addr1 = config::byKey('IpWifiZigate',      'Abeille', '');
         echo "port1: ".$port1;
         echo "addr1: ".$addr1;
-        
+
         if ( ($port1 == '/tmp/zigate') || ($port1 == '/dev/zigate') ) {
             config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
             config::save( 'IpWifiZigate1', $addr1, 'Abeille' );
@@ -94,23 +97,50 @@ function Abeille_update() {
         config::save( 'DbVersion', '20200225', 'Abeille' );
     }
 
+    /* Version 20200510 changes:
+       Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI' */
+    $dbVersion = config::byKey('DbVersion', 'Abeille', '');
+    if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
+        for ($i=1; $i<=10; $i++ ) {
+            if (config::byKey('AbeilleActiver'.$i, 'Abeille', '') != "Y")
+                continue; // Disabled or undefined
+
+            $sp = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
+            if ($sp == "/dev/zigate".$i)
+                config::save('AbeilleType'.$i, 'WIFI', 'Abeille' );
+            else if ((substr($sp, 0, 9) == "/dev/ttyS") || (substr($sp, 0, 11) == "/dev/ttyAMA"))
+                config::save('AbeilleType'.$i, 'PI', 'Abeille' );
+            else
+                config::save('AbeilleType'.$i, 'USB', 'Abeille' );
+        }
+        config::save('DbVersion', '20200510', 'Abeille');
+    }
+}
+
+function Abeille_update() {
+
+    message::add('Abeille', 'Mise à jour en cours...', null, null);
+
+    /* Updating config DB if required */
+    updateConfigDB();
+
     // Clean Config
     config::remove('affichageCmdAdd', 'Abeille');
     config::remove('affichageNetwork', 'Abeille');
     config::remove('affichageTime', 'Abeille');
-    
+
     config::remove('AbeilleSerialPort', 'Abeille');
     config::remove('IpWifiZigate', 'Abeille');
-    
+
     config::remove('AbeilleAddress', 'Abeille');
     config::remove('AbeilleConId', 'Abeille');
     config::remove('AbeillePort', 'Abeille');
-    
+
     config::remove('mqttPass', 'Abeille');
     config::remove('mqttTopic', 'Abeille');
     config::remove('mqttUser', 'Abeille');
     config::remove('onlyTimer', 'Abeille');
-    
+
     message::removeAll('Abeille');
     message::add('Abeille', 'Mise à jour terminée', null, null);
 }

@@ -22,6 +22,7 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once dirname(__FILE__).'/AbeilleMsg.php';
+    include_once dirname(__FILE__).'/../../plugin_info/install.php'; // updateConfigDB()
 
     /* Errors reporting: uncomment below lines for debug */
     // error_reporting(E_ALL);
@@ -442,13 +443,11 @@
             return $return;
         }
 
-        /* This function is used to run some cleanup before starting demons,
+        /* This function is used to run some cleanup before starting daemons,
            or update the database due to data needed changes. */
         /* TODO: Move to correct naming 'daemon' and not 'deamon' */
         public static function deamon_start_cleanup($message = null) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
-
-            $debug = 0;
 
             // ******************************************************************************************************************
             // Remove temporary files
@@ -468,6 +467,15 @@
                 config::save( "AbeilleIEEE_Ok".$i, 0, 'Abeille');
             }
 
+            /* Checking configuration DB version.
+               If standard user, this should be done by installation process (install.php).
+               If user based on GIT, this is a work-around */
+            $dbVersion = config::byKey('DbVersion', 'Abeille', '');
+            if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
+                log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.'. Mise-à-jour nécéssaire.');
+                updateConfigDB();
+            }
+
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): Terminé');
             return;
         }
@@ -478,7 +486,19 @@
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
 
-            $param = self::getParameters();
+            /* Some checks before starting daemons
+               - Are dependancies ok ?
+               - Is cron running ? */
+            if (self::dependancy_info()['state'] != 'ok') {
+                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.", 'Abeille/Demon');
+                log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
+                return false;
+            }
+            if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
+                log::add('Abeille', 'error', 'deamon_start(): Tache cron introuvable');
+                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est un bug dans Abeille ?", "Abeille/Demon");
+                throw new Exception(__('Tache cron introuvable', __FILE__));
+            }
 
             self::deamon_stop();
 
@@ -489,17 +509,7 @@
 
             self::deamon_start_cleanup();
 
-            if (self::dependancy_info()['state'] != 'ok') {
-                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.", 'Abeille/Demon');
-                log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
-                return false;
-            }
-
-            if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
-                log::add('Abeille', 'error', 'deamon_start(): Tache cron introuvable');
-                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est un bug dans Abeille ?", "Abeille/Demon");
-                throw new Exception(__('Tache cron introuvable', __FILE__));
-            }
+            $param = self::getParameters();
 
             /* Configuring GPIO for PiZigate case.
             TODO: Should be done only if PiZigate is present to avoid any unexpected side effect. */

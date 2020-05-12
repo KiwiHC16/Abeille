@@ -95,8 +95,30 @@
         }
 
         public static function tryToGetIEEE() {
+            
+            // Cherche les IEEE manquantes
             $eqLogics = Abeille::byType('Abeille');
-            foreach ($eqLogics as $eqLogic) {
+            foreach ($eqLogics as $key => $eqLogic) {
+                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+                if ( $commandIEEE ) {
+                    $addrIEEE = $commandIEEE->execCmd();
+                    if (strlen($addrIEEE) < 2 ) {
+                        $tryToGetIEEEArray[] = $key;
+                    }
+                }
+            }
+            // var_dump($tryToGetIEEEArray);
+            
+            // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
+            $eqLogicIds = array_rand( $tryToGetIEEEArray, 2 );
+            // var_dump($eqLogicIds);
+            
+            // Pour ces x Abeilles lance l interrogation
+            foreach ($eqLogicIds as $eqLogicId) {
+                // echo "Start Loop: "; var_dump($eqLogicId);
+                // echo "Start Loop Detail: ";
+                $eqLogic = $eqLogics[$eqLogicId];
+                // var_dump($eqLogic);
                 $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                 if ( $commandIEEE ) {
                     $addrIEEE = $commandIEEE->execCmd();
@@ -105,11 +127,10 @@
                         if (strlen($NE) == 4) {
                             if ( $eqLogic->getIsEnable() ) {
                                 log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
-                                echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                                // echo 'Demarrage tryToGetIEEE for '.$NE."\n";
                                 $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
-                                echo "Cmd: ".$cmd."\n";
+                                // echo "Cmd: ".$cmd."\n";
                                 exec($cmd, $out, $status);
-                                return;
                             }
                         }
                     }

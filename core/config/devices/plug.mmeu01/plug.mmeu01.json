@@ -1,0 +1,30 @@
+{
+  "plug.mmeu01": {
+    "nameJeedom": "Xiaomi Prise EU",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07c76625d9",
+      "icone": "XiaomiPriseEU",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etat",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier",
+      "include11": "conso",
+      "include12": "Xiaomi-ff01",
+      "include13": "puissance",
+      "include13 2": "Group-Membership"
+    }
+  }
+}

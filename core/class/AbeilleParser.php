@@ -2207,7 +2207,7 @@
                         // Relay Double
                         $this->mqqtPublish( $dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
                     }
-                    if ($EPoint=="02") {
+                    if ( ($EPoint=="02") || ($EPoint=="15")) {
                     // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
                     // On va envoyer ca sur la meme variable que le champ ff01
                     $hexNumber = substr($payload, 24, 8);

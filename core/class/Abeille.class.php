@@ -95,46 +95,54 @@
         }
 
         public static function tryToGetIEEE() {
+            $tryToGetIEEEArray = array();
             
             // Cherche les IEEE manquantes
             $eqLogics = Abeille::byType('Abeille');
+            // var_dump($eqLogics);
+            
             foreach ($eqLogics as $key => $eqLogic) {
                 $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                 if ( $commandIEEE ) {
                     $addrIEEE = $commandIEEE->execCmd();
-                    if (strlen($addrIEEE) < 2 ) {
+                    if ( strlen($addrIEEE) < 2 ) {
                         $tryToGetIEEEArray[] = $key;
                     }
                 }
             }
+            
             // var_dump($tryToGetIEEEArray);
             
             // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
             $eqLogicIds = array_rand( $tryToGetIEEEArray, 2 );
-            // var_dump($eqLogicIds);
+            var_dump($eqLogicIds);
             
             // Pour ces x Abeilles lance l interrogation
             foreach ($eqLogicIds as $eqLogicId) {
-                // echo "Start Loop: "; var_dump($eqLogicId);
+                echo "Start Loop: ".$eqLogicId."\n";
                 // echo "Start Loop Detail: ";
-                $eqLogic = $eqLogics[$eqLogicId];
+                $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
                 // var_dump($eqLogic);
-                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-                if ( $commandIEEE ) {
-                    $addrIEEE = $commandIEEE->execCmd();
-                    if (strlen($addrIEEE) < 2 ) {
-                        list( $dest, $NE) = explode('/', $eqLogic->getLogicalId());
+                $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
+                if ( $commandIEEE_X ) {
+                    $addrIEEE_X = $commandIEEE_X->execCmd();
+                    if (strlen($addrIEEE_X) < 2 ) {
+                        list( $dest, $NE) = explode('/', $eqLogicX->getLogicalId());
                         if (strlen($NE) == 4) {
-                            if ( $eqLogic->getIsEnable() ) {
+                            if ( $eqLogicX->getIsEnable() ) {
                                 log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
-                                // echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                                echo 'Demarrage tryToGetIEEE for '.$NE."\n";
                                 $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
                                 // echo "Cmd: ".$cmd."\n";
                                 exec($cmd, $out, $status);
                             }
+                            else echo "Je n essaye pas car Abeille inactive.\n";
                         }
+                        else echo "Je n ai pas recuperé l adresse courte !!!\n";
                     }
+                    else echo "IEEE superieure à deux carateres !!! :".$addrIEEE_X."\n";
                 }
+                else echo "commandIEEE n existe pas !!!!\n";
             }
         }
 

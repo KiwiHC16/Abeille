@@ -16,6 +16,11 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
+    /* Errors reporting: uncomment below lines for debug */
+    // error_reporting(E_ALL);
+    // ini_set('error_log', '/var/www/html/log/AbeillePHP');
+    // ini_set('log_errors', 'On');
+
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',
                            '0104'=>'ZigBee Home Automation (ZHA)',
@@ -229,6 +234,42 @@
                      "f3" => array( "MAC_ENUM_UNAVAILABLE_KEY", "Appropriate key is not available in ACL", ),
                      "f4" => array( "MAC_ENUM_UNSUPPORTED_ATTRIBUTE", "PIB Set/Get on unsupported attribute", ),
                      );
+
+    /* Type and name of zigate messages (mainly those currently unsupported) */
+    $zigateMessages = array(
+        "8001" => "Log",
+        "8002" => "Data indication",
+        "8006" => "Non “Factory new” Restart",
+        "8007" => "“Factory New” Restart",
+        "8008" => "\“Function inconnue pas dans la doc\"",
+        "8009" => "Network State Response",
+        "8028" => "Authenticate response",
+        "802B" => "User Descriptor Notify",
+        "802C" => "User Descriptor Response",
+        "8031" => "unBind response",
+        "8034" => "Complex Descriptor response",
+        "8042" => "Node Descriptor response",
+        "8044" => "Power Descriptor response",
+        "8046" => "Match Descriptor response",
+        "8047" => "Management Leave response",
+        "804B" => "System Server Discovery response",
+        "8061" => "?",
+        "8084" => "?",
+        "80A1" => "?",
+        "80A2" => "?",
+        "8110" => "Write Attribute Response",
+        "8140" => "Configure Reporting response"
+    );
+
+    /* Returns Zigate message name based on given '$msgType' */
+    function getZigateMsgByType($msgType)
+    {
+        global $zigateMessages;
+
+        if (array_key_exists($msgType, $zigateMessages))
+            return $zigateMessages[$msgType];
+        return "Message inconnu";
+    }
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
@@ -712,7 +753,8 @@
             if ( method_exists($this, $fct) ) {
                 $this->$fct($dest, $payload, $ln, $qos, $param1); }
             else {
-                $this->deamonlog('debug', 'Message \''.$type.'\' ignoré (non supporté)');
+                $msgName = getZigateMsgByType($type);
+                $this->deamonlog('debug', 'Message \''.$type.'/'.$msgName.'\' ignoré.');
             }
 
             return $tab;
@@ -850,21 +892,21 @@
             }
         }
 
-        function decode8001($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8001/Log (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8001($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8001/Log (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode8002($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8002/Data indication (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8002($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8002/Data indication (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)
         {
@@ -917,31 +959,31 @@
             }
         }
 
-        function decode8006($dest, $payload, $ln, $qos, $dummy)
-        {
+        // function decode8006($dest, $payload, $ln, $qos, $dummy)
+        // {
             // Firmware 3.1a,  Fix Rearranged teNODE_STATES to logical in all cases https://github.com/fairecasoimeme/ZiGate/issues/101
 
-            $this->deamonlog('debug', 'Type=8006/Non “Factory new” Restart (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+            // $this->deamonlog('debug', 'Type=8006/Non “Factory new” Restart (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode8007($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8007/“Factory New” Restart (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8007($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8007/“Factory New” Restart (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode8008($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8008/“Function inconnue pas dans la doc" (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8008($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8008/“Function inconnue pas dans la doc" (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         /* Network State Reponse */
         function decode8009($dest, $payload, $ln, $qos, $dummy)
@@ -1206,29 +1248,29 @@
             $this->deamonlog('debug', 'Type=8024/Network joined-formed: Dest='.$dest.', Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Channel='.$dataNetwork);
         }
 
-        function decode8028($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8028/Authenticate response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8028($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8028/Authenticate response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode802B($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=802B/User Descriptor Notify (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode802B($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=802B/User Descriptor Notify (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode802C($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=802C/User Descriptor Response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode802C($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=802C/User Descriptor Response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         function decode8030($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1249,23 +1291,23 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        function decode8031($dest, $payload, $ln, $qos, $dummy)
-        {
+        // function decode8031($dest, $payload, $ln, $qos, $dummy)
+        // {
             // Firmware V3.1a: Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
 
-            $this->deamonlog('debug', 'Type=8031/unBind response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+            // $this->deamonlog('debug', 'Type=8031/unBind response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
-        function decode8034($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8034/Complex Descriptor response (ignoré)'
-                             . ', Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8034($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8034/Complex Descriptor response (ignoré)'
+                             // . ', Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         function decode8040($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1335,13 +1377,13 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        function decode8042($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8042/Node Descriptor response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8042($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8042/Node Descriptor response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         function decode8043($dest, $payload, $ln, $qos, $clusterTab)
         {
@@ -1394,13 +1436,13 @@
             }
         }
 
-        function decode8044($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8044/Power Descriptor response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8044($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8044/Power Descriptor response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         // Active Endpoints Response
         function decode8045($dest, $payload, $ln, $qos, $dummy)
@@ -1434,21 +1476,21 @@
 
         }
 
-        function decode8046($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8046/Match Descriptor response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
-        }
+        // function decode8046($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8046/Match Descriptor response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
+        // }
 
-        function decode8047($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8047/Management Leave response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
-        }
+        // function decode8047($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8047/Management Leave response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
+        // }
 
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1479,26 +1521,46 @@
             $this->mqqtPublishFct( $dest."/".$SrcAddr, $fct, $extendedAddr);
         }
 
+        /* 804A = Management Network Update Response */
         function decode804A($dest, $payload, $ln, $qos, $dummy)
         {
-            // Firmware V3.1a Add SrcAddr to 0x804A command (MANAGEMENT_NETWORK_UPDATE_RESPONSE) https://github.com/fairecasoimeme/ZiGate/issues/203
-            // SrcAddress  est le dernier champ, voir page https://zigate.fr/documentation/commandes-zigate/
+            /* Note: Source address added in FW V3.1a */
+            /* <Sequence number: uint8_t>
+               <status: uint8_t>
+               <total transmission: uint16_t>
+               <transmission failures: uint16_t>
+               <scanned channels: uint32_t >
+               <scanned channel list count: uint8_t>
+               <channel list: list each element is uint8_t>
+               <Src Address : uint16_t> (only from v3.1a) */
 
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
-            $this->deamonlog('debug', 'Type=804A/Management Network Update response (ignoré)'
-                            . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
+            $this->deamonlog('debug', 'Type=804A/Management Network Update Response (ignoré): Dest='.$dest
+                             . ', SQN=0x'.substr($payload, 0, 2)
+                             . ', Status='.substr($payload, 2, 2)
+                             . ', TotalTransmission='.substr($payload, 4, 4)
+                             . ', TransmFailures='.substr($payload, 8, 4));
+            $ScannedChannelsCount = substr($payload, 20, 2);
+            $this->deamonlog('debug', '  ScannedChannels='.substr($payload, 12, 8)
+                             . ', ScannedChannelsCount='.$ScannedChannelsCount);
+            $Channels = "";
+            for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
+                $Chan = substr($payload, (22 + ($i * 2)), 2); // hexa value
+                if ($i != 0)
+                    $Channels .= '/';
+                $Channels .= hexdec($Chan);
+            }
+            $this->deamonlog('debug', '  Channels='.$Channels);
         }
 
-        function decode804B($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=804B/System Server Discovery response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
-        }
+        // function decode804B($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=804B/System Server Discovery response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
+        // }
 
         function decode804E($dest, $payload, $ln, $qos, &$LQI)
         {
@@ -1609,10 +1671,10 @@
         }
 
         //----------------------------------------------------------------------------------------------------------------
-        function decode8061($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8061/? (ignoré)');
-        }
+        // function decode8061($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8061/? (ignoré)');
+        // }
 
         // Get Group Membership response
         function decode8062($dest, $payload, $ln, $qos, $dummy)
@@ -1698,10 +1760,10 @@
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
 
-        function decode8084($dest, $payload, $ln, $qos, $dummy) {
+        // function decode8084($dest, $payload, $ln, $qos, $dummy) {
             // J ai eu un crash car le soft cherchait cette fonction mais elle n'est pas documentée...
-            $this->deamonlog('debug', 'Type=8084/? (ignoré)');
-        }
+            // $this->deamonlog('debug', 'Type=8084/? (ignoré)');
+        // }
 
         function decode8085($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1801,15 +1863,15 @@
                              . ', scene extensions : '             .substr($payload,34, 2) );
         }
 
-        function decode80a1($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=80a1/? (ignoré)');
-        }
+        // function decode80a1($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=80a1/? (ignoré)');
+        // }
 
-        function decode80a2($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=80a2/? (ignoré)');
-        }
+        // function decode80a2($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=80a2/? (ignoré)');
+        // }
 
         function decode80a3($dest, $payload, $ln, $qos, $dummy)
         {
@@ -2554,13 +2616,13 @@
             }
         }
 
-        function decode8110($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', 'Type=8110/Write Attribute Response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+        // function decode8110($dest, $payload, $ln, $qos, $dummy)
+        // {
+            // $this->deamonlog('debug', 'Type=8110/Write Attribute Response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         function decode8120($dest, $payload, $ln, $qos, $dummy)
         {
@@ -2588,14 +2650,14 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        function decode8140($dest, $payload, $ln, $qos, $dummy)
-        {
+        // function decode8140($dest, $payload, $ln, $qos, $dummy)
+        // {
             // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
-            $this->deamonlog('debug', 'Type=8140/Configure Reporting response (ignoré)'
-                             . ': Dest='.$dest
-                             . ', Level=0x'.substr($payload, 0, 2)
-                             . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        }
+            // $this->deamonlog('debug', 'Type=8140/Configure Reporting response (ignoré)'
+                             // . ': Dest='.$dest
+                             // . ', Level=0x'.substr($payload, 0, 2)
+                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
+        // }
 
         // Codé sur la base des messages Xiaomi Inondation
         function decode8401($dest, $payload, $ln, $qos, $dummy)

@@ -402,7 +402,7 @@
         }
 
         // $SrcAddr = dest / shortaddr
-        function mqqtPublish( $SrcAddr, $ClusterId, $AttributId, $data)
+        function mqqtPublish($SrcAddr, $ClusterId, $AttributId, $data)
         {
             // dest / short addr / Cluster ID - Attr ID -> data
 
@@ -410,32 +410,25 @@
             $errorcode = 0;
             $blocking = true;
 
-            $msgAbeille->message = array( 'topic' => $SrcAddr."/".$ClusterId."-".$AttributId, 'payload' => $data,
-                                         );
-
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
-                // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-            }
-            else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
-            }
-
-            $msgAbeille->message = array( 'topic' => $SrcAddr."/Time-TimeStamp", 'payload' => time(), );
-
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
-                // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-            }
-            else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
+            $msgAbeille->message = array(
+                                    'topic' => $SrcAddr."/".$ClusterId."-".$AttributId,
+                                    'payload' => $data,
+                                     );
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == FALSE) {
+                $this->deamonlog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+                $this->deamonlog("error", "  Message=".json_encode($msgAbeille));
             }
 
-            $msgAbeille->message = array( 'topic' => $SrcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"), );
-
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
-                // $this->deamonlog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): .json_encode($msgAbeille));
+            $msgAbeille->message = array('topic' => $SrcAddr."/Time-TimeStamp", 'payload' => time());
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == FALSE) {
+                $this->deamonlog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+                $this->deamonlog("error", "  Message=".json_encode($msgAbeille));
             }
-            else {
-                $this->deamonlog("debug","(fct mqqtPublish) could not add message to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille)." with error code : ".$errorcode);
+
+            $msgAbeille->message = array('topic' => $SrcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"));
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == FALSE) {
+                $this->deamonlog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+                $this->deamonlog("error", "  Message=".json_encode($msgAbeille));
             }
         }
 
@@ -2175,7 +2168,8 @@
             $dataType           = substr($payload,18, 2);
             $AttributSize       = substr($payload,20, 4);
 
-            $this->mqqtPublish( $SrcAddr, 'Link', 'Quality', $quality);
+            /* Params: SrcAddr, ClustId, AttrId, Data */
+            $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)

@@ -97,11 +97,11 @@
 
         public static function tryToGetIEEE() {
             $tryToGetIEEEArray = array();
-            
+
             // Cherche les IEEE manquantes
             $eqLogics = Abeille::byType('Abeille');
             // var_dump($eqLogics);
-            
+
             foreach ($eqLogics as $key => $eqLogic) {
                 $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                 if ( $commandIEEE ) {
@@ -111,13 +111,13 @@
                     }
                 }
             }
-            
+
             // var_dump($tryToGetIEEEArray);
-            
+
             // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
             $eqLogicIds = array_rand( $tryToGetIEEEArray, 2 );
             var_dump($eqLogicIds);
-            
+
             // Pour ces x Abeilles lance l interrogation
             foreach ($eqLogicIds as $eqLogicId) {
                 echo "Start Loop: ".$eqLogicId."\n";
@@ -993,16 +993,18 @@
 
         public static function message($message) {
 
+            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."'");
             $parameters_info = self::getParameters();
 
-            if (!preg_match("(Time|Link-Quality)", $message->topic)) {
-                log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-            }
+            // if (!preg_match("(Time|Link-Quality)", $message->topic)) {
+                // log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+            // }
+
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // demande de creation de ruche au cas ou elle n'est pas deja crée....
             // La ruche est aussi un objet Abeille
             if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
-                log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+                // log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
                 self::createRuche($message);
                 return;
             }
@@ -1022,9 +1024,12 @@
             // $nodeId = [CmdAbeille:Abeille] / $addr
 
             $topicArray = explode("/", $message->topic);
-            if (sizeof($topicArray) != 3) return;
+            if (sizeof($topicArray) != 3) {
+                log::add('Abeille', 'error', "Le topic n'a pas 3 éléments: ".$message->topic);
+                return;
+            }
 
-            list( $Filter, $addr, $cmdId) = explode("/", $message->topic);
+            list($Filter, $addr, $cmdId) = explode("/", $message->topic);
             if ( preg_match("(^CmdCreate)", $message->topic) ) { $Filter = str_replace( "CmdCreate", "", $Filter) ; }
             $dest = $Filter;
 

@@ -644,14 +644,16 @@
             log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
 
             // Stop socat if exist
-            exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
+	    // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
+	    exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
             log::add('Abeille', 'debug', 'deamon_stop(): Killing deamons socat: '.implode($output, '!'));
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
 
             // Stop other deamon
-            exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            // exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
+            exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'", $output);
             log::add('Abeille', 'debug', 'deamon stop: Killing deamons: '.implode($output, '!'));
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");

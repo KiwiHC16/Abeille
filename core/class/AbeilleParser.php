@@ -2174,30 +2174,28 @@
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
-                $this->deamonlog('debug', 'Type=8102/Attribut Report'
-                                 . ': Dest='.$dest
-                                 . ', SQN='              .$SQN
-                                 . ', SrcAddr='        .$SrcAddr
-                                 . ', EndPoint='       .$EPoint
-                                 . ', ClusterID='      .$ClusterId
-                                 . ', AttrID='         .$AttributId
-                                 . ', AttrStatus='     .$AttributStatus
-                                 . ', AttrDataType='  .$dataType
-                                 . ', AttrSize='       .$AttributSize
-                                 . ', DataByteList='  .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)) ));
+                $this->deamonlog('debug', 'Type=8102/Attribut Report: Dest='.$dest
+                                 . ', SQN='             .$SQN
+                                 . ', SrcAddr='         .$SrcAddr
+                                 . ', EndPoint='        .$EPoint
+                                 . ', ClusterID='       .$ClusterId
+                                 . ', AttrID='          .$AttributId
+                                 . ', AttrStatus='      .$AttributStatus
+                                 . ', AttrDataType='    .$dataType
+                                 . ', AttrSize='        .$AttributSize
+                                 . ', DataByteList='    .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)) ));
             }
             else {
-                $this->deamonlog('debug', 'Type=8102/Attribut Report'
-                                 . ': Dest='.$dest
-                                 . ', SQN='              .$SQN
-                                 . ', SrcAddr='        .$SrcAddr
-                                 . ', EndPoint='       .$EPoint
-                                 . ', ClusterID='      .$ClusterId
-                                 . ', AttrID='         .$AttributId
-                                 . ', AttrStatus='     .$AttributStatus
-                                 . ', AttrDataType='  .$dataType
-                                 . ', AttrSize='       .$AttributSize
-                                 . ', DataByteList='  .substr($payload, 24, (strlen($payload) - 24 - 2)));
+                $this->deamonlog('debug', 'Type=8102/Attribut Report: Dest='.$dest
+                                 . ', SQN='             .$SQN
+                                 . ', SrcAddr='         .$SrcAddr
+                                 . ', EndPoint='        .$EPoint
+                                 . ', ClusterID='       .$ClusterId
+                                 . ', AttrID='          .$AttributId
+                                 . ', AttrStatus='      .$AttributStatus
+                                 . ', AttrDataType='    .$dataType
+                                 . ', AttrSize='        .$AttributSize
+                                 . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2)));
             }
 
             // valeur hexadécimale  - type -> function

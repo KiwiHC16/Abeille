@@ -993,7 +993,14 @@
 
         public static function message($message) {
 
-            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."'");
+            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+
+            $topicArray = explode("/", $message->topic);
+            if (sizeof($topicArray) != 3) {
+                log::add('Abeille', 'error', "Le topic n'a pas 3 éléments: ".$message->topic);
+                return;
+            }
+
             $parameters_info = self::getParameters();
 
             // if (!preg_match("(Time|Link-Quality)", $message->topic)) {
@@ -1023,24 +1030,16 @@
             // [CmdAbeille:Abeille] / $addr / $cmdId => $value
             // $nodeId = [CmdAbeille:Abeille] / $addr
 
-            $topicArray = explode("/", $message->topic);
-            if (sizeof($topicArray) != 3) {
-                log::add('Abeille', 'error', "Le topic n'a pas 3 éléments: ".$message->topic);
-                return;
-            }
-
             list($Filter, $addr, $cmdId) = explode("/", $message->topic);
             if ( preg_match("(^CmdCreate)", $message->topic) ) { $Filter = str_replace( "CmdCreate", "", $Filter) ; }
             $dest = $Filter;
 
+            // Si le message est pour 0000 alors on change en Ruche
             if ( $addr == "0000" ) $addr = "Ruche";
 
             $nodeid = $Filter.'/'.$addr;
 
             $value = $message->payload;
-
-            // Si le message est pour 0000 alors on change en Ruche
-
 
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";

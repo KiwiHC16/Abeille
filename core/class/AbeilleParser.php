@@ -1425,7 +1425,7 @@
 
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
             if ( strlen( $data) > 1 ) {
-                $this->mqqtPublish($dest.$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
+                $this->mqqtPublish($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
             }
         }
 

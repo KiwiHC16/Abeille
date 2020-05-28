@@ -1,5 +1,4 @@
 <?php
-
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
     /*
@@ -8,8 +7,17 @@
     }
      */
 
-    
     $eqLogics = Abeille::byType('Abeille');
+?>
+
+Démons:
+<?php
+    if (Abeille::deamon_info()['state'] == 'ok') {
+        echo "<span class=\"label label-success\" style=\"font-size:1em;\">OK</span>";
+    } else {
+        echo "<span class=\"label label-danger\" style=\"font-size:1em;\">NOK</span>";
+        echo "  Attention ! Un ou plusieurs démons ne tournent pas.";
+    }
 ?>
 
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
@@ -31,7 +39,7 @@
     <?php
         // To identify duplicated objet with same IEEE
         $IEEE_Table = array();
-        
+
         foreach ($eqLogics as $eqLogic) {
 
             // Module
@@ -39,23 +47,23 @@
 
             // Nom
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
-            
+
             // ID
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getId().'</span></td>';
-            
+
             $parts = explode("/", $eqLogic->getLogicalId());
-            
+
             // Ruche
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$parts[0].'</span></td>';
-            
+
             // Short Address
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$parts[1].'</span></td>';
-            
+
             // IEEE
-            
+
             // Recupere IEEE de la Ruche/ZiGate
             $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-            
+
             if ( $commandIEEE ) {
                 $addrIEEE = $commandIEEE->execCmd();
                 if (strlen($addrIEEE) > 2 ) {
@@ -71,14 +79,13 @@
             if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
                 $addrIEEE = "-";
             }
-            
+
             if ( strlen($addrIEEE) == 16 || $addrIEEE=="-") {
                 echo '<td><span class="label label-success" style="font-size : 1em; cursor : default;">'.$addrIEEE.'</span></td>';
             }
             else {
                 echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">Missing</span></td>';
             }
-
 
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue
@@ -115,7 +122,6 @@
             //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size : 1em; cursor : default;">-</span>'; }
             echo '<td>'.$Depuis.'</td>';
 
-
             // Date Creation
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('createtime').'</span></td></tr>';
         }
@@ -124,9 +130,8 @@
 </table>
 
 <?php
-foreach ($IEEE_Table as $IEEE=>$IEEE_Device) {
-    if ($IEEE_Device>1) { echo "L'adresse ->".$IEEE."<- est dupliquée ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
-}
-    ?>
-
-<?php include_file('desktop', 'health', 'js', 'Abeille'); ?>
+    foreach ($IEEE_Table as $IEEE=>$IEEE_Device) {
+        if ($IEEE_Device>1) { echo "L'adresse ->".$IEEE."<- est dupliquée ce n'est pas normal. On ne doit avoir qu'un équipment par adresse IEEE</br>"; }
+    }
+    include_file('desktop', 'health', 'js', 'Abeille');
+?>

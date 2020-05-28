@@ -214,13 +214,12 @@ class Tools
      * @param string $filename
      * @return mixed|string*
      */
-    public function getTrimmedValueForJsonFiles($filename = "") {
+    public static function getTrimmedValueForJsonFiles($filename = "") {
         //remove lumi. from name as all xiaomi devices have a lumi. name
         //remove all space in names for easier filename handling
         $trimmed = strlen($filename) > 1 ? str_replace(' ', '', str_replace('lumi.', '', $filename)) : "";
         return $trimmed;
     }
-
 
     /**
      * Scan config/devices directory to load devices name
@@ -259,7 +258,5 @@ class Tools
         return array_filter($return,function($value){return strlen($value)>1;});
     }
 }
-
-
 
 ?>

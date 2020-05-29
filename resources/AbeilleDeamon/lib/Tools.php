@@ -227,7 +227,7 @@ class Tools
      * @param string $logger
      * @return array of json devices name
      */
-    public function getDeviceNameFromJson($logger = 'Abeille') {
+    public static function getDeviceNameFromJson($logger = 'Abeille') {
         $return = array();
         $devicesDir = dirname(__FILE__) . '/../../../core/config/devices/';
 

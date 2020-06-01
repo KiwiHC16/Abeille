@@ -176,7 +176,7 @@
 
             //--------------------------------------------------------
             // Pull IEEE
-            self::tryToGetIEEE();
+            // self::tryToGetIEEE();
 
             //--------------------------------------------------------
             // Refresh Ampoule Ikea Bind et set Report

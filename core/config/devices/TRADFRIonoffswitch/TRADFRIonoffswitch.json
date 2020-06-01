@@ -1,27 +1,34 @@
 {
   "TRADFRIonoffswitch": {
-    "nameJeedom": "IKEA TRADFRI Carre 2 Boutons Remote Control",
+    "nameJeedom": "TRADFRI Variateur d'intensité",
     "timeout": "60",
+    "Comment": "Ref. IKEA E1743",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
       "uniqId": "5c07c76667372",
-      "icone": "IkeaTradfri2BtnCarre",
+      "icone": "TRADFRIonoffswitch",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
       "mainEP": "#EP#"
     },
     "Commandes": {
-      "include1": "offGroup",
-      "include2": "toggleGroup",
-      "include3": "onGroup",
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include4": "offGroup",
+      "include5": "toggleGroup",
+      "include6": "onGroup",
+      "include7": "Up-Down",
+      "include12": "Click-Middle",
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",
       "include11": "setReportBatterie",
-      "include11 2": "Up-Down",
-      "include11 2 2": "Click-Middle"
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild"
     }
   }
 }

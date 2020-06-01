@@ -1,31 +1,31 @@
 <?php
-    
+
     if (!isConnect('admin')) {
-        throw new Exception('401 Unauthorized');
+        throw new Exception('{{401 - Accès non autorisé}}');
     }
-    
+
     // Last Demon start time
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
-    
+
     // Status demon
-    $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin désactivé et démon non configuré";
+    $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i>{{Plugin désactivé et démon non configuré}}";
     if (config::byKey('active', 'Abeille', '0') == 1) {
         if (Abeille::deamon_info()['state'] == 'ok') {
-            $status = "<i class=\"fa fa-circle fa-lg greeniconcolor\"></i> Plugin activé et démon configuré";
+            $status = "<i class=\"fa fa-circle fa-lg greeniconcolor\"></i>{{Plugin activé et démon configuré}}";
         } else {
-            $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i> Plugin activé mais démon non configué";
+            $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i>{{Plugin activé mais démon non configué}}";
         }
     }
-    
+
     $eqLogics = eqLogic::byType('Abeille');
-    
+
     // Node Count
     $nodesCount = count($eqLogics);
     $timerCount = 0;
     foreach ($eqLogics as $eqLogic) {
         if (preg_match("(Timer)", $eqLogic->getLogicalId())) $timerCount++;
     }
-    
+
     // Liste des noeuds
     $neighbors = "";
     $nodes = array();
@@ -34,14 +34,14 @@
         $nodes[str_replace("/", "x", $eqLogic->getLogicalId())] = $eqLogic->getId();
     }
     $neighbors = substr($neighbors, 0, -2); // enleve la virgule et l espace en fin de chaine
-    
+
     // Nombre de process actifs
     $processes = Abeille::deamon_info();
     $color = "greeniconcolor";
     $color = ($processes['nbProcess'] == $processes['nbProcessExpected']) ? "greeniconcolor" : "rediconcolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
-    
-    
+
+
     sendVarToJS('nodesFromJeedom', $nodes);
 
 ?>
@@ -145,7 +145,7 @@
 <?php
                             for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
                                 if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
-                                    echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>Refresh LQI Z'.$i.'</a>';
+                                    echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>{{Refresh LQI Z'.$i.'}}</a>';
                                 }
                             }
     ?>
@@ -159,21 +159,21 @@
 <?php
                             for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
                                 if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
-                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>{{Affiche LQI Z'.$i.'}}</a>';
                                 }
                             }
     ?>
                             </span>
-                            
+
                             <br>
 
-                            Refresh LQI permet de lancer l interrogation des équipements pour avoir les information <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
+                            {{Refresh LQI permet de lancer l'interrogation des équipements pour avoir les informations}} <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
 
                              <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">{{Source}}</label>
                             <select class="filterSource" id="nodeFrom"> </select>
 
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">Destinataire </label>
+                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">{{Destinataire}}</label>
                             <select class="filterRecipient" id="nodeTo"> </select>
 
                         </span>
@@ -189,8 +189,8 @@
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Name}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Profondeur}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{LQI }}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Type }}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{LQI}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -208,7 +208,7 @@
                     <span class="" style="padding: 3px 20px;">
 <?php
                     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$i.'"><i class="fa fa-refresh" ></i>Affiche LQI Z'.$i.'</a>';
+                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$i.'"><i class="fa fa-refresh" ></i>{{Affiche LQI Z'.$i.'}}</a>';
                     }
 ?>
                     </span>
@@ -223,19 +223,19 @@
                         <tbody>
                         <tr>
                             <td class="typeCoordinator-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
-                            <td>Coordinateur</td>
+                            <td>{{Coordinateur}}</td>
                         </tr>
                         <tr>
                             <td class="typeEndDevice-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
-                            <td>Bout de chaine</td>
+                            <td>{{Bout de chaine}}</td>
                         </tr>
                         <tr>
                             <td class="typeRouter-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
-                            <td>Routeur</td>
+                            <td>{{Routeur}}</td>
                         </tr>
                         <tr>
                             <td class="typeUndefined-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
-                            <td>Inconnu</td>
+                            <td>{{Inconnu}}</td>
                         </tr>
 
                         </tbody>
@@ -284,7 +284,7 @@
                         </div>
                     </div>
 
-                    
+
 
 
                 </div>
@@ -324,11 +324,11 @@
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         echo '$(".btn.afficheCache'.$i.'").off("click").on("click", function () { network_links('.$i.'); });'."\n";
     }
-        
+
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });'."\n";
     }
-        
+
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
     }

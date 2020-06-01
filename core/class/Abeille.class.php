@@ -95,21 +95,42 @@
             return $status; // Return script status (0=OK)
         }
 
+        /* Looking for missing IEEE addresses */
         public static function tryToGetIEEE() {
+            log::add('Abeille', 'debug', 'Recherche des adresses IEEE manquantes.');
             $tryToGetIEEEArray = array();
-
-            // Cherche les IEEE manquantes
             $eqLogics = Abeille::byType('Abeille');
             // var_dump($eqLogics);
-
             foreach ($eqLogics as $key => $eqLogic) {
-                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-                if ( $commandIEEE ) {
-                    $addrIEEE = $commandIEEE->execCmd();
-                    if ( strlen($addrIEEE) < 2 ) {
-                        $tryToGetIEEEArray[] = $key;
-                    }
+                if ($eqLogic->getIsEnable() != 1) {
+                    log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' désactivé => ignoré');
+                    continue; // Eq disabled => ignored
                 }
+                if ($eqLogic->getTimeout() == 1) {
+                    log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' en timeout => ignoré');
+                    continue; // Eq in timeout => ignored
+                }
+                if ($eqLogic->getStatus('lastCommunication') == '') {
+                    log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' n\'a jamais communiqué => ignoré');
+                    continue; // Eq in timeout => ignored
+                }
+
+                $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+                if ($commandIEEE == null) {
+                    log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' sans cmd \'IEEE-Addr\' => ignoré');
+                    continue; // No cmd to retrieve IEEE address. Normal ?
+                }
+
+                $addrIEEE = $commandIEEE->execCmd();
+                if ( strlen($addrIEEE) < 2 ) {
+                    $tryToGetIEEEArray[] = $key;
+                }
+            }
+
+            /* Exit if there is no missing IEEE address */
+            if (count($tryToGetIEEEArray) == 0) {
+                log::add('Abeille', 'debug', 'Aucune adresse IEEE manquante.');
+                return;
             }
 
             // var_dump($tryToGetIEEEArray);

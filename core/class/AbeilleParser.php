@@ -237,7 +237,7 @@
 
     /* Type and name of zigate messages (mainly those currently unsupported) */
     $zigateMessages = array(
-        "8001" => "Log",
+        "8001" => "Log message",
         "8002" => "Data indication",
         "8006" => "Non “Factory new” Restart",
         "8007" => "“Factory New” Restart",
@@ -246,19 +246,21 @@
         "8028" => "Authenticate response",
         "802B" => "User Descriptor Notify",
         "802C" => "User Descriptor Response",
-        "8031" => "unBind response",
+        "8031" => "Unbind response",
         "8034" => "Complex Descriptor response",
+        "8035" => "PDM event code",
         "8042" => "Node Descriptor response",
         "8044" => "Power Descriptor response",
         "8046" => "Match Descriptor response",
         "8047" => "Management Leave response",
         "804B" => "System Server Discovery response",
-        "8061" => "?",
-        "8084" => "?",
-        "80A1" => "?",
-        "80A2" => "?",
+        "8061" => "View Group response",
+        "80A1" => "Add Scene response",
+        "80A2" => "Remove Scene response",
         "8110" => "Write Attribute Response",
-        "8140" => "Configure Reporting response"
+        "8140" => "Configure Reporting response",
+        "8401" => "Zone status change notification",
+        "8531" => "Complex Descriptor response",
     );
 
     /* Returns Zigate message name based on given '$msgType' */

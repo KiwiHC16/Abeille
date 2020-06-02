@@ -240,7 +240,7 @@
                 }
             }
             if ( ($i*33) > (3600) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum.","Abeille/cron" );
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum." );
             }
 
             log::add( 'Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------' );
@@ -260,7 +260,7 @@
             exec(system::getCmdSudo().$cmd, $output);
             $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
             if ($usbZigateStatus != '0') {
-                message::add( "Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le demon.","Abeille/cron" );
+                message::add( "Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le demon." );
                 log::add( 'Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
             }
 
@@ -284,7 +284,7 @@
                 }
             }
             if ( ($i*23) > (60*15) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas A.","Contacter KiwiHC15 sur le Forum","Abeille/cron" );
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas A.","Contacter KiwiHC15 sur le Forum" );
             }
 
             // Rafraichie l etat poll = 15
@@ -303,7 +303,7 @@
                 }
             }
             if ( ($i*13) > (60*15) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum","Abeille/cron" );
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum" );
             }
 
             log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
@@ -344,7 +344,7 @@
                 }
             }
             if ( ($i*3) > 60 ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 minute.","Contacter KiwiHC15 sur le Forum","Abeille/cron" );
+                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 minute.","Contacter KiwiHC15 sur le Forum" );
             }
 
             /**
@@ -511,13 +511,13 @@
                - Are dependancies ok ?
                - Is cron running ? */
             if (self::dependancy_info()['state'] != 'ok') {
-                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.", 'Abeille/Demon');
+                message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances." );
                 log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
                 return false;
             }
             if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 log::add('Abeille', 'error', 'deamon_start(): Tache cron introuvable');
-                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est un bug dans Abeille ?", "Abeille/Demon");
+                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est un bug dans Abeille ?" );
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
 
@@ -586,7 +586,7 @@
 
                 if (@!file_exists($param['AbeilleSerialPort'.$i])) {
                     log::add('Abeille', 'warning', 'deamon_start(): Le port '.$param['AbeilleSerialPort'.$i].' n\'existe pas.');
-                    message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi.", "Abeille/Demon" );
+                    message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi." );
                     $return['parametersCheck']="nok";
                     $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
                     return false;
@@ -725,7 +725,7 @@
             $cmd = "dpkg -l socat";
             exec($cmd, $output_dpkg, $return_var);
             if ($output_dpkg[0] == "") {
-                message::add( "Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message");
+                message::add( "Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message" );
                 log::add( 'Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.' );
             }
             // log::add( 'Abeille', 'debug', ' state: '.$return['state'] );
@@ -739,7 +739,7 @@
 
         public static function dependancy_install() {
             log::add('Abeille', 'debug', 'Installation des dépendances: IN');
-            message::add( "Abeille", "L installation des dependances est en cours", "N oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation", "Abeille/Dependances" );
+            message::add( "Abeille", "L installation des dependances est en cours", "N oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation" );
             log::remove(__CLASS__.'_update');
             $result = [ 'script' => dirname(__FILE__).'/../../resources/install_#stype#.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance',
                 'log' => log::getPathToLog(__CLASS__.'_update')
@@ -857,7 +857,7 @@
             }
             if ( $atLeastOneZigateActiveWithOnePortDefined <= 0 ) {
                 log::add('Abeille','debug','checkParameters: aucun serialPort n est pas défini/actif.');
-                message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.','Abeille/Demon');
+                message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.' );
                 return 0;
             }
 
@@ -867,7 +867,7 @@
                     if ($return['AbeilleSerialPort'.$i] != 'none') {
                         if (@!file_exists($return['AbeilleSerialPort'.$i])) {
                             log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i]);
-                            message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'','Abeille/Demon');
+                            message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'' );
                             $return['parametersCheck']="nok";
                             $return['parametersCheck_message'] = __('Le port série '.$return['AbeilleSerialPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
                             return 0;
@@ -1151,7 +1151,7 @@
                     $nodeid = $nodeid."-".$index;
                 }
 
-                message::add( "Abeille", "Création d un nouvel objet Abeille (".$nodeid.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.",'','Abeille/Abeille' );
+                message::add( "Abeille", "Création d un nouvel objet Abeille (".$nodeid.") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.", '' );
                 $elogic = new Abeille();
                 //id
 
@@ -1325,7 +1325,7 @@
 
                     log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
                     // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
-                    message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '', 'Abeille/Abeille' );
+                    message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '' );
 
                     // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
                     log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
@@ -1395,7 +1395,7 @@
                 // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
                 if (strlen($IEEE)>2) {
                     log::add( 'Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." =>".$value."<=" );
-                    message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )", '', 'Abeille/Abeille' );
+                    message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )", '' );
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
@@ -1424,7 +1424,7 @@
 
                 /*
                 if ( ($cmdId == "Zigate-8000") && (substr($value,0,2)!="00") ) {
-                    message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes.",'KiwiHC16: Investigations en cours pour mieux traiter ce sujet.','Abeille/Abeille');
+                    message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes.",'KiwiHC16: Investigations en cours pour mieux traiter ce sujet.' );
                 }
                 */
 
@@ -1498,7 +1498,7 @@
             $nodeid = implode($topicArray, '/');
             */
 
-            message::add( "Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.", '', 'Abeille/Abeille' );
+            message::add( "Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.", '' );
             $parameters_info = self::getParameters();
             $elogic = new Abeille();
             //id
@@ -2041,6 +2041,9 @@
                 echo log::getLogLevel('Abeille')."\n";
                 echo log::convertLogLevel(log::getLogLevel('Abeille'))."\n";
 
+                break;
+            case "25":
+                message::add("Abeille","Test5.","Contactez KiwiHC16 sur le Forum." );
                 break;
 
         } // switch

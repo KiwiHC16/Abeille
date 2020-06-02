@@ -2040,7 +2040,13 @@
 
                 break;
             case "25":
+                // Test message management
                 message::add("Abeille","Test5.","Contactez KiwiHC16 sur le Forum." );
+                break;
+            case "26":
+            // Test message management
+                $addr = "f02b";
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/managementNetworkUpdateRequest", "" );
                 break;
 
         } // switch

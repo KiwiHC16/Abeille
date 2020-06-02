@@ -1541,7 +1541,7 @@
             for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
                 $Chan = substr($payload, (22 + ($i * 2)), 2); // hexa value
                 if ($i != 0)
-                    $Channels .= '/';
+                    $Channels .= ';';
                 $Channels .= hexdec($Chan);
             }
             $this->deamonlog('debug', '  Channels='.$Channels);

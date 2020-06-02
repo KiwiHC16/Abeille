@@ -522,11 +522,8 @@
             }
 
             self::deamon_stop();
-
-            message::removeAll('Abeille', '');
-            message::removeAll('Abeille', 'Abeille/Demon');
-            message::removeAll('Abeille', 'Abeille/cron');
-            message::removeAll('Abeille', 'Abeille/Abeille');
+            
+            message::removeAll('Abeille');
 
             self::deamon_start_cleanup();
 

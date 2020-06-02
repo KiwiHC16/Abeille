@@ -592,6 +592,17 @@ Start Zigbee Network:
                         </div>
 
                         <br>
+                                
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{Note}}</label>
+                            <div class="col-sm-3">
+                                <textarea class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="note" placeholder="{{Vos notes pour vous souvenir}}"/>
+                            </div>
+                        </div>
+
+                        <br>
+                                
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Time Out (min)}}</label>

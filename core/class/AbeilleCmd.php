@@ -154,16 +154,17 @@
                               "procmsg"                 => 0, // Debug fct procmsg
                               "procmsg1"                => 1, // Debug fct procmsg avec un seul msg
                               "procmsg2"                => 1, // Debug fct procmsg avec un seul msg
-                              "procmsg3"                => 1, // Debug fct procmsg avec un seul msg
+                              "procmsg3"                => 0, // Debug fct procmsg avec un seul msg
                               "processCmd"              => 1, // Debug fct processCmd
                               "sendCmd"                 => 1, // Debug fct sendCmd
+                              "sendCmd2"                => 0, // Debug fct sendCmd
                               "cmdQueue"                => 0, // Debug cmdQueue
                               "sendCmdAck"              => 1, // Debug fct sendCmdAck
-                              "sendCmdAck2"             => 1, // Debug fct sendCmdAck
+                              "sendCmdAck2"             => 0, // Debug fct sendCmdAck
                               "transcode"               => 0, // Debug transcode fct
                               "AbeilleCmdClass"         => 1, // Mise en place des class
                               "sendCmdToZigate"         => 1, // Mise en place des class
-                              "traiteLesAckRecus"       => 1, // Nouvelle Gestion des Ack
+                              "traiteLesAckRecus"       => 0, // Nouvelle Gestion des Ack
                               "processCmdQueueToZigate" => 1,
                               );
 
@@ -733,7 +734,7 @@
                 $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate est desactivee." );
                 return;
             }
-            if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1)); }
+            if ( $this->debug['sendCmd2'] ) { $this->deamonlog("debug", "sendCmd fct - i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1)); }
             if ( config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1) == '-1' ) {
                 $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
                 return;
@@ -768,7 +769,7 @@
 
             if ( ($i>0) && ($i<=maxNbOfZigate) ) {
                 $this->cmdQueue[$i][] = array( 'received'=>microtime(true), 'time'=>0, 'retry'=>$this->maxRetry, 'priority'=>$priority, 'dest'=>$dest, 'cmd'=>$cmd, 'len'=>$len, 'datas'=>$datas );
-                if ( $this->debug['sendCmd'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
+                if ( $this->debug['sendCmd2'] ) { $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]) ); }
                 if ( count($this->cmdQueue[$i]) > 50 ) $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue de la zigate: '.$i );
             }
             else {
@@ -2740,7 +2741,7 @@
         function procmsg( $message ) {
 
             if ( $this->debug['procmsg2'] ) $this->deamonlog("debug", "----------");
-            if ( $this->debug['procmsg1'] ) $this->deamonlog("info", "procmsg fct - message: ". json_encode($message) );
+            $this->deamonlog("info", "procmsg fct - message: ". json_encode($message) );
 
             $topic      = $message->topic;
             $msg        = $message->payload;
@@ -3924,7 +3925,7 @@
             } // if $address != "Ruche"
             else { // $address == "Ruche"
                 $done = 0;
-                $this->deamonlog("debug", 'procmsg fct - Pour La Ruche - (Ln: '.__LINE__.')' );
+                // $this->deamonlog("debug", 'procmsg fct - Pour La Ruche - (Ln: '.__LINE__.')' );
                 // Crée les variables dans la chaine et associe la valeur.
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

@@ -80,6 +80,22 @@ function updateZigBeeJsonCache(zigateX) {
     );
 }
 
+function refreshBruit(device) {
+    // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
+    // Show progress in AlertDiv
+    $.ajax({
+            url: "/plugins/Abeille/Network/refreshBruit.php,
+            async: true,
+            error: function (jqXHR, status, error) {
+                console.log("refreshBruit error status: " + status);
+            },
+            success: function (data, status, jqhr) {
+                console.log("refreshBruit success status: " + status);
+            }
+        }
+    );
+}
+
 function getAbeilleLog(_autoUpdate, _log) {
     $.ajax({
         type: 'POST',
@@ -181,6 +197,8 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
     })
     ;
 }
+
+
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display(zigateX) {

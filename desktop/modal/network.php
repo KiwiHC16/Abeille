@@ -289,7 +289,7 @@
 
                 </div>
 
-<!-- tab future usage -->
+<!-- tab Bruit -->
 
                 <div id="test1" class="tab-pane" >
                                 (Ce texte devra etre mis dans la doc)<br>
@@ -305,9 +305,13 @@
                                 - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
                                 Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br>
                                 A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br>
+                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus. Attendez et rafraichissez la page au bout d un certain temps (Il faut compter 5s par équipement... Si une mesure a ete faite pour un equipement le graph doit apparaitre. Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br>
                                 <br>
+
 <?php
-                                function afficheGraph( $values ) {
+                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Refresh All}}</a><br><br>';
+
+                                function afficheGraph( $title, $logicalId, $values ) {
                                 // Vertical
                                 $hauteurGraph = 256;
                                 $hauteurLegendX = 30;
@@ -329,6 +333,8 @@
                                 $hauteurCadre = $hauteurGraph+$hauteurLegendX;
                                 
                                 $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
+                                    
+                                    echo $title.'<br><br>';
                                 
                                     echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
                                     echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
@@ -341,6 +347,10 @@
                                         echo '<text x="'.$x.'" y="'.$positionVerticalLegendX.'" fill="purple">'.$key.'</text>';
                                     }
                                     echo '</svg>';
+                                      if ( $logicalId != "" ) {
+                                            echo '<a data-action="refreshBruit'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Refresh}}</a><br><br>';
+                                                                                                                                                                                        
+                                      }
                                     echo "<br><br>";
                                     
                                 }
@@ -348,18 +358,16 @@
                                 // Exemple 1: Pas chargé, Exemple 2: Chargé
                                 $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
                                 $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
-                                afficheGraph( $localZigbeeChannelPowerExample1 );
-                                afficheGraph( $localZigbeeChannelPowerExample2 );
+                                afficheGraph( "Exemple 1", "", $localZigbeeChannelPowerExample1 );
+                                afficheGraph( "Exemple 2", "", $localZigbeeChannelPowerExample2 );
                                 
                                 // Affichons toutes les Abeilles
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
                                     if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
-                                        echo $eqLogic->getName()."<br>";
-                                        echo '<br>';
                                         // $values = $eqLogic->getConfiguration('localZigbeeChannelPower');
                                         // var_dump($eqLogic->getConfiguration('localZigbeeChannelPower'));
-                                        afficheGraph( $eqLogic->getConfiguration('localZigbeeChannelPower') );
+                                        afficheGraph( $eqLogic->getName(), $eqLogic->getLogicalId(), $eqLogic->getConfiguration('localZigbeeChannelPower') );
                                     }
                                 }
 
@@ -403,6 +411,14 @@
     for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
     }
+                                
+    echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
+      $eqLogics = Abeille::byType('Abeille');
+      foreach ($eqLogics as $eqLogic) {
+          if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
+              echo '$(".btn.refreshBruit'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.str_replace('/','',$eqLogic->getLogicalId()).'"); });'."\n";
+        }
+      }
 ?>
 
 </script>

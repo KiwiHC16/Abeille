@@ -2665,7 +2665,7 @@
 
                 // Xiaomi Double Relay (ref ?)
                 elseif (($AttributId == "ff01") && ($AttributSize == "0044")) {
-                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2)));
+                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
                     $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relais double)");
                     $this->deamonlog('debug', "  ".json_encode($FF01));
 

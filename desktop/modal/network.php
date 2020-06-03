@@ -305,7 +305,10 @@
                                 - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
                                 Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br>
                                 A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br>
-                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus. Attendez et rafraichissez la page au bout d un certain temps (Il faut compter 5s par équipement... Si une mesure a ete faite pour un equipement le graph doit apparaitre. Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br>
+                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br>
+                                Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br>
+                                Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br>
+                                Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br>
                                 <br>
 
 <?php

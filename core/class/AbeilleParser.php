@@ -2663,16 +2663,16 @@
                     $this->deamonlog('debug', $logMessage);
                 }
 
-                // Xiaomi Double Relay (Kiwi:  )
-                elseif ( ($AttributId == "ff01") && ($AttributSize == "0044") ) {
-                    $FF01 = $this->decodeFF01(substr($payload, 24));
+                // Xiaomi Double Relay (ref ?)
+                elseif (($AttributId == "ff01") && ($AttributSize == "0044")) {
+                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2)));
+                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relais double)");
+                    $this->deamonlog('debug', "  ".json_encode($FF01));
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',  '01-0000',       $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',  '02-0000',       $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '000C',  '01-0055',       $FF01["Puissance"]["valueConverted"],         $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',   '--conso--',     $FF01["Consommation"]["valueConverted"],      $qos);
-
-                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relay Double):".json_encode($FF01));
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $qos);
                 }
 
                 // Xiaomi Capteur Presence

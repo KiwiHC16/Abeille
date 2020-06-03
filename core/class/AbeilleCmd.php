@@ -817,6 +817,19 @@
             }
         }
         
+        function afficheStatQueue() {
+            $texteLog = "";
+            if ( isset( $this->tempoMessageQueue ) ) {
+                $texteLog .= "tempoMessageQueue: ".count( $this->tempoMessageQueue )." - ";
+            }
+            for ( $i=1; $i<=$this->zigateNb; $i++) {
+                if ( isset( $this->cmdQueue[$i] ) ) {
+                    $texteLog .= "cmdQueue: ".$i." nb message: ".count( $this->cmdQueue[$i] )." - ";
+                }
+            }
+            $this->deamonlog("debug", $texteLog );
+        }
+        
         function processCmdQueueToZigate() {
             
             for ( $i=1; $i<=$this->zigateNb; $i++) {
@@ -4343,6 +4356,8 @@
     
     try {
         echo "Let s start\n";
+        
+        $last = 0;
 
         $AbeilleCmdL2 = new AbeilleCmdL2($argv[1]);
         // echo "AbeilleCmd construit\n";
@@ -4360,6 +4375,12 @@
 
             // Recuperes tous les messages en attente sur timer
             $AbeilleCmdL2->execTempoCmdAbeille();
+            
+            // Affiche etat des queues
+            if ( (time() - $last) > 30 ) {
+                $AbeilleCmdL2->afficheStatQueue();
+                $last = time();
+            }
 
             // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s

@@ -1529,14 +1529,22 @@
 
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
-            $this->deamonlog('debug', 'Type=804A/Management Network Update Response (ignoré): Dest='.$dest
-                             . ', SQN=0x'.substr($payload, 0, 2)
-                             . ', Status='.substr($payload, 2, 2)
-                             . ', TotalTransmission='.substr($payload, 4, 4)
-                             . ', TransmFailures='.substr($payload, 8, 4));
+            
+            $SQN=substr($payload, 0, 2);
+            $Status=substr($payload, 2, 2);
+            
+            if ($Status!="00") {
+                $this->deamonlog('debug', 'Type=804A/Management Network Update Response (Processed): Status Error ('.$Status.') can not process the message.');
+                return;
+            }
+            
+            $TotalTransmission = substr($payload, 4, 4);
+            $TransmFailures = substr($payload, 8, 4);
+            
+            $ScannedChannels = substr($payload, 12, 8);
             $ScannedChannelsCount = substr($payload, 20, 2);
-            $this->deamonlog('debug', '  ScannedChannels='.substr($payload, 12, 8)
-                             . ', ScannedChannelsCount='.$ScannedChannelsCount);
+            
+            /*
             $Channels = "";
             for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
                 $Chan = substr($payload, (22 + ($i * 2)), 2); // hexa value
@@ -1544,7 +1552,41 @@
                     $Channels .= ';';
                 $Channels .= hexdec($Chan);
             }
-            $this->deamonlog('debug', '  Channels='.$Channels);
+            
+            $this->deamonlog('debug', '  Channels='.$Channels.' address='.$addr);
+            */
+            
+            $Channel = 11; // Could need to be adapted if we change the list of channel requested, at this time all of them.
+            $results = array();
+            for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
+                $Chan = substr($payload, (22 + ($i * 2)), 2); // hexa value
+                $results[$Channel] = hexdec($Chan);
+                $Channel++;
+            }
+            $addr = substr($payload, (22 + ($i * 2)), 4);
+            
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                list( $eqDest, $eqAddr ) = explode("/", $eqLogic->getLogicalId());
+                if ( ($dest==$eqDest) &&($addr==$eqAddr) ) {
+                    // $this->deamonlog('debug', '  Storing the information');
+                    $eqLogic->setConfiguration('totalTransmission', $TotalTransmission);
+                    $eqLogic->setConfiguration('transmissionFailures', $TransmFailures);
+                    $eqLogic->setConfiguration('localZigbeeChannelPower', $results);
+                    $eqLogic->save();
+                }
+            }
+            
+            $this->deamonlog('debug', 'Type=804A/Management Network Update Response (Processed): Dest='.$dest.' addr='.$addr
+                             . ', SQN=0x'.$SQN
+                             . ', Status='.$Status
+                             . ', TotalTransmission='.$TotalTransmission
+                             . ', TransmFailures='.$TransmFailures
+                             . ', ScannedChannels=0x'.$ScannedChannels
+                             . ', ScannedChannelsCount=0x'.$ScannedChannelsCount
+                             . ', Channels='.json_encode($results)
+                             );
+                                 
         }
 
         // function decode804B($dest, $payload, $ln, $qos, $dummy)

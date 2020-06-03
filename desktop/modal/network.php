@@ -127,7 +127,7 @@
                 <li class="active"  id="tab_route">     <a href="#route_network"              data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
                 <li                 id="tab_graph">     <a href="#graph_network"              data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
                 <li                 id="tab_summary">   <a href="#summary_network"            data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
-                <li                 id="tab_test1">     <a href="#test1"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Test1}}                 </a></li>
+                <li                 id="tab_test1">     <a href="#test1"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
                 <li                 id="tab_test2">     <a href="#test2"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Test2}}                 </a></li>
             </ul>
 
@@ -292,7 +292,78 @@
 <!-- tab future usage -->
 
                 <div id="test1" class="tab-pane" >
-                    test1
+                                (Ce texte devra etre mis dans la doc)<br>
+                                Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br>
+                                En utilisant le bouton refresh, Abeille va demander aux équipments de mesurer le bruit qu ils entendent sur les canaux 11 à 26.<br>
+                                Ceux ci vont répondre avec une valeur pour chaque canal qui represente la puissance mesurée entre 0 et 255.<br>
+                                A ma connaissance la méthode de mesure n est pas définie dans le standard Zigbee et donc chaque fabricant est libre de mesurer comme il le souhaite.<br>
+                                C est une premiere version avant que je ne comprenne mieux les résultats.<br>
+                                Les ampoules Ikea repondent aux demandes. Elles retournent une valeur entre 160 et 180 quand le canal est libre<br>
+                                Par contre quand le canal est aucupé elles remontent des valeurs entre 200 et 210.<br>
+                                Ces valeurs viennent du test suivant:
+                                - libre: reseau en fonctionnement normal lors de mon test.
+                                - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
+                                Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br>
+                                A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br>
+                                <br>
+<?php
+                                function afficheGraph( $values ) {
+                                // Vertical
+                                $hauteurGraph = 256;
+                                $hauteurLegendX = 30;
+                                
+                                // Horizontal
+                                $margeLeft = 10;
+                                $largeurGraph = 300;
+                                $margeRight = $margeLeft;
+                                
+                                $channelMin = 11;
+                                $channelMax = 26;
+                                
+                                // Objet
+                                $cercleRayon = 5;
+                                $lineBruitY = 256 - 180;
+                                
+                                // As a result
+                                $largeurCadre = $margeLeft + $largeurGraph + $margeRight;
+                                $hauteurCadre = $hauteurGraph+$hauteurLegendX;
+                                
+                                $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
+                                
+                                    echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
+                                    echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
+                                    echo '<line x1 = "1" y1 = "'.$lineBruitY.'" x2 = "'.$largeurCadre.'" y2 = "'.$lineBruitY.'" style = "stroke:yellow; stroke-width:3"/>';
+                                    foreach( $values as $key=>$value ) {
+                                        $x = ($key-11)*($largeurGraph/($channelMax-$channelMin))+10; // Ch 11 a 26 vers X de 0 a 300 plus 10 pour centrer pour une largeur de 320 = 10(Marge)+300
+                                        $y = $hauteurGraph - $value;
+                                        echo '<circle cx= "'.$x.'" cy= "'.$y.'" r="'.$cercleRayon.'" stroke= "red" stroke-width="1" fill="red" />';
+                                        $xText = $x - $cercleRayon;
+                                        echo '<text x="'.$x.'" y="'.$positionVerticalLegendX.'" fill="purple">'.$key.'</text>';
+                                    }
+                                    echo '</svg>';
+                                    echo "<br><br>";
+                                    
+                                }
+                                
+                                // Exemple 1: Pas chargé, Exemple 2: Chargé
+                                $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
+                                $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
+                                afficheGraph( $localZigbeeChannelPowerExample1 );
+                                afficheGraph( $localZigbeeChannelPowerExample2 );
+                                
+                                // Affichons toutes les Abeilles
+                                $eqLogics = Abeille::byType('Abeille');
+                                foreach ($eqLogics as $eqLogic) {
+                                    if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
+                                        echo $eqLogic->getName()."<br>";
+                                        echo '<br>';
+                                        // $values = $eqLogic->getConfiguration('localZigbeeChannelPower');
+                                        // var_dump($eqLogic->getConfiguration('localZigbeeChannelPower'));
+                                        afficheGraph( $eqLogic->getConfiguration('localZigbeeChannelPower') );
+                                    }
+                                }
+
+?>
                 </div>
 
 <!-- tab future usage -->

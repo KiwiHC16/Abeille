@@ -310,9 +310,10 @@
                                 Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br>
                                 Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br>
                                 <br>
+                                Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br>
 
 <?php
-                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Refresh All}}</a><br><br>';
+                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
 
                                 function afficheGraph( $title, $logicalId, $values ) {
                                 // Vertical
@@ -351,7 +352,7 @@
                                     }
                                     echo '</svg>';
                                       if ( $logicalId != "" ) {
-                                            echo '<a data-action="refreshBruit'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Refresh}}</a><br><br>';
+                                            echo '<br><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Collecter}}</a><br><br>';
                                                                                                                                                                                         
                                       }
                                     echo "<br><br>";
@@ -416,12 +417,14 @@
     }
                                 
     echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
+                                
       $eqLogics = Abeille::byType('Abeille');
       foreach ($eqLogics as $eqLogic) {
           if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
-              echo '$(".btn.refreshBruit'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.str_replace('/','',$eqLogic->getLogicalId()).'"); });'."\n";
+              echo '$(".btn.refreshBruit_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.$eqLogic->getLogicalId().'"); });'."\n";
         }
       }
+
 ?>
 
 </script>

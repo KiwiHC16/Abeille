@@ -80,20 +80,10 @@ function updateZigBeeJsonCache(zigateX) {
     );
 }
 
-function refreshBruit(device) {
-    // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
-    // Show progress in AlertDiv
-    $.ajax({
-            url: "/plugins/Abeille/Network/refreshBruit.php,
-            async: true,
-            error: function (jqXHR, status, error) {
-                console.log("refreshBruit error status: " + status);
-            },
-            success: function (data, status, jqhr) {
-                console.log("refreshBruit success status: " + status);
-            }
-        }
-    );
+function refreshBruit(Device) {
+    console.log("refreshBruit start");
+    $.ajax({ url: "/plugins/Abeille/Network/refreshBruit.php?device="+Device });
+    console.log("refreshBruit end");
 }
 
 function getAbeilleLog(_autoUpdate, _log) {

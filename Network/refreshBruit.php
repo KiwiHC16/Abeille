@@ -15,10 +15,12 @@
     include_once("../resources/AbeilleDeamon/includes/config.php");
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
     include_once("../resources/AbeilleDeamon/includes/function.php");
-    
+        
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
+        if ( ($_GET['device'] == $eqLogic->getLogicalId()) || ($_GET['device'] == "All") ) {
         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$eqLogic->getLogicalId()."/managementNetworkUpdateRequest", "" );
         sleep(5);
+        }
     }
 ?>

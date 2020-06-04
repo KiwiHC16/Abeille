@@ -857,7 +857,6 @@
             // Bit 6 - Security capability          => 64 no
             // Bit 7 - Allocate Address             => 128 no
             // Pour le Rejoin, à la fin de la trame, j'ai rajouté une information pour savoir si c'est un JOIN classique ou REJOIN c'est un uint8 - JOIN =0 REJOIN= 2 (mail du 22/11/2019 17:11)
-            $test = 2 + 4 + 8;
 
             $this->deamonlog('debug', 'Type=004d/Device announce'
                              . ': Dest='.$dest
@@ -878,6 +877,9 @@
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
+
+            // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
+            if ( substr($payload, 22, 2) == "02" ) return;
 
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$SrcAddr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );

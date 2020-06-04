@@ -839,7 +839,8 @@
                 if ( $this->zigateAvailable[$i] == 0 )   continue;                                     // Si la zigate n est pas considéré dispo je passe mon chemin
                 // if ( $this->debug['processCmdQueueToZigate'] ) { $this->deamonlog("debug", "processCmdQueueToZigate fct - start y a des truc a faire dans la queue : ".$i); }
                 if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "--------------------"); }
-                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]) ); }
+                if ( $this->debug['sendCmdAck'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer." ); }
+                if ( $this->debug['sendCmdAck2'] ) { $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]) ); }
                 
                 $this->zigateAvailable[$i] = 0;    // Je considere la zigate pas dispo car je lui envoie une commande
                 $this->timeLastAck[$i] = time();
@@ -1243,7 +1244,7 @@
                 // $dataLength             = "16";
 
                 $SQN = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
-                $startIndex = "01";
+                $startIndex = "00";
                 
                 $data2 = $SQN . $startIndex;
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));

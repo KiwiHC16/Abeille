@@ -978,13 +978,31 @@
                              // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
         // }
 
-        // function decode8002($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', 'Type=8002/Data indication (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
+        function decode8002($dest, $payload, $ln, $qos, $dummy) {
+            $frameControlField      = substr($payload, 2, 2);
+            $destEndPoint           = substr($payload, 4, 2);
+            $cluster                = substr($payload, 6, 4);
+            $profile                = substr($payload,10, 4);
+            $dummy1                 = substr($payload,14, 2);
+            $address                = substr($payload,16, 4);
+            $dummy2                 = substr($payload,20, 6);
+            $SQN                    = substr($payload,26, 2);
+            $status                 = substr($payload,28, 2);
+            $tableSize              = hexdec(substr($payload,30, 2));
+            $index                  = hexdec(substr($payload,32, 2));
+            $tableCount             = hexdec(substr($payload,34, 2));
+            
+            $this->deamonlog('debug', 'Type=8002/Data indication (ignoré)'
+                             . ': Dest='.$dest
+                             . ', tableSize='.$tableSize
+                             . ', index='.$index
+                             . ', tableCount='.$tableCount
+                             );
+            
+            for ($i = $index; $i < $index+$tableCount; $i++) {
+                $this->deamonlog('debug', '    address='.substr($payload,36+($i*10), 4).' status='.substr($payload,36+($i*10)+4,2).' Next Hop='.substr($payload,36+($i*10)+4+2,4));
+            }
+        }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)
         {

@@ -2050,7 +2050,7 @@
                 break;
             case "27":
             // Test message management
-                $addr = "5197";
+                $addr = "25fb";
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/Mgmt_Rtg_req", "" );
                 break;
 

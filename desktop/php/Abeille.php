@@ -597,7 +597,7 @@ Start Zigbee Network:
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{Note}}</label>
                             <div class="col-sm-3">
-                                <textarea class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="note" placeholder="{{Vos notes pour vous souvenir}}"/>
+                                <textarea class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="note" placeholder="{{Vos notes pour vous souvenir}}">Votre note</textarea>
                             </div>
                         </div>
 

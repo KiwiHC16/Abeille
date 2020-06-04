@@ -24,7 +24,9 @@
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
       "include28": "setReportEtat",
-      "include28 2": "writeAttributeRequestIAS_WD"
+      "include28 2": "writeAttributeRequestIAS_WD_Flash",
+      "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
+      "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound"
     }
   }
 }

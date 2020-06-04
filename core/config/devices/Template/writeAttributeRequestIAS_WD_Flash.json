@@ -1,18 +1,18 @@
 {
-  "writeAttributeRequestIAS_WD": {
+  "writeAttributeRequestIAS_WD_Flash": {
     "isVisible": 1,
-    "name": "Alarm",
+    "name": "Flash",
     "order": 43,
     "isHistorized": "0",
     "Type": "action",
-    "subType": "other",
+    "subType": "slider",
     "generic_type": "DONT",
     "invertBinary": "0",
     "template": "",
     "configuration": {
       "uniqId": "5c07c766sdsd251f1",
       "topic": "writeAttributeRequestIAS_WD",
-      "request": "EP=#EP"
+      "request": "mode=Flash&duration=#slider#"
     },
     "display": {
       "forceReturnLineAfter": "1"

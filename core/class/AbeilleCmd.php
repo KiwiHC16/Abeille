@@ -2209,6 +2209,8 @@
             }
 
             if ( isset($Command['writeAttributeRequestIAS_WD']) ) {
+                // Parameters: EP=#EP&mode=Flash&duration=#slider#
+                
                     $this->deamonlog('debug',"command writeAttributeRequestIAS_WD");
                     // Msg Type = 0x0111
                     
@@ -2234,8 +2236,12 @@
                     $direction = "01";
                     $manufacturerSpecific = "00";
                     $manufacturerId = "0000";
-                    $warningMode = "04";        // 14, 24, 34: semble faire le meme son meme si la doc indique: Burglar, Fire, Emergency / 04: que le flash
-                    $warningDuration = "0002"; // en seconde
+                    $warningMode = "04";
+                    if ( $Command['mode'] == "Flash" )      $warningMode = "04";        // 14, 24, 34: semble faire le meme son meme si la doc indique: Burglar, Fire, Emergency / 04: que le flash
+                    if ( $Command['mode'] == "Sound" )      $warningMode = "10";
+                    if ( $Command['mode'] == "FlashSound" ) $warningMode = "14";
+                    $warningDuration = "000A"; // en seconde
+                    if ( $Command['duration'] > 0 )         $warningDuration = sprintf("%04s", dechex($Command['duration']) );
                     // $strobeDutyCycle = "01";
                     // $strobeLevel = "F0";
                     
@@ -3926,6 +3932,8 @@
                                          "priority"                        => $priority,
                                          "dest"                            => $dest,
                                          "address"                         => $address,
+                                         "mode"                            => $parameters['mode'],
+                                         "duration"                        => $parameters['duration'],
                         );
                         break;
                         

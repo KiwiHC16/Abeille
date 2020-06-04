@@ -1507,7 +1507,7 @@
                 }
             }
 
-            $data = "Leave->".$name."->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
+            $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
 
             $SrcAddr = "Ruche";

@@ -8,8 +8,8 @@
     "subType": "other",
     "configuration": {
       "uniqId": "5cqs07c766229fhgka5",
-      "topic": "setColourGroup",
-      "request": "EP=#EP#&X=147A&Y=D709",
+      "topic": "CmdAbeille/#addrGroup#/setColourGroup",
+      "request": "X=147A&Y=D709",
       "visibilityCategory": "All"
     },
     "display": {

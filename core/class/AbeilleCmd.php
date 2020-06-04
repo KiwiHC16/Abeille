@@ -3541,7 +3541,7 @@
                                                  "address"              => $address,
                                                  "X"                    => $parameters['X'],
                                                  "Y"                    => $parameters['Y'],
-                                                 "destinationEndPoint"  => $parameters['EP'],
+                                                 "destinationEndPoint"  => "01", // not needed as group
                                                  );
                             }
                             break;

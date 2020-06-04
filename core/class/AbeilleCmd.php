@@ -1207,6 +1207,58 @@
                 $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
 
             }
+            
+            //----------------------------------------------------------------------
+            // 2.4.3.3.3   Mgmt_Rtg_req
+            //
+            if ( isset($Command['Mgmt_Rtg_req']) && isset($Command['address']) )
+            {
+                $this->deamonlog('debug',"command Mgmt_Rtg_req");
+                // Msg Type = 0x0530
+                $cmd = "0530";
+
+                // <address mode: uint8_t>              -> 1
+                // <target short address: uint16_t>     -> 2
+                // <source endpoint: uint8_t>           -> 1
+                // <destination endpoint: uint8_t>      -> 1
+
+                // <profile ID: uint16_t>               -> 2
+                // <cluster ID: uint16_t>               -> 2
+
+                // <security mode: uint8_t>             -> 1
+                // <radius: uint8_t>                    -> 1
+                // <data length: uint8_t>               -> 1  (22 -> 0x16)
+                // <data: auint8_t>
+                // APS Part <= data
+                //
+
+                $addressMode            = "02";
+                $targetShortAddress     = $Command['address'];
+                $sourceEndpoint         = "00";
+                $destinationEndpoint    = "00";
+                $profileID              = "0000";
+                $clusterID              = "0032";
+                $securityMode           = "28";
+                $radius                 = "30";
+                // $dataLength             = "16";
+
+                $SQN = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
+                $startIndex = "01";
+                
+                $data2 = $SQN . $startIndex;
+                $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+                $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+                
+                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength );
+                $this->deamonlog('debug',"Data2: ".$SQN."-".$startIndex );
+
+                $data = $data1 . $data2;
+
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+
+            }
 
             //----------------------------------------------------------------------
             // Bind
@@ -2800,6 +2852,15 @@
                     case "managementNetworkUpdateRequest":
                         $Command = array(
                                          "managementNetworkUpdateRequest" => "1",
+                                         "priority" => $priority,
+                                         "dest" => $dest,
+                                         "address" => $address,
+                                         );
+                        break;
+                        //----------------------------------------------------------------------------
+                    case "Mgmt_Rtg_req":
+                        $Command = array(
+                                         "Mgmt_Rtg_req" => "1",
                                          "priority" => $priority,
                                          "dest" => $dest,
                                          "address" => $address,

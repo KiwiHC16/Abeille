@@ -1,0 +1,19 @@
+{
+  "VertGroup": {
+    "name": "Vert Group",
+    "order": 26,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "uniqId": "5cqs07c766229fhgka5",
+      "topic": "setColourGroup",
+      "request": "EP=#EP#&X=147A&Y=D709",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

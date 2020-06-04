@@ -3529,6 +3529,23 @@
                         }
                         break;
                         //----------------------------------------------------------------------------
+                    case "setColourGroup":
+                            $fields = preg_split("/[=&]+/", $msg);
+                            if (count($fields) > 1) {
+                                $parameters = proper_parse_str( $msg );
+                                $Command = array(
+                                                 "setColour"            => "1",
+                                                 "addressMode"          => "01",
+                                                 "priority"             => $priority,
+                                                 "dest"                 => $dest,
+                                                 "address"              => $address,
+                                                 "X"                    => $parameters['X'],
+                                                 "Y"                    => $parameters['Y'],
+                                                 "destinationEndPoint"  => $parameters['EP'],
+                                                 );
+                            }
+                            break;
+                        //----------------------------------------------------------------------------
                     case "setColourRGB":
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {

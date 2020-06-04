@@ -1,0 +1,19 @@
+{
+  "BlancGroup": {
+    "name": "Blanc Group",
+    "order": 23,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "uniqId": "5c0df7c7662198edf",
+      "topic": "setColourGroup",
+      "request": "EP=#EP#&X=6000&Y=6000",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "0"
+    }
+  }
+}

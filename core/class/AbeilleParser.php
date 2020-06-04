@@ -307,7 +307,7 @@
 
         // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
         // Data Type -> Description, # octets
-        public $dataType = array(
+        public $zbDataTypes = array(
                                  '00' => array( 'Null', 0 ),
                                  // 01-07: reserved
                                  '08' => array( 'General Data', 1),
@@ -319,7 +319,7 @@
                                  '0e' => array( 'General Data', 7),
                                  '0f' => array( 'General Data', 8),
 
-                                 '10' => array( 'Logical', 1 ),
+                                 '10' => array( 'Bool', 1 ), // Boolean
                                  // 0x11-0x17 Reserved
                                  '18' => array( 'Bitmap', 1 ),
                                  '19' => array( 'Bitmap', 2 ),
@@ -330,30 +330,30 @@
                                  '1e' => array( 'Bitmap', 7 ),
                                  '1f' => array( 'Bitmap', 8 ),
 
-                                 '20' => array( 'Unsigned integer', 1 ),
-                                 '21' => array( 'Unsigned integer', 2 ),
-                                 '22' => array( 'Unsigned integer', 3 ),
-                                 '23' => array( 'Unsigned integer', 4 ),
-                                 '24' => array( 'Unsigned integer', 5 ),
-                                 '25' => array( 'Unsigned integer', 6 ),
-                                 '26' => array( 'Unsigned integer', 7 ),
-                                 '27' => array( 'Unsigned integer', 8 ),
+                                 '20' => array( 'Uint8',  1 ), // Unsigned 8-bit int
+                                 '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+                                 '22' => array( 'Uint24', 3 ), // Unsigned 24-bit int
+                                 '23' => array( 'Uint32', 4 ), // Unsigned 32-bit int
+                                 '24' => array( 'Uint40', 5 ), // Unsigned 40-bit int
+                                 '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
+                                 '26' => array( 'Uint56', 7 ), // Unsigned 56-bit int
+                                 '27' => array( 'Uint64', 8 ), // Unsigned 64-bit int
 
-                                 '28' => array( 'Signed integer', 1 ),
-                                 '29' => array( 'Signed integer', 2 ),
-                                 '2a' => array( 'Signed integer', 3 ),
-                                 '2b' => array( 'Signed integer', 4 ),
-                                 '2c' => array( 'Signed integer', 5 ),
-                                 '2d' => array( 'Signed integer', 6 ),
-                                 '2e' => array( 'Signed integer', 7 ),
-                                 '2f' => array( 'Signed integer', 8 ),
+                                 '28' => array( 'Int8', 1 ), // Signed 8-bit int
+                                 '29' => array( 'Int16', 2 ), // Signed 16-bit int
+                                 '2a' => array( 'Int24', 3 ), // Signed 24-bit int
+                                 '2b' => array( 'Int32', 4 ), // Signed 32-bit int
+                                 '2c' => array( 'Int40', 5 ), // Signed 40-bit int
+                                 '2d' => array( 'Int48', 6 ), // Signed 48-bit int
+                                 '2e' => array( 'Int56', 7 ), // Signed 56-bit int
+                                 '2f' => array( 'Int64', 8 ), // Signed 64-bit int
 
                                  '30' => array( 'Enumeration', 1 ),
                                  '31' => array( 'Enumeration', 2 ),
                                  // 0x32-0x37 Reserved
 
                                  '38' => array( 'SemiPrecision',   2 ),
-                                 '39' => array( 'SinglePrecision', 4 ),
+                                 '39' => array( 'Single', 4 ), // Single precision
                                  '3a' => array( 'DoublePrecision', 8 ),
                                  // 0x3b-0x3f
                                  // 0x40 Reserved
@@ -383,6 +383,14 @@
                                  // 0xF2-0xFe Reserved
                                  'ff' => array( 'Unknown', 0 ),
         );
+
+        /* Returns ZigBee data type or array('?'.$type.'?', 0) if unknown */
+        function getZbDataType($type)
+        {
+            if (array_key_exists($type, $this->zbDataTypes))
+                return $this->zbDataTypes[$type];
+            return array('?'.$type.'?', 0);
+        }
 
         public $parameters_info;
         public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
@@ -587,61 +595,136 @@
             return 'ClusterId='.$cluster.'-'.$GLOBALS['clusterTab']["0x".$cluster] ;
         }
 
-        function Logical( $value ) {
-          return hexdec( $value );
+        /* Zigbee type 0x10 to string */
+        function convBoolToString($value) {
+            if (hexdec($value) == 0)
+                return "0";
+            return "1"; // Any value != 0 means TRUE
         }
 
-        function SinglePrecision( $value ) {
+        /* Zigbee type 0x39 to string */
+        function convSingleToString($value) {
           return unpack('f', pack('H*', $value ))[1];
         }
 
-        function getFF01IdName($id) {
-          $IdName = array(
-            '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
-            '03' => "tbd1",
-            '05' => "tbd2",
-            '07' => "tbd3",
-            '08' => "tbd4",
-            '09' => "tbd5",
-            '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2)
-            '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
-            '66' => "Pression",          // Based on Temperature Capteur V2
-            '6e' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
-            '6f' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
-            '94' => "tbd6",
-            '95' => "Consommation",     // Based on Prise Xiaomi
-            '96' => "tbd8",
-            '97' => "tbdç",
-            '98' => "Puissance",        // Based on Aqara Double Relay
-            '9b' => "tbd11",
-          );
-
-          return $IdName[$id];
+        function convUint8ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint16ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint24ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint32ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint40ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint48ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint56ToString($value) {
+            return base_convert($value, 16, 10);
+        }
+        function convUint64ToString($value) {
+            return base_convert($value, 16, 10);
         }
 
-        function decodeFF01( $data ) {
-          $continue = 1;
-          $fields = array();
-          if ( strlen( $data ) < 2 ) return $fields;
-          while ($continue) {
-            $id = $data[0].$data[1];
-            $type = $data[2].$data[3];
-            $len = $this->dataType[$type][1]*2;
-            $value = substr($data, 4, $len );
-            $fct = $this->dataType[$type][0];
-            if ( method_exists($this, $fct) ) { $valueConverted = $this->$fct($value); } else { $valueConverted = ""; }
+        /* Zigbee types 0x28..0x2f to string */
+        function convInt8ToString($value) {
+            $num = hexdec($value);
+            if ($num > 0x7f) // is negative
+                $num -= 0x100;
+            return sprintf("%d", $num);
+        }
+        function convInt16ToString($value) {
+            $num = hexdec($value);
+            if ($num > 0x7fff) // is negative
+                $num -= 0x10000;
+            return sprintf("%d", $num);
+        }
+        function convInt24ToString($value) {
+            $num = hexdec($value);
+            if ($num > 0x7fffff) // is negative
+                $num -= 0x1000000;
+            return sprintf("%d", $num);
+        }
+        function convInt32ToString($value) {
+            $num = hexdec($value);
+            if ($num > 0x7fffffff) // is negative
+                $num -= 0x100000000;
+            $conv = sprintf("%d", $num);
+            // $this->deamonlog( 'debug', 'convInt32ToString value='.$value.', conv='.$conv );
+            return $conv;
+        }
 
-            $fields[$this->getFF01IdName( $id )] = array(
-              'id' => $id,
-              'type' => $type,
-              'converter' => $this->dataType[$type][0],
-              'value' => $value,
-              'valueConverted' => $valueConverted,
+        function getFF01IdName($id) {
+            $IdName = array(
+                '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
+                '03' => "tbd1",
+                '05' => "tbd2",
+                '07' => "tbd3",
+                '08' => "tbd4",
+                '09' => "tbd5",
+                '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2)
+                '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
+                '66' => "Pression",          // Based on Temperature Capteur V2
+                '6e' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
+                '6f' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
+                '94' => "tbd6",
+                '95' => "Consommation",     // Based on Prise Xiaomi
+                '96' => "tbd8",
+                '97' => "tbd9",
+                '98' => "Puissance",        // Based on Aqara Double Relay
+                '9b' => "tbd11",
             );
-            $data = substr( $data, 4+$len );
-            if ( strlen($data)<2 ) $continue = 0;
-          }
-          return $fields;
+            if (array_key_exists($id, $IdName))
+                return $IdName[$id];
+            return '?'.$id.'?';
+        }
+
+        /* Decode FF01 attribut payload */
+        function decodeFF01($data) {
+            $fields = array();
+            $dataLen = strlen($data);
+            while ($dataLen != 0) {
+                if ($dataLen < 4) {
+                    $this->deamonlog('debug', 'decodeFF01(): Longueur incorrecte ('.$dataLen.'). Analyse FF01 interrompue.');
+                    break;
+                }
+
+                $id = $data[0].$data[1];
+                $type = $data[2].$data[3];
+                $dt_arr = $this->getZbDataType($type);
+                $len = $dt_arr[1] * 2;
+                if ($len == 0) {
+                    /* If length is unknown we can't continue since we don't known where is next good position */
+                    $this->deamonlog('warning', 'decodeFF01(): Type de données '.$type.' non supporté. Analyse FF01 interrompue.');
+                    break;
+                }
+                $value = substr($data, 4, $len );
+                $fct = 'conv'.$dt_arr[0].'ToString';
+                if (method_exists($this, $fct)) {
+                    $valueConverted = $this->$fct($value);
+                    // $this->deamonlog('debug', 'decodeFF01(): Conversion du type '.$type.' (val='.$value.')');
+                } else {
+                    $this->deamonlog('debug', 'decodeFF01(): Conversion du type '.$type.' non supporté');
+                    $valueConverted = "";
+                }
+
+                $fields[$this->getFF01IdName($id)] = array(
+                    'id' => $id,
+                    'type' => $type,
+                    'typename' => $dt_arr[0],
+                    'value' => $value,
+                    'valueConverted' => $valueConverted,
+                );
+                $data = substr($data, 4 + $len);
+                $dataLen = strlen($data);
+            }
+            return $fields;
         }
 
         function displayStatus($status) {
@@ -2580,16 +2663,16 @@
                     $this->deamonlog('debug', $logMessage);
                 }
 
-                // Xiaomi Double Relay (Kiwi:  )
-                elseif ( ($AttributId == "ff01") && ($AttributSize == "0044") ) {
-                    $FF01 = $this->decodeFF01(substr($payload, 24));
+                // Xiaomi Double Relay (ref ?)
+                elseif (($AttributId == "ff01") && ($AttributSize == "0044")) {
+                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
+                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relais double)");
+                    $this->deamonlog('debug', "  ".json_encode($FF01));
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',  '01-0000',       $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',  '02-0000',       $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '000C',  '01-0055',       $FF01["Puissance"]["valueConverted"],         $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',   '--conso--',     $FF01["Consommation"]["valueConverted"],      $qos);
-
-                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relay Double):".json_encode($FF01));
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $qos);
                 }
 
                 // Xiaomi Capteur Presence

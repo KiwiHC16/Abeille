@@ -128,7 +128,7 @@
                 <li                 id="tab_graph">     <a href="#graph_network"              data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
                 <li                 id="tab_summary">   <a href="#summary_network"            data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
                 <li                 id="tab_test1">     <a href="#test1"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
-                <li                 id="tab_test2">     <a href="#test2"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Test2}}                 </a></li>
+                <li                 id="tab_test2">     <a href="#test2"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Routes}}                 </a></li>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
@@ -381,7 +381,24 @@
 <!-- tab future usage -->
 
                 <div id="test2" class="tab-pane" >
-                    test2
+                    <?php
+                                echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
+                                
+                                function afficheRouteTable() {
+                                    
+                                }
+                                
+                                $routingTable = array();
+                                $eqLogics = Abeille::byType('Abeille');
+                                foreach ($eqLogics as $eqLogic) {
+                                    if( ($eqLogic->getConfiguration('routingTable')) && (strlen($eqLogic->getConfiguration('routingTable'))>2) ) {
+                                        $routingTable[$eqLogic->getLogicalId()] = json_decode($eqLogic->getConfiguration('routingTable'), 1)[0];
+                                    }
+                                }
+                                var_dump( $routingTable );
+                                
+                                    
+                                ?>
                 </div>
 
 
@@ -425,6 +442,14 @@
         }
       }
 
+    echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
+                                
+      $eqLogics = Abeille::byType('Abeille');
+      foreach ($eqLogics as $eqLogic) {
+          if( $eqLogic->getConfiguration('routingTable') ) {
+              echo '$(".btn.refreshRoutes_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshRoutes("'.$eqLogic->getLogicalId().'"); });'."\n";
+        }
+      }
 ?>
 
 </script>

@@ -990,7 +990,7 @@
                                    0x01 => "Dicovery_Underway",
                                    0x02 => "Discovery_Failed",
                                    0x03 => "Inactive",
-                                   0x04 => "Validation_Underway",
+                                   0x04 => "Validation_Underway", // Got that if interrogate the Zigate
                                    0x05 => "Reserved",
                                    0x06 => "Reserved",
                                    0x07 => "Reserved",
@@ -1003,7 +1003,7 @@
             $cluster                = substr($payload, 6, 4);
             $profile                = substr($payload,10, 4);
             $dummy1                 = substr($payload,14, 2);
-            $address                = substr($payload,16, 4);
+            $address                = substr($payload,16, 4); if ( $address == "0000" ) $address = "Ruche";
             $dummy2                 = substr($payload,20, 6);
             $SQN                    = substr($payload,26, 2);
             
@@ -1014,6 +1014,7 @@
             
             $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
                              . ': Dest='.$dest
+                             . ': addr='.$address
                              . ', tableSize='.$tableSize
                              . ', index='.$index
                              . ', tableCount='.$tableCount
@@ -1031,16 +1032,23 @@
                 
                 $nextHop=substr($payload,36+($i*10)+4+2,4);
                 
-                $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.' Next Hop='.$nextHop );
+                $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop );
                 
                 if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
                     $routingTable[] = array( $addressDest => $nextHop );
                 }
             }
             
+            if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+            
             $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
-            $abeille->setConfiguration('routingTable', json_encode($routingTable) );
-            $abeille->save();
+            if ( $abeille ) {
+                $abeille->setConfiguration('routingTable', json_encode($routingTable) );
+                $abeille->save();
+            }
+            else {
+                $this->deamonlog('debug', '    abeille not found !!!');
+            }
 
             
             

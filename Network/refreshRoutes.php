@@ -1,7 +1,7 @@
 <?php
     
     /***
-     * 
+     *
      *
      */
     
@@ -11,14 +11,14 @@
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
     include_once("../resources/AbeilleDeamon/includes/function.php");
         
-    // Je ne filtre pas sur les équipements qur batterie car j ai eu une réponse d'un interrupteur mural xiaomi. En les reveillant ca se trouve ils repondent.
+    // Je ne filtre pas sur les équipements sur batterie car je ne sais pas s'ils repondent. Je suppose que non mais on ne sait jamais.
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         if ( ($_GET['device'] == $eqLogic->getLogicalId()) || ($_GET['device'] == "All") ) {
             list($type, $address, $action) = explode('/', $eqLogic->getLogicalId());
-            if ( $address == "Ruche" ) $address = "0000"; // Ajout de la ruche mais elle ne repond pas.
+            if ( $address == "Ruche" ) $address = "0000"; // Ajout de la ruche.
             if ( strlen($address) == 4 ) {
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$type."/".$address."/managementNetworkUpdateRequest", "" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$type."/".$address."/Mgmt_Rtg_req", "" );
                 sleep(5);
             }
         }

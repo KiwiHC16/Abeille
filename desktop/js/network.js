@@ -86,6 +86,12 @@ function refreshBruit(Device) {
     console.log("refreshBruit end");
 }
 
+function refreshRoutes(Device) {
+    console.log("refreshRoutes start");
+    $.ajax({ url: "/plugins/Abeille/Network/refreshRoutes.php?device="+Device });
+    console.log("refreshRoutes end");
+}
+
 function getAbeilleLog(_autoUpdate, _log) {
     $.ajax({
         type: 'POST',

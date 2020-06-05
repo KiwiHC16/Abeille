@@ -981,6 +981,23 @@
         // }
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
+            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
+            
+            // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
+            // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
+            $statusDecode = array(
+                                   0x00 => "Active",
+                                   0x01 => "Dicovery_Underway",
+                                   0x02 => "Discovery_Failed",
+                                   0x03 => "Inactive",
+                                   0x04 => "Validation_Underway",
+                                   0x05 => "Reserved",
+                                   0x06 => "Reserved",
+                                   0x07 => "Reserved",
+                                   0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
+                           );
+            
+            
             $frameControlField      = substr($payload, 2, 2);
             $destEndPoint           = substr($payload, 4, 2);
             $cluster                = substr($payload, 6, 4);
@@ -989,21 +1006,44 @@
             $address                = substr($payload,16, 4);
             $dummy2                 = substr($payload,20, 6);
             $SQN                    = substr($payload,26, 2);
+            
             $status                 = substr($payload,28, 2);
             $tableSize              = hexdec(substr($payload,30, 2));
             $index                  = hexdec(substr($payload,32, 2));
             $tableCount             = hexdec(substr($payload,34, 2));
             
-            $this->deamonlog('debug', 'Type=8002/Data indication (ignoré)'
+            $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
                              . ': Dest='.$dest
                              . ', tableSize='.$tableSize
                              . ', index='.$index
                              . ', tableCount='.$tableCount
                              );
             
+            $routingTable = array();
+            
             for ($i = $index; $i < $index+$tableCount; $i++) {
-                $this->deamonlog('debug', '    address='.substr($payload,36+($i*10), 4).' status='.substr($payload,36+($i*10)+4,2).' Next Hop='.substr($payload,36+($i*10)+4+2,4));
+                
+                $addressDest=substr($payload,36+($i*10), 4);
+                
+                $statusRouting = substr($payload,36+($i*10)+4,2);
+                $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
+                if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
+                
+                $nextHop=substr($payload,36+($i*10)+4+2,4);
+                
+                $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.' Next Hop='.$nextHop );
+                
+                if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
+                    $routingTable[] = array( $addressDest => $nextHop );
+                }
             }
+            
+            $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
+            $abeille->setConfiguration('routingTable', json_encode($routingTable) );
+            $abeille->save();
+
+            
+            
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)

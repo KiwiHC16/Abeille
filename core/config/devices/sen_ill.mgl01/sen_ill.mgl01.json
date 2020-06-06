@@ -15,11 +15,12 @@
     "Commandes": {
       "include1": "SW",
       "include2": "nom",
-      "include3": "presence",
-      "include4": "luminosite",
+      "include4": "luminositeXiaomi",
       "include5": "Batterie-Volt",
       "include6": "Batterie-Pourcent",
-      "include7": "Xiaomi-ff01"
+      "include7": "Xiaomi-ff01",
+      "include7 2": "BindToZigateIlluminance",
+      "include7 2 2": "setReportIlluminanceXiaomi"
     }
   }
 }

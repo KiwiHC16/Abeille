@@ -3017,7 +3017,7 @@
                                            'BindToZigateLevel',                     'setReportLevel',
                                            'BindToZigateButton',
                                            'spiritTemperatureBindShortToZigate',    'spiritTemperatureSetReport',
-                                           'BindToZigateIlluminance',               'setReportIlluminance',
+                                           'BindToZigateIlluminance',               'setReportIlluminance', 'setReportIlluminanceXiaomi',
                                            'BindToZigateOccupancy',                 'setReportOccupancy',
                                            'BindToZigateTemperature',               'setReportTemperature',
                                            'BindToZigatePuissanceLegrand',          'setReportPuissanceLegrand',

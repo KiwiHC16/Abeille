@@ -3945,6 +3945,7 @@
                                          "ClusterId"                => $parameters['ClusterId'],
                                          "AttributeType"            => $parameters['AttributeType'],
                                          "AttributeId"              => $parameters['AttributeId'],
+                                         "MinInterval"              => str_pad(dechex($parameters['MinInterval']),4,0,STR_PAD_LEFT),
                                          "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
                                          );
                         break;

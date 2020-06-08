@@ -31,7 +31,7 @@
     <fieldset>
         <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
         <div>
-            <p><i> En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.</i></p>
+            <p><i> Toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur le forum</strong> </a>.</i></p>
             <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Version d'Abeille.">{{Version Abeille : }}</label>

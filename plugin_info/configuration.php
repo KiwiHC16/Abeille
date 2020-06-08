@@ -32,6 +32,8 @@
         <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
         <div>
             <p><i> Toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur le forum</strong> </a>.</i></p>
+            <p><i> Toutes les dernieres discussions <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>au sujet d Abeille sur le forum</strong> </a>. Si vous postez un message assurez vous de mettre le flag "plugin-abeille".</i></p>
+            <p><i> Note: si vous souhaitez de l aide, ne passer pas par les fonctions integrees de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
             <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="Version d'Abeille.">{{Version Abeille : }}</label>

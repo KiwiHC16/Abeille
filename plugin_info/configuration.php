@@ -131,22 +131,23 @@
 ?>
              </div>
             <hr>
-            <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
-            <a class="btn btn-success" id="bt_zigatewifi_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_zigatewifi_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
-            <div id="zigatewifi">
-                <div>
-                    <p><i>{{La zigate wifi néccéssite l'installation de l'utilitaire socat pour lier un fichier fifo a une ip:port.}}</i></p>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Installation de socat qui permet les échanges avec la zigate wifi.}}">{{Installation de socat}}</label>
-                    <div class="col-lg-5">
-                        <a class="btn btn-warning" id="bt_installSocat"><i class="fa fa-refresh"></i> {{Installer}}</a>
-                    </div>
-                </div>
-
-
+        <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
+        <a class="btn btn-success" id="bt_zigatewifi_hide"><i class="fa fa-refresh"></i> {{Cache}}</a><a class="btn btn-danger" id="bt_zigatewifi_show"><i class="fa fa-refresh"></i> {{Affiche}}</a>
+        <div id="zigatewifi">
+            <div>
+                <p><i>{{La zigate wifi néccéssite l'installation de l'utilitaire socat pour lier un fichier fifo a une ip:port.}}</i></p>
             </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Installation de socat qui permet les échanges avec la zigate wifi.}}">{{Installation de socat : }}</label>
+                <div class="col-lg-5">
+                    <a class="socatStatus" title="Status d'installation du package">
+                        <span class="label label-success" style="font-size:1em;">-?-</span>
+                    </a>
+                    <a class="btn btn-warning" id="bt_installSocat" title="Installation automatique du package"><i class="fa fa-refresh"></i>{{Installer}}</a>
+                </div>
+            </div>
+        </div>
 
 <hr>
 
@@ -239,41 +240,22 @@
 
 <script>
 
-// $("#paramMosquitto").hide();
-$("#PiZigate").hide();
-// $("#Parametre").hide();
-$("#Connection").hide();
-$("#zigatewifi").hide();
+    $("#Connection").hide();
+    $("#zigatewifi").hide();
+    $("#PiZigate").hide();
 
-// $('#bt_hide').on('click', function () {
-                 // $("#paramMosquitto").hide();
-                    // }
-                    // );
 
-// $('#bt_show').on('click', function () {
-                 // $("#paramMosquitto").show();
-                 // }
-                 // );
 
-$('#bt_zigatewifi_show').on('click', function () {
-        $("#zigatewifi").show();
-    }
-);
+    $('#bt_zigatewifi_show').on('click', function () {
+            checkSocatInstallation();
+            $("#zigatewifi").show();
+        }
+    );
 
-$('#bt_zigatewifi_hide').on('click', function () {
-        $("#zigatewifi").hide();
-    }
-);
-
-// $('#bt_parametre_hide').on('click', function () {
-                          // $("#Parametre").hide();
-                          // }
-                          // );
-
-// $('#bt_parametre_show').on('click', function () {
-                          // $("#Parametre").show();
-                          // }
-                          // );
+    $('#bt_zigatewifi_hide').on('click', function () {
+            $("#zigatewifi").hide();
+        }
+    );
 
 $('#bt_Connection_hide').on('click', function () {
                            // console.log("bt_hide");
@@ -307,15 +289,35 @@ $('#bt_updateConfigAbeille').on('click',function(){
                                               });
                               });
 
-$('#bt_installSocat').on('click',function(){
-    bootbox.confirm('{{Vous êtes sur le point d\'installer socat pour le module wifi de la zigate. <br> Voulez vous continuer ?}}', function (result) {
-        if (result) {
-            $('#md_modal2').dialog({title: "{{Installation de socat}}"});
-            $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installSocat.abeille').dialog('open');
-        }
-    });
-})
+    function checkSocatInstallation() {
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'checkSocat',
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'checkSocat' !<br>Votre installation semble corrompue.");
+            },
+            success: function (res) {
+                if (res.result == 0)
+                    $('.socatStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                else
+                    $('.socatStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+            }
+        });
+    }
 
+    $('#bt_installSocat').on('click',function(){
+        bootbox.confirm('{{Vous êtes sur le point d\'installer le package \'socat\' pour les zigates Wifi.<br>Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Installation de socat}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installSocat.abeille').dialog('open');
+            }
+        });
+    })
 
     $('#bt_pizigate_hide').on('click', function () {
         $("#PiZigate").hide();

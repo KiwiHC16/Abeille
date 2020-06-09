@@ -17,7 +17,7 @@
  */
 
 /*
- * AJAX's requests targets for Abeille
+ * Targets for AJAX's requests
  */
 
 try {
@@ -44,9 +44,18 @@ try {
         ajax::success();
     }
 
+    if (init('action') == 'checkSocat') {
+        $cmdToExec = "checkSocat.sh";
+        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
+        ajax::success(json_encode($status));
+    }
+    
     if (init('action') == 'installSocat') {
-        abeille::installSocat(false);
-        ajax::success();
+        $cmdToExec = "installSocat.sh";
+        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
+        ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {

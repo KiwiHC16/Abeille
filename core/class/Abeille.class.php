@@ -63,10 +63,6 @@
             Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
         }
 
-        public static function installSocat($_background = true) {
-            Abeille::execShellCmd( "installSocat.sh", "installSocat", $_background );
-        }
-
         public static function checkWiringPi($_background = true) {
             $cmdToExec = "checkWiringPi.sh";
             $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
@@ -1450,7 +1446,7 @@
             }
 
             if (is_object($elogic) && !is_object($cmdlogic)) {
-                log::add('Abeille', 'debug', "fct message Topic: Objet existe mais pas la commande, je passe ->".$message->topic."<- Value ->".$message->payload."<-");
+                log::add('Abeille', 'debug', "  L'objet '".$nodeid."' existe mais pas la cmde '".$cmdId."' => message ignoré");
                 return;
             }
             log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");

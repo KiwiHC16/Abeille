@@ -72,21 +72,21 @@
 
         public static function installWiringPi($_background = true) {
             $cmdToExec = "installWiringPi.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
         public static function installTTY($_background = true) {
             $cmdToExec = "installTTY.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
         public static function resetPiZiGate($_background = true) {
             $cmdToExec = "resetPiZigate.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }

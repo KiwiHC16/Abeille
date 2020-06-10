@@ -1,5 +1,7 @@
+#! /bin/bash
 
-echo "Execution de '$(basename $0)'"
+NOW=`date +"%Y-%m-%d %H:%M:%S"`
+echo "[${NOW}] Démarrage de '$(basename $0)'"
 
 echo "Vérification de l'installation WiringPi"
 hash gpio 2>/dev/null

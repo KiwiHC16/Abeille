@@ -1,10 +1,13 @@
+#! /bin/bash
+
 ###
 ### WiringPi installation script
 ### Note: This assumes standard plateform (ex: RPI) with supported package
 ### Note: WiringOPI is the equivalent for OrangePi
 ###
 
-echo "Execution de '$(basename $0)'"
+NOW=`date +"%Y-%m-%d %H:%M:%S"`
+echo "[${NOW}] Démarrage de '$(basename $0)'"
 
 echo "Mise-à-jour de la liste des packages"
 sudo apt-get -y update

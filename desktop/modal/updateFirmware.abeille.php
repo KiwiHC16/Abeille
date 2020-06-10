@@ -46,7 +46,7 @@ Lancement des operations.
 
     function updatelog(){
         jeedom.log.autoupdate({
-            log: 'AbeillePiZigate',
+            log: 'AbeilleConfig',
             display: $('#pre_abeilleUpdateFirmware'),
             search: $('#in_abeilleLogSearch'),
             control: $('#bt_abeilleLogStopStart'),

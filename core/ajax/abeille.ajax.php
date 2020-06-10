@@ -110,7 +110,7 @@ try {
         log::remove('AbeillePiZigate');
         log::add('AbeillePiZigate', 'info', 'Vérification des paramètres');
         $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort . " -check";
-        $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+        $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
         exec($cmd, $out, $status);
         // if ($status != 0)
             // return $status; // Something wrong with parameters
@@ -123,7 +123,7 @@ try {
             /* Updating FW and reset Zigate */
             log::add('AbeillePiZigate', 'info', 'Programming');
             $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort;
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeillePiZigate') . ' 2>&1';
+            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
 
             /* Reading FW version */

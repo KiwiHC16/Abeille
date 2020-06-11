@@ -167,7 +167,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{WiringPI est nécéssaire pour controller les GPIO.}}">{{Installation de WiringPi}}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{WiringPI est nécéssaire pour controller les GPIO.}}">{{Installation de WiringPi : }}</label>
                 <div class="col-lg-5">
                     <a class="WiringPiStatus" title="Status du package">
                         <span class="label label-success" style="font-size:1em;">-?-</span>
@@ -178,7 +178,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">{{Port TTY}}</label>
+                <label class="col-lg-4 control-label">{{Port TTY : }}</label>
                 <div class="col-lg-5">
                     <select style="width:150px" id="ZiGatePort" data-toggle="tooltip" title="{{Port de communication avec la PiZigate}}">
                         <?php
@@ -206,7 +206,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">{{Firmware}}</label>
+                <label class="col-lg-4 control-label">{{Firmware : }}</label>
                 <div class="col-lg-5">
                     <a class="CurrentFirmware" title="{{Version du firmware actuel}}">
                         <span class="label label-success" style="font-size:1em;">-?-</span>
@@ -227,7 +227,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label">{{Reset (HW) PiZigate}}</label>
+                <label class="col-lg-4 control-label">{{Reset (HW) PiZigate : }}</label>
                 <div class="col-lg-5">
                     <a class="btn btn-warning" id="bt_resetPiZigate" title="{{Reset HW de la PiZigate}}"><i class="fa fa-refresh"></i> {{Reset}}</a>
                 </div>
@@ -270,24 +270,6 @@ $('#bt_Connection_show').on('click', function () {
                            $("#Connection").show();
                            }
                            );
-
-$('#bt_syncconfigAbeille').on('click',function(){
-        bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernières configurations des modules ?<br>Si vous avez des modifications locales des fichier JSON, elles seront perdues.}}', function (result) {
-                if (result) {
-                    $('#md_modal2').dialog({title: "{{Téléchargement des configurations}}"});
-                    $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=syncconf.abeille').dialog('open');
-                    }
-        });
-    });
-
-$('#bt_updateConfigAbeille').on('click',function(){
-                              bootbox.confirm('{{Etes-vous sûr de vouloir mettre à jour les équipements avec les dernières configurations des modules ?<br>Si vous avez des modifications locales, il est possible qu elles seront perdues.}}', function (result) {
-                                              if (result) {
-                                              $('#md_modal2').dialog({title: "{{Application des configurations}}"});
-                                              $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateConfig.abeille').dialog('open');
-                                              }
-                                              });
-                              });
 
     function checkSocatInstallation() {
         $.ajax({
@@ -365,6 +347,7 @@ $('#bt_updateConfigAbeille').on('click',function(){
             data: {
                 action: 'checkTTY',
                 zgport: document.getElementById("ZiGatePort").value,
+                zgtype: 'PI',
             },
             dataType: 'json',
             global: false,

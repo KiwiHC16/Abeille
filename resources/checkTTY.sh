@@ -6,13 +6,19 @@
 ###          not disturb Zigate answer.
 ###
 
-echo "Execution de '$(basename $0)'"
+# Usage
+# checkTTY.sh <portname> <zigatetype>
+# ex: checkTTY.sh /dev/ttyS1 PI
 
-if [ $# -lt 1 ]; then
-    echo "= ERREUR: Port manquant !"
+NOW=`date +"%Y-%m-%d %H:%M:%S"`
+echo "[${NOW}] Démarrage de '$(basename $0)'"
+
+if [ $# -lt 2 ]; then
+    echo "= ERREUR: Port et/ou type manquant !"
     exit 1
 fi
 PORT=$1
+TYPE=$2
 
 echo "Vérifications du port '${PORT}'"
 
@@ -23,7 +29,7 @@ if [ ! -e ${PORT} ]; then
 fi
 
 # Is port already used ?
-FIELDS=`lsof -Fcn ${PORT}`
+FIELDS=`sudo lsof -Fcn ${PORT}`
 if [ "${FIELDS}" == "" ]; then
     echo "= Ok, le port semble libre."
 else
@@ -40,67 +46,20 @@ else
     exit 3
 fi
 
-# Zigate communication check now done from PHP
-exit 0
-
-# echo "Configuration du port ${PORT}"
-# stty -F ${PORT} 115200 -parity cs8 -cstopb
-# if [ $? -ne 0 ]; then
-    # echo "= ERREUR: Mauvais port ?"
-    # exit 2
-# fi
-# echo "= Ok"
-
-# Zigate reminder: START=0x01 MsgType2B Len2B Chksm Data LQI STOP=0x03
-#   Get version: code 0x0010
-#   Trame  : 0x01   0010     0000 10 03
-#   Encoded: 0x01 021010 02100210 10 03
-GETVERSION='\x01\x02\x10\x10\x02\x10\x02\x10\x10\x03'
-GETVERSIONEXPECTED='\x01\x80\x02\x10\x02\x10\x02\x15'
-
-echo "Contact de la Zigate"
-exec 99<>${PORT}
-echo -ne ${GETVERSION} >&99
-read -n 8 -t 2 ANSWER <&99
-if [ $? -ne 0 ]; then
-    echo "= ERREUR: Pas de réponse. Mauvais port ?"
-    exit 3
+# If Zigate type is "PI", let's check if "WiringPi" is properly installed
+if [ "${TYPE}" == "PI" ]; then
+    # 'gpio' commands are provided from "WiringPi" package (or equivalent)
+    echo "Vérification de l'installation du package 'WiringPi'"
+    hash gpio 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "= ERREUR: Commande 'gpio' manquante !"
+        echo "=         Le package 'WiringPi' est probablement mal installé."
+        exit 4
+    fi
+    echo "= Ok"
+elif [ "${TYPE}" == "WIFI" ]; then
+    echo "= ERREUR: Type 'WIFI' inattendu ici."
+    exit 5
 fi
-ANSWER2=`echo -n "${ANSWER}" | od -An -t x1`
-echo "- Reçu ${#ANSWER} bytes:${ANSWER2}"
-ANSWER3=""
-for C in ${ANSWER2}
-do
-    ANSWER3="${ANSWER3}\\x$C"
-done
-if [ "${ANSWER3}" != "${GETVERSIONEXPECTED}" ]; then
-    echo "= ERROR: Mauvaise réponse reçue de la Zigate."
-    exit 4
-fi
-echo "= Ok. Bonne réponse reçue de la Zigate"
 
 exit 0
-
-
-# echo -ne '\x01\x02\x10\x10\x02\x10\x02\x10\x10\x03' > /dev/ttyS1
-# orangepi@TestsBox:$ od -t x1 /dev/ttyS1
-# 0000000 01 80 02 10 02 10 02 15 95 02 10 02 10 02 10 10
-# 0000020 02 10 03 01 80 10 02 10 02 15 89 02 10 02 13 02
-# 0000040 13 1c 02 10 03
-#
-#     01
-#     80 02 10 => 80 00, STATUS sucess
-#     02 10 02 15 => 00 05
-#     95 => 95, CHKSM
-#     02 10 02 10 02 10 10 => 00000010
-#     02 10 => 00 RSSI
-#     03
-#
-#     01
-#     80 10 => 8010,
-#     02 10 02 15 => 0005
-#     89 => 89, CHKSM
-#     02 10 02 13 => 0003
-#     02 13 1c => 031c
-#     02 10 => 00, RSSI
-#     03

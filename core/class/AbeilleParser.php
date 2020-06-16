@@ -241,7 +241,6 @@
         "8002" => "Data indication",
         "8006" => "Non “Factory new” Restart",
         "8007" => "“Factory New” Restart",
-        "8008" => "\“Function inconnue pas dans la doc\"",
         "8009" => "Network State Response",
         "8028" => "Authenticate response",
         "802B" => "User Descriptor Notify",
@@ -271,6 +270,37 @@
         if (array_key_exists($msgType, $zigateMessages))
             return $zigateMessages[$msgType];
         return "Message inconnu";
+    }
+
+    /* PDM event codes & desc.
+       Returned by command 0x8035 */
+    $zigatePDMEvents = array(
+        "00" => "WEAR_COUNT_TRIGGER_VALUE_REACHED",
+        "01" => "DESCRIPTOR_SAVE_FAILED",
+        "02" => "PDM_NOT_ENOUGH_SPACE",
+        "03" => "LARGEST_RECORD_FULL_SAVE_NO_LONGER_POSSIBLE",
+        "04" => "SEGMENT_DATA_CHECKSUM_FAIL",
+        "05" => "SEGMENT_SAVE_OK",
+        "06" => "EEPROM_SEGMENT_HEADER_REPAIRED",
+        "07" => "SYSTEM_INTERNAL_BUFFER_WEAR_COUNT_SWAP",
+        "08" => "SYSTEM_DUPLICATE_FILE_SEGMENT_DETECTED",
+        "09" => "SYSTEM_ERROR",
+        "0a" => "SEGMENT_PREWRITE",
+        "0b" => "SEGMENT_POSTWRITE",
+        "0c" => "SEQUENCE_DUPLICATE_DETECTED",
+        "0d" => "SEQUENCE_VERIFY_FAIL",
+        "0e" => "PDM_SMART_SAVE",
+        "0f" => "PDM_FULL_SAVE"
+    );
+
+    /* Returns Zigate PDM event desc based on given '$code' */
+    function getZigatePDMEvent($code)
+    {
+        global $zigatePDMEvents;
+
+        if (array_key_exists($code, $zigatePDMEvents))
+            return $zigatePDMEvents[$code];
+        return "Code PDM ".$code." inconnu";
     }
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
@@ -976,7 +1006,7 @@
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            
+
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -990,8 +1020,8 @@
                                    0x07 => "Reserved",
                                    0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
                            );
-            
-            
+
+
             $frameControlField      = substr($payload, 2, 2);
             $destEndPoint           = substr($payload, 4, 2);
             $cluster                = substr($payload, 6, 4);
@@ -1000,12 +1030,12 @@
             $address                = substr($payload,16, 4); if ( $address == "0000" ) $address = "Ruche";
             $dummy2                 = substr($payload,20, 6);
             $SQN                    = substr($payload,26, 2);
-            
+
             $status                 = substr($payload,28, 2);
             $tableSize              = hexdec(substr($payload,30, 2));
             $index                  = hexdec(substr($payload,32, 2));
             $tableCount             = hexdec(substr($payload,34, 2));
-            
+
             $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
                              . ': Dest='.$dest
                              . ': addr='.$address
@@ -1013,28 +1043,28 @@
                              . ', index='.$index
                              . ', tableCount='.$tableCount
                              );
-            
+
             $routingTable = array();
-            
+
             for ($i = $index; $i < $index+$tableCount; $i++) {
-                
+
                 $addressDest=substr($payload,36+($i*10), 4);
-                
+
                 $statusRouting = substr($payload,36+($i*10)+4,2);
                 $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
                 if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
-                
+
                 $nextHop=substr($payload,36+($i*10)+4+2,4);
-                
+
                 $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop );
-                
+
                 if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
                     $routingTable[] = array( $addressDest => $nextHop );
                 }
             }
-            
+
             if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
-            
+
             $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
             if ( $abeille ) {
                 $abeille->setConfiguration('routingTable', json_encode($routingTable) );
@@ -1044,8 +1074,8 @@
                 $this->deamonlog('debug', '    abeille not found !!!');
             }
 
-            
-            
+
+
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)
@@ -1429,29 +1459,23 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        // function decode8031($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // Firmware V3.1a: Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
+        /* 8035/PDM event code. Since FW 3.1b */
+        function decode8035($dest, $payload, $ln, $qos, $dummy)
+        {
+            $PDMEvtCode = substr($payload, 0, 2); // <PDM event code: uint8_t>
+            $RecId = substr($payload, 2, 8); // <record id : uint32_t>
 
-            // $this->deamonlog('debug', $dest.' Type=8031/unBind response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
-        // function decode8034($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8034/Complex Descriptor response (ignoré)'
-                             // . ', Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
+            $this->deamonlog('debug', $dest.' Type=8035/PDM event code'
+                             .': PDMEvtCode=x'.$PDMEvtCode
+                             .', RecId='.$RecId
+                             .' => '.getZigatePDMEvent($PDMEvtCode));
+        }
 
         function decode8040($dest, $payload, $ln, $qos, $dummy)
         {
             // Firmware V3.1a: Add SrcAddr to 0x8040 command (MANAGEMENT_LQI_REQUEST) https://github.com/fairecasoimeme/ZiGate/issues/198
 
-            // Network Address response
+            // Network address response
 
             // <Sequence number: uin8_t>
             // <status: uint8_t>
@@ -1461,7 +1485,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug', $dest.' Type=8040/Network Address response (decoded but Not Processed)'
+            $this->deamonlog('debug', $dest.' Type=8040/Network address response'
                              . ': SQN='                                    .substr($payload, 0, 2)
                              . ', Status='                                 .substr($payload, 2, 2)
                              . ', ExtAddr='                           .substr($payload, 4,16)
@@ -1669,21 +1693,21 @@
 
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
-            
+
             $SQN=substr($payload, 0, 2);
             $Status=substr($payload, 2, 2);
-            
+
             if ($Status!="00") {
                 $this->deamonlog('debug', $dest.' Type=804A/Management Network Update Response (Processed): Status Error ('.$Status.') can not process the message.');
                 return;
             }
-            
+
             $TotalTransmission = substr($payload, 4, 4);
             $TransmFailures = substr($payload, 8, 4);
-            
+
             $ScannedChannels = substr($payload, 12, 8);
             $ScannedChannelsCount = substr($payload, 20, 2);
-            
+
             /*
             $Channels = "";
             for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
@@ -1692,10 +1716,10 @@
                     $Channels .= ';';
                 $Channels .= hexdec($Chan);
             }
-            
+
             $this->deamonlog('debug', '  Channels='.$Channels.' address='.$addr);
             */
-            
+
             $Channel = 11; // Could need to be adapted if we change the list of channel requested, at this time all of them.
             $results = array();
             for ($i = 0; $i < (intval($ScannedChannelsCount, 16)); $i += 1) {
@@ -1704,7 +1728,7 @@
                 $Channel++;
             }
             $addr = substr($payload, (22 + ($i * 2)), 4);
-            
+
             $eqLogics = Abeille::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 list( $eqDest, $eqAddr ) = explode("/", $eqLogic->getLogicalId());
@@ -1716,7 +1740,7 @@
                     $eqLogic->save();
                 }
             }
-            
+
             $this->deamonlog('debug', $dest.' Type=804A/Management Network Update Response (Processed): addr='.$addr
                              . ', SQN=0x'.$SQN
                              . ', Status='.$Status
@@ -1726,7 +1750,7 @@
                              . ', ScannedChannelsCount=0x'.$ScannedChannelsCount
                              . ', Channels='.json_encode($results)
                              );
-                                 
+
         }
 
         // function decode804B($dest, $payload, $ln, $qos, $dummy)

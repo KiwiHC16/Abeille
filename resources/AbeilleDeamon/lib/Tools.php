@@ -67,7 +67,8 @@ class Tools
         #fwrite(STDOUT, $loggerName . ' ' . date('Y-m-d H:i:s') . '['.strtoupper($loglevel). '='.$iLog.']/[' . strtoupper($GLOBALS['requestedlevel']) . '='.$iRequested. ']' . PHP_EOL);
         if (Tools::getNumberFromLevel($loglevel) <= Tools::getPluginLogLevel($pluginName)) {
             // fwrite(STDOUT,  '['.date('Y-m-d H:i:s').']['.$loggerName . '][' . $loglevel . ']' . $message . PHP_EOL);
-            fwrite(STDOUT,  '['.date('Y-m-d H:i:s').'][' . $loglevel . '] ' . $message . PHP_EOL);
+            /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => "warni" */
+            fwrite(STDOUT, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $loglevel).'] '.$message.PHP_EOL);
         }
     }
 

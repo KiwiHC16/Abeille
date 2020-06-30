@@ -3082,7 +3082,7 @@
         $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
 
         $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
-        $max_msg_size = 512;
+        $max_msg_size = 2048;
         $msg_type = NULL;
 
         while (true) {

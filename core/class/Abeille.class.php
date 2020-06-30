@@ -457,20 +457,20 @@
             }
 
             // Check ipcs situation pour detecter des soucis eventuels
-            if ( msg_stat_queue( msg_get_queue(queueKeyAbeilleToAbeille) )["msg_qnum"]                   > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyAbeilleToCmd) )["msg_qnum"]         > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyParserToAbeille) )["msg_qnum"]      > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyParserToCmd) )["msg_qnum"]          > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyParserToLQI) )["msg_qnum"]          > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyCmdToAbeille) )["msg_qnum"]         > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyCmdToCmd) )["msg_qnum"]             > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyLQIToAbeille) )["msg_qnum"]         > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToAbeille' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyLQIToCmd) )["msg_qnum"]             > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyXmlToAbeille) )["msg_qnum"]         > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyXmlToCmd) )["msg_qnum"]             > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyFormToCmd) )["msg_qnum"]            > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeySerieToParser) )["msg_qnum"]        > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
-            if ( msg_stat_queue( msg_get_queue(msg_get_queue(queueKeyParserToCmdSemaphore) )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyAbeilleToAbeille)    )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyAbeilleToCmd)        )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyParserToAbeille)     )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmd)         )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyParserToLQI)         )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyCmdToAbeille)        )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyCmdToCmd)            )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyLQIToAbeille)        )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToAbeille' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyLQIToCmd)            )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyXmlToAbeille)        )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyXmlToCmd)            )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyFormToCmd)           )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd' );
+            if ( msg_stat_queue( msg_get_queue(queueKeySerieToParser)       )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
+            if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
             
             
             if ($debug_deamon_info) log::add( 'Abeille', 'debug', 'deamon_info(): Terminé, return='.json_encode($return) );

@@ -1,21 +1,30 @@
 <?php
-    /***
-     * AbeilleCmd subscribe to Abeille topic and receive message sent by AbeilleParser.
+    /*
+     * AbeilleCmd
      *
-     *
+     * subscribe to Abeille topic and receive message sent by AbeilleParser.
      *
      */
 
+    /* Developpers debug features */
+    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    if (file_exists($dbgFile))
+        include_once $dbgFile;
+
+    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
+    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        error_reporting(E_ALL);
+        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('log_errors', 'On');
+    }
+
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-
     include_once dirname(__FILE__).'/AbeilleMsg.php';
-    
+
     class debug extends Tools {
         function deamonlog($loglevel = 'NONE', $message = "")
         {

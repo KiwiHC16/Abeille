@@ -16,6 +16,18 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
+    /* Developpers debug features */
+    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    if (file_exists($dbgFile))
+        include_once $dbgFile;
+
+    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
+    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        error_reporting(E_ALL);
+        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('log_errors', 'On');
+    }
+
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
@@ -23,11 +35,6 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once dirname(__FILE__).'/AbeilleMsg.php';
     include_once dirname(__FILE__).'/../../plugin_info/install.php'; // updateConfigDB()
-
-    /* Errors reporting: uncomment below lines for debug */
-    // error_reporting(E_ALL);
-    // ini_set('error_log', '/var/www/html/log/AbeillePHP');
-    // ini_set('log_errors', 'On');
 
     class Abeille extends eqLogic {
 

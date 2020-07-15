@@ -1,21 +1,28 @@
 <?php
 
-
-    /***
-     * AbeilleSerialRead
+    /*
+     * AbeilleSocat (daemon)
      *
-     * Get information from selected port (/dev/ttyUSB0 pour TTL ou socat pour WIFI), transcode data from binary to hex.
-     * and write it to FIFO file.
-     *
+     * - Using 'socat'
+     * - Convert TCP connection to 'tty' like port for later use by 'AbeileSerialRead'
      */
 
+    /* Developpers debug features */
+    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    if (file_exists($dbgFile))
+        include_once $dbgFile;
+
+    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
+    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        error_reporting(E_ALL);
+        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('log_errors', 'On');
+    }
 
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
 

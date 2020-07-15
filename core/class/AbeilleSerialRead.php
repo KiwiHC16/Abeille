@@ -30,7 +30,8 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
-    function daemonlog($loglevel='NONE', $message=""){
+    // function daemonlog($loglevel='NONE', $message=""){
+    function deamonlog($loglevel='NONE', $message=""){
         Tools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSerialRead', $message);
     }
 

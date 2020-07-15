@@ -8,6 +8,18 @@
      * - then publish them to mosquitto
      */
 
+    /* Developpers debug features */
+    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    if (file_exists($dbgFile))
+        include_once $dbgFile;
+
+    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
+    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        error_reporting(E_ALL);
+        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('log_errors', 'On');
+    }
+
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
@@ -15,11 +27,7 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-
-    /* Errors reporting: uncomment below lines for debug */
-    // error_reporting(E_ALL);
-    // ini_set('error_log', '/var/www/html/log/AbeillePHP');
-    // ini_set('log_errors', 'On');
+    include_once dirname(__FILE__).'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',

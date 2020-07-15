@@ -29,7 +29,7 @@
     define('queueKeyXmlToAbeille',          621);
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
-    define('queueKeySerieToParser',         822);
+    define('queueKeySerieToParser',         822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
     
     define('priorityMin',           1);

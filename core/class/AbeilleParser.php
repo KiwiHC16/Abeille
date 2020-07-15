@@ -27,7 +27,7 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    include_once dirname(__FILE__).'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+    // include_once dirname(__FILE__).'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',

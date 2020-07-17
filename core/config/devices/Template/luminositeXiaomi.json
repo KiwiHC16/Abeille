@@ -11,7 +11,7 @@
     "template": "",
     "unite": "Lux",
     "configuration": {
-      "calculValueOffset": "10**(#value#/10000)-1",
+      "calculValueOffset": "pow(10,#value#/10000+1/10000)",
       "uniqId": "5c07c76s6242b1sd",
       "visibilityCategory": "All",
       "historizeRound": "0"

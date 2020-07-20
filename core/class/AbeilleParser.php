@@ -1841,7 +1841,7 @@
             // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
             // Ca ne va marcher que pour les équipements en eveil.
             // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
-            if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') ) {
+            if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') && ($NeighbourAddr!="0000") ) {
                 $this->deamonlog('debug', $dest.' Type=804E/Management LQI response: NeighbourAddr='.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
 
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );

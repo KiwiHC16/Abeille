@@ -557,6 +557,70 @@
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
 
         }
+        
+        // Needed for fc41 of Legrand Contacteur
+        function commandLegrand($dest,$Command) {
+
+            $this->deamonlog('debug',"commandLegrand()");
+
+            $priority = $Command['priority'];
+            
+            $cmd = "0530";
+
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+            // <data: auint8_t>
+           
+
+            $addressMode = "02";
+            $targetShortAddress = $Command['address'];
+            $sourceEndpoint = "01";
+            if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+            $profileID = "0104";
+            $clusterID = "fc41";
+
+            $securityMode = "02"; // ???
+            $radius = "30";
+            // $dataLength = define later
+            
+            // ---------------------------
+            
+            $frameControlAPS = "15";   // APS Control Field, see doc for details
+
+            $transqactionSequenceNumber = "1A"; // to be reviewed
+            $command = "00";
+            
+            $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
+
+            $data2 = $frameControlAPS . $transqactionSequenceNumber . $command . $data;
+
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            // $this->deamonlog('debug',"data: ".$data );
+            // $this->deamonlog('debug',"lenth data: ".$lenth );
+
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+
+        }
 
         function getParam($priority,$dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
             /*
@@ -3062,6 +3126,21 @@
                                          "address" => $address,
                                          "destinationEndpoint" => "03",
                                          "action" => $actionId,
+                                         );
+                        break;
+                            //----------------------------------------------------------------------------
+                    case "commandLegrand":
+                        $fields = preg_split("/[=&]+/", $msg);
+                        if (count($fields) > 1) $parameters = proper_parse_str( $msg );
+                      
+                        $Command = array(
+                                         "commandLegrand" => "1",
+                                         "addressMode" => "02",
+                                         "priority" => $priority,
+                                         "dest" => $dest,
+                                         "address" => $address,
+                                         "destinationEndpoint" => $parameters['EP'],
+                                         "Mode" => $parameters['Mode'],
                                          );
                         break;
                         //----------------------------------------------------------------------------

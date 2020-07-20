@@ -1,0 +1,19 @@
+{
+  "LegrandContactorOff": {
+    "isVisible": 1,
+    "name": "Off",
+    "order": 7,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c7s662frsgd2080sd",
+      "topic": "commandLegrand",
+      "request": "Action=On&EP=#EP#&Mode=00",
+      "visibilityCategory": "All"
+    }
+  }
+}

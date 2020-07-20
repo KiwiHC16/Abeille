@@ -14,21 +14,15 @@
       "include1": "nom",
       "include2": "societe",
       "include3": "SW",
-      "include4": "etatLight",
       "include8": "LegrandContactorOn",
       "include9": "LegrandContactorOff",
       "include10": "LegrandContactorAuto",
-      "include19": "getEtat",
+      "include11 2": "PuissanceLegrandPrise",
       "include21": "getManufacturerName",
       "include22": "getModelIdentifier",
       "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat",
       "include26 2": "BindToZigatePuissanceLegrand",
-      "include28 2": "setReportPuissanceLegrand",
-      "include11 2": "PuissanceLegrandPrise"
+      "include28 2": "setReportPuissanceLegrand"
     }
   }
 }

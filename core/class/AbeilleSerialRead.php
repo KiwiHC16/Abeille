@@ -125,6 +125,13 @@
      */
 
     while (true) {
+        /* Check if port still there.
+           Key for connection with Socat */
+        if (!file_exists($serial)) {
+            daemonlog('error', 'Le port '.$serial.' a disparu !');
+            break;
+        }
+
         $byte = fread($f, 01);
 
         $byte = bin2hex($byte);

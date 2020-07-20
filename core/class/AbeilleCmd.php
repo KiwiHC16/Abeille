@@ -598,12 +598,14 @@
             
             $frameControlAPS = "15";   // APS Control Field, see doc for details
 
+            $manufacturerCode = "2110";
             $transqactionSequenceNumber = "1A"; // to be reviewed
             $command = "00";
             
-            $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
-
-            $data2 = $frameControlAPS . $transqactionSequenceNumber . $command . $data;
+            // $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
+            $data = $Command['Mode'];
+            
+            $data2 = $frameControlAPS . $manufacturerCode . $transqactionSequenceNumber . $command . $data;
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
@@ -2842,6 +2844,11 @@
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
             }
 
+            if ( isset($Command['commandLegrand']) )
+            {
+                $this->commandLegrand($dest,$Command);
+            }
+            
         }
 
         function getQueueName($queue){

@@ -561,7 +561,7 @@
         // Needed for fc41 of Legrand Contacteur
         function commandLegrand($dest,$Command) {
 
-            $this->deamonlog('debug',"commandLegrand()");
+            // $this->deamonlog('debug',"commandLegrand()");
 
             $priority = $Command['priority'];
             
@@ -609,7 +609,7 @@
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+            // $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 

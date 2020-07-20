@@ -1014,76 +1014,113 @@
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-
+            
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
-                                   0x00 => "Active",
-                                   0x01 => "Dicovery_Underway",
-                                   0x02 => "Discovery_Failed",
-                                   0x03 => "Inactive",
-                                   0x04 => "Validation_Underway", // Got that if interrogate the Zigate
-                                   0x05 => "Reserved",
-                                   0x06 => "Reserved",
-                                   0x07 => "Reserved",
-                                   0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
-                           );
-
-
-            $frameControlField      = substr($payload, 2, 2);
-            $destEndPoint           = substr($payload, 4, 2);
+                                  0x00 => "Active",
+                                  0x01 => "Dicovery_Underway",
+                                  0x02 => "Discovery_Failed",
+                                  0x03 => "Inactive",
+                                  0x04 => "Validation_Underway", // Got that if interrogate the Zigate
+                                  0x05 => "Reserved",
+                                  0x06 => "Reserved",
+                                  0x07 => "Reserved",
+                                  0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
+                                  );
+            
+            
+            // https://zigate.fr/documentation/commandes-zigate/
+            
+            $status                 = substr($payload, 0, 2);
+            $profile                = substr($payload, 2, 4);
             $cluster                = substr($payload, 6, 4);
-            $profile                = substr($payload,10, 4);
-            $dummy1                 = substr($payload,14, 2);
-            $address                = substr($payload,16, 4); if ( $address == "0000" ) $address = "Ruche";
-            $dummy2                 = substr($payload,20, 6);
-            $SQN                    = substr($payload,26, 2);
-
-            $status                 = substr($payload,28, 2);
-            $tableSize              = hexdec(substr($payload,30, 2));
-            $index                  = hexdec(substr($payload,32, 2));
-            $tableCount             = hexdec(substr($payload,34, 2));
-
-            $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
-                             . ': Dest='.$dest
-                             . ': addr='.$address
-                             . ', tableSize='.$tableSize
-                             . ', index='.$index
-                             . ', tableCount='.$tableCount
-                             );
-
-            $routingTable = array();
-
-            for ($i = $index; $i < $index+$tableCount; $i++) {
-
-                $addressDest=substr($payload,36+($i*10), 4);
-
-                $statusRouting = substr($payload,36+($i*10)+4,2);
-                $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
-                if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
-
-                $nextHop=substr($payload,36+($i*10)+4+2,4);
-
-                $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop );
-
-                if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
-                    $routingTable[] = array( $addressDest => $nextHop );
+            $srcEndPoint            = substr($payload,10, 2);
+            $destEndPoint           = substr($payload,12, 2);
+            $sourceAddressMode      = substr($payload,14, 2);
+            $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
+            $destinationAddressMode = substr($payload,20, 2);
+            $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
+            
+            // Partie a revoir completement
+            if (0) {
+                $status                 = substr($payload,28, 2);
+                $tableSize              = hexdec(substr($payload,30, 2));
+                $index                  = hexdec(substr($payload,32, 2));
+                $tableCount             = hexdec(substr($payload,34, 2));
+                
+                $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
+                                 . ': Dest='.$dest
+                                 . ': addr='.$address
+                                 . ', tableSize='.$tableSize
+                                 . ', index='.$index
+                                 . ', tableCount='.$tableCount
+                                 );
+                
+                $routingTable = array();
+                
+                for ($i = $index; $i < $index+$tableCount; $i++) {
+                    
+                    $addressDest=substr($payload,36+($i*10), 4);
+                    
+                    $statusRouting = substr($payload,36+($i*10)+4,2);
+                    $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
+                    if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
+                    
+                    $nextHop=substr($payload,36+($i*10)+4+2,4);
+                    
+                    $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop );
+                    
+                    if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
+                        $routingTable[] = array( $addressDest => $nextHop );
+                    }
+                }
+                
+                if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+                
+                $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
+                if ( $abeille ) {
+                    $abeille->setConfiguration('routingTable', json_encode($routingTable) );
+                    $abeille->save();
+                }
+                else {
+                    $this->deamonlog('debug', '    abeille not found !!!');
                 }
             }
-
-            if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
-
-            $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
-            if ( $abeille ) {
-                $abeille->setConfiguration('routingTable', json_encode($routingTable) );
-                $abeille->save();
+            
+            
+            // Remontée puissance module Legrand 20AX
+            if ( ($profile == "0104") && ($cluster == "0B04") ) {
+                
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
+                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
+                $dataType               = substr($payload,36, 2);
+                $value                  = substr($payload,40, 2).substr($payload,38, 2);
+            
+            
+                $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
+                                 . ': status='.$status
+                                 . ': profile='.$profile
+                                 . ', cluster='.$cluster
+                                 . ', srcEndPoint='.$srcEndPoint
+                                 . ', destEndPoint='.$destEndPoint
+                                 . ', sourceAddressMode='.$sourceAddressMode
+                                 . ', srcAddress='.$srcAddress
+                                 . ', destinationAddressMode='.$destinationAddressMode
+                                 . ', dstAddress='.$dstAddress
+                                 . ', frameCtrlField='.$frameCtrlField
+                                 . ', SQN='.$SQN
+                                 . ', cmd='.$cmd
+                                 . ', attribute='.$attribute
+                                 . ', dataType='.$dataType
+                                 . ', value='.$value.' - '.hexdec($value)
+                                 );
+                
+                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
             }
-            else {
-                $this->deamonlog('debug', '    abeille not found !!!');
-            }
-
-
-
+            
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)

@@ -318,9 +318,7 @@
         {
             if ($this->debug["cli"] ) {
                 echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
-            }
-            else {
-                /* TODO: How to align loglevel width for better visual aspect ? */
+            } else {
                 Tools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
             }
         }
@@ -870,7 +868,7 @@
                 $this->$fct($dest, $payload, $ln, $qos, $param1); }
             else {
                 $msgName = getZigateMsgByType($type);
-                $this->deamonlog('debug', $dest.' Type='.$type.'/'.$msgName.': ignoré (non supporté).');
+                $this->deamonlog('debug', $dest.', Type='.$type.'/'.$msgName.', ignoré (non supporté).');
             }
 
             return $tab;
@@ -896,16 +894,17 @@
             // Bit 7 - Allocate Address             => 128 no
             // Pour le Rejoin, à la fin de la trame, j'ai rajouté une information pour savoir si c'est un JOIN classique ou REJOIN c'est un uint8 - JOIN =0 REJOIN= 2 (mail du 22/11/2019 17:11)
 
-            $this->deamonlog('debug', $dest.' Type=004d/Device announce: '
-                             . ', SrcAddr='  .substr($payload,  0, 4)
-                             . ', IEEE='      .substr($payload,  4, 16)
-                             . ', MACCapa='  .substr($payload, 20, 2)
-                             . ', Rejoin='    .substr($payload, 22, 2)
-                             );
-
             $SrcAddr    = substr($payload,  0,  4);
             $IEEE       = substr($payload,  4, 16);
             $capability = substr($payload, 20,  2);
+            $Rejoin     = substr($payload, 22,  2);
+
+            $msgDecoded = '004d/Device announce'
+                             .', ShortAddr='.$SrcAddr
+                             .', ExtAddr='.$IEEE
+                             .', MACCapa='.$capability
+                             .', Rejoin='.$Rejoin;
+            $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
             $this->mqqtPublish($dest."/".$SrcAddr, "IEEE", "Addr", $IEEE);
@@ -916,7 +915,7 @@
             $this->mqqtPublish($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
-            if ( substr($payload, 22, 2) == "02" ) return;
+            if ($Rejoin == "02") return;
 
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$SrcAddr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );
@@ -964,6 +963,8 @@
             $AttributId = "0000";
             $data       = substr($payload, 30,  2);
 
+            $msgDecoded = "0100/?";
+            $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -975,10 +976,10 @@
             $PacketType = substr($payload, 4, 4);
 
             if ($this->debug['8000']) {
-                $this->deamonlog('debug', $dest.' Type=8000/Status'
-                                 . ': Status='.$this->displayStatus($status)
+                $this->deamonlog('debug', $dest.', Type=8000/Status'
+                                 . ', Status='.$this->displayStatus($status)
                                  . ', SQN='.$SQN
-                                 . ', PacketType='.$PacketType  );
+                                 . ', PacketType='.$PacketType);
             }
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
@@ -1004,17 +1005,9 @@
             }
         }
 
-        // function decode8001($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8001/Log (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            
+
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -1028,10 +1021,10 @@
                                   0x07 => "Reserved",
                                   0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
                                   );
-            
-            
+
+
             // https://zigate.fr/documentation/commandes-zigate/
-            
+
             $status                 = substr($payload, 0, 2);
             $profile                = substr($payload, 2, 4);
             $cluster                = substr($payload, 6, 4);
@@ -1041,14 +1034,14 @@
             $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
-            
+
             // Partie a revoir completement
             if (0) {
                 $status                 = substr($payload,28, 2);
                 $tableSize              = hexdec(substr($payload,30, 2));
                 $index                  = hexdec(substr($payload,32, 2));
                 $tableCount             = hexdec(substr($payload,34, 2));
-                
+
                 $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
                                  . ': Dest='.$dest
                                  . ': addr='.$address
@@ -1056,28 +1049,28 @@
                                  . ', index='.$index
                                  . ', tableCount='.$tableCount
                                  );
-                
+
                 $routingTable = array();
-                
+
                 for ($i = $index; $i < $index+$tableCount; $i++) {
-                    
+
                     $addressDest=substr($payload,36+($i*10), 4);
-                    
+
                     $statusRouting = substr($payload,36+($i*10)+4,2);
                     $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
                     if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
-                    
+
                     $nextHop=substr($payload,36+($i*10)+4+2,4);
-                    
+
                     $this->deamonlog('debug', '    address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop );
-                    
+
                     if ( (base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
                         $routingTable[] = array( $addressDest => $nextHop );
                     }
                 }
-                
+
                 if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
-                
+
                 $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
                 if ( $abeille ) {
                     $abeille->setConfiguration('routingTable', json_encode($routingTable) );
@@ -1087,19 +1080,18 @@
                     $this->deamonlog('debug', '    abeille not found !!!');
                 }
             }
-            
-            
+
+
             // Remontée puissance module Legrand 20AX
             if ( ($profile == "0104") && ($cluster == "0B04") ) {
-                
+
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
                 $attribute              = substr($payload,34, 2).substr($payload,32, 2);
                 $dataType               = substr($payload,36, 2);
                 $value                  = substr($payload,40, 2).substr($payload,38, 2);
-            
-            
+
                 $this->deamonlog('debug', 'Type=8002/Data indication (Processed)'
                                  . ': status='.$status
                                  . ': profile='.$profile
@@ -1117,10 +1109,9 @@
                                  . ', dataType='.$dataType
                                  . ', value='.$value.' - '.hexdec($value)
                                  );
-                
+
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
             }
-            
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)
@@ -1134,7 +1125,7 @@
 
             $len = (strlen($payload)-2-4-2)/4;
             for ($i = 0; $i < $len; $i++) {
-                $this->deamonlog('debug', $dest.' Type=8003/Liste des clusters de l’objet: SrcEndPoint='.$SrcEndpoint.', ProfileID='.$profileID.', Cluster='.substr($payload, (6 + ($i*4) ), 4). ' - ' . $clusterTab['0x'.substr($payload, (6 + ($i*4) ), 4)]);
+                $this->deamonlog('debug', $dest.', Type=8003/Liste des clusters de l’objet, SrcEP='.$SrcEndpoint.', ProfileID='.$profileID.', Cluster='.substr($payload, (6 + ($i*4) ), 4). ' - ' . $clusterTab['0x'.substr($payload, (6 + ($i*4) ), 4)]);
             }
         }
 
@@ -1151,7 +1142,7 @@
 
             $len = (strlen($payload)-2-4-4-2)/4;
             for ($i = 0; $i < $len; $i++) {
-                $this->deamonlog('debug', $dest.' Type=8004/Liste des Attributs de l’objet: SrcEndPoint='.$SrcEndpoint.', ProfileID='.$profileID.', ClustID='.$clusterID.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
+                $this->deamonlog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$SrcEndpoint.', ProfileID='.$profileID.', ClustID='.$clusterID.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
             }
         }
 
@@ -1170,35 +1161,9 @@
 
             $len = (strlen($payload)-2-4-4-2)/2;
             for ($i = 0; $i < $len; $i++) {
-                $this->deamonlog('debug', $dest.' Type=8005/Liste des commandes de l’objet: SrcEndpoint='.$SrcEndpoint.', ProfileID='.$profileID.', ClustID='.$clusterID.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
+                $this->deamonlog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$SrcEndpoint.', ProfID='.$profileID.', ClustID='.$clusterID.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
             }
         }
-
-        // function decode8006($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // Firmware 3.1a,  Fix Rearranged teNODE_STATES to logical in all cases https://github.com/fairecasoimeme/ZiGate/issues/101
-
-            // $this->deamonlog('debug', $dest.' Type=8006/Non “Factory new” Restart (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
-        // function decode8007($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8007/“Factory New” Restart (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
-        // function decode8008($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8008/“Function inconnue pas dans la doc" (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
 
         /* Network State Reponse */
         function decode8009($dest, $payload, $ln, $qos, $dummy)
@@ -1216,7 +1181,8 @@
             $Ext_PAN_ID         = substr($payload,24,16);
             $Channel            = hexdec(substr($payload,40, 2));
 
-            if ($this->debug['8009']) { $this->deamonlog('debug', $dest.' Type=8009/Network State Response: ShortAddr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Channel='.$Channel); }
+            $msgDecoded = '8009/Network state response, ShortAddr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Channel='.$Channel;
+            if ($this->debug['8009']) { $this->deamonlog('debug', $dest.', Type='.$msgDecoded); }
 
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
@@ -1282,7 +1248,7 @@
             */
 
             if ($this->debug['8010']) {
-                $this->deamonlog('debug', $dest.' Type=8010/Version: Appli='.hexdec(substr($payload, 0, 4)) . ', SDK='.substr($payload, 4, 4));
+                $this->deamonlog('debug', $dest.', Type=8010/Version: Appli='.hexdec(substr($payload, 0, 4)) . ', SDK='.substr($payload, 4, 4));
             }
             $SrcAddr = "Ruche";
             $ClusterId = "SW";
@@ -1295,11 +1261,12 @@
             $ClusterId = "SW";
             $AttributId = "SDK";
             $data = substr($payload, 4, 4);
-            // if ($this->debug['8010']) { $this->deamonlog('debug', $dest.' Type=8010; '.$AttributId.': '.$data.' qos:'.$qos); }
+            // if ($this->debug['8010']) { $this->deamonlog('debug', $dest.', Type=8010; '.$AttributId.': '.$data.' qos:'.$qos); }
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        /* ACK DATA (since FW 3.1b) */
+        /* ACK DATA (since FW 3.1b) = ZPS_EVENT_APS_DATA_CONFIRM
+           Note: NACK = 8702 */
         function decode8011($dest, $payload, $ln, $qos, $dummy)
         {
             /*
@@ -1313,7 +1280,7 @@
             $DestEndPoint = substr($payload, 6, 2);
             $ClustID = substr($payload, 8, 4);
 
-            $this->deamonlog('debug', $dest.' Type=8011/APS_DATA_ACK (ignoré): Status='.$Status.', DestAddr='.$DestAddr.', DestEndPoint='.$DestEndPoint.', ClustID='.$ClustID);
+            $this->deamonlog('debug', $dest.', Type=8011/APS data ACK: Status='.$Status.', DestAddr='.$DestAddr.', DestEndPoint='.$DestEndPoint.', ClustID='.$ClustID);
         }
 
         function decode8014($dest, $payload, $ln, $qos, $dummy)
@@ -1326,7 +1293,7 @@
 
             $data = substr($payload, 0, 2);
 
-            $this->deamonlog('debug', $dest.' Type=8014/Permit join status response: PermitJoinStatus='.$data);
+            $this->deamonlog('debug', $dest.', Type=8014/Permit join status response: PermitJoinStatus='.$data);
             if ($data == "01")
                 $this->deamonlog('info', 'Zigate'.substr($dest, 7, 1).' en mode INCLUSION');
             else
@@ -1360,7 +1327,7 @@
             // 32 553c  000B57fffe3025ad 01     9f
             // 00 -> Pourquoi 00 ?
 
-            $this->deamonlog('debug', $dest.' Type=8015/Abeille List: Payload='.$payload);
+            $this->deamonlog('debug', $dest.', Type=8015/Abeille List: Payload='.$payload);
 
             $nb = (strlen($payload) - 2) / 26;
             $this->deamonlog('debug','  Nombre d\'abeilles: '.$nb);
@@ -1401,7 +1368,7 @@
             // Get Time server Response (v3.0f)
             // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
             $Timestamp = substr($payload, 0, 8);
-            $this->deamonlog('debug', $dest.' Type=8017/Get Time server Response: Timestamp='.hexdec($Timestamp) );
+            $this->deamonlog('debug', $dest.', Type=8017/Get Time server Response: Timestamp='.hexdec($Timestamp) );
 
             $SrcAddr = "Ruche";
             $ClusterId = "ZiGate";
@@ -1459,32 +1426,8 @@
             $dataNetwork = hexdec( substr($payload,22, 2) );
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataNetwork);
 
-            $this->deamonlog('debug', $dest.' Type=8024/Network joined-formed: Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Channel='.$dataNetwork);
+            $this->deamonlog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork);
         }
-
-        // function decode8028($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8028/Authenticate response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
-        // function decode802B($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=802B/User Descriptor Notify (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
-        // function decode802C($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=802C/User Descriptor Response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
 
         function decode8030($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1492,7 +1435,7 @@
             // <Sequence number: uint8_t>
             // <status: uint8_t>
 
-            $this->deamonlog('debug', $dest.' Type=8030/Bind response (decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
+            $this->deamonlog('debug', $dest.', Type=8030/Bind response (decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
                              . ': SQN=0x'.substr($payload, 0, 2)
                              . ', Status=0x'.substr($payload, 2, 2)  );
 
@@ -1510,7 +1453,7 @@
             $PDMEvtCode = substr($payload, 0, 2); // <PDM event code: uint8_t>
             $RecId = substr($payload, 2, 8); // <record id : uint32_t>
 
-            $this->deamonlog('debug', $dest.' Type=8035/PDM event code'
+            $this->deamonlog('debug', $dest.', Type=8035/PDM event code'
                              .': PDMEvtCode=x'.$PDMEvtCode
                              .', RecId='.$RecId
                              .' => '.getZigatePDMEvent($PDMEvtCode));
@@ -1530,7 +1473,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug', $dest.' Type=8040/Network address response'
+            $this->deamonlog('debug', $dest.', Type=8040/Network address response'
                              . ': SQN='                                    .substr($payload, 0, 2)
                              . ', Status='                                 .substr($payload, 2, 2)
                              . ', ExtAddr='                           .substr($payload, 4,16)
@@ -1559,7 +1502,7 @@
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
 
-            $this->deamonlog('debug', $dest.' Type=8041/IEEE Address response'
+            $this->deamonlog('debug', $dest.', Type=8041/IEEE Address response'
                              . ': SQN='                                    .substr($payload, 0, 2)
                              . ', Status='                                 .substr($payload, 2, 2)
                              . ', ExtAddr='                           .substr($payload, 4,16)
@@ -1581,14 +1524,6 @@
             $data = substr($payload, 4,16);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
-
-        // function decode8042($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8042/Node Descriptor response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
 
         function decode8043($dest, $payload, $ln, $qos, $clusterTab)
         {
@@ -1615,7 +1550,7 @@
             $deviceId   = substr($payload,16, 4);
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
-            $this->deamonlog('debug', $dest.' Type=8043/Simple Descriptor Response'
+            $this->deamonlog('debug', $dest.', Type=8043/Simple Descriptor Response'
                              . ': SQN='             .substr($payload, 0, 2)
                              . ', Status='          .substr($payload, 2, 2)
                              . ', ShortAddr='   .substr($payload, 4, 4)
@@ -1640,14 +1575,6 @@
             }
         }
 
-        // function decode8044($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8044/Power Descriptor response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
-
         // Active Endpoints Response
         function decode8045($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1660,7 +1587,7 @@
                 $endPointList = $endPointList . '; '.substr($payload, (10 + $i), 2) ;
             }
 
-            $this->deamonlog('debug', $dest.' Type=8045/Active Endpoints Response'
+            $this->deamonlog('debug', $dest.', Type=8045/Active Endpoints Response'
                              . ': SQN='             .substr($payload, 0, 2)
                              . ', Status='          .substr($payload, 2, 2)
                              . ', ShortAddr='   .substr($payload, 4, 4)
@@ -1679,33 +1606,15 @@
 
         }
 
-        // function decode8046($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8046/Match Descriptor response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
-        // }
-
-        // function decode8047($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8047/Management Leave response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
-        // }
-
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
-            $this->deamonlog('debug', $dest.' Type=8048/Leave Indication'
-                             . ': ExtendedAddr='.substr($payload, 0, 16)
-                             . ', RejoinStatus='.substr($payload, 16, 2)    );
-
-            $SrcAddr = "Ruche";
-            $ClusterId = "joinLeave";
-            $AttributId = "IEEE";
-
             $IEEE = substr($payload, 0, 16);
+            $RejoinStatus = substr($payload, 16, 2);
+
+            $this->deamonlog('debug', $dest.', Type=8048/Leave indication'
+                             . ': ExtAddr='.$IEEE
+                             . ', RejoinStatus='.$RejoinStatus);
+
             $cmds = Cmd::byLogicalId('IEEE-Addr');
             foreach( $cmds as $cmd ) {
                 if ( $cmd->execCmd() == $IEEE ) {
@@ -1714,12 +1623,15 @@
                 }
             }
 
-            $data = "Leave->".substr($payload, 0, 16)."->".substr($payload, 16, 2);
+            $SrcAddr = "Ruche";
+            $ClusterId = "joinLeave";
+            $AttributId = "IEEE";
+            $data = "Leave->".$IEEE."->".$RejoinStatus;
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
 
             $SrcAddr = "Ruche";
             $fct = "disable";
-            $extendedAddr = substr($payload, 0, 16);
+            $extendedAddr = $IEEE;
             $this->mqqtPublishFct( $dest."/".$SrcAddr, $fct, $extendedAddr);
         }
 
@@ -1743,7 +1655,7 @@
             $Status=substr($payload, 2, 2);
 
             if ($Status!="00") {
-                $this->deamonlog('debug', $dest.' Type=804A/Management Network Update Response (Processed): Status Error ('.$Status.') can not process the message.');
+                $this->deamonlog('debug', $dest.', Type=804A/Management Network Update Response (Processed): Status Error ('.$Status.') can not process the message.');
                 return;
             }
 
@@ -1786,7 +1698,7 @@
                 }
             }
 
-            $this->deamonlog('debug', $dest.' Type=804A/Management Network Update Response (Processed): addr='.$addr
+            $this->deamonlog('debug', $dest.', Type=804A/Management Network Update Response (Processed): addr='.$addr
                              . ', SQN=0x'.$SQN
                              . ', Status='.$Status
                              . ', TotalTransmission='.$TotalTransmission
@@ -1797,14 +1709,6 @@
                              );
 
         }
-
-        // function decode804B($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=804B/System Server Discovery response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  );
-        // }
 
         function decode804E($dest, $payload, $ln, $qos, &$LQI)
         {
@@ -1833,7 +1737,7 @@
 
             // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
 
-            $this->deamonlog('debug', $dest.' Type=804E/Management LQI response'
+            $this->deamonlog('debug', $dest.', Type=804E/Management LQI response'
                              . ': SQN='                          .substr($payload, 0, 2)
                              . ', Status='                       .substr($payload, 2, 2)
                              . ', NeighbourTableEntries='      .substr($payload, 4, 2)
@@ -1879,7 +1783,7 @@
             // Ca ne va marcher que pour les équipements en eveil.
             // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
             if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') && ($NeighbourAddr!="0000") ) {
-                $this->deamonlog('debug', $dest.' Type=804E/Management LQI response: NeighbourAddr='.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
+                $this->deamonlog('debug', $dest.', Type=804E/Management LQI response: NeighbourAddr='.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
 
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
@@ -1903,7 +1807,7 @@
             // <Group id :        uint16_t> (added only from 3.0f version)
             // <Src Addr:         uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', $dest.' Type=8060/Add a group response (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=8060/Add a group response (ignoré)'
                              . ': SQN='           .substr($payload, 0, 2)
                              . ', EndPoint='      .substr($payload, 2, 2)
                              . ', ClusterId='     .substr($payload, 4, 4)
@@ -1911,12 +1815,6 @@
                              . ', GroupID='       .substr($payload,10, 4)
                              . ', SrcAddr='       .substr($payload,14, 4) );
         }
-
-        //----------------------------------------------------------------------------------------------------------------
-        // function decode8061($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.' Type=8061/? (ignoré)');
-        // }
 
         // Get Group Membership response
         function decode8062($dest, $payload, $ln, $qos, $dummy)
@@ -1934,10 +1832,10 @@
             $groupsId="";
             for ($i=0;$i<$groupCount;$i++)
             {
-                $this->deamonlog('debug', $dest.' Type=8062: group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
+                $this->deamonlog('debug', $dest.', Type=8062: group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
                 $groupsId .= '-' . substr($payload,12+$i*4, 4);
             }
-            $this->deamonlog('debug', $dest.' Type=8062;Groups: ->'.$groupsId."<-");
+            $this->deamonlog('debug', $dest.', Type=8062;Groups: ->'.$groupsId."<-");
 
             // $this->deamonlog('debug', ';Level=0x'.substr($payload, strlen($payload)-2, 2));
 
@@ -1950,7 +1848,7 @@
 
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
 
-            $this->deamonlog('debug', $dest.' Type=8062/Group Membership'
+            $this->deamonlog('debug', $dest.', Type=8062/Group Membership'
                              . ': SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', ClusterId='    .substr($payload, 4, 4)
@@ -1969,7 +1867,7 @@
             // <Group id: uint16_t>         -> 4
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', $dest.' Type=8063/Remove a group response (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=8063/Remove a group response (ignoré)'
                              . ': SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', clusterId='    .substr($payload, 4, 4)
@@ -2016,7 +1914,7 @@
 
             // 2: 'click', 1: 'hold', 3: 'release'
 
-            $this->deamonlog('debug', $dest.' Type=8085/Remote button pressed (ClickHoldRelease) a group response)'
+            $this->deamonlog('debug', $dest.', Type=8085/Remote button pressed (ClickHoldRelease) a group response)'
                              . ': SQN='           .substr($payload, 0, 2)
                              . ', EndPoint='      .substr($payload, 2, 2)
                              . ', clusterId='     .substr($payload, 4, 4)
@@ -2041,7 +1939,7 @@
             // <SrcAddr: uint16_t>      -> 4
             // <cmd: uint8>                 -> 2
 
-            $this->deamonlog('debug', $dest.' Type=8095/Remote button pressed (ONOFF_UPDATE) a group response)'
+            $this->deamonlog('debug', $dest.', Type=8095/Remote button pressed (ONOFF_UPDATE) a group response)'
                              . ': SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', ClusterId='    .substr($payload, 4, 4)
@@ -2081,7 +1979,7 @@
             // <extensions data: data each element is uint8_t>      -> 2
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', $dest.' Type=80A0/Scene View (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=80A0/Scene View (ignoré)'
                              . ': SQN='                           .substr($payload, 0, 2)
                              . ', EndPoint='                      .substr($payload, 2, 2)
                              . ', ClusterId='                     .substr($payload, 4, 4)
@@ -2119,7 +2017,7 @@
             // <group ID: uint16_t>         -> 4
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', $dest.' Type=80A3/Remove All Scene (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=80A3/Remove All Scene (ignoré)'
                              . ': SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', ClusterId='    .substr($payload, 4, 4)
@@ -2138,7 +2036,7 @@
             // <scene ID: uint8_t>          -> 2
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            $this->deamonlog('debug', $dest.' Type=80A3/Store Scene Response (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=80A3/Store Scene Response (ignoré)'
                              . ': SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', ClusterId='    .substr($payload, 4, 4)
@@ -2162,7 +2060,7 @@
                 // <group ID: uint16_t>                     -> 4
                 // sceneId: uint8_t                       ->2
 
-                $this->deamonlog('debug', $dest.' Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
+                $this->deamonlog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
                                  . ': SQN='          .substr($payload, 0, 2)      // 1
                                  . ', EndPoint='     .substr($payload, 2, 2)      // 1
                                  . ', ClusterId='    .substr($payload, 4, 4)      // 1
@@ -2193,7 +2091,7 @@
                 $source     = substr($payload,18+$sceneCount*2, 4);
 
                 if ($status!=0) {
-                    $this->deamonlog('debug', $dest.' Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT) => Status NOT null'
+                    $this->deamonlog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT) => Status NOT null'
                                      . ': SQN='          .substr($payload, 0, 2)      // 1
                                      . ', EndPoint='     .substr($payload, 2, 2)      // 1
                                      . ', source='       .$source
@@ -2220,7 +2118,7 @@
                 $AttributId = "Membership";
                 if ( $sceneId == "" ) { $data = $groupID."-none"; } else { $data = $groupID . $sceneId; }
 
-                $this->deamonlog('debug', $dest.' Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
+                $this->deamonlog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
                                  . ': SQN='          .$seqNumber
                                  . ', EndPoint='     .$endpoint
                                  . ', ClusterId='    .$clusterId
@@ -2289,7 +2187,7 @@
             $attr3          = substr($payload,16, 2);
             $source         = substr($payload,18, 4);
 
-            $this->deamonlog('debug', $dest.' Type=80a7/Remote button pressed (LEFT/RIGHT) (Processed->$this->decoded but not sent to MQTT)'
+            $this->deamonlog('debug', $dest.', Type=80a7/Remote button pressed (LEFT/RIGHT) (Processed->$this->decoded but not sent to MQTT)'
                              . ': SQN='          .$seqNumber
                              . ', EndPoint='     .$endpoint
                              . ', ClusterId='    .$clusterId
@@ -2319,11 +2217,11 @@
         {
             // "Type: 0x8100 (Read Attrib Response)"
             // 8100 000D0C0Cb32801000600000010000101
-            $this->deamonlog('debug', $dest.' Type=0x8100; (Read Attrib Response)(Processed->MQTT)'
+            $this->deamonlog('debug', $dest.', Type=0x8100/Read attribut response'
                              . ': SQN='.substr($payload, 0, 2)
                              . ', SrcAddr='.substr($payload, 2, 4)
-                             . ', EnPt='.substr($payload, 6, 2)
-                             . ', ClusterId='.substr($payload, 8, 4)
+                             . ', EP='.substr($payload, 6, 2)
+                             . ', ClustId='.substr($payload, 8, 4)
                              . ', AttrId='.substr($payload, 12, 4)
                              . ', AttrStatus='.substr($payload, 16, 2)
                              . ', AttrDataType='.substr($payload, 18, 2) );
@@ -2374,7 +2272,7 @@
 
         function decode8101($dest, $payload, $ln, $qos, $dummy)
         {
-            $this->deamonlog('debug', $dest.' Type=8101/Default Response (ignoré)'
+            $this->deamonlog('debug', $dest.', Type=8101/Default Response (ignoré)'
                              . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
                              . ': SQN='.substr($payload, 0, 2)
                              . ', EndPoint='.substr($payload, 2, 2)
@@ -2395,14 +2293,14 @@
             //<Attribute data type: uint8_t>
             //<Size Of the attributes in bytes: uint16_t>
             //<Data byte list : stream of uint8_t>
-            $SQN                = substr($payload, 0, 2);
-            $SrcAddr            = substr($payload, 2, 4);
-            $EPoint             = substr($payload, 6, 2);
-            $ClusterId          = substr($payload, 8, 4);
-            $AttributId         = substr($payload,12, 4);
-            $AttributStatus     = substr($payload,16, 2);
-            $dataType           = substr($payload,18, 2);
-            $AttributSize       = substr($payload,20, 4);
+            $SQN                = substr($payload,  0, 2);
+            $SrcAddr            = substr($payload,  2, 4);
+            $EPoint             = substr($payload,  6, 2);
+            $ClusterId          = substr($payload,  8, 4);
+            $AttributId         = substr($payload, 12, 4);
+            $AttributStatus     = substr($payload, 16, 2);
+            $dataType           = substr($payload, 18, 2);
+            $AttributSize       = substr($payload, 20, 4);
 
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
@@ -2410,8 +2308,8 @@
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
-                $this->deamonlog('debug', $dest.' Type=8102/Attribut Report'
-                                 . ': SQN='             .$SQN
+                $msg = '8102/Attribut report'
+                                 . ', SQN='             .$SQN
                                  . ', SrcAddr='         .$SrcAddr
                                  . ', EndPoint='        .$EPoint
                                  . ', ClustID='         .$ClusterId
@@ -2419,11 +2317,11 @@
                                  . ', AttrStatus='      .$AttributStatus
                                  . ', AttrDataType='    .$dataType
                                  . ', AttrSize='        .$AttributSize
-                                 . ', DataByteList='    .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)) ));
+                                 . ', DataByteList='    .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
             }
             else {
-                $this->deamonlog('debug', $dest.' Type=8102/Attribut Report'
-                                 . ': SQN='             .$SQN
+                $msg = '8102/Attribut report'
+                                 . ', SQN='             .$SQN
                                  . ', SrcAddr='         .$SrcAddr
                                  . ', EndPoint='        .$EPoint
                                  . ', ClustID='         .$ClusterId
@@ -2431,8 +2329,10 @@
                                  . ', AttrStatus='      .$AttributStatus
                                  . ', AttrDataType='    .$dataType
                                  . ', AttrSize='        .$AttributSize
-                                 . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2)));
+                                 . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2));
             }
+            $this->deamonlog('debug', $dest.', Type='.$msg);
+            monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -2861,7 +2761,7 @@
             // <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
 
-            $this->deamonlog('debug', $dest.' Type=8120/Configure Reporting response (decoded but not Processed)'
+            $this->deamonlog('debug', $dest.', Type=8120/Configure Reporting response (decoded but not Processed)'
                              . ': SQN='              .substr($payload, 0, 2)
                              . ', SrcAddr='   .substr($payload, 2, 4)
                              . ', EndPoint='         .substr($payload, 6, 2)
@@ -2899,7 +2799,7 @@
             // <zone id : uint8_t>
             // <delay: data each element uint16_t>
 
-            $this->deamonlog('debug', $dest.' Type=8401/IAS Zone status change notification'
+            $this->deamonlog('debug', $dest.', Type=8401/IAS Zone status change notification'
                              . ': SQN='               .substr($payload, 0, 2)
                              . ', EndPoint='          .substr($payload, 2, 2)
                              . ', ClusterId='        .substr($payload, 4, 4)
@@ -2932,18 +2832,25 @@
             $nwkStatus = substr($payload, 0, 2);
             $status = substr($payload, 2, 2);
 
-            $this->deamonlog('debug', $dest.' Type=8701/Route Discovery Confirm (decoded but Not Processed)'
+            $this->deamonlog('debug', $dest.', Type=8701/Route Discovery Confirm (decoded but Not Processed)'
                              . ': MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                              . ', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'  );
         }
 
+        /* 8702/APS data confirm fail */
         function decode8702($dest, $payload, $ln, $qos, $dummy)
         {
             global $allErrorCode;
 
+            // <status: uint8_t>
+            // <src endpoint: uint8_t>
+            // <dst endpoint: uint8_t>
+            // <dst address mode: uint8_t>
+            // <destination address: uint64_t>
+            // <seq number: uint8_t>
             $status = substr($payload, 0, 2);
 
-            $this->deamonlog('debug', $dest.' Type=8702/APS Data Confirm Fail'
+            $this->deamonlog('debug', $dest.', Type=8702/APS Data Confirm Fail'
                              . ': Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                              . ', SrcEndpoint='.substr($payload, 2, 2)
                              . ', DestEndpoint='.substr($payload, 4, 2)
@@ -2979,7 +2886,7 @@
 
             // <Power: uint8_t>
 
-            $this->deamonlog('debug', $dest.' Type=8806/Set TX Power Answer'
+            $this->deamonlog('debug', $dest.', Type=8806/Set TX Power Answer'
                              . ': Power='               .$payload
                              );
             $SrcAddr    = "Ruche";
@@ -3005,7 +2912,7 @@
 
             // <Power: uint8_t>
 
-            $this->deamonlog('debug', $dest.' Type=8807/Get Tx Power'
+            $this->deamonlog('debug', $dest.', Type=8807/Get Tx Power'
                              . ': Power='               .$payload
                              );
 
@@ -3093,8 +3000,7 @@
                         $fct = $action['what'];
                         if ( isset($action['parm0']) ) {
                             $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
-                        }
-                        else {
+                        } else {
                             $this->$fct($action['addr']);
                         }
                         unset($this->actionQueue[$key]);

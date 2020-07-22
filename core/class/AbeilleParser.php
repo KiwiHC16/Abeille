@@ -2332,7 +2332,7 @@
                                  . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2));
             }
             $this->deamonlog('debug', $dest.', Type='.$msg);
-            monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
+            // monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null

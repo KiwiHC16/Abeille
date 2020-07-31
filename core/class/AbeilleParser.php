@@ -1614,6 +1614,7 @@
                              . ', ExtAddr='.$IEEE
                              . ', RejoinStatus='.$RejoinStatus);
 
+            /*
             $cmds = Cmd::byLogicalId('IEEE-Addr');
             foreach( $cmds as $cmd ) {
                 if ( $cmd->execCmd() == $IEEE ) {
@@ -1621,6 +1622,7 @@
                     $name = $abeille->getName();
                 }
             }
+             */
 
             $SrcAddr = "Ruche";
             $ClusterId = "joinLeave";

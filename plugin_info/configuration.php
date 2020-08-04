@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Version d'Abeille.}}">{{Version Abeille : }}</label>
                 <div class="col-lg-4">
-                    Master
+                    <?php include dirname(__FILE__)."/AbeilleVersion.inc"; ?>
                 </div>
             </div>
         </div>

@@ -10,7 +10,9 @@
       "icone": "IkeaTradfri5BtnRond",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "paramType": "telecommande",
+      "paramBatterie": "true"
     },
     "Commandes": {
       "include1": "offGroup",

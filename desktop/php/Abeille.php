@@ -529,7 +529,7 @@ Start Zigbee Network:
 
     </div>
 
-
+<!-- Affichage des informations d un equipement specifique  -->
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px; display: none;">
 
         <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i>   {{Sauvegarder}}</a>
@@ -543,6 +543,7 @@ Start Zigbee Network:
             <li role="presentation"                 ><a href="#commandtab"     aria-controls="profile" role="tab" data-toggle="tab">                                                                    <i class="fa fa-align-left"></i>            {{Commandes}}   </a></li>
         </ul>
 
+<!-- Affichage des informations communes aux equipements  -->
         <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
             <div role="tabpanel" class="tab-pane active" id="eqlogictab">
                 <form class="form-horizontal">
@@ -696,42 +697,58 @@ Start Zigbee Network:
                 </form>
             </div>
 
+<!-- Affichage des informations specifiques a cet equipement: tab param  -->
             <div role="tabpanel" class="tab-pane" id="paramtab">
                 <form class="form-horizontal">
                     <fieldset>
                                 <hr>
-                                Pour l'instant cette page consolide l'ensemble des parametres spécifiques à tous les équipments. L'idée est de ne faire apparaitre (dès que je trouve la solution) que les paragraphes en relation avec l'objet sélectionné. Par exemple si vous avez sélectionné une ampoule le paragraphe "Equipement sur piles" ne devrait pas apparaitre. (Si quelqu'un sait comment faire, je suis preneur).
-                                <hr>
-                                <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Equipements sur piles.}}</label>
-                                </div>
-
-                                <div class="form-group" >
-                                <label class="col-sm-3 control-label" >{{Type de piles}}</label>
-                                <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type"  placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>
-                                </div>
-                                </div>
-
+                                Pour l'instant cette page consolide l'ensemble des parametres spécifiques à tous les équipments.<br>
+                                L'idée est de ne faire apparaitre que les paragraphes en relation avec l'objet sélectionné.<br>
+                                Par exemple si vous avez sélectionné une ampoule le paragraphe "Equipement sur piles" ne devrait pas apparaitre.<br>
+                                Par defaut si cette partie n est pas definie dans le modele tout est affiché.<br>
+                                Si cela est defini dans le modele alors que les parameteres necessaires sont affichés.<br>
                                 <hr>
 
-                                <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Telecommande}}</label>
-                                </div>
+<?php
+if ($_GET['id']>0) {
+$eqLogic = eqLogic::byId($_GET['id']);
+    if ( ($eqLogic->getConfiguration('paramBatterie', 'notDefined') == "true") || ($eqLogic->getConfiguration('paramBatterie', 'notDefined') == "notDefined") ) {
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{Equipements sur piles.}}</label>';
+                                echo '</div>';
 
-                                <div class="form-group">
-                                <label class="col-sm-3 control-label">{{Groupe}}</label>
-                                <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>
-                                </div>
-                                </div>
+                                echo '<div class="form-group" >';
+                                echo '<label class="col-sm-3 control-label" >{{Type de piles}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type"  placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>';
+                                echo '</div>';
+                                echo '</div>';
 
-                                <div class="form-group">
-                                <label class="col-sm-3 control-label">{{on time (s)}}</label>
-                                <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>
-                                </div>
-                                </div>
+                                echo '<hr>';
+    }
+
+    if ( ($eqLogic->getConfiguration('paramType', 'notDefined') == "telecommande") || ($eqLogic->getConfiguration('paramType', 'notDefined') == "notDefined") )  {
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{Telecommande}}</label>';
+                                echo '</div>';
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{Groupe}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse en hex sur 4 digits, ex:ae12}}"/>';
+                                echo '</div>';
+                                echo '</div>';
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{on time (s)}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>';
+                                echo '</div>';
+                                echo '</div>';
+    }
+}
+?>
 
                     </fieldset>
                 </form>

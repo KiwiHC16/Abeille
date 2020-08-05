@@ -1184,6 +1184,7 @@
 
                 $objetConfiguration = $objetDefSpecific["configuration"];
                 log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
+                $elogic->setConfiguration('modeleJson', $trimmedValue);
                 $elogic->setConfiguration('topic', $nodeid);
                 $elogic->setConfiguration('type', $type);
                 $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);

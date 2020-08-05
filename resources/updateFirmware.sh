@@ -35,6 +35,11 @@ if [ ! -e ${PROG} ]; then
     echo "=         ${PROG}"
     error=1
 fi
+if [ ! -x ${PROG} ]; then
+    echo "= ERREUR: Le programmateur Jennic n'est pas exécutable !"
+    echo "=         ${PROG}"
+    error=1
+fi
 if [ $error != 0 ]; then
     exit 1
 fi

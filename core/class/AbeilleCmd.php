@@ -3536,10 +3536,15 @@
                         // c=-8.60201639
                         // level = level * level * a + level * b + c
 
-                        $a = -0.8571429;
-                        $b = 1.8571429;
-                        $c = 0;
+                        // $a = -0.8571429;
+                        // $b = 1.8571429;
+                        // $c = 0;
 
+                        $eqLogic = eqLogic::byLogicalId( $dest."/".$address, "Abeille" );
+                        $a = $eqLogic->getConfiguration( 'paramA', 0);
+                        $b = $eqLogic->getConfiguration( 'paramB', 1);
+                        $c = $eqLogic->getConfiguration( 'paramC', 0);
+                        
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );

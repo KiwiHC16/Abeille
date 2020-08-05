@@ -1400,7 +1400,7 @@
                 }
 
                 $IEEE = $cmdlogic->execCmd();
-                if ($IEEE == $value) {
+                if ( strtoupper($IEEE) == strtoupper($value) ) {
                     // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
                     return;
                 }

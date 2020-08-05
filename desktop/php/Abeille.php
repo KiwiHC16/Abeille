@@ -747,6 +747,34 @@ $eqLogic = eqLogic::byId($_GET['id']);
                                 echo '</div>';
                                 echo '</div>';
     }
+    
+    if ( ($eqLogic->getConfiguration('paramType', 'notDefined') == "paramABC") || ($eqLogic->getConfiguration('paramType', 'notDefined') == "notDefined") )  {
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{Calibration (y=ax2+bx+c)}}</label>';
+                                echo '</div>';
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{parametre A}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="paramA" placeholder="{{nombre}}"/>';
+                                echo '</div>';
+                                echo '</div>';
+
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{parametre B}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="paramB" placeholder="{{nombre}}"/>';
+                                echo '</div>';
+                                echo '</div>';
+        
+                                echo '<div class="form-group">';
+                                echo '<label class="col-sm-3 control-label">{{parametre C}}</label>';
+                                echo '<div class="col-sm-3">';
+                                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="paramC" placeholder="{{nombre}}"/>';
+                                echo '</div>';
+                                echo '</div>';
+    }
 }
 ?>
 

@@ -8,7 +8,9 @@
     "configuration": {
       "uniqId": "5c07c7662688a",
       "icone": "voletProFalux",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "paramBatterie": "false",
+      "paramType": "paramABC"
     },
     "Commandes": {
       "include1": "nom",

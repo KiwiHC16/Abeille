@@ -15,10 +15,10 @@
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         if ( ($_GET['device'] == $eqLogic->getLogicalId()) || ($_GET['device'] == "All") ) {
-            list($type, $address, $action) = explode('/', $eqLogic->getLogicalId());
+            list($dest, $address) = explode('/', $eqLogic->getLogicalId());
             if ( $address == "Ruche" ) $address = "0000"; // Ajout de la ruche mais elle ne repond pas.
             if ( strlen($address) == 4 ) {
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$type."/".$address."/managementNetworkUpdateRequest", "" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$dest."/".$address."/managementNetworkUpdateRequest", "" );
                 sleep(5);
             }
         }

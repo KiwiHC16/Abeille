@@ -617,11 +617,11 @@
 
         public function volt2pourcent( $voltage ) {
             if ( $voltage/1000 > 3.135 ) {
-                $this->deamonlog( 'error', 'Voltage a plus de 3.135V. Je retourne 100% mais il y a qq chose qui cloche.' );
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a plus de 3.135V. Je retourne 100%.' );
                 return 100;
             }
             if ( $voltage/1000 < 2.8 ) {
-                $this->deamonlog( 'error', 'Voltage a moins de 2.8V. Je retourne 0% mais il y a qq chose qui cloche.' );
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a moins de 2.8V. Je retourne 0%.' );
                 return 0;
             }
             return round(100-(((3.135-($voltage/1000))/(3.135-2.8))*100));

@@ -779,6 +779,7 @@
                 $msg_type = NULL;
                 $msg = NULL;
                 $max_msg_size = 512;
+                $message = new MsgAbeille;
 
                 // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
                 // #define    ENOMSG        42    /* No message of desired type */
@@ -792,8 +793,8 @@
                         $msg_type = NULL;
                         $msg = NULL;
                     }
-                    if ( ($errorcodeMsg!=42) and ($errorcodeMsg!=0) ) {
-                        log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyAbeilleToAbeille issue: '.$errorcodeMsg);
+                    if (($errorcodeMsg!=42) and ($errorcodeMsg!=0)) {
+                        log::add('Abeille', 'error', 'Erreur inattendue, lecture queue \'AbeilleToAbeille\': '.$errorcodeMsg);
                     }
 
                     if (msg_receive( $queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {

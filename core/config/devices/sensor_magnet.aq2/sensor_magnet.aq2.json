@@ -6,9 +6,9 @@
       "security": "1"
     },
     "configuration": {
-	"uniqId": "5c07c7662639b",
+      "uniqId": "5c07c7662639b",
       "icone": "XiaomiPorte",
-      "battery_type": "1x3V CR2032",
+      "battery_type": "1x3V CR1632",
       "mainEP": "#EP#"
     },
     "Commandes": {

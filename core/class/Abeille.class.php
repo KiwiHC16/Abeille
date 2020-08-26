@@ -38,6 +38,21 @@
 
     class Abeille extends eqLogic {
 
+        // Fonction dupliquée dans AbeilleParser.
+        public function volt2pourcent( $voltage ) {
+            $max = 3.135;
+            $min = 2.8;
+            if ( $voltage/1000 > $max ) {
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
+                return 100;
+            }
+            if ( $voltage/1000 < $min ) {
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
+                return 0;
+            }
+            return round(100-((($max-($voltage/1000))/($max-$min))*100));
+        }
+        
         // Is it the health of the plugin level menu Analyse->santé ? A verifier.
         public static function health() {
             $return = array();
@@ -1434,7 +1449,7 @@
                 /* Traitement particulier pour les batteries */
                 if ($cmdId == "Batterie-Volt") {
                     /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-                    $elogic->setStatus('battery', $value );
+                    $elogic->setStatus('battery', $this->volt2pourcent($value) );
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
                 if ($cmdId == "Batterie-Pourcent") {

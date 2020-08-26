@@ -615,16 +615,19 @@
             return $str;
         }
 
+        // Fonction dupliquée dans Abeille.
         public function volt2pourcent( $voltage ) {
-            if ( $voltage/1000 > 3.135 ) {
-                $this->deamonlog( 'debug', 'Voltage remonte par le device a plus de 3.135V. Je retourne 100%.' );
+            $max = 3.135;
+            $min = 2.8;
+            if ( $voltage/1000 > $max ) {
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
                 return 100;
             }
-            if ( $voltage/1000 < 2.8 ) {
-                $this->deamonlog( 'debug', 'Voltage remonte par le device a moins de 2.8V. Je retourne 0%.' );
+            if ( $voltage/1000 < $min ) {
+                $this->deamonlog( 'debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
                 return 0;
             }
-            return round(100-(((3.135-($voltage/1000))/(3.135-2.8))*100));
+            return round(100-((($max-($voltage/1000))/($max-$min))*100));
         }
 
         function displayClusterId($cluster) {

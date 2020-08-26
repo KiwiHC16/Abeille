@@ -151,12 +151,27 @@
                             }
                         ?>
                         </select>
+                        <?php
+                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
+                            echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' pour le détail.}}">';
+                        ?>
+                        <span class="label label-success" style="font-size:1em">-?-</span>
+                        </a>
+                        <select style="width:55px" id ="idAvailableFW".$i title="{{Firmwares disponibles}}">
+                            <?php
+                                foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $fwName) {
+                                    $fwName = substr($fwName, 8); // Removing "ZiGate_v" prefix
+                                    $fwName = substr($fwName, 0, -4); // Removing ".bin" suffix
+                                    if (preg_match("(3.1c)", $fwName))
+                                        echo '<option value='.$fwName.' selected>'.$fwName.'</option>'; // Selecting default choice
+                                    else
+                                        echo '<option value='.$fwName.'>'.$fwName.'</option>';
+                                }
+                            ?>
+                        </select>
                     <?php
-                    echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
-                    echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' pour le détail.}}">';
+                    echo '<a class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fa fa-refresh"></i> {{Mettre à jour}}</a>';
                     ?>
-                        <span class="label label-success" style="font-size:1em;">-?-</span>
-                    </a>
                     </div>
                 </div>
 
@@ -217,11 +232,6 @@
                 <p><i>{{La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.}}</i></p>
                 <p><i>{{Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.}}</i></p>
                 <p><i>{{Attention l'accès aux GPIOs ne se fait pas depuis un container sous Docker (si vous savez faire alors donnez moi la combine). Dans ce cas faites les manipulations à la main depuis le host.}}</i></p>
-                <!-- TODO: Possible known ports should be moved to "Connection" section.
-                <p><i>La PiZiGate est installée sur les pin GPIO du raspberry pi. Sur un RPI2, par defaut le port /dev/ttyAMA0 est disponible et utilisable. Sur un RPI3, il faut activer le port serie /dev/ttyS0.</i></p>
-                <p><i>Il faut aussi avoir le logiciel Wiring Pi installé pour faire un reset de la PiZIGate ou la programmer.</i></p>
-                <p><i>Attention l'accès au GPIO ne se fait pas depuis un container sous Docker (Si vous savez faire alors donnez moi la combine), dans ce cas faites les manipulations à la main depuis le host.</i></p>
-                -->
             </div>
 
             <div class="form-group">
@@ -544,7 +554,7 @@
                 $res = JSON.parse(json_res.result);
                 if ($res.status == 0) {
                     $fw = $res.fw;
-                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">OK, FW ' + $fw + '</span>');
+                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">FW ' + $fw + '</span>');
                 } else {
                     $('.serialPortStatus' + zgNb).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }

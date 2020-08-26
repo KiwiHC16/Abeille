@@ -1985,8 +1985,8 @@
 
                 // Envoie un message a Abeille
             case "13":
-                $message->topic = "Abeille2/9b1c/Batterie-Pourcent";
-                $message->payload = "30";
+                $message->topic = "Abeille1/92e9/0001-01-0021";
+                $message->payload = "33";
                 Abeille::message($message);
                 break;
 

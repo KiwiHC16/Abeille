@@ -1983,9 +1983,10 @@
                 }
                 break;
 
+                // Envoie un message a Abeille
             case "13":
-                $message->topic = "Abeille/Ruche/Time-Time";
-                $message->payload = "2018-11-28 12:19:03";
+                $message->topic = "Abeille2/9b1c/Batterie-Pourcent";
+                $message->payload = "30";
                 Abeille::message($message);
                 break;
 

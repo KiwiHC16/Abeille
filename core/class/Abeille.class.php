@@ -1083,10 +1083,14 @@
             $value = $message->payload;
 
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-            if ( $value=="lumi.sens" ) $value = "lumi.sensor_ht";
-            if ( $value=="lumi.sensor_swit" ) $value = "lumi.sensor_switch.aq3";
-            if ( $value=="TRADFRI Signal Repeater" ) $value = "TRADFRI signal repeater";
-
+            if ($cmdId == "0000-01-0005") {
+                if  ($value=="lumi.sens") {
+                    $value = "lumi.sensor_ht";
+                    message::add( "Abeille", "lumi.sensor_ht case tracking: ".json_encode($message), '' );
+                }
+                if ( $value=="lumi.sensor_swit" )           $value = "lumi.sensor_switch.aq3";
+                if ( $value=="TRADFRI Signal Repeater" )    $value = "TRADFRI signal repeater";
+            }
             $type = 'topic';         // type = topic car pas json
 
             // Si cmd activate/desactivate NE based on IEEE Leaving/Joining

@@ -1479,8 +1479,8 @@
                 // Traitement particulier pour rejeter certaines valeurs
                 // exemple: le Xiaomi Wall Switch 2 Bouton envoie un On et un Off dans le même message donc Abeille recoit un ON/OFF consecutif et
                 // ne sais pas vraiment le gérer donc ici on rejete le Off et on met un retour d'etat dans la commande Jeedom
-                if ($cmdlogic->getConfiguration('AbeilleRejectValue') == $value) {
-                    log::add('Abeille', 'debug', 'Rejet de la valeur: '.$value);
+                if ($cmdlogic->getConfiguration('AbeilleRejectValue', -9999.99) == $value) {
+                    log::add('Abeille', 'debug', 'Rejet de la valeur: '.$cmdlogic->getConfiguration('AbeilleRejectValue', -9999.99).' - '.$value);
 
                     return;
                 }

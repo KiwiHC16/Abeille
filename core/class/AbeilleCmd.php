@@ -1354,7 +1354,7 @@
                 // <destination endpoint (value ignored for group address): uint8_t>    -> 2
 
                 // $targetExtendedAddress  = "000B57fffe3025ad";
-                $targetExtendedAddress  = $Command['address'];
+                $targetExtendedAddress  = strtoupper($Command['address']);
                 //
                 if ( isset($Command['targetEndpoint']) ) {
                     $targetEndpoint         = $Command['targetEndpoint'];
@@ -1370,7 +1370,7 @@
 
                 // $destinationAddress     = "0000";
                 // $destinationAddress     = "00158D0001B22E24";
-                $destinationAddress     = $Command['reportToAddress'];
+                $destinationAddress     = strtoupper($Command['reportToAddress']);
 
                 $destinationEndpoint    = "01";
                 //  16 + 2 + 4 + 2 + 4 + 2 = 30/2 => 15 => F
@@ -1427,7 +1427,7 @@
                 $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
                 // $targetExtendedAddress = "1d1369feff9ffd90";
-                $targetExtendedAddress = reverse_hex($Command['targetExtendedAddress']);
+                $targetExtendedAddress = reverse_hex(strtoupper($Command['targetExtendedAddress']));
                 // $targetEndpoint = "01";
                 $targetEndpoint = $Command['targetEndpoint'];
                 // $clusterID = "0600";  // 0006 but need to be inverted
@@ -1435,7 +1435,7 @@
                 $destinationAddressMode = "03";
                 // $destinationAddressMode = $Command['destinationAddressMode'];
                 // $destinationAddress = "221b9a01008d1500";
-                $destinationAddress = reverse_hex($Command['destinationAddress']);
+                $destinationAddress = reverse_hex(strtoupper($Command['destinationAddress']));
                 // $destinationEndpoint = "01";
                 $destinationEndpoint = $Command['destinationEndpoint'];
 
@@ -2024,7 +2024,7 @@
                 // -> 24 / 2 = 12 => 0x0C
 
                 $address = $Command['address'];
-                $IeeeAddress = $Command['IEEEAddress'];
+                $IeeeAddress = strtoupper($Command['IEEEAddress']);
                 $requestType = "01";
                 $startIndex = "00";
 
@@ -2810,7 +2810,7 @@
                 //      1 = Leave, do not remove children
 
                 $address        = $Command['address'];
-                $IEEE           = $Command['IEEE'];
+                $IEEE           = strtoupper($Command['IEEE']);
                 $Rejoin         = "00";
                 $RemoveChildren = "01";
 
@@ -2836,7 +2836,7 @@
 
                 // $address        = $Command['address'];
                 $address        = $Command['IEEE'];
-                $IEEE           = $Command['IEEE'];
+                $IEEE           = strtoupper($Command['IEEE']);
 
                 $data = $address . $IEEE ;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));

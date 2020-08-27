@@ -898,7 +898,7 @@
             // Pour le Rejoin, à la fin de la trame, j'ai rajouté une information pour savoir si c'est un JOIN classique ou REJOIN c'est un uint8 - JOIN =0 REJOIN= 2 (mail du 22/11/2019 17:11)
 
             $SrcAddr    = substr($payload,  0,  4);
-            $IEEE       = substr($payload,  4, 16);
+            $IEEE       = strtoupper(substr($payload,  4, 16));
             $capability = substr($payload, 20,  2);
             $Rejoin     = substr($payload, 22,  2);
 
@@ -1178,7 +1178,7 @@
             // <Ext PAN ID: uint64_t>
             // <Channel: u int8_t>
             $ShortAddress       = substr($payload, 0, 4);
-            $ExtendedAddress    = substr($payload, 4,16);
+            $ExtendedAddress    = strtoupper(substr($payload, 4,16));
             $PAN_ID             = substr($payload,20, 4);
             $Ext_PAN_ID         = substr($payload,24,16);
             $Channel            = hexdec(substr($payload,40, 2));
@@ -1189,7 +1189,7 @@
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
             }
-            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == $ExtendedAddress ) {
+            if ( strtoupper(config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 )) == $ExtendedAddress ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
             }
             else {
@@ -1341,7 +1341,7 @@
                 // Envoie IEEE
                 $ClusterId = "IEEE";
                 $AttributId = "Addr";
-                $dataAddr = substr($payload, $i * 26 + 6, 16);
+                $dataAddr = strtoupper(substr($payload, $i * 26 + 6, 16));
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataAddr);
 
                 // Envoie Power Source
@@ -1418,7 +1418,7 @@
             $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
-            $dataIEEE = substr($payload, 6,16);
+            $dataIEEE = strtoupper(substr($payload, 6,16));
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataIEEE);
 
             // Envoie channel
@@ -1476,12 +1476,12 @@
             // <device list – data each entry is uint16_t>
 
             $this->deamonlog('debug', $dest.', Type=8040/Network address response'
-                             . ', SQN='                                    .substr($payload, 0, 2)
-                             . ', Status='                                 .substr($payload, 2, 2)
-                             . ', ExtAddr='                           .substr($payload, 4,16)
-                             . ', ShortAddr='                          .substr($payload,20, 4)
-                             . ', NumberOfAssociatedDevices='           .substr($payload,24, 2)
-                             . ', StartIndex='                            .substr($payload,26, 2) );
+                             . ', SQN='                                     .substr($payload, 0, 2)
+                             . ', Status='                                  .substr($payload, 2, 2)
+                             . ', ExtAddr='                                 .strtoupper(substr($payload, 4,16))
+                             . ', ShortAddr='                               .substr($payload,20, 4)
+                             . ', NumberOfAssociatedDevices='               .substr($payload,24, 2)
+                             . ', StartIndex='                              .substr($payload,26, 2) );
 
             if ( substr($payload, 2, 2)!= "00" ) {
                 $this->deamonlog('debug', '  Type=8040: Don t use this data there is an error, comme info not known');
@@ -1505,12 +1505,12 @@
             // <device list – data each entry is uint16_t>
 
             $this->deamonlog('debug', $dest.', Type=8041/IEEE Address response'
-                             . ', SQN='                                    .substr($payload, 0, 2)
-                             . ', Status='                                 .substr($payload, 2, 2)
-                             . ', ExtAddr='                           .substr($payload, 4,16)
-                             . ', ShortAddr='                          .substr($payload,20, 4)
-                             . ', NumberOfAssociatedDevices='           .substr($payload,24, 2)
-                             . ', StartIndex='                            .substr($payload,26, 2) );
+                             . ', SQN='                                     .substr($payload, 0, 2)
+                             . ', Status='                                  .substr($payload, 2, 2)
+                             . ', ExtAddr='                                 .strtoupper(substr($payload, 4,16))
+                             . ', ShortAddr='                               .substr($payload,20, 4)
+                             . ', NumberOfAssociatedDevices='               .substr($payload,24, 2)
+                             . ', StartIndex='                              .substr($payload,26, 2) );
 
             if ( substr($payload, 2, 2)!= "00" ) {
                 $this->deamonlog('debug', '  Don t use this data there is an error, comme info not known');
@@ -1523,7 +1523,7 @@
             $SrcAddr = substr($payload,20, 4);
             $ClusterId = "IEEE";
             $AttributId = "Addr";
-            $data = substr($payload, 4,16);
+            $data = strtoupper(substr($payload, 4,16));
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -1610,7 +1610,7 @@
 
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
-            $IEEE = substr($payload, 0, 16);
+            $IEEE = strtoupper(substr($payload, 0, 16));
             $RejoinStatus = substr($payload, 16, 2);
 
             $this->deamonlog('debug', $dest.', Type=8048/Leave indication'
@@ -1749,7 +1749,7 @@
                              . ', StartIndex='                  .substr($payload, 8, 2)
                              . ', NWKAddr='                  .substr($payload,10, 4)
                              . ', ExtPANId='              .substr($payload,14,16)
-                             . ', ExtAddr='                 .substr($payload,30,16)
+                             . ', ExtAddr='                 .strtoupper(substr($payload,30,16))
                              . ', Depth='                 .hexdec(substr($payload,46, 2))
                              . ', LinkQuality='          .hexdec(substr($payload,48, 2))
                              . ', BitMapOfAttributes='        .substr($payload,50, 2)
@@ -1758,7 +1758,7 @@
             $srcAddress           = substr($payload, 52, 4);
             $index                = substr($payload, 8, 2);
             $NeighbourAddr        = substr($payload, 10, 4);
-            $NeighbourIEEEAddress = substr($payload, 30,16);
+            $NeighbourIEEEAddress = strtoupper(substr($payload, 30,16));
             $lqi                  = hexdec(substr($payload, 48, 2));
             $Depth                = hexdec(substr($payload, 46, 2));
             $bitMapOfAttributes   = substr($payload, 50, 2); // to be $this->decoded
@@ -1769,7 +1769,7 @@
             ."&NeighbourTableEntries="      .substr($payload, 4, 2)
             ."&Index="                      .substr($payload, 8, 2)
             ."&ExtendedPanId="              .substr($payload,14,16)
-            ."&IEEE_Address="               .substr($payload,30,16)
+            ."&IEEE_Address="               .strtoupper(substr($payload,30,16))
             ."&Depth="                      .substr($payload,46, 2)
             ."&LinkQuality="                .substr($payload,48, 2)
             ."&BitmapOfAttributes="         .substr($payload,50, 2);

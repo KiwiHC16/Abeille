@@ -145,6 +145,8 @@
 
                 if ( strlen(strtoupper($commandIEEE->execCmd())) == 16 ) {
                     $eqLogic->setConfiguration('IEEE', strtoupper($commandIEEE->execCmd()) ); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
+                    $eqLogic->save();
+                    $eqLogic->refresh();
                     continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
                 }
                 
@@ -966,6 +968,8 @@
                         $IEEE_abeille = strtoupper($cmdIEEE->execCmd());
                         if (strlen($IEEE_abeille) == 16) {
                             $abeille->setConfiguration('IEEE', $IEEE_abeille ); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
+                            $abeille->save();
+                            $abeille->refresh();
                         }
                     }
                 }
@@ -1154,26 +1158,25 @@
                         
                         $done = 1;
                     }
-                }
                 
-                if ( !$done ) {
-                    $cmds = Cmd::byLogicalId('IEEE-Addr');
-                    foreach( $cmds as $cmd ) {
-                        if ( strtoupper($cmd->execCmd()) == strtoupper($value) ) {
-                            $abeille = $cmd->getEqLogic();
-                            if ($cmdId == "enable") {
-                                $abeille->setIsEnable(1);
+                    if ( !$done ) {
+                        $cmds = Cmd::byLogicalId('IEEE-Addr');
+                        foreach( $cmds as $cmd ) {
+                            if ( strtoupper($cmd->execCmd()) == strtoupper($value) ) {
+                                $abeille = $cmd->getEqLogic();
+                                if ($cmdId == "enable") {
+                                    $abeille->setIsEnable(1);
+                                }
+                                else {
+                                    $abeille->setIsEnable(0);
+                                }
+                                $abeille->save();
+                                $abeille->refresh();
                             }
-                            else {
-                                $abeille->setIsEnable(0);
-                            }
-                            $abeille->save();
-                            $abeille->refresh();
+                            echo "\n";
                         }
-                        echo "\n";
                     }
                 }
-
                 return;
             }
 
@@ -1471,7 +1474,9 @@
                 if ( strtoupper($IEEE) == strtoupper($value) ) {
                     // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
                     $elogic->checkAndUpdateCmd($cmdlogic, strtoupper($value)); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
-                    $eqlogic->setConfiguration('IEEE',strtoupper($value));
+                    $elogic->setConfiguration('IEEE',strtoupper($value));
+                    $elogic->save();
+                    $elogic->refresh();
                     return;
                 }
 
@@ -1489,6 +1494,8 @@
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
                 $eqlogic->setConfiguration('IEEE',strtoupper($value));
+                $elogic->save();
+                $elogic->refresh();
 
                 return;
             }

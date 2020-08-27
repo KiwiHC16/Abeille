@@ -133,16 +133,22 @@
                     continue; // Eq in timeout => ignored
                 }
 
+                if (strlen($eqLogic->getConfiguration('IEEE','none'))==16) {
+                    continue; // J'ai une adresse IEEE dans la conf donc je passe mon chemin
+                }
+                
                 $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                 if ($commandIEEE == null) {
                     log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' sans cmd \'IEEE-Addr\' => ignoré');
                     continue; // No cmd to retrieve IEEE address. Normal ?
                 }
 
-                $addrIEEE = strtoupper($commandIEEE->execCmd());
-                if ( strlen($addrIEEE) < 2 ) {
-                    $tryToGetIEEEArray[] = $key;
+                if ( strlen(strtoupper($commandIEEE->execCmd())) == 16 ) {
+                    $eqLogic->setConfiguration('IEEE', strtoupper($commandIEEE->execCmd()) ); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
+                    continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
                 }
+                
+                $tryToGetIEEEArray[] = $key;
             }
 
             /* Exit if there is no missing IEEE address */
@@ -237,19 +243,29 @@
                     $rucheId = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
                     // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
 
-                    $ZiGateIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
-                    // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
-
+                    if ( strlen($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16  ) {
+                        $ZiGateIEEE = strtoupper($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none'));
+                    }
+                    else {
+                        $ZiGateIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                        // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
+                    }
+                    
                     $abeille = new Abeille();
                     $commandIEEE = new AbeilleCmd();
 
                     // Recupere IEEE de la Ruche/ZiGate
                     $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
                     // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
-
-                    $addrIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd());
-                    // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
-
+                    
+                    if ( strlen($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none')) == 16  ) {
+                        $addrIEEE = strtoupper($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none'));
+                    }
+                    else {
+                        $addrIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd());
+                        // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
+                    }
+                        
                     log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
@@ -940,30 +956,40 @@
             $abeilles = Abeille::byType('Abeille');
 
             foreach ($abeilles as $abeille) {
-
-                $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
-                if (is_object($cmdIEEE)) {
-
-                    if ( strtoupper($cmdIEEE->execCmd()) == strtoupper($IEEE) ) {
-
-                        $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
-                        if ($cmdShort) {
-                            if ($cmdShort->execCmd() == $checkShort) {
-                                // echo "Success ";
-                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
-                                return 0;
-                            } else {
-                                // echo "Pas success du tout ";
-                                // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
-                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
-                                // return $cmdShort->execCmd();
-                                // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
-                                return substr($abeille->getlogicalId(), -4);
-                            }
-
-                            return $return;
+                
+                if ( strlen($abeille->getConfiguration('IEEE','none')) == 16) {
+                    $IEEE_abeille = strtoupper($abeille->getConfiguration('IEEE','none'));
+                }
+                else {
+                    $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
+                    if (is_object($cmdIEEE)) {
+                        $IEEE_abeille = strtoupper($cmdIEEE->execCmd());
+                        if (strlen($IEEE_abeille) == 16) {
+                            $abeille->setConfiguration('IEEE', $IEEE_abeille ); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
                         }
                     }
+                }
+                
+                if ( $IEEE_abeille == strtoupper($IEEE) ) {
+                    
+                    $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
+                    if ($cmdShort) {
+                        if ($cmdShort->execCmd() == $checkShort) {
+                            // echo "Success ";
+                            // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
+                            return 0;
+                        } else {
+                            // echo "Pas success du tout ";
+                            // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
+                            // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
+                            // return $cmdShort->execCmd();
+                            // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
+                            return substr($abeille->getlogicalId(), -4);
+                        }
+                        
+                        return $return;
+                    }
+                    
                 }
             }
 
@@ -1111,10 +1137,12 @@
             // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
             if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
                 log::add('Abeille', 'debug', 'Entering enable/disable: '.$cmdId );
-                $cmds = Cmd::byLogicalId('IEEE-Addr');
-                foreach( $cmds as $cmd ) {
-                    if ( strtoupper($cmd->execCmd()) == strtoupper($value) ) {
-                        $abeille = $cmd->getEqLogic();
+                
+                $abeilles = self::byType('Abeille');
+                foreach ($abeilles as $key=>$abeille) {
+                    $done = 0;
+                    
+                    if ( strtoupper($abeille->getConfiguration('IEEE','none')) == strtoupper($value) ) {
                         if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
                         }
@@ -1123,8 +1151,27 @@
                         }
                         $abeille->save();
                         $abeille->refresh();
+                        
+                        $done = 1;
                     }
-                    echo "\n";
+                }
+                
+                if ( !$done ) {
+                    $cmds = Cmd::byLogicalId('IEEE-Addr');
+                    foreach( $cmds as $cmd ) {
+                        if ( strtoupper($cmd->execCmd()) == strtoupper($value) ) {
+                            $abeille = $cmd->getEqLogic();
+                            if ($cmdId == "enable") {
+                                $abeille->setIsEnable(1);
+                            }
+                            else {
+                                $abeille->setIsEnable(0);
+                            }
+                            $abeille->save();
+                            $abeille->refresh();
+                        }
+                        echo "\n";
+                    }
                 }
 
                 return;
@@ -1423,7 +1470,8 @@
                 $IEEE = $cmdlogic->execCmd();
                 if ( strtoupper($IEEE) == strtoupper($value) ) {
                     // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
-                    $elogic->checkAndUpdateCmd($cmdlogic, $value); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
+                    $elogic->checkAndUpdateCmd($cmdlogic, strtoupper($value)); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
+                    $eqlogic->setConfiguration('IEEE',strtoupper($value));
                     return;
                 }
 
@@ -1440,6 +1488,7 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                $eqlogic->setConfiguration('IEEE',strtoupper($value));
 
                 return;
             }
@@ -1726,21 +1775,26 @@
 
                     if (strpos($request, '#addrIEEE#') > 0) {
                         $ruche = new Abeille();
-                        $commandIEEE = new AbeilleCmd();
+                        $command = new AbeilleCmd();
 
                         // Recupere IEEE de la Ruche/ZiGate
                         $rucheId = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getId();
                         log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
 
-                        $rucheIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                        if ( strlen($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16 ) {
+                            $rucheIEEE = strtoupper($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none'));
+                        }
+                        else {
+                            $rucheIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                        }
                         log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
-
+                        
                         $currentCommandId = $this->getId();
                         $currentObjectId = $this->getEqLogic_id();
                         log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
 
                         // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
-                        $commandIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
+                        $commandIEEE = strtoupper($command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
 
                         // print_r( $command->execCmd() );
                         log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE);
@@ -1845,7 +1899,7 @@
                 // Verifie qu on recupere les IEEE pour les remplacer dans les commandes
             case "3":
                 $ruche = new Abeille();
-                $commandIEEE = new AbeilleCmd();
+                $command = new AbeilleCmd();
 
                 // Recupere IEEE de la Ruche/ZiGate
                 $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
@@ -1859,7 +1913,7 @@
                 $currentObjectId = 284;
                 echo 'Id pour current abeille: '.$currentObjectId."\n";
 
-                $commandIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
+                $commandIEEE = strtoupper($command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
                 // print_r( $command->execCmd() );
                 echo 'IEEE pour current abeille: '.$commandIEEE."\n";
 

@@ -83,6 +83,9 @@
                                          '0105'=>'Color Dimmer Switch',
                                          '0106'=>'Light Sensor',
                                          '0107'=>'Occupency Sensor',
+                                         
+                                         // Legrand
+                                         '010A'=>'Legrand xxxx',
 
                                          // Closures
                                          '0200'=>'Shade',
@@ -1549,7 +1552,7 @@
             $SrcAddr    = substr($payload, 4, 4);
             $EPoint     = substr($payload,10, 2);
             $profile    = substr($payload,12, 4);
-            $deviceId   = substr($payload,16, 4);
+            $deviceId   = strtoupper(substr($payload,16, 4));
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
             $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
@@ -1559,16 +1562,16 @@
                              . ', Length='          .substr($payload, 8, 2)
                              . ', EndPoint='        .substr($payload,10, 2)
                              . ', Profile='         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
-                             . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[substr($payload,12, 4)][substr($payload,16, 4)] .')'
+                             . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[$profile][$deviceId] .')'
                              . ', BitField='        .substr($payload,20, 2));
 
             $this->deamonlog('debug','  InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', '  InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
+                $this->deamonlog('debug', '  InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.strtoupper(substr($payload, (24 + $i), 4))]);
             }
             $this->deamonlog('debug','  OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+                $this->deamonlog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.strtoupper(substr($payload, (24 + $i +2 +$j), 4))]);
             }
 
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];

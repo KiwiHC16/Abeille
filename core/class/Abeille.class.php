@@ -1423,7 +1423,8 @@
                 $IEEE = $cmdlogic->execCmd();
                 if ( strtoupper($IEEE) == strtoupper($value) ) {
                     // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
-                    // return; -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
+                    $elogic->checkAndUpdateCmd($cmdlogic, $value); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
+                    return;
                 }
 
                 // Je ne sais pas pourquoi des fois on recoit des IEEE null

@@ -1079,7 +1079,7 @@
 
         public static function message($message) {
 
-            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+            // log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
 
             $topicArray = explode("/", $message->topic);
             if (sizeof($topicArray) != 3) {
@@ -1120,6 +1120,10 @@
             if ( preg_match("(^CmdCreate)", $message->topic) ) { $Filter = str_replace( "CmdCreate", "", $Filter) ; }
             $dest = $Filter;
 
+            if ( ($cmdId!="Time-Time") && (($cmdId!="Time-TimeStamp")) ) {
+                log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+            }
+            
             // Si le message est pour 0000 alors on change en Ruche
             if ( $addr == "0000" ) $addr = "Ruche";
 

@@ -11,6 +11,8 @@
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
     include_once("../resources/AbeilleDeamon/includes/function.php");
         
+    echo "Il faut un firmware zigate au moins en version 3.1d<br>";
+    
     // Je ne filtre pas sur les équipements sur batterie car je ne sais pas s'ils repondent. Je suppose que non mais on ne sait jamais.
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {

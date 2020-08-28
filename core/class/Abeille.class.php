@@ -1120,7 +1120,8 @@
             if ( preg_match("(^CmdCreate)", $message->topic) ) { $Filter = str_replace( "CmdCreate", "", $Filter) ; }
             $dest = $Filter;
 
-            if ( ($cmdId!="Time-Time") && (($cmdId!="Time-TimeStamp")) ) {
+            if ( !in_array( $cmdId, array( "Time-Time", "Time-TimeStamp", "Link-Quality") ) {
+            // if ( ($cmdId!="Time-Time") && ($cmdId!="Time-TimeStamp") && ($cmdId!="Link-Quality") ) {
                 log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
             }
             

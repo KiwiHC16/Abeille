@@ -384,6 +384,8 @@
                     <?php
                                 echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
                                 
+                                echo 'Il faut un firmware zigate au moins en version 3.1d<br><br>';
+                                
                                 function afficheRouteTable( $routingTable ) {
                                     foreach ( $routingTable as $addr=>$route ) {
                                         foreach ( $route as $destination=>$nextHop ) {

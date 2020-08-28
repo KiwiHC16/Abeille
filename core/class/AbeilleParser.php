@@ -334,9 +334,10 @@
         public $debug = array(
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
-                              "8000"                    => 1, // Status
-                              "8009"                    => 1, // Get Network Status
-                              "8010"                    => 1,
+                              "8000"                    => 0, // Status
+                              "8009"                    => 0, // Get Network Status
+                              "8010"                    => 0, // Zigate Version
+                              "8024"                    => 0, // Network joined-forme
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
                               "cleanUpNE"               => 1,
@@ -1013,7 +1014,7 @@
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-
+            
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -1040,27 +1041,35 @@
             $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
-
+            
+            $this->deamonlog("debug","decode8002: payload:".$payload);
+            $this->deamonlog("debug","decode8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
+            
             // Partie a revoir completement
-            if (0) {
+            
+
+            
+            if (($profile == "0000") && ($cluster == "8032")) {
+                $SQN                    = substr($payload,26, 2);
                 $status                 = substr($payload,28, 2);
                 $tableSize              = hexdec(substr($payload,30, 2));
                 $index                  = hexdec(substr($payload,32, 2));
                 $tableCount             = hexdec(substr($payload,34, 2));
 
-                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
-                                 . ', addr='.$address
+                $this->deamonlog('debug', $dest.', Type=8002/Routing Table Response'
+                                 . ', SQN='.$SQN
+                                 . ', status='.$status
                                  . ', tableSize='.$tableSize
                                  . ', index='.$index
                                  . ', tableCount='.$tableCount
                                  );
-
+                
                 $routingTable = array();
 
                 for ($i = $index; $i < $index+$tableCount; $i++) {
 
                     $addressDest=substr($payload,36+($i*10), 4);
-
+                    
                     $statusRouting = substr($payload,36+($i*10)+4,2);
                     $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
                     if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
@@ -1074,9 +1083,9 @@
                     }
                 }
 
-                if ( $address == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+                if ( $srcAddress == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
 
-                $abeille = Abeille::byLogicalId( $dest.'/'.$address, 'Abeille');
+                $abeille = Abeille::byLogicalId( $dest.'/'.$srcAddress, 'Abeille');
                 if ( $abeille ) {
                     $abeille->setConfiguration('routingTable', json_encode($routingTable) );
                     $abeille->save();
@@ -1431,7 +1440,7 @@
             $dataNetwork = hexdec( substr($payload,22, 2) );
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataNetwork);
 
-            $this->deamonlog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork);
+            if ($this->debug['8024']) {$this->deamonlog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork);}
         }
 
         function decode8030($dest, $payload, $ln, $qos, $dummy)
@@ -3041,6 +3050,7 @@
                 // $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
 
                 $data = json_decode( $dataJson );
+                $AbeilleParser->deamonlog( 'debug', 'Message: '.$dataJson );
                 $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
             }
             // $AbeilleParser->processAnnonce($NE);

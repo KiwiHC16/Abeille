@@ -1066,7 +1066,7 @@
                 
                 $routingTable = array();
 
-                for ($i = $index; $i < $index+$tableCount; $i++) {
+                for ($i = $index; $i < $index+$tableSize; $i++) {
 
                     $addressDest=substr($payload,36+($i*10), 4);
                     
@@ -1083,7 +1083,7 @@
                     }
                 }
 
-                if ( $srcAddress == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+                // if ( $srcAddress == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
 
                 $abeille = Abeille::byLogicalId( $dest.'/'.$srcAddress, 'Abeille');
                 if ( $abeille ) {

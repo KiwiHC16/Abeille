@@ -384,19 +384,24 @@
                     <?php
                                 echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
                                 
-                                function afficheRouteTable() {
+                                function afficheRouteTable( $routingTable ) {
+                                    foreach ( $routingTable as $addr=>$route ) {
+                                        foreach ( $route as $destination=>$nextHop ) {
+                                            echo $addr.' veut joindre '.$destination.' passera par '.$nextHop.'<br>';
+                                        }
+                                    }
                                     
                                 }
                                 
                                 $routingTable = array();
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
-                                    if( ($eqLogic->getConfiguration('routingTable')) && (strlen($eqLogic->getConfiguration('routingTable'))>2) ) {
+                                    if ( $eqLogic->getConfiguration('routingTable', 'none') != 'none' ) {
                                         $routingTable[$eqLogic->getLogicalId()] = json_decode($eqLogic->getConfiguration('routingTable'), 1)[0];
                                     }
                                 }
-                                var_dump( $routingTable );
-                                
+                                // var_dump( $routingTable );
+                                afficheRouteTable( $routingTable );
                                     
                                 ?>
                 </div>

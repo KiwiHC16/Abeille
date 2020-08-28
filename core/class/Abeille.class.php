@@ -2156,12 +2156,12 @@
                 break;
             case "26":
             // Test message management
-                $addr = "f02b";
+                $addr = "2317";
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/managementNetworkUpdateRequest", "" );
                 break;
             case "27":
             // Test message management
-                $addr = "25fb";
+                $addr = "df3b";
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/Mgmt_Rtg_req", "" );
                 break;
 

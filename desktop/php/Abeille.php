@@ -692,6 +692,27 @@ Start Zigbee Network:
                                 <img name="icon_visu" src="" width="160" height="200"/>
                             </div>
                         </div>
+                        
+                        <hr>
+                        <div class="form-group">
+                                <label class="col-sm-3 control-label">{{Documentation}}</label><br>
+                                <div style="text-align: left">
+<?php
+                                    if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                                        $eqLogic = eqLogic::byId($_GET['id']);
+                                        if ( $eqLogic->getConfiguration('modeleJson', 'notDefined') != 'notDefined' ) {
+                                            $fileList = glob('plugins/Abeille/core/config/devices/'.$eqLogic->getConfiguration('modeleJson', 'notDefined').'/doc/*');
+                                            foreach($fileList as $filename){
+                                                echo '<label class="col-sm-3 control-label">{{.}}</label><a href="'.$filename, '" target="_blank">'.basename($filename).'</a><br>';
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        echo '<label class="col-sm-3 control-label">{{.}}</label>.<br>';
+                                    }
+?>
+                                </div>
+                        </div>
 
                     </fieldset>
                 </form>
@@ -710,7 +731,7 @@ Start Zigbee Network:
                                 <hr>
 
 <?php
-    /* Tcharp38: In which case this 'id' is supposed to be set ? */
+    /* Tcharp38: In which case this 'id' is supposed to be set ? <= quand on accede à la page de configuration d un equipement*/
     if (isset($_GET['id']) && ($_GET['id'] > 0)) {
         $eqLogic = eqLogic::byId($_GET['id']);
         if ( ($eqLogic->getConfiguration('paramBatterie', 'notDefined') == "true") || ($eqLogic->getConfiguration('paramBatterie', 'notDefined') == "notDefined") ) {

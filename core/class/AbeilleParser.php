@@ -3050,7 +3050,7 @@
                 // $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
 
                 $data = json_decode( $dataJson );
-                $AbeilleParser->deamonlog( 'debug', 'Message: '.$dataJson );
+                // $AbeilleParser->deamonlog( 'debug', 'Message: '.$dataJson );
                 $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
             }
             // $AbeilleParser->processAnnonce($NE);

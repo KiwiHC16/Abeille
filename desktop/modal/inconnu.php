@@ -15,7 +15,7 @@
 <p>{{Collecter ces informations permettrait d'améliorer le code d'Abeille.}}</p>
 <p>-------------------------------------</p>
 <?php
-$cmd = "grep -e 'existe mais pas la cmde' /var/www/html/log/Abeille | grep -v 'ff01' ";
+$cmd = "grep -e 'existe mais pas la cmde' /var/www/html/log/Abeille | grep -v 'ff01' | sort";
 
 exec($cmd, $output);
 

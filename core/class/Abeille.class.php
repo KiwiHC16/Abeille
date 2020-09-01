@@ -1378,8 +1378,6 @@
 
                     $cmdlogic->setIsVisible($isVisible);
 
-                    $cmdlogic->save();
-
                     // html
                     // alert
 

@@ -16,7 +16,7 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
-    /* Developpers debug features */
+    /* Developers debug features */
     $dbgFile = dirname(__FILE__)."/../../debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
@@ -511,15 +511,16 @@
             if ( msg_stat_queue( msg_get_queue(queueKeyFormToCmd)           )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd' );
             if ( msg_stat_queue( msg_get_queue(queueKeySerieToParser)       )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
             if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
-            
-            
+
+
             if ($debug_deamon_info) log::add( 'Abeille', 'debug', 'deamon_info(): Terminé, return='.json_encode($return) );
             return $return;
         }
 
-        /* This function is used to run some cleanup before starting daemons,
-           or update the database due to data needed changes. */
-        /* TODO: Move to correct naming 'daemon' and not 'deamon' */
+        /* This function is used before starting daemons to
+           - run some cleanup
+           - update the config database if changes needed
+           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
         public static function deamon_start_cleanup($message = null) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
@@ -533,7 +534,7 @@
                 }
             }
 
-            // Desactive les Zigate pour eviter de discuster avec une zigate sur le mauvais port
+            // Desactive les Zigate pour eviter de discuter avec une zigate sur le mauvais port
             // AbeilleIEEE_Ok = -1 si la Zigate detectée n est pas la bonne
             //     "          =  0 pour demarrer
             //     "          =  1 Si la zigate detectée est la bonne
@@ -554,8 +555,8 @@
             return;
         }
 
-        /* Starting all daemons. */
-        /* TODO: Move to correct naming 'daemon' and not 'deamon' */
+        /* Starting all daemons.
+           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
         public static function deamon_start($_debug = false) {
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
@@ -575,20 +576,33 @@
             }
 
             self::deamon_stop();
-            
+
             message::removeAll('Abeille');
 
             self::deamon_start_cleanup();
 
             $param = self::getParameters();
 
-            /* Configuring GPIO for PiZigate case.
-            TODO: Should be done only if PiZigate is present to avoid any unexpected side effect. */
-            /* PiZigate reminder (using 'WiringPi'):
-            - port 0 = RESET
-            - port 2 = FLASH
-            - Production mode: FLASH=1, RESET=0 then 1 */
-            exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+            /* Configuring GPIO for PiZigate if one active found.
+               PiZigate reminder (using 'WiringPi'):
+               - port 0 = RESET
+               - port 2 = FLASH
+               - Production mode: FLASH=1, RESET=0 then 1 */
+            for ($i = 1; $i <= $param['zigateNb']; $i++ ) {
+                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+                    continue; // Undefined or disabled
+                if ($param['AbeilleType'.$i] != "PI")
+                    break; // Found an active PI Zigate
+            }
+            if ($i <= $param['zigateNb']) {
+                exec("gpio -v", $out, $ret);
+                if ($ret != 0)
+                    log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
+                else {
+                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée. Configuration des GPIOs');
+                    exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+                }
+            }
 
             cron::byClassAndFunction('Abeille', 'deamon')->run();
 
@@ -715,8 +729,8 @@
             log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
 
             // Stop socat if exist
-	    // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
-	    exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
+            // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
+            exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
             log::add('Abeille', 'debug', 'deamon_stop(): Killing deamons socat: '.implode($output, '!'));
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");

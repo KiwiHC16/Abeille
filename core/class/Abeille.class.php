@@ -591,7 +591,7 @@
             for ($i = 1; $i <= $param['zigateNb']; $i++ ) {
                 if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                     continue; // Undefined or disabled
-                if ($param['AbeilleType'.$i] != "PI")
+                if ($param['AbeilleType'.$i] == "PI")
                     break; // Found an active PI Zigate
             }
             if ($i <= $param['zigateNb']) {

@@ -555,7 +555,7 @@
         }
 
         /* Starting all daemons. */
-        /* TODO: Move to correct naming 'daemon' and not 'deamon' */
+        /* TODO: Move to correct naming 'daemon' and not 'deamon' => No car c est une erreur dans le core jeedom voir fichier plugin.class.php */
         public static function deamon_start($_debug = false) {
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
@@ -570,7 +570,7 @@
             }
             if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
                 log::add('Abeille', 'error', 'deamon_start(): Tache cron introuvable');
-                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est un bug dans Abeille ?" );
+                message::add("Abeille", "deamon_start(): Tache cron introuvable", "Est ce un bug dans Abeille ?" );
                 throw new Exception(__('Tache cron introuvable', __FILE__));
             }
 
@@ -713,15 +713,15 @@
         /* Stopping all daemons and removing queues */
         public static function deamon_stop() {
             log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
-
+            
             // Stop socat if exist
-	    // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
-	    exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
+            // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
+            exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
             log::add('Abeille', 'debug', 'deamon_stop(): Killing deamons socat: '.implode($output, '!'));
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
-
+            
             // Stop other deamon
             // exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
             exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'", $output);
@@ -729,7 +729,7 @@
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
-
+            
             // Stop main deamon
             log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
@@ -740,7 +740,7 @@
             else {
                 log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
             }
-
+            
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToAbeille) );
@@ -755,7 +755,7 @@
             msg_remove_queue ( msg_get_queue(queueKeyFormToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeySerieToParser) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToCmdSemaphore) );
-
+            
             log::add('Abeille', 'debug', 'deamon_stop(): Terminé');
         }
 
@@ -1496,7 +1496,7 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                $eqlogic->setConfiguration('IEEE',strtoupper($value));
+                $elogic->setConfiguration('IEEE',strtoupper($value));
                 $elogic->save();
                 $elogic->refresh();
 

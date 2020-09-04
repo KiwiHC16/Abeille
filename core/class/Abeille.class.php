@@ -1498,7 +1498,7 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                $eqlogic->setConfiguration('IEEE',strtoupper($value));
+                $elogic->setConfiguration('IEEE',strtoupper($value));
                 $elogic->save();
                 $elogic->refresh();
 

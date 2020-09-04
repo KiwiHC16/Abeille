@@ -16,7 +16,7 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
-    /* Developpers debug features */
+    /* Developers debug features */
     $dbgFile = dirname(__FILE__)."/../../debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
@@ -52,7 +52,7 @@
             }
             return round(100-((($max-($voltage/1000))/($max-$min))*100));
         }
-        
+
         // Is it the health of the plugin level menu Analyse->santé ? A verifier.
         public static function health() {
             $return = array();
@@ -136,7 +136,7 @@
                 if (strlen($eqLogic->getConfiguration('IEEE','none'))==16) {
                     continue; // J'ai une adresse IEEE dans la conf donc je passe mon chemin
                 }
-                
+
                 $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                 if ($commandIEEE == null) {
                     log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' sans cmd \'IEEE-Addr\' => ignoré');
@@ -149,7 +149,7 @@
                     $eqLogic->refresh();
                     continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
                 }
-                
+
                 $tryToGetIEEEArray[] = $key;
             }
 
@@ -252,14 +252,14 @@
                         $ZiGateIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
                         // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
                     }
-                    
+
                     $abeille = new Abeille();
                     $commandIEEE = new AbeilleCmd();
 
                     // Recupere IEEE de la Ruche/ZiGate
                     $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
                     // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
-                    
+
                     if ( strlen($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none')) == 16  ) {
                         $addrIEEE = strtoupper($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none'));
                     }
@@ -267,7 +267,7 @@
                         $addrIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd());
                         // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
                     }
-                        
+
                     log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time()+(($i*33)+1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE );
                     Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time()+(($i*33)+2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE );
@@ -511,15 +511,16 @@
             if ( msg_stat_queue( msg_get_queue(queueKeyFormToCmd)           )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd' );
             if ( msg_stat_queue( msg_get_queue(queueKeySerieToParser)       )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
             if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
-            
-            
+
+
             if ($debug_deamon_info) log::add( 'Abeille', 'debug', 'deamon_info(): Terminé, return='.json_encode($return) );
             return $return;
         }
 
-        /* This function is used to run some cleanup before starting daemons,
-           or update the database due to data needed changes. */
-        /* TODO: Move to correct naming 'daemon' and not 'deamon' */
+        /* This function is used before starting daemons to
+           - run some cleanup
+           - update the config database if changes needed
+           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
         public static function deamon_start_cleanup($message = null) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
@@ -533,7 +534,7 @@
                 }
             }
 
-            // Desactive les Zigate pour eviter de discuster avec une zigate sur le mauvais port
+            // Desactive les Zigate pour eviter de discuter avec une zigate sur le mauvais port
             // AbeilleIEEE_Ok = -1 si la Zigate detectée n est pas la bonne
             //     "          =  0 pour demarrer
             //     "          =  1 Si la zigate detectée est la bonne
@@ -554,8 +555,8 @@
             return;
         }
 
-        /* Starting all daemons. */
-        /* TODO: Move to correct naming 'daemon' and not 'deamon' => No car c est une erreur dans le core jeedom voir fichier plugin.class.php */
+        /* Starting all daemons.
+           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
         public static function deamon_start($_debug = false) {
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
@@ -575,20 +576,33 @@
             }
 
             self::deamon_stop();
-            
+
             message::removeAll('Abeille');
 
             self::deamon_start_cleanup();
 
             $param = self::getParameters();
 
-            /* Configuring GPIO for PiZigate case.
-            TODO: Should be done only if PiZigate is present to avoid any unexpected side effect. */
-            /* PiZigate reminder (using 'WiringPi'):
-            - port 0 = RESET
-            - port 2 = FLASH
-            - Production mode: FLASH=1, RESET=0 then 1 */
-            exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+            /* Configuring GPIO for PiZigate if one active found.
+               PiZigate reminder (using 'WiringPi'):
+               - port 0 = RESET
+               - port 2 = FLASH
+               - Production mode: FLASH=1, RESET=0 then 1 */
+            for ($i = 1; $i <= $param['zigateNb']; $i++ ) {
+                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+                    continue; // Undefined or disabled
+                if ($param['AbeilleType'.$i] == "PI")
+                    break; // Found an active PI Zigate
+            }
+            if ($i <= $param['zigateNb']) {
+                exec("gpio -v", $out, $ret);
+                if ($ret != 0)
+                    log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
+                else {
+                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée. Configuration des GPIOs');
+                    exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+                }
+            }
 
             cron::byClassAndFunction('Abeille', 'deamon')->run();
 
@@ -713,7 +727,7 @@
         /* Stopping all daemons and removing queues */
         public static function deamon_stop() {
             log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
-            
+
             // Stop socat if exist
             // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
             exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'",$output);
@@ -721,7 +735,7 @@
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
-            
+
             // Stop other deamon
             // exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | tr  '\n' ' '", $output);
             exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'", $output);
@@ -729,7 +743,7 @@
             system::kill(implode($output, ' '), true);
             exec(system::getCmdSudo()."kill -15 ".implode($output, ' ')." 2>&1");
             exec(system::getCmdSudo()."kill -9 ".implode($output, ' ')." 2>&1");
-            
+
             // Stop main deamon
             log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
@@ -740,7 +754,7 @@
             else {
                 log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
             }
-            
+
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToAbeille) );
             msg_remove_queue ( msg_get_queue(queueKeyAbeilleToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToAbeille) );
@@ -755,7 +769,7 @@
             msg_remove_queue ( msg_get_queue(queueKeyFormToCmd) );
             msg_remove_queue ( msg_get_queue(queueKeySerieToParser) );
             msg_remove_queue ( msg_get_queue(queueKeyParserToCmdSemaphore) );
-            
+
             log::add('Abeille', 'debug', 'deamon_stop(): Terminé');
         }
 
@@ -958,7 +972,7 @@
             $abeilles = Abeille::byType('Abeille');
 
             foreach ($abeilles as $abeille) {
-                
+
                 if ( strlen($abeille->getConfiguration('IEEE','none')) == 16) {
                     $IEEE_abeille = strtoupper($abeille->getConfiguration('IEEE','none'));
                 }
@@ -973,9 +987,9 @@
                         }
                     }
                 }
-                
+
                 if ( $IEEE_abeille == strtoupper($IEEE) ) {
-                    
+
                     $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
                     if ($cmdShort) {
                         if ($cmdShort->execCmd() == $checkShort) {
@@ -990,10 +1004,10 @@
                             // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
                             return substr($abeille->getlogicalId(), -4);
                         }
-                        
+
                         return $return;
                     }
-                    
+
                 }
             }
 
@@ -1124,7 +1138,7 @@
             // if ( ($cmdId!="Time-Time") && ($cmdId!="Time-TimeStamp") && ($cmdId!="Link-Quality") ) {
                 log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
             }
-            
+
             // Si le message est pour 0000 alors on change en Ruche
             if ( $addr == "0000" ) $addr = "Ruche";
 
@@ -1146,11 +1160,11 @@
             // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
             if ( ($cmdId == "enable") || ($cmdId == "disable") ) {
                 log::add('Abeille', 'debug', 'Entering enable/disable: '.$cmdId );
-                
+
                 $abeilles = self::byType('Abeille');
                 foreach ($abeilles as $key=>$abeille) {
                     $done = 0;
-                    
+
                     if ( strtoupper($abeille->getConfiguration('IEEE','none')) == strtoupper($value) ) {
                         if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
@@ -1160,10 +1174,10 @@
                         }
                         $abeille->save();
                         $abeille->refresh();
-                        
+
                         $done = 1;
                     }
-                
+
                     if ( !$done ) {
                         $cmds = Cmd::byLogicalId('IEEE-Addr');
                         foreach( $cmds as $cmd ) {
@@ -1798,7 +1812,7 @@
                             $rucheIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
                         }
                         log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
-                        
+
                         $currentCommandId = $this->getId();
                         $currentObjectId = $this->getEqLogic_id();
                         log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);

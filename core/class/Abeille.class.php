@@ -889,17 +889,18 @@
         public static function getParameters() {
 
             $return = array();
-            $return['parametersCheck'] = 'ok';                  // Ces deux variables permettent d'indiquer la validité des données.
+            $return['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
             $return['parametersCheck_message'] = "";
 
             //Most Fields are defined with default values
-            $return['AbeilleParentId']      = config::byKey('AbeilleParentId',  'Abeille', '1', 1);
-            $return['zigateNb']             = config::byKey('zigateNb',         'Abeille', '1', 1);
+            $return['AbeilleParentId']  = config::byKey('AbeilleParentId',  'Abeille', '1', 1);
+            $return['zigateNb']         = config::byKey('zigateNb',         'Abeille', '1', 1);
 
             for ( $i=1; $i<=$return['zigateNb']; $i++ ) {
-                $return['AbeilleSerialPort'.$i]   = config::byKey('AbeilleSerialPort'.$i,   'Abeille', 'none',          1 );
-                $return['IpWifiZigate'.$i]        = config::byKey('IpWifiZigate'.$i,        'Abeille', '192.168.0.1',   1 );
-                $return['AbeilleActiver'.$i ]     = config::byKey('AbeilleActiver'.$i,      'Abeille', 'N',             1 );
+                $return['AbeilleType'.$i]       = config::byKey('AbeilleType'.$i,       'Abeille', 'none',          1);
+                $return['AbeilleSerialPort'.$i] = config::byKey('AbeilleSerialPort'.$i, 'Abeille', 'none',          1);
+                $return['IpWifiZigate'.$i]      = config::byKey('IpWifiZigate'.$i,      'Abeille', '192.168.0.1',   1);
+                $return['AbeilleActiver'.$i ]   = config::byKey('AbeilleActiver'.$i,    'Abeille', 'N',             1);
             }
 
             return $return;

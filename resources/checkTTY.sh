@@ -33,16 +33,23 @@ FIELDS=`sudo lsof -Fcn ${PORT}`
 if [ "${FIELDS}" == "" ]; then
     echo "= Ok, le port semble libre."
 else
-    CMD=""
+    PID=0
     for f in ${FIELDS};
     do
-        if [[ "$f" != "c"* ]]; then
-            continue
+        if [[ "$f" == "p"* ]]; then
+            PID=${f:1}
+            break
         fi
-        CMD=${f:1}
     done
-    echo "= ERREUR: Port utilisé par la commande '${CMD}'."
-    echo "=         Le port doit être libéré pour permettre le dialogue avec la Zigate."
+    echo "= ERREUR: Le port est utilisé par le process '${PID}'."
+    echo "=         Il doit être libéré et n'être utilisé QUE par le plugin Abeille pour permettre le dialogue avec la Zigate."
+    PSOUT=`ps --pid ${PID} -o ppid,cmd | grep -v PPID`
+    IFS=' '
+    read -ra PSOUTA <<< "${PSOUT}"
+    PPID2=${PSOUTA[0]}
+    CMD=${PSOUTA[@]:1}
+    echo "=         Details du process ${PID}:"
+    echo "=           PPid=${PPID2}, cmd='${CMD}'"
     exit 3
 fi
 

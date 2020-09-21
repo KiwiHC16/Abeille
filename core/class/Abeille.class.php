@@ -39,7 +39,7 @@
     class Abeille extends eqLogic {
 
         // Fonction dupliquée dans AbeilleParser.
-        public function volt2pourcent( $voltage ) {
+        public static function volt2pourcent( $voltage ) {
             $max = 3.135;
             $min = 2.8;
             if ( $voltage/1000 > $max ) {
@@ -1593,7 +1593,7 @@
             }
         }
 
-        public function createRuche($message = null) {
+        public static function createRuche($message = null) {
 
             $dest = $message->payload;
             $elogic = self::byLogicalId( $dest."/Ruche", 'Abeille');

@@ -221,7 +221,7 @@ class Tools
         return $trimmed;
     }
 
-    /**
+    /*
      * Scan config/devices directory to load devices name
      *
      * @param string $logger
@@ -229,31 +229,42 @@ class Tools
      */
     public static function getDeviceNameFromJson($logger = 'Abeille') {
         $return = array();
-        $devicesDir = dirname(__FILE__) . '/../../../core/config/devices/';
+        $devicesDir = __DIR__.'/../../../core/config/devices/';
+        if (file_exists($devicesDir) == FALSE) {
+            log::add($logger, 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
+            return $return;
+        }
 
-        if ($dh = opendir($devicesDir)) {
-            while ( ($deviceDir = readdir($dh)) !== false) {
-                try {
-                    if ( !(($deviceDir == ".") || ($deviceDir == "..") || ($deviceDir == "listeCompatibilite.php") || ($deviceDir == "Template")) ) {
+        $dh = opendir($devicesDir);
+        while (($dirEntry = readdir($dh)) !== false) {
+            if (($dirEntry == ".") || ($dirEntry == ".."))
+                continue;
+            if (($dirEntry == "listeCompatibilite.php") || ($dirEntry == "Template"))
+                continue;
 
-                    $file = $deviceDir.".json";
-
-                    $content = file_get_contents($devicesDir . $deviceDir . DIRECTORY_SEPARATOR . $file);
-                    //echo("nomCourt : $file : type : " . filetype($deviceDir . $file) . " \n");
-                    //echo("fullName: " . $deviceDir . $file . DIRECTORY_SEPARATOR . $file . '.json' . " \n");
-                    $temp = explode(":", $content);
-                    $atemp = explode('"', str_replace(array("\r", "\n"), '', $temp[0]));
-                    $found = $atemp[1];
-                    if ($found != "" and  strlen($found)>1) {
-                        //echo 'file:' .$file.' / nom: ' . $found . " \n";
-                        array_push($return, $found);
-                    }
-                    }
-                } catch (Exception $e) {
-                    log::add($logger, 'error', 'Cannot read content of file ' . $file);
+            $file = $dirEntry.".json";
+            $fullPath = $devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$file;
+            if (file_exists($fullPath) == FALSE) {
+                log::add($logger, 'warning', "Fichier introuvable: ".$file);
+                return $return;
+            }
+        
+            try {
+                $content = file_get_contents($fullPath);
+                //echo("nomCourt : $file : type : " . filetype($dirEntry . $file) . " \n");
+                //echo("fullName: " . $dirEntry . $file . DIRECTORY_SEPARATOR . $file . '.json' . " \n");
+                $temp = explode(":", $content);
+                $atemp = explode('"', str_replace(array("\r", "\n"), '', $temp[0]));
+                $found = $atemp[1];
+                if ($found != "" and  strlen($found)>1) {
+                    //echo 'file:' .$file.' / nom: ' . $found . " \n";
+                    array_push($return, $found);
                 }
+            } catch (Exception $e) {
+                log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $file);
             }
         }
+
         //filter out empty value
         return array_filter($return,function($value){return strlen($value)>1;});
     }

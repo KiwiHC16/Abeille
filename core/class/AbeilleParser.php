@@ -382,7 +382,7 @@
                                  '28' => array( 'Int8', 1 ), // Signed 8-bit int
                                  '29' => array( 'Int16', 2 ), // Signed 16-bit int
                                  '2a' => array( 'Int24', 3 ), // Signed 24-bit int
-                                 '2b' => array( 'Int32', 4 ), // Signed 32-bit int
+                                    '2b' => array( 'Int32', 4 ), // Signed 32-bit int
                                  '2c' => array( 'Int40', 5 ), // Signed 40-bit int
                                  '2d' => array( 'Int48', 6 ), // Signed 48-bit int
                                  '2e' => array( 'Int56', 7 ), // Signed 56-bit int
@@ -1096,15 +1096,16 @@
             }
 
 
-            // Remontée puissance module Legrand 20AX
-            if ( ($profile == "0104") && ($cluster == "0B04") ) {
+            // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
+            if ( ($profile == "0104") && ( strtoupper($cluster) == "0B04") ) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
                 $attribute              = substr($payload,34, 2).substr($payload,32, 2);
-                $dataType               = substr($payload,36, 2);
-                $value                  = substr($payload,40, 2).substr($payload,38, 2);
+                $succes                 = substr($payload,36, 2);
+                $dataType               = substr($payload,38, 2);
+                $value                  = substr($payload,42, 2).substr($payload,40, 2);
 
                 $this->deamonlog('debug', 'Type=8002/Data indication'
                                  . ', status='.$status
@@ -1126,6 +1127,7 @@
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
             }
+            
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab)

@@ -1216,9 +1216,9 @@
             /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
             // Si l objet n existe pas et je recoie son nom => je créé l objet.
             if ( !is_object($elogic)
-                && (    preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId)
-                    ||  preg_match( "/^0000-[0-9A-F]*-*0010/", $cmdId )
-                    ||  preg_match( "/^SimpleDesc-[0-9A-F]*-*DeviceDescription/", $cmdId )
+                && (    preg_match("/^0000-[0-9A-Fa-f]*-*0005/", $cmdId)
+                    ||  preg_match( "/^0000-[0-9A-Fa-f]*-*0010/", $cmdId )
+                    ||  preg_match( "/^SimpleDesc-[0-9A-Fa-f]*-*DeviceDescription/", $cmdId )
                     )
                 ) {
 
@@ -1457,7 +1457,7 @@
             // Si l objet n existe pas et je recoie une commande => je drop la cmd
             // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
             if (!is_object($elogic)) {
-                log::add( 'Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne process pas la commande, j'eesaye d interroger l equipement pour le créer." );
+                log::add( 'Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer." );
                 // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default" );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue" );

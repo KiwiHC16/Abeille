@@ -1,0 +1,18 @@
+{
+  "setReportPuissanceLegrand": {
+    "isVisible": 0,
+    "name": "setReportPuissanceLegrand",
+    "order": 29,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5csd07cfgdf76z624fsd46",
+      "topic": "setReport",
+      "request": "targetEndpoint=#EP#&ClusterId= 0702&AttributeId=050B&AttributeType=29",
+      "visibilityCategory": "Network"
+    }
+  }
+}

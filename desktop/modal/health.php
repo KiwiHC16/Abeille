@@ -24,12 +24,12 @@ Démons:
     <thead>
         <tr>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Module}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Name}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Address}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Statut}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière communication}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Date création}}</th>
@@ -45,7 +45,7 @@ Démons:
             // Module
             echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
-            // Nom
+            // Module type
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
 
             // ID
@@ -59,32 +59,33 @@ Démons:
             // Short Address
             echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">'.$parts[1].'</span></td>';
 
-            // IEEE
-
-            // Recupere IEEE de la Ruche/ZiGate
-            $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-
-            if ( $commandIEEE ) {
-                $addrIEEE = strtoupper($commandIEEE->execCmd());
-                if (strlen($addrIEEE) > 2 ) {
-                    if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
-                        $IEEE_Table[$addrIEEE] += 1;
-                    }
-                    else {
-                        $IEEE_Table[$addrIEEE] = 1;
+            /* Extended address/IEEE
+               If present in config, taking it.
+               If not, asking IEEE adress */
+            if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
+                $addrIEEE = "-";
+            } else {
+                $addrIEEE = $eqLogic->getConfiguration('IEEE', 'none');
+                if ($addrIEEE == "none") {
+                    /* Get IEEE address from zigate */
+                    $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+                    if ($commandIEEE) {
+                        $addrIEEE = strtoupper($commandIEEE->execCmd());
+                        if (strlen($addrIEEE) > 2 ) {
+                            if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
+                                $IEEE_Table[$addrIEEE] += 1;
+                            }
+                            else {
+                                $IEEE_Table[$addrIEEE] = 1;
+                            }
+                        }
                     }
                 }
             }
-
-            if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
-                $addrIEEE = "-";
-            }
-
-            if ( strlen($addrIEEE) == 16 || $addrIEEE=="-") {
+            if ((strlen($addrIEEE) == 16) || ($addrIEEE=="-")) {
                 echo '<td><span class="label label-success" style="font-size : 1em; cursor : default;">'.$addrIEEE.'</span></td>';
-            }
-            else {
-                echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">Missing</span></td>';
+            } else {
+                echo '<td><span class="label label-warning" style="font-size : 1em; cursor : default;">Manquante</span></td>';
             }
 
             // Status

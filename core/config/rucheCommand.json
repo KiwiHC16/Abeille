@@ -433,7 +433,7 @@
     "display": {
       "forceReturnLineAfter": "1",
       "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "ClusterId=XXXX&attributeId=YYYY[&Proprio=ZZZZ]"
+      "message_placeholder": "clusterId=XXXX&attributId=YYYY&Proprio=ZZZZ&EP=XX"
     }
   },
   "AbeilleList": {

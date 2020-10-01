@@ -1280,7 +1280,8 @@
                 $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
                 $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
                 $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
-                $elogic->setConfiguration('lastCommunicationTimeOut', $objetConfiguration["lastCommunicationTimeOut"]);
+                $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
+                $elogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
                 $elogic->setConfiguration('type', $type);
 
                 if (isset($objetConfiguration['battery_type'])) {
@@ -1320,7 +1321,7 @@
                 $elogic->save();
 
                 // Creation des commandes pour l objet Abeille juste créé.
-                if ($GLOBALS['debugKIWI']) {
+                if (isset($GLOBALS['debugKIWI']) && $GLOBALS['debugKIWI']) {
                     echo "On va creer les commandes.\n";
                     print_r($objetDefSpecific['Commandes']);
                 }
@@ -1372,7 +1373,8 @@
                     $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                     $cmdlogic->setType($cmdValueDefaut["Type"]);
                     $cmdlogic->setSubType($cmdValueDefaut["subType"]);
-                    $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
+                    if (array_key_exists("generic_type", $cmdValueDefaut))
+                        $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
                     // unite
                     if (isset($cmdValueDefaut["unite"])) {
                         $cmdlogic->setUnite($cmdValueDefaut["unite"]);
@@ -1386,10 +1388,11 @@
                     $parameters_info = self::getParameters();
                     $isVisible = $cmdValueDefaut["isVisible"];
 
-                    foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-                        // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-                        $cmdlogic->setDisplay($confKey, $confValue);
-                    }
+                    if (array_key_exists("display", $cmdValueDefaut))
+                        foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                            // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                            $cmdlogic->setDisplay($confKey, $confValue);
+                        }
 
                     $cmdlogic->setIsVisible($isVisible);
 

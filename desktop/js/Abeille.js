@@ -255,6 +255,64 @@ $('#bt_createRemote10').on('click', function () {
                           }
                           );
 
+/* Developer feature.
+   Removes selected equipments in Jeedom DB only. Zigate is untouched. */
+   function removeBeesJeedom(zgNb) {
+    console.log("removeBeesJeedom(zgNb="+zgNb+")");
+    
+    eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
+
+    /* Any selected ? */
+    var nbSelected = 0;
+    for (var i = 0; i < eqZigate.length; i++) {
+        var eqId = eqZigate[i].id;
+        var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
+        if (checked == true)
+            nbSelected++;
+    }
+    console.log("nbSelected="+nbSelected);
+    if (nbSelected == 0) {
+        alert("Aucun équipement sélectionné !")
+        return;
+    }
+
+    bootbox.confirm('{{Vous êtes sur le point de supprimer les équipements selectionnés.<br>Etes vous sur de vouloir continuer ?}}', function (result) {
+        if (result == false)
+            return
+
+        var eqList = Array();    
+        for (var i = 0; i < eqZigate.length; i++) {
+            var eqId = eqZigate[i].id;
+            var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
+            if (checked == false)
+                continue;
+            eqList.push(eqId);
+        }
+
+        console.log("eqList="+eqList);
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'removeEqJeedom',
+                eqList: eqList
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'removeEqJeedom' !");
+            },
+            success: function (json_res) {
+                window.location.reload();
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.errors;
+                    alert(msg);
+                }
+            }
+        });
+    });
+}
 
 
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});

@@ -12,6 +12,13 @@ $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 
 $parametersAbeille = Abeille::getParameters();
 
+    /* Developers debug features */
+    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    if (file_exists($dbgFile)) {
+        include_once $dbgFile;
+        $dbgDeveloperMode = TRUE;
+        echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
+    }
 ?>
 
 <!-- Barre verticale de recherche à gauche de la page  -->
@@ -75,7 +82,7 @@ $outils = array(
 
 <?php
     /* Display beehive or bee card */
-    function displayBeeCard($eqLogic, $files) {
+    function displayBeeCard($eqLogic, $files, $zgNb) {
         // find opacity
         $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
 
@@ -88,15 +95,17 @@ $outils = array(
         }
 
         // Affichage
+        $id = $eqLogic->getId();
         echo '<div class="eqLogicDisplayCardB">';
-        echo    '<input type="checkbox" name="eqSelected-'.$eqLogic->getId().'" />';
-        echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+        echo    '<input id="idBeeChecked'.$zgNb.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $id . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
         echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
         echo    '</div>';
         echo '</div>';
     }
 
     $NbOfZigatesON = 0; // Number of enabled zigates
+    $eqAll = array(); // All equipments, sorted per zigate
     for ( $i=1; $i<=$zigateNb; $i++ ) {
         if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled
@@ -112,15 +121,28 @@ $outils = array(
         echo "&nbsp&nbsp&nbsp";
         echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
 
-        echo '<div class="eqLogicThumbnailContainer">';
+        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+            echo '<br>';
+            $port = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
 
+            /* Remove equipments from Jeedom only */
+            echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-primary btn-xs" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
+        }
+
+        echo '<div class="eqLogicThumbnailContainer">';
         $dir = dirname(__FILE__) . '/../../images/';
         $files = scandir($dir);
+        $eqPerZigate = array(); // All equipements linked to current zigate
         /* Display beehive card then bee cards */
         foreach ($eqLogics as $eqLogic) {
-            if ($eqLogic->getLogicalId() != "Abeille".$i."/Ruche")
+            $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
+            if ($eqLogicId != "Abeille".$i."/Ruche")
                 continue;
-            displayBeeCard($eqLogic, $files);
+            displayBeeCard($eqLogic, $files, $i);
+            $eq = array();
+            $eq['id'] = $eqLogic->getId();
+            $eq['logicalId'] = $eqLogicId;
+            $eqPerZigate[] = $eq;
         }
         foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
@@ -129,10 +151,17 @@ $outils = array(
                 continue;
             if ($eqLogicId == "Abeille".$i."/Ruche")
                 continue; // Skipping beehive
-            displayBeeCard($eqLogic, $files);
+            displayBeeCard($eqLogic, $files, $i);
+            $eq = array();
+            $eq['id'] = $eqLogic->getId();
+            $eq['logicalId'] = $eqLogicId;
+            $eqPerZigate[] = $eq;
         }
+        echo '<script>var js_eqZigate'.$i.' = \''.json_encode($eqPerZigate).'\';</script>';
+        $eqAll['zigate'.$i] = $eqPerZigate;
         echo ' </div>';
     }
+
     if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !
         echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
         echo "   <span style=\"color:red\">";
@@ -511,9 +540,11 @@ Start Zigbee Network:
                     <input type="submit" name="submitButton" value="Set Size">
                 </td>
             </tr><tr>
-                </td><td>
+                </td>
+                <!-- <td>
                     <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeSelect"><i class="fa fa-minus-circle"></i>  {{Supprime les objets sélectionnés}}</a>
-                </td><td>
+                </td> -->
+                <td>
                     <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeAll"><i class="fa fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
                 </td>
             </tr><tr>

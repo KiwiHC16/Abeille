@@ -152,8 +152,29 @@ try {
         ajax::success();
     }
 
+    /* Developer featuer: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
+       Zigate is untouched.
+       Returns: status=0/-1, errors=<error message(s)> */
+       if (init('action') == 'removeEqJeedom') {
+        $eqList = init('eqList');
+
+        $status = 0;
+        $errors = ""; // Error messages
+        foreach ($eqList as $eqId) {
+            /* Collecting required infos */
+            $eqLogic = eqLogic::byId($eqId);
+            if (!is_object($eqLogic)) {
+                throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+            }
+
+            /* Removing device from Jeedom DB */
+            $eqLogic->remove();
+        }
+
+        ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
+    }
     throw new Exception('Aucune methode correspondante');
-    /*     * *********Catch exeption*************** */
+    /********** Catch exeption ************/
 } catch (Exception $e) {
     ajax::error(displayExeption($e), $e->getCode());
 }

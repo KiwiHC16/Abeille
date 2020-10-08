@@ -31,7 +31,7 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
 
     function daemonlog($loglevel='NONE', $message=""){
-        Tools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSerialRead', $message);
+        AbeilleTools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSerialRead', $message);
     }
 
     // function _exec($cmd, &$out = null)
@@ -87,7 +87,7 @@
         exit(3);
     }
 
-    // $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json'); // Unused
+    // $clusterTab= AbeilleTools::getJSonConfigFiles('zigateClusters.json'); // Unused
 
     daemonlog('info', 'Queue: \'queueKeySerieToParser\'');
     $queueKeySerieToParser    = msg_get_queue(queueKeySerieToParser);

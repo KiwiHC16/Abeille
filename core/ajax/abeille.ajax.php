@@ -22,7 +22,7 @@
 
     function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
     {
-        if (Tools::getNumberFromLevel($logLevel) > Tools::getPluginLogLevel('Abeille'))
+        if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
             return; // Nothing to do
 
         $logDir = __DIR__.'/../../../../log/';

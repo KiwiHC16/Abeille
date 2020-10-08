@@ -701,11 +701,11 @@ Start Zigbee Network:
                                     <option value="Ruche">{{Ruche}}</option>
                                     <?php
                                     require_once dirname(__FILE__) . '/../../resources/AbeilleDeamon/lib/Tools.php';
-                                    $items = Tools::getDeviceNameFromJson('Abeille');
+                                    $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
                                     $selectBox = array();
                                     foreach ($items as $item) {
-                                        $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices(Tools::getTrimmedValueForJsonFiles($item), 'Abeille');
+                                        $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
                                         $name = $AbeilleObjetDefinition[$item]['nameJeedom'];
                                         $icone = $AbeilleObjetDefinition[$item]['configuration']['icone'];
                                         $selectBox[ucwords($name)] = $icone;

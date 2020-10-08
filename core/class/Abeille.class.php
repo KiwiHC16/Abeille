@@ -1236,7 +1236,7 @@
                 $trimmedValue = str_replace("\0", '', $trimmedValue);
 
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
-                $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
+                $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
                 log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
 
                 // On recupere le EP
@@ -1647,17 +1647,17 @@
             $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
             $elogic->save();
 
-            $rucheCommandList = Tools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
+            $rucheCommandList = AbeilleTools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
 
             // Only needed for debug and dev so by default it's not done.
             if (0) {
                 $i = 100;
 
                 //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-                $items = Tools::getDeviceNameFromJson('Abeille');
+                $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
                 foreach ($items as $item) {
-                    $AbeilleObjetDefinition = Tools::getJSonConfigFilebyDevices( Tools::getTrimmedValueForJsonFiles($item), 'Abeille' );
+                    $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices( AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille' );
                     // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
                     foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
                         $rucheCommandList[$objetId] = array(
@@ -1905,7 +1905,7 @@
 
                 // Creation des objets sur la base des modeles pour verifier la bonne creation dans Abeille
             case "1":
-                $items = Tools::getDeviceNameFromJson('Abeille');
+                $items = AbeilleTools::getDeviceNameFromJson('Abeille');
                 $parameters_info = Abeille::getParameters();
                 //problem icon creation
                 foreach ($items as $item) {

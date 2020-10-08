@@ -322,7 +322,7 @@
             if ($this->debug["cli"] ) {
                 echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
             } else {
-                Tools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
+                AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
             }
         }
     }
@@ -3040,7 +3040,7 @@
         $AbeilleParser = new AbeilleParser("AbeilleParser");
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
-        $clusterTab = Tools::getJSonConfigFiles("zigateClusters.json");
+        $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
 
         $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
         $max_msg_size = 2048;

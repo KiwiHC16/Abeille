@@ -2,7 +2,7 @@
 
 // require_once dirname(__FILE__) . '/../../../../../core/php/core.inc.php';
 
-class Tools
+class AbeilleTools
 {
     /**
      * Get Plugin Log Level.
@@ -62,7 +62,7 @@ class Tools
      */
     public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '') {
         if (strlen($message) < 1) return;
-        if (Tools::getNumberFromLevel($loglevel) <= Tools::getPluginLogLevel($pluginName)) {
+        if (self::getNumberFromLevel($loglevel) <= self::getPluginLogLevel($pluginName)) {
             $loglevel = strtolower(trim($loglevel));
             if ($loglevel == "warning")
                 $loglevel = "warn";
@@ -158,18 +158,18 @@ class Tools
 
         $configDir = dirname(__FILE__) . '/../../../core/config/';
 
-        // Tools::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
+        // self::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
         $confFile = $configDir . $jsonFile;
 
         //file exists ?
         if (!is_file($confFile)) {
-            Tools::deamonlog('error', $confFile . ' not found.');
+            self::deamonlog('error', $confFile . ' not found.');
             return;
         }
         // is valid json
         $content = file_get_contents($confFile);
         if (!is_json($content)) {
-            Tools::deamonlog('error', $confFile . ' is not a valid json.');
+            self::deamonlog('error', $confFile . ' is not a valid json.');
             return;
         }
 

@@ -25,7 +25,7 @@
     include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once dirname(__FILE__).'/AbeilleMsg.php';
 
-    class debug extends Tools {
+    class debug extends AbeilleTools {
         function deamonlog($loglevel = 'NONE', $message = "")
         {
             if ( $this->debug["cli"] ) {

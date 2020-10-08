@@ -27,7 +27,7 @@
 
 
     function deamonlog($loglevel='NONE',$message=""){
-        Tools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSocat', $message);
+        AbeilleTools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSocat', $message);
         echo $message."\n";
     }
 
@@ -39,7 +39,7 @@
     $requestedlevel=$argv[2];
     $requestedlevel=''?'none':$argv[2];
     $ip=''?'192.168.4.1':$argv[3];
-    $clusterTab= Tools::getJSonConfigFiles('zigateClusters.json');
+    $clusterTab= AbeilleTools::getJSonConfigFiles('zigateClusters.json');
 
     $nohup 	= "/usr/bin/nohup";
     $sudo   = "/usr/bin/sudo";

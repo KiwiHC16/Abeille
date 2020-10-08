@@ -19,7 +19,7 @@
             // $configDir = dirname(__FILE__) . '/../../../core/config/';
             $fileDir = './';
             
-            // Tools::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
+            // AbeilleTools::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
             $confFile = $fileDir . $jsonFile;
             
             //file exists ?

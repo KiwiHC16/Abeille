@@ -16,7 +16,7 @@
     function zg_SetConf($lFile = '')
     {
         global $curLogLevel, $logFile;
-        $curLogLevel = Tools::getPluginLogLevel('Abeille');
+        $curLogLevel = AbeilleTools::getPluginLogLevel('Abeille');
         $logFile = $lFile;
     }
 
@@ -29,7 +29,7 @@
 
         if ($logFile == '')
             return; // Can't log. Config not done
-        if (Tools::getNumberFromLevel($logLevel) > $curLogLevel)
+        if (AbeilleTools::getNumberFromLevel($logLevel) > $curLogLevel)
             return; // Nothing to do
 
         $logDir = __DIR__.'/../../../../log/';

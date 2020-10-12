@@ -17,9 +17,12 @@
     */
 
     /* Developers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
-    if (file_exists($dbgFile))
+    $dbgFile = dirname(__FILE__)."/../debug.php";
+    if (file_exists($dbgFile)) {
         include_once $dbgFile;
+        $dbgDeveloperMode = TRUE;
+        echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
+    }
 
     /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
     if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
@@ -352,16 +355,6 @@
     $("#zigatewifi").hide();
     $("#PiZigate").hide();
 
-    // $('#bt_Connection_hide').on('click', function () {
-        // $("#Connection").hide();
-        // }
-    // );
-
-    // $('#bt_Connection_show').on('click', function () {
-        // $("#Connection").show();
-        // }
-    // );
-
     $('#idZigatesShowHide').on('click', function () {
             var Label = document.getElementById("idZigatesShowHide").innerText;
             console.log("ZigatesShowHide click: Label=" + Label);
@@ -472,17 +465,6 @@
             // }
         // });
     // }
-
-    // $('#bt_zigatewifi_show').on('click', function () {
-            // checkSocatInstallation();
-            // $("#zigatewifi").show();
-        // }
-    // );
-
-    // $('#bt_zigatewifi_hide').on('click', function () {
-            // $("#zigatewifi").hide();
-        // }
-    // );
 
     $('#idWifiShowHide').on('click', function () {
             var Label = document.getElementById("idWifiShowHide").innerText;

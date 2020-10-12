@@ -176,12 +176,18 @@
                         <?php
                             echo '<select id="idFW'.$i.'" style="width:55px" title="{{Firmwares disponibles}}">';
                             foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $fwName) {
-                                $fwName = substr($fwName, 8); // Removing "ZiGate_v" prefix
-                                $fwName = substr($fwName, 0, -4); // Removing ".bin" suffix
-                                if (preg_match("(3.1c)", $fwName))
-                                    echo '<option value='.$fwName.' selected>'.$fwName.'</option>'; // Selecting default choice
+                                $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
+                                if (substr($fwVers, -4) == ".dev") {
+                                    /* FW for developer mode only */
+                                    if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
+                                        continue; // Not in developer mode. Ignoring this FW
+                                    $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
+                                }
+                                $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
+                                if (preg_match("(3.1c)", $fwVers))
+                                    echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                                 else
-                                    echo '<option value='.$fwName.'>'.$fwName.'</option>';
+                                    echo '<option value='.$fwName.'>'.$fwVers.'</option>';
                             }
                         ?>
                         </select>
@@ -661,7 +667,7 @@
             return;
         }
         var zgPort = $("#idSelSP" + zgNb).val();
-        var zgFW = "ZiGate_v" + $("#idFW" + zgNb).val() + ".bin";
+        var zgFW = $("#idFW" + zgNb).val();
         bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + zgPort + '<br> - firmware: ' + zgFW + '<br> Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
@@ -678,15 +684,6 @@
             }
         });
     })
-
-    // $('#bt_updateFirmware').on('click',function(){
-        // bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + document.getElementById("ZiGatePort").value + '<br> - firmware: ' + document.getElementById("ZiGateFirmwareVersion").value + '<br> Voulez vous continuer ?}}', function (result) {
-            // if (result) {
-                // $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-                // $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + document.getElementById("ZiGateFirmwareVersion").value + '\"&zgport=\"' + document.getElementById("ZiGatePort").value + '\"').dialog('open');
-            // }
-        // });
-    // })
 
     $('#bt_resetPiZigate').on('click',function(){
         bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {

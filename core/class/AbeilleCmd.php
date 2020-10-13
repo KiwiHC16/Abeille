@@ -977,6 +977,15 @@
             }
 
             $dest = $Command['dest'];
+            
+            if ( isset($Command['setModeHybride']) )
+            {
+                if ($Command['setModeHybride']=="set")
+                {
+                    if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - Set Mode Hybride");
+                    $this->sendCmd($priority,$dest,"0002","0001","02");
+                }
+            }
 
             if ( isset($Command['getVersion']) )
             {

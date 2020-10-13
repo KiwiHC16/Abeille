@@ -471,6 +471,18 @@ Start Zigbee Network:
 </br>
 </br>
 
+<label>Set Hybride Mode</label> </br>
+Set Hybride Mode:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Hybride Mode Z'.$i.'">';
+    }
+}
+?>
+</br>
+</br>
+
 <hr>
 
 <!-- Affichage des informations reseau zigate  -->

@@ -325,6 +325,14 @@
                 sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/startNetwork', "StartNetwork" );
             }
         }
+        
+        // startNetwork
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Hybride Mode Z'.$zigateId ) {
+                echo "Set Hybride Mode";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setModeHybride', "set" );
+            }
+        }
 
     } catch (Exception $e) {
         echo '<br>error: '.$e->getMessage();

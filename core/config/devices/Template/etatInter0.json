@@ -1,0 +1,18 @@
+{
+  "0006-01-0000": {
+    "isVisible": 1,
+    "name": "etat inter 0",
+    "order": 4,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07sdcb66dsd28sd2cb",
+      "visibilityCategory": "All",
+      "repeatEventManagement": "always"
+    }
+  }
+}

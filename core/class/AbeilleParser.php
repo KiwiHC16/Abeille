@@ -1161,7 +1161,7 @@
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "fd" ) return;
-                $attribute              = substr($payload,32, 2);
+                $value                  = substr($payload,32, 2);
 
                 $this->deamonlog('debug', $dest.', Type=8002/Data indication'
                                  . ', status='.$status
@@ -1176,10 +1176,10 @@
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
-                                 . ', attribute='.$attribute
+                                 . ', value='.$value
                                  );
 
-                // $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
             }
             
         }
@@ -2303,7 +2303,7 @@
             // IKEA Manufecturer name data type: 42
 
             $sizeOfAttribute = substr($payload, 20, 4);
-            $this->deamonlog('debug', '  Size of Attribute='.$sizeOfAttribute);
+            // $this->deamonlog('debug', '  Size of Attribute='.$sizeOfAttribute);
 
             // short addr / Cluster ID / EP / Attr ID -> data
             $SrcAddr    = substr($payload, 2, 4);

@@ -12,18 +12,10 @@
       "mainEP": "01"
     },
     "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
       "include3": "nom",
-      "include5": "On",
-      "include5 2": "On1",
-      "include5 2 2": "On2",
-      "include6": "Off",
-      "include6 2": "Off1",
-      "include6 2 2": "Off2",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+      "include5 3": "etatInter0",
+      "include5 3 2": "etatInter1",
+      "include5 3 2 2": "etatInter2"
     }
   }
 }

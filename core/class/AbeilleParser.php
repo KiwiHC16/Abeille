@@ -1042,14 +1042,12 @@
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             
-            $this->deamonlog("debug","decode8002: payload:".$payload);
-            $this->deamonlog("debug","decode8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
+            $this->deamonlog("debug",$dest.", Type=8002: payload:".$payload);
+            $this->deamonlog("debug",$dest.", Type=8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
             
-            // Partie a revoir completement
-            
-
-            
-            if (($profile == "0000") && ($cluster == "8032")) {
+            // Partie a revoir completement: Pourquoi avais je ecris ca ?
+                        
+            if (($profile == "0000") && (strtoupper($cluster) == "8032")) {
                 $SQN                    = substr($payload,26, 2);
                 $status                 = substr($payload,28, 2);
                 $tableSize              = hexdec(substr($payload,30, 2));
@@ -1095,7 +1093,6 @@
                 }
             }
 
-
             // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
             if ( ($profile == "0104") && ( strtoupper($cluster) == "0B04") ) {
 
@@ -1107,7 +1104,7 @@
                 $dataType               = substr($payload,38, 2);
                 $value                  = substr($payload,42, 2).substr($payload,40, 2);
 
-                $this->deamonlog('debug', 'Type=8002/Data indication'
+                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
                                  . ', status='.$status
                                  . ', profile='.$profile
                                  . ', cluster='.$cluster
@@ -1128,10 +1125,66 @@
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
             }
             
+            // Remontée puissance prise TS0121 Issue: #1288
+            if ( ($profile == "0104") && ( strtoupper($cluster) == "0702") ) {
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
+                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
+                $dataType               = substr($payload,36, 2);
+                $value                  = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
+
+                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
+                                 . ', status='.$status
+                                 . ', profile='.$profile
+                                 . ', cluster='.$cluster
+                                 . ', srcEndPoint='.$srcEndPoint
+                                 . ', destEndPoint='.$destEndPoint
+                                 . ', sourceAddressMode='.$sourceAddressMode
+                                 . ', srcAddress='.$srcAddress
+                                 . ', destinationAddressMode='.$destinationAddressMode
+                                 . ', dstAddress='.$dstAddress
+                                 . ', frameCtrlField='.$frameCtrlField
+                                 . ', SQN='.$SQN
+                                 . ', cmd='.$cmd
+                                 . ', attribute='.$attribute
+                                 . ', dataType='.$dataType
+                                 . ', value='.$value.' - '.hexdec($value)
+                                 );
+
+                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+            }
+            
+            // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
+            if ( ($profile == "0104") && ( strtoupper($cluster) == "0006") ) {
+
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd != "fd" ) return;
+                $attribute              = substr($payload,32, 2);
+
+                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
+                                 . ', status='.$status
+                                 . ', profile='.$profile
+                                 . ', cluster='.$cluster
+                                 . ', srcEndPoint='.$srcEndPoint
+                                 . ', destEndPoint='.$destEndPoint
+                                 . ', sourceAddressMode='.$sourceAddressMode
+                                 . ', srcAddress='.$srcAddress
+                                 . ', destinationAddressMode='.$destinationAddressMode
+                                 . ', dstAddress='.$dstAddress
+                                 . ', frameCtrlField='.$frameCtrlField
+                                 . ', SQN='.$SQN
+                                 . ', cmd='.$cmd
+                                 . ', attribute='.$attribute
+                                 );
+
+                // $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+            }
+            
         }
 
-        function decode8003($dest, $payload, $ln, $qos, $clusterTab)
-        {
+        function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
             // <source endpoint: uint8_t t>
             // <profile ID: uint16_t>
             // <cluster list: data each entry is uint16_t>
@@ -1145,8 +1198,7 @@
             }
         }
 
-        function decode8004($dest, $payload, $ln, $qos, $dummy)
-        {
+        function decode8004($dest, $payload, $ln, $qos, $dummy) {
             // <source endpoint: uint8_t>
             // <profile ID: uint16_t>
             // <cluster ID: uint16_t>
@@ -1162,8 +1214,7 @@
             }
         }
 
-        function decode8005($dest, $payload, $ln, $qos, $dummy)
-        {
+        function decode8005($dest, $payload, $ln, $qos, $dummy) {
             // $this->deamonlog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)' );
 
             // <source endpoint: uint8_t>
@@ -2235,24 +2286,24 @@
         {
             // "Type: 0x8100 (Read Attrib Response)"
             // 8100 000D0C0Cb32801000600000010000101
-            $this->deamonlog('debug', $dest.', Type=0x8100/Read attribut response'
-                             . ', SQN='.substr($payload, 0, 2)
-                             . ', SrcAddr='.substr($payload, 2, 4)
-                             . ', EP='.substr($payload, 6, 2)
-                             . ', ClustId='.substr($payload, 8, 4)
-                             . ', AttrId='.substr($payload, 12, 4)
-                             . ', AttrStatus='.substr($payload, 16, 2)
+            // 1b 83e4 01 0000 0005 00 42 0006 54 53 30 31 32 31 99
+            //
+            $this->deamonlog('debug', $dest.', Type=8100/Read attribut response: '.$payload);
+            $this->deamonlog('debug', $dest.', Type=8100/Read attribut response'
+                             . ', SQN='         .substr($payload,  0, 2)
+                             . ', SrcAddr='     .substr($payload,  2, 4)
+                             . ', EP='          .substr($payload,  6, 2)
+                             . ', ClustId='     .substr($payload,  8, 4)
+                             . ', AttrId='      .substr($payload, 12, 4)
+                             . ', AttrStatus='  .substr($payload, 16, 2)
                              . ', AttrDataType='.substr($payload, 18, 2) );
 
             $dataType = substr($payload, 18, 2);
             // IKEA OnOff state reply data type: 10
             // IKEA Manufecturer name data type: 42
-            /*
-             $this->deamonlog('Syze of Attribute: '.substr($payload, 20, 4));
-             $this->deamonlog('Data byte list (one octet pour l instant): '.substr($payload, 24, 2));
-             */
-            $this->deamonlog('debug', '  Size of Attribute='.substr($payload, 20, 4));
-            $this->deamonlog('debug', '  Data byte list (one octet pour l instant)='.substr($payload, 24, 2));
+
+            $sizeOfAttribute = substr($payload, 20, 4);
+            $this->deamonlog('debug', '  Size of Attribute='.$sizeOfAttribute);
 
             // short addr / Cluster ID / EP / Attr ID -> data
             $SrcAddr    = substr($payload, 2, 4);
@@ -2280,12 +2331,14 @@
                 $data = hexdec(substr($payload, 24, 2));
             }
             if ($dataType == "42") {
-                $data = hex2bin(substr($payload, 24, (strlen($payload) - 24)));
+                $data = hex2bin(substr($payload, 24, $sizeOfAttribute*2));
             }
             //deamonlog('Data byte: '.$data);
-            $this->deamonlog('debug', '  Data byte='.$data);
-
-            $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
+            if (isset($data)) {
+                $this->deamonlog('debug', '  Data byte='.$data);
+                $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
+            }
+            
         }
 
         function decode8101($dest, $payload, $ln, $qos, $dummy)

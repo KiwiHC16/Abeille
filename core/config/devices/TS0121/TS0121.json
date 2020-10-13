@@ -32,7 +32,8 @@
       "include3 2 2": "setReportPuissance",
       "include3 2 2 2 2 2": "PuissanceVoltagePrise",
       "include3 2 2 2 2": "PuissanceCurrentPrise",
-      "include3 2 2 2": "PuissanceLegrandPrise"
+      "include3 2 2 2": "PuissanceLegrandPrise",
+      "include3 2 2 2 3": "CurrentSummationDelivered"
     }
   }
 }

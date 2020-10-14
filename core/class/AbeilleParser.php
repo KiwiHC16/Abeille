@@ -1042,8 +1042,8 @@
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             
-            $this->deamonlog("debug",$dest.", Type=8002: payload:".$payload);
-            $this->deamonlog("debug",$dest.", Type=8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
+            // $this->deamonlog("debug",$dest.", Type=8002: payload:".$payload);
+            // $this->deamonlog("debug",$dest.", Type=8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
             
             // Partie a revoir completement: Pourquoi avais je ecris ca ?
                         
@@ -1091,6 +1091,8 @@
                 else {
                     $this->deamonlog('debug', '    abeille not found !!!');
                 }
+                
+                return;
             }
 
             // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
@@ -1123,6 +1125,7 @@
                                  );
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                return;
             }
             
             // Remontée puissance prise TS0121 Issue: #1288
@@ -1153,6 +1156,7 @@
                                  );
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                return;
             }
             
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
@@ -1180,8 +1184,10 @@
                                  );
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
+                return;
             }
-            
+
+            $this->deamonlog("debug",$dest.", Type=8002 (decoded but not processed): status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -2288,7 +2294,7 @@
             // 8100 000D0C0Cb32801000600000010000101
             // 1b 83e4 01 0000 0005 00 42 0006 54 53 30 31 32 31 99
             //
-            $this->deamonlog('debug', $dest.', Type=8100/Read attribut response: '.$payload);
+            // $this->deamonlog('debug', $dest.', Type=8100/Read attribut response: '.$payload);
             $this->deamonlog('debug', $dest.', Type=8100/Read attribut response'
                              . ', SQN='         .substr($payload,  0, 2)
                              . ', SrcAddr='     .substr($payload,  2, 4)
@@ -2335,7 +2341,7 @@
             }
             //deamonlog('Data byte: '.$data);
             if (isset($data)) {
-                $this->deamonlog('debug', '  Data byte='.$data);
+                // $this->deamonlog('debug', '  Data byte='.$data);
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
             }
             

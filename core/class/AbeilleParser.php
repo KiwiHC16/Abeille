@@ -2351,7 +2351,7 @@
             }
             //deamonlog('Data byte: '.$data);
             if (isset($data)) {
-                // $this->deamonlog('debug', '  Data byte='.$data);
+                $this->deamonlog('debug', '  Data byte='.$data);
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
             }
             

@@ -471,8 +471,28 @@ Start Zigbee Network:
 </br>
 </br>
 
-<label>Set Hybride Mode</label> </br>
-Set Hybride Mode:
+<label>Set Mode</label> </br>
+Normal:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Normal Mode Z'.$i.'">';
+    }
+}
+?>
+</br>
+
+Raw:
+<?php
+    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {
+        echo '<input type="submit" name="submitButton" value="Set Raw Mode Z'.$i.'">';
+    }
+}
+?>
+</br>
+
+Hybride:
 <?php
     for ( $i=1; $i<=$zigateNb; $i++ ) {
     if ( $parametersAbeille['AbeilleActiver'.$i] == 'Y' ) {

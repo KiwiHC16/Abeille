@@ -326,11 +326,23 @@
             }
         }
         
-        // startNetwork
+        // Mode: normal, raw, hybride
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Normal Mode Z'.$zigateId ) {
+                echo "Set Hybride Mode";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setModeHybride', "normal" );
+            }
+        }
+        foreach ( $zigateIds as $zigateId ) {
+            if ( $_POST['submitButton'] == 'Set Raw Mode Z'.$zigateId ) {
+                echo "Set Hybride Mode";
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setModeHybride', "RAW" );
+            }
+        }
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Hybride Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setModeHybride', "set" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/Ruche/setModeHybride', "hybride" );
             }
         }
 

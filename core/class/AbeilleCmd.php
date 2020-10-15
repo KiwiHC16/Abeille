@@ -978,9 +978,22 @@
 
             $dest = $Command['dest'];
             
+            // En gros 0 normal, 1 RAW mode, 2 Mode hybride
             if ( isset($Command['setModeHybride']) )
             {
-                if ($Command['setModeHybride']=="set")
+                if ($Command['setModeHybride']=="normal")
+                {
+                    if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - Set Mode Hybride");
+                    $this->sendCmd($priority,$dest,"0002","0001","00");
+                }
+            
+                if ($Command['setModeHybride']=="RAW")
+                {
+                    if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - Set Mode Hybride");
+                    $this->sendCmd($priority,$dest,"0002","0001","01");
+                }
+      
+                if ($Command['setModeHybride']=="hybride")
                 {
                     if ( $this->debug['processCmd'] ) $this->deamonlog('debug',"processCmd fct - Set Mode Hybride");
                     $this->sendCmd($priority,$dest,"0002","0001","02");

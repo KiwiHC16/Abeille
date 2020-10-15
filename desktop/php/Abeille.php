@@ -548,10 +548,13 @@ Hybride:
 
 
 
-            <br>
-
-            <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
-
+<br>
+<legend><i class="fa fa-cog"></i> {{Zone developpeurs}}</legend>
+Attention !!<br>
+Cette partie est réservée aux developpeurs. Ne pas s'y aventurer sauf sur leur demande expresse.<br><br>
+<a id="idDevGrpShowHide" class="btn btn-success">Afficher</a>
+<div id="idDevGrp" style="display:none">
+    <br>
             <input type="submit" name="submitButton" value="Identify">
 
             <table>
@@ -899,11 +902,26 @@ Hybride:
         </div>
     </div>
 </div>
+</div> <!-- End of developer area -->
 
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
+    /* Show or hide developer area */
+    $('#idDevGrpShowHide').on('click', function () {
+            var Label = document.getElementById("idDevGrpShowHide").innerText;
+            if (Label == "Afficher") {
+                document.getElementById("idDevGrpShowHide").innerText = "Cacher";
+                document.getElementById("idDevGrpShowHide").className = "btn btn-danger";
+                $("#idDevGrp").show();
+            } else {
+                document.getElementById("idDevGrpShowHide").innerText = "Afficher";
+                document.getElementById("idDevGrpShowHide").className = "btn btn-success";
+                $("#idDevGrp").hide();
+            }
+        }
+    );
 
     $("#sel_icon").change(function () {
         var text = 'plugins/Abeille/images/node_' + $("#sel_icon").val() + '.png';

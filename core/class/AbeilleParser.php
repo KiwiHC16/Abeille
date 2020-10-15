@@ -334,10 +334,10 @@
         public $debug = array(
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
-                              "8000"                    => 0, // Status
-                              "8009"                    => 0, // Get Network Status
-                              "8010"                    => 0, // Zigate Version
-                              "8024"                    => 0, // Network joined-forme
+                              "8000"                    => 1, // Status
+                              "8009"                    => 1, // Get Network Status
+                              "8010"                    => 1, // Zigate Version
+                              "8024"                    => 1, // Network joined-forme
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
                               "cleanUpNE"               => 1,
@@ -1010,6 +1010,16 @@
             else {
                 $this->deamonlog("debug","(fct decode8000) could not add message to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
             }
+            
+            if ($PacketType == "0002") {
+                if ( $status == "00" ) {
+                    message::add("Abeille","Le mode de fonctionnement de la zigate a bien été modifié.","" );
+                }
+                else {
+                    message::add("Abeille","Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
+                }
+            }
+            
         }
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {

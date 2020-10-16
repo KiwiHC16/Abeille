@@ -639,6 +639,7 @@
             /* Starting 'AbeilleSerialPort' daemons.
                - First checks that all ports exist
                - Then launch each daemon */
+            $deamonDir = __DIR__."/../../core/php/";
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
                 $deamon[10+$i] = "AbeilleSerialRead.php";
                 $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
@@ -661,7 +662,7 @@
                     continue; // Undefined or disabled
 
                 exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-                $cmd = $nohup." ".$php." ".$dirdeamon.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
+                $cmd = $nohup." ".$php." ".$deamonDir.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' 2>&1 &');
             }

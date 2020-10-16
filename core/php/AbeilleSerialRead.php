@@ -8,12 +8,12 @@
      * - and write it to FIFO file.
      *
      * Usage:
-     * /usr/bin/php /var/www/html/plugins/Abeille/core/class/AbeilleSerialRead.php <AbeilleX> <ZigatePort> <DebugLevel>
+     * /usr/bin/php /var/www/html/plugins/Abeille/core/php/AbeilleSerialRead.php <AbeilleX> <ZigatePort> <DebugLevel>
      *
      */
 
-    /* Developpers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
 
@@ -24,74 +24,43 @@
         ini_set('log_errors', 'On');
     }
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/AbeilleLog.php';
 
-    function daemonlog($loglevel='NONE', $message=""){
-        AbeilleTools::deamonlogFilter($loglevel, 'Abeille', 'AbeilleSerialRead', $message);
-    }
-
-    // function _exec($cmd, &$out = null)
-    // {
-        // $desc = array(
-            // 1 => array("pipe", "w"),
-            // 2 => array("pipe", "w"),
-        // );
-
-        // $proc = proc_open($cmd, $desc, $pipes);
-
-        // $ret = stream_get_contents($pipes[1]);
-        // $err = stream_get_contents($pipes[2]);
-
-        // fclose($pipes[1]);
-        // fclose($pipes[2]);
-
-        // $retVal = proc_close($proc);
-
-        // if (func_num_args() == 2) {
-            // $out = array($ret, $err);
-        // }
-
-        // return $retVal;
-    // }
-
-    /* -------------------------------------------------------------------- */
-
-    daemonlog('info', 'Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
+    logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)
+    logMessage('info', 'Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
 
     /* Checking parameters */
     if ($argc < 3) { // Currently expecting <cmdname> <AbeilleX> <ZigatePort>
-        daemonlog('error', 'Argument(s) manquant(s)');
+        logMessage('error', 'Argument(s) manquant(s)');
         exit(1);
     }
     if (substr($argv[1], 0, 7) != "Abeille") {
-        daemonlog('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
+        logMessage('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
         exit(2);
     }
 
     $abeille        = $argv[1]; // Zigate name (ex: 'Abeille1')
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
-    $abeilleNb = (int)substr($arg1, 7); // Zigate number (ex: 1)
+    $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
+    logSetConf("AbeilleSerialRead".$abeilleNb);
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
-        daemonlog('info', 'Main: com file (experiment): '.$serial);
+        logMessage('info', 'Main: com file (experiment): '.$serial);
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
     if (!file_exists($serial)) {
-        daemonlog('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
+        logMessage('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
         exit(3);
     }
 
-    // $clusterTab= AbeilleTools::getJSonConfigFiles('zigateClusters.json'); // Unused
-
-    daemonlog('info', 'Queue: \'queueKeySerieToParser\'');
-    $queueKeySerieToParser    = msg_get_queue(queueKeySerieToParser);
-    // $queueKeySerieToParserSem = sem_get(queueKeySerieToParser); // Unused
+    $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' > /dev/null 2>&1');
     exec("stty -F ".$serial." sane", $out);
@@ -101,7 +70,7 @@
     // Il semblerai que le lien pts soit créé même si la liaison n'est pas établie.
     $f = fopen($serial, "r");
     if ($f == FALSE) {
-        daemonlog('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
+        logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
         exit(4);
     }
     stream_set_blocking($f, TRUE); // Should be blocking read but is it default ?
@@ -128,7 +97,7 @@
         /* Check if port still there.
            Key for connection with Socat */
         if (!file_exists($serial)) {
-            daemonlog('error', 'Le port '.$serial.' a disparu !');
+            logMessage('error', 'Le port '.$serial.' a disparu !');
             break;
         }
 
@@ -144,7 +113,7 @@
             } else {
                 /* "01" start found */
                 if ($trame != "")
-                    daemonlog('error', 'Trame en dehors marqueurs: '.json_encode($trame));
+                    logMessage('error', 'Trame en dehors marqueurs: '.json_encode($trame));
                 $trame = "";
                 $step = "WAITEND";
                 $byteIdx = 1; // Next byte is index 1
@@ -154,13 +123,13 @@
             /* Waiting for "03" end byte */
             if ($byte == "03") {
                 if ($ccrc != $ecrc)
-                    daemonlog('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($trame, 0, 12).'...'.substr($trame, -2, 2));
+                    logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($trame, 0, 12).'...'.substr($trame, -2, 2));
 
                 $trameToSend = array( 'dest'=>$abeille, 'trame'=>$trame );
                 if (msg_send( $queueKeySerieToParser, 1, json_encode($trameToSend), false, false) == FALSE) {
-                    daemonlog('error', 'ERREUR de transmission: '.json_encode($trame));
+                    logMessage('error', 'ERREUR de transmission: '.json_encode($trame));
                 } else {
-                    daemonlog('debug', 'Reçu: '.json_encode($trame));
+                    logMessage('debug', 'Reçu: '.json_encode($trame));
                 }
                 $trame = ""; // Already transmitted or displayed
                 $step = "WAITSTART";
@@ -184,5 +153,5 @@
     }
 
     fclose($f);
-    daemonlog('info', 'Fin du démon AbeilleSerialRead'.$abeilleNb);
+    logMessage('info', 'Fin du démon AbeilleSerialRead'.$abeilleNb);
 ?>

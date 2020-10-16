@@ -4,11 +4,12 @@
 
     function equipementHtml( $resultIcone, $resultRaw, $result) {
 
-        echo "<h1>{{Equipments}}</h1>";
-
-        echo "<table>";
         sort( $resultIcone );
-        foreach ( $resultIcone as $values ) echo '<tr><td>'.$values['name'].'</td><td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td></tr>'."\n";
+        
+        echo "<h1>{{Equipments}}</h1>";
+        echo "<table>";
+        echo "<th>Nom Zigbee</th><th>Nom Generique</th><th>Icone</th>";
+        foreach ( $resultIcone as $values ) echo '<tr><td>'.$values['nameZigbee'].'</td><td>'.$values['nameDescription'].'</td><td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td></tr>'."\n";
         echo "</table>";
 
         //---------------------------------------------------------------------
@@ -77,7 +78,7 @@
         // echo $name."\n";
         $contentJSON = file_get_contents( $file );
         $content = JSON_decode( $contentJSON, true );
-        $resultIcone[] = array( 'name'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
+        $resultIcone[] = array( 'nameZigbee'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
 
         /*
         echo "File:\n";
@@ -89,7 +90,7 @@
         */
 
         foreach ( $content[$name]['Commandes'] as $include ) {
-            $resultRaw[] = array( 'name'=>$content[$name]["nameJeedom"], 'nameZigbee'=>$name, 'fonction'=>$include );
+            $resultRaw[] = array( 'nameZigbee'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'fonction'=>$include );
             $result[] = "<tr><td>".$content[$name]["nameJeedom"]."</td><td>".$name."</td><td>".$include."</td></tr>";
         }
     }

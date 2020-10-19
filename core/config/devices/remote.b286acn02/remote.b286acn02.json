@@ -1,0 +1,25 @@
+{
+  "remote.b286acn02": {
+    "nameJeedom": "Xiaomi Interrupteur Mural Carré Double (Pile)",
+    "timeout": "60",
+    "Commentaire": "https://github.com/KiwiHC16/Abeille/issues/1299",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07ce66zjd25f99",
+      "icone": "XiaomiButtonb286acn02",
+      "battery_type": "1x3V CR2032",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etatSwitchDoubleb286acn01",
+      "include4 2": "Batterie-Volt",
+      "include5": "Batterie-Pourcent",
+      "include6": "Xiaomi-ff01"
+    }
+  }
+}

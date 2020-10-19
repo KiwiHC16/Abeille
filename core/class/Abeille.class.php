@@ -28,13 +28,13 @@
         ini_set('log_errors', 'On');
     }
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    include_once dirname(__FILE__).'/AbeilleMsg.php';
-    include_once dirname(__FILE__).'/../../plugin_info/install.php'; // updateConfigDB()
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/AbeilleMsg.php';
+    include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
 
     class Abeille extends eqLogic {
 
@@ -72,7 +72,7 @@
             log::add('Abeille', 'debug', 'Starting '.$text);
             log::remove('Abeille_'.$text);
             log::add('Abeille_'.$text, 'info', $text.' Start');
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
             if ($_background) $cmd .= ' &';
             if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
             log::add('Abeille_'.$text, 'info', $cmd);
@@ -87,28 +87,28 @@
 
         public static function checkWiringPi($_background = true) {
             $cmdToExec = "checkWiringPi.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
         public static function installWiringPi($_background = true) {
             $cmdToExec = "installWiringPi.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
         public static function installTTY($_background = true) {
             $cmdToExec = "installTTY.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
 
         public static function resetPiZiGate($_background = true) {
             $cmdToExec = "resetPiZigate.sh";
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
             exec($cmd, $out, $status);
             return $status; // Return script status (0=OK)
         }
@@ -357,10 +357,13 @@
             // so I need to create a minimum of traffic, so pull zigate every minutes
 
             for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if ($param['AbeilleSerialPort'.$i]!="none") {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
-                }
+                if ($param['AbeilleActiver'.$i] != 'Y')
+                    continue; // Zigate disabled
+                if ($param['AbeilleSerialPort'.$i]=="none")
+                    continue; // Serial port undefined
+
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time="      .(time()+20), "Version"          );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time()+24), "getNetworkStatus" );
             }
 
             $eqLogics = self::byType('Abeille');
@@ -372,7 +375,7 @@
                 list( $dest, $address)  = explode("/", $eqLogic->getLogicalId());
                 if (strlen($address) == 4) {
                     if ($eqLogic->getConfiguration("poll") == "1") {
-                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$address);
+                        log::add('Abeille', 'debug', 'cron(): GetEtat/GetLevel, addr='.$address);
                         $i=$i+1;
                         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
                         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0008&attributeId=0000" );
@@ -608,7 +611,7 @@
 
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
-            $dirdeamon = dirname(__FILE__)."/../../core/class/";
+            $dirdeamon = __DIR__."/../../core/class/";
 
             /* For debug: display nb of zigates and port */
             log::add('Abeille','debug','deamon_start(): '.$param['zigateNb'].' zigate(s) définie(s)');
@@ -808,7 +811,7 @@
             log::add('Abeille', 'debug', 'Installation des dépendances: IN');
             message::add( "Abeille", "L installation des dependances est en cours", "N oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation" );
             log::remove(__CLASS__.'_update');
-            $result = [ 'script' => dirname(__FILE__).'/../../resources/install_#stype#.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance',
+            $result = [ 'script' => __DIR__.'/../../resources/install_#stype#.sh '.jeedom::getTmpFolder( 'Abeille' ).'/dependance',
                 'log' => log::getPathToLog(__CLASS__.'_update')
             ];
             log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result, ' X '));

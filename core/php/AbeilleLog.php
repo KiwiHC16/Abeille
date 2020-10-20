@@ -8,7 +8,7 @@
 
     $curLogLevelNb = 0; // Abeille log level number: 0=none, 1=error/default, 2=warning, 3=info, 4=debug
     $logFile = '';
-    $logMaxLines = 500; // Default max number of lines
+    $logMaxLines = 2000; // Default max number of lines
     $logNbOfLines = 0; // Current number of lines
 
     /* Get Abeille current log level as a number:

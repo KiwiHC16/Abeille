@@ -8,8 +8,8 @@
      * - then publish them to mosquitto
      */
 
-    /* Developpers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
 
@@ -22,12 +22,13 @@
 
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    // include_once dirname(__FILE__).'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
+
 
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',
@@ -319,11 +320,12 @@
     class debug {
         function deamonlog($loglevel = 'NONE', $message = "")
         {
-            if ($this->debug["cli"] ) {
-                echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
-            } else {
-                AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
-            }
+            logMessage($loglevel, $message);
+            // if ($this->debug["cli"] ) {
+                // echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
+            // } else {
+                // AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
+            // }
         }
     }
 
@@ -449,6 +451,9 @@
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
+
+            /* Configuring log library to use 'logMessage()' */
+            logSetConf("AbeilleParser");
         }
 
         // $SrcAddr = dest / shortaddr
@@ -1686,7 +1691,6 @@
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
-
         }
 
         function decode8048($dest, $payload, $ln, $qos, $dummy)

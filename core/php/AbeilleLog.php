@@ -59,8 +59,13 @@
 
         $jeedomMaxLines = log::getConfig('maxLineLog');
         if ($jeedomMaxLines < $GLOBALS["logMaxLines"]) {
-            $GLOBALS["logMaxLines"] = $jeedomMaxLines;
-            logMessage("warning", "Le log est limité à ".$jeedomMaxLines." lignes par la config Jeedom");
+            /* Taking Jeedom config with a margin to be sure AbeilleLog will be able to
+               move previous log to tmp before Jeedom truncate it */
+            $GLOBALS["logMaxLines"] = $jeedomMaxLines - 2;
+            // WARNING: Don't output UTF8 encoded text thru fwrite(). It kills Jeedom display. 
+            // To be understood.
+            // logMessage("warning", "Le log est limité à ".$jeedomMaxLines." lignes par la config Jeedom");
+            logMessage("warning", "Le log est limite a ".$jeedomMaxLines." lignes par la config Jeedom");
         }
 
         if ($lFile == "")

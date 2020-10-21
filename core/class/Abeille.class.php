@@ -719,11 +719,11 @@
             }
 
             /* Starting 'AbeilleParser' daemon */
-            $deamon2 = "AbeilleParser.php";
-            // $paramdeamon2 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-            $paramdeamon2 = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $log2 = " > ".log::getPathToLog(substr($deamon2, 0, (strrpos($deamon2, "."))));
-            $cmd = $nohup." ".$php." ".$dirdeamon.$deamon2." ".$paramdeamon2.$log2;
+            $daemonDir = __DIR__."/../../core/class/";
+            $daemonFile = "AbeilleParser.php";
+            $daemonParams = log::convertLogLevel(log::getLogLevel('Abeille'));
+            $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
+            $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
             log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
             exec($cmd.' 2>&1 &');
 

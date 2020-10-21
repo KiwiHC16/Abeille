@@ -440,6 +440,9 @@
         function __construct() {
             global $argv;
 
+            /* Configuring log library to use 'logMessage()' */
+            logSetConf("AbeilleParser");
+            
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
 
@@ -452,8 +455,7 @@
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
 
-            /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser");
+
         }
 
         // $SrcAddr = dest / shortaddr
@@ -3099,7 +3101,6 @@
                 }
             }
         }
-
     } // class AbeilleParser
 
     // ***********************************************************************************************
@@ -3111,6 +3112,8 @@
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
+        logMessage("info", "(Re)Démarrage d'AbeilleParser");
+
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
         $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
@@ -3136,7 +3139,6 @@
         }
 
         unset($AbeilleParser);
-
     }
     catch (Exception $e) {
         $AbeilleParser->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));

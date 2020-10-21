@@ -4,10 +4,10 @@
      * Abeille log functionalities
      */
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
 
     $curLogLevelNb = 0; // Abeille log level number: 0=none, 1=error/default, 2=warning, 3=info, 4=debug
-    $logFile = '';
+    $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1')
     $logMaxLines = 2000; // Default max number of lines
     $logNbOfLines = 0; // Current number of lines
 
@@ -53,11 +53,31 @@
     /* Library config for logs */
     function logSetConf($lFile = '')
     {
-        global $curLogLevelNb, $logFile;
-        $curLogLevelNb = logGetPluginLevel();
-        $logFile = $lFile;
-        /* TODO: Need to count number of lines in current file */
-    }
+        $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
+        $GLOBALS["logFile"] = $lFile;
+        $GLOBALS["logNbOfLines"] = 0;
+
+        $jeedomMaxLines = log::getConfig('maxLineLog');
+        if ($jeedomMaxLines < $GLOBALS["logMaxLines"]) {
+            $GLOBALS["logMaxLines"] = $jeedomMaxLines;
+            logMessage("warning", "Le log est limité à ".$jeedomMaxLines." lignes par la config Jeedom");
+        }
+
+        if ($lFile == "")
+            return; // Output of STDOUT
+
+        /* What is number of lines in current log ? */
+        $logPath = __DIR__."/../../../../log/".$lFile;
+        if (file_exists($logPath) == FALSE)
+            return;
+        $cmd = "wc -l ".$logPath." | awk '{print $1}'";
+        exec($cmd, $out, $status);
+        if ($status != 0) {
+            logMessage("warning", "AbeilleLog: Impossible de mesurer la taille du log.");
+            return;
+        }
+        $GLOBALS["logNbOfLines"] = intval($out[0]);
+   }
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.
        '\n' is automatically added at end of line.

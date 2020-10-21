@@ -639,19 +639,15 @@
             if ($NbOfSocat != 0)
                 sleep(5); // At least 1 socat launched. Waiting startup before AbeilleSerialRead
 
-            /* Starting 'AbeilleSerialPort' daemons.
-               - First checks that all ports exist
-               - Then launch each daemon */
-            $deamonDir = __DIR__."/../../core/php/";
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                $deamon[10+$i] = "AbeilleSerialRead.php";
-                $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-                $log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
-            }
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-                    continue; // Undefined or disabled
-
+            /* Starting 'AbeilleSerialPort' daemons if
+               - zigate is enabled and port is defined
+               - Port exists */
+            $daemonDir = __DIR__."/../../core/php/";
+            $daemonFile = "AbeilleSerialRead.php";
+            $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
+            for ($i = 1; $i <= $param['zigateNb']; $i++) {
+                if (($param['AbeilleActiver'.$i] != 'Y') or ($param['AbeilleSerialPort'.$i] == 'none'))
+                    continue; // Disable or undefined
                 if (@!file_exists($param['AbeilleSerialPort'.$i])) {
                     log::add('Abeille', 'warning', 'deamon_start(): Le port '.$param['AbeilleSerialPort'.$i].' n\'existe pas.');
                     message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi." );
@@ -659,13 +655,65 @@
                     $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
                     return false;
                 }
-            }
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-                    continue; // Undefined or disabled
-
+    
+                $daemonParams = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.$logLevel;
+                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, ".")))).$i." 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-                $cmd = $nohup." ".$php." ".$deamonDir.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
+                $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
+                log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
+                exec($cmd.' &');
+            }
+            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+            //     $deamon[10+$i] = "AbeilleSerialRead.php";
+            //     $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
+            //     $log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
+            // }
+            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            //         continue; // Undefined or disabled
+
+            //     if (@!file_exists($param['AbeilleSerialPort'.$i])) {
+            //         log::add('Abeille', 'warning', 'deamon_start(): Le port '.$param['AbeilleSerialPort'.$i].' n\'existe pas.');
+            //         message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi." );
+            //         $return['parametersCheck']="nok";
+            //         $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
+            //         return false;
+            //     }
+            // }
+            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            //         continue; // Undefined or disabled
+
+            //     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
+            //     $cmd = $nohup." ".$php." ".$deamonDir.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
+            //     log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
+            //     exec($cmd.' 2>&1 &');
+            // }
+
+            /* Starting 'AbeilleMonitor' daemon
+               Note: Monitor still under dev so hidden to end users */
+            /* Reread 'debug.php' to avoid PHP cache issues */
+            if (file_exists($dbgFile)) {
+                $fi = file_get_contents($dbgFile);
+                $rows = explode("\n", $fi);
+                foreach($rows as $row => $line) {
+                    if (!strstr($line, '$dbgMonitorAddr'))
+                        continue;
+
+                    $line = trim($line);
+                    $l = explode("=", $line);
+                    $a = trim($l[1]); // $a='"xxxx-xxxxxxxxxxxxxxxx"; // comments'
+                    $end = strpos($a, ";"); // Where is end of line code ?
+                    eval('$dbgMonitorAddr = '.substr($a, 0, $end).';');
+                    break;
+                }
+            }
+            if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != "")) {
+                $daemonFile = "AbeilleMonitor.php";
+                $daemonDir = __DIR__."/../../core/php/";
+                $daemonParams = "";
+                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
+                $cmd = $nohup." ".$php." -r \"require '".$daemonDir.$daemonFile."'; monRun('".$dbgMonitorAddr."');\" ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' 2>&1 &');
             }

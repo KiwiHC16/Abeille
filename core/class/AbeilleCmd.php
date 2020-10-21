@@ -18,12 +18,12 @@
         ini_set('log_errors', 'On');
     }
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    include_once dirname(__FILE__).'/AbeilleMsg.php';
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/AbeilleMsg.php';
 
     class debug extends AbeilleTools {
         function deamonlog($loglevel = 'NONE', $message = "")
@@ -4539,7 +4539,7 @@
         // echo "AbeilleCmd construit\n";
 
         while ( true ) {
-            // echo "loop\n";
+            /* Treat Zigate statuses (0x8000 cmd) coming from parser */
             $AbeilleCmdL2->traiteLesAckRecus();
 
             $AbeilleCmdL2->timeOutSurLesAck();

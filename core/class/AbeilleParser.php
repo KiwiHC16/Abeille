@@ -2482,7 +2482,7 @@
             }
 
             if ($dataType == "39") {
-                if ( ($ClusterId=="000C") && ($AttributId="0055")  ) {
+                if ( ($ClusterId=="000c") && ($AttributId=="0055")  ) {
                     if ($EPoint=="01") {
                         // Remontée puissance (instantannée) relay double switch 1
                         // On va envoyer ca sur la meme variable que le champ ff01

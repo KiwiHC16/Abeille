@@ -69,7 +69,7 @@
         $zgMsg = "";
         while (true) {
             $c = fread($zgF, 01);
-            $c = bin2hex($c);
+            $c = strtoupper(bin2hex($c));
 
             // zg_Log("  Got " . $c . "");
             if ($c == "01") { // Start of frame ?

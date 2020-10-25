@@ -143,8 +143,8 @@
                     continue; // No cmd to retrieve IEEE address. Normal ?
                 }
 
-                if ( strlen(strtoupper($commandIEEE->execCmd())) == 16 ) {
-                    $eqLogic->setConfiguration('IEEE', strtoupper($commandIEEE->execCmd()) ); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
+                if ( strlen($commandIEEE->execCmd()) == 16 ) {
+                    $eqLogic->setConfiguration('IEEE', $commandIEEE->execCmd() ); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
                     $eqLogic->save();
                     $eqLogic->refresh();
                     continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
@@ -173,7 +173,7 @@
                 // var_dump($eqLogic);
                 $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
                 if ( $commandIEEE_X ) {
-                    $addrIEEE_X = strtoupper($commandIEEE_X->execCmd());
+                    $addrIEEE_X = $commandIEEE_X->execCmd();
                     if (strlen($addrIEEE_X) < 2 ) {
                         list( $dest, $NE) = explode('/', $eqLogicX->getLogicalId());
                         if (strlen($NE) == 4) {
@@ -246,10 +246,10 @@
                     // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
 
                     if ( strlen($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16  ) {
-                        $ZiGateIEEE = strtoupper($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none'));
+                        $ZiGateIEEE = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none');
                     }
                     else {
-                        $ZiGateIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                        $ZiGateIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
                         // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
                     }
 
@@ -261,10 +261,10 @@
                     // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
 
                     if ( strlen($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none')) == 16  ) {
-                        $addrIEEE = strtoupper($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none'));
+                        $addrIEEE = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none');
                     }
                     else {
-                        $addrIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd());
+                        $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
                         // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
                     }
 
@@ -1027,12 +1027,12 @@
             foreach ($abeilles as $abeille) {
 
                 if ( strlen($abeille->getConfiguration('IEEE','none')) == 16) {
-                    $IEEE_abeille = strtoupper($abeille->getConfiguration('IEEE','none'));
+                    $IEEE_abeille = $abeille->getConfiguration('IEEE','none');
                 }
                 else {
                     $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
                     if (is_object($cmdIEEE)) {
-                        $IEEE_abeille = strtoupper($cmdIEEE->execCmd());
+                        $IEEE_abeille = $cmdIEEE->execCmd();
                         if (strlen($IEEE_abeille) == 16) {
                             $abeille->setConfiguration('IEEE', $IEEE_abeille ); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
                             $abeille->save();
@@ -1041,7 +1041,7 @@
                     }
                 }
 
-                if ( $IEEE_abeille == strtoupper($IEEE) ) {
+                if ( $IEEE_abeille == $IEEE ) {
 
                     $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
                     if ($cmdShort) {
@@ -1218,7 +1218,7 @@
                 foreach ($abeilles as $key=>$abeille) {
                     $done = 0;
 
-                    if ( strtoupper($abeille->getConfiguration('IEEE','none')) == strtoupper($value) ) {
+                    if ( $abeille->getConfiguration('IEEE','none')) == $value  {
                         if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
                         }
@@ -1234,7 +1234,7 @@
                     if ( !$done ) {
                         $cmds = Cmd::byLogicalId('IEEE-Addr');
                         foreach( $cmds as $cmd ) {
-                            if ( strtoupper($cmd->execCmd()) == strtoupper($value) ) {
+                            if ( $cmd->execCmd() == $value ) {
                                 $abeille = $cmd->getEqLogic();
                                 if ($cmdId == "enable") {
                                     $abeille->setIsEnable(1);
@@ -1276,7 +1276,7 @@
 
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
                 //remove lumi. from name as all xiaomi devices have a lumi. name
-                $trimmedValue = str_replace('lumi.', '', $value);
+                $trimmedValue = str_replace('LUMI.', '', $value);
 
                 //remove all space in names for easier filename handling
                 $trimmedValue = str_replace(' ', '', $trimmedValue);
@@ -1532,7 +1532,7 @@
                 }
 
                 // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
-                if ( strtoupper($value) == strtoupper("ffffffffffffffff") ) {
+                if ( $value == "FFFFFFFFFFFFFFFF") ) {
                     log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
                     return;
                 }
@@ -1544,29 +1544,29 @@
                 }
 
                 $IEEE = $cmdlogic->execCmd();
-                if ( strtoupper($IEEE) == strtoupper($value) ) {
+                if ( $IEEE == $value ) {
                     // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
-                    $elogic->checkAndUpdateCmd($cmdlogic, strtoupper($value)); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
-                    $elogic->setConfiguration('IEEE',strtoupper($value));
+                    $elogic->checkAndUpdateCmd($cmdlogic, $value); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
+                    $elogic->setConfiguration('IEEE',$value);
                     $elogic->save();
                     $elogic->refresh();
                     return;
                 }
 
                 // Je ne sais pas pourquoi des fois on recoit des IEEE null
-                if ( strtoupper($value) == "0000000000000000") {
-                    log::add('Abeille', 'debug', 'IEEE-Addr;'.strtoupper($value).';IEEE recue est null, je ne fais rien.');
+                if ( $value == "0000000000000000") {
+                    log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
                     return;
                 }
 
                 // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
                 if (strlen($IEEE)>2) {
-                    log::add( 'Abeille', 'debug', 'IEEE-Addr;'.strtoupper($value).';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".strtoupper($IEEE)." =>".$value."<=" );
+                    log::add( 'Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." =>".$value."<=" );
                     message::add( "Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )", '' );
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                $elogic->setConfiguration('IEEE',strtoupper($value));
+                $elogic->setConfiguration('IEEE',$value);
                 $elogic->save();
                 $elogic->refresh();
 
@@ -1862,10 +1862,10 @@
                         log::add('Abeille', 'debug', 'Id pour abeille Ruche: '.$rucheId);
 
                         if ( strlen($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16 ) {
-                            $rucheIEEE = strtoupper($ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none'));
+                            $rucheIEEE = $ruche->byLogicalId( $dest.'/Ruche', 'Abeille')->getConfiguration('IEEE', 'none');
                         }
                         else {
-                            $rucheIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                            $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
                         }
                         log::add('Abeille', 'debug', 'IEEE pour  Ruche: '.$rucheIEEE);
 
@@ -1874,7 +1874,7 @@
                         log::add('Abeille', 'debug', 'Id pour current abeille: '.$currentObjectId);
 
                         // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
-                        $commandIEEE = strtoupper($command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
+                        $commandIEEE = $command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
 
                         // print_r( $command->execCmd() );
                         log::add('Abeille', 'debug', 'IEEE pour current abeille: '.$commandIEEE);
@@ -1985,7 +1985,7 @@
                 $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
                 echo 'Id pour abeille Ruche: '.$rucheId."\n";
 
-                $rucheIEEE = strtoupper($commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd());
+                $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
                 echo 'IEEE pour  Ruche: '.$rucheIEEE."\n";
 
                 // $currentCommandId = $this->getId();
@@ -1993,7 +1993,7 @@
                 $currentObjectId = 284;
                 echo 'Id pour current abeille: '.$currentObjectId."\n";
 
-                $commandIEEE = strtoupper($command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd());
+                $commandIEEE = $command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
                 // print_r( $command->execCmd() );
                 echo 'IEEE pour current abeille: '.$commandIEEE."\n";
 
@@ -2021,7 +2021,7 @@
                 // Cherche l objet qui a une IEEE specifique
             case "5":
                 // Info ampoue T7
-                $lookForIEEE = strtoupper("000B57fffe490C2a");
+                $lookForIEEE = "000B57fffE490C2A";
                 $checkShort = "2096";
 
                 if (0) {
@@ -2035,7 +2035,7 @@
                         if ($cmdIEEE) {
                             // var_dump( $cmd );
 
-                            if ( strtoupper($cmdIEEE->execCmd()) == $lookFor) {
+                            if ( $cmdIEEE->execCmd() == $lookFor) {
                                 echo "Found it\n";
                                 $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
                                 if ($cmdShort) {
@@ -2051,7 +2051,7 @@
                                     }
                                 }
                             }
-                            echo strtoupper($cmdIEEE->execCmd())."\n-----\n";
+                            echo $cmdIEEE->execCmd()."\n-----\n";
                         }
                     }
 
@@ -2123,7 +2123,7 @@
             case "12":
                 $cmds = Cmd::byLogicalId('IEEE-Addr');
                 foreach( $cmds as $cmd ) {
-                    if ( strtoupper($cmd->execCmd()) == strtoupper('00158d0001a66ca3') ) {
+                    if ( $cmd->execCmd() == '00158D0001A66CA3' ) {
                         $abeille = $cmd->getEqLogic();
                         $abeille->setIsEnable(0);
                         $abeille->save();

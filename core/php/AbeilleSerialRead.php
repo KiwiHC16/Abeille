@@ -103,7 +103,7 @@
 
         $byte = fread($f, 01);
 
-        $byte = bin2hex($byte);
+        $byte = strtoupper(bin2hex($byte));
 
         if ($step == "WAITSTART") {
             /* Waiting for "01" start byte.

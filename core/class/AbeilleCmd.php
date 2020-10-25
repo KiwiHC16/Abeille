@@ -50,8 +50,8 @@
                             "15" => "ZPS_EVENT_ERROR Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message",
 
                             "80" => "Code inconnu",
-                            "a6" => "Code inconnu",
-                            "c2" => "Code inconnu",
+                            "A6" => "Code inconnu",
+                            "C2" => "Code inconnu",
                             );
 
         public $queueKeyAbeilleToCmd;
@@ -586,7 +586,7 @@
             if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
 
             $profileID = "0104";
-            $clusterID = "fc41";
+            $clusterID = "FC41";
 
             $securityMode = "02"; // ???
             $radius = "30";
@@ -1369,7 +1369,7 @@
                 // <destination endpoint (value ignored for group address): uint8_t>    -> 2
 
                 // $targetExtendedAddress  = "000B57fffe3025ad";
-                $targetExtendedAddress  = strtoupper($Command['address']);
+                $targetExtendedAddress  = $Command['address'];
                 //
                 if ( isset($Command['targetEndpoint']) ) {
                     $targetEndpoint         = $Command['targetEndpoint'];
@@ -1385,7 +1385,7 @@
 
                 // $destinationAddress     = "0000";
                 // $destinationAddress     = "00158D0001B22E24";
-                $destinationAddress     = strtoupper($Command['reportToAddress']);
+                $destinationAddress     = $Command['reportToAddress'];
 
                 $destinationEndpoint    = "01";
                 //  16 + 2 + 4 + 2 + 4 + 2 = 30/2 => 15 => F
@@ -1442,7 +1442,7 @@
                 $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
                 // $targetExtendedAddress = "1d1369feff9ffd90";
-                $targetExtendedAddress = reverse_hex(strtoupper($Command['targetExtendedAddress']));
+                $targetExtendedAddress = reverse_hex($Command['targetExtendedAddress']);
                 // $targetEndpoint = "01";
                 $targetEndpoint = $Command['targetEndpoint'];
                 // $clusterID = "0600";  // 0006 but need to be inverted
@@ -1450,7 +1450,7 @@
                 $destinationAddressMode = "03";
                 // $destinationAddressMode = $Command['destinationAddressMode'];
                 // $destinationAddress = "221b9a01008d1500";
-                $destinationAddress = reverse_hex(strtoupper($Command['destinationAddress']));
+                $destinationAddress = reverse_hex($Command['destinationAddress']);
                 // $destinationEndpoint = "01";
                 $destinationEndpoint = $Command['destinationEndpoint'];
 
@@ -1892,7 +1892,7 @@
                 // $dataLength = "16";
 
                 $FrameControlField = "05";  // 1
-                $manu = "7c11";
+                $manu = "7C11";
                 $SQN = "00";
                 $cmdIkea = "07";
                 $cmdIkeaParams = "00010D00";
@@ -2031,7 +2031,7 @@
                 // -> 24 / 2 = 12 => 0x0C
 
                 $address = $Command['address'];
-                $IeeeAddress = strtoupper($Command['IEEEAddress']);
+                $IeeeAddress = $Command['IEEEAddress'];
                 $requestType = "01";
                 $startIndex = "00";
 
@@ -2454,7 +2454,7 @@
                 $dummy1 = "00";  // Dummy
 
                 $cmdAddGroup = "00";
-                $groupId = "aaaa";
+                $groupId = "AAAA";
                 $length = "00";
 
                 $lenth = "0011";
@@ -2801,7 +2801,7 @@
                 //      1 = Leave, do not remove children
 
                 $address        = $Command['address'];
-                $IEEE           = strtoupper($Command['IEEE']);
+                $IEEE           = $Command['IEEE'];
                 $Rejoin         = "00";
                 $RemoveChildren = "01";
 
@@ -2827,7 +2827,7 @@
 
                 // $address        = $Command['address'];
                 $address        = $Command['IEEE'];
-                $IEEE           = strtoupper($Command['IEEE']);
+                $IEEE           = $Command['IEEE'];
 
                 $data = $address . $IEEE ;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));

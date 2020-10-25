@@ -1509,7 +1509,7 @@
             $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
-            $dataIEEE = strtoupper(substr($payload, 6,16));
+            $dataIEEE = substr($payload, 6,16);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataIEEE);
 
             // Envoie channel
@@ -1614,7 +1614,7 @@
             $SrcAddr = substr($payload,20, 4);
             $ClusterId = "IEEE";
             $AttributId = "Addr";
-            $data = strtoupper(substr($payload, 4,16));
+            $data = substr($payload, 4,16);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 

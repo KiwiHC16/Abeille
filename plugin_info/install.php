@@ -16,7 +16,7 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
+include_once __DIR__.'/../../../core/php/core.inc.php';
 
 function Abeille_install() {
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
@@ -101,7 +101,7 @@ function updateConfigDB() {
        Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI' */
     $dbVersion = config::byKey('DbVersion', 'Abeille', '');
     if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
-        for ($i=1; $i<=10; $i++ ) {
+        for ($i = 1; $i <= 10; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', '') != "Y")
                 continue; // Disabled or undefined
 
@@ -114,6 +114,63 @@ function updateConfigDB() {
                 config::save('AbeilleType'.$i, 'USB', 'Abeille' );
         }
         config::save('DbVersion', '20200510', 'Abeille');
+    }
+
+    /* Version 20201025 changes:
+       All hexa values are now UPPER-CASE */
+    if (intval($dbVersion) < 20201025) {
+        /* Updating addresses in config */
+        for ($i = 1; $i <= 10; $i++) {
+            $ieee = config::byKey('AbeilleIEEE'.$i, 'Abeille', '');
+            if ($ieee == "")
+                continue; // Undefined
+            $ieee_up = strtoupper($ieee);
+            if ($ieee_up !== $ieee)
+                config::save('AbeilleIEEE'.$i, $ieee_up, 'Abeille' );
+        }
+
+        /* Updating addresses for all equipments Jeedom knows */
+        $eqLogics = eqLogic::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            $ieee = $eqLogic->getConfiguration('IEEE', 'undefined');
+log::add('Abeille','debug','LA IEEE='.$ieee);
+            if ($ieee != "undefined") {
+                $ieee_up = strtoupper($ieee);
+                if ($ieee_up !== $ieee) {
+                    $eqLogic->setConfiguration('IEEE', $ieee_up);
+                    $eqLogic->save();
+log::add('Abeille','debug','LA SAVED IEEE='.$ieee_up);
+                }
+            }
+            $topic = $eqLogic->getConfiguration('topic', 'undefined');
+log::add('Abeille','debug','LA topic='.$topic);
+            if ($topic != "undefined") {
+                $topicArray = explode("/", $topic);
+                if (ctype_xdigit($topicArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
+                    $topicAddr_up = strtoupper($topicArray[1]);
+log::add('Abeille','debug','LA topicAddr_up='.$topicAddr_up.', topicArray[1]='.$topicArray[1]);
+                    if ($topicAddr_up !== $topicArray[1]) {
+                        $eqLogic->setConfiguration('topic', $topicArray[0]."/".$topicAddr_up);
+                        $eqLogic->save();
+log::add('Abeille','debug','LA SAVED topic='.$topicArray[0]."/".$topicAddr_up);
+                    }
+                }
+            }
+            $logId = $eqLogic->getlogicalId();
+log::add('Abeille','debug','LA logId='.$logId);
+            if ($logId != "") {
+                $logIdArray = explode("/", $logId);
+                if (ctype_xdigit($logIdArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
+                    $logIdAddr_up = strtoupper($logIdArray[1]);
+                    if ($logIdAddr_up !== $logIdArray[1]) {
+                        $eqLogic->setLogicalId($logIdArray[0]."/".$logIdAddr_up);
+                        $eqLogic->save();
+log::add('Abeille','debug','LA SAVED logId='.$logIdArray[0]."/".$logIdAddr_up);
+                    }
+                }
+            }
+        }
+        // config::save('DbVersion', '20201025', 'Abeille');
     }
 }
 

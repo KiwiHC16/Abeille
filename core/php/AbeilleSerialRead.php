@@ -3,9 +3,9 @@
     /*
      * AbeilleSerialReadX
      *
-     * - Read Zigate messages from selected port (/dev/ttyXX for USB & Pi, or thru socat for WIFI)
-     * - Transcode data from binary to hex.
-     * - and write it to FIFO file.
+     * - Read Zigate messages from selected port (/dev/ttyXX)
+     * - Transcode data from binary to hex (note: ALL HEX are converted UPPERCASE)
+     * - and send message to parser thru queue.
      *
      * Usage:
      * /usr/bin/php /var/www/html/plugins/Abeille/core/php/AbeilleSerialRead.php <AbeilleX> <ZigatePort> <DebugLevel>
@@ -138,7 +138,7 @@
                     $transcode = true; // Next char to be transcoded
                 } else {
                     if ($transcode) {
-                        $byte = sprintf("%02x", (hexdec($byte) ^ 0x10));
+                        $byte = sprintf("%02X", (hexdec($byte) ^ 0x10));
                         $transcode = false;
                     }
                     $trame .= $byte;

@@ -549,8 +549,9 @@
                If standard user, this should be done by installation process (install.php).
                If user based on GIT, this is a work-around */
             $dbVersion = config::byKey('DbVersion', 'Abeille', '');
-            if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
-                log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.'. Mise-à-jour nécéssaire.');
+            $dbVersionLast = 20201025;
+            if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
+                log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Mise-à-jour');
                 updateConfigDB();
             }
 

@@ -13,7 +13,7 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
 
@@ -48,7 +48,7 @@
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$abeilleNb);
+    logSetConf("AbeilleSerialRead".$abeilleNb); // Log to file with line nb check
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
@@ -62,7 +62,7 @@
 
     $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
 
-    exec(system::getCmdSudo().' chmod 777 '.$serial.' > /dev/null 2>&1');
+    exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
     exec("stty -F ".$serial." sane", $out);
     exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
 

@@ -8,8 +8,8 @@
      * - then publish them to mosquitto
      */
 
-    /* Developpers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../debug.php";
     if (file_exists($dbgFile))
         include_once $dbgFile;
 
@@ -22,12 +22,13 @@
 
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php';
-    // include_once dirname(__FILE__).'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
+
 
     $profileTable = array (
                            'c05e'=>'ZLL Application Profile',
@@ -319,11 +320,12 @@
     class debug {
         function deamonlog($loglevel = 'NONE', $message = "")
         {
-            if ($this->debug["cli"] ) {
-                echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
-            } else {
-                AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
-            }
+            logMessage($loglevel, $message);
+            // if ($this->debug["cli"] ) {
+                // echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
+            // } else {
+                // AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
+            // }
         }
     }
 
@@ -438,6 +440,9 @@
         function __construct() {
             global $argv;
 
+            /* Configuring log library to use 'logMessage()' */
+            logSetConf("AbeilleParser");
+            
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
 
@@ -449,6 +454,8 @@
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
+
+
         }
 
         // $SrcAddr = dest / shortaddr
@@ -1686,7 +1693,6 @@
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
-
         }
 
         function decode8048($dest, $payload, $ln, $qos, $dummy)
@@ -2476,7 +2482,7 @@
             }
 
             if ($dataType == "39") {
-                if ( ($ClusterId=="000C") && ($AttributId="0055")  ) {
+                if ( ($ClusterId=="000c") && ($AttributId=="0055")  ) {
                     if ($EPoint=="01") {
                         // Remontée puissance (instantannée) relay double switch 1
                         // On va envoyer ca sur la meme variable que le champ ff01
@@ -3095,7 +3101,6 @@
                 }
             }
         }
-
     } // class AbeilleParser
 
     // ***********************************************************************************************
@@ -3107,6 +3112,8 @@
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
+        logMessage("info", "(Re)Démarrage d'AbeilleParser");
+
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
         $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
@@ -3132,7 +3139,6 @@
         }
 
         unset($AbeilleParser);
-
     }
     catch (Exception $e) {
         $AbeilleParser->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));

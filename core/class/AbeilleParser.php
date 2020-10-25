@@ -110,6 +110,9 @@
                                          '0402'=>'IAS Zone',
                                          '0403'=>'IAS Warning Device',
 
+                                         // From Xiaomi
+                                         '5F01'=>'Xiaomi Temperature',
+                                         
                                          // From OSRAM investigation
                                          '0810'=>'OSRAM Switch',
 

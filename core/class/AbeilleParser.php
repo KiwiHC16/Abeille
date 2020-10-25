@@ -2321,7 +2321,9 @@
                              . ', ClustId='     .substr($payload,  8, 4)
                              . ', AttrId='      .substr($payload, 12, 4)
                              . ', AttrStatus='  .substr($payload, 16, 2)
-                             . ', AttrDataType='.substr($payload, 18, 2) );
+                             . ', AttrDataType='.substr($payload, 18, 2)
+                             . ', sizeOfAttribute='.substr($payload, 20, 4)
+                             );
 
             $dataType = substr($payload, 18, 2);
             // IKEA OnOff state reply data type: 10
@@ -2356,7 +2358,7 @@
                 $data = hexdec(substr($payload, 24, 2));
             }
             if ($dataType == "42") {
-                $data = hex2bin(substr($payload, 24, $sizeOfAttribute*2));
+                $data = hex2bin(substr($payload, 24, hexdec($sizeOfAttribute)*2));
             }
             //deamonlog('Data byte: '.$data);
             if (isset($data)) {

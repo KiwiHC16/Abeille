@@ -1218,7 +1218,7 @@
                 foreach ($abeilles as $key=>$abeille) {
                     $done = 0;
 
-                    if ( $abeille->getConfiguration('IEEE','none')) == $value  {
+                    if ( $abeille->getConfiguration('IEEE','none') == $value )  {
                         if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
                         }
@@ -1532,7 +1532,7 @@
                 }
 
                 // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
-                if ( $value == "FFFFFFFFFFFFFFFF") ) {
+                if ( $value == "FFFFFFFFFFFFFFFF" ) {
                     log::add( 'Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=" );
                     return;
                 }

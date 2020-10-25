@@ -37,6 +37,9 @@
         include_file('desktop', '404', 'php');
         die();
     }
+    
+    // require_once dirname(__FILE__).'/../core/class/Abeille.class.php';
+    require_once '/var/www/html/plugins/Abeille/core/class/Abeille.class.php';
 
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);

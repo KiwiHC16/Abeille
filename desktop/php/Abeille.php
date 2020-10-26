@@ -13,9 +13,10 @@ $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 $parametersAbeille = Abeille::getParameters();
 
     /* Developers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.php";
     if (file_exists($dbgFile)) {
-        include_once $dbgFile;
+        // include_once $dbgFile;
+        include $dbgFile;
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
     }
@@ -545,17 +546,36 @@ Hybride:
     }
 ?>
 
+</form> <!-- Is this the right place to end form ? -->
 
+    <br>
+    <legend><i class="fa fa-cog"></i> {{Zone developpeurs}}</legend>
+    <span style="font-weight:bold">Attention !! Cette partie est réservée aux developpeurs.</span> Ne pas s'y aventurer sauf sur leur demande expresse.<br>
+    Elle ne contient que des fonctionalités de test ou en cours de developpement, pour lesquels il ne sera fourni <span style="font-weight:bold">aucun support</span>.<br>
+    <br>
+    <a id="idDevGrpShowHide" class="btn btn-success">Montrer</a>
+    <div id="idDevGrp" style="display:none">
+        <hr>
+        <br>
+        <label>Fonctionalités cachées:</label>
+        <?php
+            if (file_exists($dbgFile))
+                echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Supprime le fichier debug.php">';
+            else    
+                echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Crée le fichier debug.php avec les valeurs par defaut.">';
+        ?>
+        <br>
 
+        <!-- Following functionalities are visible only if 'tmp/debug.php' file exists (developer mode). -->
+        <?php
+            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+            }
+        ?>
 
-            <br>
-
-            <legend><i class="fa fa-cog"></i> {{Dev en cours}}</legend>
-
-            <input type="submit" name="submitButton" value="Identify">
-
-            <table>
-            </tr><tr>
+        <!-- Misc -->
+        <input type="submit" name="submitButton" value="Identify">
+        <table>
+            <tr>
                 <td>
                     Widget Properties
                 </td>
@@ -584,13 +604,12 @@ Hybride:
                     <a class="btn btn-danger  eqLogicAction pull-right" data-action="exclusion"><i class="fa fa-sign-out"></i>  {{Exclusion}}</a>
                 </td>
             </tr>
-
-
         </table>
 
-        </form>
+    <!-- </form> Where is the start of form ? -->
 
-    </div>
+    </div> <!-- End of developer area -->
+</div> <!-- Where is this div start ? -->
 
 <!-- Affichage des informations d un equipement specifique  -->
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px; display: none;">
@@ -901,9 +920,29 @@ Hybride:
 </div>
 
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
+<?php include_file('desktop', 'AbeilleDev', 'js', 'Abeille'); ?>
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
+    /* Show or hide developer area.
+       If developer mode is enabled, default is to always expand this area. */
+    $('#idDevGrpShowHide').on('click', function () {
+        console.log("idDevGrpShowHide() click");
+        var Label = document.getElementById("idDevGrpShowHide").innerText;
+        if (Label == "Montrer") {
+            document.getElementById("idDevGrpShowHide").innerText = "Cacher";
+            document.getElementById("idDevGrpShowHide").className = "btn btn-danger";
+            $("#idDevGrp").show();
+        } else {
+            document.getElementById("idDevGrpShowHide").innerText = "Montrer";
+            document.getElementById("idDevGrpShowHide").className = "btn btn-success";
+            $("#idDevGrp").hide();
+        }
+    });
+    if ((typeof js_dbgDeveloperMode != 'undefined') && (js_dbgDeveloperMode == 1)) {
+        var Label = document.getElementById("idDevGrpShowHide").innerText;
+        document.querySelector('#idDevGrpShowHide').click(); 
+    }
 
     $("#sel_icon").change(function () {
         var text = 'plugins/Abeille/images/node_' + $("#sel_icon").val() + '.png';

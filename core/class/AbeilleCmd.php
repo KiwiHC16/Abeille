@@ -6,13 +6,11 @@
      *
      */
 
-    /* Developpers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
-    if (file_exists($dbgFile))
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
         include_once $dbgFile;
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');
@@ -1264,6 +1262,7 @@
                     $this->sendCmd($priority,$dest,$cmd,$lenth,$data); //1E = 30 secondes
                 }
             }
+
             //----------------------------------------------------------------------
             // Management Network Update request
             // ZPS_eAplZdpMgmtNwkUpdateRequest - APP_eZdpMgmtNetworkUpdateReq - E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_REQUEST
@@ -1348,7 +1347,6 @@
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
-
             }
 
             //----------------------------------------------------------------------
@@ -1494,7 +1492,6 @@
             // setReport
             // Title => setReport
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
-
             if ( isset($Command['setReport']) )
             {
                 $this->deamonlog('debug',"command setReport");

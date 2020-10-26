@@ -152,6 +152,32 @@ try {
         ajax::success();
     }
 
+   /* Devloper mode: Switch GIT branch */
+    if (init('action') == 'switchBranch') {
+        $branch = init('branch');
+        $updateOnly = init('updateOnly');
+
+        $status = 0;
+        
+        /* Creating temp dir */
+        $tmp = __DIR__.'/../../tmp';
+        $doneFile = $tmp.'/switchBranch.done';
+        if (file_exists($tmp) == FALSE)
+            mkdir($tmp);
+        else if (file_exists($doneFile))
+            unlink($doneFile); // Removing 'switchBranch.done' file
+             
+        /* Creating a copy of 'switchBranch.sh' in 'tmp' */    
+        $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd);
+
+        $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
+        $cmd = 'nohup '.__DIR__.'/../../tmp/'.$cmdToExec.' >> '.log::getPathToLog('AbeilleConfig').' 2>&1 &';
+        exec($cmd);
+
+        ajax::success(json_encode(array('status' => $status)));
+    }
+
     /* Developer featuer: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
        Zigate is untouched.
        Returns: status=0/-1, errors=<error message(s)> */

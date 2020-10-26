@@ -9,12 +9,10 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../debug.php";
-    if (file_exists($dbgFile))
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
         include_once $dbgFile;
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');

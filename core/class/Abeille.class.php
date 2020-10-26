@@ -17,12 +17,10 @@
      */
 
     /* Developers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
-    if (file_exists($dbgFile))
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
         include_once $dbgFile;
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');
@@ -565,6 +563,14 @@
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
 
+            /* Developers debug features.
+               Since deamon_start() is static, could not find a way to reuse global variables.
+               WARNING: Since php file is cached, it sometimes requires delay or restart to 
+                 get last content of 'debug.php' */
+            $dbgFile = __DIR__."/../../tmp/debug.php";
+            if (file_exists($dbgFile))
+                include $dbgFile;
+    
             /* Some checks before starting daemons
                - Are dependancies ok ?
                - Is cron running ? */
@@ -690,34 +696,6 @@
             //     log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
             //     exec($cmd.' 2>&1 &');
             // }
-
-            /* Starting 'AbeilleMonitor' daemon
-               Note: Monitor still under dev so hidden to end users */
-            /* Reread 'debug.php' to avoid PHP cache issues */
-            if (file_exists($dbgFile)) {
-                $fi = file_get_contents($dbgFile);
-                $rows = explode("\n", $fi);
-                foreach($rows as $row => $line) {
-                    if (!strstr($line, '$dbgMonitorAddr'))
-                        continue;
-
-                    $line = trim($line);
-                    $l = explode("=", $line);
-                    $a = trim($l[1]); // $a='"xxxx-xxxxxxxxxxxxxxxx"; // comments'
-                    $end = strpos($a, ";"); // Where is end of line code ?
-                    eval('$dbgMonitorAddr = '.substr($a, 0, $end).';');
-                    break;
-                }
-            }
-            if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != "")) {
-                $daemonFile = "AbeilleMonitor.php";
-                $daemonDir = __DIR__."/../../core/php/";
-                $daemonParams = "";
-                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
-                $cmd = $nohup." ".$php." -r \"require '".$daemonDir.$daemonFile."'; monRun('".$dbgMonitorAddr."');\" ".$daemonParams.$daemonLog;
-                log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-                exec($cmd.' 2>&1 &');
-            }
 
             /* Starting 'AbeilleParser' daemon */
             $daemonDir = __DIR__."/../../core/class/";

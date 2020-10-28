@@ -1,20 +1,20 @@
 {
   "0702-01-0000": {
     "isVisible": 1,
-    "name": "Current Summation Delievered",
+    "name": "Conso",
     "order": 4,
     "isHistorized": "1",
     "Type": "info",
     "subType": "numeric",
     "invertBinary": "0",
-    "template": "",
-    "unite": "",
+    "template": "badge",
+    "unite": "Wh",
     "configuration": {
       "uniqId": "5c07c76gggg621e11",
       "minValue": "",
       "maxValue": "",
       "historizeRound": "0",
-      "calculValueOffset": "",
+      "calculValueOffset": "#value#*10",
       "visibilityCategory": "All"
     }
   }

@@ -196,6 +196,15 @@
 
         }
 
+        public static function pollingCmd($period) {
+            $cmds = AbeilleCmd::searchConfiguration( 'Polling', 'Abeille' );
+            foreach ( $cmds as $key => $cmd ) {
+                echo $cmd->getName()." - ".$cmd->getConfiguration('Polling')."\n";
+                if ( $cmd->getConfiguration('Polling') == $period ) {
+                    $cmd->execute();
+                }
+            }
+        }
         public static function cronDaily() {
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
             /**
@@ -207,6 +216,9 @@
             $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
             log::add('Abeille', 'debug', $cmd);
             exec($cmd);
+            
+            // Poll Cmd
+            self::pollingCmd("cronDaily");
         }
 
         public static function cronHourly() {
@@ -276,6 +288,9 @@
             if ( ($i*33) > (3600) ) {
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum." );
             }
+            
+            // Poll Cmd
+            self::pollingCmd("cronHourly");
 
             log::add( 'Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------' );
         }
@@ -340,6 +355,9 @@
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum" );
             }
 
+            // Poll Cmd
+            self::pollingCmd("cron15");
+            
             log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
@@ -384,6 +402,9 @@
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 minute.","Contacter KiwiHC15 sur le Forum" );
             }
 
+            // Poll Cmd
+            self::pollingCmd("cron");
+            
             /**
              * Refresh health information
              */
@@ -438,7 +459,7 @@
         }
 
         public static function deamon_info() {
-            $debug_deamon_info = 1;
+            $debug_deamon_info = 0;
             // log::add('Abeille', 'debug', 'deamon_info(): Démarrage'); // Useless
 
             // On suppose que tout est bon et on cherche les problemes.
@@ -1595,6 +1616,19 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                
+                // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
+                $cmds = AbeilleCmd::searchConfigurationEqLogic($elogic->getId(),'PollingOnCmdChange','action');
+ 
+                foreach ( $cmds as $key => $cmd ) {
+                    if ( $cmd->getConfiguration('PollingOnCmdChange') == $cmdId ) {
+                        log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName() );
+                        // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
+                        // Je vais attendre qq secondes aveant de faire la demande
+                        // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
+                        }
+                }
 
                 return;
             }
@@ -2210,6 +2244,14 @@
             // Test message management
                 $addr = "df3b";
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/Mgmt_Rtg_req", "" );
+                break;
+            case "28":
+                $cmds = AbeilleCmd::searchConfiguration( 'Polling', 'Abeille' );
+                var_dump($cmds);
+                break;
+            case "29":
+                $cmds = AbeilleCmd::searchConfigurationEqLogic(  579,   'PollingOnCmdChange', 'action');
+                var_dump( $cmds );
                 break;
 
         } // switch

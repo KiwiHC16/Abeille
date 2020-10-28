@@ -1,0 +1,24 @@
+{
+  "getPlugPower": {
+    "isVisible": 0,
+    "name": "getPlugPower",
+    "order": 12,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "Comment": "Declenchement sur changement etat et polling toutes les 15 minutes pour realigner.",
+    "configuration": {
+      "uniqId": "5c07c76623cd1",
+      "topic": "ReadAttributeRequest",
+      "request": "EP=#EP#&clusterId=0B04&attributeId=050B&AttributeType=29",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "10",
+      "Polling": "cron15",
+      "PollingOnCmdChange": "0006-01-0000",
+      "PollingOnCmdChangeDelay": "5",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

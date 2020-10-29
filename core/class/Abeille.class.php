@@ -627,10 +627,11 @@
             }
             if ($i <= $param['zigateNb']) {
                 exec("gpio -v", $out, $ret);
-                if ($ret != 0)
+                if ($ret != 0) {
                     log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
-                else {
-                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée. Configuration des GPIOs');
+                    log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
+                } else {
+                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée => configuration des GPIOs');
                     exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 }
             }
@@ -649,19 +650,22 @@
 
             log::add('Abeille', 'info', 'Démarrage des démons.');
 
-            /* Starting socat daemons */
+            /* Starting 'socat' daemons */
             $NbOfSocat = 0; // Number of socat daemons
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            $daemonDir = __DIR__."/../php/";
+            for ($i = 1; $i <= $param['zigateNb']; $i++) {
+                $serialPort = $param['AbeilleSerialPort'.$i];
+                if (($serialPort == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                     continue; // Undefined or disabled
-                if ($param['AbeilleSerialPort'.$i] != "/dev/zigate".$i)
+log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
+                if ($serialPort != "/dev/zigate".$i)
                     continue; // Not a WIFI Zigate
 
-                $paramdeamon21 = $param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
-                $log21 = " > ".log::getPathToLog('AbeilleSocat').$i;
-                $cmd = $nohup." ".$php." ".$dirdeamon."AbeilleSocat.php"." ".$paramdeamon21.$log21;
+                $daemonParams = $serialPort.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
+                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.' 2>&1';
+                $cmd = $nohup." ".$php." ".$daemonDir."AbeilleSocat.php ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-                exec($cmd.' 2>&1 &');
+                exec($cmd.' &');
                 $NbOfSocat++;
             }
             if ($NbOfSocat != 0)
@@ -670,7 +674,7 @@
             /* Starting 'AbeilleSerialPort' daemons if
                - zigate is enabled and port is defined
                - Port exists */
-            $daemonDir = __DIR__."/../../core/php/";
+            $daemonDir = __DIR__."/../php/";
             $daemonFile = "AbeilleSerialRead.php";
             $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
             for ($i = 1; $i <= $param['zigateNb']; $i++) {
@@ -691,32 +695,6 @@
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' &');
             }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     $deamon[10+$i] = "AbeilleSerialRead.php";
-            //     $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-            //     $log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
-            // }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-            //         continue; // Undefined or disabled
-
-            //     if (@!file_exists($param['AbeilleSerialPort'.$i])) {
-            //         log::add('Abeille', 'warning', 'deamon_start(): Le port '.$param['AbeilleSerialPort'.$i].' n\'existe pas.');
-            //         message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi." );
-            //         $return['parametersCheck']="nok";
-            //         $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
-            //         return false;
-            //     }
-            // }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-            //         continue; // Undefined or disabled
-
-            //     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-            //     $cmd = $nohup." ".$php." ".$deamonDir.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
-            //     log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            //     exec($cmd.' 2>&1 &');
-            // }
 
             /* Starting 'AbeilleParser' daemon */
             $daemonDir = __DIR__."/../../core/class/";

@@ -3046,8 +3046,15 @@
             }
         }
 
-        function configureNE( $short )
-        {
+        public static function execAtCreationCmdForOneNE($address) {
+            $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId( $address,'Abeille')->getId(), 'execAtCreation', 'action' );
+            foreach ( $cmds as $key => $cmd ) {
+                $this->deamonlog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
+            }
+        }
+        
+        function configureNE( $short ) {
             $this->deamonlog('debug', 'Type=fct; ===> Configure NE Start');
 
             $commandeConfiguration = array( 'BindShortToZigateBatterie',            'setReportBatterie', 'spiritSetReportBatterie',
@@ -3066,6 +3073,8 @@
             $abeille = Abeille::byLogicalId( $short,'Abeille');
 
             if ( $abeille) {
+                
+                // Initial mode of configuration
                 $arr = array(1, 2);
                 foreach ($arr as &$value) {
                     foreach ( $commandeConfiguration as $config ) {
@@ -3080,8 +3089,11 @@
                         }
                     }
                 }
+                
+                // New mode of configuration based on definition in the template
+                self::execAtCreationCmdForOneNE($short);
             }
-
+            
             $this->deamonlog('debug', 'Type=fct; ===> Configure NE End');
         }
 

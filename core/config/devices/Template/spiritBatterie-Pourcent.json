@@ -16,7 +16,7 @@
       "maxValue": "100",
       "historizeRound": "1",
       "visibilityCategory": "Network",
-      "calculValueOffset": "#value#/255*100"
+      "calculValueOffset": "#value#/2"
     }
   }
 }

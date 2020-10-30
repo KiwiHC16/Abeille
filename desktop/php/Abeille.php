@@ -21,6 +21,8 @@ $parametersAbeille = Abeille::getParameters();
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
     }
 ?>
+<!-- For all modals on 'Abeilles' page. -->
+<div id="abeilleModal" style="display:none;"></div>
 
 <!-- Barre verticale de recherche à gauche de la page  -->
 <div class="row row-overflow">
@@ -128,6 +130,9 @@ $outils = array(
 
             /* Remove equipments from Jeedom only */
             echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-primary btn-xs" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
+
+            /* Set timeout on selected equipements */
+            echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
 
         echo '<div class="eqLogicThumbnailContainer">';

@@ -25,10 +25,7 @@
     if (file_exists($dbgFile)) {
         include_once $dbgFile;
         $dbgDeveloperMode = TRUE;
-    }
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');
@@ -134,7 +131,7 @@
             file_put_contents($dbgFile, "<?php\n");
             file_put_contents($dbgFile, "   // Auto-generated developers config file.\n", FILE_APPEND);
             file_put_contents($dbgFile, "   // ".date('Y-m-d H:i:s')." \n\n", FILE_APPEND);
-            file_put_contents($dbgFile, "   \$dbgAbeillePHP = TRUE;\n", FILE_APPEND);
+            // file_put_contents($dbgFile, "   \$dbgAbeillePHP = TRUE;\n", FILE_APPEND);
             file_put_contents($dbgFile, "   \$dbgMonitorAddr = \"\";\n", FILE_APPEND);
             file_put_contents($dbgFile, "?>\n", FILE_APPEND);
 
@@ -239,6 +236,29 @@
             rename($dbgFileTmp, $dbgFile); // Move new file from tmp
 
             sleep(2); // A small delay before returning to allow change detection
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        /* Developer feature: Change timeout for equipment(s) listed by id in 'eqList'.
+           Returns: status=0/-1, error=<error message(s)> */
+        if (init('action') == 'setEqTimeout') {
+            $eqList = init('eqList');
+            $timeout = init('timeout');
+
+            $status = 0;
+            $error = ""; // Error messages
+            foreach ($eqList as $eqId) {
+                /* Collecting required infos */
+                $eqLogic = eqLogic::byId($eqId);
+                if (!is_object($eqLogic)) {
+                    throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+                }
+
+                /* Updating timeout */
+                $eqLogic->setTimeout($timeout);
+                $eqLogic->save();
+            }
+
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 

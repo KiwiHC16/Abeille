@@ -21,16 +21,15 @@
 
 /* Check which equipements are selected for given zigate number (zgNb).
    Returns: object {zgNb:<zigateNb>, nb:<nbOfSelectedEq>, ids:[<arrayOfEqIds>]} */
-function checkSelected(zgNb) {
+function getSelectedEqs(zgNb) {
     var selected = new Object;
     selected["zgNb"] = zgNb; // Zigate number
     selected["nb"] = 0; // Number of selected equipments
-    selected["ids"] = []; // Array of eq IDs
+    selected["ids"] = new Array; // Array of eq IDs
     eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
     for (var i = 0; i < eqZigate.length; i++) {
         var eqId = eqZigate[i].id;
         var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
-        // console.log("eqId="+eqId+", checked="+checked);
         if (checked == false)
             continue;
 
@@ -41,25 +40,34 @@ function checkSelected(zgNb) {
     return selected;
 }
 
-/* Called when 'setTimeout' button is pressed */
+/* Called when 'setTimeout' button is pressed
+   Allows to modify timeout of selected equipements. */
 function setBeesTimeout(zgNb) {
     console.log("setBeesTimeout(zgNb="+zgNb+")");
     
-    var sel = checkSelected(zgNb);
+    var sel = getSelectedEqs(zgNb);
     console.log(sel);
     if (sel["nb"] == 0) {
         alert("Aucun équipement sélectionné !")
         return;
     }
-    $('#md_modal').dialog({title: "{{Modification du timeout}}"});
-    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille').dialog('open');
+    $("#abeilleModal").dialog({
+        title: "{{Modification du timeout}}",
+        autoOpen: false,  
+        resizable: false,
+        modal: true,
+        height: 300,
+        width: 400,
+        closeText: "",
+    });
+    $('#abeilleModal').load('index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgNb='+zgNb).dialog('open');
 }
 
 /* Called when 'monitor' button is pressed */
 function monitorIt(zgNb, zgPort) {
     console.log("monitorIt(zgNb="+zgNb+", zpPort="+zgPort+")");
     
-    var sel = checkSelected(zgNb);
+    var sel = getSelectedEqs(zgNb);
     console.log(sel);
     if (sel["nb"] == 0) {
         alert("Aucun équipement sélectionné !")
@@ -132,33 +140,33 @@ function xableDevMode(enable) {
 
 /* Called when 'developer mode' must be enabled or disabled.
    This means creating or deleting "tmp/debug.php" file. */
-function xableAbeillePHP(enable) {
-    console.log("xableAbeillePHP(enable=" + enable + ")");
-    var devConfig = new Object;
-    if (enable == 1)
-        devConfig["dbgAbeillePHP"] = true;
-    else
-        devConfig["dbgAbeillePHP"] = false;
-    $.ajax({
-        type: 'POST',
-        url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
-        data: {
-            action: 'updateDevConfig',
-            devConfig: devConfig
-        },
-        dataType: 'json',
-        global: false,
-        error: function (request, status, error) {
-            bootbox.alert("ERREUR 'updateDevConfig' !<br>status="+status+"<br>error="+error);
-        },
-        success: function (json_res) {
-            console.log(json_res);
-            res = JSON.parse(json_res.result);
-            if (res.status != 0) {
-                var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
-                alert(msg);
-            } else
-                window.location.reload(true);
-        }
-    });
-}
+// function xableAbeillePHP(enable) {
+//     console.log("xableAbeillePHP(enable=" + enable + ")");
+//     var devConfig = new Object;
+//     if (enable == 1)
+//         devConfig["dbgAbeillePHP"] = true;
+//     else
+//         devConfig["dbgAbeillePHP"] = false;
+//     $.ajax({
+//         type: 'POST',
+//         url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+//         data: {
+//             action: 'updateDevConfig',
+//             devConfig: devConfig
+//         },
+//         dataType: 'json',
+//         global: false,
+//         error: function (request, status, error) {
+//             bootbox.alert("ERREUR 'updateDevConfig' !<br>status="+status+"<br>error="+error);
+//         },
+//         success: function (json_res) {
+//             console.log(json_res);
+//             res = JSON.parse(json_res.result);
+//             if (res.status != 0) {
+//                 var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+//                 alert(msg);
+//             } else
+//                 window.location.reload(true);
+//         }
+//     });
+// }

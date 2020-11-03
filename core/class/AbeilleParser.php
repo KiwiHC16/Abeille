@@ -82,7 +82,7 @@
                                          '0105'=>'Color Dimmer Switch',
                                          '0106'=>'Light Sensor',
                                          '0107'=>'Occupency Sensor',
-                                         
+
                                          // Legrand
                                          '010A'=>'Legrand xxxx',
 
@@ -110,7 +110,7 @@
 
                                          // From Xiaomi
                                          '5F01'=>'Xiaomi Temperature',
-                                         
+
                                          // From OSRAM investigation
                                          '0810'=>'OSRAM Switch',
 
@@ -443,7 +443,7 @@
 
             /* Configuring log library to use 'logMessage()' */
             logSetConf("AbeilleParser");
-            
+
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
 
@@ -893,38 +893,48 @@
         /* $this->decode functions
          /*--------------------------------------------------------------------------------------------------*/
 
-        // Device announce
-        function decode004D($dest, $payload, $ln, $qos, $dummy)
+        /* 004D/Device announce */
+        function decode004d($dest, $payload, $ln, $qos, $dummy)
         {
-            // < short address: uint16_t>
-            // < IEEE address: uint64_t>
-            // < MAC capability: uint8_t> MAC capability
-            // Bit 0 - Alternate PAN Coordinator    => 1 no
-            // Bit 1 - Device Type                  => 2 yes
-            // Bit 2 - Power source                 => 4 yes
-            // Bit 3 - Receiver On when Idle        => 8 yes
-            // Bit 4 - Reserved                     => 16 no
-            // Bit 5 - Reserved                     => 32 no
-            // Bit 6 - Security capability          => 64 no
-            // Bit 7 - Allocate Address             => 128 no
-            // Pour le Rejoin, à la fin de la trame, j'ai rajouté une information pour savoir si c'est un JOIN classique ou REJOIN c'est un uint8 - JOIN =0 REJOIN= 2 (mail du 22/11/2019 17:11)
+            /* < short address: uint16_t>
+               < IEEE address: uint64_t>
+               < MAC capability: uint8_t> MAC capability
+                    Bit 0 - Alternate PAN Coordinator    => 1 no
+                    Bit 1 - Device Type                  => 2 yes
+                    Bit 2 - Power source                 => 4 yes
+                    Bit 3 - Receiver On when Idle        => 8 yes
+                    Bit 4 - Reserved                     => 16 no
+                    Bit 5 - Reserved                     => 32 no
+                    Bit 6 - Security capability          => 64 no
+                    Bit 7 - Allocate Address             => 128 no
+               <Rejoin information : uint8_t> (from v3.1b) => OPTIONAL !!
+                    If len(payload) == 22 ==> No Join Flag
+                    If len(payload) == 24 ==> Join Flag
+                    When receiving a Device Annoucement the Rejoin Flag can give us some information
+                    0x00 The device was not on the network.
+                         Most-likely it has been reset, and all Unbind, Bind , Report, must be redone
+                    0x01 The device was on the Network, but change its route
+                         the device was not reset
+                    0x02, 0x03 The device was on the network and coming back.
+                          Here we can assumed the device was not reset. */
 
-            $SrcAddr    = substr($payload,  0,  4);
-            $IEEE       = substr($payload,  4, 16);
-            $capability = substr($payload, 20,  2);
-            $Rejoin     = substr($payload, 22,  2);
+            $Addr       = substr($payload, 0, 4);
+            $IEEE       = strtoupper(substr($payload, 4, 16));
+            $MACCapa    = substr($payload, 20, 2);
+            if (strlen($payload) > 22)
+                $Rejoin = substr($payload, 22, 2);
+            else
+                $Rejoin = "";
 
-            $msgDecoded = '004D/Device announce'
-                             .', ShortAddr='.$SrcAddr
-                             .', ExtAddr='.$IEEE
-                             .', MACCapa='.$capability
-                             .', Rejoin='.$Rejoin;
+            $msgDecoded = '004d/Device announce'.', Addr='.$Addr.', ExtAddr='.$IEEE.', MACCapa='.$MACCapa;
+            if ($Rejoin != "")
+                $msgDecoded .= ', Rejoin='.$Rejoin;
             $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
-            $this->mqqtPublish($dest."/".$SrcAddr, "IEEE", "Addr", $IEEE);
+            $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
 
-            $this->mqqtPublishFct( $dest."/"."Ruche", "enable", $IEEE);
+            $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE);
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
@@ -932,15 +942,15 @@
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             if ($Rejoin == "02") return;
 
-            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$SrcAddr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$SrcAddr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$SrcAddr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$SrcAddr );
+            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$Addr );
 
-            $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$SrcAddr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -1018,7 +1028,7 @@
             else {
                 $this->deamonlog("debug","(fct decode8000) could not add message to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
             }
-            
+
             if ($PacketType == "0002") {
                 if ( $status == "00" ) {
                     message::add("Abeille","Le mode de fonctionnement de la zigate a bien été modifié.","" );
@@ -1027,12 +1037,12 @@
                     message::add("Abeille","Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
                 }
             }
-            
+
         }
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            
+
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -1059,12 +1069,12 @@
             $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
-            
+
             // $this->deamonlog("debug",$dest.", Type=8002: payload:".$payload);
             // $this->deamonlog("debug",$dest.", Type=8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
-            
+
             // Partie a revoir completement: Pourquoi avais je ecris ca ?
-                        
+
             if (($profile == "0000") && ($cluster == "8032")) {
                 $SQN                    = substr($payload,26, 2);
                 $status                 = substr($payload,28, 2);
@@ -1079,13 +1089,13 @@
                                  . ', index='.$index
                                  . ', tableCount='.$tableCount
                                  );
-                
+
                 $routingTable = array();
 
                 for ($i = $index; $i < $index+$tableSize; $i++) {
 
                     $addressDest=substr($payload,36+($i*10), 4);
-                    
+
                     $statusRouting = substr($payload,36+($i*10)+4,2);
                     $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
                     if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
@@ -1109,7 +1119,7 @@
                 else {
                     $this->deamonlog('debug', '    abeille not found !!!');
                 }
-                
+
                 return;
             }
 
@@ -1145,7 +1155,7 @@
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
                 return;
             }
-            
+
             // Remontée puissance prise TS0121 Issue: #1288
             if ( ($profile == "0104") && ($cluster == "0702") ) {
                 $frameCtrlField         = substr($payload,26, 2);
@@ -1176,7 +1186,7 @@
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
                 return;
             }
-            
+
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
             if ( ($profile == "0104") && ($cluster == "0006") ) {
 
@@ -1234,7 +1244,7 @@
 
             $len = (strlen($payload)-2-4-4-2)/4;
             for ($i = 0; $i < $len; $i++) {
-                $this->deamonlog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$SrcEndpoint.', ProfileID='.$profileID.', ClustID='.$clusterID.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
+                $this->deamonlog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$SrcEndpoint.', ProfileID='.$profileID.', ClustId='.$clusterID.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
             }
         }
 
@@ -1252,7 +1262,7 @@
 
             $len = (strlen($payload)-2-4-4-2)/2;
             for ($i = 0; $i < $len; $i++) {
-                $this->deamonlog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$SrcEndpoint.', ProfID='.$profileID.', ClustID='.$clusterID.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
+                $this->deamonlog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$SrcEndpoint.', ProfID='.$profileID.', ClustId='.$clusterID.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
             }
         }
 
@@ -1301,7 +1311,7 @@
             $AttributId = "Addr";
             $data = $ExtendedAddress;
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.' Type=8009; IEEE Address: '.$ExtendedAddress); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.', Type=8009; IEEE Address: '.$ExtendedAddress); }
 
             // Envoie PAN ID
             $SrcAddr = "Ruche";
@@ -1317,7 +1327,7 @@
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.' Type=8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.', Type=8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
 
             // Envoie Channel
             $SrcAddr = "Ruche";
@@ -1325,9 +1335,9 @@
             $AttributId = "Channel";
             $data = $Channel;
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.' Type=8009; Channel: '.$Channel); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.', Type=8009; Channel: '.$Channel); }
 
-            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.' Type=8009; ; Level=0x'.substr($payload, 0, 2)); }
+            // if ($this->debug['8009']) { $this->deamonlog('debug', $dest.', Type=8009; ; Level=0x'.substr($payload, 0, 2)); }
         }
 
         /* Version */
@@ -1371,7 +1381,7 @@
             $DestEndPoint = substr($payload, 6, 2);
             $ClustID = substr($payload, 8, 4);
 
-            $this->deamonlog('debug', $dest.', Type=8011/APS data ACK: Status='.$Status.', DestAddr='.$DestAddr.', DestEndPoint='.$DestEndPoint.', ClustID='.$ClustID);
+            $this->deamonlog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID);
         }
 
         function decode8014($dest, $payload, $ln, $qos, $dummy)
@@ -1701,9 +1711,8 @@
             $IEEE = substr($payload, 0, 16);
             $RejoinStatus = substr($payload, 16, 2);
 
-            $this->deamonlog('debug', $dest.', Type=8048/Leave indication'
-                             . ', ExtAddr='.$IEEE
-                             . ', RejoinStatus='.$RejoinStatus);
+            $msgDecoded = '8048/Leave indication, ExtAddr='.$IEEE.', RejoinStatus='.$RejoinStatus;
+            $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             /*
             $cmds = Cmd::byLogicalId('IEEE-Addr');
@@ -2305,80 +2314,8 @@
         #Reponse Attributs
         #8100-8140
 
-        function decode8100($dest, $payload, $ln, $qos, $dummy)
-        {
-            // "Type: 0x8100 (Read Attrib Response)"
-            // 8100 000D0C0Cb32801000600000010000101
-            // 1b 83e4 01 0000 0005 00 42 0006 54 53 30 31 32 31 99
-            //
-            // $this->deamonlog('debug', $dest.', Type=8100/Read attribut response: '.$payload);
-            $this->deamonlog('debug', $dest.', Type=8100/Read attribut response'
-                             . ', SQN='         .substr($payload,  0, 2)
-                             . ', SrcAddr='     .substr($payload,  2, 4)
-                             . ', EP='          .substr($payload,  6, 2)
-                             . ', ClustId='     .substr($payload,  8, 4)
-                             . ', AttrId='      .substr($payload, 12, 4)
-                             . ', AttrStatus='  .substr($payload, 16, 2)
-                             . ', AttrDataType='.substr($payload, 18, 2)
-                             . ', sizeOfAttribute='.substr($payload, 20, 4)
-                             );
-
-            $dataType = substr($payload, 18, 2);
-            // IKEA OnOff state reply data type: 10
-            // IKEA Manufecturer name data type: 42
-
-            $sizeOfAttribute = substr($payload, 20, 4);
-            // $this->deamonlog('debug', '  Size of Attribute='.$sizeOfAttribute);
-
-            // short addr / Cluster ID / EP / Attr ID -> data
-            $SrcAddr    = substr($payload, 2, 4);
-            $ClusterId  = substr($payload, 8, 4);
-            $EP         = substr($payload, 6, 2);
-            $AttributId = substr($payload, 12, 4);
-
-            // valeur hexadécimale  - type -> function
-            // 0x00 Null
-            // 0x10 boolean                 -> hexdec
-            // 0x18 8-bit bitmap
-            // 0x20 uint8   unsigned char   -> hexdec
-            // 0x21 uint16
-            // 0x22 uint32
-            // 0x25 uint48
-            // 0x28 int8
-            // 0x29 int16
-            // 0x2a int32
-            // 0x30 Enumeration : 8bit
-            // 0x42 string                  -> hex2bin
-            if ($dataType == "10") {
-                $data = hexdec(substr($payload, 24, 2));
-            }
-            if ($dataType == "20") {
-                $data = hexdec(substr($payload, 24, 2));
-            }
-            if ($dataType == "42") {
-                $data = hex2bin(substr($payload, 24, hexdec($sizeOfAttribute)*2));
-            }
-            //deamonlog('Data byte: '.$data);
-            if (isset($data)) {
-                $this->deamonlog('debug', '  Data byte='.$data);
-                $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
-            }
-            
-        }
-
-        function decode8101($dest, $payload, $ln, $qos, $dummy)
-        {
-            $this->deamonlog('debug', $dest.', Type=8101/Default Response (ignoré)'
-                             . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
-                             . ', SQN='.substr($payload, 0, 2)
-                             . ', EndPoint='.substr($payload, 2, 2)
-                             . ', '. $this->displayClusterId(substr($payload, 4, 4))
-                             . ', Command='.substr($payload, 8, 2)
-                             . ', Status='.substr($payload, 10, 2)  );
-        }
-
-        /* Attribute report */
-        function decode8102($dest, $payload, $ln, $qos, $quality)
+        /* Common function for 8100 & 8102 messages */
+        function decode8100_8102($type, $dest, $payload, $ln, $qos, $quality)
         {
             //<Sequence number: uint8_t>
             //<Src address : uint16_t>
@@ -2401,34 +2338,26 @@
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
+            if ($type == "8100")
+                $msg = '8100/Read individual attribute response';
+            else
+                $msg = '8102/Attribut report';
+            $msg .= ', SQN='             .$SQN
+                    .', Addr='         .$SrcAddr
+                    .', EP='        .$EPoint
+                    .', ClustId='         .$ClusterId
+                    .', AttrId='          .$AttributId
+                    .', AttrStatus='      .$AttributStatus
+                    .', AttrDataType='    .$dataType
+                    .', AttrSize='        .$AttributSize;
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
-                $msg = '8102/Attribut report'
-                                 . ', SQN='             .$SQN
-                                 . ', SrcAddr='         .$SrcAddr
-                                 . ', EndPoint='        .$EPoint
-                                 . ', ClustID='         .$ClusterId
-                                 . ', AttrID='          .$AttributId
-                                 . ', AttrStatus='      .$AttributStatus
-                                 . ', AttrDataType='    .$dataType
-                                 . ', AttrSize='        .$AttributSize
-                                 . ', DataByteList='    .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
-            }
-            else {
-                $msg = '8102/Attribut report'
-                                 . ', SQN='             .$SQN
-                                 . ', SrcAddr='         .$SrcAddr
-                                 . ', EndPoint='        .$EPoint
-                                 . ', ClustID='         .$ClusterId
-                                 . ', AttrID='          .$AttributId
-                                 . ', AttrStatus='      .$AttributStatus
-                                 . ', AttrDataType='    .$dataType
-                                 . ', AttrSize='        .$AttributSize
-                                 . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2));
+                $msg .= ', DataByteList='.pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
+            } else {
+                $msg .= ', DataByteList='.substr($payload, 24, (strlen($payload) - 24 - 2));
             }
             $this->deamonlog('debug', $dest.', Type='.$msg);
-            // monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -2840,9 +2769,567 @@
             }
         }
 
+        /* 0x8100/Read individual Attribute Response */
+        function decode8100($dest, $payload, $ln, $qos, $dummy)
+        {
+            $this->decode8100_8102("8100", $dest, $payload, $ln, $qos, $dummy);
+
+            /*
+            <Sequence number: uint8_t>
+			<Src address : uint16_t>
+			<Endpoint: uint8_t>
+			<Cluster id: uint16_t>
+			<Attribute Enum: uint16_t>
+			<Attribute status: uint8_t>
+			<Attribute data type: uint8_t>
+			<Size Of the attributes in bytes: uint16_t>
+			<Data byte list : stream of uint8_t> */
+            // "Type: 0x8100 (Read Attrib Response)"
+            // 8100 000D0C0Cb32801000600000010000101
+            // 1b 83e4 01 0000 0005 00 42 0006 54 53 30 31 32 31 99
+            //
+            // $this->deamonlog('debug', $dest.', Type=8100/Read attribut response: '.$payload);
+            /*
+            $msg = '8100/Read attribut response'
+                     .', SQN='         .substr($payload,  0, 2)
+                     .', Addr='     .substr($payload,  2, 4)
+                     .', EP='          .substr($payload,  6, 2)
+                     .', ClustId='     .substr($payload,  8, 4)
+                     .', AttrId='      .substr($payload, 12, 4)
+                     .', AttrStatus='  .substr($payload, 16, 2)
+                     .', AttrDataType='.substr($payload, 18, 2)
+                     .', AttrSize='.substr($payload, 20, 4);
+            $this->deamonlog('debug', $dest.', Type='.$msg);
+
+            $dataType = substr($payload, 18, 2);
+            // IKEA OnOff state reply data type: 10
+            // IKEA Manufecturer name data type: 42
+
+            $sizeOfAttribute = substr($payload, 20, 4);
+            // $this->deamonlog('debug', '  Size of Attribute='.$sizeOfAttribute);
+
+            // short addr / Cluster ID / EP / Attr ID -> data
+            $SrcAddr    = substr($payload, 2, 4);
+            $ClusterId  = substr($payload, 8, 4);
+            $EP         = substr($payload, 6, 2);
+            $AttributId = substr($payload, 12, 4);
+
+            // valeur hexadécimale  - type -> function
+            // 0x00 Null
+            // 0x10 boolean                 -> hexdec
+            // 0x18 8-bit bitmap
+            // 0x20 uint8   unsigned char   -> hexdec
+            // 0x21 uint16
+            // 0x22 uint32
+            // 0x25 uint48
+            // 0x28 int8
+            // 0x29 int16
+            // 0x2a int32
+            // 0x30 Enumeration : 8bit
+            // 0x42 string                  -> hex2bin
+            if ($dataType == "10") {
+                $data = hexdec(substr($payload, 24, 2));
+            }
+            if ($dataType == "20") {
+                $data = hexdec(substr($payload, 24, 2));
+            }
+            if ($dataType == "42") {
+                $data = hex2bin(substr($payload, 24, hexdec($sizeOfAttribute)*2));
+            }
+            //deamonlog('Data byte: '.$data);
+            if (isset($data)) {
+                $this->deamonlog('debug', '  Data byte='.$data);
+                $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
+            }
+            */
+        }
+
+        function decode8101($dest, $payload, $ln, $qos, $dummy)
+        {
+            $this->deamonlog('debug', $dest.', Type=8101/Default Response (ignoré)'
+                             . '; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
+                             . ', SQN='.substr($payload, 0, 2)
+                             . ', EndPoint='.substr($payload, 2, 2)
+                             . ', '. $this->displayClusterId(substr($payload, 4, 4))
+                             . ', Command='.substr($payload, 8, 2)
+                             . ', Status='.substr($payload, 10, 2)  );
+        }
+
+        /* Attribute report */
+        function decode8102($dest, $payload, $ln, $qos, $quality)
+        {
+            $this->decode8100_8102("8102", $dest, $payload, $ln, $qos, $quality);
+
+            //<Sequence number: uint8_t>
+            //<Src address : uint16_t>
+            //<Endpoint: uint8_t>
+            //<Cluster id: uint16_t>
+            //<Attribute Enum: uint16_t>
+            //<Attribute status: uint8_t>
+            //<Attribute data type: uint8_t>
+            //<Size Of the attributes in bytes: uint16_t>
+            //<Data byte list : stream of uint8_t>
+            /*
+            $SQN                = substr($payload,  0, 2);
+            $SrcAddr            = substr($payload,  2, 4);
+            $EPoint             = substr($payload,  6, 2);
+            $ClusterId          = substr($payload,  8, 4);
+            $AttributId         = substr($payload, 12, 4);
+            $AttributStatus     = substr($payload, 16, 2);
+            $dataType           = substr($payload, 18, 2);
+            $AttributSize       = substr($payload, 20, 4);
+            */
+
+            /* Params: SrcAddr, ClustId, AttrId, Data */
+            /* $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality); */
+
+            // 0005: ModelIdentifier
+            // 0010: Piece (nom utilisé pour Profalux)
+            /*
+            if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
+                $msg = '8102/Attribut report'
+                                 . ', SQN='             .$SQN
+                                 . ', SrcAddr='         .$SrcAddr
+                                 . ', EndPoint='        .$EPoint
+                                 . ', ClustId='         .$ClusterId
+                                 . ', AttrId='          .$AttributId
+                                 . ', AttrStatus='      .$AttributStatus
+                                 . ', AttrDataType='    .$dataType
+                                 . ', AttrSize='        .$AttributSize
+                                 . ', DataByteList='    .pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
+            }
+            else {
+                $msg = '8102/Attribut report'
+                                 . ', SQN='             .$SQN
+                                 . ', SrcAddr='         .$SrcAddr
+                                 . ', EndPoint='        .$EPoint
+                                 . ', ClustId='         .$ClusterId
+                                 . ', AttrId='          .$AttributId
+                                 . ', AttrStatus='      .$AttributStatus
+                                 . ', AttrDataType='    .$dataType
+                                 . ', AttrSize='        .$AttributSize
+                                 . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2));
+            }
+            $this->deamonlog('debug', $dest.', Type='.$msg);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
+            */
+
+            // valeur hexadécimale  - type -> function
+            // 0x00 Null
+            // 0x10 boolean                 -> hexdec
+            // 0x18 8-bit bitmap
+            // 0x20 uint8   unsigned char   -> hexdec
+            // 0x21 uint16                  -> hexdec
+            // 0x22 uint32
+            // 0x24 ???
+            // 0x25 uint48
+            // 0x28 int8                    -> hexdec(2)
+            // 0x29 int16                   -> unpack("s", pack("s", hexdec(
+            // 0x2a int32                   -> unpack("l", pack("l", hexdec(
+            // 0x2b ????32
+            // 0x30 Enumeration : 8bit
+            // 0x42 string                  -> hex2bin
+
+            /*
+            if ($dataType == "10") {
+                $data = hexdec(substr($payload, 24, 2));
+            }
+
+            if ($dataType == "18") {
+                $data = substr($payload, 24, 2);
+            }
+
+            // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
+            if ($dataType == "19") {
+                $data = substr($payload, 24, 4);
+            }
+
+            if ($dataType == "20") {
+                $data = hexdec(substr($payload, 24, 2));
+            }
+
+            if ($dataType == "21") {
+                $data = hexdec(substr($payload, 24, 4));
+            }
+            // Utilisé pour remonter la pression par capteur Xiaomi Carré.
+            // Octet 8 bits man pack ne prend pas le 8 bits, il prend à partir de 16 bits.
+
+            if ($dataType == "28") {
+                // $data = hexdec(substr($payload, 24, 2));
+                $in = substr($payload, 24, 2);
+                if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
+
+                $data = unpack("s", pack("s", hexdec($raw)))[1];
+            }
+
+            // Example Temperature d un Xiaomi Carre
+            // Sniffer dit Signed 16bit integer
+            if ($dataType == "29") {
+                // $data = hexdec(substr($payload, 24, 4));
+                $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+            }
+
+            if ($dataType == "39") {
+                if ( ($ClusterId=="000C") && ($AttributId=="0055")  ) {
+                    if ($EPoint=="01") {
+                        // Remontée puissance (instantannée) relay double switch 1
+                        // On va envoyer ca sur la meme variable que le champ ff01
+                        $hexNumber = substr($payload, 24, 8);
+                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                        $bin = pack('H*', $hexNumberOrder );
+                        $data = unpack("f", $bin )[1];
+
+                        $puissanceValue = $data;
+                        // $this->mqqtPublish( $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+
+                        // Relay Double
+                        $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
+                    }
+                    if ( ($EPoint=="02") || ($EPoint=="15")) {
+                    // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
+                    // On va envoyer ca sur la meme variable que le champ ff01
+                    $hexNumber = substr($payload, 24, 8);
+                    $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                    $bin = pack('H*', $hexNumberOrder );
+                    $data = unpack("f", $bin )[1];
+
+                    $puissanceValue = $data;
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+
+                    // Relay Double
+                    $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '02-0055',    $puissanceValue,    $qos);
+                    }
+                } else {
+                    // Example Cube Xiaomi
+                    // Sniffer dit Single Precision Floating Point
+                    // b9 1e 38 c2 -> -46,03
+
+                    // $data = hexdec(substr($payload, 24, 4));
+                    // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+                    $hexNumber = substr($payload, 24, 8);
+                    $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                    $bin = pack('H*', $hexNumberOrder );
+                    $data = unpack("f", $bin )[1];
+                }
+            }
+
+            if ($dataType == "42") {
+                // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
+                // Xiaomi Bouton V2 Carré
+                if (($AttributId == "FF01") && ($AttributSize == "001A")) {
+                    $this->deamonlog("debug", "  Champ proprietaire Xiaomi (Bouton carré)" );
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    $this->deamonlog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $qos);
+                }
+
+                // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
+                elseif (($AttributId == "FF01") && ($AttributSize == "001B")) {
+                    $this->deamonlog("debug","  Champ proprietaire Xiaomi (Wall 1 Switch, Gaz Sensor)" );
+                    // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $etat           = substr($payload, 80, 2);
+
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Etat=' .$etat);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',     '01-0000', $etat,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // Xiaomi Door Sensor V2
+                elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
+                    $this->deamonlog("debug","  Champ proprietaire Xiaomi (Door Sensor)" );
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $etat           = substr($payload, 80, 2);
+
+                    $this->deamonlog('debug', '  DoorV2Voltage='   .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', DoorV2Etat='      .$etat);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ));
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
+                }
+
+                // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
+                elseif (($AttributId == "FF01") && ($AttributSize == "001F")) {
+                    $this->deamonlog("debug","  Champ proprietaire Xiaomi (Capteur Temperature Rond/Wall 2 Switch): ");
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity );
+                    // $this->deamonlog('debug', 'Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'Humidity: '     .$humidity);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,$qos);
+                }
+
+                // Xiaomi capteur Presence V2
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
+                // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
+                // 03 28 15                                   /32
+                // 04 21 a801                                 /38
+                // 05 21 3300                                 /46
+                // 06 24 0000000000                           /54
+                // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
+                // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
+                // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
+
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0021")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Capteur Presence V2)');
+
+                    $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
+                    $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
+                    // $this->deamonlog('debug', 'Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'Humidity: '     .$humidity);
+                    // $this->deamonlog('debug', 'Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0400', '01-0000', $lux,$qos); // Luminosite
+
+                    // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                }
+
+                // Xiaomi capteur Inondation
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0022")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Capteur d\'inondation)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                    $etat = substr($payload, 88, 2);
+
+                    $this->deamonlog('debug', '  Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Etat='.$etat);
+                    // $this->deamonlog('debug', 'Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'Humidity: '     .$humidity);
+                    // $this->deamonlog('debug', 'Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                }
+
+                // Xiaomi capteur temperature carré V2
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Capteur de température carré)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+
+                    $this->deamonlog('debug', '  Voltage='.$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity.', Pression='.$pression);
+                    // $this->deamonlog('debug', 'ff01/25: Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'ff01/25: Humidity: '     .$humidity);
+                    // $this->deamonlog('debug', 'ff01/25: Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                }
+
+                // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0026")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Bouton Aqara Wireless Switch V3)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // Xiaomi Smoke Sensor
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0028")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Sensor Smoke)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // Xiaomi Cube
+                // Xiaomi capteur Inondation
+                elseif (($AttributId == 'FF01') && ($AttributSize == "002A")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Cube)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    // $this->deamonlog('debug', 'Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'Humidity: '     .$humidity);
+                    // $this->deamonlog('debug', 'Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+
+                    // $this->mqqtPublish( $SrcAddr, '0402', '0000', $temperature,      $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0405', '0000', $humidity,         $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                }
+
+                // Xiaomi Vibration
+                elseif (($AttributId == 'FF01') && ($AttributSize == "002E")) {
+                    $this->deamonlog('debug', '  Champ proprietaire Xiaomi (Vibration)');
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ));
+                    // $this->deamonlog('debug', 'Temperature: '  .$temperature);
+                    // $this->deamonlog('debug', 'Humidity: '     .$humidity);
+                    // $this->deamonlog('debug', 'Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
+                elseif (($AttributId == "FF01") && (($AttributSize == "0031") || ($AttributSize == "002B") )) {
+                    $logMessage = "";
+                    // $this->deamonlog('debug', $dest.', Type=8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
+                    $logMessage .= "  Champ proprietaire Xiaomi (Wall Plug)";
+
+                    $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
+
+                    $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
+                    $puissanceValue = $puissance[1];
+
+                    $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
+                    $consoValue = $conso[1];
+
+                    // $this->mqqtPublish($SrcAddr,$ClusterId,$AttributId,'$this->decoded as OnOff-Puissance-Conso',$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',  '-01-0000',        $onOff,             $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',   '--puissance--',   $puissanceValue,    $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',   '--conso--',       $consoValue,        $qos);
+
+                    $logMessage .= '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue;
+                    $this->deamonlog('debug', $logMessage);
+                }
+
+                // Xiaomi Double Relay (ref ?)
+                elseif (($AttributId == "FF01") && ($AttributSize == "0044")) {
+                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
+                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Relais double)");
+                    $this->deamonlog('debug', "  ".json_encode($FF01));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $qos);
+                }
+
+                // Xiaomi Capteur Presence
+                // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
+                // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
+                elseif (($AttributId == "FF01") && ($AttributSize == "00XX")) {
+                    $this->deamonlog("debug","  Champ proprietaire Xiaomi (Bouton Carre)" );
+
+                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
+                elseif (($AttributId == "FF02")) {
+                    // Non decodé a ce stade
+                    // $this->deamonlog("debug", "Champ 0xFF02 non $this->decode a ce stade");
+                    $this->deamonlog("debug","  Champ proprietaire Xiaomi (IR V1)" );
+
+                    $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
+
+                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                }
+
+                // ------------------------------------------------------- Philips ----------------------------------------------------------
+                // Bouton Telecommande Philips Hue RWL021
+                elseif (($ClusterId == "FC00")) {
+
+                    $buttonEventTexte = array (
+                                               '00' => 'appui',
+                                               '01' => 'appui maintenu',
+                                               '02' => 'relâche sur appui court',
+                                               '03' => 'relâche sur appui long',
+                                               );
+                    // $this->deamonlog("debug","  Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                    $button = $AttributId;
+                    $buttonEvent = substr($payload, 24+2, 2 );
+                    $buttonDuree = hexdec(substr($payload, 24+6, 2 ));
+                    $this->deamonlog("debug", "  Champ proprietaire Philips Hue: Bouton=".$button.", Event=".$buttonEvent.", EventText=".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Event", $buttonEvent);
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId."-Duree", $buttonDuree);
+                }
+
+                // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
+                else {
+                    $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
+                }
+            }
+
+            if (isset($data)) {
+                if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; } // Verrue: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
+                $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
+            }
+            */
+        }
+
         // function decode8110($dest, $payload, $ln, $qos, $dummy)
         // {
-            // $this->deamonlog('debug', $dest.' Type=8110/Write Attribute Response (ignoré)'
+            // $this->deamonlog('debug', $dest.', Type=8110/Write Attribute Response (ignoré)'
                              // . ': Dest='.$dest
                              // . ', Level=0x'.substr($payload, 0, 2)
                              // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
@@ -2916,21 +3403,23 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
 
+        /* 0x8701/Router Discovery Confirm
+           Warning: potential swap between statuses. */
         function decode8701($dest, $payload, $ln, $qos, $dummy)
         {
             // NWK Code Table Chap 10.2.3 from JN-UG-3113
             // D apres https://github.com/fairecasoimeme/ZiGate/issues/92 il est fort possible que les deux status soient inversés
             global $allErrorCode;
 
-            // $status = substr($payload, 0, 2);
-            // $nwkStatus = substr($payload, 2, 2);
-            // D apres https://github.com/fairecasoimeme/ZiGate/issues/92 il est fort possible que les deux status soient inversés
             $nwkStatus = substr($payload, 0, 2);
             $status = substr($payload, 2, 2);
+            $Addr = substr($payload, 4, 4);
 
-            $this->deamonlog('debug', $dest.', Type=8701/Route Discovery Confirm (decoded but Not Processed)'
-                             . ', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
-                             . ', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'  );
+            $msg = '8701/Route discovery confirm'
+                   .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
+                   .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
+                   .', Addr='.$Addr;
+            $this->deamonlog('debug', $dest.', Type='.$msg);
         }
 
         /* 8702/APS data confirm fail */
@@ -2948,8 +3437,8 @@
 
             $this->deamonlog('debug', $dest.', Type=8702/APS Data Confirm Fail'
                              . ', Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
-                             . ', SrcEndpoint='.substr($payload, 2, 2)
-                             . ', DestEndpoint='.substr($payload, 4, 2)
+                             . ', SrcEP='.substr($payload, 2, 2)
+                             . ', DestEP='.substr($payload, 4, 2)
                              . ', DestMode='.substr($payload, 6, 2)
                              . ', DestAddr='.substr($payload, 8, 4)
                              . ', SQN='.substr($payload, 12, 2)   );
@@ -2962,7 +3451,7 @@
             $AttributId = "8702";
             $data       = substr($payload, 8, 4);
 
-            if ( Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' )->getHumanName(true);
+            // if ( Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' )->getHumanName(true);
             // message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être joint." );
 
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
@@ -3053,7 +3542,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
             }
         }
-        
+
         function configureNE( $short ) {
             $this->deamonlog('debug', 'Type=fct; ===> Configure NE Start');
 
@@ -3073,7 +3562,7 @@
             $abeille = Abeille::byLogicalId( $short,'Abeille');
 
             if ( $abeille) {
-                
+
                 // Initial mode of configuration
                 $arr = array(1, 2);
                 foreach ($arr as &$value) {
@@ -3089,11 +3578,11 @@
                         }
                     }
                 }
-                
+
                 // New mode of configuration based on definition in the template
                 self::execAtCreationCmdForOneNE($short);
             }
-            
+
             $this->deamonlog('debug', 'Type=fct; ===> Configure NE End');
         }
 

@@ -133,31 +133,25 @@ function updateConfigDB() {
         $eqLogics = eqLogic::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             $ieee = $eqLogic->getConfiguration('IEEE', 'undefined');
-log::add('Abeille','debug','LA IEEE='.$ieee);
             if ($ieee != "undefined") {
                 $ieee_up = strtoupper($ieee);
                 if ($ieee_up !== $ieee) {
                     $eqLogic->setConfiguration('IEEE', $ieee_up);
                     $eqLogic->save();
-log::add('Abeille','debug','LA SAVED IEEE='.$ieee_up);
                 }
             }
             $topic = $eqLogic->getConfiguration('topic', 'undefined');
-log::add('Abeille','debug','LA topic='.$topic);
             if ($topic != "undefined") {
                 $topicArray = explode("/", $topic);
                 if (ctype_xdigit($topicArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
                     $topicAddr_up = strtoupper($topicArray[1]);
-log::add('Abeille','debug','LA topicAddr_up='.$topicAddr_up.', topicArray[1]='.$topicArray[1]);
                     if ($topicAddr_up !== $topicArray[1]) {
                         $eqLogic->setConfiguration('topic', $topicArray[0]."/".$topicAddr_up);
                         $eqLogic->save();
-log::add('Abeille','debug','LA SAVED topic='.$topicArray[0]."/".$topicAddr_up);
                     }
                 }
             }
             $logId = $eqLogic->getlogicalId();
-log::add('Abeille','debug','LA logId='.$logId);
             if ($logId != "") {
                 $logIdArray = explode("/", $logId);
                 if (ctype_xdigit($logIdArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
@@ -165,12 +159,11 @@ log::add('Abeille','debug','LA logId='.$logId);
                     if ($logIdAddr_up !== $logIdArray[1]) {
                         $eqLogic->setLogicalId($logIdArray[0]."/".$logIdAddr_up);
                         $eqLogic->save();
-log::add('Abeille','debug','LA SAVED logId='.$logIdArray[0]."/".$logIdAddr_up);
                     }
                 }
             }
         }
-        // config::save('DbVersion', '20201025', 'Abeille');
+        config::save('DbVersion', '20201025', 'Abeille');
     }
 }
 

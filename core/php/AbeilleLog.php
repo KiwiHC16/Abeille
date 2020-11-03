@@ -8,7 +8,7 @@
 
     $curLogLevelNb = 0; // Abeille log level number: 0=none, 1=error/default, 2=warning, 3=info, 4=debug
     $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1')
-    $logMaxLines = 2000; // Default max number of lines
+    $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
 
     /* Get Abeille current log level as a number:
@@ -57,16 +57,9 @@
         $GLOBALS["logFile"] = $lFile;
         $GLOBALS["logNbOfLines"] = 0;
 
-        $jeedomMaxLines = log::getConfig('maxLineLog');
-        if ($jeedomMaxLines < $GLOBALS["logMaxLines"]) {
-            /* Taking Jeedom config with a margin to be sure AbeilleLog will be able to
-               move previous log to tmp before Jeedom truncate it */
-            $GLOBALS["logMaxLines"] = $jeedomMaxLines - 2;
-            // WARNING: Don't output UTF8 encoded text thru fwrite(). It kills Jeedom display. 
-            // To be understood.
-            // logMessage("warning", "Le log est limité à ".$jeedomMaxLines." lignes par la config Jeedom");
-            logMessage("warning", "Le log est limite a ".$jeedomMaxLines." lignes par la config Jeedom");
-        }
+        /* Taking Jeedom config with a margin to avoid Jeedom truncates
+           the log itself before it is saved */
+        $GLOBALS["logMaxLines"] = log::getConfig('maxLineLog') - 10;
 
         if ($lFile == "")
             return; // Output of STDOUT
@@ -98,7 +91,7 @@
         /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
 
         if ($GLOBALS["logFile"] == '') {
-            fwrite(STDOUT, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n");
+            echo ('['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n");
             fflush(STDOUT);
         } else {
             $lFile = __DIR__.'/../../../../log/'.$GLOBALS["logFile"];
@@ -111,7 +104,9 @@
                     mkdir($tmpDir);
                 $lFileTmp = $tmpDir."/".$GLOBALS["logFile"]."-prev";
                 rename($lFile, $lFileTmp);
-                $GLOBALS["logNbOfLines"] = 0;
+
+                file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] Log précédent sauvé sous \'tmp/'.$GLOBALS["logFile"]."-prev'\n", FILE_APPEND);
+                $GLOBALS["logNbOfLines"] = 1;
             }
         }
     }

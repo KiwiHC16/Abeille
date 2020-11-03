@@ -116,7 +116,7 @@ if [ ${ERROR} -eq 0 ] && [ ${UPDATE_ONLY} -eq 0 ]; then
         git show-ref refs/heads/${REMOTE_BRANCH} >/dev/null
         if [ $? -ne 0 ]; then
             echo "- Info: La branche locale '${REMOTE_BRANCH}' n'existe pas"
-            sudo git checkout -b ${REMOTE_BRANCH} ${NEW_BRANCH}
+            sudo git checkout -b ${REMOTE_BRANCH} ${REMOTE_SOURCE}/${REMOTE_BRANCH}
             if [ $? -ne 0 ]; then
                 echo "= ERREUR: Pendant création de la branche ${REMOTE_BRANCH}"
                 ERROR=5

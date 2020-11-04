@@ -17,12 +17,10 @@
      */
 
     /* Developers debug features */
-    $dbgFile = dirname(__FILE__)."/../../debug.php";
-    if (file_exists($dbgFile))
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
         include_once $dbgFile;
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');
@@ -198,6 +196,15 @@
 
         }
 
+        public static function pollingCmd($period) {
+            $cmds = AbeilleCmd::searchConfiguration( 'Polling', 'Abeille' );
+            foreach ( $cmds as $key => $cmd ) {
+                echo $cmd->getName()." - ".$cmd->getConfiguration('Polling')."\n";
+                if ( $cmd->getConfiguration('Polling') == $period ) {
+                    $cmd->execute();
+                }
+            }
+        }
         public static function cronDaily() {
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
             /**
@@ -209,6 +216,9 @@
             $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
             log::add('Abeille', 'debug', $cmd);
             exec($cmd);
+            
+            // Poll Cmd
+            self::pollingCmd("cronDaily");
         }
 
         public static function cronHourly() {
@@ -278,6 +288,9 @@
             if ( ($i*33) > (3600) ) {
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum." );
             }
+            
+            // Poll Cmd
+            self::pollingCmd("cronHourly");
 
             log::add( 'Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------' );
         }
@@ -342,6 +355,9 @@
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum" );
             }
 
+            // Poll Cmd
+            self::pollingCmd("cron15");
+            
             log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
@@ -386,6 +402,9 @@
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 minute.","Contacter KiwiHC15 sur le Forum" );
             }
 
+            // Poll Cmd
+            self::pollingCmd("cron");
+            
             /**
              * Refresh health information
              */
@@ -440,7 +459,7 @@
         }
 
         public static function deamon_info() {
-            $debug_deamon_info = 1;
+            $debug_deamon_info = 0;
             // log::add('Abeille', 'debug', 'deamon_info(): Démarrage'); // Useless
 
             // On suppose que tout est bon et on cherche les problemes.
@@ -565,6 +584,14 @@
 
             log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
 
+            /* Developers debug features.
+               Since deamon_start() is static, could not find a way to reuse global variables.
+               WARNING: Since php file is cached, it sometimes requires delay or restart to 
+                 get last content of 'debug.php' */
+            $dbgFile = __DIR__."/../../tmp/debug.php";
+            if (file_exists($dbgFile))
+                include $dbgFile;
+    
             /* Some checks before starting daemons
                - Are dependancies ok ?
                - Is cron running ? */
@@ -600,10 +627,11 @@
             }
             if ($i <= $param['zigateNb']) {
                 exec("gpio -v", $out, $ret);
-                if ($ret != 0)
+                if ($ret != 0) {
                     log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
-                else {
-                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée. Configuration des GPIOs');
+                    log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
+                } else {
+                    log::add('Abeille', 'debug', 'deamon_start(): Une PiZigate active trouvée => configuration des GPIOs');
                     exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 }
             }
@@ -622,19 +650,22 @@
 
             log::add('Abeille', 'info', 'Démarrage des démons.');
 
-            /* Starting socat daemons */
+            /* Starting 'socat' daemons */
             $NbOfSocat = 0; // Number of socat daemons
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            $daemonDir = __DIR__."/../php/";
+            for ($i = 1; $i <= $param['zigateNb']; $i++) {
+                $serialPort = $param['AbeilleSerialPort'.$i];
+                if (($serialPort == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                     continue; // Undefined or disabled
-                if ($param['AbeilleSerialPort'.$i] != "/dev/zigate".$i)
+log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
+                if ($serialPort != "/dev/zigate".$i)
                     continue; // Not a WIFI Zigate
 
-                $paramdeamon21 = $param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
-                $log21 = " > ".log::getPathToLog('AbeilleSocat').$i;
-                $cmd = $nohup." ".$php." ".$dirdeamon."AbeilleSocat.php"." ".$paramdeamon21.$log21;
+                $daemonParams = $serialPort.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
+                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.' 2>&1';
+                $cmd = $nohup." ".$php." ".$daemonDir."AbeilleSocat.php ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-                exec($cmd.' 2>&1 &');
+                exec($cmd.' &');
                 $NbOfSocat++;
             }
             if ($NbOfSocat != 0)
@@ -643,7 +674,7 @@
             /* Starting 'AbeilleSerialPort' daemons if
                - zigate is enabled and port is defined
                - Port exists */
-            $daemonDir = __DIR__."/../../core/php/";
+            $daemonDir = __DIR__."/../php/";
             $daemonFile = "AbeilleSerialRead.php";
             $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
             for ($i = 1; $i <= $param['zigateNb']; $i++) {
@@ -663,60 +694,6 @@
                 $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' &');
-            }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     $deamon[10+$i] = "AbeilleSerialRead.php";
-            //     $paramdeamon[10+$i] = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
-            //     $log[10+$i] = " > ".log::getPathToLog(substr($deamon[10+$i], 0, (strrpos($deamon[10+$i], ".")))).$i;
-            // }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-            //         continue; // Undefined or disabled
-
-            //     if (@!file_exists($param['AbeilleSerialPort'.$i])) {
-            //         log::add('Abeille', 'warning', 'deamon_start(): Le port '.$param['AbeilleSerialPort'.$i].' n\'existe pas.');
-            //         message::add('Abeille', 'Warning: le port '.$param['AbeilleSerialPort'.$i].' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi." );
-            //         $return['parametersCheck']="nok";
-            //         $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
-            //         return false;
-            //     }
-            // }
-            // for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-            //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
-            //         continue; // Undefined or disabled
-
-            //     exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-            //     $cmd = $nohup." ".$php." ".$deamonDir.$deamon[10+$i]." ".$paramdeamon[10+$i].$log[10+$i];
-            //     log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            //     exec($cmd.' 2>&1 &');
-            // }
-
-            /* Starting 'AbeilleMonitor' daemon
-               Note: Monitor still under dev so hidden to end users */
-            /* Reread 'debug.php' to avoid PHP cache issues */
-            if (file_exists($dbgFile)) {
-                $fi = file_get_contents($dbgFile);
-                $rows = explode("\n", $fi);
-                foreach($rows as $row => $line) {
-                    if (!strstr($line, '$dbgMonitorAddr'))
-                        continue;
-
-                    $line = trim($line);
-                    $l = explode("=", $line);
-                    $a = trim($l[1]); // $a='"xxxx-xxxxxxxxxxxxxxxx"; // comments'
-                    $end = strpos($a, ";"); // Where is end of line code ?
-                    eval('$dbgMonitorAddr = '.substr($a, 0, $end).';');
-                    break;
-                }
-            }
-            if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != "")) {
-                $daemonFile = "AbeilleMonitor.php";
-                $daemonDir = __DIR__."/../../core/php/";
-                $daemonParams = "";
-                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
-                $cmd = $nohup." ".$php." -r \"require '".$daemonDir.$daemonFile."'; monRun('".$dbgMonitorAddr."');\" ".$daemonParams.$daemonLog;
-                log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-                exec($cmd.' 2>&1 &');
             }
 
             /* Starting 'AbeilleParser' daemon */
@@ -1589,7 +1566,11 @@
                 }
                 if ($cmdId == "0001-01-0021") {
                     /* en % batterie example Ikea Remote */
-                    $elogic->setStatus('battery', $value);
+                    // 10.10.2.1   BatteryPercentageRemaining Attribute Specifies the remaining battery life as a half integer percentage of the full battery capacity (e.g.
+                    // 34.5%, 45%, 68.5%, 90%) with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%. This is particularly suited for devices with
+                    // rechargeable batteries. The value 0xff indicates an invalid or unknown reading. This attribute SHALL be configurable for attribute reporting.
+                    // C8 is 200, so value/200*100
+                    $elogic->setStatus('battery', $value/2);
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
 
@@ -1617,6 +1598,19 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
+                
+                // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
+                $cmds = AbeilleCmd::searchConfigurationEqLogic($elogic->getId(),'PollingOnCmdChange','action');
+ 
+                foreach ( $cmds as $key => $cmd ) {
+                    if ( $cmd->getConfiguration('PollingOnCmdChange') == $cmdId ) {
+                        log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName() );
+                        // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
+                        // Je vais attendre qq secondes aveant de faire la demande
+                        // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
+                        }
+                }
 
                 return;
             }
@@ -2232,6 +2226,14 @@
             // Test message management
                 $addr = "df3b";
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/Mgmt_Rtg_req", "" );
+                break;
+            case "28":
+                $cmds = AbeilleCmd::searchConfiguration( 'Polling', 'Abeille' );
+                var_dump($cmds);
+                break;
+            case "29":
+                $cmds = AbeilleCmd::searchConfigurationEqLogic(  579,   'PollingOnCmdChange', 'action');
+                var_dump( $cmds );
                 break;
 
         } // switch

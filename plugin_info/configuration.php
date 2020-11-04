@@ -17,21 +17,19 @@
     */
 
     /* Developers debug features */
-    $dbgFile = dirname(__FILE__)."/../debug.php";
+    $dbgFile = __DIR__."/../tmp/debug.php";
     if (file_exists($dbgFile)) {
         include_once $dbgFile;
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
-    }
-
-    /* Errors reporting: enabled if 'dbgAbeillePHP' is TRUE */
-    if (isset($dbgAbeillePHP) && ($dbgAbeillePHP == TRUE)) {
+        include_once __DIR__."/../core/php/AbeilleGit.php"; // Developer functions/features
+        /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', '/var/www/html/log/AbeillePHP');
         ini_set('log_errors', 'On');
     }
 
-    require_once dirname(__FILE__).'/../../../core/php/core.inc.php';
+    require_once __DIR__.'/../../../core/php/core.inc.php';
     include_file('core', 'authentification', 'php');
     if (!isConnect()) {
         include_file('desktop', '404', 'php');
@@ -49,7 +47,7 @@
 
 <style>
     .confs1 {
-      width: 200px;
+      width: 300px;
       margin-right: 4px;
     }
     .ml4px {
@@ -65,17 +63,58 @@
             <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
             <p><i> Note: si vous souhaitez de l aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
             <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Version d'Abeille.}}">{{Version Abeille : }}</label>
-                <div class="col-lg-4">
-                    <?php include dirname(__FILE__)."/AbeilleVersion.inc"; ?>
-                </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label" data-toggle="tooltip">{{Version Abeille : }}</label>
+            <div class="col-lg-4 confs1" title="{{Version du plugin Abeille.}}">
+                <?php include __DIR__."/AbeilleVersion.inc"; ?>
+            </div>
+            <div class="col-lg-4">
+                <?php
+                    /* Developers only: display current branch & allows to switch to another one */
+                    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+                        /* TODO: Check if GIT repo & GIT present */
+                        if (gitIsRepo() == FALSE) {
+                            echo "Pas sous GIT";
+                        } else {
+                            $localChanges = gitHasLocalChanges();
+                            if ($localChanges == TRUE)
+                                echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
+                            else
+                                echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';
+                            $localBranch = gitGetCurrentBranch();
+                            echo '<script>var js_curBranch = "'.$localBranch.'";</script>'; // PHP to JS
+                            echo $localBranch;
+                            echo '</div>';
+                            /* List branches */
+                            gitFetchAll();
+                            $Branches = gitGetAllBranches();
+                            echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
+                            foreach ($Branches as $b) {
+                                if ($b == '')
+                                    continue;
+                                $b = substr($b, 2);
+                                if (substr($b, 0, 8) == "remotes/")
+                                    $b2 = substr($b, 8); // Remove 'remotes/'
+                                else
+                                    $b2 = $b;
+echo '<script>console.log("branch='.$b.'")</script>';
+                                if ($b == $localBranch)                               
+                                    echo '<option value="'.$b.'" selected>'.$b2.'</option>';
+                                else
+                                    echo '<option value="'.$b.'">'.$b2.'</option>';
+                            }
+                            echo '</select>';
+                            echo '<a id="idSwitchBranch" class="btn btn-warning ml4px" title="{{Suppression des modifs locales, basculement sur la branche selectionnée, et redémarrage.}}">{{Mettre-à-jour}}</a>';
+                        }
+                    }
+                ?>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">{{Objet Parent : }}</label>
-            <div class="col-lg-4">
-                <select class="configKey form-control confs1" data-l1key="AbeilleParentId">
+            <label class="col-lg-4 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
+            <div class="col-lg-4 confs1" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
+                <select class="configKey form-control" data-l1key="AbeilleParentId">
                     <?php
                         foreach (jeeObject::all() as $object) {
                             echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
@@ -100,8 +139,8 @@
 
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip">{{Nombre de zigates : }}</label>
-                <div class="col-sm-4 confs1">
-                    <select id="nbOfZigates" class="configKey form-control col-sm-12 confs1" data-l1key="zigateNb" title="{{Nombre de zigates.}}">
+                <div class="col-lg-4 confs1">
+                    <select id="nbOfZigates" class="configKey form-control" data-l1key="zigateNb" title="{{Nombre de zigates.}}">
                         <option value="1" selected>1</option>
                         <?php
                         for ( $i=2; $i<=$zigateNbMax; $i++ ) {
@@ -118,7 +157,7 @@
             ?>
                 <div class="form-group">
                     <label class="col-lg-4 control-label">-----</label>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 confs1">
                     <?php
                     echo '<label style="padding-top: 7px">------------ Zigate'.$i.' ------------</label>';
                     ?>
@@ -127,26 +166,28 @@
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip">{{Nom : }}</label>
-                    <div class="col-lg-8">
-                    <?php
-                    if (Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')) {
-                        $zgName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getName();
-                        $networkName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
-                    } else {
-                        $zgName = "";
-                        $networkName = "";
-                    }
-                    echo '<input type="text" class="eqLogicAttr form-control confs1" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
-                    echo '<label class="control-label ml4px" data-toggle="tooltip" title="{{Chemin hiérarchique Jeedom}}">'.$networkName.'</label>';
+                    <div class="col-lg-4 confs1">
+                        <?php
+                        if (Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')) {
+                            $zgName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getName();
+                            $networkName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
+                        } else {
+                            $zgName = "";
+                            $networkName = "";
+                        }
+                        echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
+                    echo '</div>';
+                    echo '<div>';
+                        echo '<label class="control-label ml4px" data-toggle="tooltip" title="{{Chemin hiérarchique Jeedom}}">'.$networkName.'</label>';
                     echo '</div>';
                     ?>
                 </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip">{{Type : }}</label>
-                    <div class="col-lg-8">
+                    <div class="col-lg-4 confs1">
                         <?php
-                        echo '<select id="idSelZgType'.$i.'" class="configKey form-control col-sm-12 confs1" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
+                        echo '<select id="idSelZgType'.$i.'" class="configKey form-control" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
                         ?>
                             <option value="USB" selected>{{USB}}</option>
                             <option value="WIFI" >{{WIFI}}</option>
@@ -157,9 +198,9 @@
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip">{{Port série : }}</label>
-                    <div class="col-lg-8">
+                    <div class="col-lg-4 confs1">
                         <?php
-                            echo '<select id="idSelSP'.$i.'" class="configKey form-control col-sm-12 confs1" data-l1key="AbeilleSerialPort'.$i.'" title="{{Port série si zigate USB ou Pi.}}" disabled>';
+                            echo '<select id="idSelSP'.$i.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$i.'" title="{{Port série si zigate USB ou Pi.}}" disabled>';
                             echo '<option value="none" selected>{{Aucun}}</option>';
                             echo '<option value="/dev/zigate'.$i.'" >{{WIFI'.$i.'}}</option>';
                             echo '<option value="/dev/monitZigate'.$i.'" >{{Monit'.$i.'}}</option>';
@@ -173,6 +214,8 @@
                             }
                         ?>
                         </select>
+                    </div>
+                    <div>
                         <?php
                             echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
                             echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' si \'NOK\'.}}">';
@@ -205,9 +248,9 @@
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>
-                    <div class="col-lg-8">
+                    <div class="col-lg-4 confs1">
                         <?php
-                        echo '<input id="idWifiAddr'.$i.'" class="configKey form-control col-sm-12 confs1" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                        echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
                         // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
                         // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' si \'NOK\'.}}">';
                         ?>
@@ -218,8 +261,8 @@
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip">{{Status : }}</label>
-                    <div class="col-lg-8">
-                        <?php echo '<select id="idSelZgStatus'.$i.'" class="configKey form-control confs1" col-sm-10 data-l1key="AbeilleActiver'.$i.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">'; ?>
+                    <div class="col-lg-4 confs1">
+                        <?php echo '<select id="idSelZgStatus'.$i.'" class="configKey form-control" data-l1key="AbeilleActiver'.$i.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">'; ?>
                             <option value="N" selected>{{Désactivée}}</option>
                             <option value="Y">{{Activée}}</option>
                         </select>
@@ -678,5 +721,127 @@
             }
        });
     })
+
+    /* Developers mode only */
+    if ((typeof js_dbgDeveloperMode != 'undefined')) {
+        console.log("Developer mode");
+
+        /* Branch select changed. Updating button label. */
+        $("#idBranch").change(function() {
+            var branchName = $("#idBranch").val();
+            console.log("Selected branch = '" + branchName + "', current = '" + js_curBranch + "'")
+            if (branchName == js_curBranch) {
+                document.getElementById("idSwitchBranch").innerText = "Mettre-à-jour";
+            } else {
+                document.getElementById("idSwitchBranch").innerText = "Changer";
+            }
+        });
+        
+        $('#idSwitchBranch').on('click', function() {
+            var branchName = $("#idBranch").val();
+            console.log("switchBranch(branch="+branchName+", current="+js_curBranch+")")
+            if (branchName == js_curBranch)
+                var updateOnly = "update"
+            else
+                var updateOnly = ""
+            $.ajax({
+                type: 'POST',
+                url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+                data: {
+                    action: 'switchBranch',
+                    branch: branchName,
+                    updateOnly: updateOnly
+                },
+                dataType: 'json',
+                global: false,
+                error: function (request, status, error) {
+                    bootbox.alert("ERREUR 'switchBranch' !<br>Votre installation semble corrompue.");
+                },
+                success: function (json_res) {
+                }
+            });
+
+            /* Returns: 1=completed, else 0 */
+            // function checkCompletion() {
+            //     console.log("checkCompletion()");
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            //         data: {
+            //             action: 'fileExists',
+            //             path: 'tmp/switchBranch.done'
+            //         },
+            //         dataType: 'json',
+            //         global: false,
+            //         error: function (request, status, error) {
+            //             console.log("checkCompletion() => ERROR");
+            //         },
+            //         success: function (json_res) {
+            //             console.log("checkCompletion() => SUCCESS");
+            //             $res = JSON.parse(json_res.result);
+            //             if ($res.status == 0) {
+            //                 console.log('File tmp/switchBranch.done exists');
+            //                 return 1;
+            //             }
+            //         }
+            //     });
+            //     console.log("checkCompletion() => SUCCESS, but not done");
+            //     return 0;
+            // }
+
+            // function switchSleep(s) {
+            //     console.log("switchSleep()");
+            //     return new Promise(resolve => setTimeout(resolve, s * 1000));
+            // }
+
+            /* Wait until 'switchBranch.done' file exists in 'tmp' */
+            // async function waitCompletion() {
+            //     console.log("waitCompletion()");
+            //     if (checkCompletion())
+            //         return 0;
+            //     await switchSleep(1);
+                // var timeout = 10; // 10s timeout
+                // var t;
+                // var switchDone = 0;
+                // for (t = 0; t < timeout; t++) {
+                //     console.log("Before fileExists() t="+t)
+                //     $.ajax({
+                //         type: 'POST',
+                //         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+                //         data: {
+                //             action: 'fileExists',
+                //             path: 'tmp/switchBranch.done'
+                //         },
+                //         dataType: 'json',
+                //         global: false,
+                //         error: function (request, status, error) {
+                //         },
+                //         success: function (json_res) {
+                //             $res = JSON.parse(json_res.result);
+                //             if ($res.status == 0) {
+                //                 console.log('File tmp/switchBranch.done exists');
+                //                 switchDone = 1;
+                //             }
+                //         }
+                //     })
+                //     .then(() => {
+                //         if (switchDone == 1)
+                //             return 0;
+                //         console.log("dodo 1sec, t="+t);
+                //         await switchSleep(1);
+                //     });
+                // }
+            //     return -1;
+            // }
+
+            // if (waitCompletion() != 0) {
+            //     /* Error */
+            //     bootbox.alert("ERREUR 'switchBranch' !<br>Le basculement s'est mal passé.");
+            // } else {
+            //     document.location.reload(true);
+            //     // Note: reload does not reload config page but default page. How to solve ?
+            // }
+        });
+    }
 
 </script>

@@ -1,0 +1,3 @@
+- le retour d etat fonctionne sans soucis.
+- par contre le retour de Puissance, Volt et Ampere ne semble pas fonctionner.
+- de ce fait Abeille doit recuperer les informations. Cela se produit sur changement d'etat (avec un délai de 5s) et toutes les 15 minutes.

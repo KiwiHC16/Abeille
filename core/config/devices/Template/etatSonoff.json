@@ -1,0 +1,17 @@
+{
+  "0500-#EP#-0000": {
+    "isVisible": 1,
+    "name": "etat",
+    "order": 2,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "generic_type": "OPENING",
+    "invertBinary": "1",
+    "template": "door",
+    "configuration": {
+      "uniqId": "5c07sdc766sd2341a",
+      "visibilityCategory": "All"
+    }
+  }
+}

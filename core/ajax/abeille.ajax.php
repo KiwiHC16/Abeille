@@ -52,19 +52,20 @@ try {
     }
 
     if (init('action') == 'installSocat') {
-        $cmdToExec = "installSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {
-        $status = abeille::checkWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installWiringPi') {
-        abeille::installWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -96,7 +97,8 @@ try {
     }
 
     if (init('action') == 'installTTY') {
-        abeille::installTTY(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -136,7 +138,8 @@ try {
     }
 
     if (init('action') == 'resetPiZiGate') {
-        abeille::resetPiZiGate(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 

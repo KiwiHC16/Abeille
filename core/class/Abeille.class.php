@@ -120,51 +120,51 @@
             return $return;
         }
 
-        public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
-            if ($GLOBALS['debugKIWI']) echo $text." start\n";
-            log::add('Abeille', 'debug', 'Starting '.$text);
-            log::remove('Abeille_'.$text);
-            log::add('Abeille_'.$text, 'info', $text.' Start');
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
-            if ($_background) $cmd .= ' &';
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_'.$text, 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_'.$text, 'info', 'End'.$text);
-            if ($GLOBALS['debugKIWI']) echo $text." end\n";
-        }
+        // public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
+        //     if ($GLOBALS['debugKIWI']) echo $text." start\n";
+        //     log::add('Abeille', 'debug', 'Starting '.$text);
+        //     log::remove('Abeille_'.$text);
+        //     log::add('Abeille_'.$text, 'info', $text.' Start');
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
+        //     if ($_background) $cmd .= ' &';
+        //     if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
+        //     log::add('Abeille_'.$text, 'info', $cmd);
+        //     shell_exec($cmd);
+        //     log::add('Abeille_'.$text, 'info', 'End'.$text);
+        //     if ($GLOBALS['debugKIWI']) echo $text." end\n";
+        // }
 
-        public static function syncconfAbeille($_background = true) {
-            Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
-        }
+        // public static function syncconfAbeille($_background = true) {
+        //     Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
+        // }
 
-        public static function checkWiringPi($_background = true) {
-            $cmdToExec = "checkWiringPi.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function checkWiringPi($_background = true) {
+        //     $cmdToExec = "checkWiringPi.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function installWiringPi($_background = true) {
-            $cmdToExec = "installWiringPi.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function installWiringPi($_background = true) {
+        //     $cmdToExec = "installWiringPi.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function installTTY($_background = true) {
-            $cmdToExec = "installTTY.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function installTTY($_background = true) {
+        //     $cmdToExec = "installTTY.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function resetPiZiGate($_background = true) {
-            $cmdToExec = "resetPiZigate.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function resetPiZiGate($_background = true) {
+        //     $cmdToExec = "resetPiZigate.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
         /* Looking for missing IEEE addresses */
         public static function tryToGetIEEE() {

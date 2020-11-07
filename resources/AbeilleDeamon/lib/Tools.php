@@ -1,6 +1,6 @@
 <?php
 
-// require_once dirname(__FILE__) . '/../../../../../core/php/core.inc.php';
+// require_once __DIR__ . '/../../../../../core/php/core.inc.php';
 
 class AbeilleTools
 {
@@ -79,7 +79,7 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyCmd($cmd) {
 
-        $cmdFilename = dirname(__FILE__) . '/../../../core/config/devices/Template/' . $cmd . '.json';
+        $cmdFilename = __DIR__ . '/../../../core/config/devices/Template/' . $cmd . '.json';
 
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename );
@@ -97,22 +97,18 @@ class AbeilleTools
         return $cmdJson;
     }
 
-    /**
+    /*
      * Needed for Template Generation
-     *
-     *
-     *
      */
     public static function getJSonConfigFilebyDevicesTemplate($device = 'none') {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
 
-        $deviceCmds = array();
-        $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        $deviceFilename = __DIR__.'/../../../core/config/devices/'.$device.'/'.$device.'.json';
 
         if (!is_file($deviceFilename)) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename not found: ' . $deviceFilename . ' will send back default template.');
+            log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut.');
             $device = 'defaultUnknown';
-            $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+            $deviceFilename = __DIR__.'/../../../core/config/devices/'.$device.'/'.$device.'.json';
         }
 
         $content = file_get_contents($deviceFilename);
@@ -120,11 +116,13 @@ class AbeilleTools
         // Recupere le template master
         $deviceTemplate = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
+            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content='.$content);
             return;
         }
 
         // Basic Commands
+        $deviceCmds = array();
         $deviceCmds += self::getJSonConfigFilebyCmd("IEEE-Addr");
         $deviceCmds += self::getJSonConfigFilebyCmd("Link-Quality");
         $deviceCmds += self::getJSonConfigFilebyCmd("Time-Time");
@@ -132,7 +130,6 @@ class AbeilleTools
         $deviceCmds += self::getJSonConfigFilebyCmd("Power-Source");
         $deviceCmds += self::getJSonConfigFilebyCmd("Short-Addr");
         $deviceCmds += self::getJSonConfigFilebyCmd("online");
-
 
         // Recupere les templates Cmd instanciées
         foreach ( $deviceTemplate[$device]['Commandes'] as $cmd=>$file ) {
@@ -156,7 +153,7 @@ class AbeilleTools
      */
     public static function getJSonConfigFiles($jsonFile = null) {
 
-        $configDir = dirname(__FILE__) . '/../../../core/config/';
+        $configDir = __DIR__ . '/../../../core/config/';
 
         // self::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
         $confFile = $configDir . $jsonFile;
@@ -189,7 +186,7 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille') {
 
-        $deviceFilename = dirname(__FILE__) . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        $deviceFilename = __DIR__ . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename' . $deviceFilename);
         if (!is_file($deviceFilename)) {
             // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename' . $deviceFilename);

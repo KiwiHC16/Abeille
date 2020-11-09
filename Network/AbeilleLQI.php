@@ -7,7 +7,6 @@
      * Process 804E answer messages
      * to draw LQI (Link Quality Indicator)
      * to draw NE Hierarchy
-     *
      */
     
     include_once __DIR__."/../../../core/php/core.inc.php";

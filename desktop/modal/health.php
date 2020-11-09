@@ -91,7 +91,7 @@ Démons:
             // Status
             // Status Ok par defaut, apres on test et on met le status à la valeur voulue
             if ($eqLogic->getIsEnable() == 0) // Disabled ?
-                $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Dévalidé}}</span>';
+                $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
             else if ($eqLogic->getStatus('state') == '-')
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             else if ($eqLogic->getConfiguration('icone') == "remotecontrol")

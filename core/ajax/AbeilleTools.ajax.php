@@ -79,7 +79,6 @@
             }
             if ($status == 0) {
                 $mtime = filemtime($path);
-                logToFile('AbeilleTOTO', 'debug', 'mtime='.$mtime);
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'mtime'=> $mtime)));

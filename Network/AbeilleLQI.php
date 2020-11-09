@@ -1,6 +1,6 @@
 <?php
     
-    /***
+    /*
      * LQI
      *
      * Send LQI request to the network
@@ -10,7 +10,7 @@
      *
      */
     
-    include_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
+    include_once __DIR__."/../../../core/php/core.inc.php";
     include_once("../resources/AbeilleDeamon/lib/Tools.php");
     include_once("../resources/AbeilleDeamon/includes/config.php");
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
@@ -141,7 +141,6 @@
         $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
         
         $LQI[] = $parameters;
-        
     }
     
     function mqqtPublishLQI( $dest, $addr, $index ) {
@@ -200,7 +199,6 @@
             message();
             sleep(1);
         }
-
     }
     
     /*--------------------------------------------------------------------------------------------------*/
@@ -223,15 +221,28 @@
     
     KiwiLog('Start Main');
     
-    if ( $_GET['zigate']<1 or $_GET['zigate']>maxNbOfZigate ) {
+    /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
+       collected in the same way.
+       URL => use $_GET[]
+       Cmd line/shell => use $argv[] */
+    if (!isset($_GET['zigate'])) {
+        /* Zigate number passed as arg ? (called from shell/cron case) */
+        if (!isset($argv[1])) {
+            KiwiLog("Paramètre zigate manquant.");
+            return;
+        }
+        $zgNb = $argv[1];
+    } else
+        $zgNb = $_GET['zigate'];
+    if (($zgNb < 1) or ($zgNb > maxNbOfZigate)) {
         KiwiLog("Mauvaise valeur de zigate !!!!");
         return;
     }
     
-    $serial = "Abeille".$_GET['zigate'];
+    $serial = "Abeille".$zgNb;
     
-    $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
-    $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
+    $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
+    $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
     
     $dir = "tmp/";
     $DataFile = $dir."AbeilleLQI_MapData".$serial.".json";
@@ -329,7 +340,6 @@
                 // echo "Already done\n";
             }
         }
-        
     }
         
     //announce end of processing
@@ -347,9 +357,7 @@
         echo "Oops! Error creating json file...\n";
     }
     
-    
     // print_r( $NE_All );
     // print_r( $voisine );
     // print_r( $LQI );
-    
-    ?>
+?>

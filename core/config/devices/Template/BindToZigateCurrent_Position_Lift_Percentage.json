@@ -1,0 +1,19 @@
+{
+  "BindToZigateCurrent_Position_Lift_Percentage": {
+    "Comment": "Used to bind the device to zigate",
+    "isVisible": 0,
+    "name": "BindToZigateCurrent_Position_Lift_Percentage",
+    "order": 28,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5csqf07cc26621916",
+      "topic": "bindShort",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0102&reportToAddress=#ZiGateIEEE#",
+      "visibilityCategory": "Network"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "0102-#EP#-0008": {
+    "isVisible": 1,
+    "name": "current_position_lift_percentage",
+    "order": 4,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "invertBinary": "0",
+    "template": "",
+    "unite": "%",
+    "configuration": {
+      "uniqId": "sgh5c07c76621e16621e11",
+      "minValue": "0",
+      "maxValue": "100",
+      "historizeRound": "0",
+      "visibilityCategory": "All"
+    }
+  }
+}

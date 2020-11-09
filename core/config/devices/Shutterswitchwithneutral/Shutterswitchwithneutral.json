@@ -1,0 +1,31 @@
+{
+  "Shutterswitchwithneutral": {
+    "nameJeedom": "Shutter switch with neutral",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07c620dfgfdfd7662071f",
+      "icone": "Shutterswitchwithneutral",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include5": "current_position_lift_percentage",
+      "include9": "WindowsCoveringUp",
+      "include10": "WindowsCoveringDown",
+      "include10 2": "WindowsCoveringStop",
+      "include20": "getcurrent_position_lift_percentage",
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild",
+      "include24": "Identify",
+      "include25": "Group-Membership",
+      "include27": "BindToZigateCurrent_Position_Lift_Percentage",
+      "include29": "setReportCurrent_Position_Lift_Percentage"
+    }
+  }
+}

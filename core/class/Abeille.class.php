@@ -205,18 +205,24 @@
                 }
             }
         }
+    
         public static function cronDaily() {
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
-            /**
+            /*
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
              */
-            log::add('Abeille', 'debug', 'Launching AbeilleLQI.php');
+            log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
             $ROOT= "/var/www/html/plugins/Abeille/Network" ;// getcwd();
-            log::add('Abeille', 'debug', 'ROOT: '.$ROOT);
-            $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
-            log::add('Abeille', 'debug', $cmd);
-            exec($cmd);
-            
+            $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
+            for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+                $zgEnabled = config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N', 1);
+                if ($zgEnabled != 'Y')
+                    continue; // Zigate disabled
+                $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php ".$zgNb." 1>/dev/null 2>/dev/null &";
+                log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
+                exec($cmd);
+            }
+
             // Poll Cmd
             self::pollingCmd("cronDaily");
         }
@@ -298,6 +304,7 @@
         public static function cron15() {
 
             log::add( 'Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------' );
+
             /**
              * Look every 15 minutes if the kernel driver is not in error
              */
@@ -534,7 +541,6 @@
             if ( msg_stat_queue( msg_get_queue(queueKeySerieToParser)       )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
             if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
 
-
             if ($debug_deamon_info) log::add( 'Abeille', 'debug', 'deamon_info(): Terminé, return='.json_encode($return) );
             return $return;
         }
@@ -657,7 +663,6 @@
                 $serialPort = $param['AbeilleSerialPort'.$i];
                 if (($serialPort == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                     continue; // Undefined or disabled
-log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
                 if ($serialPort != "/dev/zigate".$i)
                     continue; // Not a WIFI Zigate
 
@@ -1822,7 +1827,6 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
 
                     $topicArray = explode("/", $topic );
                     $dest = substr($topicArray[0],3);
-
 
                     /* ------------------------------ */
                     // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)

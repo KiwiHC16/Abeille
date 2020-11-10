@@ -380,23 +380,23 @@
                                             echo $addr.' veut joindre '.$destination.' passera par '.$nextHop.'<br />';
                                         }
                                     }
-                                    
                                 }
                                 
                                 $routingTable = array();
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
-                                    if ( $eqLogic->getConfiguration('routingTable', 'none') != 'none' ) {
-                                        $routingTable[$eqLogic->getLogicalId()] = json_decode($eqLogic->getConfiguration('routingTable'), 1)[0];
-                                    }
+                                    $rt = $eqLogic->getConfiguration('routingTable', 'none');
+                                    if ($rt == 'none')
+                                        continue; // No routing info
+                                    $rt2 = json_decode($rt); // JSON to array
+                                    if (empty($rt2))
+                                        continue; // Empty routing info
+                                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
                                 }
                                 // var_dump( $routingTable );
                                 afficheRouteTable( $routingTable );
-                                    
-                                ?>
+                    ?>
                 </div>
-
-
 
 <!-- tab fin -->
 
@@ -415,7 +415,7 @@
 <script type="text/javascript">
     <?php
         for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-            echo '$(".btn.displayNodes'.$i.'").off("click").on("click", function () { network_links('.$i.'); });'."\n";
+            echo '$(".btn.displayNodes'.$i.'").off("click").on("click", function () { displayNetLinks('.$i.'); });'."\n";
             echo '$(".btn.refreshNodes'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.'); setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
         }
 

@@ -1,5 +1,5 @@
 <?php
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
 ?>
 
 <script type="text/javascript">
@@ -47,7 +47,7 @@ function getVoisinesJSON() {
             }
         };
 
-        xmlhttp.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapData"+Ruche+".json", false); // False pour bloquer sur la recuperation du fichier
+        xmlhttp.open("GET", "/plugins/Abeille/tmp/AbeilleLQI_MapData"+Ruche+".json", false); // False pour bloquer sur la recuperation du fichier
         xmlhttp.send();
     }
 
@@ -121,7 +121,7 @@ function refreshNetworkInformationProgress() {
             // console.log("Debug - Progress:"+networkInformationProgress);
         }
     };
-    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/Network/tmp/AbeilleLQI_MapData"+Ruche+".json.lock?"+d.getTime(), true);
+    xmlhttpRefreshNetworkInformationProgress.open("GET", "/plugins/Abeille/tmp/AbeilleLQI_MapData"+Ruche+".json.lock?"+d.getTime(), true);
     xmlhttpRefreshNetworkInformationProgress.send();
 }
 

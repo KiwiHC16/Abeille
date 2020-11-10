@@ -555,10 +555,10 @@
             // ******************************************************************************************************************
             // Remove temporary files
             for ( $i=1; $i<=config::byKey( 'zigateNb', 'Abeille', '1', 1 ); $i++ ) {
-                $FileLock = '/var/www/html/plugins/Abeille/Network/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
-                if (file_exists($FileLock)) {
-                    unlink( $FileLock );
-                    log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de '.$FileLock );
+                $lockFile = '/var/www/html/plugins/Abeille/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
+                if (file_exists($lockFile)) {
+                    unlink( $lockFile );
+                    log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de '.$lockFile );
                 }
             }
 

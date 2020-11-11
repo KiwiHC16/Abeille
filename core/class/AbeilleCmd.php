@@ -1667,22 +1667,23 @@
                 $profileID              = "0104";
                 $clusterID              = "FC01";
                 $securityMode           = "02";
-                $radius                 = "14";
+                $radius                 = "1E";
 
                 $zclControlField        = "1D";
-                $ManufacturerCode       = "2110";
+                $Manufacturer           = reverse_hex("1021");
                 $transactionSequence    = "01";
                 $cmdId                  = "08";
                 $groupId                = reverse_hex($Command['groupId']);
+                $total                  = "AAAA";
 
-                $data2 = $zclControlField . $ManufacturerCode . $transactionSequence . $cmdId . $groupId;
+                $data2 = $zclControlField . $Manufacturer . $transactionSequence . $cmdId . $groupId ;
 
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
                 $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$ManufacturerCode."-".$transactionSequence."-".$cmdId."-".$groupId." len: ".$dataLength );
+                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
 
                 $data = $data1 . $data2;
                 // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );

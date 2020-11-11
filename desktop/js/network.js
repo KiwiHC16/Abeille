@@ -213,8 +213,7 @@ function network_display(zigateX) {
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
             //console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
-        }
-        else {
+        } else {
                  
             // On parcours le json ligne à ligne
             // On regarde la source et l'ajoute a la table nodes si pas deja existante
@@ -328,9 +327,7 @@ function network_display(zigateX) {
                                                                                                     });
                                                                     };
                   */
-                  
 
-                //
                 graphics.node(function (node) {
                     var nodeSize = 10;
                               

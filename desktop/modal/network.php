@@ -110,7 +110,7 @@
     }
 </style>
 
-<link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css">
+<!-- <link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="/3rdparty/jquery.tablesorter/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
@@ -140,30 +140,26 @@
                     {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
                     <br />
                     <div id="div_routingTable">
-                        <!-- <span> -->
+                        Afficher réseau : 
+                        <?php
+                        for ($i = 1; $i <= $nbOfZigates; $i++) {
+                            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+                                continue; // Disabled
+                            echo '<a data-action="afficheNetworkCache" class="btn btn-success displayNodes'.$i.'">Abeille'.$i.' </a>';
+                            echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-default fa fa-refresh refreshNodes'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
+                        }
+                        ?>
+                        <br />
+                        <hr>
+                        Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
+                        <br />
+                        <br />
 
-                            Afficher réseau : 
-                            <?php
-                            for ($i = 1; $i <= $nbOfZigates; $i++) {
-                                if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
-                                    continue; // Disabled
-                                echo '<a data-action="afficheNetworkCache" class="btn btn-success displayNodes'.$i.'">Abeille'.$i.' </a>';
-                                echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-default fa fa-refresh refreshNodes'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
-                            }
-                            ?>
-                            <br />
-                            <hr>
-                            Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
-                            <br />
-                            <br />
+                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par emetteur">{{Source}}</label>
+                        <select class="filterSource" id="nodeFrom"> </select>
 
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par emetteur">{{Source}}</label>
-                            <select class="filterSource" id="nodeFrom"> </select>
-
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par destinataire">{{Destinataire}}</label>
-                            <select class="filterRecipient" id="nodeTo"> </select>
-
-                        <!-- </span> -->
+                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par destinataire">{{Destinataire}}</label>
+                        <select class="filterRecipient" id="nodeTo"> </select>
 
                         <table class="table table-condensed tablesorter" id="table_routingTable">
                             <thead>
@@ -191,18 +187,18 @@
                 <div id="graph_network" class="tab-pane">
 
                     <br />
-                    <span class="" style="padding: 3px 20px;">
+                    Afficher réseau : 
                     <?php
-                        for ($i = 1; $i <= $nbOfZigates; $i++) {
-                            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
-                                continue; // Disabled
-                            echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$i.'"><i class="fa fa-refresh" ></i>{{Affiche LQI Z'.$i.'}}</a>';
-                        }
+                    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+                        if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
+                            continue; // Disabled
+                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$zgNb.'">Abeille'.$zgNb.' </a>';
+                        echo '<a data-action="refreshNetworkCache'.$zgNb.'" class="btn btn-default fa fa-refresh refreshNodes'.$zgNb.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
+                    }
                     ?>
-                    </span>
 
                     <table class="table table-bordered table-condensed"
-                           style="width: 700px;position:fixed;margin-top : 25px;">
+                           style="width: 150px;position:fixed;margin-top : 25px;">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -230,13 +226,9 @@
                     </table>
 
                     <span id="graph-node-name" style="width: 100%;height: 100%"></span>
-
                 </div>
 
-
 <!-- tab Résumé -->
-
-
                 <div id="summary_network" class="tab-pane" >
                     <br />
 

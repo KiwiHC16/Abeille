@@ -1667,14 +1667,13 @@
                 $profileID              = "0104";
                 $clusterID              = "FC01";
                 $securityMode           = "02";
-                $radius                 = "1E";
+                $radius                 = "14";
 
                 $zclControlField        = "1D";
                 $Manufacturer           = reverse_hex("1021");
                 $transactionSequence    = "01";
                 $cmdId                  = "08";
                 $groupId                = reverse_hex($Command['groupId']);
-                $total                  = "AAAA";
 
                 $data2 = $zclControlField . $Manufacturer . $transactionSequence . $cmdId . $groupId ;
 

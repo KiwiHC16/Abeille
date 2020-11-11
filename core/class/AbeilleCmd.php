@@ -1629,6 +1629,68 @@
 
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
             }
+            
+            // CmdAbeille/Ruche/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
+            // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
+            if ( isset($Command['commissioningGroupAPSLegrand']) )
+            {
+                $this->deamonlog('debug',"commissioningGroupAPSLegrand");
+
+                $cmd = "0530";
+
+                // <address mode: uint8_t>              -> 1
+                // <target short address: uint16_t>     -> 2
+                // <source endpoint: uint8_t>           -> 1
+                // <destination endpoint: uint8_t>      -> 1
+
+                // <profile ID: uint16_t>               -> 2
+                // <cluster ID: uint16_t>               -> 2
+
+                // <security mode: uint8_t>             -> 1
+                // <radius: uint8_t>                    -> 1
+                // <data length: uint8_t>               -> 1
+                //                                                                                12 -> 0x0C
+                // <data: auint8_t>
+                // 19 ZCL Control Field
+                // 01 ZCL SQN
+                // 41 Commad Id: Get Group Id Response
+                // 01 Total
+                // 00 Start Index
+                // 01 Count
+                // 00 Group Type
+                // 001B Group Id
+
+                $addressMode            = "02";
+                $targetShortAddress     = $Command['address'];
+                $sourceEndpoint         = "01";
+                $destinationEndpoint    = "01";
+                $profileID              = "0104";
+                $clusterID              = "FC01";
+                $securityMode           = "02";
+                $radius                 = "14";
+
+                $zclControlField        = "1D";
+                $ManufacturerCode       = "2110";
+                $transactionSequence    = "01";
+                $cmdId                  = "08";
+                $groupId                = reverse_hex($Command['groupId']);
+
+                $data2 = $zclControlField . $ManufacturerCode . $transactionSequence . $cmdId . $groupId;
+
+                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+                $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$ManufacturerCode."-".$transactionSequence."-".$cmdId."-".$groupId." len: ".$dataLength );
+
+                $data = $data1 . $data2;
+                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            }
 
             if ( isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
             {

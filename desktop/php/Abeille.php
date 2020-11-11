@@ -260,6 +260,7 @@ $outils = array(
                     <input type="submit" name="submitButton" value="Add Group">
                     <input type="submit" name="submitButton" value="Remove Group"></br>
                     <input type="submit" name="submitButton" value="Set Group Remote">
+                    <input type="submit" name="submitButton" value="Set Group Remote Legrand">
                 </td>
             </tr>
           </table>

@@ -140,7 +140,7 @@
                     {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
                     <br />
                     <div id="div_routingTable">
-                        Afficher réseau : 
+                        Afficher réseau :
                         <?php
                         for ($i = 1; $i <= $nbOfZigates; $i++) {
                             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
@@ -187,7 +187,7 @@
                 <div id="graph_network" class="tab-pane">
 
                     <br />
-                    Afficher réseau : 
+                    Afficher réseau :
                     <?php
                     for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
                         if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
@@ -299,27 +299,27 @@
                                 // Vertical
                                 $hauteurGraph = 256;
                                 $hauteurLegendX = 30;
-                                
+
                                 // Horizontal
                                 $margeLeft = 10;
                                 $largeurGraph = 300;
                                 $margeRight = $margeLeft;
-                                
+
                                 $channelMin = 11;
                                 $channelMax = 26;
-                                
+
                                 // Objet
                                 $cercleRayon = 5;
                                 $lineBruitY = 256 - 180;
-                                
+
                                 // As a result
                                 $largeurCadre = $margeLeft + $largeurGraph + $margeRight;
                                 $hauteurCadre = $hauteurGraph+$hauteurLegendX;
-                                
+
                                 $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
-                                    
+
                                     echo $title.'<br /><br />';
-                                
+
                                     echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
                                     echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
                                     echo '<line x1 = "1" y1 = "'.$lineBruitY.'" x2 = "'.$largeurCadre.'" y2 = "'.$lineBruitY.'" style = "stroke:yellow; stroke-width:3"/>';
@@ -333,18 +333,18 @@
                                     echo '</svg>';
                                       if ( $logicalId != "" ) {
                                             echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Collecter}}</a><br /><br />';
-                                                                                                                                                                                        
+
                                       }
                                     echo "<br /><br />";
-                                    
+
                                 }
-                                
+
                                 // Exemple 1: Pas chargé, Exemple 2: Chargé
                                 $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
                                 $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
                                 afficheGraph( "Exemple 1", "", $localZigbeeChannelPowerExample1 );
                                 afficheGraph( "Exemple 2", "", $localZigbeeChannelPowerExample2 );
-                                
+
                                 // Affichons toutes les Abeilles
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
@@ -363,9 +363,8 @@
                 <div id="test2" class="tab-pane" >
                     <?php
                                 echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
-                                
                                 echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
-                                
+
                                 function afficheRouteTable( $routingTable ) {
                                     foreach ( $routingTable as $addr=>$route ) {
                                         foreach ( $route as $destination=>$nextHop ) {
@@ -373,7 +372,7 @@
                                         }
                                     }
                                 }
-                                
+
                                 $routingTable = array();
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
@@ -383,9 +382,8 @@
                                     $rt2 = json_decode($rt); // JSON to array
                                     if (empty($rt2))
                                         continue; // Empty routing info
-                                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
+                                    $routingTable[$eqLogic->getName()] = $rt2[0];
                                 }
-                                // var_dump( $routingTable );
                                 afficheRouteTable( $routingTable );
                     ?>
                 </div>
@@ -424,7 +422,7 @@
         }
 
         echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
-                                
+
         $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             if( $eqLogic->getConfiguration('routingTable') ) {

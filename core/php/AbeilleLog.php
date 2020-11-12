@@ -102,7 +102,7 @@
                 $tmpDir = __DIR__.'/../../tmp';
                 if (file_exists($tmpDir) == FALSE)
                     mkdir($tmpDir);
-                $lFileTmp = $tmpDir."/".$GLOBALS["logFile"]."-prev";
+                $lFileTmp = $tmpDir."/".$GLOBALS["logFile"]."-prev.log";
                 rename($lFile, $lFileTmp);
 
                 file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] Log précédent sauvé sous \'tmp/'.$GLOBALS["logFile"]."-prev'\n", FILE_APPEND);

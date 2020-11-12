@@ -25,6 +25,8 @@
     ini_set('error_log', '/var/www/html/log/AbeillePHP');
     ini_set('log_errors', 'On');
 
+    $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
+
     function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
     {
         if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
@@ -82,6 +84,59 @@
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'mtime'=> $mtime)));
+        }
+
+        /* Create compressed file with all logs.
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'createLogsZipFile') {
+            $status = 0;
+            $error = "";
+
+            $logsDir = $pluginRoot."/tmp/AbeilleLogs";
+            if (file_exists($logsDir)) {
+                $cmd = "cd ".$pluginRoot."; sudo rm -f tmp/AbeilleLogs/*";
+                exec($cmd, $out, $status);
+            } else {
+                if (!file_exists($pluginRoot."/tmp"))
+                    mkdir($pluginRoot."/tmp");
+                if (!file_exists($logsDir))
+                    mkdir($logsDir);
+            }
+
+            /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
+            $cmd = "cd ".$pluginRoot."; sudo cp ../../log/Abeille* tmp/AbeilleLogs";
+            $cmd .= "; sudo cp tmp/*.log tmp/AbeilleLogs";
+            $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
+            exec($cmd, $out, $status);
+
+            /* Searching for available compression tool */
+            // TODO: Select tool according to what's available.
+            $tool = "gzip";
+            // $tool = "bzip2";
+            
+            if ($tool == "gzip") {
+                /* gzip
+                -c => Write output on standard output
+                -r => Travel the directory structure recursively
+                */
+                $zipFile = "AbeilleLogs.tgz";
+                $cmd = "cd ".$pluginRoot."/tmp; sudo tar cvf - AbeilleLogs | gzip -c >".$zipFile;
+            }
+            if ($tool == "bzip2") {
+                /* bzip2
+                -c => Compress or decompress to standard output
+                -z => Compress
+                -q => Quiet
+                */
+                $zipFile = "AbeilleLogs.bz2";
+                $cmd = "cd ".$pluginRoot."/tmp; sudo tar cvf - AbeilleLogs | bzip2 -zqc >".$zipFile;
+            }
+
+            exec($cmd, $out, $status);
+            if ($status != 0)
+                $error = "Erreur '".$cmd."'";
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'zipFile' => $zipFile)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

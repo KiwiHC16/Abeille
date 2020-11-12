@@ -43,5 +43,4 @@
     define('maxNbOfZigate',        10);
 
     define('maxRetryDefault',       3);
-
 ?>

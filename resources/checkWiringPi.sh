@@ -11,6 +11,6 @@ if [ $? -ne 0 ]; then
     echo "=         Le package WiringPi est probablement mal installé."
     exit 1
 fi
-echo "=Ok"
+echo "= Ok"
 
 exit 0

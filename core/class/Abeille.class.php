@@ -1257,11 +1257,12 @@
                     )
                 ) {
 
+                $trimmedValue = $value;
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
 
                 /* Remove leading "lumi." from name as all xiaomi devices who start with this prefix. */
-                if (!strncasecmp($value, "lumi.", 5))
-                    $trimmedValue = substr($value, 5); // Remove leading "lumi." case insensitive    
+                if (!strncasecmp($trimmedValue, "lumi.", 5))
+                    $trimmedValue = substr($trimmedValue, 5); // Remove leading "lumi." case insensitive
 
                 //remove all space in names for easier filename handling
                 $trimmedValue = str_replace(' ', '', $trimmedValue);
@@ -1275,7 +1276,7 @@
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
                 log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
-
+                
                 // On recupere le EP
                 // $EP = substr($cmdId,5,2);
                 $EP = explode('-', $cmdId)[1];

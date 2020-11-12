@@ -919,9 +919,9 @@
                           Here we can assumed the device was not reset. */
 
             $Addr       = substr($payload, 0, 4);
-            $IEEE       = strtoupper(substr($payload, 4, 16));
+            $IEEE       = substr($payload, 4, 16);
             $MACCapa    = substr($payload, 20, 2);
-            if (strlen($payload) > 22)
+            if (strlen($payload) > 24)
                 $Rejoin = substr($payload, 22, 2);
             else
                 $Rejoin = "";

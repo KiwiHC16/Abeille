@@ -942,6 +942,8 @@
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             if ($Rejoin == "02") return;
 
+            if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
+            
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );

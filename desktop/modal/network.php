@@ -1,5 +1,4 @@
 <?php
-
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
@@ -362,29 +361,29 @@
 
                 <div id="test2" class="tab-pane" >
                     <?php
-                                echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
-                                echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
+                        echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                        echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
 
-                                function afficheRouteTable( $routingTable ) {
-                                    foreach ( $routingTable as $addr=>$route ) {
-                                        foreach ( $route as $destination=>$nextHop ) {
-                                            echo $addr.' veut joindre '.$destination.' passera par '.$nextHop.'<br />';
-                                        }
-                                    }
-                                }
+                        $eqLogics = [];
+                        foreach (eqLogic::byType('Abeille') as $abeille) {
+                            $eqLogics[str_replace('Abeille1/', '', $abeille->getLogicalId())] = $abeille;
+                        }
 
-                                $routingTable = array();
-                                $eqLogics = Abeille::byType('Abeille');
-                                foreach ($eqLogics as $eqLogic) {
-                                    $rt = $eqLogic->getConfiguration('routingTable', 'none');
-                                    if ($rt == 'none')
-                                        continue; // No routing info
-                                    $rt2 = json_decode($rt); // JSON to array
-                                    if (empty($rt2))
-                                        continue; // Empty routing info
-                                    $routingTable[$eqLogic->getName()] = $rt2[0];
+                        foreach ($eqLogics as $eqLogic) {
+                            $routingList = json_decode($eqLogic->getConfiguration('routingTable', '[]'));
+                            if (empty($routingList)) {
+                                continue; // Empty routing info
+                            }
+                            foreach ($routingList as $route) {
+                                if (!key($route) || !current($route)) {
+                                    continue;
                                 }
-                                afficheRouteTable( $routingTable );
+                                $destEqName = isset($eqLogics[key($route)]) ? "{$eqLogics[key($route)]->getName()} ({$eqLogics[key($route)]->getLogicalId()})" : key($route);
+                                $transitionEqName = isset($eqLogics[current($route)]) ? "{$eqLogics[current($route)]->getName()} ({$eqLogics[key($route)]->getLogicalId()})" : current($route);
+                                echo "{$eqLogic->getName()} ({$eqLogic->getLogicalId()}) veut joindre $destEqName passera par $transitionEqName<br />";
+                            }
+                            echo "<br/>";
+                        }
                     ?>
                 </div>
 

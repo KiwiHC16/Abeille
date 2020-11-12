@@ -205,7 +205,7 @@
                 }
             }
         }
-    
+
         public static function cronDaily() {
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
             /*
@@ -294,7 +294,7 @@
             if ( ($i*33) > (3600) ) {
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum." );
             }
-            
+
             // Poll Cmd
             self::pollingCmd("cronHourly");
 
@@ -364,7 +364,7 @@
 
             // Poll Cmd
             self::pollingCmd("cron15");
-            
+
             log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
@@ -411,7 +411,7 @@
 
             // Poll Cmd
             self::pollingCmd("cron");
-            
+
             /**
              * Refresh health information
              */
@@ -592,12 +592,12 @@
 
             /* Developers debug features.
                Since deamon_start() is static, could not find a way to reuse global variables.
-               WARNING: Since php file is cached, it sometimes requires delay or restart to 
+               WARNING: Since php file is cached, it sometimes requires delay or restart to
                  get last content of 'debug.php' */
             $dbgFile = __DIR__."/../../tmp/debug.php";
             if (file_exists($dbgFile))
                 include $dbgFile;
-    
+
             /* Some checks before starting daemons
                - Are dependancies ok ?
                - Is cron running ? */
@@ -692,7 +692,7 @@
                     $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
                     return false;
                 }
-    
+
                 $daemonParams = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.$logLevel;
                 $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, ".")))).$i." 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
@@ -1276,7 +1276,7 @@
                 log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
                 $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
                 log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
-                
+
                 // On recupere le EP
                 // $EP = substr($cmdId,5,2);
                 $EP = explode('-', $cmdId)[1];
@@ -1606,10 +1606,10 @@
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                
+
                 // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
                 $cmds = AbeilleCmd::searchConfigurationEqLogic($elogic->getId(),'PollingOnCmdChange','action');
- 
+
                 foreach ( $cmds as $key => $cmd ) {
                     if ( $cmd->getConfiguration('PollingOnCmdChange') == $cmdId ) {
                         log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName() );

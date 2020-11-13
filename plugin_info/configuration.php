@@ -25,7 +25,7 @@
         include_once __DIR__."/../core/php/AbeilleGit.php"; // Developer functions/features
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP');
         ini_set('log_errors', 'On');
     }
 
@@ -35,9 +35,7 @@
         include_file('desktop', '404', 'php');
         die();
     }
-    
-    // require_once dirname(__FILE__).'/../core/class/Abeille.class.php';
-    require_once '/var/www/html/plugins/Abeille/core/class/Abeille.class.php';
+    require_once __DIR__.'/../core/class/Abeille.class.php';
 
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
@@ -98,7 +96,7 @@
                                     $b2 = substr($b, 8); // Remove 'remotes/'
                                 else
                                     $b2 = $b;
-echo '<script>console.log("branch='.$b.'")</script>';
+                                echo '<script>console.log("branch='.$b.'")</script>';
                                 if ($b == $localBranch)                               
                                     echo '<option value="'.$b.'" selected>'.$b2.'</option>';
                                 else
@@ -125,9 +123,6 @@ echo '<script>console.log("branch='.$b.'")</script>';
         </div>
 
         <legend><i class="fa fa-list-alt"></i> {{Zigates}}</legend>
-        <!--
-        <a class="btn btn-success" id="bt_Connection_hide"><i class="fa fa-refresh"></i> {{Cacher}}</a><a class="btn btn-danger" id="bt_Connection_show"><i class="fa fa-refresh"></i> {{Afficher}}</a>
-        -->
         <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="Connection">
             <div>
@@ -218,7 +213,7 @@ echo '<script>console.log("branch='.$b.'")</script>';
                     <div>
                         <?php
                             echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
-                            echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' si \'NOK\'.}}">';
+                            echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         ?>
                         <span class="label label-success" style="font-size:1em">-?-</span>
                         </a>
@@ -252,7 +247,7 @@ echo '<script>console.log("branch='.$b.'")</script>';
                         <?php
                         echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
                         // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
-                        // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig\' si \'NOK\'.}}">';
+                        // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         ?>
                             <!-- <span class="label label-success" style="font-size:1em;">-?-</span> -->
                         <!-- </a> -->
@@ -277,9 +272,6 @@ echo '<script>console.log("branch='.$b.'")</script>';
         <br>
 
         <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
-        <!--
-        <a class="btn btn-success" id="bt_zigatewifi_hide"><i class="fa fa-refresh"></i> {{Cacher}}</a><a class="btn btn-danger" id="bt_zigatewifi_show"><i class="fa fa-refresh"></i> {{Afficher}}</a>
-        -->
         <a id="idWifiShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="zigatewifi">
             <div>
@@ -300,9 +292,6 @@ echo '<script>console.log("branch='.$b.'")</script>';
         <br>
 
         <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
-        <!--
-        <a class="btn btn-success" id="bt_pizigate_hide"><i class="fa fa-refresh"></i> {{Cacher}}</a><a class="btn btn-danger" id="bt_pizigate_show"><i class="fa fa-refresh"></i> {{Afficher}}</a>
-        -->
         <a id="idPiShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="PiZigate">
             <div>
@@ -342,41 +331,9 @@ echo '<script>console.log("branch='.$b.'")</script>';
                             }
                         ?>
                     </select>
-                    <!-- No longer required. Moved to "Zigates" section.
-                    <a class="TTYStatus" title="{{Status de communication sur ce port}}">
-                        <span class="label label-success" style="font-size:1em;">-?-</span>
-                    </a>
-                    <a class="btn btn-warning" id="bt_checkTTY" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fa fa-refresh"></i> {{Tester}}</a>
-                    -->
                     <a class="btn btn-warning" id="bt_installTTY" title="{{Tentative d'activation du port}}"><i class="fa fa-refresh"></i> {{Activer}}</a>
                 </div>
             </div>
-
-            <!-- No longer required. Moved to "Zigates" section.
-            <div class="form-group">
-                <label class="col-lg-4 control-label">{{Firmware : }}</label>
-                <div class="col-lg-5">
-                    <a class="CurrentFirmware" title="{{Version du firmware actuel}}">
-                        <span class="label label-success" style="font-size:1em;">-?-</span>
-                    </a>
-                    <a class="btn btn-warning" id="bt_readFW" title="{{Lecture de la version du FW}}">
-                        <i class="fa fa-refresh"></i>
-                        {{Lire}}
-                    </a>
-                    <select style="width:150px" id ="ZiGateFirmwareVersion" title="{{Firmwares disponibles}}">
-                        <?php
-                            foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $value) {
-                                if (preg_match("(3.1c)", $value))
-                                    echo '<option value='.$value.' selected>'.$value.'</option>'; // Selecting default choice
-                                else
-                                    echo '<option value='.$value.'>'.$value.'</option>';
-                            }
-                        ?>
-                    </select>
-                    <a class="btn btn-warning" id="bt_updateFirmware" title="{{Programmation du FW selectionné}}"><i class="fa fa-refresh"></i> {{Mettre à jour}}</a>
-                </div>
-            </div>
-            -->
 
             <div class="form-group">
                 <label class="col-lg-4 control-label">{{Reset (HW) PiZigate : }}</label>
@@ -385,8 +342,10 @@ echo '<script>console.log("branch='.$b.'")</script>';
                 </div>
             </div>
         </div>
-                    
-        <legend><i class="fa fa-list-alt"></i> {{Option avancées}}</legend>
+
+        <br />
+        <br />
+        <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
         <div id="optionsAvancees">
             <div>
                 <p><i>{{Dans certains cas, le fonctionnement du plugin doit être adapté.}}</i></p>
@@ -576,15 +535,6 @@ echo '<script>console.log("branch='.$b.'")</script>';
             }
         });
     })
-
-    // $('#bt_pizigate_hide').on('click', function () {
-        // $("#PiZigate").hide();
-    // });
-
-    // $('#bt_pizigate_show').on('click', function () {
-        // $("#bt_checkWiringPi").click(); // Force WiringPi check
-        // $("#PiZigate").show();
-    // });
 
     $('#idPiShowHide').on('click', function () {
             var Label = document.getElementById("idPiShowHide").innerText;

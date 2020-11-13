@@ -46,11 +46,11 @@ Lancement des operations.
 
     function updatelog(){
         jeedom.log.autoupdate({
-            log: 'AbeilleConfig',
+            log: 'AbeilleConfig.log',
             display: $('#pre_abeilleUpdateFirmware'),
             search: $('#in_abeilleLogSearch'),
             control: $('#bt_abeilleLogStopStart'),
         });
     }
-    setTimeout(updatelog,5000);
+    setTimeout(updatelog, 1000);
 </script>

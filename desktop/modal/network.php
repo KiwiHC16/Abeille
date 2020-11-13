@@ -3,7 +3,7 @@
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
-
+    
     // Last Demon start time
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
 
@@ -358,7 +358,7 @@
 ?>
                 </div>
 
-<!-- tab future usage -->
+<!-- tab Route -->
 
                 <div id="test2" class="tab-pane" >
                     <?php
@@ -367,8 +367,21 @@
 
                                 function afficheRouteTable( $routingTable ) {
                                     foreach ( $routingTable as $addr=>$route ) {
+                                        list( $zigate, $addrShort ) = explode ( '/', $addr );
+                                        if ( $addrShort == '0000' ) $addrShort = 'Ruche';
                                         foreach ( $route as $destination=>$nextHop ) {
-                                            echo $addr.' veut joindre '.$destination.' passera par '.$nextHop.'<br />';
+                                            if ( $destination == '0000' ) $destination = 'Ruche';
+                                            if ( $nextHop == '0000' )     $nextHop = 'Ruche';
+                                            
+                                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, Abeille);
+                                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
+                                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
+                                            
+                                            echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
+                                                . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
+                                                . ') passera par '.$nextHopEq->getObject()->getName() . '-' .$nextHopEq->getName() . ' ('.$nextHopEq->getLogicalId()
+                                                . ')<br>';
+                                            // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
                                         }
                                     }
                                 }
@@ -382,7 +395,7 @@
                                     $rt2 = json_decode($rt); // JSON to array
                                     if (empty($rt2))
                                         continue; // Empty routing info
-                                    $routingTable[$eqLogic->getName()] = $rt2[0];
+                                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
                                 }
                                 afficheRouteTable( $routingTable );
                     ?>

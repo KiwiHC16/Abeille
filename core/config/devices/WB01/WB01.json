@@ -1,0 +1,19 @@
+{
+  "WB01": {
+    "nameJeedom": "SonOff SNZB-01",
+    "timeout": "60",
+    "battery_type": "1xCR2032",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "dsdsdvdsjliudr",
+      "icone": "SNZB-01",
+      "battery_type": "1x3V CR2450",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include2": "nom"
+    }
+  }
+}

@@ -942,6 +942,8 @@
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             if ($Rejoin == "02") return;
 
+            if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
+            
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
             
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );

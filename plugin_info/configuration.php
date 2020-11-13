@@ -385,6 +385,25 @@ echo '<script>console.log("branch='.$b.'")</script>';
                 </div>
             </div>
         </div>
+                    
+        <legend><i class="fa fa-list-alt"></i> {{Option avancées}}</legend>
+        <div id="optionsAvancees">
+            <div>
+                <p><i>{{Dans certains cas, le fonctionnement du plugin doit être adapté.}}</i></p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Port de communication avec la PiZigate}}">
+                        <option value="Oui"         >{{Oui}}</option>
+                        <option value="Non" selected>{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
 
         <hr>
     </fieldset>

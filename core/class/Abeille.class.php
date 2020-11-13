@@ -22,7 +22,7 @@
         include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -178,7 +178,7 @@
                             if ( $eqLogicX->getIsEnable() ) {
                                 log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
                                 echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                                $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
+                                $cmd = "/usr/bin/nohup php ".__DIR__."/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
                                 // echo "Cmd: ".$cmd."\n";
                                 exec($cmd, $out, $status);
                             }
@@ -212,7 +212,7 @@
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
              */
             log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
-            $ROOT= "/var/www/html/plugins/Abeille/Network" ;// getcwd();
+            $ROOT = __DIR__."/../../Network";
             $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
             for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
                 $zgEnabled = config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N', 1);
@@ -555,7 +555,7 @@
             // ******************************************************************************************************************
             // Remove temporary files
             for ( $i=1; $i<=config::byKey( 'zigateNb', 'Abeille', '1', 1 ); $i++ ) {
-                $lockFile = '/var/www/html/plugins/Abeille/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
+                $lockFile = __DIR__.'/../../tmp/AbeilleLQI_MapData'.$i.'.json.lock';
                 if (file_exists($lockFile)) {
                     unlink( $lockFile );
                     log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de '.$lockFile );
@@ -667,7 +667,7 @@
                     continue; // Not a WIFI Zigate
 
                 $daemonParams = $serialPort.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
-                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.' 2>&1';
+                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".$daemonDir."AbeilleSocat.php ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' &');
@@ -694,7 +694,7 @@
                 }
 
                 $daemonParams = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.$logLevel;
-                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, ".")))).$i." 2>&1";
+                $daemonLog = " >>".log::getPathToLog("AbeilleSerialRead").$i.".log 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
@@ -702,22 +702,21 @@
             }
 
             /* Starting 'AbeilleParser' daemon */
-            $daemonDir = __DIR__."/../../core/class/";
+            $daemonDir = __DIR__."/"; // Same location than this file
             $daemonFile = "AbeilleParser.php";
             $daemonParams = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
+            $daemonLog = " >>".log::getPathToLog("AbeilleParser").".log 2>&1";
             $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
             log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            exec($cmd.' 2>&1 &');
+            exec($cmd.' &');
 
             /* Starting 'AbeilleCmd' daemon */
             $deamon3 = "AbeilleCmd.php";
-            // $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
             $paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
+            $log3 = " >>".log::getPathToLog("AbeilleCmd").".log 2>&1";
             $cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
             log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            exec($cmd.' 2>&1 &');
+            exec($cmd.' &');
 
             sleep(2);
 

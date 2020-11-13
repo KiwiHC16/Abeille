@@ -14,7 +14,7 @@
         include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -442,7 +442,7 @@
             global $argv;
 
             /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser");
+            logSetConf("AbeilleParser.log");
 
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();

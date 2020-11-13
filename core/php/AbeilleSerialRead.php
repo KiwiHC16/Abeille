@@ -18,7 +18,7 @@
         include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -46,7 +46,7 @@
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$abeilleNb); // Log to file with line nb check
+    logSetConf("AbeilleSerialRead".$abeilleNb.".log"); // Log to file with line nb check
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';

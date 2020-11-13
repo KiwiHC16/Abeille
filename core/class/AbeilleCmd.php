@@ -22,6 +22,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once __DIR__.'/AbeilleMsg.php';
+    include_once __DIR__.'/../php/AbeilleLog.php';
 
     class debug extends AbeilleTools {
         public $debug = array(
@@ -52,9 +53,8 @@
             }
             if ($this->debug["cli"]) {
                 echo "[".date("Y-m-d H:i:s").'][AbeilleCmd][DEBUG.KIWI] '.$message."\n";
-            }
-            else {
-                $this->deamonlogFilter($loglevel, 'Abeille', 'AbeilleCmd', $message);
+            } else {
+                logMessage($loglevel, $message);
             }
         }
     }
@@ -94,6 +94,9 @@
 
 
         function __construct($debugLevel) {
+            /* Configuring log library to use 'logMessage()' */
+            logSetConf("AbeilleCmd.log");
+
             $this->deamonlog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             $this->deamonlog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 

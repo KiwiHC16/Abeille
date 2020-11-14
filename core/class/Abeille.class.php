@@ -36,6 +36,64 @@
 
     class Abeille extends eqLogic {
 
+        // https://github.com/KiwiHC16/Abeille/issues/1055
+        public static function replaceGhost( $ghostId, $realId ) {
+            //lors de l association sur la zigate Y, une nouvel Abeille va etre créée en AbeilleY/YYYY a reception de son nom alors que AbeilleX/XXXX existe toujours.
+            // On va avoir ce doublon jusqu'à reception de IEEE ou action utilisateur. Ce qui veut dire que sur reception de IEEE pour AbeilleY/YYYY, il faut gérer le doublon. Il faut:
+            // -- supprimer de la Zigate X, l'appairage avec l IEEEE
+            // -- migrer l historique des commandes AbeilleX/XXXX vers AbeilleY/YYYY,
+            // -- migrer les instances des commandes dans scenario et autres
+            // -- supprimer l Abeille: AbeilleX/XXXX
+            
+            // Collect all needed infos
+            $ghost  = Abeille::byId($ghostId); if (!is_object($ghost)) return;
+            $real   = Abeille::byId($realId); if (!is_object($real)) return;
+            
+            list($destGhost,$shortGhost) = explode('/', $ghost->getLogicalId() );
+            list($destReal, $shortReal ) = explode('/', $real->getLogicalId()  );
+            $IEEE = $ghost->getConfiguration('IEEE','none');
+            if ( $ghostIEEE == 'none' ) {
+                $IEEE = $real->getConfiguration('IEEE','none');
+            }
+            
+            // -- supprimer de la Zigate X, l'appairage avec l IEEEE
+            if ( $destGhost != $destReal ) {
+                if ( $IEEE == 'none' ) {
+                    echo "Erreur je n ai pas l IEEE je ne sais comment gerer.\n";
+                    return;
+                }
+                self::publishMosquitto( $this->queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "IEEE=".$ghostIEEE );
+            }
+            
+            // Parcours toutes les commandes
+            foreach ( $ghost->getCmd() as $numGhost=>$ghostCmd ) {
+                foreach ( $real->getCmd() as $numReal=>$realCmd ) {
+                    if ( $ghostCmd->getLogicalId() == $realCmd->getLogicalId() ) {
+                        if ( $ghostCmd->getType() == 'info' && $realCmd->getType() == 'info' ) {
+                            if ( $ghostCmd->getSubType() == $realCmd->getSubType() ) {
+                                
+                                if ( $ghostCmd->getIsHistorized() == 1 ) {
+                                    // -- migrer l historique des commandes AbeilleY/YYYY vers AbeilleX/XXXX, les instances des commandes dans scenario et autres
+                                    // history::copyHistoryToCmd('#17009#', '#17251#');
+                                    echo 'Copy history from '.$ghostCmd->getName().' to '.$realCmd->getName()."\n";
+                                    history::copyHistoryToCmd( $ghostCmd->getId(), $realCmd->getId() );
+                                }
+                                
+                                // -- migrer les instances des commandes dans scenario et autres
+                                jeedom::replaceTag(array('#'.$ghostCmd->getId().'#'=>'#'.$realCmd->getId().'#'));
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // -- supprimer l Abeille: AbeilleY/YYYY
+            $ghost->remove();
+            
+            return;
+        }
+        
         // Fonction dupliquée dans AbeilleParser.
         public static function volt2pourcent( $voltage ) {
             $max = 3.135;
@@ -2240,6 +2298,17 @@
             case "29":
                 $cmds = AbeilleCmd::searchConfigurationEqLogic(  579,   'PollingOnCmdChange', 'action');
                 var_dump( $cmds );
+                break;
+            case "30":
+                // Replace a cmd by an other
+                jeedom::replaceTag(array('#17009#'=>'#17251#'));
+                break;
+            case "31":
+                //Remove an eq
+                Abeille::byLogicalId('Abeille1/C359','Abeille',0)->remove();
+                break;
+            case "32":
+                Abeille::replaceGhost( 588, 601 );
                 break;
 
         } // switch

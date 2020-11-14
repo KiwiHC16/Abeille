@@ -85,8 +85,8 @@ try {
         /* Read Zigate FW version */
         $version = 0; // FW version
         if ($status == 0) {
-            zg_SetConf('AbeilleConfig.log');
-            $status = zg_GetVersion($zgPort, $version);
+            zgSetConf('AbeilleConfig.log');
+            $status = zgGetVersion($zgPort, $version);
         }
 
         logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
@@ -126,7 +126,7 @@ try {
 
             /* Reading FW version */
             if ($status == 0) {
-                $status = zg_GetVersion($zgPort, $version);
+                $status = zgGetVersion($zgPort, $version);
             }
 
             logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');

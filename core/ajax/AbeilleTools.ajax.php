@@ -40,8 +40,6 @@
     try {
 
         require_once __DIR__.'/../../../../core/php/core.inc.php';
-        // require_once __DIR__.'/../class/Abeille.class.php';
-        // require_once __DIR__.'/../class/AbeilleZigate.php';
         include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
 
         include_file('core', 'authentification', 'php');
@@ -60,7 +58,7 @@
         //     if (file_exists($path))
         //         $status = 0;
         //     else
-        //         $status = -1; // Not found    
+        //         $status = -1; // Not found
         //     ajax::success(json_encode(array('status' => $status)));
         // }
 
@@ -113,7 +111,7 @@
             // TODO: Select tool according to what's available.
             $tool = "gzip";
             // $tool = "bzip2";
-            
+
             if ($tool == "gzip") {
                 /* gzip
                 -c => Write output on standard output

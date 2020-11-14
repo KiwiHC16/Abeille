@@ -256,6 +256,11 @@
                     }
                 }
                 break;
+                
+            case "Remplace":
+                log::add('Abeille', 'debug', $_POST['ghost'] . ' - ' . $_POST['real']);
+                Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
+                break;
         }
         
         // TX Power

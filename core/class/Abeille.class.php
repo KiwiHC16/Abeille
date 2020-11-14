@@ -69,20 +69,17 @@
             foreach ( $ghost->getCmd() as $numGhost=>$ghostCmd ) {
                 foreach ( $real->getCmd() as $numReal=>$realCmd ) {
                     if ( $ghostCmd->getLogicalId() == $realCmd->getLogicalId() ) {
-                        if ( $ghostCmd->getType() == 'info' && $realCmd->getType() == 'info' ) {
-                            if ( $ghostCmd->getSubType() == $realCmd->getSubType() ) {
-                                
+                        if ( $ghostCmd->getSubType() == $realCmd->getSubType() ) {
+                            if ( $ghostCmd->getType() == 'info' && $realCmd->getType() == 'info' ) {
                                 if ( $ghostCmd->getIsHistorized() == 1 ) {
                                     // -- migrer l historique des commandes AbeilleY/YYYY vers AbeilleX/XXXX, les instances des commandes dans scenario et autres
                                     // history::copyHistoryToCmd('#17009#', '#17251#');
                                     echo 'Copy history from '.$ghostCmd->getName().' to '.$realCmd->getName()."\n";
                                     history::copyHistoryToCmd( $ghostCmd->getId(), $realCmd->getId() );
                                 }
-                                
-                                // -- migrer les instances des commandes dans scenario et autres
-                                jeedom::replaceTag(array('#'.$ghostCmd->getId().'#'=>'#'.$realCmd->getId().'#'));
-                                
                             }
+                            // -- migrer les instances des commandes dans scenario et autres
+                            jeedom::replaceTag(array('#'.$ghostCmd->getId().'#'=>'#'.$realCmd->getId().'#'));
                         }
                     }
                 }

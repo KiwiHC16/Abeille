@@ -45,26 +45,25 @@ try {
     ajax::init();
 
     if (init('action') == 'checkSocat') {
-        $cmdToExec = "checkSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installSocat') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -97,7 +96,7 @@ try {
     }
 
     if (init('action') == 'installTTY') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -138,7 +137,7 @@ try {
     }
 
     if (init('action') == 'resetPiZiGate') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -149,7 +148,7 @@ try {
         $updateOnly = init('updateOnly');
 
         $status = 0;
-        
+
         /* Creating temp dir */
         $tmp = __DIR__.'/../../tmp';
         $doneFile = $tmp.'/switchBranch.done';
@@ -157,8 +156,8 @@ try {
             mkdir($tmp);
         else if (file_exists($doneFile))
             unlink($doneFile); // Removing 'switchBranch.done' file
-             
-        /* Creating a copy of 'switchBranch.sh' in 'tmp' */    
+
+        /* Creating a copy of 'switchBranch.sh' in 'tmp' */
         $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 

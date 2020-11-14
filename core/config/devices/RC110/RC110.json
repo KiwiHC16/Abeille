@@ -1,0 +1,34 @@
+{
+  "RC110": {
+    "nameJeedom": "Télécommande RC110 INNR",
+    "timeout": "60",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07csd76dsf621278HF72",
+      "icone": "RC110",
+      "battery_type": "2x1.5V",
+      "lastCommunicationTimeOut": "-1",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "offGroup",
+      "include2": "toggleGroup",
+      "include3": "onGroup",
+      "include4": "downGroup",
+      "include5": "upGroup",
+      "include6": "setLevelGroup",
+      "include6 2": "setTemperatureLightGroup",
+      "include7": "sceneGroupRecall",
+      "include8": "Batterie-Pourcent-Ikea",
+      "include9": "getBattery",
+      "include10": "BindShortToZigateBatterie",
+      "include11": "setReportBatterie",
+      "include11 2": "Up-Down",
+      "include11 2 2": "Click-Middle",
+      "include11 2 2 2": "Left-Right-Cmd",
+      "include11 2 2 2 2": "Left-Right-Direction"
+    }
+  }
+}

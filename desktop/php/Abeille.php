@@ -188,56 +188,51 @@ $outils = array(
 <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
-<div id="leftMargin" style="float: left; width:10%;">.
-</div>
-<div id="leftThing" style="float: left; width:40%;">
-        <table border="1" style="border:1px">
-          <thead>
-            <tr>
-                <th>{{Module}}</th>
-                <th>{{Telecommande}}</th>
-                <th>{{Membre}}</th>
-            </tr>
-          </thead>
-          <tbody>
+    <div id="leftMargin" style="float: left; width:10%;">.
+    </div>
+    <div id="leftThing" style="float: left; width:40%;">
+            <table border="1" style="border:1px">
+                <thead>
+                <tr>
+                    <th>{{Module}}</th>
+                    <th>{{Telecommande}}</th>
+                    <th>{{Membre}}</th>
+                </tr>
+                </thead>
+                <tbody>
 
-        <?php
+                <?php
+                    $abeille = new Abeille();
+                    $commandIEEE = new AbeilleCmd();
 
-        $abeille = new Abeille();
-        $commandIEEE = new AbeilleCmd();
+                    foreach ($eqLogics as $key => $eqLogic) {
+                        $name= "";
+                        $groupMember = "";
+                        $groupTele = "";
+                        $print=0;
 
-        foreach ($eqLogics as $key => $eqLogic) {
+                        $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
 
-              $name= "";
-              $groupMember = "";
-              $groupTele = "";
-              $print=0;
+                        $name = $eqLogic->getHumanName(true);
 
-              $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+                        if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
+                            if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
+                                $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
+                                $print = 1;
+                            }
+                        }
 
-              $name = $eqLogic->getHumanName(true);
+                        if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
+                            $groupTele = $eqLogic->getConfiguration('Groupe');
+                            $print = 1;
+                        }
 
-              if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-                if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-
-                  $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
-                  $print = 1;
-                }
-              }
-
-              if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-                $groupTele = $eqLogic->getConfiguration('Groupe');
-                $print = 1;
-              }
-
-            if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
-
-        }
-
-        ?>
-          </tbody>
-        </table>
-</div>
+                    if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
+                    }
+                ?>
+                </tbody>
+            </table>
+    </div>
 
 
 <div id="rightThing" style="float: left; width:40%;">
@@ -275,10 +270,10 @@ $outils = array(
 
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
-<div id="leftMargin" style="float: left; width:10%;">.
-</div>
-<div id="leftThing" style="float: left; width:40%;">
-            <table>
+    <div id="leftMargin" style="float: left; width:10%;">.
+    </div>
+    <div id="leftThing" style="float: left; width:40%;">
+        <table>
             <thead>
             <tr>
             <th>{{Module}}</th>
@@ -287,9 +282,7 @@ $outils = array(
             </tr>
             </thead>
             <tbody>
-
             <?php
-
                 $abeille = new Abeille();
                 $commandIEEE = new AbeilleCmd();
 
@@ -323,10 +316,10 @@ $outils = array(
 
                 ?>
             </tbody>
-            </table>
-</div>
-<div id="rightThing" style="float: left; width:40%;">
-          <table>
+        </table>
+    </div>
+    <div id="rightThing" style="float: left; width:40%;">
+        <table>
             <tr>
                 <td>
                     <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
@@ -335,8 +328,9 @@ $outils = array(
                     <input type="submit" name="submitButton" value="Get Scene Membership">
                     <input type="submit" name="submitButton" value="Remove All Scene">
                 </td>
-            </tr><tr>
-                </td><td>
+            </tr>
+            <tr>
+                <td>
                     <label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
                     <label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
                     <br>
@@ -348,8 +342,8 @@ $outils = array(
                     <input type="submit" name="submitButton" value="scene Group Recall">
                 </td>
             </tr>
-          </table>
-</div>
+        </table>
+    </div>
 </div>
 
 <br>

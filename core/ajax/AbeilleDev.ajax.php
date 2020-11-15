@@ -27,7 +27,7 @@
         $dbgDeveloperMode = TRUE;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -43,8 +43,6 @@
 
     try {
         require_once __DIR__.'/../../../../core/php/core.inc.php';
-        // require_once __DIR__.'/../class/Abeille.class.php';
-        // require_once __DIR__.'/../class/AbeilleZigate.php';
         include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
 
         include_file('core', 'authentification', 'php');
@@ -171,7 +169,7 @@
                     continue; // Empty line
                 if (substr($line, 0, 2) == "//")
                     continue; // Single line comment
-    
+
                 if (substr($line, 0, 14) == "\$dbgAbeillePHP") {
                     $l = explode("=", $line);
                     $a = trim($l[1]); // $a='FALSE;' or 'TRUE;'

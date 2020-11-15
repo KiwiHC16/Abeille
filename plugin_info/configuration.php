@@ -97,7 +97,7 @@
                                 else
                                     $b2 = $b;
                                 echo '<script>console.log("branch='.$b.'")</script>';
-                                if ($b == $localBranch)                               
+                                if ($b == $localBranch)
                                     echo '<option value="'.$b.'" selected>'.$b2.'</option>';
                                 else
                                     echo '<option value="'.$b.'">'.$b2.'</option>';
@@ -297,7 +297,7 @@
             <div>
                 <p><i>{{La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.}}</i></p>
                 <p><i>{{Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.}}</i></p>
-                <p><i>{{Attention l'accès aux GPIOs ne se fait pas depuis un container sous Docker (si vous savez faire alors donnez moi la combine). Dans ce cas faites les manipulations à la main depuis le host.}}</i></p>
+                <p><i>{{Attention l'accès aux GPIOs peut se faire depuis un container sous Docker, il faut ajouter --device /dev/gpiomem). Dans ce cas faites les manipulations à la main depuis le host.}}</i></p>
             </div>
 
             <div class="form-group">
@@ -705,7 +705,7 @@
                 document.getElementById("idSwitchBranch").innerText = "Changer";
             }
         });
-        
+
         $('#idSwitchBranch').on('click', function() {
             var branchName = $("#idBranch").val();
             console.log("switchBranch(branch="+branchName+", current="+js_curBranch+")")

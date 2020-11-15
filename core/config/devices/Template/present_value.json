@@ -1,0 +1,20 @@
+{
+  "000f-#EP#-0055": {
+    "isVisible": 1,
+    "name": "present_value",
+    "order": 1,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "binary",
+    "invertBinary": "0",
+    "template": "badge",
+    "configuration": {
+      "uniqId": "5c07c76621e1667c76621e1sdk1",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "repeatEventManagement": "always",
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

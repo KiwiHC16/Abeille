@@ -4,23 +4,25 @@
      * Output all required datas for support on window and in "tmp/supportPage.log".
      */
 
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php');
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once(__DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php');
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
     }
     */
     $eqLogics = Abeille::byType('Abeille');
-    $tmp = __DIR__.'/../../tmp';
-    if (file_exists($tmp) == FALSE)
-        mkdir($tmp);
-    $logFile = $tmp.'/supportPage.log';
+    $tmpDir = __DIR__.'/../../tmp';
+    if (file_exists($tmpDir) == FALSE)
+        mkdir($tmpDir);
+    $logFile = $tmpDir.'/supportPage.log';
     echo '<script>';
     echo 'var js_logFile = "'.$logFile.'";';
+    echo 'var js_tmpDir = "'.$tmpDir.'";';
     echo '</script>';
 ?>
 
+<a class="btn btn-success pull-right" id="idDownloadAllLogs"><i class="fas fa-cloud-download-alt"></i> Télécharger tous</a>
 <a class="btn btn-success pull-right" id="bt_DownloadSupportPage"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
 <br/><br/><br/>
 <pre style='overflow: auto; height: 90%;with:90%;'>
@@ -134,6 +136,34 @@
 
 <script>
     $('#bt_DownloadSupportPage').click(function() {
-        window.open('core/php/downloadFile.php?pathfile=' + js_logFile, "_blank", null);
+        window.open('core/php/downloadFile.php?pathfile='+js_logFile, "_blank", null);
+    });
+
+    /* Pack and download all log at once */
+    $('#idDownloadAllLogs').click(function() {
+        console.log("idDownloadAllLogs click");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+            data: {
+                action: 'createLogsZipFile'
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'createZipFile' !");
+            },
+            success: function (json_res) {
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                    alert(msg);
+                } else {
+                    // window.location.reload();
+                    window.open('core/php/downloadFile.php?pathfile='+js_tmpDir+'/'+res.zipFile, "_blank", null);
+                }
+            }
+        });
     });
 </script>

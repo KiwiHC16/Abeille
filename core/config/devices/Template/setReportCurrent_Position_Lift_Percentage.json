@@ -1,0 +1,21 @@
+{
+  "setReportCurrent_Position_Lift_Percentage": {
+    "isVisible": 0,
+    "name": "setReportCurrent_Position_Lift_Percentage",
+    "order": 30,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5ophc07ccc6624fbb",
+      "topic": "setReport",
+      "request": "targetEndpoint=#EP#&ClusterId=0102&AttributeId=0008&AttributeType=10",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

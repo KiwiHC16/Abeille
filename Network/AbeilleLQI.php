@@ -1,16 +1,15 @@
 <?php
     
-    /***
+    /*
      * LQI
      *
      * Send LQI request to the network
      * Process 804E answer messages
      * to draw LQI (Link Quality Indicator)
      * to draw NE Hierarchy
-     *
      */
     
-    include_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
+    include_once __DIR__."/../../../core/php/core.inc.php";
     include_once("../resources/AbeilleDeamon/lib/Tools.php");
     include_once("../resources/AbeilleDeamon/includes/config.php");
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
@@ -141,7 +140,6 @@
         $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
         
         $LQI[] = $parameters;
-        
     }
     
     function mqqtPublishLQI( $dest, $addr, $index ) {
@@ -175,12 +173,12 @@
         return 'Cluster ID: ' . $cluster . '-' . $GLOBALS['clusterTab']["0x" . $cluster];
     }
     
-    function collectInformation( $serial, $addr ) {
+    function collectInformation( $netName, $addr ) {
         $indexTable = 0;
         
         while ($GLOBALS['NE_continue']) {
 
-            mqqtPublishLQI( $serial, $addr, sprintf("%'.02x", $indexTable) );
+            mqqtPublishLQI( $netName, $addr, sprintf("%'.02x", $indexTable) );
             
             $indexTable++;
             // if ($indexTable > count($GLOBALS['knownNE'])+10) {
@@ -200,7 +198,6 @@
             message();
             sleep(1);
         }
-
     }
     
     /*--------------------------------------------------------------------------------------------------*/
@@ -223,24 +220,39 @@
     
     KiwiLog('Start Main');
     
-    if ( $_GET['zigate']<1 or $_GET['zigate']>maxNbOfZigate ) {
+    /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
+       collected in the same way.
+       URL => use $_GET[]
+       Cmd line/shell => use $argv[] */
+    if (!isset($_GET['zigate'])) {
+        /* Zigate number passed as arg ? (called from shell/cron case) */
+        if (!isset($argv[1])) {
+            KiwiLog("Paramètre zigate manquant.");
+            return;
+        }
+        $zgNb = $argv[1];
+    } else
+        $zgNb = $_GET['zigate'];
+    if (($zgNb < 1) or ($zgNb > maxNbOfZigate)) {
         KiwiLog("Mauvaise valeur de zigate !!!!");
         return;
     }
     
-    $serial = "Abeille".$_GET['zigate'];
+    $netName = "Abeille".$zgNb; // Abeille network
     
-    $queueKeyLQIToCmd       = msg_get_queue( queueKeyLQIToCmd );
-    $queueKeyParserToLQI    = msg_get_queue( queueKeyParserToLQI );
+    $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
+    $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
     
-    $dir = "tmp/";
-    $DataFile = $dir."AbeilleLQI_MapData".$serial.".json";
-    $FileLock = $DataFile . ".lock";
+    $tmpDir = __DIR__.'/../tmp';
+    if (file_exists($tmpDir) == FALSE)
+        mkdir($tmpDir);
+    $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
+    $lockFile = $dataFile.".lock";
     $nbwritten = 0;
     
-    if (file_exists($FileLock)) {
-        $content = file_get_contents($FileLock);
-        KiwiLog($FileLock . ' content: ' . $content);
+    if (file_exists($lockFile)) {
+        $content = file_get_contents($lockFile);
+        KiwiLog($lockFile . ' content: ' . $content);
         if (strpos("_".$content, "done") != 1) {
             echo 'Oops, une collecte est déja en cours... Veuillez attendre la fin de l\'opération';
             KiwiLog('debug', 'Une collecte est probablement en cours, fichier lock present, exit.');
@@ -248,10 +260,10 @@
         }
     }
     
-    $nbwritten = file_put_contents($FileLock, "init");
+    $nbwritten = file_put_contents($lockFile, "init");
     if ($nbwritten<1) {
-        unlink($FileLock);
-        echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
+        unlink($lockFile);
+        echo 'Oops, je ne peux pas écrire sur ' . $lockFile;
         exit;
     }
     
@@ -264,7 +276,7 @@
     if ( $debugKiwiCli ) { echo json_encode($knownObject_FromAbeille)."\n"; }
     
     // Let's start at least with Ruche
-    $NE_All_BuildFromLQI[$serial."/Ruche"] = array("LQI_Scan_Done" => 0);
+    $NE_All_BuildFromLQI[$netName."/Ruche"] = array("LQI_Scan_Done" => 0);
     
     KiwiLog( "NE connus pas Abeille: ".json_encode($knownNE_FromAbeille) );
     KiwiLog( "NE to scan: ".json_encode($NE_All_BuildFromLQI) );
@@ -286,7 +298,7 @@
             KiwiLog("=============================================================");
             KiwiLog("Start Loop with : ".$currentNeAddress);
             
-            list( $serial, $addr ) = explode( '/', $currentNeAddress) ;
+            list( $netName, $addr ) = explode( '/', $currentNeAddress) ;
             if ( $addr == "Ruche" ) { $addr = "0000"; }
             
             //-----------------------------------------------------------------------------
@@ -309,10 +321,10 @@
                 $name = "Inconnu-" . $currentNeAddress;
             }
             
-            $nbwritten = file_put_contents($FileLock, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
+            $nbwritten = file_put_contents($lockFile, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
             if ($nbwritten<1) {
-                unlink($FileLock);
-                echo 'Oops, je ne peux pas écrire sur ' . $FileLock;
+                unlink($lockFile);
+                echo 'Oops, je ne peux pas écrire sur ' . $lockFile;
                 exit;
             }
             
@@ -321,35 +333,32 @@
             if ($currentNeStatus['LQI_Scan_Done'] == 0) {
                 $NE_All_continue = 1;
                 $NE_continue = 1;
-                KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $serial . ' - ' . $addr  . " -> Je lance la collecte");
-                collectInformation( $serial, $addr );
+                KiwiLog('AbeilleLQI main: Interrogation de ' . $name . ' - ' . $netName . ' - ' . $addr  . " -> Je lance la collecte");
+                collectInformation( $netName, $addr );
                 $NE_All_BuildFromLQI[$NE]['LQI_Scan_Done'] = 1;
                 sleep(5);
             } else {
                 // echo "Already done\n";
             }
         }
-        
     }
         
     //announce end of processing
-    file_put_contents($FileLock, "done - ".date('l jS \of F Y h:i:s A'));
+    file_put_contents($lockFile, "done - ".date('l jS \of F Y h:i:s A'));
     
     // encode array to json
     $json = json_encode(array('data' => $LQI));
     
     //write json to file
-    if (file_put_contents($DataFile, $json)) {
+    if (file_put_contents($dataFile, $json)) {
         echo "JSON file created successfully...\n";
     }
     else {
-        unlink($DataFile);
+        unlink($dataFile);
         echo "Oops! Error creating json file...\n";
     }
-    
     
     // print_r( $NE_All );
     // print_r( $voisine );
     // print_r( $LQI );
-    
-    ?>
+?>

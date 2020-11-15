@@ -1,0 +1,18 @@
+{
+  "getcurrent_position_lift_percentage": {
+    "isVisible": 0,
+    "name": "getcurrent_position_lift_percentage",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "455c07c76623d65623d65",
+      "topic": "ReadAttributeRequest",
+      "request": "EP=#EP#&clusterId=0102&attributeId=0008",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

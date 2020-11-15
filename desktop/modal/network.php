@@ -3,7 +3,7 @@
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
-
+    
     // Last Demon start time
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
 
@@ -18,6 +18,7 @@
     }
 
     $eqLogics = eqLogic::byType('Abeille');
+    $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1');
 
     // Node Count
     $nodesCount = count($eqLogics);
@@ -41,10 +42,9 @@
     $color = ($processes['nbProcess'] == $processes['nbProcessExpected']) ? "greeniconcolor" : "rediconcolor";
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
 
-
     sendVarToJS('nodesFromJeedom', $nodes);
-
 ?>
+
 <style>
     #graph_network {
         height: 80%;
@@ -109,7 +109,8 @@
         color: red;
     }
 </style>
-<link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css">
+
+<!-- <link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="/3rdparty/jquery.tablesorter/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
@@ -124,59 +125,41 @@
         <div id="content">
 
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
-                <li class="active"  id="tab_route">     <a href="#route_network"              data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
-                <li                 id="tab_graph">     <a href="#graph_network"              data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
-                <li                 id="tab_summary">   <a href="#summary_network"            data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
-                <li                 id="tab_test1">     <a href="#test1"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
-                <li                 id="tab_test2">     <a href="#test2"                      data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Routes}}                 </a></li>
+                <li class="active"  id="tab_nodes">    <a href="#route_network"   data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
+                <li                 id="tab_graph">    <a href="#graph_network"   data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
+                <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
+                <li                 id="tab_test1">    <a href="#test1"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
+                <li                 id="tab_test2">    <a href="#test2"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Routes}}                 </a></li>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
 
-
-<!-- tab Table des noeuds -->
-
+                <!-- tab Table des noeuds -->
                 <div id="route_network" class="tab-pane active">
-                    <br/>
+                    <br />
+                    {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
+                    <br />
                     <div id="div_routingTable">
-                        <span>
+                        Afficher réseau :
+                        <?php
+                        for ($i = 1; $i <= $nbOfZigates; $i++) {
+                            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+                                continue; // Disabled
+                            echo '<a data-action="afficheNetworkCache" class="btn btn-success displayNodes'.$i.'">Abeille'.$i.' </a>';
+                            echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-default fa fa-refresh refreshNodes'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
+                        }
+                        ?>
+                        <br />
+                        <hr>
+                        Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
+                        <br />
+                        <br />
 
-                            <span class="" style="padding: 3px 20px;">
-<?php
-                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
-                                    echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-success refreshCache'.$i.'"><i class="fa fa-refresh" ></i>{{Refresh LQI Z'.$i.'}}</a>';
-                                }
-                            }
-    ?>
-                            </span>
+                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par emetteur">{{Source}}</label>
+                        <select class="filterSource" id="nodeFrom"> </select>
 
-                            <span class="" style="padding: 3px 20px;">
-                            <br> . <br>
-                            </span>
-
-                            <span class="" style="padding: 3px 20px;">
-<?php
-                            for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y'  ) {
-                                    echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheCache'.$i.'"><i class="fa fa-refresh" ></i>{{Affiche LQI Z'.$i.'}}</a>';
-                                }
-                            }
-    ?>
-                            </span>
-
-                            <br>
-
-                            {{Refresh LQI permet de lancer l'interrogation des équipements pour avoir les informations}} <a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator (LQI)</a><br><hr>
-
-                             <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">Source </label>
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par emetteur">{{Source}}</label>
-                            <select class="filterSource" id="nodeFrom"> </select>
-
-                            <label class="control-label" data-toggle="tooltip" title="Filtre les nodes par destinataire">{{Destinataire}}</label>
-                            <select class="filterRecipient" id="nodeTo"> </select>
-
-                        </span>
+                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par destinataire">{{Destinataire}}</label>
+                        <select class="filterRecipient" id="nodeTo"> </select>
 
                         <table class="table table-condensed tablesorter" id="table_routingTable">
                             <thead>
@@ -200,21 +183,22 @@
                     </div>
                 </div>
 
-<!-- tab Graphique du réseau -->
-
+                <!-- tab Graphique du réseau -->
                 <div id="graph_network" class="tab-pane">
 
-                    <br>
-                    <span class="" style="padding: 3px 20px;">
-<?php
-                    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$i.'"><i class="fa fa-refresh" ></i>{{Affiche LQI Z'.$i.'}}</a>';
+                    <br />
+                    Afficher réseau :
+                    <?php
+                    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+                        if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
+                            continue; // Disabled
+                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$zgNb.'">Abeille'.$zgNb.' </a>';
+                        echo '<a data-action="refreshNetworkCache'.$zgNb.'" class="btn btn-default fa fa-refresh refreshNodes'.$zgNb.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
                     }
-?>
-                    </span>
+                    ?>
 
                     <table class="table table-bordered table-condensed"
-                           style="width: 700px;position:fixed;margin-top : 25px;">
+                           style="width: 150px;position:fixed;margin-top : 25px;">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -242,15 +226,11 @@
                     </table>
 
                     <span id="graph-node-name" style="width: 100%;height: 100%"></span>
-
                 </div>
 
-
 <!-- tab Résumé -->
-
-
                 <div id="summary_network" class="tab-pane" >
-                    <br>
+                    <br />
 
                     <div class="panel panel-primary">
                         <div class="panel-heading"><h4 class="panel-title">{{Informations}}</h4></div>
@@ -292,54 +272,54 @@
 <!-- tab Bruit -->
 
                 <div id="test1" class="tab-pane" >
-                                (Ce texte devra etre mis dans la doc)<br>
-                                Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br>
-                                En utilisant le bouton refresh, Abeille va demander aux équipments de mesurer le bruit qu ils entendent sur les canaux 11 à 26.<br>
-                                Ceux ci vont répondre avec une valeur pour chaque canal qui represente la puissance mesurée entre 0 et 255.<br>
-                                A ma connaissance la méthode de mesure n est pas définie dans le standard Zigbee et donc chaque fabricant est libre de mesurer comme il le souhaite.<br>
-                                C est une premiere version avant que je ne comprenne mieux les résultats.<br>
-                                Les ampoules Ikea repondent aux demandes. Elles retournent une valeur entre 160 et 180 quand le canal est libre<br>
-                                Par contre quand le canal est aucupé elles remontent des valeurs entre 200 et 210.<br>
+                                (Ce texte devra etre mis dans la doc)<br />
+                                Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br />
+                                En utilisant le bouton refresh, Abeille va demander aux équipments de mesurer le bruit qu ils entendent sur les canaux 11 à 26.<br />
+                                Ceux ci vont répondre avec une valeur pour chaque canal qui represente la puissance mesurée entre 0 et 255.<br />
+                                A ma connaissance la méthode de mesure n est pas définie dans le standard Zigbee et donc chaque fabricant est libre de mesurer comme il le souhaite.<br />
+                                C est une premiere version avant que je ne comprenne mieux les résultats.<br />
+                                Les ampoules Ikea repondent aux demandes. Elles retournent une valeur entre 160 et 180 quand le canal est libre<br />
+                                Par contre quand le canal est aucupé elles remontent des valeurs entre 200 et 210.<br />
                                 Ces valeurs viennent du test suivant:
                                 - libre: reseau en fonctionnement normal lors de mon test.
                                 - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
-                                Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br>
-                                A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br>
-                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br>
-                                Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br>
-                                Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br>
-                                Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br>
-                                <br>
-                                Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br>
+                                Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br />
+                                A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br />
+                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br />
+                                Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br />
+                                Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br />
+                                Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br />
+                                <br />
+                                Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
 <?php
-                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
+                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
 
                                 function afficheGraph( $title, $logicalId, $values ) {
                                 // Vertical
                                 $hauteurGraph = 256;
                                 $hauteurLegendX = 30;
-                                
+
                                 // Horizontal
                                 $margeLeft = 10;
                                 $largeurGraph = 300;
                                 $margeRight = $margeLeft;
-                                
+
                                 $channelMin = 11;
                                 $channelMax = 26;
-                                
+
                                 // Objet
                                 $cercleRayon = 5;
                                 $lineBruitY = 256 - 180;
-                                
+
                                 // As a result
                                 $largeurCadre = $margeLeft + $largeurGraph + $margeRight;
                                 $hauteurCadre = $hauteurGraph+$hauteurLegendX;
-                                
+
                                 $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
-                                    
-                                    echo $title.'<br><br>';
-                                
+
+                                    echo $title.'<br /><br />';
+
                                     echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
                                     echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
                                     echo '<line x1 = "1" y1 = "'.$lineBruitY.'" x2 = "'.$largeurCadre.'" y2 = "'.$lineBruitY.'" style = "stroke:yellow; stroke-width:3"/>';
@@ -352,19 +332,19 @@
                                     }
                                     echo '</svg>';
                                       if ( $logicalId != "" ) {
-                                            echo '<br><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Collecter}}</a><br><br>';
-                                                                                                                                                                                        
+                                            echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Collecter}}</a><br /><br />';
+
                                       }
-                                    echo "<br><br>";
-                                    
+                                    echo "<br /><br />";
+
                                 }
-                                
+
                                 // Exemple 1: Pas chargé, Exemple 2: Chargé
                                 $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
                                 $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
                                 afficheGraph( "Exemple 1", "", $localZigbeeChannelPowerExample1 );
                                 afficheGraph( "Exemple 2", "", $localZigbeeChannelPowerExample2 );
-                                
+
                                 // Affichons toutes les Abeilles
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
@@ -378,37 +358,48 @@
 ?>
                 </div>
 
-<!-- tab future usage -->
+<!-- tab Route -->
 
                 <div id="test2" class="tab-pane" >
                     <?php
-                                echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br><br>';
-                                
-                                echo 'Il faut un firmware zigate au moins en version 3.1d<br><br>';
-                                
+                                echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                                echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
+
                                 function afficheRouteTable( $routingTable ) {
                                     foreach ( $routingTable as $addr=>$route ) {
+                                        list( $zigate, $addrShort ) = explode ( '/', $addr );
+                                        if ( $addrShort == '0000' ) $addrShort = 'Ruche';
                                         foreach ( $route as $destination=>$nextHop ) {
-                                            echo $addr.' veut joindre '.$destination.' passera par '.$nextHop.'<br>';
+                                            if ( $destination == '0000' ) $destination = 'Ruche';
+                                            if ( $nextHop == '0000' )     $nextHop = 'Ruche';
+                                            
+                                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, Abeille);
+                                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
+                                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
+                                            
+                                            echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
+                                                . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
+                                                . ') passera par '.$nextHopEq->getObject()->getName() . '-' .$nextHopEq->getName() . ' ('.$nextHopEq->getLogicalId()
+                                                . ')<br>';
+                                            // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
                                         }
                                     }
-                                    
                                 }
-                                
+
                                 $routingTable = array();
                                 $eqLogics = Abeille::byType('Abeille');
                                 foreach ($eqLogics as $eqLogic) {
-                                    if ( $eqLogic->getConfiguration('routingTable', 'none') != 'none' ) {
-                                        $routingTable[$eqLogic->getLogicalId()] = json_decode($eqLogic->getConfiguration('routingTable'), 1)[0];
-                                    }
+                                    $rt = $eqLogic->getConfiguration('routingTable', 'none');
+                                    if ($rt == 'none')
+                                        continue; // No routing info
+                                    $rt2 = json_decode($rt); // JSON to array
+                                    if (empty($rt2))
+                                        continue; // Empty routing info
+                                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
                                 }
-                                // var_dump( $routingTable );
                                 afficheRouteTable( $routingTable );
-                                    
-                                ?>
+                    ?>
                 </div>
-
-
 
 <!-- tab fin -->
 
@@ -424,42 +415,34 @@
     </div> <!-- div class="container-fluid" -->
 </div> <!-- div class='network' nid='' id="div_templateNetwork" -->
 
-
-
 <script type="text/javascript">
     <?php
-    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.afficheCache'.$i.'").off("click").on("click", function () { network_links('.$i.'); });'."\n";
-    }
-
-    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });'."\n";
-    }
-
-    for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        echo '$(".btn.refreshCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.');  setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
-    }
-                                
-    echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
-                                
-      $eqLogics = Abeille::byType('Abeille');
-      foreach ($eqLogics as $eqLogic) {
-          if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
-              echo '$(".btn.refreshBruit_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.$eqLogic->getLogicalId().'"); });'."\n";
+        for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+            echo '$(".btn.displayNodes'.$i.'").off("click").on("click", function () { displayNetLinks('.$i.'); });'."\n";
+            echo '$(".btn.refreshNodes'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.'); setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
         }
-      }
 
-    echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
-                                
-      $eqLogics = Abeille::byType('Abeille');
-      foreach ($eqLogics as $eqLogic) {
-          if( $eqLogic->getConfiguration('routingTable') ) {
-              echo '$(".btn.refreshRoutes_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshRoutes("'.$eqLogic->getLogicalId().'"); });'."\n";
+        for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+            echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });'."\n";
         }
-      }
-?>
 
+        echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
+                echo '$(".btn.refreshBruit_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.$eqLogic->getLogicalId().'"); });'."\n";
+            }
+        }
+
+        echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
+
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            if( $eqLogic->getConfiguration('routingTable') ) {
+                echo '$(".btn.refreshRoutes_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshRoutes("'.$eqLogic->getLogicalId().'"); });'."\n";
+            }
+        }
+    ?>
 </script>
-
 
 <?php include_file('desktop', 'network', 'js', 'Abeille'); ?>

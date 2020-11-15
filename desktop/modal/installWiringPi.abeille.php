@@ -44,7 +44,7 @@ Lancement des operations.
 
     function updatelog(){
         jeedom.log.autoupdate({
-            log: 'AbeilleConfig',
+            log: 'AbeilleConfig.log',
             display: $('#pre_abeilleInstallWiringPi'),
             search: $('#in_abeilleLogSearch'),
             control: $('#bt_abeilleLogStopStart'),

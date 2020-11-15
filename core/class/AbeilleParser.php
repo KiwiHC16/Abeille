@@ -14,7 +14,7 @@
         include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -442,7 +442,7 @@
             global $argv;
 
             /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser");
+            logSetConf("AbeilleParser.log");
 
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
             $this->parameters_info = Abeille::getParameters();
@@ -919,7 +919,7 @@
                           Here we can assumed the device was not reset. */
 
             $Addr       = substr($payload, 0, 4);
-            $IEEE       = strtoupper(substr($payload, 4, 16));
+            $IEEE       = substr($payload, 4, 16);
             $MACCapa    = substr($payload, 20, 2);
             if (strlen($payload) > 22)
                 $Rejoin = substr($payload, 22, 2);
@@ -942,6 +942,10 @@
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             if ($Rejoin == "02") return;
 
+            if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
+            
+            if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
+            
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );

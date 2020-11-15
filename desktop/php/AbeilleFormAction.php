@@ -78,6 +78,18 @@
                 }
                 break;
                 
+            case 'Set Group Remote Legrand':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+                        $EP = $device->getConfiguration('mainEP');
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/commissioningGroupAPSLegrand',   'address='.$address.'&groupId='.$_POST['group'] );
+                    }
+                }
+                break;
+                
             case 'Remove Group':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
@@ -243,6 +255,11 @@
                         // abeille::updateConfigAbeille( );
                     }
                 }
+                break;
+                
+            case "Remplace":
+                log::add('Abeille', 'debug', $_POST['ghost'] . ' - ' . $_POST['real']);
+                Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
                 break;
         }
         

@@ -14,8 +14,8 @@
  * along with Plugin Abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$("#tab_route").off("click").on("click", function () {
-    network_links(1);
+$("#tab_nodes").off("click").on("click", function () {
+    displayNetLinks(1);
 });
 
 $("#tab_graph").off("click").on("click", function () {
@@ -68,7 +68,7 @@ function updateZigBeeJsonCache(zigateX) {
                 if (data.indexOf("successfully") >= 0) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
-                    network_links(zigateX);
+                    displayNetLinks(zigateX);
                     updateAlertFromZigBeeJsonLog(false, zigateX);
                 }
                 $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
@@ -140,7 +140,7 @@ function getAbeilleLog(_autoUpdate, _log) {
 function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
     $.ajax({
         type: 'GET',
-        url: '/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
+        url: '/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
         dataType: 'html',
         global: false,
         cache: false,
@@ -194,8 +194,6 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
     ;
 }
 
-
-
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function network_display(zigateX) {
     // Step 1. We create a graph object.
@@ -203,7 +201,7 @@ function network_display(zigateX) {
 
     // Load JSON-encoded data from the server using a GET HTTP request.
     var request = $.ajax({
-        url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
         cache: false
     });
@@ -215,8 +213,7 @@ function network_display(zigateX) {
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
             //console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
-        }
-        else {
+        } else {
                  
             // On parcours le json ligne à ligne
             // On regarde la source et l'ajoute a la table nodes si pas deja existante
@@ -225,7 +222,7 @@ function network_display(zigateX) {
                  
             console.log('Visiblement j ai un json a utiliser');
             //process the json array
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'})
+            // $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'})
             json.data.sort(function (a, b) {
                 if (a.Voisin_Name == b.Voisin_Name) {
                     return 0;
@@ -330,9 +327,7 @@ function network_display(zigateX) {
                                                                                                     });
                                                                     };
                   */
-                  
 
-                //
                 graphics.node(function (node) {
                     var nodeSize = 10;
                               
@@ -398,10 +393,9 @@ function network_display(zigateX) {
     });
 
     request.fail(function () {
-        var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List'
+        var msg = 'Données du réseau non trouvées. Forcez la réinterrogation.'
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         $('#graph_network svg').remove();
-
     });
 
     request.always(function (data) {
@@ -411,10 +405,10 @@ function network_display(zigateX) {
     });
 };
 
-function network_links(zigateX) {
+function displayNetLinks(zigateX) {
     // Generate la table qui est affichée dans le modale tab "Table des noeuds".
     var jqXHR = $.ajax({
-        url: "/plugins/Abeille/Network/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
         dataType: "json",
         cache: false
     });
@@ -424,15 +418,14 @@ function network_links(zigateX) {
         if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1 || json.data.includes('OOPS')) {
             //console.log('Fichier vide, rien a traiter.');
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
-        }
-        else {
-            $('#div_networkZigbeeAlert').showAlert({
-                message: '{{Données récupérées avec succès}}',
-                level: 'success'
-            });
-            setTimeout(function () {
-                $('#div_networkZigbeeAlert').hide()
-            }, 2000);
+        } else {
+            // $('#div_networkZigbeeAlert').showAlert({
+            //     message: '{{Données récupérées avec succès}}',
+            //     level: 'success'
+            // });
+            // setTimeout(function () {
+            //     $('#div_networkZigbeeAlert').hide()
+            // }, 2000);
             //Sort objects to have Voisin list array
             var nodes = json.data;
             nodes.sort(function (a, b) {
@@ -478,7 +471,6 @@ function network_links(zigateX) {
                 if (nodeJId == 'undefined' || nodeJId == null) {
                     nodeJId = 'not found in jeedom DB';
                 }
-
 
                 //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
                 tbody += '<td id="neId">';
@@ -591,13 +583,41 @@ function network_links(zigateX) {
             });
             $('#table_routingTable').trigger('update');
             var nodes = json.data;
+
+            /* Get network info time */
+            $.ajax({
+                type: 'POST',
+                url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+                data: {
+                    action: 'getFileModificationTime',
+                    path: "tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json"
+                },
+                dataType: 'json',
+                global: false,
+                error: function (request, status, error) {
+                    bootbox.alert("ERREUR 'getFileModificationTime' !<br>"+"status="+status+"<br>error="+error);
+                },
+                success: function (json_res) {
+                    console.log(json_res);
+                    res = JSON.parse(json_res.result);
+                    if (res.status != 0) {
+                        var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                        alert(msg);
+                    } else {
+                        // window.location.reload();
+                        console.log("timestamp="+res.mtime);
+                        const date = new Date(res.mtime * 1000);
+                        var out = date.toLocaleDateString()+' '+date.toLocaleTimeString();
+                        $('#idInfosDate').empty().append(out);
+                    }
+                }
+            });
         }
     });
 
-
     jqXHR.fail(function (json, textStatus, jqXHR) {
-        //console.log("network.js: network_links: fail: " + textStatus);
-        var msg = 'Données du réseau non trouvées, faites un cache-refresh sur la page Network List';
+        //console.log("network.js: displayNetLinks: fail: " + textStatus);
+        var msg = 'Données du réseau non trouvées. Forcez la réinterrogation.';
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         $('#table_routingTable tbody').empty()
     });
@@ -607,7 +627,6 @@ function network_links(zigateX) {
             $('#div_networkZigbeeAlert').hide()
         }, 10000);
     })
-
 }
 
 function filterColumnOnValue(data, col) {

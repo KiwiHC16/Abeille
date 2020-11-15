@@ -22,7 +22,7 @@
         include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', '/var/www/html/log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -36,6 +36,61 @@
 
     class Abeille extends eqLogic {
 
+        // https://github.com/KiwiHC16/Abeille/issues/1055
+        public static function replaceGhost( $ghostId, $realId ) {
+            //lors de l association sur la zigate Y, une nouvel Abeille va etre créée en AbeilleY/YYYY a reception de son nom alors que AbeilleX/XXXX existe toujours.
+            // On va avoir ce doublon jusqu'à reception de IEEE ou action utilisateur. Ce qui veut dire que sur reception de IEEE pour AbeilleY/YYYY, il faut gérer le doublon. Il faut:
+            // -- supprimer de la Zigate X, l'appairage avec l IEEEE
+            // -- migrer l historique des commandes AbeilleX/XXXX vers AbeilleY/YYYY,
+            // -- migrer les instances des commandes dans scenario et autres
+            // -- supprimer l Abeille: AbeilleX/XXXX
+            
+            // Collect all needed infos
+            $ghost  = Abeille::byId($ghostId); if (!is_object($ghost)) return;
+            $real   = Abeille::byId($realId); if (!is_object($real)) return;
+            
+            list($destGhost,$shortGhost) = explode('/', $ghost->getLogicalId() );
+            list($destReal, $shortReal ) = explode('/', $real->getLogicalId()  );
+            $IEEE = $ghost->getConfiguration('IEEE','none');
+            if ( $ghostIEEE == 'none' ) {
+                $IEEE = $real->getConfiguration('IEEE','none');
+            }
+            
+            // -- supprimer de la Zigate X, l'appairage avec l IEEEE
+            if ( $destGhost != $destReal ) {
+                if ( $IEEE == 'none' ) {
+                    echo "Erreur je n ai pas l IEEE je ne sais comment gerer.\n";
+                    return;
+                }
+                self::publishMosquitto( $this->queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "IEEE=".$ghostIEEE );
+            }
+            
+            // Parcours toutes les commandes
+            foreach ( $ghost->getCmd() as $numGhost=>$ghostCmd ) {
+                foreach ( $real->getCmd() as $numReal=>$realCmd ) {
+                    if ( $ghostCmd->getLogicalId() == $realCmd->getLogicalId() ) {
+                        if ( $ghostCmd->getSubType() == $realCmd->getSubType() ) {
+                            if ( $ghostCmd->getType() == 'info' && $realCmd->getType() == 'info' ) {
+                                if ( $ghostCmd->getIsHistorized() == 1 ) {
+                                    // -- migrer l historique des commandes AbeilleY/YYYY vers AbeilleX/XXXX, les instances des commandes dans scenario et autres
+                                    // history::copyHistoryToCmd('#17009#', '#17251#');
+                                    echo 'Copy history from '.$ghostCmd->getName().' to '.$realCmd->getName()."\n";
+                                    history::copyHistoryToCmd( $ghostCmd->getId(), $realCmd->getId() );
+                                }
+                            }
+                            // -- migrer les instances des commandes dans scenario et autres
+                            jeedom::replaceTag(array('#'.$ghostCmd->getId().'#'=>'#'.$realCmd->getId().'#'));
+                        }
+                    }
+                }
+            }
+            
+            // -- supprimer l Abeille: AbeilleY/YYYY
+            $ghost->remove();
+            
+            return;
+        }
+        
         // Fonction dupliquée dans AbeilleParser.
         public static function volt2pourcent( $voltage ) {
             $max = 3.135;
@@ -65,51 +120,51 @@
             return $return;
         }
 
-        public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
-            if ($GLOBALS['debugKIWI']) echo $text." start\n";
-            log::add('Abeille', 'debug', 'Starting '.$text);
-            log::remove('Abeille_'.$text);
-            log::add('Abeille_'.$text, 'info', $text.' Start');
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
-            if ($_background) $cmd .= ' &';
-            if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-            log::add('Abeille_'.$text, 'info', $cmd);
-            shell_exec($cmd);
-            log::add('Abeille_'.$text, 'info', 'End'.$text);
-            if ($GLOBALS['debugKIWI']) echo $text." end\n";
-        }
+        // public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
+        //     if ($GLOBALS['debugKIWI']) echo $text." start\n";
+        //     log::add('Abeille', 'debug', 'Starting '.$text);
+        //     log::remove('Abeille_'.$text);
+        //     log::add('Abeille_'.$text, 'info', $text.' Start');
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
+        //     if ($_background) $cmd .= ' &';
+        //     if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
+        //     log::add('Abeille_'.$text, 'info', $cmd);
+        //     shell_exec($cmd);
+        //     log::add('Abeille_'.$text, 'info', 'End'.$text);
+        //     if ($GLOBALS['debugKIWI']) echo $text." end\n";
+        // }
 
-        public static function syncconfAbeille($_background = true) {
-            Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
-        }
+        // public static function syncconfAbeille($_background = true) {
+        //     Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
+        // }
 
-        public static function checkWiringPi($_background = true) {
-            $cmdToExec = "checkWiringPi.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function checkWiringPi($_background = true) {
+        //     $cmdToExec = "checkWiringPi.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function installWiringPi($_background = true) {
-            $cmdToExec = "installWiringPi.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function installWiringPi($_background = true) {
+        //     $cmdToExec = "installWiringPi.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function installTTY($_background = true) {
-            $cmdToExec = "installTTY.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function installTTY($_background = true) {
+        //     $cmdToExec = "installTTY.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
-        public static function resetPiZiGate($_background = true) {
-            $cmdToExec = "resetPiZigate.sh";
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-            exec($cmd, $out, $status);
-            return $status; // Return script status (0=OK)
-        }
+        // public static function resetPiZiGate($_background = true) {
+        //     $cmdToExec = "resetPiZigate.sh";
+        //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     return $status; // Return script status (0=OK)
+        // }
 
         /* Looking for missing IEEE addresses */
         public static function tryToGetIEEE() {
@@ -178,7 +233,7 @@
                             if ( $eqLogicX->getIsEnable() ) {
                                 log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
                                 echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                                $cmd = "/usr/bin/nohup php /var/www/html/plugins/Abeille/core/class/AbeilleInterrogate.php ".$dest." ".$NE." >> /dev/null 2>&1 &";
+                                $cmd = "/usr/bin/nohup php ".__DIR__."/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
                                 // echo "Cmd: ".$cmd."\n";
                                 exec($cmd, $out, $status);
                             }
@@ -205,18 +260,24 @@
                 }
             }
         }
+
         public static function cronDaily() {
             log::add( 'Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------' );
-            /**
+            /*
              * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
              */
-            log::add('Abeille', 'debug', 'Launching AbeilleLQI.php');
-            $ROOT= "/var/www/html/plugins/Abeille/Network" ;// getcwd();
-            log::add('Abeille', 'debug', 'ROOT: '.$ROOT);
-            $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php >/dev/null 2>/dev/null &";
-            log::add('Abeille', 'debug', $cmd);
-            exec($cmd);
-            
+            log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
+            $ROOT = __DIR__."/../../Network";
+            $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
+            for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+                $zgEnabled = config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N', 1);
+                if ($zgEnabled != 'Y')
+                    continue; // Zigate disabled
+                $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php ".$zgNb." 1>/dev/null 2>/dev/null &";
+                log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
+                exec($cmd);
+            }
+
             // Poll Cmd
             self::pollingCmd("cronDaily");
         }
@@ -288,7 +349,7 @@
             if ( ($i*33) > (3600) ) {
                 message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 1 heure.","Contactez KiwiHC16 sur le Forum." );
             }
-            
+
             // Poll Cmd
             self::pollingCmd("cronHourly");
 
@@ -298,6 +359,7 @@
         public static function cron15() {
 
             log::add( 'Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------' );
+
             /**
              * Look every 15 minutes if the kernel driver is not in error
              */
@@ -357,7 +419,7 @@
 
             // Poll Cmd
             self::pollingCmd("cron15");
-            
+
             log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
@@ -404,7 +466,7 @@
 
             // Poll Cmd
             self::pollingCmd("cron");
-            
+
             /**
              * Refresh health information
              */
@@ -534,7 +596,6 @@
             if ( msg_stat_queue( msg_get_queue(queueKeySerieToParser)       )["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser' );
             if ( msg_stat_queue( msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100 ) log::add( 'Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore' );
 
-
             if ($debug_deamon_info) log::add( 'Abeille', 'debug', 'deamon_info(): Terminé, return='.json_encode($return) );
             return $return;
         }
@@ -549,10 +610,10 @@
             // ******************************************************************************************************************
             // Remove temporary files
             for ( $i=1; $i<=config::byKey( 'zigateNb', 'Abeille', '1', 1 ); $i++ ) {
-                $FileLock = '/var/www/html/plugins/Abeille/Network/tmp/AbeilleLQI_MapData'.$i.'.json.lock';
-                if (file_exists($FileLock)) {
-                    unlink( $FileLock );
-                    log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de '.$FileLock );
+                $lockFile = __DIR__.'/../../tmp/AbeilleLQI_MapData'.$i.'.json.lock';
+                if (file_exists($lockFile)) {
+                    unlink( $lockFile );
+                    log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de '.$lockFile );
                 }
             }
 
@@ -586,12 +647,12 @@
 
             /* Developers debug features.
                Since deamon_start() is static, could not find a way to reuse global variables.
-               WARNING: Since php file is cached, it sometimes requires delay or restart to 
+               WARNING: Since php file is cached, it sometimes requires delay or restart to
                  get last content of 'debug.php' */
             $dbgFile = __DIR__."/../../tmp/debug.php";
             if (file_exists($dbgFile))
                 include $dbgFile;
-    
+
             /* Some checks before starting daemons
                - Are dependancies ok ?
                - Is cron running ? */
@@ -657,12 +718,11 @@
                 $serialPort = $param['AbeilleSerialPort'.$i];
                 if (($serialPort == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                     continue; // Undefined or disabled
-log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
                 if ($serialPort != "/dev/zigate".$i)
                     continue; // Not a WIFI Zigate
 
                 $daemonParams = $serialPort.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$param['IpWifiZigate'.$i];
-                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.' 2>&1';
+                $daemonLog = " >>".log::getPathToLog('AbeilleSocat').$i.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".$daemonDir."AbeilleSocat.php ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
                 exec($cmd.' &');
@@ -687,9 +747,9 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
                     $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
                     return false;
                 }
-    
+
                 $daemonParams = 'Abeille'.$i.' '.$param['AbeilleSerialPort'.$i].' '.$logLevel;
-                $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, ".")))).$i." 2>&1";
+                $daemonLog = " >>".log::getPathToLog("AbeilleSerialRead").$i.".log 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
                 log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
@@ -697,22 +757,21 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
             }
 
             /* Starting 'AbeilleParser' daemon */
-            $daemonDir = __DIR__."/../../core/class/";
+            $daemonDir = __DIR__."/"; // Same location than this file
             $daemonFile = "AbeilleParser.php";
             $daemonParams = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $daemonLog = " >>".log::getPathToLog(substr($daemonFile, 0, (strrpos($daemonFile, "."))));
+            $daemonLog = " >>".log::getPathToLog("AbeilleParser").".log 2>&1";
             $cmd = $nohup." ".$php." ".$daemonDir.$daemonFile." ".$daemonParams.$daemonLog;
             log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            exec($cmd.' 2>&1 &');
+            exec($cmd.' &');
 
             /* Starting 'AbeilleCmd' daemon */
             $deamon3 = "AbeilleCmd.php";
-            // $paramdeamon3 = $param['AbeilleSerialPort'].' '.$param['AbeilleAddress'].' '.$param['AbeillePort'].' '.$param['AbeilleUser'].' '.$param['AbeillePass'].' '.$param['AbeilleQos'].' '.log::convertLogLevel(log::getLogLevel('Abeille'));
             $paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $log3 = " > ".log::getPathToLog(substr($deamon3, 0, (strrpos($deamon3, "."))));
+            $log3 = " >>".log::getPathToLog("AbeilleCmd").".log 2>&1";
             $cmd = $nohup." ".$php." ".$dirdeamon.$deamon3." ".$paramdeamon3.$log3;
             log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: '.$cmd);
-            exec($cmd.' 2>&1 &');
+            exec($cmd.' &');
 
             sleep(2);
 
@@ -1252,9 +1311,12 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
                     )
                 ) {
 
+                $trimmedValue = $value;
                 log::add('Abeille', 'info', 'Recherche objet: '.$value.' dans les objets connus');
-                //remove lumi. from name as all xiaomi devices have a lumi. name
-                $trimmedValue = str_replace('LUMI.', '', $value);
+
+                /* Remove leading "lumi." from name as all xiaomi devices who start with this prefix. */
+                if (!strncasecmp($trimmedValue, "lumi.", 5))
+                    $trimmedValue = substr($trimmedValue, 5); // Remove leading "lumi." case insensitive
 
                 //remove all space in names for easier filename handling
                 $trimmedValue = str_replace(' ', '', $trimmedValue);
@@ -1598,10 +1660,10 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
                 }
 
                 $elogic->checkAndUpdateCmd($cmdlogic, $value);
-                
+
                 // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
                 $cmds = AbeilleCmd::searchConfigurationEqLogic($elogic->getId(),'PollingOnCmdChange','action');
- 
+
                 foreach ( $cmds as $key => $cmd ) {
                     if ( $cmd->getConfiguration('PollingOnCmdChange') == $cmdId ) {
                         log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName() );
@@ -1820,7 +1882,6 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
 
                     $topicArray = explode("/", $topic );
                     $dest = substr($topicArray[0],3);
-
 
                     /* ------------------------------ */
                     // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
@@ -2234,6 +2295,17 @@ log::add('Abeille', 'debug', 'deamon_start(): LA: '.$serialPort);
             case "29":
                 $cmds = AbeilleCmd::searchConfigurationEqLogic(  579,   'PollingOnCmdChange', 'action');
                 var_dump( $cmds );
+                break;
+            case "30":
+                // Replace a cmd by an other
+                jeedom::replaceTag(array('#17009#'=>'#17251#'));
+                break;
+            case "31":
+                //Remove an eq
+                Abeille::byLogicalId('Abeille1/C359','Abeille',0)->remove();
+                break;
+            case "32":
+                Abeille::replaceGhost( 588, 601 );
                 break;
 
         } // switch

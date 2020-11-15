@@ -1,12 +1,9 @@
 <?php
 
-    Class MsgAbeille {
-        /*
-        public $message = array(
-                                // 'topic' => 'Coucou class Abeille',
-                                // 'payload' => 'me voici creation message',
-                                );
-         */
-    }
-
-    ?>
+class MsgAbeille
+{
+    public $topic;
+    public $payload;
+    public $priority;
+    public $message;
+}

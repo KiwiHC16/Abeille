@@ -1,24 +1,24 @@
 <?php
 
-/* This file is part of Plugin abeille for jeedom.
- *
- * Plugin abeille for jeedom is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Plugin abeille for jeedom is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Plugin abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
- */
+    /* This file is part of Plugin abeille for jeedom.
+     *
+     * Plugin abeille for jeedom is free software: you can redistribute it and/or modify
+     * it under the terms of the GNU General Public License as published by
+     * the Free Software Foundation, either version 3 of the License, or
+     * (at your option) any later version.
+     *
+     * Plugin abeille for jeedom is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+     * GNU General Public License for more details.
+     *
+     * You should have received a copy of the GNU General Public License
+     * along with Plugin abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
+     */
 
-/*
- * Targets for AJAX's requests
- */
+    /*
+     * Targets for AJAX's requests
+     */
 
     function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
     {
@@ -32,10 +32,10 @@
 
 try {
 
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    require_once dirname(__FILE__).'/../class/Abeille.class.php';
-    require_once dirname(__FILE__).'/../class/AbeilleZigate.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
+    require_once __DIR__.'/../class/Abeille.class.php';
+    require_once __DIR__.'/../class/AbeilleZigate.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
 
     include_file('core', 'authentification', 'php');
     if (!isConnect('admin')) {
@@ -44,69 +44,60 @@ try {
 
     ajax::init();
 
-    if (init('action') == 'syncconfAbeille') {
-        abeille::syncconfAbeille(false);
-        ajax::success();
-    }
-
-    if (init('action') == 'updateConfigAbeille') {
-        abeille::updateConfigAbeille(false);
-        ajax::success();
-    }
-
     if (init('action') == 'checkSocat') {
-        $cmdToExec = "checkSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installSocat') {
-        $cmdToExec = "installSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {
-        $status = abeille::checkWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installWiringPi') {
-        abeille::installWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
     if (init('action') == 'checkTTY') {
         $zgPort = init('zgport');
         $zgType = init('zgtype');
-        logToFile('AbeilleConfig', 'info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
+        logToFile('AbeilleConfig.log', 'info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
 
-        logToFile('AbeilleConfig', 'debug', 'Arret des démons');
+        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
         abeille::deamon_stop(); // Stopping daemon
 
         /* Checks port exists and is not already used */
         $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType;
-        $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         // $status = 0;
 
         /* Read Zigate FW version */
         $version = 0; // FW version
         if ($status == 0) {
-            zg_SetConf('AbeilleConfig');
+            zg_SetConf('AbeilleConfig.log');
             $status = zg_GetVersion($zgPort, $version);
         }
 
-        logToFile('AbeilleConfig', 'debug', 'Redémarrage des démons');
+        logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
         abeille::deamon_start(); // Restarting daemon
 
         ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
     }
 
     if (init('action') == 'installTTY') {
-        abeille::installTTY(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -117,22 +108,20 @@ try {
 
         logToFile('Abeille', 'debug', 'Démarrage updateFirmware(' . $zgFwFile . ', ' . $zgPort . ')');
 
-        logToFile('AbeilleConfig', 'info', 'Vérification des paramètres');
+        logToFile('AbeilleConfig.log', 'info', 'Vérification des paramètres');
         $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort . " -check";
-        $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
-        // if ($status != 0)
-            // return $status; // Something wrong with parameters
 
         $version = 0; // FW version
         if ($status == 0) {
-            logToFile('AbeilleConfig', 'info', 'Arret des démons');
+            logToFile('AbeilleConfig.log', 'info', 'Arret des démons');
             abeille::deamon_stop(); // Stopping daemon
 
             /* Updating FW and reset Zigate */
-            logToFile('AbeilleConfig', 'info', 'Programming');
+            logToFile('AbeilleConfig.log', 'info', 'Programming');
             $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort;
-            $cmd = '/bin/bash ' . dirname(__FILE__) . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
+            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig.log') . ' 2>&1';
             exec($cmd, $out, $status);
 
             /* Reading FW version */
@@ -140,7 +129,7 @@ try {
                 $status = zg_GetVersion($zgPort, $version);
             }
 
-            logToFile('AbeilleConfig', 'info', 'Redémarrage des démons');
+            logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
             abeille::deamon_start(); // Restarting daemon
         }
 
@@ -148,7 +137,8 @@ try {
     }
 
     if (init('action') == 'resetPiZiGate') {
-        abeille::resetPiZiGate(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -158,7 +148,7 @@ try {
         $updateOnly = init('updateOnly');
 
         $status = 0;
-        
+
         /* Creating temp dir */
         $tmp = __DIR__.'/../../tmp';
         $doneFile = $tmp.'/switchBranch.done';
@@ -166,13 +156,13 @@ try {
             mkdir($tmp);
         else if (file_exists($doneFile))
             unlink($doneFile); // Removing 'switchBranch.done' file
-             
-        /* Creating a copy of 'switchBranch.sh' in 'tmp' */    
-        $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig').' 2>&1';
+
+        /* Creating a copy of 'switchBranch.sh' in 'tmp' */
+        $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
         $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
-        $cmd = 'nohup '.__DIR__.'/../../tmp/'.$cmdToExec.' >> '.log::getPathToLog('AbeilleConfig').' 2>&1 &';
+        $cmd = 'nohup '.__DIR__.'/../../tmp/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
         exec($cmd);
 
         ajax::success(json_encode(array('status' => $status)));

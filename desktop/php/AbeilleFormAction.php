@@ -368,6 +368,6 @@
     }
     echo "<br>Fin";
     sleep(1);
-    header ("location:/index.php?v=d&m=Abeille&p=Abeille");
+    header ("location:../../../../index.php?v=d&m=Abeille&p=Abeille"); //pphil passage du lien en relatif
 
     ?>

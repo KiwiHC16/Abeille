@@ -2307,11 +2307,22 @@
                 Abeille::replaceGhost( 588, 601 );
                 break;
             case "33":
-                // Test WindowsCovering
-                $addr = "2317";
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/WindowsCovering", "clusterCommand=05&" );
-                break;
 
+                break;
+            case "34":
+                // Test Bind
+                // 00158D0001ECBCBB <- zigate
+                // 00124B0022292CF1 <- Touch
+                // 00124B002242A288 <- Temp
+
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0001&reportToAddress=00158D0001ECBCBB" );
+
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0402&reportToAddress=00158D0001ECBCBB" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/setReport", "targetEndpoint=01&ClusterId=0402&AttributeId=0000&AttributeType=20&MaxInterval=3500" );
+
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0405&reportToAddress=00158D0001ECBCBB" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/setReport", "targetEndpoint=01&ClusterId=0405&AttributeId=0000&AttributeType=20&MaxInterval=3500" );
+                break;
         } // switch
 
         echo "Fin Abeille.class.php test mode\n";

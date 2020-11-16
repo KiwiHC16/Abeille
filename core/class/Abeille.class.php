@@ -52,17 +52,17 @@
             list($destGhost,$shortGhost) = explode('/', $ghost->getLogicalId() );
             list($destReal, $shortReal ) = explode('/', $real->getLogicalId()  );
             $IEEE = $ghost->getConfiguration('IEEE','none');
-            if ( $ghostIEEE == 'none' ) {
+            if ( $IEEE == 'none' ) {
                 $IEEE = $real->getConfiguration('IEEE','none');
             }
             
-            // -- supprimer de la Zigate X, l'appairage avec l IEEEE
+            // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X
             if ( $destGhost != $destReal ) {
                 if ( $IEEE == 'none' ) {
-                    echo "Erreur je n ai pas l IEEE je ne sais comment gerer.\n";
+                    log::add('Abeille', 'debug', 'Erreur je n ai pas l IEEE je ne sais comment gerer.');
                     return;
                 }
-                self::publishMosquitto( $this->queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "IEEE=".$ghostIEEE );
+                self::publishMosquitto( $this->queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "IEEE=".$IEEE );
             }
             
             // Parcours toutes les commandes

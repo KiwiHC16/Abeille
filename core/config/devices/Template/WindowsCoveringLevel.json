@@ -1,0 +1,18 @@
+{
+  "0102-#EP#-0008": {
+    "isVisible": 1,
+    "name": "Level",
+    "order": 3,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c76smtj623220",
+      "repeatEventManagement": "always",
+      "visibilityCategory": "All"
+    }
+  }
+}

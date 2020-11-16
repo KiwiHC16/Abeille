@@ -22,7 +22,9 @@
       "include21": "getManufacturerName",
       "include22": "getModelIdentifier",
       "include23": "getSWBuild",
-      "include25": "Group-Membership"
+      "include25": "Group-Membership",
+      "include25 2": "WindowsCoveringLevel",
+      "include25 2 2": "WindowsCoveringGetLevel"
     }
   }
 }

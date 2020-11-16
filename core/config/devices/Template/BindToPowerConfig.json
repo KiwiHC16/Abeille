@@ -1,0 +1,21 @@
+{
+  "BindToPowerConfig": {
+    "isVisible": 0,
+    "name": "BindToPowerConfig",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07cdd62ytjt1802sdd",
+      "topic": "bindShort",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

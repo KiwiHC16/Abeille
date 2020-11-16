@@ -126,8 +126,8 @@
         <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="Connection">
             <div>
-                <p><i>{{Ce plugin supporte 3 types de Zigates: USB, Wifi ou du type "PI"}}</i></p>
-                <p><i>{{- Si USB ou Pi, le champ 'Port série' doit indiquer le port correspondant (ex: ttyUSB0 ou ttyS1)}}</i></p>
+                <p><i>{{Ce plugin supporte 4 types de Zigates: USB, Wifi, "PI" ou DIN}}</i></p>
+                <p><i>{{- Si USB, Pi ou DIN, le champ 'Port série' doit indiquer le port correspondant (ex: ttyUSB0 ou ttyS1)}}</i></p>
                 <p><i>{{- Si Wifi, le champ 'Adresse IP' doit indiquer l'adresse de la Zigate et son port (ex: 192.168.4.1:9999)}}</i></p>
                 <p><i>{{Les zigates non utilisées doivent être désactivées.}}</i></p>
             </div>
@@ -187,6 +187,7 @@
                             <option value="USB" selected>{{USB}}</option>
                             <option value="WIFI" >{{WIFI}}</option>
                             <option value="PI" >{{PI}}</option>
+                            <option value="DIN" >{{DIN}}</option>
                         </select>
                     </div>
                 </div>
@@ -413,7 +414,7 @@
         js_NbOfZigates = nbOfZigates;
     });
 
-    /* Called when Zigate type (USB, WIFI, PI) is changed */
+    /* Called when Zigate type (USB, WIFI, PI, DIN) is changed */
     function checkZigateType(zgNb) {
         console.log("checkZigateType(zgNb=" + zgNb + ")");
         var zgType = $("#idSelZgType" + zgNb).val();
@@ -433,17 +434,17 @@
             idWifiAddr.removeAttribute('disabled');
             // idCheckWifi.removeAttribute('disabled');
         } else {
-            console.log('Type changed to USB or PI');
+            console.log('Type changed to USB, PI or DIN');
             idWifiAddr.setAttribute('disabled', true);
             // idCheckWifi.setAttribute('disabled', true);
             idSelSP.removeAttribute('disabled');
             idCheckSP.removeAttribute('disabled');
-            if (zgType == "USB") {
-                idFW.setAttribute('disabled', true);
-                idUpdateFW.setAttribute('disabled', true);
-            } else {
+            if (zgType == "PI") { // FW update is supported for PI only
                 idFW.removeAttribute('disabled');
                 idUpdateFW.removeAttribute('disabled');
+            } else {
+                idFW.setAttribute('disabled', true);
+                idUpdateFW.setAttribute('disabled', true);
             }
         }
     }

@@ -27,6 +27,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
 
+    include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
 
     $profileTable = array (
                            'C05E'=>'ZLL Application Profile',
@@ -248,74 +249,6 @@
                      "F4" => array( "MAC_ENUM_UNSUPPORTED_ATTRIBUTE", "PIB Set/Get on unsupported attribute", ),
                      );
 
-    /* Type and name of zigate messages (mainly those currently unsupported) */
-    $zigateMessages = array(
-        "8001" => "Log message",
-        "8002" => "Data indication",
-        "8006" => "Non “Factory new” Restart",
-        "8007" => "“Factory New” Restart",
-        "8009" => "Network State Response",
-        "8028" => "Authenticate response",
-        "802B" => "User Descriptor Notify",
-        "802C" => "User Descriptor Response",
-        "8031" => "Unbind response",
-        "8034" => "Complex Descriptor response",
-        "8035" => "PDM event code",
-        "8042" => "Node Descriptor response",
-        "8044" => "Power Descriptor response",
-        "8046" => "Match Descriptor response",
-        "8047" => "Management Leave response",
-        "804B" => "System Server Discovery response",
-        "8061" => "View Group response",
-        "80A1" => "Add Scene response",
-        "80A2" => "Remove Scene response",
-        "8110" => "Write Attribute Response",
-        "8140" => "Configure Reporting response",
-        "8401" => "Zone status change notification",
-        "8531" => "Complex Descriptor response",
-    );
-
-    /* Returns Zigate message name based on given '$msgType' */
-    function getZigateMsgByType($msgType)
-    {
-        global $zigateMessages;
-
-        if (array_key_exists($msgType, $zigateMessages))
-            return $zigateMessages[$msgType];
-        return "Message inconnu";
-    }
-
-    /* PDM event codes & desc.
-       Returned by command 0x8035 */
-    $zigatePDMEvents = array(
-        "00" => "WEAR_COUNT_TRIGGER_VALUE_REACHED",
-        "01" => "DESCRIPTOR_SAVE_FAILED",
-        "02" => "PDM_NOT_ENOUGH_SPACE",
-        "03" => "LARGEST_RECORD_FULL_SAVE_NO_LONGER_POSSIBLE",
-        "04" => "SEGMENT_DATA_CHECKSUM_FAIL",
-        "05" => "SEGMENT_SAVE_OK",
-        "06" => "EEPROM_SEGMENT_HEADER_REPAIRED",
-        "07" => "SYSTEM_INTERNAL_BUFFER_WEAR_COUNT_SWAP",
-        "08" => "SYSTEM_DUPLICATE_FILE_SEGMENT_DETECTED",
-        "09" => "SYSTEM_ERROR",
-        "0A" => "SEGMENT_PREWRITE",
-        "0B" => "SEGMENT_POSTWRITE",
-        "0C" => "SEQUENCE_DUPLICATE_DETECTED",
-        "0D" => "SEQUENCE_VERIFY_FAIL",
-        "0E" => "PDM_SMART_SAVE",
-        "0F" => "PDM_FULL_SAVE"
-    );
-
-    /* Returns Zigate PDM event desc based on given '$code' */
-    function getZigatePDMEvent($code)
-    {
-        global $zigatePDMEvents;
-
-        if (array_key_exists($code, $zigatePDMEvents))
-            return $zigatePDMEvents[$code];
-        return "Code PDM ".$code." inconnu";
-    }
-
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
     class debug {
@@ -490,7 +423,7 @@
             }
         }
 
-        function mqqtPublishFct( $SrcAddr, $fct, $data)
+        function mqqtPublishFct($SrcAddr, $fct, $data)
         {
             // $SrcAddr = dest / shortaddr
             // dest / short addr / Cluster ID - Attr ID -> data
@@ -882,7 +815,7 @@
             if ( method_exists($this, $fct) ) {
                 $this->$fct($dest, $payload, $ln, $qos, $param1); }
             else {
-                $msgName = getZigateMsgByType($type);
+                $msgName = zgGetMsgByType($type);
                 $this->deamonlog('debug', $dest.', Type='.$type.'/'.$msgName.', ignoré (non supporté).');
             }
 
@@ -943,9 +876,9 @@
             if ($Rejoin == "02") return;
 
             if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
-            
+
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
-            
+
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
@@ -1561,7 +1494,7 @@
             $this->deamonlog('debug', $dest.', Type=8035/PDM event code'
                              .', PDMEvtCode=x'.$PDMEvtCode
                              .', RecId='.$RecId
-                             .' => '.getZigatePDMEvent($PDMEvtCode));
+                             .' => '.zgGetPDMEvent($PDMEvtCode));
         }
 
         function decode8040($dest, $payload, $ln, $qos, $dummy)
@@ -1714,6 +1647,7 @@
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
         }
 
+        /* 8048/Leave indication */
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
             $IEEE = substr($payload, 0, 16);

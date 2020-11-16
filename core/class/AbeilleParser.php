@@ -927,8 +927,8 @@
                 $Rejoin = "";
 
             $msgDecoded = '004d/Device announce'.', Addr='.$Addr.', ExtAddr='.$IEEE.', MACCapa='.$MACCapa;
-            if ($Rejoin != "")
-                $msgDecoded .= ', Rejoin='.$Rejoin;
+            if ($Rejoin != "") $msgDecoded .= ', Rejoin='.$Rejoin;
+            $msgDecoded .= ', [Modelisation]';
             $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
@@ -1663,15 +1663,17 @@
                              . ', EndPoint='        .substr($payload,10, 2)
                              . ', Profile='         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
                              . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[$profile][$deviceId] .')'
-                             . ', BitField='        .substr($payload,20, 2));
+                             . ', BitField='        .substr($payload,20, 2))
+                             . ', [Modelisation]'
+                             ;
 
-            $this->deamonlog('debug','  InClusterCount='.$InClusterCount);
+            $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', '  InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
+                $this->deamonlog('debug', ' [Modelisation] InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
             }
-            $this->deamonlog('debug','  OutClusterCount='.substr($payload,24+$i, 2));
+            $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+                $this->deamonlog('debug', ' [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
             }
 
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
@@ -1697,7 +1699,9 @@
                              . ', Status='          .substr($payload, 2, 2)
                              . ', ShortAddr='       .substr($payload, 4, 4)
                              . ', EndPointCount='   .substr($payload, 8, 2)
-                             . ', EndPointList='    .$endPointList             );
+                             . ', EndPointList='    .$endPointList
+                             . ', [Modelisation]'
+                            );
 
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
@@ -2346,18 +2350,19 @@
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
-            $msg .= ', SQN='             .$SQN
-                    .', Addr='         .$SrcAddr
-                    .', EP='        .$EPoint
-                    .', ClustId='         .$ClusterId
-                    .', AttrId='          .$AttributId
-                    .', AttrStatus='      .$AttributStatus
-                    .', AttrDataType='    .$dataType
-                    .', AttrSize='        .$AttributSize;
+                $msg .= ', SQN='            .$SQN
+                        .', Addr='          .$SrcAddr
+                        .', EP='            .$EPoint
+                        .', ClustId='       .$ClusterId
+                        .', AttrId='        .$AttributId
+                        .', AttrStatus='    .$AttributStatus
+                        .', AttrDataType='  .$dataType
+                        .', AttrSize='      .$AttributSize;
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
                 $msg .= ', DataByteList='.pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
+                $msg .= ', [Modelisation]';
             } else {
                 $msg .= ', DataByteList='.substr($payload, 24, (strlen($payload) - 24 - 2));
             }

@@ -20,6 +20,15 @@
      * Targets for AJAX's requests
      */
 
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
+
     function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
     {
         if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
@@ -34,7 +43,7 @@ try {
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/../class/Abeille.class.php';
-    require_once __DIR__.'/../class/AbeilleZigate.php';
+    require_once __DIR__.'/../php/AbeilleZigate.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
 
     include_file('core', 'authentification', 'php');
@@ -44,27 +53,71 @@ try {
 
     ajax::init();
 
+    /* For Wifi Zigate
+       - check 'Addr:Port' via ping
+       - check socat installation
+     */
+    if (init('action') == 'checkWifi') {
+        $zgPort = init('zgport'); // Addr:Port
+        $zgSSP = init('ssp'); // Socat serial port
+
+        /* TODO: Log old issue. Why the following message never gets out ? */
+        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+        abeille::deamon_stop(); // Stopping daemons
+
+        /* Checks addr is responding to ping and socat is installed. */
+        $cmdToExec = "checkWifi.sh ".$zgPort;
+        $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('AbeilleConfig.log') . ' 2>&1';
+        exec($cmd, $out, $status);
+        // $status = 0;
+
+        /* TODO */
+        /* Need 'AbeilleSocat' daemon to interrogate Wifi zigate */
+        // $nohup = "/usr/bin/nohup";
+        // $php = "/usr/bin/php";
+        // $dir = __DIR__."/../class/";
+        // log::add('AbeilleConfig.log', 'debug', 'Démarrage d\'un démon socat temporaire');
+        // $params = $zgSSP.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$zgPort;
+        // $log = " >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
+        // $cmd = $nohup." ".$php." ".$dir."AbeilleSocat.php"." ".$params.$log;
+        // exec("echo ".$cmd." >>".log::getPathToLog('AbeilleTOTO'));
+        // log::add('AbeilleConfig.log', 'debug', '  cmd='.$cmd);
+        // exec($cmd.' &');
+
+        /* Read Zigate FW version */
+        // $version = 0; // FW version
+        // if ($status == 0) {
+            // zg_SetLog("AbeilleConfig");
+            // $status = zgGetVersion($zgSSP, $version);
+        // }
+
+        logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
+        abeille::deamon_start(); // Restarting daemons
+
+        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
+    }
+
     if (init('action') == 'checkSocat') {
-        $cmdToExec = "checkSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installSocat') {
-        $cmdToExec = "installSocat.sh";
-        $cmd = '/bin/bash '.dirname(__FILE__).'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {
-        $status = abeille::checkWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installWiringPi') {
-        abeille::installWiringPi(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -85,8 +138,8 @@ try {
         /* Read Zigate FW version */
         $version = 0; // FW version
         if ($status == 0) {
-            zg_SetConf('AbeilleConfig.log');
-            $status = zg_GetVersion($zgPort, $version);
+            zgSetConf('AbeilleConfig.log');
+            $status = zgGetVersion($zgPort, $version);
         }
 
         logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
@@ -96,7 +149,8 @@ try {
     }
 
     if (init('action') == 'installTTY') {
-        abeille::installTTY(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -125,7 +179,7 @@ try {
 
             /* Reading FW version */
             if ($status == 0) {
-                $status = zg_GetVersion($zgPort, $version);
+                $status = zgGetVersion($zgPort, $version);
             }
 
             logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
@@ -136,7 +190,8 @@ try {
     }
 
     if (init('action') == 'resetPiZiGate') {
-        abeille::resetPiZiGate(false);
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
         ajax::success();
     }
 
@@ -146,7 +201,7 @@ try {
         $updateOnly = init('updateOnly');
 
         $status = 0;
-        
+
         /* Creating temp dir */
         $tmp = __DIR__.'/../../tmp';
         $doneFile = $tmp.'/switchBranch.done';
@@ -154,8 +209,8 @@ try {
             mkdir($tmp);
         else if (file_exists($doneFile))
             unlink($doneFile); // Removing 'switchBranch.done' file
-             
-        /* Creating a copy of 'switchBranch.sh' in 'tmp' */    
+
+        /* Creating a copy of 'switchBranch.sh' in 'tmp' */
         $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
@@ -187,6 +242,64 @@ try {
 
         ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
     }
+
+    /* Check if a file exists.
+       'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
+       Returns: status=0 if found, -1 else */
+    if (init('action') == 'fileExists') {
+        $path = init('path');
+        $path = __DIR__.'/../../'.$path;
+        if (file_exists($path))
+            $status = 0;
+        else
+            $status = -1; // Not found
+        ajax::success(json_encode(array('status' => $status)));
+    }
+
+    /* Remove equipment(s) listed by id in 'eqList'.
+       Returns: status=0/-1, errors=<error message(s)> */
+    if (init('action') == 'removeEq') {
+        $eqList = init('eqList');
+
+        logToFile('Abeille', 'info', 'Arret des démons');
+        abeille::deamon_stop(); // Stopping daemon
+        zgSetConf('Abeille');
+
+        $status = 0;
+        $errors = ""; // Error messages
+        foreach ($eqList as $eqId) {
+            /* Collecting required infos */
+            $eqLogic = eqLogic::byId($eqId);
+            if (!is_object($eqLogic)) {
+                throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+            }
+            $logicalId = $eqLogic->getLogicalId();
+            list($eqNet, $eqAddr) = explode("/", $logicalId); // Split 'AbeilleX/short'
+            $zgNb = substr($eqNet, 7); // Extracting zigate number from network
+            $zgPort = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '');
+            $eqIEEE = $eqLogic->getConfiguration('IEEE', 'none');
+            if ($eqIEEE == 'none') {
+                $errmsg = 'L\'équipement \''.$logicalId.'\' ne peut être détruit. Adresse IEEE manquante !';
+                logToFile('Abeille', 'info', $errmsg);
+                $errors .= $errmsg."\n";
+                $status = -1;
+                continue;
+            }
+
+            /* Removing device from zigate */
+            $status = zgRemoveDevice($zgPort, $eqAddr, $eqIEEE);
+            if ($status == 0) {
+                /* Removing device from Jeedom DB */
+                $eqLogic->remove();
+            }
+        }
+
+        logToFile('Abeille', 'info', 'Redémarrage des démons');
+        abeille::deamon_start(); // Restarting daemon
+
+        ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
+    }
+
     throw new Exception('Aucune methode correspondante');
     /********** Catch exeption ************/
 } catch (Exception $e) {

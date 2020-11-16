@@ -81,7 +81,7 @@ $outils = array(
 
     <!-- Icones de toutes les abeilles  -->
     <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
-    <form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
+    <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> //pphil passage du lien en relatif
 
 <?php
     /* Display beehive or bee card */

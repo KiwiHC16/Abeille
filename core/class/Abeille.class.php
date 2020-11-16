@@ -2306,6 +2306,11 @@
             case "32":
                 Abeille::replaceGhost( 588, 601 );
                 break;
+            case "33":
+                // Test WindowsCovering
+                $addr = "2317";
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/".$addr."/WindowsCovering", "clusterCommand=05&" );
+                break;
 
         } // switch
 

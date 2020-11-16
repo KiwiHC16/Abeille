@@ -68,4 +68,19 @@
             return $zgPDMEvents[$code];
         return "Code PDM ".$code." inconnu";
     }
+
+
+    /* Returns zigbee profile name based on given 'profId' */
+    function zgGetProfile($profId)
+    {
+        /* List of known zigbee profiles */
+        $profilesTable = array (
+            '0104'=>'ZigBee Home Automation (ZHA)',
+            'C05E'=>'Zigbee Link Layer (ZLL)',
+        );
+
+        if (array_key_exists($profId, $profilesTable))
+            return $profilesTable[$profId];
+        return "Profil ".$profId." inconnu";
+    }
 ?>

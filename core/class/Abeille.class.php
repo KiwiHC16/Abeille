@@ -44,11 +44,11 @@
             // -- migrer l historique des commandes AbeilleX/XXXX vers AbeilleY/YYYY,
             // -- migrer les instances des commandes dans scenario et autres
             // -- supprimer l Abeille: AbeilleX/XXXX
-            
+
             // Collect all needed infos
             $ghost  = Abeille::byId($ghostId); if (!is_object($ghost)) return;
             $real   = Abeille::byId($realId); if (!is_object($real)) return;
-            
+
             list($destGhost,$shortGhost) = explode('/', $ghost->getLogicalId() );
             list($destReal, $shortReal ) = explode('/', $real->getLogicalId()  );
             $IEEE = $ghost->getConfiguration('IEEE','none');
@@ -64,7 +64,7 @@
                 }
                 self::publishMosquitto( $this->queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "IEEE=".$IEEE );
             }
-            
+
             // Parcours toutes les commandes
             foreach ( $ghost->getCmd() as $numGhost=>$ghostCmd ) {
                 foreach ( $real->getCmd() as $numReal=>$realCmd ) {
@@ -84,13 +84,13 @@
                     }
                 }
             }
-            
+
             // -- supprimer l Abeille: AbeilleY/YYYY
             $ghost->remove();
-            
+
             return;
         }
-        
+
         // Fonction dupliquée dans AbeilleParser.
         public static function volt2pourcent( $voltage ) {
             $max = 3.135;
@@ -1257,9 +1257,9 @@
                     if ( $abeille->getConfiguration('IEEE','none') == $value )  {
                         if ($cmdId == "enable") {
                             $abeille->setIsEnable(1);
-                        }
-                        else {
+                        } else {
                             $abeille->setIsEnable(0);
+                            message::add("Abeille", "Equipement '".$abeille->getName()."' désactivé. Il a probablement quitté le réseau.", '');
                         }
                         $abeille->save();
                         $abeille->refresh();
@@ -1267,15 +1267,14 @@
                         $done = 1;
                     }
 
-                    if ( !$done ) {
+                    if (!$done) {
                         $cmds = Cmd::byLogicalId('IEEE-Addr');
                         foreach( $cmds as $cmd ) {
                             if ( $cmd->execCmd() == $value ) {
                                 $abeille = $cmd->getEqLogic();
                                 if ($cmdId == "enable") {
                                     $abeille->setIsEnable(1);
-                                }
-                                else {
+                                } else {
                                     $abeille->setIsEnable(0);
                                 }
                                 $abeille->save();

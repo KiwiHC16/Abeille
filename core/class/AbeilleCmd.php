@@ -1903,8 +1903,69 @@
                 $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
             }
 
+            if ( isset($Command['WindowsCovering']) && isset($Command['address']) && isset($Command['clusterCommand']) && $Command['clusterCommand']=="05" )
+            {
+                $this->deamonlog('debug',"command WindowsCovering ");
+
+                $cmd = "0530";
+
+                // <address mode: uint8_t>              -> 1
+                // <target short address: uint16_t>     -> 2
+                // <source endpoint: uint8_t>           -> 1
+                // <destination endpoint: uint8_t>      -> 1
+
+                // <profile ID: uint16_t>               -> 2
+                // <cluster ID: uint16_t>               -> 2
+
+                // <security mode: uint8_t>             -> 1
+                // <radius: uint8_t>                    -> 1
+                // <data length: uint8_t>               -> 1
+                //                                                                                12 -> 0x0C
+                // <data: auint8_t>
+                // 19 ZCL Control Field
+                // 01 ZCL SQN
+                // 41 Commad Id: Get Group Id Response
+                // 01 Total
+                // 00 Start Index
+                // 01 Count
+                // 00 Group Type
+                // 001B Group Id
+
+                $addressMode            = "02";
+                $targetShortAddress     = $Command['address'];
+                $sourceEndpoint         = "01";
+                $destinationEndpoint    = "01";
+                $profileID              = "0104";
+                $clusterID              = "0102";
+                $securityMode           = "02";
+                $radius                 = "1D";
+
+                $zclControlField        = "19";
+                $transactionSequence    = "01";
+                $cmdId                  = "05";  // Cmd Proprio Profalux
+                $type                   = "18";  // Je ne touche que le Tilt
+                $Lift                   = "10";  // Not used
+                
+
+                $data2 = $zclControlField . $transactionSequence . $cmdId . $type . $Lift ;
+
+                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+                $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+
+                $data = $data1 . $data2;
+                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            }
+
             // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
-            if ( isset($Command['WindowsCovering']) && isset($Command['address']) && isset($Command['clusterCommand']) )
+            if ( isset($Command['WindowsCovering']) && isset($Command['address']) && isset($Command['clusterCommand']) && $Command['clusterCommand']!="05" )
             {
                 // 0x00FA    Windows covering (v3.0f only)
                 // <address mode: uint8_t>

@@ -106,7 +106,7 @@ class AbeilleTools
         $deviceFilename = __DIR__.'/../../../core/config/devices/'.$device.'/'.$device.'.json';
 
         if (!is_file($deviceFilename)) {
-            log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut.');
+            log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
             $device = 'defaultUnknown';
             $deviceFilename = __DIR__.'/../../../core/config/devices/'.$device.'/'.$device.'.json';
         }

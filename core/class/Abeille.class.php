@@ -994,60 +994,60 @@
             return $return;
         }
 
-        public static function checkParameters() {
-            // return 1 si Ok, 0 si erreur
-            $param = Abeille::getParameters();
+        // public static function checkParameters() {
+        //     // return 1 si Ok, 0 si erreur
+        //     $param = Abeille::getParameters();
 
-            if ( !isset($param['zigateNb']) ) { return 0; }
-            if ( $param['zigateNb'] < 1 ) { return 0; }
-            if ( $param['zigateNb'] > 9 ) { return 0; }
+        //     if ( !isset($param['zigateNb']) ) { return 0; }
+        //     if ( $param['zigateNb'] < 1 ) { return 0; }
+        //     if ( $param['zigateNb'] > 9 ) { return 0; }
 
-            // Testons la validité de la configuration
-            $atLeastOneZigateActiveWithOnePortDefined = 0;
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if ($return['AbeilleActiver'.$i ]=='Y') {
-                    if ($return['AbeilleSerialPort'.$i]!='none') {
-                        $atLeastOneZigateActiveWithOnePortDefined++;
-                    }
-                }
-            }
-            if ( $atLeastOneZigateActiveWithOnePortDefined <= 0 ) {
-                log::add('Abeille','debug','checkParameters: aucun serialPort n est pas défini/actif.');
-                message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.' );
-                return 0;
-            }
+        //     // Testons la validité de la configuration
+        //     $atLeastOneZigateActiveWithOnePortDefined = 0;
+        //     for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+        //         if ($return['AbeilleActiver'.$i ]=='Y') {
+        //             if ($return['AbeilleSerialPort'.$i]!='none') {
+        //                 $atLeastOneZigateActiveWithOnePortDefined++;
+        //             }
+        //         }
+        //     }
+        //     if ( $atLeastOneZigateActiveWithOnePortDefined <= 0 ) {
+        //         log::add('Abeille','debug','checkParameters: aucun serialPort n est pas défini/actif.');
+        //         message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.' );
+        //         return 0;
+        //     }
 
-            // Vérifions l existence des ports
-            for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
-                if ($return['AbeilleActiver'.$i ]=='Y') {
-                    if ($return['AbeilleSerialPort'.$i] != 'none') {
-                        if (@!file_exists($return['AbeilleSerialPort'.$i])) {
-                            log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i]);
-                            message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'' );
-                            $return['parametersCheck']="nok";
-                            $return['parametersCheck_message'] = __('Le port série '.$return['AbeilleSerialPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
-                            return 0;
-                        } else {
-                            if (substr(decoct(fileperms($return['AbeilleSerialPort'.$i])), -4) != "0777") {
-                                exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
-                            }
-                        }
-                    }
-                }
-            }
+        //     // Vérifions l existence des ports
+        //     for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+        //         if ($return['AbeilleActiver'.$i ]=='Y') {
+        //             if ($return['AbeilleSerialPort'.$i] != 'none') {
+        //                 if (@!file_exists($return['AbeilleSerialPort'.$i])) {
+        //                     log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i]);
+        //                     message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'' );
+        //                     $return['parametersCheck']="nok";
+        //                     $return['parametersCheck_message'] = __('Le port série '.$return['AbeilleSerialPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
+        //                     return 0;
+        //                 } else {
+        //                     if (substr(decoct(fileperms($return['AbeilleSerialPort'.$i])), -4) != "0777") {
+        //                         exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            return 1;
-        }
+        //     return 1;
+        // }
 
-        public static function postSave() {
-            // log::add('Abeille', 'debug', 'deamon_postSave: IN');
-            $cron = cron::byClassAndFunction('Abeille', 'deamon');
-            if (is_object($cron) && !$cron->running()) {
-                $cron->run();
-            }
-            // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
+        // public static function postSave() {
+        //     // log::add('Abeille', 'debug', 'deamon_postSave: IN');
+        //     $cron = cron::byClassAndFunction('Abeille', 'deamon');
+        //     if (is_object($cron) && !$cron->running()) {
+        //         $cron->run();
+        //     }
+        //     // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
 
-        }
+        // }
 
         public static function fetchShortFromIEEE($IEEE, $checkShort) {
             // Return:

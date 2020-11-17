@@ -1182,7 +1182,7 @@
 
         public static function message($message) {
 
-            // log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
 
             $topicArray = explode("/", $message->topic);
             if (sizeof($topicArray) != 3) {
@@ -1509,27 +1509,27 @@
             // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
             // log::add('Abeille', 'debug', 'Je devrais entrer dans la rechcher' );
             if (!is_object( $elogic ) && ($cmdId == "IEEE-Addr") ) {
-                // log::add('Abeille', 'debug', 'Je lance la recherche' );
+                log::add('Abeille', 'debug', '!objet&IEEE --> Objet n existe pas et je recoie une IEEE, Je lance la recherche' );
                 // 0 : Short Address is aligned with the one received
                 // Short : Short Address is NOT aligned with the one received
                 // -1 : Error Nothing found
                 $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
-                // log::add('Abeille', 'debug', 'J ai fini la recherche avec resultat : '.$ShortFound );
+                log::add('Abeille', 'debug', '!objet&IEEE --> J ai fini la recherche avec resultat : '.$ShortFound );
                 if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
 
                     $elogic = self::byLogicalId( $dest."/".$ShortFound, 'Abeille');
 
                     if (!is_object( $elogic )) {
-                        log::add('Abeille', 'debug', 'Un objet trouve avec l adresse IEEE mais n est pas sur la bonne zigate.' );
+                        log::add('Abeille', 'debug', '!objet&IEEE --> Un objet trouve avec l adresse IEEE mais n est pas sur la bonne zigate. Abeille ne fait rien automatiquement. L utilisateur doit resoudre la situation.' );
                         return;
                     }
 
-                    log::add( 'Abeille', 'debug', "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
+                    log::add( 'Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique" );
                     // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
                     message::add( "Abeille",   "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " .$elogic->getName().", on fait la mise a jour automatique", '' );
 
                     // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
-                    log::add( 'Abeille', 'debug', "IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
+                    log::add( 'Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; Ancien nom: ".$elogic->getName().", nouveau nom: ".str_replace( $ShortFound, $addr, $elogic->getName()   ) );
                     $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
 
                     $elogic->setLogicalId( $dest."/".$addr );
@@ -1542,7 +1542,10 @@
                     Abeille::publishMosquitto( queueKeyAbeilleToAbeille, priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr );
 
                 }
-                log::add('Abeille', 'debug', 'Voila j ai fini' );
+                else {
+                    log::add('Abeille', 'debug', '!objet&IEEE --> Je n ai pas trouvé d Abeille qui corresponde, je ne fais rien.' );
+                }
+                log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement' );
                 return;
             }
 
@@ -1555,6 +1558,7 @@
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default" );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue" );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM" );
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceProfalux", "Default" );
                 return;
             }
 

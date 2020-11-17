@@ -92,7 +92,6 @@
         public $zigateNb;
         public $zigateAvailable = array();        // Si on pense la zigate dispo ou non.
 
-
         function __construct($debugLevel) {
             /* Configuring log library to use 'logMessage()' */
             logSetConf("AbeilleCmd.log");
@@ -228,13 +227,13 @@
 
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
             if ( isset($Command['repeat']) ) {
                 if ( $Command['repeat']>1 ) {
                     for ($x = 2; $x <= $Command['repeat']; $x++) {
                         sleep(5);
-                        $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
                     }
                 }
             }
@@ -281,11 +280,11 @@
             // $this->deamonlog('debug','len data: '.strlen($data));
             //echo "Read Attribute command data: ".$data."\n";
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
         function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio) {
-            $this->deamonlog('debug',"command setParam2");
+            $this->deamonlog('debug', "  command setParam2");
             // Msg Type = 0x0530
 
             $priority = $Command['priority'];
@@ -340,25 +339,24 @@
 
             // $dataLength = "16";
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-            $this->deamonlog('debug',"data2: ".$data2 );
-            $this->deamonlog('debug',"length data2: ".$dataLength );
+            $this->deamonlog('debug', "data2: ".$data2 );
+            $this->deamonlog('debug', "length data2: ".$dataLength );
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
             $data = $data1 . $data2;
 
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-            // $this->deamonlog('debug',"data: ".$data );
-            // $this->deamonlog('debug',"lenth data: ".$lenth );
+            // $this->deamonlog('debug', "data: ".$data );
+            // $this->deamonlog('debug', "lenth data: ".$lenth );
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
-
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
         function setParam3($dest,$Command) {
             // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
 
-            $this->deamonlog('debug',"command setParam3");
+            $this->deamonlog('debug', "command setParam3");
 
             $priority = $Command['priority'];
 
@@ -440,7 +438,7 @@
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+            $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
@@ -448,18 +446,17 @@
 
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            // $this->deamonlog('debug',"data: ".$data );
-            // $this->deamonlog('debug',"lenth data: ".$lenth );
+            // $this->deamonlog('debug', "data: ".$data );
+            // $this->deamonlog('debug', "lenth data: ".$lenth );
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
-
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
         // Needed for fc01 of Legrand Dimmer
         // clusterId=fc01&attributeId=0000&attributeType=09&value=0101
         function setParam4($dest,$Command) {
 
-            $this->deamonlog('debug',"command setParam4");
+            $this->deamonlog('debug', "command setParam4");
 
             $priority = $Command['priority'];
 
@@ -522,7 +519,7 @@
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+            $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
@@ -530,11 +527,10 @@
 
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            // $this->deamonlog('debug',"data: ".$data );
-            // $this->deamonlog('debug',"lenth data: ".$lenth );
+            // $this->deamonlog('debug', "data: ".$data );
+            // $this->deamonlog('debug', "lenth data: ".$lenth );
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
-
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
         // Needed for fc41 of Legrand Contacteur
@@ -599,7 +595,7 @@
             // $this->deamonlog('debug',"data: ".$data );
             // $this->deamonlog('debug',"lenth data: ".$lenth );
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
         function getParam($priority,$dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
@@ -682,7 +678,7 @@
 
             // $this->deamonlog('debug','data: '.$data.' length: '.$lenth);
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
         // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
@@ -710,7 +706,7 @@
             // $this->deamonlog('debug','len data: '.strlen($data));
             //echo "Read Attribute command data: ".$data."\n";
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
         // getParamOSRAM: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
@@ -738,7 +734,7 @@
             // $this->deamonlog('debug','len data: '.strlen($data));
             //echo "Read Attribute command data: ".$data."\n";
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
         function getChecksum( $msgtype, $length, $datas) {
@@ -777,38 +773,38 @@
             return $mess;
         }
 
-        function sendCmd($priority, $dest, $cmd, $len, $datas='') {
-            $this->deamonlog("debug", "sendCmd fct - dest: " . json_encode($dest) . " cmd: ".json_encode($cmd). " priority: ".json_encode($priority), $this->debug['sendCmd']);
+        function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
+            $this->deamonlog("debug", "sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
 
             $i = str_replace( 'Abeille', '', $dest );
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {
-                $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate est desactivee." );
+                $this->deamonlog("debug", "  Je ne traite pas cette commande car la zigate est desactivee." );
                 return;
             }
-            $this->deamonlog("debug", "sendCmd fct - i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1), $this->debug['sendCmd']);
+            $this->deamonlog("debug", "  i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1), $this->debug['sendCmd']);
             if (config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1) == '-1') {
-                $this->deamonlog("debug", "sendCmd fct - Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
+                $this->deamonlog("debug", "  Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
                 return;
             }
 
             if ($dest == "none") {
-                $this->deamonlog("debug", "sendCmd fct - Je ne mets pas la commande dans la queue car la dest est none", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "  Je ne mets pas la commande dans la queue car la dest est none", $this->debug['sendCmd']);
                 return; // on ne process pas les commande pour les zigate qui n existe pas.
             }
 
             if (is_null($priority)) {
-                $this->deamonlog("debug", "sendCmd fct - priority is null, rejecting the command", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "  priority is null, rejecting the command", $this->debug['sendCmd']);
                 return;
             }
 
             if ($priority < priorityMin) {
-                $this->deamonlog("debug", "sendCmd fct - priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
+                $this->deamonlog("debug", "  priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
                 return;
             }
 
             // A chaque retry la priority increase d'un.
             if ($priority > (priorityMax+priorityMax)) {
-                $this->deamonlog("debug", "sendCmd fct - priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
+                $this->deamonlog("debug", "  priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
                 return;
             }
 
@@ -826,15 +822,16 @@
                     'dest' => $dest,
                     'cmd' => $cmd,
                     'len' => $len,
-                    'datas' => $datas
+                    'datas' => $datas,
+                    'shortAddr' => $shortAddr
                 );
 
-                $this->deamonlog("debug", "sendCmd fct - Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmd2']);
+                $this->deamonlog("debug", "  Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmd2']);
                 if (count($this->cmdQueue[$i]) > 50) {
-                    $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue de la zigate: '.$i);
+                    $this->deamonlog('info', '  Il y a plus de 50 messages dans le queue de la zigate: '.$i);
                 }
             } else {
-                $this->deamonlog("debug", "sendCmd fct - Je recois un message pour une queue qui n est pas valide: ->".$i."<-", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "  Je recois un message pour une queue qui n est pas valide: ->".$i."<-", $this->debug['sendCmd']);
             }
         }
 
@@ -852,7 +849,6 @@
         }
 
         function sendCmdToZigate($dest, $cmd, $len, $datas) {
-
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
             // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
             if (0) {
@@ -861,19 +857,19 @@
                 fclose($f);
             }
 
-            $this->deamonlog('debug','sendCmd fct - Dest:'.$dest.' cmd:'.$cmd.' len:'.$len.' datas:'.$datas, $this->debug['sendCmd']);
+            $this->deamonlog('debug','sendCmdToZigate(Dest='.$dest.', cmd='.$cmd.', len='.$len.', datas='.$datas.")", $this->debug['sendCmd']);
 
             $i = str_replace( 'Abeille', '', $dest );
             $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
 
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
-                $this->deamonlog("debug", " =================> Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
+                $this->deamonlog("debug", "  Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
                 $f = fopen( $destSerial,"w");
                 $this->writeToDest($f, $destSerial, $cmd, $len, $datas);
                 fclose($f);
             }
             else {
-                $this->deamonlog("debug", " =================> Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
+                $this->deamonlog("debug", "  Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
             }
         }
 
@@ -897,9 +893,9 @@
                 if (count($this->cmdQueue[$i]) < 1) continue;                                  // si la queue est vide je passe mon chemin
                 if ($this->zigateAvailable[$i] == 0) continue;                                 // Si la zigate n est pas considéré dispo je passe mon chemin
 
-                $this->deamonlog("debug", "--------------------", $this->debug['sendCmdAck2']);
-                $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer.", $this->debug['sendCmdAck']);
-                $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
+                $this->deamonlog("debug", "processCmdQueueToZigate()", $this->debug['sendCmdAck2']);
+                $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer.", $this->debug['sendCmdAck']);
+                $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
 
                 $this->zigateAvailable[$i] = 0;    // Je considere la zigate pas dispo car je lui envoie une commande
                 $this->timeLastAck[$i] = time();
@@ -914,20 +910,20 @@
                 if ($cmd['retry'] > 0) {
                     array_unshift($this->cmdQueue[$i], $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
                 } else {
-                    $this->deamonlog("info", "La commande n a plus de retry, on la drop: ".json_encode($cmd), $this->debug['sendCmdAck2']);
+                    $this->deamonlog("debug", "  La commande n a plus de retry, on la drop: ".json_encode($cmd), $this->debug['sendCmdAck2']);
                 }
 
-                $this->deamonlog("debug", "J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
-                $this->deamonlog("debug", "--------------------", $this->debug['sendCmdAck2']);
+                $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
+                // $this->deamonlog("debug", "--------------------", $this->debug['sendCmdAck2']);
             }
         }
 
         function processCmd($Command) {
 
-            $this->deamonlog("debug", "processCmd fct - begin processCmd function, Command: ".json_encode($Command), $this->debug['processCmd']);
+            $this->deamonlog("debug", "processCmd(".json_encode($Command).")", $this->debug['processCmd']);
 
             if (!isset($Command)) {
-                $this->deamonlog('debug',"processCmd fct - processCmd Command not set return", $this->debug['processCmd']);
+                $this->deamonlog('debug', "  Command not set return", $this->debug['processCmd']);
                 return;
             }
 
@@ -936,7 +932,7 @@
                     if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['address'], 'Abeille')) {
                         if ($NE->getIsEnable()) {
                             if (( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
-                                $this->deamonlog('debug',"processCmd fct - NE en Time Out alors je mets la priorite au minimum.");
+                                $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
                                 $priority = priorityLostNE;
                             }
                             else {
@@ -944,12 +940,12 @@
                             }
                         }
                         else {
-                            $this->deamonlog('debug',"processCmd fct - NE desactive, je ne fais rien.");
+                            $this->deamonlog('debug', "  NE desactive, je ne fais rien.");
                             return;
                         }
                     }
                     else {
-                        $this->deamonlog('debug',"processCmd fct - NE introuvable, probablement une annonce, j envoie la commande.");
+                        $this->deamonlog('debug', "  NE introuvable, probablement une annonce, j envoie la commande.");
                         $priority = $Command['priority'];
                     }
                 }
@@ -958,7 +954,7 @@
                 }
             }
             else {
-                $this->deamonlog('debug',"processCmd fct - priority not defined !!!");
+                $this->deamonlog('debug', "  priority not defined !!!");
                 $priority = priorityInterrogation;
             }
 
@@ -967,19 +963,19 @@
             // En gros 0 normal, 1 RAW mode, 2 Mode hybride
             if (isset($Command['setModeHybride'])) {
                 if ($Command['setModeHybride'] == "normal") {
-                    $this->deamonlog('debug',"processCmd fct - Set Mode Hybride", $this->debug['processCmd']);
+                    $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd']);
                     $this->sendCmd($priority, $dest,"0002","0001","00");
                 } elseif ($Command['setModeHybride'] == "RAW") {
-                    $this->deamonlog('debug',"processCmd fct - Set Mode Hybride", $this->debug['processCmd']);
+                    $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd']);
                     $this->sendCmd($priority, $dest,"0002","0001","01");
                 } elseif ($Command['setModeHybride'] == "hybride") {
-                    $this->deamonlog('debug',"processCmd fct - Set Mode Hybride", $this->debug['processCmd']);
+                    $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd']);
                     $this->sendCmd($priority, $dest,"0002","0001","02");
                 }
             }
 
             if (isset($Command['getVersion']) && $Command['getVersion'] == "Version") {
-                $this->deamonlog('debug',"processCmd fct - Get Version", $this->debug['processCmd']);
+                $this->deamonlog('debug', "  Get Version", $this->debug['processCmd']);
                 $this->sendCmd($priority, $dest,"0010","0000","");
             }
 
@@ -1004,7 +1000,7 @@
 
             // abeilleList abeilleListAll
             if (isset($Command['abeilleList']) && $Command['abeilleList'] == "abeilleListAll") {
-                $this->deamonlog('debug',"Get Abeilles List");
+                $this->deamonlog('debug', "  Get Abeilles List");
                 //echo "Get Abeilles List\n";
                 $this->sendCmd($priority,$dest,"0015","0000","");
             }
@@ -1014,7 +1010,7 @@
                 if (!isset($Command['time']) ) {
                     $Command['time'] = time();
                 }
-                $this->deamonlog('debug',"setTimeServer");
+                $this->deamonlog('debug', "  setTimeServer");
                 $cmd = "0016";
                 $data = sprintf("%08s",dechex($Command['time']));
 
@@ -1023,7 +1019,7 @@
             }
 
             if (isset($Command['getTimeServer'])) {
-                $this->deamonlog('debug',"getTimeServer");
+                $this->deamonlog('debug', "  getTimeServer");
                 $cmd = "0017";
                 $data = "";
 
@@ -1032,7 +1028,7 @@
             }
             //----------------------------------------------------------------------
             if (isset($Command['setOnZigateLed'])) {
-                $this->deamonlog('debug',"setOnZigateLed");
+                $this->deamonlog('debug', "  setOnZigateLed");
                 $cmd = "0018";
                 $data = "01";
 
@@ -1041,7 +1037,7 @@
             }
 
             if (isset($Command['setOffZigateLed'])) {
-                $this->deamonlog('debug',"setOffZigateLed");
+                $this->deamonlog('debug', "  setOffZigateLed");
                 $cmd = "0018";
                 $data = "00";
 
@@ -1050,7 +1046,7 @@
             }
             //----------------------------------------------------------------------
             if (isset($Command['setCertificationCE'])) {
-                $this->deamonlog('debug',"setCertificationCE");
+                $this->deamonlog('debug', "  setCertificationCE");
                 $cmd = "0019";
                 $data = "01";
 
@@ -1059,7 +1055,7 @@
             }
 
             if (isset($Command['setCertificationFCC'])) {
-                $this->deamonlog('debug',"setCertificationFCC");
+                $this->deamonlog('debug', "  setCertificationFCC");
                 $cmd = "0019";
                 $data = "02";
 
@@ -1072,7 +1068,7 @@
             // PHY_PIB_TX_POWER_MIN (minimum - 0)
             // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
             if (isset($Command['TxPower'])  ) {
-                $this->deamonlog('debug',"TxPower");
+                $this->deamonlog('debug', "  TxPower");
                 $cmd = "0806";
                 $data = $Command['TxPower'];
                 if ( $data < 10 ) $data = '0'.$data;
@@ -1087,7 +1083,7 @@
               // PHY_PIB_TX_POWER_MIN (minimum - 0)
               // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
               if (isset($Command['GetTxPower'])) {
-                  $this->deamonlog('debug',"GetTxPower");
+                  $this->deamonlog('debug', "  GetTxPower");
                   $cmd = "0807";
                   $data = "";
 
@@ -1096,7 +1092,7 @@
               }
             //----------------------------------------------------------------------
             if (isset($Command['setChannelMask'])) {
-                $this->deamonlog('debug',"setChannelMask");
+                $this->deamonlog('debug', "  setChannelMask");
                 $cmd = "0021";
                 $data = $Command['setChannelMask'];
 
@@ -1105,7 +1101,7 @@
             }
             //----------------------------------------------------------------------
             if (isset($Command['setExtendedPANID'])) {
-                $this->deamonlog('debug',"setExtendedPANID");
+                $this->deamonlog('debug', "  setExtendedPANID");
                 $cmd = "0020";
                 $data = $Command['setExtendedPANID'];
 
@@ -1227,14 +1223,14 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $shortAddress);
             }
 
             //----------------------------------------------------------------------
             // 2.4.3.3.3   Mgmt_Rtg_req
             //
             if (isset($Command['Mgmt_Rtg_req']) && isset($Command['address'])) {
-                $this->deamonlog('debug',"command Mgmt_Rtg_req");
+                $this->deamonlog('debug', "  command Mgmt_Rtg_req");
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -1270,14 +1266,14 @@
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength );
-                $this->deamonlog('debug',"Data2: ".$SQN."-".$startIndex );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength );
+                $this->deamonlog('debug', "  Data2: ".$SQN."-".$startIndex );
 
                 $data = $data1 . $data2;
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             //----------------------------------------------------------------------
@@ -1286,7 +1282,7 @@
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006
             if ( isset($Command['bind']) )
             {
-                $this->deamonlog('debug',"command bind");
+                $this->deamonlog('debug', "  command bind");
                 // Msg Type = 0x0030
                 $cmd = "0030";
 
@@ -1332,7 +1328,7 @@
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
             if ( isset($Command['bindShort']) )
             {
-                $this->deamonlog('debug',"command bind short");
+                $this->deamonlog('debug', "  command bind short");
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -1411,13 +1407,13 @@
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
                 $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
-                $this->deamonlog('debug',"Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
+                $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2) );
 
                 $data = $data1 . $data2;
-                // $this->deamonlog('debug',"Data: ".$data." len: ".(strlen($data)/2) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2) );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             // setReport
@@ -1425,7 +1421,7 @@
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             if ( isset($Command['setReport']) )
             {
-                $this->deamonlog('debug',"command setReport");
+                $this->deamonlog('debug', "  command setReport");
                 // Configure Reporting request
                 // Msg Type = 0x0120
 
@@ -1491,16 +1487,16 @@
 
                 $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
 
-                // $this->deamonlog('debug',"Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
+                // $this->deamonlog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             // CmdAbeille/Ruche/commissioningGroupAPS -> address=a048&groupId=AA00
             // Commission group for Ikea Telecommande On/Off still interrupteur
             if ( isset($Command['commissioningGroupAPS']) )
             {
-                $this->deamonlog('debug',"commissioningGroupAPS");
+                $this->deamonlog('debug', " commissioningGroupAPS");
 
                 $cmd = "0530";
 
@@ -1550,22 +1546,22 @@
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
 
                 $data = $data1 . $data2;
-                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+                // $this->deamonlog('debug', "  Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
-            
+
             // CmdAbeille/Ruche/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
             // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
             if ( isset($Command['commissioningGroupAPSLegrand']) )
             {
-                $this->deamonlog('debug',"commissioningGroupAPSLegrand");
+                $this->deamonlog('debug', "  commissioningGroupAPSLegrand");
 
                 $cmd = "0530";
 
@@ -1612,8 +1608,8 @@
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
 
                 $data = $data1 . $data2;
                 // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
@@ -1645,7 +1641,7 @@
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupCount . $groupList ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['viewScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
@@ -1671,7 +1667,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['storeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
@@ -1697,7 +1693,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['recallScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
@@ -1723,7 +1719,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['sceneGroupRecall']) && isset($Command['groupID']) && isset($Command['sceneID']) )
@@ -1749,7 +1745,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['addScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) && isset($Command['sceneName']) )
@@ -1785,7 +1781,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['getSceneMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) )
@@ -1809,7 +1805,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['removeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) )
@@ -1836,7 +1832,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['removeSceneAll']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) )
@@ -1861,12 +1857,12 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) )
             {
-                $this->deamonlog('debug',"Specific Command to simulate Ikea Telecommand < and >");
+                $this->deamonlog('debug', "  Specific Command to simulate Ikea Telecommand < and >");
 
                 // Msg Type = 0x0530
                 $cmd = "0530";
@@ -1892,15 +1888,15 @@
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)) );
-                $this->deamonlog('debug',"Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)) );
+                $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)) );
 
                 $data = $data1 . $data2;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                // $this->deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".(dechex(strlen($data)/2)) );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
@@ -1933,9 +1929,9 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                // $this->deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".(dechex(strlen($data)/2)) );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
@@ -1968,9 +1964,9 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                // $this->deamonlog('debug',"Data: ".$data." len: ".(dechex(strlen($data)/2)) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".(dechex(strlen($data)/2)) );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['ActiveEndPoint']) )
@@ -1986,7 +1982,7 @@
 
                 $data = $address;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['SimpleDescriptorRequest']) )
@@ -2004,7 +2000,7 @@
 
                 $data = $address . $endpoint ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             //----------------------------------------------------------------------------
@@ -2028,9 +2024,9 @@
                 $data = $address . $IeeeAddress . $requestType . $startIndex ;
                 $lenth = "000C"; // A verifier
 
-                $this->deamonlog('debug','Network_Address_request: '.$data . ' - ' . $lenth  );
+                $this->deamonlog('debug', '  Network_Address_request: '.$data . ' - ' . $lenth  );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['IEEE_Address_request']) )
@@ -2052,9 +2048,9 @@
                 // $lenth = strlen($data)/2;
                 $lenth = "0006";
 
-                $this->deamonlog('debug','IEEE_Address_request: '.$data . ' - ' . $lenth  );
+                $this->deamonlog('debug', '  IEEE_Address_request: '.$data . ' - ' . $lenth  );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['Management_LQI_request']) )
@@ -2072,7 +2068,7 @@
 
                 $data = $address . $startIndex ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']) )
@@ -2107,7 +2103,7 @@
                 $lenth = "0007";
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $time ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // Don't know how to make it works
@@ -2148,7 +2144,7 @@
                     // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
                 } else {
                     $level = dechex($Command['Level']);
-                    // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
+                    // $this->deamonlog('debug', "setLevel: ".$Command['Level']."-".$level);
                 }
 
                 // $duration = "00" . $Command['duration'];
@@ -2168,7 +2164,7 @@
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
                 // echo "data: " . $data . "\n";
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
@@ -2179,7 +2175,7 @@
 
             if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )
             {
-                $this->deamonlog('debug',"command moveToLiftAndTiltBSO");
+                $this->deamonlog('debug', "  command moveToLiftAndTiltBSO");
 
                 $cmd = "0530";
 
@@ -2232,15 +2228,15 @@
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-                $this->deamonlog('debug',"Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
 
                 $data = $data1 . $data2;
-                // $this->deamonlog('debug',"Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             // setLevelStop
@@ -2261,7 +2257,7 @@
 
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
@@ -2324,7 +2320,7 @@
             if ( isset($Command['writeAttributeRequestIAS_WD']) ) {
                 // Parameters: EP=#EP&mode=Flash&duration=#slider#
 
-                    $this->deamonlog('debug',"command writeAttributeRequestIAS_WD");
+                    $this->deamonlog('debug', "  command writeAttributeRequestIAS_WD");
                     // Msg Type = 0x0111
 
                     $priority = $Command['priority'];
@@ -2362,12 +2358,12 @@
 
                     $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                    $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                    $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
             {
-                $this->deamonlog('debug',"Add a group to a device");
+                $this->deamonlog('debug', "  Add a group to a device");
                 //echo "Add a group to an IKEA bulb\n";
 
                 // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2390,7 +2386,7 @@
                 $groupAddress = $Command['groupAddress'];
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // Add Group APS
@@ -2399,7 +2395,7 @@
 
             if ( isset($Command['addGroupAPS'])  )
             {
-                $this->deamonlog('debug',"command add group with APS");
+                $this->deamonlog('debug', "  command add group with APS");
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -2447,18 +2443,18 @@
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
                 $data2 = $dummy . $dummy1 . $cmdAddGroup . $groupId . $length;
 
-                $this->deamonlog('debug',"Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
-                $this->deamonlog('debug',"Data2: ".$dummy . $dummy1 . $cmdAddGroup . $groupId . $length." len: ".(strlen($data2)/2) );
+                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
+                $this->deamonlog('debug', "  Data2: ".$dummy . $dummy1 . $cmdAddGroup . $groupId . $length." len: ".(strlen($data2)/2) );
 
                 $data = $data1 . $data2;
-                // $this->deamonlog('debug',"Data: ".$data." len: ".(strlen($data)/2) );
+                // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2) );
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             }
 
             if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
             {
-                $this->deamonlog('debug',"Remove a group to a device");
+                $this->deamonlog('debug', "  Remove a group to a device");
                 //echo "Remove a group to an IKEA bulb\n";
 
                 // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2481,36 +2477,36 @@
                 $groupAddress = $Command['groupAddress'];
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // Replace Equipement
             if ( isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']) )
             {
-                $this->deamonlog('debug',"Replace an Equipment");
+                $this->deamonlog('debug', "  Replace an Equipment");
 
                 $old = $Command['old'];
                 $new = $Command['new'];
 
-                $this->deamonlog('debug',"Update eqLogic table for new object");
+                $this->deamonlog('debug',"  Update eqLogic table for new object");
                 $sql =          "UPDATE `eqLogic` SET ";
                 $sql = $sql .   "name = 'Abeille-".$new."-New' , logicalId = '".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
                 $sql = $sql .   "WHERE  eqType_name = 'Abeille' AND logicalId = '".$old."' AND configuration LIKE '%".$old."%'";
                 $this->deamonlog('debug',"sql: ".$sql);
                 DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 
-                $this->deamonlog('debug',"Update cmd table for new object");
+                $this->deamonlog('debug',"  Update cmd table for new object");
                 $sql =          "UPDATE `cmd` SET ";
                 $sql = $sql .   "configuration = replace(configuration, '".$old."', '".$new."' ) ";
                 $sql = $sql .   "WHERE  eqType = 'Abeille' AND configuration LIKE '%".$old."%' ";
-                $this->deamonlog('debug',"sql: ".$sql);
+                $this->deamonlog('debug',"  sql: ".$sql);
                 DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
             }
 
             //
             if ( isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']) )
             {
-                $this->deamonlog('debug','UpOnOffGroup for: '.$Command['address']);
+                $this->deamonlog('debug','  UpOnOffGroup for: '.$Command['address']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2533,12 +2529,12 @@
                 $stepSize = $Command['step'];
                 $TransitionTime = "0005"; // 1/10s of a s
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
             }
 
             if ( isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']) )
             {
-                $this->deamonlog('debug','UpOnOffGroup for: '.$Command['address']);
+                $this->deamonlog('debug','  UpOnOffGroup for: '.$Command['address']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2561,13 +2557,13 @@
                 $stepSize = $Command['step'];
                 $TransitionTime = "0005"; // 1/10s of a s
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
             }
 
             // ON / OFF with no effects
             if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
             {
-                $this->deamonlog('debug','processCmd fct - fct OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+                $this->deamonlog('debug','  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2586,7 +2582,7 @@
                 $destinationEndpoint = $Command['destinationEndpoint'];
                 $action = $Command['action'];
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action, $address);
 
                 if ( $addressMode != "01" ) {
                     $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
@@ -2597,7 +2593,7 @@
             // On / Off Timed Send
             if ( isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']) )
             {
-                $this->deamonlog('debug','OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
+                $this->deamonlog('debug','  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
                 // <address mode: uint8_t>    Status
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2622,7 +2618,7 @@
 
                 $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action.$onTime.$offWaitTime;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
@@ -2656,7 +2652,7 @@
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // Take RGB (0-255) convert to X, Y and send the color
@@ -2708,11 +2704,11 @@
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
 
-                $this->deamonlog( 'debug', "colourX: ".$colourX." colourY: ".$colourY );
+                $this->deamonlog( 'debug', "  colourX: ".$colourX." colourY: ".$colourY );
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // Move to Colour Temperature
@@ -2738,12 +2734,12 @@
 
                 $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $temperature . $duration ;
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             if ( isset($Command['getName']) && isset($Command['address']) )
             {
-                // $this->deamonlog('debug','Get Name from: '.$Command['address']);
+                // $this->deamonlog('debug','  Get Name from: '.$Command['address']);
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
                 $this->getParam( $priority, $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'], "0000" );
@@ -2753,13 +2749,13 @@
             {
                 //echo "Get Name from: ".$Command['address']."\n";
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                // $this->deamonlog('debug','Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
+                // $this->deamonlog('debug','  Get Location from: '.$Command['address'].'->'.$Command['destinationEndPoint'].'<-');
                 $this->getParam( $priority, $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'], "0000" );
             }
 
             if ( isset($Command['setLocation']) && isset($Command['address']) )
             {
-                // $this->deamonlog('debug','Set Location of: '.$Command['address']);
+                // $this->deamonlog('debug','  Set Location of: '.$Command['address']);
                 if ( $Command['location'] == "" ) { $Command['location'] = "Not Def"; }
                 if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
 
@@ -2768,7 +2764,7 @@
 
             if ( isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']) )
             {
-                // $this->deamonlog('debug','Leave for: '.$Command['address']." - ".$Command['IEEE']);
+                // $this->deamonlog('debug',' Leave for: '.$Command['address']." - ".$Command['IEEE']);
                 $cmd = "0047";
                 //$lenth = "";
 
@@ -2791,7 +2787,7 @@
                 $data = $address . $IEEE . $Rejoin . $RemoveChildren;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
             }
 
             // if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
@@ -2799,7 +2795,7 @@
             if ( isset($Command['Remove']) && isset($Command['IEEE']) )
             {
                 // $this->deamonlog('debug','Remove for: '.$Command['address']." - ".$Command['IEEE']);
-                $this->deamonlog('debug','Remove for: '.$Command['IEEE']);
+                $this->deamonlog('debug', '  Remove for: '.$Command['IEEE']);
                 $cmd = "0026";
 
                 // Doc is probably not up to date, need to provide IEEE twice
@@ -2815,7 +2811,7 @@
                 $data = $address . $IEEE ;
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-                $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
+                $this->sendCmd($priority, $dest, $cmd, $lenth, $data);
             }
 
             if ( isset($Command['commandLegrand']) )
@@ -2865,40 +2861,40 @@
 
         function procmsg( $message ) {
 
-            $this->deamonlog("info", "procmsg fct - message: ". json_encode($message) );
-            $this->deamonlog("debug", "----------", $this->debug['procmsg2']);
+            $this->deamonlog("debug", "procmsg(".json_encode($message).")");
+            // $this->deamonlog("debug", "----------", $this->debug['procmsg2']);
 
             $topic      = $message->topic;
             $msg        = $message->payload;
             $priority   = $message->priority;
 
             if (sizeof(explode('/', $topic)) != 3) {
-                $this->deamonlog("debug", "Le format du message n est pas bon je ne le traite pas !!!");
+                $this->deamonlog("error", "procmsg(). Mauvais format de message reçu.");
                 return ;
             }
 
             list ($type, $address, $action) = explode('/', $topic);
 
             if (preg_match("(^TempoCmd)", $type)) {
-                $this->deamonlog("debug", "procmsg fct - topic: Ajoutons le message a queue Tempo.", $this->debug['procmsg2']);
+                $this->deamonlog("debug", "  Ajoutons le message a queue Tempo.", $this->debug['procmsg2']);
                 $this->addTempoCmdAbeille($topic, $msg, $priority);
                 return;
             }
 
             if (!preg_match("(^Cmd)", $type)) {
-                $this->deamonlog('warning','procmsg fct - Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
+                $this->deamonlog('warning', '  Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
             $dest = str_replace( 'Cmd', '',  $type );
 
-            $this->deamonlog("debug", 'procmsg fct - Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['procmsg3']);
-            $this->deamonlog("debug", 'procmsg fct - (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
+            $this->deamonlog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['procmsg3']);
+            $this->deamonlog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
 
             // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
 
             if ($address != "Ruche") {
-                $this->deamonlog("debug", 'procmsg fct - Address != Ruche', $this->debug['procmsg3']);
+                $this->deamonlog("debug", '  Address != Ruche', $this->debug['procmsg3']);
                 switch ($action) {
                         //----------------------------------------------------------------------------
                     case "managementNetworkUpdateRequest":
@@ -2989,7 +2985,7 @@
                         //----------------------------------------------------------------------------
                     case "OnOff":
                         if ($this->debug['procmsg3']) {
-                            $this->deamonlog("debug", 'procmsg fct - OnOff with dest: '.$dest);
+                            $this->deamonlog("debug", '  OnOff with dest: '.$dest);
                         }
                         $convertOnOff = array(
                             "On"      => "01",
@@ -3172,7 +3168,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                         // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                         $Command = array(
@@ -3200,7 +3196,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                         // Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=03010000&repeat=1
                         $Command = array(
@@ -3221,7 +3217,7 @@
                                          "repeat" => $parameters['repeat'],
 
                                          );
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "WriteAttributeRequestHostFlag":
@@ -3230,7 +3226,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                         // $consigne = sprintf( "%06X", $parameters['value'] );
                         $consigne = $parameters['value'];
@@ -3254,7 +3250,7 @@
                                          // "repeat" => $parameters['repeat'],
 
                                          );
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "WriteAttributeRequestTemperatureSpiritConsigne":
@@ -3263,7 +3259,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                         $consigne = sprintf( "%04X", $parameters['value']*100 );
                         $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
@@ -3286,7 +3282,7 @@
                                          // "repeat" => $parameters['repeat'],
 
                                          );
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "WriteAttributeRequestValveSpiritConsigne":
@@ -3296,7 +3292,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                         $consigne = sprintf( "%02X", $parameters['value'] );
                         $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
@@ -3319,7 +3315,7 @@
                                          // "repeat" => $parameters['repeat'],
 
                                          );
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "WriteAttributeRequestActivateDimmer":
@@ -3328,7 +3324,7 @@
                             $parameters = proper_parse_str( $msg );
                         }
                         // $keywords = preg_split("/[=&]+/", $msg);
-                        $this->deamonlog('debug', 'Msg Received: '.$msg);
+                        $this->deamonlog('debug', ' Msg Received: '.$msg);
 
                         $Command = array(
                                          "WriteAttributeRequestActivateDimmer" => "1",
@@ -3344,7 +3340,7 @@
                                          // "value" => $keywords[9],
                                          "value" => $parameters['value'],
                                          );
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "ReadAttributeRequest":
@@ -3352,7 +3348,7 @@
                         if (count($keywords) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
-                        $this->deamonlog('debug', 'AbeilleCmd: Msg received: '.json_encode($msg).' from NE');
+                        $this->deamonlog('debug', '  Msg received: '.json_encode($msg).' from NE');
                         if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                         $Command = array(
                                          "ReadAttributeRequest" => "1",
@@ -3364,7 +3360,7 @@
                                          "EP"           => $parameters['EP'],
                                          "Proprio"      => $parameters['Proprio'],
                                          );
-                        $this->deamonlog('debug', 'AbeilleCmd: Msg analysed: '.json_encode($Command).' from NE');
+                        $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                         break;
                         //----------------------------------------------------------------------------
                     case "ReadAttributeRequestHue":
@@ -3473,7 +3469,7 @@
                         $level = $levelPourcent * 255;
                         $level = min(max(round($level), 0), 255);
 
-                        $this->deamonlog('debug', 'level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
+                        $this->deamonlog('debug', '  level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
 
                         $Command = array(
                             "setLevel" => "1",
@@ -3516,7 +3512,7 @@
                          $inclinaison = $inclinaisonPourcent * 255;
                          $inclinaison = min( max( round( $inclinaison), 0), 255);
 
-                         $this->deamonlog('debug', 'inclinaison Slider: '.$inclinaisonSlider.' inclinaison calcule: '.$inclinaisonPourcent.' inclinaison envoye: '.$inclinaison);
+                         $this->deamonlog('debug', '  inclinaison Slider: '.$inclinaisonSlider.' inclinaison calcule: '.$inclinaisonPourcent.' inclinaison envoye: '.$inclinaison);
 
                          $Command = array(
                                           "moveToLiftAndTiltBSO" => "1",
@@ -3635,7 +3631,7 @@
                         $vert  = hexdec(substr($parameters['color'],2,2));
                         $bleu  = hexdec(substr($parameters['color'],4,2));
 
-                        $this->deamonlog( 'debug', "msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
                         $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
@@ -3660,12 +3656,12 @@
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog('debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu);
 
                         $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
 
@@ -3692,12 +3688,12 @@
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
 
@@ -3724,12 +3720,12 @@
                         $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                         $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                         $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         if ( $rouge=="" ) { $rouge = 1;   }
                         if ( $vert=="" )  { $vert = 1;    }
                         if ( $bleu=="" )  { $bleu = 1;    }
-                        $this->deamonlog( 'debug', "rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
+                        $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                         $this->publishMosquittoAbeile( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
 
@@ -3782,20 +3778,20 @@
                         // 2700	 0172	   370
                         // 4000	 00FA	   250
                         // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                        $this->deamonlog( 'debug', 'msg: ' . $msg );
+                        $this->deamonlog( 'debug', '  msg: ' . $msg );
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
 
                         $temperatureK = $parameters['slider'];
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureK );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureK );
                         $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                         $temperatureConsigne = dechex( $temperatureConsigne );
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                         $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                         $Command = array(
                                          "setTemperature"       => "1",
                                          "addressMode"          => "02",
@@ -3815,20 +3811,20 @@
                         // 2700     0172       370
                         // 4000     00FA       250
                         // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                        $this->deamonlog( 'debug', 'msg: ' . $msg );
+                        $this->deamonlog( 'debug', '  msg: ' . $msg );
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
                         }
 
                         $temperatureK = $parameters['slider'];
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureK );
+                        $this->deamonlog( 'debug', ' temperatureConsigne: ' . $temperatureK );
                         $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                         $temperatureConsigne = dechex( $temperatureConsigne );
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', ' temperatureConsigne: ' . $temperatureConsigne );
                         $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
-                        $this->deamonlog( 'debug', 'temperatureConsigne: ' . $temperatureConsigne );
+                        $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                         $Command = array(
                                          "setTemperature"       => "1",
                                          "addressMode"          => "01",
@@ -3844,7 +3840,7 @@
                         //----------------------------------------------------------------------------
                     case "sceneGroupRecall":
                         // a revoir completement
-                        $this->deamonlog( 'debug', 'sceneGroupRecall msg: ' . $msg );
+                        $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
@@ -4010,7 +4006,7 @@
                         //----------------------------------------------------------------------------
 
                     default:
-                        $this->deamonlog('warning', 'AbeilleCommand unknown: '.$action );
+                        $this->deamonlog('warning', '  AbeilleCommand unknown: '.$action );
                         break;
                 } // switch
             } // if $address != "Ruche"
@@ -4036,7 +4032,7 @@
                                          "EP"           => $parameters['EP'],
                                          );
 
-                        $this->deamonlog('debug', 'Msg Received: '.$msg.' from Ruche');
+                        $this->deamonlog('debug', '  Msg Received: '.$msg.' from Ruche');
                         $done = 1;
                         break;
 
@@ -4158,7 +4154,7 @@
                         break;
 
                     case "sceneGroupRecall":
-                        $this->deamonlog( 'debug', 'sceneGroupRecall msg: ' . $msg );
+                        $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
                         $fields = preg_split("/[=&]+/", $msg);
                         if (count($fields) > 1) {
                             $parameters = proper_parse_str( $msg );
@@ -4308,7 +4304,7 @@
 
             /*---------------------------------------------------------*/
 
-            $this->deamonlog('debug','procmsg fct - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
+            $this->deamonlog('debug','  calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
             $this->processCmd( $Command );
 
             return;
@@ -4316,24 +4312,21 @@
 
         /* Treat Zigate statuses (0x8000 cmd) coming from parser */
         function traiteLesAckRecus() {
-
             $msg_type = NULL;
-            $msg = NULL;
             $max_msg_size = 512;
-
             if (!msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                 return;
             }
 
-            $i = str_replace( 'Abeille', '', $msg['dest'] );
+            $i = str_replace('Abeille', '', $msg['dest']);
 
-            $this->deamonlog("debug", "traiteLesAckRecus fct - *************", $this->debug['traiteLesAckRecus']);
+            $this->deamonlog("debug", "traiteLesAckRecus())", $this->debug['traiteLesAckRecus']);
 
             if ($this->debug['traiteLesAckRecus']) {
                 if (isset($this->statusText[$msg['status']])) {
-                    $this->deamonlog("debug", "traiteLesAckRecus fct - Message 8000 status recu: " . $msg['status'] . " -> " . $this->statusText[$msg['status']] . " cmdAck: " . json_encode($msg) . " alors que j ai " . count($this->cmdQueue[$i]) . " message(s) en attente: ");
+                    $this->deamonlog("debug", "  Message 8000 status recu: ".$msg['status']." -> ".$this->statusText[$msg['status']] . " cmdAck: " . json_encode($msg) . " alors que j ai " . count($this->cmdQueue[$i]) . " message(s) en attente: ");
                 } else {
-                    $this->deamonlog("debug", "traiteLesAckRecus fct - Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$i])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
+                    $this->deamonlog("debug", "  Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$i])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
                 }
             }
 
@@ -4351,12 +4344,13 @@
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
                 // ou si conf alors que stack demarrée
+                /* TODO: How can we be sure ACK is for last cmd ? */
                 array_shift( $this->cmdQueue[$i] ); // Je vire la commande
                 $this->zigateAvailable[$i] = 1;      // Je dis que la Zigate est dispo
                 $this->timeLastAck[$i] = 0;
 
                 // Je tri la queue pour preparer la prochaine commande
-                $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue[$i]), $this->debug['traiteLesAckRecus']);
+                $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue[$i]), $this->debug['traiteLesAckRecus']);
 
                 // J'en profite pour ordonner la queue pour traiter les priorités
                 // https://www.php.net/manual/en/function.array-multisort.php
@@ -4367,14 +4361,14 @@
                     array_multisort( $retry, SORT_DESC, $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue[$i] );
                 }
 
-                $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres tri : ".json_encode($this->cmdQueue[$i]), $this->debug['traiteLesAckRecus']);
+                $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres tri : ".json_encode($this->cmdQueue[$i]), $this->debug['traiteLesAckRecus']);
             } else {
                 $this->zigateAvailable[$i] = 0;      // Je dis que la Zigate n est pas dispo
                 $this->timeLastAck[$i] = time();    // Je garde la date de ce mauvais Ack
             }
 
-            $this->deamonlog("debug", "traiteLesAckRecus fct - J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres reception de ce Ack", $this->debug['traiteLesAckRecus']);
-            $this->deamonlog("debug", "traiteLesAckRecus fct - *************", $this->debug['traiteLesAckRecus']);
+            $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres reception de ce Ack", $this->debug['traiteLesAckRecus']);
+            // $this->deamonlog("debug", "traiteLesAckRecus fct - *************", $this->debug['traiteLesAckRecus']);
         }
 
         function timeOutSurLesAck() {
@@ -4395,7 +4389,7 @@
 
         /* Collect & treat messages for cmd */
         function recupereTousLesMessagesVenantDesAutresThreads() {
-            $msg_type = NULL;
+            $msg_type = NULL; // Unused ?
             $msg = NULL;
             $max_msg_size = 512;
             $message = new MsgAbeille();
@@ -4412,7 +4406,7 @@
             // Recupere tous les messages venant des autres threads, les analyse et converti et met dans la queue cmdQueue
             foreach ($listQueue as $queue) {
                 if (msg_receive( $queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-                    $this->deamonlog("debug", "Message pulled from queue ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
+                    $this->deamonlog("debug", "Message from ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     $message->priority = $msg_priority;
@@ -4433,12 +4427,10 @@
     // php AbeilleCmd.php debug
 
     try {
-        echo "Let s start\n";
+        $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
+        logMessage("info", "Démarrage du démon 'AbeilleCmd'");
 
         $last = 0;
-
-        $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
-
         while (true) {
             /* Treat Zigate statuses (0x8000 cmd) coming from parser */
             $AbeilleCmdQueue->traiteLesAckRecus();
@@ -4462,7 +4454,6 @@
             // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s
         }
-
     }
     catch (Exception $e) {
         $AbeilleCmdQueue->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));

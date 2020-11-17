@@ -29,11 +29,6 @@
 
     include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
 
-    $profileTable = array (
-                           'C05E'=>'ZLL Application Profile',
-                           '0104'=>'ZigBee Home Automation (ZHA)',
-                           );
-
     $deviceInfo = array (
                          'C05E' => array(
                                          // Lighting devices
@@ -1579,7 +1574,6 @@
             // <Out cluster list: data each entry is uint16_t> -> 4
             // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
 
-            global $profileTable;
             global $deviceInfo;
 
             $SrcAddr    = substr($payload, 4, 4);
@@ -1589,14 +1583,14 @@
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
             $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
-                             . ', SQN='             .substr($payload, 0, 2)
-                             . ', Status='          .substr($payload, 2, 2)
-                             . ', ShortAddr='       .substr($payload, 4, 4)
-                             . ', Length='          .substr($payload, 8, 2)
-                             . ', EndPoint='        .substr($payload,10, 2)
-                             . ', Profile='         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
-                             . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[$profile][$deviceId] .')'
-                             . ', BitField='        .substr($payload,20, 2))
+                             . ', SQN='         .substr($payload, 0, 2)
+                             . ', Status='      .substr($payload, 2, 2)
+                             . ', Addr='        .$SrcAddr
+                             . ', Length='      .substr($payload, 8, 2)
+                             . ', EP='          .$EPoint
+                             . ', Profile='     .$profile.'/'.$zgGetProfile($profile).')'
+                             . ', DevId='       .$deviceId.' ('.$deviceInfo[$profile][$deviceId] .')'
+                             . ', BitField='    .substr($payload,20, 2))
                              . ', [Modelisation]'
                              ;
 

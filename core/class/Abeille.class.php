@@ -363,7 +363,7 @@
             /**
              * Look every 15 minutes if the kernel driver is not in error
              */
-            $param = self::getParameters();
+            // $param = self::getParameters();
 
             log::add('Abeille', 'debug', 'Check USB driver potential crash');
             $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
@@ -375,52 +375,59 @@
                 log::add( 'Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
             }
 
-            log::add('Abeille', 'debug', 'Ping NE with 220V to check Online status');
+            log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements sur secteur.');
+            /* TODO: We should interrogate only if eq itself did not send anything since a while */
             $eqLogics = Abeille::byType('Abeille');
-            $i=0;
+            $i = 0;
             foreach ($eqLogics as $eqLogic) {
+                $enabled = $eqLogic->getIsEnable();
+                if ($enabled == 0)
+                    continue; // Equipment disabled
                 if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
                     $topicArray = explode("/", $eqLogic->getLogicalId());
                     $dest = $topicArray[0];
                     $addr = $topicArray[1];
-                    if (strlen($addr) == 4) {
-                        // echo "Short: " . $topicArray[1];
-                        log::add('Abeille', 'debug', 'Ping: '.$addr);
-                        $i=$i+1;
-                        // Ca devrait être le fonctionnement normal
-                        if (strlen($eqLogic->getConfiguration("mainEP"))>1) {
-                            Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP") );
-                        }
+                    if (strlen($addr) != 4) 
+                        continue;
+                    // echo "Short: " . $topicArray[1];
+                    log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr);
+                    // Ca devrait être le fonctionnement normal
+                    $mainEP = $eqLogic->getConfiguration("mainEP");
+                    if (strlen($mainEP) > 1) {
+                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
+                        $i++;
                     }
                 }
             }
-            if ( ($i*23) > (60*15) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas A.","Contacter KiwiHC15 sur le Forum" );
+            if (($i*23) > (60*15)) {
+                message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas A.", "Contacter KiwiHC15 sur le forum");
             }
 
             // Rafraichie l etat poll = 15
-            $i=0;
-            log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements nécessitant un polling.');
+            $i = 0;
             foreach ($eqLogics as $eqLogic) {
+                $enabled = $eqLogic->getIsEnable();
+                if ($enabled == 0)
+                    continue; // Equipment disabled
                 $dest = explode("/", $eqLogic->getLogicalId())[0];
                 $address = explode("/", $eqLogic->getLogicalId())[1];
-                if (strlen($address) == 4) {
-                    if ($eqLogic->getConfiguration("poll") == "15") {
-                        log::add('Abeille', 'debug', 'GetEtat/GetLevel: '.$addr);
-                        $i=$i++;
-                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-                    }
-
+                if (strlen($address) != 4)
+                    continue; // Incorrect address
+                if ($eqLogic->getConfiguration("poll") == "15") {
+                    log::add('Abeille', 'debug', 'cron15(): GetEtat/GetLevel adresse '.$address);
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*13)), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+                    $i++;
                 }
             }
-            if ( ($i*13) > (60*15) ) {
-                message::add("Abeille","Danger il y a trop de message a envoyer dans le cron 15 minutes. Cas B.","Contacter KiwiHC16 sur le Forum" );
+            if (($i*13) > (60*15)) {
+                message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas B.", "Contacter KiwiHC16 sur le forum");
             }
 
             // Poll Cmd
             self::pollingCmd("cron15");
 
-            log::add( 'Abeille',  'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
+            log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------' );
 
             return;
         }

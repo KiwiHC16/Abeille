@@ -77,171 +77,18 @@ if (file_exists($dbgFile)) {
     <!-- Barre d outils horizontale  -->
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
 
-        <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
+        <!-- Icones de toutes les modales  -->
+        <?php include '10_AbeilleGestionPart.php'; ?>
 
-<?php include 'AbeilleGestionPage.php'; ?>
+        <!-- Icones de toutes les abeilles  -->
+        <?php include '20_AbeilleMesAbeillesPart.php'; ?>
 
-    <!-- Icones de toutes les abeilles  -->
-    <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
-    <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> //pphil passage du lien en relatif
-
-<?php
-
-
-    $NbOfZigatesON = 0; // Number of enabled zigates
-    $eqAll = array(); // All equipments, sorted per zigate
-    for ( $i=1; $i<=$zigateNb; $i++ ) {
-        if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
-            continue; // This Zigate is not enabled
-
-        $NbOfZigatesON++;
-        if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {
-            echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
-        }
-        echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
-        echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include_stop'.$i.'" class="fa fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
-        echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
-
-        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-            echo '<br>';
-            $port = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
-
-            /* Remove equipments from Jeedom only */
-            echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-primary btn-xs" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
-
-            /* Set timeout on selected equipements */
-            echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
-        }
-
-        echo '<div class="eqLogicThumbnailContainer">';
-        $dir = dirname(__FILE__) . '/../../images/';
-        $files = scandir($dir);
-        $eqPerZigate = array(); // All equipements linked to current zigate
-        /* Display beehive card then bee cards */
-        foreach ($eqLogics as $eqLogic) {
-            $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
-            if ($eqLogicId != "Abeille".$i."/Ruche")
-                continue;
-            displayBeeCard($eqLogic, $files, $i);
-            $eq = array();
-            $eq['id'] = $eqLogic->getId();
-            $eq['logicalId'] = $eqLogicId;
-            $eqPerZigate[] = $eq;
-        }
-        foreach ($eqLogics as $eqLogic) {
-            $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
-            list( $net, $addr ) = explode( "/", $eqLogicId);
-            if ( $net != 'Abeille'. $i)
-                continue;
-            if ($eqLogicId == "Abeille".$i."/Ruche")
-                continue; // Skipping beehive
-            displayBeeCard($eqLogic, $files, $i);
-            $eq = array();
-            $eq['id'] = $eqLogic->getId();
-            $eq['logicalId'] = $eqLogicId;
-            $eqPerZigate[] = $eq;
-        }
-        echo '<script>var js_eqZigate'.$i.' = \''.json_encode($eqPerZigate).'\';</script>';
-        $eqAll['zigate'.$i] = $eqPerZigate;
-        echo ' </div>';
-    }
-
-    if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !
-        echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
-        echo "   <span style=\"color:red\">";
-        if ($zigateNb == 0)
-            echo "Aucune Zigate n'est définie !";
-        else
-            echo "Aucune Zigate n'est activée !";
-        echo "   </span><br>";
-        echo "    Veuillez aller à la page de configuration pour corriger.<br><br>";
-        echo "</div>";
-    }
-?>
-
-<!-- Gestion des groupes et des scenes  -->
+        <!-- Gestion des groupes et des scenes  -->
+        // <?php include '30_AbeilleGroupPart'; ?>
+        
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 
-<label>Groupes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>Documentation</a>
 
-<div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
-    <div id="leftMargin" style="float: left; width:10%;">.
-    </div>
-    <div id="leftThing" style="float: left; width:40%;">
-        <table border="1" style="border:1px">
-            <thead>
-                <tr>
-                    <th>{{Module}}</th>
-                    <th>{{Telecommande}}</th>
-                    <th>{{Membre}}</th>
-                </tr>
-            </thead>
-            <tbody>
-<?php
-                $abeille = new Abeille();
-                $commandIEEE = new AbeilleCmd();
-
-                foreach ($eqLogics as $key => $eqLogic) {
-                    $name= "";
-                    $groupMember = "";
-                    $groupTele = "";
-                    $print=0;
-
-                    $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-
-                    $name = $eqLogic->getHumanName(true);
-
-                    if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-                        if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-                            $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
-                            $print = 1;
-                        }
-                    }
-
-                    if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-                        $groupTele = $eqLogic->getConfiguration('Groupe');
-                        $print = 1;
-                    }
-
-                    if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
-                }
-?>
-            </tbody>
-        </table>
-    </div>
-
-
-<div id="rightThing" style="float: left; width:40%;">
-        <table>
-            <tr>
-                <td align="center">
-                    <input type="submit" name="submitButton" value="Get Infos from NE">
-                    <input type="submit" name="submitButton" value="Get Group">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                <hr>
-                </td>
-            </tr>
-          <tr>
-                <td>
-                    <label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-                    <input type="text" name="group" placeholder="XXXX"><br>
-                    <input type="submit" name="submitButton" value="Add Group">
-                    <input type="submit" name="submitButton" value="Remove Group"></br>
-                    <input type="submit" name="submitButton" value="Set Group Remote">
-                    <input type="submit" name="submitButton" value="Set Group Remote Legrand">
-                </td>
-            </tr>
-          </table>
-</div>
-
-</div>
 
 <hr>
 

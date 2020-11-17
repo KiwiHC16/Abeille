@@ -1,9 +1,32 @@
 <?php
-    if(0){
-if (!isConnect('admin')) {
-    throw new Exception('{{401 - Accès non autorisé}}');
-}
+if(0){
+    if (!isConnect('admin')) {
+        throw new Exception('{{401 - Accès non autorisé}}');
     }
+}
+
+/* Display beehive or bee card */
+function displayBeeCard($eqLogic, $files, $zgNb) {
+    // find opacity
+    $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+
+    // Find icone
+    $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+    if (in_array($test, $files, 0)) {
+        $path = 'node_' . $eqLogic->getConfiguration('icone');
+    } else {
+        $path = 'Abeille_icon';
+    }
+
+    // Affichage
+    $id = $eqLogic->getId();
+    echo '<div class="eqLogicDisplayCardB">';
+    echo    '<input id="idBeeChecked'.$zgNb.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+    echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $id . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
+    echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
+    echo    '</div>';
+    echo '</div>';
+}
 
 sendVarToJS('eqType', 'Abeille');
 $eqLogics = eqLogic::byType('Abeille');
@@ -12,100 +35,58 @@ $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 
 $parametersAbeille = Abeille::getParameters();
 
-    /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
-    if (file_exists($dbgFile)) {
-        // include_once $dbgFile;
-        include $dbgFile;
-        $dbgDeveloperMode = TRUE;
-        echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
-    }
+$outils = array(
+    'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
+    'netList'   => array( 'bouton'=>'bt_networkAbeilleList',    'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
+    'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
+    'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
+    'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
+    'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
+    'support'   => array( 'bouton'=>'bt_getCompleteAbeilleConf','icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
+    );
+
+/* Developers debug features */
+$dbgFile = __DIR__."/../../tmp/debug.php";
+if (file_exists($dbgFile)) {
+    // include_once $dbgFile;
+    include $dbgFile;
+    $dbgDeveloperMode = TRUE;
+    echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
+}
 ?>
+
 <!-- For all modals on 'Abeilles' page. -->
 <div id="abeilleModal" style="display:none;"></div>
 
-<!-- Barre verticale de recherche à gauche de la page  -->
-<div class="row row-overflow">
-    <div class="col-lg-2 col-sm-3 col-sm-4">
-        <div class="bs-sidebar">
-            <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-
-                <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/>
-                </li>
-                <?php
-                foreach ($eqLogics as $eqLogic) {
-                    echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
-                }
-                ?>
-            </ul>
-        </div>
-    </div>
-
-<!-- Barre d outils horizontale  -->
+    <!-- Barre verticale de recherche à gauche de la page  -->
+    <div class="row row-overflow">
+        <div class="col-lg-2 col-sm-3 col-sm-4">
+            <div class="bs-sidebar">
+                <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
+                    <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/>
+                    </li>
 <?php
-$outils = array(
-                'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
-                'netList'   => array( 'bouton'=>'bt_networkAbeilleList',    'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
-                'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
-                'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
-                'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
-                'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
-                'support'   => array( 'bouton'=>'bt_getCompleteAbeilleConf','icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
-                );
-    ?>
+                    foreach ($eqLogics as $eqLogic) {
+                        echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+                    }
+?>
+                </ul>
+            </div>
+        </div>
+
+    <!-- Barre d outils horizontale  -->
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
 
         <legend><i class="fa fa-cog"></i> {{Gestion}}</legend>
 
-        <div class="eqLogicThumbnailContainer">
-            <div class="cursor eqLogicAction" data-action="gotoPluginConf"
-                 style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-                <center>
-                    <i class="fa fa-wrench" style="font-size : 5em;color:#767676;"></i>
-                </center>
-                <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
-            </div>
-
-<?php
-    foreach ( $outils as $key=>$outil ) {
-            echo '<div class="cursor" id="'.$outil['bouton'].'" style="background-color: rgb(255, 255, 255); height: 140px; margin-bottom: 10px; padding: 5px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px;">';
-            echo '  <center>';
-            echo '      <i class="fa '.$outil['icon'].'" style="font-size : 6em;color:#767676;"></i>';
-            echo '  </center>';
-            echo '  <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>'.$outil['text'].'</center></span>';
-            echo '</div>';
-    }
-?>
-
-        </div>
+<?php include 'AbeilleGestionPage.php'; ?>
 
     <!-- Icones de toutes les abeilles  -->
     <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
     <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> //pphil passage du lien en relatif
 
 <?php
-    /* Display beehive or bee card */
-    function displayBeeCard($eqLogic, $files, $zgNb) {
-        // find opacity
-        $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
 
-        // Find icone
-        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-        if (in_array($test, $files, 0)) {
-            $path = 'node_' . $eqLogic->getConfiguration('icone');
-        } else {
-            $path = 'Abeille_icon';
-        }
-
-        // Affichage
-        $id = $eqLogic->getId();
-        echo '<div class="eqLogicDisplayCardB">';
-        echo    '<input id="idBeeChecked'.$zgNb.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
-        echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $id . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-        echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
-        echo    '</div>';
-        echo '</div>';
-    }
 
     $NbOfZigatesON = 0; // Number of enabled zigates
     $eqAll = array(); // All equipments, sorted per zigate
@@ -191,47 +172,46 @@ $outils = array(
     <div id="leftMargin" style="float: left; width:10%;">.
     </div>
     <div id="leftThing" style="float: left; width:40%;">
-            <table border="1" style="border:1px">
-                <thead>
+        <table border="1" style="border:1px">
+            <thead>
                 <tr>
                     <th>{{Module}}</th>
                     <th>{{Telecommande}}</th>
                     <th>{{Membre}}</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
+<?php
+                $abeille = new Abeille();
+                $commandIEEE = new AbeilleCmd();
 
-                <?php
-                    $abeille = new Abeille();
-                    $commandIEEE = new AbeilleCmd();
+                foreach ($eqLogics as $key => $eqLogic) {
+                    $name= "";
+                    $groupMember = "";
+                    $groupTele = "";
+                    $print=0;
 
-                    foreach ($eqLogics as $key => $eqLogic) {
-                        $name= "";
-                        $groupMember = "";
-                        $groupTele = "";
-                        $print=0;
+                    $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
 
-                        $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+                    $name = $eqLogic->getHumanName(true);
 
-                        $name = $eqLogic->getHumanName(true);
-
-                        if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-                            if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-                                $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
-                                $print = 1;
-                            }
-                        }
-
-                        if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-                            $groupTele = $eqLogic->getConfiguration('Groupe');
+                    if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
+                        if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
+                            $groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
                             $print = 1;
                         }
+                    }
+
+                    if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
+                        $groupTele = $eqLogic->getConfiguration('Groupe');
+                        $print = 1;
+                    }
 
                     if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
-                    }
-                ?>
-                </tbody>
-            </table>
+                }
+?>
+            </tbody>
+        </table>
     </div>
 
 

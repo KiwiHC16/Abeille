@@ -1,4 +1,4 @@
-<legend><i class="fa fa-cogs"></i> {{Gestion des parametres radio Zigate}}</legend>
+<legend><i class="fa fa-cogs"></i> {{Gestion des parametres Zigate}}</legend>
 
 <label>Channel Mask</label> <a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i>Documentation</a></br>
 Channel Mask:   <input type="text" name="channelMask"   placeholder="XXXXXXXX">

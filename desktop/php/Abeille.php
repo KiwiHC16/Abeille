@@ -78,130 +78,37 @@ if (file_exists($dbgFile)) {
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
 
         <!-- Icones de toutes les modales  -->
-        <?php include '10_AbeilleGestionPart.php'; ?>
+        <?php include '010_AbeilleGestionPart.php'; ?>
 
-        <!-- Icones de toutes les abeilles  -->
-        <?php include '20_AbeilleMesAbeillesPart.php'; ?>
+        <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> 
 
-        <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+            <!-- Icones de toutes les abeilles  -->
+            <?php include '020_AbeilleMesAbeillesPart.php'; ?>
 
-        <!-- Gestion des groupes et des scenes  -->
-        <?php include '30_AbeilleGroupPart.php'; ?>
+            <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 
-        <!-- Gestion des groupes et des scenes  -->
-        <?php include '40_AbeilleScenePart.php'; ?>
+            <!-- Gestion des groupes et des scenes  -->
+            <?php include '030_AbeilleGroupPart.php'; ?>
 
-        <!-- Gestion des ghosts  -->
-        <?php include '50_AbeilleRemplacementPart.php'; ?>
+            <!-- Gestion des groupes et des scenes  -->
+            <?php include '040_AbeilleScenePart.php'; ?>
+
+        </form> 
+
+        <!-- Gestion des ghosts / remplacement d equipements  -->
+        <?php include '050_AbeilleRemplacementPart.php'; ?>
 
         <!-- Gestion des parametres Zigate -->
-        <?php include '60_AbeilleZigatePart.php'; ?>
-<hr>
-
-<!-- Affichage des informations reseau zigate  -->
-        <legend><i class="fa fa-cog"></i> {{ZiGate}}</legend>
-<br>
-<i>Ces tableau ne sont pas automatiquement rafraichi, ils sont mis à jour à l ouverture de la page.</i>
-<br>
-
-<?php
-    $params = array(
-                   'Last'               =>'Time-Time',
-                   'Last Stamps'        =>'Time-TimeStamp',
-                   'SW'                 => 'SW-Application',
-                   'SDK'                => 'SW-SDK',
-                   'Network Status'     => 'Network-Status',
-                   'Short address'      => 'Short-Addr',
-                   'PAN Id'             => 'PAN-ID',
-                   'Extended PAN Id'    => 'Ext_PAN-ID',
-                   'IEEE address'       => 'IEEE-Addr',
-                   'Network Channel'    => 'Network-Channel',
-                   'Inclusion'          => 'permitJoin-Status',
-                    'Time (Faites un getTime)' => 'ZiGate-Time',
-                   );
-
-    for ( $i=1; $i<=$zigateNb; $i++ ) {
-        if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
-            echo '<br>';
-            echo 'ZiGate '.$i.'<br>';
-            $rucheId = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getId();
-            echo '<table border="1" style="border:1px">';
-            foreach ( $params as $key=>$param ){
-                if ( is_object(AbeilleCmd::byEqLogicIdAndLogicalId($rucheId, $param)) ) {
-                    $command = AbeilleCmd::byEqLogicIdAndLogicalId($rucheId, $param);
-                    echo '<tr><td>'.$key.'</td>       <td align="center">' . $command->execCmd() . '</td></tr>';
-                }
-            }
-            echo '</table>';
-        }
-        echo '</br>';
-    }
-?>
-
-</form> <!-- Is this the right place to end form ? -->
-
-    <br>
-    <legend><i class="fa fa-cog"></i> {{Zone developpeurs}}</legend>
-    <span style="font-weight:bold">Attention !! Cette partie est réservée aux developpeurs.</span> Ne pas s'y aventurer sauf sur leur demande expresse.<br>
-    Elle ne contient que des fonctionalités de test ou en cours de developpement, pour lesquels il ne sera fourni <span style="font-weight:bold">aucun support</span>.<br>
-    <br>
-    <a id="idDevGrpShowHide" class="btn btn-success">Montrer</a>
-    <div id="idDevGrp" style="display:none">
+        <?php include '060_AbeilleZigatePart.php'; ?>
         <hr>
-        <br>
-        <label>Fonctionalités cachées:</label>
-        <?php
-            if (file_exists($dbgFile))
-                echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Supprime le fichier debug.php">';
-            else    
-                echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Crée le fichier debug.php avec les valeurs par defaut.">';
-        ?>
-        <br>
 
-        <!-- Following functionalities are visible only if 'tmp/debug.php' file exists (developer mode). -->
-        <?php
-            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-            }
-        ?>
+        <!-- Affichage des details zigate  -->
+        <?php include '070_AbeilleDetailsPart.php'; ?>
 
-        <!-- Misc -->
-        <input type="submit" name="submitButton" value="Identify">
-        <table>
-            <tr>
-                <td>
-                    Widget Properties
-                </td>
-            </tr><tr>
-                <td>
-                    Dimension
-                </td><td>
-                    <label control-label" data-toggle="tooltip" title="Largeur par defaut du widget que vous souhaitez.">Largeur</label>
-                    <input type="text" name="Largeur">
-                </td><td>
-                    <label control-label" data-toggle="tooltip" title="Hauteur par defaut du widget que vous souhaitez.">Largeur</label>
-                    <input type="text" name="Hauteur">
-                </td><td>
-                    <input type="submit" name="submitButton" value="Set Size">
-                </td>
-            </tr><tr>
-                </td>
-                <!-- <td>
-                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeSelect"><i class="fa fa-minus-circle"></i>  {{Supprime les objets sélectionnés}}</a>
-                </td> -->
-                <td>
-                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="removeAll"><i class="fa fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="btn btn-danger  eqLogicAction pull-right" data-action="exclusion"><i class="fa fa-sign-out"></i>  {{Exclusion}}</a>
-                </td>
-            </tr>
-        </table>
+        <!-- Affichage de la zone developpeur  -->
+        <?php include '080_AbeilleZoneDevPart.php'; ?>
 
-    <!-- </form> Where is the start of form ? -->
-
-    </div> <!-- End of developer area -->
-</div> <!-- Where is this div start ? -->
+    </div> <!-- Fin - Barre d outils horizontale  -->
 
 <!-- Affichage des informations d un equipement specifique  -->
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px; display: none;">

@@ -1,5 +1,5 @@
 <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
-    <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> 
+   
 
 <?php
 

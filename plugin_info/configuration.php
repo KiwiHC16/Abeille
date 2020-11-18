@@ -356,8 +356,8 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
                 <div class="col-lg-5">
                     <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Port de communication avec la PiZigate}}">
-                        <option value="Oui"         >{{Oui}}</option>
-                        <option value="Non" selected>{{Non}}</option>
+                        <option value="Non" >{{Non}}</option>
+                        <option value="Oui"  >{{Oui}}</option>
                     </select>
                 </div>
             </div>

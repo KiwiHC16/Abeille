@@ -50,7 +50,12 @@
       "include33": "colorVert",
       "include34": "setVert",
       "include35": "colorBleu",
-      "include36": "setBleu"
+      "include36": "setBleu",
+      "include37": "2200K",
+      "include38": "2700K",
+      "include39": "4000K",
+      "include40": "temperatureLight",
+      "include40 2 2": "setTemperatureLight"
     }
   }
 }

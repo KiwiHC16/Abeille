@@ -23,7 +23,7 @@ $outils = array(
     'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
     'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
     'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
-    'support'   => array( 'bouton'=>'bt_getCompleteAbeilleConf','icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
+    'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
     );
 
 /* Developers debug features */
@@ -61,7 +61,7 @@ if (file_exists($dbgFile)) {
         <!-- Icones de toutes les modales  -->
         <?php include '010_AbeilleGestionPart.php'; ?>
 
-        <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> 
+        <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
             <!-- Icones de toutes les abeilles  -->
             <?php include '020_AbeilleMesAbeillesPart.php'; ?>
@@ -74,7 +74,7 @@ if (file_exists($dbgFile)) {
             <!-- Gestion des groupes et des scenes  -->
             <?php include '040_AbeilleScenePart.php'; ?>
 
-        </form> 
+        </form>
 
         <!-- Gestion des ghosts / remplacement d equipements  -->
         <?php include '050_AbeilleRemplacementPart.php'; ?>
@@ -107,11 +107,11 @@ if (file_exists($dbgFile)) {
 
             <!-- Affichage des informations specifiques a cet equipement: Param tab -->
             <?php include '120_AbeilleParam.php'; ?>
-            
+
             <!-- Affichage des informations specifiques a cet equipement: Command tab -->
             <?php include '130_AbeilleCommandes.php'; ?>
 
-            
+
         </div>
     </div>
 </div>

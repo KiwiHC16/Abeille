@@ -1188,7 +1188,7 @@
 
         public static function message($message) {
 
-            log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+            // log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
 
             $topicArray = explode("/", $message->topic);
             if (sizeof($topicArray) != 3) {

@@ -4,6 +4,18 @@
         throw new Exception('{{401 - Accès non autorisé}}');
     }
     
+    function afficheButtons($nbOfZigates) {
+        echo 'Afficher réseau :';
+        for ($i = 1; $i <= $nbOfZigates; $i++) {
+            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+                continue; // Disabled
+                echo '<a class="btn btn-success displayNodes'       .$i.'                                                                                                                 ">Abeille'.$i.            '</a>';
+                echo '<a class="btn btn-warning refreshNetworkCache'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements."><i class="fa fa-cog"></i></a>';
+                echo '&nbsp;&nbsp;';
+        }
+    }
+
+
     // Last Demon start time
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
 
@@ -140,15 +152,9 @@
                     {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
                     <br />
                     <div id="div_routingTable">
-                        Afficher réseau :
-                        <?php
-                        for ($i = 1; $i <= $nbOfZigates; $i++) {
-                            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
-                                continue; // Disabled
-                            echo '<a data-action="afficheNetworkCache" class="btn btn-success displayNodes'.$i.'">Abeille'.$i.' </a>';
-                            echo '<a data-action="refreshNetworkCache'.$i.'" class="btn btn-default fa fa-refresh refreshNodes'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
-                        }
-                        ?>
+                    <?php
+                        afficheButtons($nbOfZigates);
+                    ?>
                         <br />
                         <hr>
                         Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
@@ -187,14 +193,9 @@
                 <div id="graph_network" class="tab-pane">
 
                     <br />
-                    Afficher réseau :
+                    
                     <?php
-                    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
-                        if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
-                            continue; // Disabled
-                        echo '<a data-action="afficheNetworkCache" class="btn btn-success afficheNetworkCache'.$zgNb.'">Abeille'.$zgNb.' </a>';
-                        echo '<a data-action="refreshNetworkCache'.$zgNb.'" class="btn btn-default fa fa-refresh refreshNodes'.$zgNb.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." style="margin-right: 4px;"></a>';
-                    }
+                        afficheButtons($nbOfZigates);
                     ?>
 
                     <table class="table table-bordered table-condensed"
@@ -293,7 +294,7 @@
                                 Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
 <?php
-                                echo '<a data-action="refreshBruitAll" class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                                echo '<a class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
 
                                 function afficheGraph( $title, $logicalId, $values ) {
                                 // Vertical
@@ -362,7 +363,7 @@
 
                 <div id="test2" class="tab-pane" >
                     <?php
-                                echo '<a data-action="refreshRoutesAll" class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                                echo '<a class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
                                 echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
 
                                 function afficheRouteTable( $routingTable ) {
@@ -418,16 +419,13 @@
 <script type="text/javascript">
     <?php
         for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-            echo '$(".btn.displayNodes'.$i.'").off("click").on("click", function () { displayNetLinks('.$i.'); });'."\n";
-            echo '$(".btn.refreshNodes'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.'); setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
+            echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNetLinks('.$i.'); });'."\n";
+            echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.'); setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
         }
 
-        for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-            echo '$(".btn.afficheNetworkCache'.$i.'").off("click").on("click", function () { network_display('.$i.'); });'."\n";
-        }
+        $eqLogics = Abeille::byType('Abeille');
 
         echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
-        $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
                 echo '$(".btn.refreshBruit_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.$eqLogic->getLogicalId().'"); });'."\n";
@@ -435,8 +433,6 @@
         }
 
         echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
-
-        $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             if( $eqLogic->getConfiguration('routingTable') ) {
                 echo '$(".btn.refreshRoutes_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshRoutes("'.$eqLogic->getLogicalId().'"); });'."\n";

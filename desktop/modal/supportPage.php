@@ -22,7 +22,7 @@
     echo '</script>';
 ?>
 
-<a class="btn btn-success pull-right" id="idDownloadAllLogs"><i class="fas fa-cloud-download-alt"></i> Télécharger tous</a>
+<a class="btn btn-success pull-right" id="idDownloadAllLogs"><i class="fas fa-cloud-download-alt"></i> Télécharger tout</a>
 <a class="btn btn-success pull-right" id="bt_DownloadSupportPage"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
 <br/><br/><br/>
 <pre style='overflow: auto; height: 90%;with:90%;'>
@@ -58,9 +58,9 @@
     }
 
     function getFileAndPrint($logFile,  $file, $title, $printModal, $printFile) {
-        
+
         $contents = file_get_contents($file);
-        
+
         if ( $printModal ) {
             echoTitle($logFile, $title);
             echoAndLog($logFile, $contents."\n");
@@ -74,7 +74,7 @@
             log::add('AbeilleDbConf', 'info', '');
         }
     }
-    
+
     function requestAndPrint($logFile, $link, $sql, $title, $printModal, $printFile) {
         if ( $printModal ) {
             echoTitle($logFile, $title);

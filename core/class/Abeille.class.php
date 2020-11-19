@@ -66,6 +66,8 @@ class Abeille extends eqLogic
                 log::add('Abeille', 'debug', 'Erreur je n ai pas l IEEE je ne sais comment gerer.');
                 return;
             }
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "IEEE=" . $IEEE);
+        }
 
             // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X
             if ( $destGhost != $destReal ) {
@@ -220,6 +222,7 @@ class Abeille extends eqLogic
             $tryToGetIEEEArray[] = $key;
         }
 
+        //TODO FIX THIS
             // Pour ces x Abeilles lance l interrogation
             foreach ($eqLogicIds as $eqLogicId) {
                 echo "Start Loop: ".$eqLogicId."\n";
@@ -247,7 +250,6 @@ class Abeille extends eqLogic
                 }
                 else echo "commandIEEE n existe pas !!!!\n";
             }
-        }
 
         // var_dump($tryToGetIEEEArray);
 

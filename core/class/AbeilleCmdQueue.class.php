@@ -2,9 +2,9 @@
 // Classes Heritage
 // AbeilleCmd.php -> AbeilleCmdQueue(class) -> AbeilleCmdQueueFct(class) -> debug(class) -> AbeilleTools(class)
     
-    include_once __DIR__.'/AbeilleCmdQueueFct.class.php';
+    include_once __DIR__.'/AbeilleCmdProcess.class.php';
 
-    class AbeilleCmdQueue extends AbeilleCmdQueueFct {
+    class AbeilleCmdQueue extends AbeilleCmdProcess {
 
         public $statusText = array(
             "00" => "Success",

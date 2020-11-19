@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/AbeilleDebug.class.php';
 
-class AbeilleCmdQueueFct extends debug {
+class AbeilleCmdProcess extends debug {
     function processCmd($Command) {
 
         $this->deamonlog("debug", "processCmd(".json_encode($Command).")", $this->debug['processCmd']);

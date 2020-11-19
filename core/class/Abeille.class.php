@@ -595,7 +595,7 @@ class Abeille extends eqLogic
         // Nb de demon devant tourner: Parser + cmd + n x ( Zigate serial ) + socat si wifi
 
         $nbProcessExpected = 0; // Comptons les process prevus.
-        exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
+        $running = AbeilleTools::getRunningDaemons();
         //get last start to limit restart requests
         if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
             $return['state'] = "nok";
@@ -689,7 +689,7 @@ class Abeille extends eqLogic
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
-               - Is cron running ? */
+               - does Abeille cron exist ? */
         if (self::dependancy_info()['state'] != 'ok') {
             message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.");
             log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
@@ -723,83 +723,12 @@ class Abeille extends eqLogic
             }
         }
 
+        //demarrage d'un cron pour le plugin.
         cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-        $nohup = "/usr/bin/nohup";
-        $php = "/usr/bin/php";
-        $dirdeamon = __DIR__ . "/../../core/class/";
-
-        /* For debug: display nb of zigates and port */
-        log::add('Abeille', 'debug', 'deamon_start(): ' . $param['zigateNb'] . ' zigate(s) définie(s)');
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            log::add('Abeille', 'debug', 'deamon_start(): Zigate' . $i . ' (' . $param['AbeilleSerialPort' . $i] . '): active=' . $param['AbeilleActiver' . $i]);
-        }
-
-        log::add('Abeille', 'info', 'Démarrage des démons.');
-
-        /* Starting 'socat' daemons */
-        $NbOfSocat = 0; // Number of socat daemons
-        $daemonDir = __DIR__ . "/../php/";
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            $serialPort = $param['AbeilleSerialPort' . $i];
-            if (($serialPort == 'none') or ($param['AbeilleActiver' . $i] != 'Y'))
-                continue; // Undefined or disabled
-            if ($serialPort != "/dev/zigate" . $i)
-                continue; // Not a WIFI Zigate
-
-            $daemonParams = $serialPort . ' ' . log::convertLogLevel(log::getLogLevel('Abeille')) . ' ' . $param['IpWifiZigate' . $i];
-            $daemonLog = " >>" . log::getPathToLog('AbeilleSocat') . $i . '.log 2>&1';
-            $cmd = $nohup . " " . $php . " " . $daemonDir . "AbeilleSocat.php " . $daemonParams . $daemonLog;
-            log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: ' . $cmd);
-            exec($cmd . ' &');
-            $NbOfSocat++;
-        }
-        if ($NbOfSocat != 0)
-            sleep(5); // At least 1 socat launched. Waiting startup before AbeilleSerialRead
-
-        /* Starting 'AbeilleSerialPort' daemons if
-               - zigate is enabled and port is defined
-               - Port exists */
-        $daemonDir = __DIR__ . "/../php/";
-        $daemonFile = "AbeilleSerialRead.php";
-        $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            if (($param['AbeilleActiver' . $i] != 'Y') or ($param['AbeilleSerialPort' . $i] == 'none'))
-                continue; // Disable or undefined
-            if (@!file_exists($param['AbeilleSerialPort' . $i])) {
-                log::add('Abeille', 'warning', 'deamon_start(): Le port ' . $param['AbeilleSerialPort' . $i] . ' n\'existe pas.');
-                message::add('Abeille', 'Warning: le port ' . $param['AbeilleSerialPort' . $i] . ' vers la zigate n\'existe pas.', "Vérifiez la connexion de la zigate, verifier l adresse IP:port pour la version Wifi.");
-                $return['parametersCheck'] = "nok";
-                $return['parametersCheck_message'] = __('Le port n\'existe pas (zigate déconnectée ?)', __FILE__);
-                return false;
-            }
-
-            $daemonParams = 'Abeille' . $i . ' ' . $param['AbeilleSerialPort' . $i] . ' ' . $logLevel;
-            $daemonLog = " >>" . log::getPathToLog("AbeilleSerialRead") . $i . ".log 2>&1";
-            exec(system::getCmdSudo() . 'chmod 777 ' . $param['AbeilleSerialPort' . $i] . ' > /dev/null 2>&1');
-            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonFile . " " . $daemonParams . $daemonLog;
-            log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: ' . $cmd);
-            exec($cmd . ' &');
-        }
-
-        /* Starting 'AbeilleParser' daemon */
-        $daemonDir = __DIR__ . "/"; // Same location than this file
-        $daemonFile = "AbeilleParser.php";
-        $daemonParams = log::convertLogLevel(log::getLogLevel('Abeille'));
-        $daemonLog = " >>" . log::getPathToLog("AbeilleParser") . ".log 2>&1";
-        $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonFile . " " . $daemonParams . $daemonLog;
-        log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: ' . $cmd);
-        exec($cmd . ' &');
-
-        /* Starting 'AbeilleCmd' daemon */
-        $deamon3 = "AbeilleCmd.php";
-        $paramdeamon3 = log::convertLogLevel(log::getLogLevel('Abeille'));
-        $log3 = " >>" . log::getPathToLog("AbeilleCmd") . ".log 2>&1";
-        $cmd = $nohup . " " . $php . " " . $dirdeamon . $deamon3 . " " . $paramdeamon3 . $log3;
-        log::add('Abeille', 'debug', 'deamon_start(): Lancement démon: ' . $cmd);
-        exec($cmd . ' &');
-
-        sleep(2);
+        $parameters = self::getParameters();
+        $running = AbeilleTools::getRunningDaemons();
+        AbeilleTools::restartMissingDaemons($parameters, $running);
 
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         log::add('Abeille', 'debug', 'deamon_start(): ***** Envoi de la creation de ruche par défaut ********');
@@ -821,6 +750,12 @@ class Abeille extends eqLogic
         return true;
     }
 
+    /**
+     * Not used ?
+     *
+     * @param $Abeille
+     * @return string
+     */
     public static function mapAbeillePort($Abeille)
     {
 
@@ -831,6 +766,12 @@ class Abeille extends eqLogic
         }
     }
 
+    /**
+     * Not used ?
+     *
+     * @param $port
+     * @return string
+     */
     public static function mapPortAbeille($port)
     {
 

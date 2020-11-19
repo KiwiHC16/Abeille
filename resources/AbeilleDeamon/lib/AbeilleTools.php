@@ -278,13 +278,23 @@ class AbeilleTools
     }
 
     /**
+     * get running processes for Abeille plugin
+     *
+     * @return array
+     */
+    public static function getRunningDaemons(): array {
+        exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
+        return $running;
+    }
+
+    /**
      * return an array with expected daemons and theirs status
      *
      * @param $parameters
      * @param $running
      * @return array
      */
-    public static function getRunningDaemons($parameters, $running): array
+    public static function diffExpectedRunningDaemons($parameters, $running): array
     {
         $nbZigate = $parameters['zigateNb'];
         $nbProcessExpected = 2; // parser and cmd
@@ -345,11 +355,11 @@ class AbeilleTools
         if (AbeilleTools::isAbeilleCronRunning()==false) {
             return false;
         }
-        $found = self::getRunningDaemons($parameters, $running);
+        $found = self::diffExpectedRunningDaemons($parameters, $running);
         $nbProcessExpected = $found['expected'];
         array_pop($found);
         $result = $nbProcessExpected - array_sum($found);
-        log::add('Abeille', 'debug', 'Tools:isMissingDaemons: ' . ($result == 0 ? 'False' : 'True') . ', params: ' . implode(',', $parameters) .
+        log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '. ($result == 0 ? 'False' : 'True') . ', params: ' . implode(',', $parameters) .
             ', running: ' . implode(',', $running));
         //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
         if ($result == 1) {
@@ -367,7 +377,7 @@ class AbeilleTools
     public static function restartMissingDaemons(array $parameters, $running)
     {
         $lastLaunch = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
-        $found = self::getRunningDaemons($parameters, $running);
+        $found = self::diffExpectedRunningDaemons($parameters, $running);
         array_splice($found, -1, 1);
         //get socat first
         arsort($found);
@@ -450,7 +460,7 @@ class AbeilleTools
 
     public static function getMissingDaemons(array $parameters, $running)
     {
-        $found = self::getRunningDaemons($parameters, $running);
+        $found = self::diffExpectedRunningDaemons($parameters, $running);
     }
 
     /**

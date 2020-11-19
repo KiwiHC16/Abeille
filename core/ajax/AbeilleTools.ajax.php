@@ -20,10 +20,16 @@
      * Targets for AJAX's requests
      */
 
-    /* Errors reporting: uncomment below lines for debug */
-    error_reporting(E_ALL);
-    ini_set('error_log', '/var/www/html/log/AbeillePHP');
-    ini_set('log_errors', 'On');
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        include_once $dbgFile;
+        $dbgDeveloperMode = TRUE;
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
 
     $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
 
@@ -40,8 +46,6 @@
     try {
 
         require_once __DIR__.'/../../../../core/php/core.inc.php';
-        // require_once __DIR__.'/../class/Abeille.class.php';
-        // require_once __DIR__.'/../class/AbeilleZigate.php';
         include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
 
         include_file('core', 'authentification', 'php');
@@ -60,7 +64,7 @@
         //     if (file_exists($path))
         //         $status = 0;
         //     else
-        //         $status = -1; // Not found    
+        //         $status = -1; // Not found
         //     ajax::success(json_encode(array('status' => $status)));
         // }
 
@@ -113,14 +117,16 @@
             // TODO: Select tool according to what's available.
             $tool = "gzip";
             // $tool = "bzip2";
-            
+
+            $now = new DateTime;
+            $zipFile = "AbeilleLogs-".$now->format('ymd'); // 'AbeilleLogs-YYMMDD'
             if ($tool == "gzip") {
                 /* gzip
                 -c => Write output on standard output
                 -r => Travel the directory structure recursively
                 */
-                $zipFile = "AbeilleLogs.tgz";
-                $cmd = "cd ".$pluginRoot."/tmp; sudo tar cvf - AbeilleLogs | gzip -c >".$zipFile;
+                $zipFile .= ".tgz";
+                $cmd = "cd ".$pluginRoot."/tmp/AbeilleLogs; sudo tar cvf - * | gzip -c >../".$zipFile;
             }
             if ($tool == "bzip2") {
                 /* bzip2
@@ -128,8 +134,8 @@
                 -z => Compress
                 -q => Quiet
                 */
-                $zipFile = "AbeilleLogs.bz2";
-                $cmd = "cd ".$pluginRoot."/tmp; sudo tar cvf - AbeilleLogs | bzip2 -zqc >".$zipFile;
+                $zipFile .= ".bz2";
+                $cmd = "cd ".$pluginRoot."/tmp/AbeilleLogs; sudo tar cvf - * | bzip2 -zqc >../".$zipFile;
             }
 
             exec($cmd, $out, $status);

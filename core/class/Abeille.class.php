@@ -233,7 +233,7 @@
                             if ( $eqLogicX->getIsEnable() ) {
                                 log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
                                 echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                                $cmd = "/usr/bin/nohup php ".__DIR__."/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
+                                $cmd = "/usr/bin/nohup php ".__DIR__."/../php/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
                                 // echo "Cmd: ".$cmd."\n";
                                 exec($cmd, $out, $status);
                             }

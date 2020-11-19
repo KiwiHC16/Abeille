@@ -3,6 +3,560 @@
 include_once __DIR__.'/AbeilleDebug.class.php';
 
 class AbeilleCmdProcess extends debug {
+
+    // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
+    function setParamXiaomi($dest,$Command) {
+        // Write Attribute request
+        // Msg Type = 0x0110
+
+        // <address mode: uint8_t>
+        // <target short address: uint16_t>
+        // <source endpoint: uint8_t>
+        // <destination endpoint: uint8_t>
+        // <Cluster id: uint16_t>
+        // <direction: uint8_t>
+        // <manufacturer specific: uint8_t>
+        // <manufacturer id: uint16_t>
+        // <number of attributes: uint8_t>
+        // <attributes list: data list of uint16_t  each>
+        //      Direction:
+        //          0 - from server to client
+        //          1 - from client to server
+        //      Manufacturer specific :
+        //          1 – Yes
+        //          0 – No
+
+        $priority = $Command['priority'];
+
+        $cmd                    = "0110";
+
+        $addressMode            = "02"; // Short Address -> 2
+        $address                = $Command['address'];
+        $sourceEndpoint         = "01";
+        $destinationEndpoint    = "01";
+        $clusterId              = $Command['clusterId'];
+        $direction              = "00";
+        $manufacturerSpecific   = "01";
+        $proprio                = $Command['Proprio'];
+        $numberOfAttributes     = "01";
+        $attributeId            = $Command['attributeId'];
+        $attributeType          = $Command['attributeType'];
+        $value                  = $Command['value'];
+
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $clusterId . $direction . $manufacturerSpecific . $proprio . $numberOfAttributes . $attributeId . $attributeType . $value;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+
+        if ( isset($Command['repeat']) ) {
+            if ( $Command['repeat']>1 ) {
+                for ($x = 2; $x <= $Command['repeat']; $x++) {
+                    sleep(5);
+                    $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+                }
+            }
+        }
+    }
+
+    // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
+    function setParam($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param) {
+        /*
+            <address mode: uint8_t>
+            <target short address: uint16_t>
+            <source endpoint: uint8_t>
+            <destination endpoint: uint8_t>
+            <Cluster id: uint16_t>
+            <direction: uint8_t>
+            <manufacturer specific: uint8_t>
+            <manufacturer id: uint16_t>
+            <number of attributes: uint8_t>
+            <attributes list: data list of uint16_t  each>
+            Direction:
+            0 - from server to client
+            1 - from client to server
+            */
+
+        $priority = $Command['priority'];
+
+        $cmd = "0110";
+        $lenth = "000E";
+
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        // $destinationEndpoint = "01";
+        //$ClusterId = "0006";
+        $Direction = "01";
+        $manufacturerSpecific = "00";
+        $manufacturerId = "0000";
+        $numberOfAttributes = "01";
+        // $attributesList = "0000";
+        $attributesList = $attributeId;
+        $attributesList = "Salon1         ";
+
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $clusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        // $this->deamonlog('debug','data: '.$data);
+        // $this->deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+    }
+
+    function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio) {
+        $this->deamonlog('debug', "  command setParam2");
+        // Msg Type = 0x0530
+
+        $priority = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+
+        $addressMode = "02";
+        $targetShortAddress = $address;
+        $sourceEndpoint = "01";
+        $destinationEndpoint = $destinationEndPoint; // "01";
+        $profileID = "0104"; // "0000";
+        $clusterID = $clusterId; // "0021";
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = "16";
+
+        $frameControl = "00";
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute = "02";
+
+        $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
+        // $dataType = "42"; // string
+        // $Param = "53616C6F6E31202020202020202020";
+        // $Param = "Salon2         ";
+        $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
+        $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
+        // $attributValue = $Param; // "53616C6F6E31202020202020202020"; //$Param;
+
+        $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+
+        // $dataLength = "16";
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+        $this->deamonlog('debug', "data2: ".$data2 );
+        $this->deamonlog('debug', "length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        // $this->deamonlog('debug', "data: ".$data );
+        // $this->deamonlog('debug', "lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
+    function setParam3($dest,$Command) {
+        // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+
+        $this->deamonlog('debug', "command setParam3");
+
+        $priority = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+
+        $addressMode = "02";
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint = "01";
+
+        if ( isset($Command['destinationEndpoint']) ) {
+                if ( $Command['destinationEndpoint']>1 ) {
+            $destinationEndpoint = $Command['destinationEndpoint'];
+        }
+        else {
+            $destinationEndpoint = "01";
+        } // $destinationEndPoint; // "01";
+        }
+            else {
+            $destinationEndpoint = "01";
+        }
+
+        $profileID = "0104";
+        $clusterID = $Command['clusterId'];
+
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = define later
+
+        $frameControlAPS = "40";   // APS Control Field
+        // If Ack Request 0x40 If no Ack then 0x00
+        // Avec 0x40 j'ai un default response
+
+        $frameControlZCL = "14";   // ZCL Control Field
+        // Disable Default Response + Manufacturer Specific
+
+        $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+
+        $Proprio = $Command['Proprio'][2].$Command['Proprio'][3].$Command['Proprio'][0].$Command['Proprio'][1];
+
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute = "02";
+
+        // $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
+        $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+
+        // $dataType = "42"; // string
+        $dataType = $Command['attributeType'];
+
+        // $Param = $Command['value'];
+        // $lengthAttribut = sprintf("%02s",dechex(strlen( $Param )));
+        // $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
+        $attributValue = $Command['value'];
+
+        // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
+        $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+        $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug', "data: ".$data );
+        // $this->deamonlog('debug', "lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
+    // Needed for fc01 of Legrand Dimmer
+    // clusterId=fc01&attributeId=0000&attributeType=09&value=0101
+    function setParam4($dest,$Command) {
+
+        $this->deamonlog('debug', "command setParam4");
+
+        $priority = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+
+        $addressMode = "02";
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint = "01";
+        if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+        $profileID = "0104";
+        $clusterID = $Command['clusterId'];
+
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = define later
+
+        $frameControlAPS = "40";   // APS Control Field
+        // If Ack Request 0x40 If no Ack then 0x00
+        // Avec 0x40 j'ai un default response
+
+        $frameControlZCL = "10";   // ZCL Control Field
+        // Disable Default Response + Not Manufacturer Specific
+
+        $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute = "02";
+
+        $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+
+        $dataType = $Command['attributeType'];
+        $attributValue = $Command['value'];
+
+        // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+        $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+        $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug', "data: ".$data );
+        // $this->deamonlog('debug', "lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
+    // Needed for fc41 of Legrand Contacteur
+    function commandLegrand($dest,$Command) {
+
+        // $this->deamonlog('debug',"commandLegrand()");
+
+        $priority = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+        // <data: auint8_t>
+
+
+        $addressMode = "02";
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint = "01";
+        if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+        $profileID = "0104";
+        $clusterID = "FC41";
+
+        $securityMode = "02"; // ???
+        $radius = "30";
+        // $dataLength = define later
+
+        // ---------------------------
+
+        $frameControlAPS = "15";   // APS Control Field, see doc for details
+
+        $manufacturerCode = "2110";
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $command = "00";
+
+        // $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
+        $data = $Command['Mode'];
+
+        $data2 = $frameControlAPS . $manufacturerCode . $transqactionSequenceNumber . $command . $data;
+
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+        // $this->deamonlog('debug',"data2: ".$data2 . " length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug',"data: ".$data );
+        // $this->deamonlog('debug',"lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
+    function getParam($priority,$dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
+        /*
+            <address mode: uint8_t>
+            <target short address: uint16_t>
+            <source endpoint: uint8_t>
+            <destination endpoint: uint8_t>
+            <Cluster id: uint16_t>
+            <direction: uint8_t>
+            <manufacturer specific: uint8_t>
+            <manufacturer id: uint16_t>
+            <number of attributes: uint8_t>
+            <attributes list: data list of uint16_t  each>
+            Direction:
+            0 - from server to client
+            1 - from client to server
+            Manufacturer specific :
+            0 – No
+            1 – Yes
+
+            8 16 8 8 16 8 8 16 8 16 -> 2 4 2 2 4 2 2 4 2 4 -> 28/2d -> 14d -> 0x0E
+
+            19:07:11.771 -> 01 02 11 02 10 02 10 02 1E 91 02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10 03
+            00:15:32.115 -> 01 02 11 02 10 02 10 02 1E 91 02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10 03
+            00:15:32.221 <- 01 80 00 00 04 86 00 03 01 00 03
+            00:20:29.130 <- 01 80 00 00 04 80 00 05 01 00 03
+            80 00 00 04 84 00 01 01 00
+            00:15:32.248 <- 01 81 00 00 0D 02 03 B3 28 01 00 06 00 00 00 10 00 01 00 03
+            00:20:29.156 <- 01 81 00 00 0D 05 05 B3 28 01 00 06 00 00 00 10 00 01 01 03
+            81 00 00 0D 00 01 b3 28 01 00 06 00 00 00 10 00 01 00
+            81 00 00 0D 06 06 b3 28 01 00 06 00 00 00 10 00 01 01
+
+            01: start
+            02 11 02 10: Msg Type: 02 11 => 01 02 10 => 00 ==> 0100 (read attribute request)
+            02 10 02 1E: Length: 00 0E
+            91: Chrksum
+            02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10: data
+            02 12: address mode: 02
+            B3 28: Short address: B328
+            02 11: Source EndPoint: 01
+            02 11: Dest EndPoint: 01
+            02 10 02 16: Cluster Id: 00 06 (General On/Off)
+            02 10: Direction: 0 (from server to client)
+            02 10: manufacturer specific: 00 (No)
+            02 10 02 10 : manufacturer id: 00 00
+            02 11: number of attributes: 01
+            02 10 02 10: attributes list: data list of uint16_t  each: 00 00
+
+            */
+        // $param = "02B3280101000600000000010000";
+        // echo $param;
+        // $this->sendCmd($priority, $dest, "0100", "000E", $param );
+        // $this->sendCmd($priority, $dest, "0100", "000E", "02B3280101000600000000010000");
+
+        $cmd = "0100";
+        // $lenth = "000E";
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        // $destinationEndpoint = "01";
+        //$ClusterId = "0006";
+        $ClusterId = $clusterId;
+        $Direction = "00";
+        if ( (strlen($Proprio)<1) || ($Proprio="0000") ) {
+            $manufacturerSpecific = "00";
+            $manufacturerId = "0000";
+        }
+        else {
+            $manufacturerSpecific = "01";
+            $manufacturerId = $Proprio;
+        }
+        $numberOfAttributes = "01";
+        $attributesList = $attributeId;
+        //      02              B328        01              01                      0006            00          00                      0000            01                      0000
+        //      02              faec        01              01                      0500           00           01                      115f            01                      fff1
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug','data: '.$data.' length: '.$lenth);
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+    }
+
+    // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
+    function getParamHue($priority,$dest,$address,$clusterId,$attributeId) {
+        $this->deamonlog('debug','getParamHue');
+
+        $priority = $Command['priority'];
+
+        $cmd = "0100";
+        $lenth = "000E";
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        $destinationEndpoint = "0B";
+        //$ClusterId = "0006";
+        $ClusterId = $clusterId;
+        $Direction = "00";
+        $manufacturerSpecific = "00";
+        $manufacturerId = "0000";
+        $numberOfAttributes = "01";
+        // $attributesList = "0000";
+        $attributesList = $attributeId;
+
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        // $this->deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+    }
+
+    // getParamOSRAM: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
+    function getParamOSRAM($priority,$dest,$address,$clusterId,$attributeId) {
+        $this->deamonlog('debug','getParamOSRAM');
+
+        $priority = $Command['priority'];
+
+        $cmd = "0100";
+        $lenth = "000E";
+        $addressMode = "02";
+        // $address = $Command['address'];
+        $sourceEndpoint = "01";
+        $destinationEndpoint = "03";
+        //$ClusterId = "0006";
+        $ClusterId = $clusterId;
+        $Direction = "00";
+        $manufacturerSpecific = "00";
+        $manufacturerId = "0000";
+        $numberOfAttributes = "01";
+        // $attributesList = "0000";
+        $attributesList = $attributeId;
+
+        $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
+        // $this->deamonlog('debug','len data: '.strlen($data));
+        //echo "Read Attribute command data: ".$data."\n";
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+    }
+
     function processCmd($Command) {
 
         $this->deamonlog("debug", "processCmd(".json_encode($Command).")", $this->debug['processCmd']);

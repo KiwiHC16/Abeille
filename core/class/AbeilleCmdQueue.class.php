@@ -44,7 +44,7 @@
         public $zigateNb;
         public $zigateAvailable = array();        // Si on pense la zigate dispo ou non.
 
-        function __construct($debugLevel) {
+        function __construct($debugLevel='debug') {
             /* Configuring log library to use 'logMessage()' */
             logSetConf("AbeilleCmd.log");
 
@@ -173,7 +173,7 @@
         }
 
         function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
-            $this->deamonlog("debug", "sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
+            $this->deamonlog("debug", "sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
 
             $i = str_replace( 'Abeille', '', $dest );
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {

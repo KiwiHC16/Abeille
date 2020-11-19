@@ -1,7 +1,10 @@
 #! /bin/bash
+# PiZigate flash programmation script
+# updateFirmware.sh <action> <zigateport> [fwfile]
+#   where action = flash, check, eraseeeprom
 
 NOW=`date +"%Y-%m-%d %H:%M:%S"`
-echo "[${NOW}] Démarrage de '$(basename $0)'"
+echo "[${NOW}] Démarrage de '$(basename $0)' $@"
 
 PROG=/var/www/html/plugins/Abeille/Zigate_Module/JennicModuleProgrammerRPI3
 FW_DIR=/var/www/html/plugins/Abeille/Zigate_Module
@@ -11,34 +14,46 @@ echo "Vérifications préliminaires"
 error=0
 if [ $# -lt 2 ]; then
     echo "= ERREUR: Argument(s) manquant(s) !"
-    echo "=         updateFirmware.sh <fwfile> <zigateport>"
+    echo "=         updateFirmware.sh <action> <zigateport> [fwfile]"
     error=1
 fi
-if [ ! -e ${FW_DIR}/$1 ]; then
-    echo "= ERREUR: le FW choisi n'existe pas !"
-    echo "=         FW: $1"
+ACTION=$1
+ZGPORT=$2
+FW=""
+if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "eraseeeprom" ]; then
+    echo "= ERREUR: Action '${ACTION}' non supportée."
+    echo "=         Choix=flash/check/eraseeeprom"
     error=1
-fi
-if [ ! -e $2 ]; then
-    echo "= ERREUR: le port tty choisi n'existe pas !"
-    echo "=         Port: $2"
-    error=1
-fi
-hash gpio 2>/dev/null
-if [ $? -ne 0 ]; then
-    echo "= ERREUR: Commande 'gpio' manquante !"
-    echo "=         Le package WiringPi est probablement mal installé."
-    error=1
-fi
-if [ ! -e ${PROG} ]; then
-    echo "= ERREUR: Programmateur Jennic manquant !"
-    echo "=         ${PROG}"
-    error=1
-fi
-if [ ! -x ${PROG} ]; then
-    echo "= ERREUR: Le programmateur Jennic n'est pas exécutable !"
-    echo "=         ${PROG}"
-    error=1
+else
+    if [ ${ACTION} == "flash" ]; then
+        FW=$3
+        if [ ! -e ${FW_DIR}/${FW} ]; then
+            echo "= ERREUR: le FW choisi n'existe pas !"
+            echo "=         FW: ${FW}"
+            error=1
+        fi
+    fi
+    if [ ! -e ${ZGPORT} ]; then
+        echo "= ERREUR: le port tty choisi n'existe pas !"
+        echo "=         Port: ${ZGPORT}"
+        error=1
+    fi
+    hash gpio 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "= ERREUR: Commande 'gpio' manquante !"
+        echo "=         Le package WiringPi est probablement mal installé."
+        error=1
+    fi
+    if [ ! -e ${PROG} ]; then
+        echo "= ERREUR: Programmateur Jennic manquant !"
+        echo "=         ${PROG}"
+        error=1
+    fi
+    if [ ! -x ${PROG} ]; then
+        echo "= ERREUR: Le programmateur Jennic n'est pas exécutable !"
+        echo "=         ${PROG}"
+        error=1
+    fi
 fi
 if [ $error != 0 ]; then
     exit 1
@@ -46,13 +61,16 @@ fi
 echo "= Ok"
 
 # Si check seulement on quitte ici
-if [ $# -gt 2 ] && [ $3 == "-check" ]; then
+if [ ${ACTION} == "check" ]; then
     exit 0
+elif [ ${ACTION} == "eraseeeprom" ]; then
+    echo "Effacement de l'EEPROM"
+    echo "- Port tty: ${ZGPORT}"
+else
+    echo "Lancement de la programmation du firmware"
+    echo "- Port tty: ${ZGPORT}"
+    echo "- Firmware: ${FW}"
 fi
-
-echo "Lancement de la programmation du firmware"
-echo "- Firmware: $1"
-echo "- Port tty: $2"
 
 # Memo connexion PiZiGate
 # port 0 = RESET
@@ -74,14 +92,26 @@ sleep 1
 # gpio write 2 1
 # sleep 1
 
-sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/$1 -s $2 2>&1
-if [ $? != 0 ]; then
-    echo "- ERREUR: Programmation impossible"
-    status=2
+if [ ${ACTION} == "eraseeeprom" ]; then
+    sudo ${PROG} -V 6 -P 115200 -v --eraseeeprom -s ${ZGPORT} 2>&1
+    if [ $? != 0 ]; then
+        echo "- ERREUR: Effacement impossible"
+        status=2
+    else
+        echo "- Ok. Effacement terminé"
+        echo "Redémarrage de la PiZiGate"
+        status=0
+    fi
 else
-    echo "- Ok. Programmation faite"
-    echo "Redémarrage de la PiZiGate"
-    status=0
+    sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/${FW} -s ${ZGPORT} 2>&1
+    if [ $? != 0 ]; then
+        echo "- ERREUR: Programmation impossible"
+        status=2
+    else
+        echo "- Ok. Programmation faite"
+        echo "Redémarrage de la PiZiGate"
+        status=0
+    fi
 fi
 
 # gpio mode 0 out

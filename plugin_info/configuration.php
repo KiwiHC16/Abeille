@@ -97,7 +97,7 @@
                                 else
                                     $b2 = $b;
                                 echo '<script>console.log("branch='.$b.'")</script>';
-                                if ($b == $localBranch)                               
+                                if ($b == $localBranch)
                                     echo '<option value="'.$b.'" selected>'.$b2.'</option>';
                                 else
                                     echo '<option value="'.$b.'">'.$b2.'</option>';
@@ -238,6 +238,7 @@
                         </select>
                         <?php
                             echo '<a id="idUpdateFW'.$i.'" class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fa fa-refresh"></i> {{Mettre à jour}}</a>';
+                            // echo '<a id="idResetE2P'.$i.'" class="btn btn-warning ml4px" onclick="resetE2P('.$i.')" title="{{Effacement de l\'EEPROM}}"><i class="fa fa-refresh"></i> {{Effacer E2P}}</a>';
                         ?>
                     </div>
                 </div>
@@ -422,6 +423,7 @@
         var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
         var idFW = document.querySelector('#idFW' + zgNb);
         var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
+        // var idResetE2P = document.querySelector('#idResetE2P' + zgNb);
         var idWifiAddr = document.querySelector('#idWifiAddr' + zgNb);
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
         if (zgType == "WIFI") {
@@ -431,6 +433,7 @@
             idCheckSP.setAttribute('disabled', true);
             idFW.setAttribute('disabled', true);
             idUpdateFW.setAttribute('disabled', true);
+            // idResetE2P.setAttribute('disabled', true);
             idWifiAddr.removeAttribute('disabled');
             // idCheckWifi.removeAttribute('disabled');
         } else {
@@ -442,9 +445,11 @@
             if (zgType == "PI") { // FW update is supported for PI only
                 idFW.removeAttribute('disabled');
                 idUpdateFW.removeAttribute('disabled');
+                // idResetE2P.removeAttribute('disabled');
             } else {
                 idFW.setAttribute('disabled', true);
                 idUpdateFW.setAttribute('disabled', true);
+                // idResetE2P.setAttribute('disabled', true);
             }
         }
     }
@@ -666,10 +671,34 @@
         }
         var zgPort = $("#idSelSP" + zgNb).val();
         var zgFW = $("#idFW" + zgNb).val();
-        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : ' + zgPort + '<br> - firmware: ' + zgFW + '<br> Voulez vous continuer ?}}', function (result) {
+        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br> Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=updateFirmware.abeille&fwfile=\"' + zgFW + '\"&zgport=\"' + zgPort + '\"').dialog('open');
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=updateFW&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
+            }
+        });
+    }
+
+    /* Called when "reset E2P" button is pressed */
+    function resetE2P(zgNb) {
+        console.log("resetE2P(zgNb=" + zgNb + ")");
+        /* Note. Onclick seems still active even if button is disabled (wifi case) */
+        var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
+        if (idCheckSP.getAttribute('disabled') != null) {
+            console.log("=> DISABLED");
+            return;
+        }
+        var zgType = $("#idSelZgType" + zgNb).val();
+        if (zgType != "PI") {
+            console.log("=> Not PI type. UNEXPECTED !");
+            return;
+        }
+        var zgPort = $("#idSelSP" + zgNb).val();
+        var zgFW = $("#idFW" + zgNb).val();
+        bootbox.confirm("{{Attention !! Vous êtes sur le point d'effacer l'EEPROM de votre PiZigate.<br>Tous les équipements devront être réinclus.<br> - port    : "+zgPort+"<br>Etes vous sur de vouloir continuer ?}}", function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Effacement EEPROM}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=resetE2P&zgport=\"'+zgPort+'\"').dialog('open');
             }
         });
     }
@@ -706,7 +735,7 @@
                 document.getElementById("idSwitchBranch").innerText = "Changer";
             }
         });
-        
+
         $('#idSwitchBranch').on('click', function() {
             var branchName = $("#idBranch").val();
             console.log("switchBranch(branch="+branchName+", current="+js_curBranch+")")

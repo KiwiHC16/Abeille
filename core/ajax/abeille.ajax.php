@@ -162,8 +162,8 @@ try {
         logToFile('Abeille', 'debug', 'Démarrage updateFirmware(' . $zgFwFile . ', ' . $zgPort . ')');
 
         logToFile('AbeilleConfig.log', 'info', 'Vérification des paramètres');
-        $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort . " -check";
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmdToExec = "updateFirmware.sh check ".$zgPort;
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         $version = 0; // FW version
@@ -173,14 +173,42 @@ try {
 
             /* Updating FW and reset Zigate */
             logToFile('AbeilleConfig.log', 'info', 'Programming');
-            $cmdToExec = "updateFirmware.sh " . $zgFwFile . " " . $zgPort;
-            $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('AbeilleConfig.log') . ' 2>&1';
+            $cmdToExec = "updateFirmware.sh flash ".$zgPort." ".$zgFwFile;
+            $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             /* Reading FW version */
             if ($status == 0) {
                 $status = zgGetVersion($zgPort, $version);
             }
+
+            logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
+            abeille::deamon_start(); // Restarting daemon
+        }
+
+        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
+    }
+
+    /* Reset EEPROM but check parameters first, prior to shutdown daemon */
+    if (init('action') == 'resetE2P') {
+        $zgPort = init('zgport');
+
+        logToFile('Abeille', 'debug', 'Démarrage resetE2P('.$zgPort.')');
+
+        logToFile('AbeilleConfig.log', 'debug', 'Vérification des paramètres');
+        $cmdToExec = "updateFirmware.sh check ".$zgPort;
+        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        exec($cmd, $out, $status);
+
+        if ($status == 0) {
+            logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+            abeille::deamon_stop(); // Stopping daemon
+
+            /* Reset EEPROM */
+            logToFile('AbeilleConfig.log', 'info', 'Reset EEPROM');
+            $cmdToExec = "updateFirmware.sh eraseeeprom ".$zgPort;
+            $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
 
             logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
             abeille::deamon_start(); // Restarting daemon

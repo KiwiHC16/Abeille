@@ -334,13 +334,17 @@ class AbeilleTools
 
     /**
      * return true if all expected daemons are running
+     * @param $isCron   is cron daemon for this plugin started
      * @param $parameters (parametersCheck, parametersCheck_message, AbeilleParentId, zigateNb,
      * AbeilleType,AbeilleSerialPortX, IpWifiZigateX, AbeilleActiverX
      * @param $running
      */
     public static function isMissingDaemons($parameters, $running): bool
     {
-
+        //no cron, no start requested
+        if (AbeilleTools::isAbeilleCronRunning()==false) {
+            return false;
+        }
         $found = self::getRunningDaemons($parameters, $running);
         $nbProcessExpected = $found['expected'];
         array_pop($found);
@@ -372,12 +376,12 @@ class AbeilleTools
 
         $missing = "";
         foreach ($found as $daemon => $value) {
-            if ($value != 1) {
+            if ($value == 0) {
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
                 log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: restarting ' . $daemon . ': ' . $cmd);
                 log::add('Abeille', 'info', 'Tools:restartMissingDaemons: restarting Abeille' . $daemon);
-                //exec($cmd.' &');
+                exec($cmd . ' &');
             }
         }
         log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: missing daemons:' . $missing);
@@ -465,6 +469,23 @@ class AbeilleTools
             log::add('Abeille', 'debug', 'AbeilleTools:checkGpio(): Une PiZigate active trouvée => configuration des GPIOs');
             exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
         }
+    }
+
+    /**
+     * Le daemon cron d'Abeille tourne après un appui sur start.
+     * un appui sur stop arrete le cron d'Abeille
+     *
+     * @return false
+     */
+    public static function isAbeilleCronRunning()
+    {
+        if (is_object(cron::byClassAndFunction('Abeille', 'deamon')) &
+            (cron::byClassAndFunction('Abeille', 'deamon')->running())) {
+            //log::add('Abeille', 'debug', 'isAbeilleCronRunning: le plugin est démarré.');
+            return true;
+        }
+        return false;
+
     }
 }
 

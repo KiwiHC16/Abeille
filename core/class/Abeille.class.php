@@ -584,26 +584,24 @@ class Abeille extends eqLogic
             $return['launchable_message'] = $parameters['parametersCheck_message'];
         }
 
-        // On regarde si tout tourne already
-        // On verifie que le cron tourne
-        if (is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
-            if (!cron::byClassAndFunction('Abeille', 'deamon')->running()) {
-                log::add('Abeille', 'warning', 'deamon_info(): Le cron ne tourne pas');
-                // message::add('Abeille', 'Warning: deamon_info: cron not running','','Abeille/Demon');
-                $return['state'] = "nok";
-            }
+        // si la cron tourne alors le plugin a été démarré.
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
+            $return['state'] = "nok";
+            log::add('Abeille', 'warning', 'deamon_info(): Le plugin n\'est pas démarré. la cron ne tourne pas');
+            return $return;
         }
+        log::add('Abeille', 'info', 'deamon_info(): Le plugin est démarré. la cron tourne');
 
         // Nb de demon devant tourner: Parser + cmd + n x ( Zigate serial ) + socat si wifi
 
         $nbProcessExpected = 0; // Comptons les process prevus.
         exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
         //get last start to limit restart requests
-        if (AbeilleTools::isMissingDaemons($parameters, $running)) {
+        if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
             $return['state'] = "nok";
             for ($retry = 1; $retry <= 3; $retry++) {
                 AbeilleTools::restartMissingDaemons($parameters, $running);
-                if (!AbeilleTools::isMissingDaemons($parameters, $running)){
+                if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
                     $return['state'] = "ok";
                     break;
                 }

@@ -4389,46 +4389,4 @@
         }
     }
 
-    // ***********************************************************************************************
-    // MAIN
-    // ***********************************************************************************************
-    // exemple d appel
-    // php AbeilleCmd.php debug
-
-    try {
-        $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
-        logMessage("info", "Démarrage du démon 'AbeilleCmd'");
-
-        $last = 0;
-        while (true) {
-            /* Treat Zigate statuses (0x8000 cmd) coming from parser */
-            $AbeilleCmdQueue->traiteLesAckRecus();
-
-            $AbeilleCmdQueue->timeOutSurLesAck();
-
-            // Traite toutes les commandes zigate en attente
-            $AbeilleCmdQueue->processCmdQueueToZigate();
-
-            $AbeilleCmdQueue->recupereTousLesMessagesVenantDesAutresThreads();
-
-            // Recuperes tous les messages en attente sur timer
-            $AbeilleCmdQueue->execTempoCmdAbeille();
-
-            /* Display queues status every 30sec */
-            if ((time() - $last) > 30 ) {
-                $AbeilleCmdQueue->afficheStatQueue();
-                $last = time();
-            }
-
-            // Libère le CPU
-            time_nanosleep(0, 10000000); // 1/100s
-        }
-    }
-    catch (Exception $e) {
-        $AbeilleCmdQueue->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
-        $AbeilleCmdQueue->deamonlog( 'info', 'Fin du script');
-    }
-
-    $AbeilleCmdQueue->deamonlog( 'info', 'Fin du démon \'AbeilleCmd\'');
-    unset($AbeilleCmdQueue);
 ?>

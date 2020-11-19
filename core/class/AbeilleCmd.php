@@ -20,12 +20,9 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    
     include_once __DIR__.'/AbeilleMsg.php';
     include_once __DIR__.'/../php/AbeilleLog.php';
-
-    include_once __DIR__.'/AbeilleDebug.class.php';
-
 
     include_once __DIR__.'/AbeilleCmdQueue.class.php';
 

@@ -1,4 +1,7 @@
 <?php
+
+include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+
 class debug extends AbeilleTools {
         public $debug = array(
             "cli"                    => 0, // commande line mode or jeedom

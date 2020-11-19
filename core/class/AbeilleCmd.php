@@ -2194,12 +2194,8 @@
                 // <data: auint8_t>
                 // 19 ZCL Control Field
                 // 01 ZCL SQN
-                // 41 Commad Id: Get Group Id Response
-                // 01 Total
-                // 00 Start Index
-                // 01 Count
-                // 00 Group Type
-                // 001B Group Id
+                // 41 Commad Id
+                // etc
 
                 $addressMode            = $Command['addressMode'];
                 $targetShortAddress     = $Command['address'];
@@ -2210,26 +2206,23 @@
                 $securityMode           = "02";
                 $radius                 = "1E";
 
-                $zclControlField        = "11";
+                $zclControlField        = "05";
+                $ManfufacturerCode      = "1011"; // inverted
                 $transactionSequence    = "01";
                 $cmdId                  = "10";  // Cmd Proprio Profalux
                 $option                 = "02";  // Je ne touche que le Tilt
-                $Lift                   = "00";  // Not used
-                $Tilt                   = "2D";  // 2D move to 45deg
-                $transitionTime         = "FFFF";
-                // $startIndex             = "00";
-                // $count                  = "01";
-                // $groupId                = reverse_hex($Command['groupId']);
-                // $groupType              = "00";
+                $Lift                   = "00";  // Not used / between 1 and 254 (see CurrentLevel attribute)
+                $Tilt                   = "2D";  // 2D move to 45deg / between 0 and 90 (See CurrentOrentation attribute)
+                $transitionTime         = "FFFF"; // FFFF ask the Tilt to move as fast as possible
 
-                $data2 = $zclControlField . $transactionSequence . $cmdId . $option . $Lift . $Tilt . $transitionTime ;
+                $data2 = $zclControlField . $ManfufacturerCode . $transactionSequence . $cmdId . $option . $Lift . $Tilt . $transitionTime ;
 
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
 
                 $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
                 $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
 
                 $data = $data1 . $data2;
                 // $this->deamonlog('debug', "Data: ".$data." len: ".sprintf("%04s",dechex(strlen( $data )/2)) );
@@ -3484,35 +3477,11 @@
                         break;
                         //----------------------------------------------------------------------------
                     case "moveToLiftAndTiltBSO":
-                         // Pour un get level (level de 0 à 255):
-                         // a=0.00081872
-                         // b=0.2171167
-                         // c=-8.60201639
-                         // level = level * level * a + level * b + c
-
-                         $a = -0.8571429;
-                         $b = 1.8571429;
-                         $c = 0;
-
+                         
                          $fields = preg_split("/[=&]+/", $msg);
                          if (count($fields) > 1) {
                              $parameters = proper_parse_str( $msg );
                          }
-
-                         // $level255 = intval($keywords[1] * 255 / 100);
-                         // $this->deamonlog('debug', 'level255: '.$level255);
-
-                         $inclinaisonSlider = $parameters['Inclinaison'];                // Valeur entre 0 et 100
-                         // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
-
-                         $inclinaisonSliderPourcent = $inclinaisonSlider/100;    // Valeur entre 0 et 1
-
-                         // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
-                         $inclinaisonPourcent = $a*$inclinaisonSliderPourcent*$inclinaisonSliderPourcent+$b*$inclinaisonSliderPourcent+$c;
-                         $inclinaison = $inclinaisonPourcent * 255;
-                         $inclinaison = min( max( round( $inclinaison), 0), 255);
-
-                         $this->deamonlog('debug', '  inclinaison Slider: '.$inclinaisonSlider.' inclinaison calcule: '.$inclinaisonPourcent.' inclinaison envoye: '.$inclinaison);
 
                          $Command = array(
                                           "moveToLiftAndTiltBSO" => "1",
@@ -3521,8 +3490,8 @@
                                           "dest" => $dest,
                                           "address" => $address,
                                           "destinationEndpoint" => "01",
-                                          "inclinaison" => $inclinaison,
-                                          "duration" => $parameters['duration'],
+                                          "inclinaison" => $parameters['Inclinaison'],        // Valeur entre 0 et 90
+                                          "duration" => $parameters['duration'],              // FFFF to have max speed of tilt
                                           );
                         break;
                         //----------------------------------------------------------------------------

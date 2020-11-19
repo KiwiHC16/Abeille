@@ -925,6 +925,13 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
+        function decode0302($dest, $payload, $ln, $qos, $dummy)
+        {
+            // E_SL_MSG_PDM_LOADED = 0x0302
+            // https://zigate.fr/documentation/deplacer-le-pdm-de-la-zigate/
+            $this->deamonlog('debug', $dest.', Type=0302/E_SL_MSG_PDM_LOADED');
+        }
+
         // Zigate Status
         function decode8000($dest, $payload, $ln, $qos, $dummy)
         {

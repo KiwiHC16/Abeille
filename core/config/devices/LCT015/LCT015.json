@@ -55,7 +55,8 @@
       "include38": "2700K",
       "include39": "4000K",
       "include40": "temperatureLight",
-      "include40 2 2": "setTemperatureLight"
+      "include40 2 2": "setTemperatureLight",
+      "include41":  "5000K"
     }
   }
 }

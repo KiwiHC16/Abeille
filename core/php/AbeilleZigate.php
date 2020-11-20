@@ -91,53 +91,9 @@
         return 0;
     }
 
-    /* Send "Get Version" to zgPort to get FW version.
-       Returns: 0=OK, -1=ERROR */
-    function zgGetVersion($zgPort, &$version)
-    {
-        // zgLog("zgGetVersion()");
-        $version = 0;
-        $zgF = fopen($zgPort, "w+"); // Zigate input/output
-        if ($zgF == FALSE) {
-            zgLog("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port " . $zgPort);
-            return -1;
-        }
-
-        zgLog('debug', 'Interrogation de la Zigate sur port '.$zgPort);
-        $fr = zgComposeFrame("0010");
-        $status = zgWrite($zgF, $fr); // Sending "Get Version" command
-        // $status = zgWrite($zgF, "01021010021002101003"); // Sending "Get Version" command
-        $zgMsg = "";
-        if ($status == 0) {
-            $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
-        }
-        if ($status == 0) {
-            $zgMsgType = substr($zgMsg, 0, 4);
-            if ($zgMsgType != "8000") {
-                zgLog('debug', 'Mauvaise réponse. 8000 attendu.');
-                $status = -1;
-            }
-        }
-        if ($status == 0)
-            $status = zgRead($zgF, $zgMsg); // Expecting 8010 'Version list' frame
-        if ($status == 0) {
-            $zgMsgType = substr($zgMsg, 0, 4);
-            if ($zgMsgType != "8010") {
-                zgLog('debug', 'Mauvaise réponse. 8010 attendu.');
-                $status = -1;
-            } else {
-                $version = substr($zgMsg, 14, 4);
-                zgLog('info', 'FW version '.$version);
-            }
-        }
-
-        fclose($zgF); // Close file desc
-        return $status;
-    }
-
-    /* Transcode given 'msg'.
-       Returns: transcoded message. */
-    function zgTranscode($msg)
+    /* Encode given 'msg' and return zigate frame.
+       Returns: proplery encoded zigate frame. */
+    function zgMsgToFrame($msg)
     {
         $msgout = "";
         $msgsize = strlen($msg);
@@ -148,7 +104,7 @@
             else
                 $msgout .= $byte;
         }
-        return $msgout;
+        return "01".$msgout."03";
     }
 
     /* Compose message frame following zigate protocol. */
@@ -176,20 +132,64 @@
 
         $msg = "";
         $msg .= $msgType; // Message type, 2 bytes
-        // zgLog('debug', 'msg3='.$msg);
         $msg .= sprintf("%04X", $payloadLen); // Payload length, 2 bytes
-        // zgLog('debug', 'msg4='.$msg);
         $msg .= sprintf("%02X", $crc); // Checksum, 1 byte
-        // zgLog('debug', 'msg5='.$msg);
         $msg .= $payload; // Payload
         zgLog('debug', 'msg='.$msg);
-        $msg = zgTranscode($msg);
-        // zgLog('debug', 'msg7='.$msg);
+        $frame = zgMsgToFrame($msg);
 
-        return "01".$msg."03";
+        return $frame;
     }
 
-    /* Send "Get Devices List" (cmd 0x0015) to zgPort to get list of known devices.
+    /*
+     * Zigate commands
+     */
+
+    /* Send "Get Version" to zgPort to get FW version.
+       Returns: 0=OK, -1=ERROR */
+       function zgGetVersion($zgPort, &$version)
+       {
+           // zgLog("zgGetVersion()");
+           $version = 0;
+           $zgF = fopen($zgPort, "w+"); // Zigate input/output
+           if ($zgF == FALSE) {
+               zgLog("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port " . $zgPort);
+               return -1;
+           }
+
+           zgLog('debug', 'Interrogation de la Zigate sur port '.$zgPort);
+           $fr = zgComposeFrame("0010");
+           $status = zgWrite($zgF, $fr); // Sending "Get Version" command
+           // $status = zgWrite($zgF, "01021010021002101003"); // Sending "Get Version" command
+           $zgMsg = "";
+           if ($status == 0) {
+               $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
+           }
+           if ($status == 0) {
+               $zgMsgType = substr($zgMsg, 0, 4);
+               if ($zgMsgType != "8000") {
+                   zgLog('debug', 'Mauvaise réponse. 8000 attendu.');
+                   $status = -1;
+               }
+           }
+           if ($status == 0)
+               $status = zgRead($zgF, $zgMsg); // Expecting 8010 'Version list' frame
+           if ($status == 0) {
+               $zgMsgType = substr($zgMsg, 0, 4);
+               if ($zgMsgType != "8010") {
+                   zgLog('debug', 'Mauvaise réponse. 8010 attendu.');
+                   $status = -1;
+               } else {
+                   $version = substr($zgMsg, 14, 4);
+                   zgLog('info', 'FW version '.$version);
+               }
+           }
+
+           fclose($zgF); // Close file desc
+           return $status;
+       }
+
+       /* Send "Get Devices List" (cmd 0x0015) to zgPort to get list of known devices.
        'zgDevices' is an array of known devices.
        Each device is himself an array with the following keys, with addr & ieee UPPER case
            ['id', 'addr', 'ieee', 'power, 'link']

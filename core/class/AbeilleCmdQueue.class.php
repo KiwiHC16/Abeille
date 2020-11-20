@@ -173,37 +173,37 @@
         }
 
         function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
-            $this->deamonlog("debug", "sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
+            $this->deamonlog("debug", "      sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
 
             $i = str_replace( 'Abeille', '', $dest );
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {
-                $this->deamonlog("debug", "  Je ne traite pas cette commande car la zigate est desactivee." );
+                $this->deamonlog("debug", "      Je ne traite pas cette commande car la zigate est desactivee." );
                 return;
             }
             $this->deamonlog("debug", "  i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1), $this->debug['sendCmd']);
             if (config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1) == '-1') {
-                $this->deamonlog("debug", "  Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
+                $this->deamonlog("debug", "      Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
                 return;
             }
 
             if ($dest == "none") {
-                $this->deamonlog("debug", "  Je ne mets pas la commande dans la queue car la dest est none", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "      Je ne mets pas la commande dans la queue car la dest est none", $this->debug['sendCmd']);
                 return; // on ne process pas les commande pour les zigate qui n existe pas.
             }
 
             if (is_null($priority)) {
-                $this->deamonlog("debug", "  priority is null, rejecting the command", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "      priority is null, rejecting the command", $this->debug['sendCmd']);
                 return;
             }
 
             if ($priority < priorityMin) {
-                $this->deamonlog("debug", "  priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
+                $this->deamonlog("debug", "      priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
                 return;
             }
 
             // A chaque retry la priority increase d'un.
             if ($priority > (priorityMax+priorityMax)) {
-                $this->deamonlog("debug", "  priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
+                $this->deamonlog("debug", "      priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
                 return;
             }
 
@@ -225,12 +225,12 @@
                     'shortAddr' => $shortAddr
                 );
 
-                $this->deamonlog("debug", "  Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmd2']);
+                $this->deamonlog("debug", "      Je mets la commande dans la queue: ".$i." - Nb Cmd:".count($this->cmdQueue[$i])." -> ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmd2']);
                 if (count($this->cmdQueue[$i]) > 50) {
-                    $this->deamonlog('info', '  Il y a plus de 50 messages dans le queue de la zigate: '.$i);
+                    $this->deamonlog('info', '      Il y a plus de 50 messages dans le queue de la zigate: '.$i);
                 }
             } else {
-                $this->deamonlog("debug", "  Je recois un message pour une queue qui n est pas valide: ->".$i."<-", $this->debug['sendCmd']);
+                $this->deamonlog("debug", "      Je recois un message pour une queue qui n est pas valide: ->".$i."<-", $this->debug['sendCmd']);
             }
         }
 

@@ -559,7 +559,7 @@ class AbeilleCmdProcess extends debug {
 
     function processCmd($Command) {
 
-        $this->deamonlog("debug", "processCmd(".json_encode($Command).")", $this->debug['processCmd']);
+        $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
 
         if (!isset($Command)) {
             $this->deamonlog('debug', "  Command not set return", $this->debug['processCmd']);
@@ -598,6 +598,43 @@ class AbeilleCmdProcess extends debug {
         }
 
         $dest = $Command['dest'];
+
+
+
+        //---- PDM ------------------------------------------------------------------
+
+        if (isset($Command['PDM']) && $Command['PDM'] == "PDM") {
+
+            if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE") {
+                $cmd = "8300";
+
+                $PDM_E_STATUS_OK = "00";
+                $data = $PDM_E_STATUS_OK;
+                
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                $this->sendCmd($priority,$dest,$cmd,$lenth,$data); 
+            }
+
+            if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_EXISTENCE_RESPONSE") {
+                $cmd = "8208";
+
+                $recordId = $Command['recordId'];
+                
+                $recordExist = "00";
+
+                if ($recordExist == "00" ) {
+                    $size = '0000';
+                    $persistedData = "";
+                }
+                    
+                $data = $recordId . $recordExist . $size;
+                
+                $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+                $this->sendCmd($priority,$dest,$cmd,$lenth,$data); 
+            }
+        }
+
+        //----------------------------------------------------------------------
 
         // En gros 0 normal, 1 RAW mode, 2 Mode hybride
         if (isset($Command['setModeHybride'])) {

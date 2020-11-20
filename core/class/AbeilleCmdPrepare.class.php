@@ -6,12 +6,13 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
     function procmsg( $message ) {
 
-        $this->deamonlog("debug", "procmsg(".json_encode($message).")");
-        // $this->deamonlog("debug", "----------", $this->debug['procmsg2']);
+        $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")");
 
         $topic      = $message->topic;
         $msg        = $message->payload;
         $priority   = $message->priority;
+
+        $this->deamonlog("debug", "  L2 - procmsg(".json_encode($topic)." , ".json_encode($msg)." , ".json_encode($priority).")");
 
         if (sizeof(explode('/', $topic)) != 3) {
             $this->deamonlog("error", "procmsg(). Mauvais format de message reçu.");
@@ -1344,6 +1345,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
                 // Si une string simple
                 if (count($keywords) == 1) {
+                    $this->deamonlog('debug', '  L2 - 1 argument command');
                     $Command = array(
                                      $action => $msg,
                                      "priority" => $priority,
@@ -1351,7 +1353,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 } // Si une command type get http param1=value1&param2=value2
                 if (count($keywords) == 2) {
-                    // $this->deamonlog('debug', '2 arguments command');
+                    $this->deamonlog('debug', '  L2 - 2 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1360,7 +1362,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 4) {
-                    // $this->deamonlog('debug', '4 arguments command');
+                    $this->deamonlog('debug', '  L2 - 4 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1370,7 +1372,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 6) {
-                    // $this->deamonlog('debug', '6 arguments command');
+                    $this->deamonlog('debug', '  L2 - 6 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1381,7 +1383,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 8) {
-                    // $this->deamonlog('debug', '8 arguments command');
+                    // $this->deamonlog('debug', '  L2 - 8 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1393,7 +1395,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 10) {
-                    // $this->deamonlog('debug', '10 arguments command');
+                    // $this->deamonlog('debug', '  L2 - 10 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1406,7 +1408,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 12) {
-                    // $this->deamonlog('debug', '12 arguments command');
+                    // $this->deamonlog('debug', '  L2 - 12 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,

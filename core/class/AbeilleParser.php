@@ -793,12 +793,12 @@
             if ($type == "8102") $param1=$quality;
 
             $fct = "decode".$type;
-            // $this->deamonlog('debug','Calling function: '.$fct);
+            $this->deamonlog('debug','Calling function: '.$fct);
 
             //  if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none' ) == $ExtendedAddress ) {
             //               config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
 
-            $commandAcceptedUntilZigateIdentified = array( "decode8009", "decode8024", "decode8000" );
+            $commandAcceptedUntilZigateIdentified = array( "decode0300", "decode0208", "decode8009", "decode8024", "decode8000" );
 
             // On vérifie que l on est sur la bonne zigate.
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
@@ -925,6 +925,12 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
+
+
+
+
+        // PDM Management
+
         function decode0302($dest, $payload, $ln, $qos, $dummy)
         {
             // E_SL_MSG_PDM_LOADED = 0x0302
@@ -934,10 +940,35 @@
 
         function decode0300($dest, $payload, $ln, $qos, $dummy)
         {
+            // "0300 0001DCDE"
             // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
-            // https://github.com/pipiche38/Domoticz-Zigate-Wiki/blob/master/en-eng/Technical/ZiGate-PDMonHost.md
-            $this->deamonlog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE ------------+++++++++++++****************');
+            $this->deamonlog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
+
+            $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
         }
+
+        function decode0208($dest, $payload, $ln, $qos, $dummy)
+        {
+            // "0208 0003 19001000"
+            // E_SL_MSG_PDM_EXISTENCE_REQUEST = 0x0208
+
+            $id = substr( $payload, 0  , 4);
+
+            $this->deamonlog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
+            
+            $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         // Zigate Status
         function decode8000($dest, $payload, $ln, $qos, $dummy)

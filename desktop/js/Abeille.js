@@ -59,10 +59,10 @@ $('#bt_healthAbeille').on('click', function () {
                           $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');
                           });
 
-$('#bt_getCompleteAbeilleConf').on('click', function () {
-                            $('#md_modal').dialog({title: "{{Support}}"});
-                            $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=getCompleteAbeilleConf').dialog('open');
-                            });
+$('#bt_supportPage').on('click', function () {
+    $('#md_modal').dialog({title: "{{Support}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=supportPage').dialog('open');
+});
 
 $('#bt_networkAbeilleList').on('click', function () {
                                $('#md_modal').dialog({title: "{{Réseau Abeille}}"});
@@ -110,7 +110,7 @@ $('#bt_createRemote1').on('click', function () {
                          $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                          }
                          );
-                          
+
 $('#bt_createRemote2').on('click', function () {
                           console.log("bt_createRemote2");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -126,7 +126,7 @@ $('#bt_createRemote2').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote3').on('click', function () {
                           console.log("bt_createRemote3");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -142,7 +142,7 @@ $('#bt_createRemote3').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote4').on('click', function () {
                           console.log("bt_createRemote4");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -158,7 +158,7 @@ $('#bt_createRemote4').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote5').on('click', function () {
                           console.log("bt_createRemote5");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -174,7 +174,7 @@ $('#bt_createRemote5').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote6').on('click', function () {
                           console.log("bt_createRemote6");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -190,7 +190,7 @@ $('#bt_createRemote6').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote7').on('click', function () {
                           console.log("bt_createRemote7");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -206,7 +206,7 @@ $('#bt_createRemote7').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote8').on('click', function () {
                           console.log("bt_createRemote8");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -222,7 +222,7 @@ $('#bt_createRemote8').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote9').on('click', function () {
                           console.log("bt_createRemote9");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -238,7 +238,7 @@ $('#bt_createRemote9').on('click', function () {
                           $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
                           }
                           );
-                          
+
 $('#bt_createRemote10').on('click', function () {
                           console.log("bt_createRemote");
                           var xmlhttpMQTTSendTimer = new XMLHttpRequest();
@@ -259,7 +259,7 @@ $('#bt_createRemote10').on('click', function () {
    Removes selected equipments in Jeedom DB only. Zigate is untouched. */
    function removeBeesJeedom(zgNb) {
     console.log("removeBeesJeedom(zgNb="+zgNb+")");
-    
+
     eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
 
     /* Any selected ? */
@@ -280,7 +280,7 @@ $('#bt_createRemote10').on('click', function () {
         if (result == false)
             return
 
-        var eqList = Array();    
+        var eqList = Array();
         for (var i = 0; i < eqZigate.length; i++) {
             var eqId = eqZigate[i].id;
             var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;

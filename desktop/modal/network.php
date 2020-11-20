@@ -3,7 +3,7 @@
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
-
+ 
     function displayButtons($nbOfZigates) {
         echo 'Afficher réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
@@ -54,6 +54,7 @@
     $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
 
     sendVarToJS('nodesFromJeedom', $nodes);
+
 ?>
 
 <style>
@@ -377,6 +378,10 @@
                                             $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
                                             $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
 
+					    if (!is_object($sourceEq)) 	continue;		
+					    if (!is_object($destinationEq)) 	continue;		
+					    if (!is_object($nextHopEq)) 	continue;		
+
                                             echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
                                                 . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
                                                 . ') passera par '.$nextHopEq->getObject()->getName() . '-' .$nextHopEq->getName() . ' ('.$nextHopEq->getLogicalId()
@@ -397,16 +402,11 @@
                                         continue; // Empty routing info
                                     $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
                                 }
-                                afficheRouteTable( $routingTable );
+				afficheRouteTable( $routingTable );
                     ?>
                 </div>
 
 <!-- tab fin -->
-
-
-
-
-
 
 
 

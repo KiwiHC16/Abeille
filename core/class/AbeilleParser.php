@@ -2337,7 +2337,7 @@
                 $msg .= ', DataByteList='.pack('H*', substr($payload, 24, hexdec($AttributSize) ) );
                 $msg .= ', [Modelisation]';
             } else {
-                $msg .= ', DataByteList='.substr($payload, 24, hexdec($AttributSize) );
+                $msg .= ', DataByteList='.substr($payload, 24, hexdec($AttributSize)*2 );
             }
             $this->deamonlog('debug', $dest.', Type='.$msg);
 
@@ -2741,7 +2741,7 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = hex2bin(substr($payload, 24, hexdec($AttributSize) ) ); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
+                    $data = hex2bin(substr($payload, 24, hexdec($AttributSize)*2 ) ); 
                 }
             }
 

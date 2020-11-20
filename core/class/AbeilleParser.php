@@ -703,7 +703,7 @@
             if ($type == "8102") $param1=$quality;
 
             $fct = "decode".$type;
-            $this->deamonlog('debug','Calling function: '.$fct);
+            // $this->deamonlog('debug','Calling function: '.$fct);
 
             //  if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none' ) == $ExtendedAddress ) {
             //               config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
@@ -2221,14 +2221,16 @@
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
-                $msg .= ', SQN='            .$SQN
-                        .', Addr='          .$SrcAddr
-                        .', EP='            .$EPoint
-                        .', ClustId='       .$ClusterId
-                        .', AttrId='        .$AttributId
-                        .', AttrStatus='    .$AttributStatus
-                        .', AttrDataType='  .$dataType
-                        .', AttrSize='      .$AttributSize;
+
+            $msg .= ', SQN='            .$SQN
+                    .', Addr='          .$SrcAddr
+                    .', EP='            .$EPoint
+                    .', ClustId='       .$ClusterId
+                    .', AttrId='        .$AttributId
+                    .', AttrStatus='    .$AttributStatus
+                    .', AttrDataType='  .$dataType
+                    .', AttrSize='      .$AttributSize;
+
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
@@ -2639,7 +2641,7 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = hex2bin(substr($payload, 24, $Attribut ) ); 
+                    $data = pack('H*', $Attribut ); 
                 }
             }
 

@@ -2334,10 +2334,10 @@
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
-                $msg .= ', DataByteList='.pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
+                $msg .= ', DataByteList='.pack('H*', substr($payload, 24, hexdec($AttributSize) ) );
                 $msg .= ', [Modelisation]';
             } else {
-                $msg .= ', DataByteList='.substr($payload, 24, (strlen($payload) - 24 - 2));
+                $msg .= ', DataByteList='.substr($payload, 24, hexdec($AttributSize) );
             }
             $this->deamonlog('debug', $dest.', Type='.$msg);
 
@@ -2741,7 +2741,7 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = hex2bin(substr($payload, 24, (strlen($payload) - 24 - 2))); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
+                    $data = hex2bin(substr($payload, 24, hexdec($AttributSize) ) ); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
                 }
             }
 

@@ -163,6 +163,11 @@ function updateConfigDB() {
                 }
             }
         }
+
+        if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
+            config::save( 'blocageTraitementAnnonce', 'Non', 'Abeille' ) ;
+        }
+
         config::save('DbVersion', '20201025', 'Abeille');
     }
 }

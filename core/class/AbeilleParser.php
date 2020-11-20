@@ -295,7 +295,6 @@
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
-
         }
 
         // $SrcAddr = dest / shortaddr
@@ -833,12 +832,9 @@
 
             $msgDecoded = "0100/?";
             $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
+
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
-
-
-
-
 
         // PDM Management
 
@@ -869,17 +865,6 @@
 
             $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         }
-
-
-
-
-
-
-
-
-
-
-
 
         // Zigate Status
         function decode8000($dest, $payload, $ln, $qos, $dummy)
@@ -2805,8 +2790,6 @@
                                  . ', DataByteList='    .substr($payload, 24, (strlen($payload) - 24 - 2));
             }
             $this->deamonlog('debug', $dest.', Type='.$msg);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
             */
 
             // valeur hexadécimale  - type -> function

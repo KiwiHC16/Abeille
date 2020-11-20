@@ -932,6 +932,13 @@
             $this->deamonlog('debug', $dest.', Type=0302/E_SL_MSG_PDM_LOADED');
         }
 
+        function decode0300($dest, $payload, $ln, $qos, $dummy)
+        {
+            // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
+            // https://github.com/pipiche38/Domoticz-Zigate-Wiki/blob/master/en-eng/Technical/ZiGate-PDMonHost.md
+            $this->deamonlog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE ------------+++++++++++++****************');
+        }
+
         // Zigate Status
         function decode8000($dest, $payload, $ln, $qos, $dummy)
         {

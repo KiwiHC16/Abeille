@@ -18,11 +18,10 @@
     }
 
     if (1) {
-        if (1) {
-            $message->topic = 'CmdAbeille1/2317/moveToLiftAndTiltBSO';
+        if (0) {
+            $message->topic = 'CmdAbeille1/25c9/moveToLiftAndTiltBSO';
             $message->payload = 'EP=01&Inclinaison=60&duration=FFFF';
         }  
-
         
         if (0) {
             $message->topic = 'CmdAbeille1/83E4/OnOff';
@@ -32,6 +31,21 @@
         if (0) {
             $message->topic = 'CmdAbeille1/83E4/OnOff';
             $message->payload = 'Action=Toggle&EP=01';
+        }
+
+        if (0) {
+            $message->topic = 'CmdAbeille1/Ruche/reset';
+            $message->payload = 'reset';
+        }
+        
+        if (1) {
+
+            $message->topic = 'CmdAbeille1/Ruche/PDM';
+            $message->payload = 'E_SL_MSG_PDM_HOST_AVAILABLE';
+            $objet->procmsg($message);
+            $objet->processCmdQueueToZigate();
+
+
         }
 
         $objet->procmsg($message);

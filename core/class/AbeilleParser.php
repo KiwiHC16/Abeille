@@ -1538,11 +1538,11 @@
 
             $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', ' [Modelisation] InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
+                $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
             }
             $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', ' [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+                $this->deamonlog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
             }
 
             $data = 'zigbee'.zgGetDevice($profile, $deviceId);
@@ -2220,14 +2220,14 @@
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
-                $msg .= ', SQN='            .$SQN
-                        .', Addr='          .$SrcAddr
-                        .', EP='            .$EPoint
-                        .', ClustId='       .$ClusterId
-                        .', AttrId='        .$AttributId
-                        .', AttrStatus='    .$AttributStatus
-                        .', AttrDataType='  .$dataType
-                        .', AttrSize='      .$AttributSize;
+            $msg .= ', SQN='            .$SQN
+                    .', Addr='          .$SrcAddr
+                    .', EP='            .$EPoint
+                    .', ClustId='       .$ClusterId
+                    .', AttrId='        .$AttributId
+                    .', AttrStatus='    .$AttributStatus
+                    .', AttrDataType='  .$dataType
+                    .', AttrSize='      .$AttributSize;
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
@@ -2638,7 +2638,7 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = hex2bin(substr($payload, 24, hexdec($AttributSize) ) ); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
+                    $data = hex2bin(substr($payload, 24, hexdec($AttributSize) * 2)); // -2 est une difference entre ZiGate et NXP Controlleur pour le LQI.
                 }
             }
 

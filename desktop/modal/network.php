@@ -3,18 +3,17 @@
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
-    
-    function afficheButtons($nbOfZigates) {
+
+    function displayButtons($nbOfZigates) {
         echo 'Afficher réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
-                echo '<a class="btn btn-success displayNodes'       .$i.'                                                                                                                 ">Abeille'.$i.            '</a>';
-                echo '<a class="btn btn-warning refreshNetworkCache'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements."><i class="fa fa-cog"></i></a>';
-                echo '&nbsp;&nbsp;';
+            echo '<a class="btn btn-success displayNodes'.$i.'" style="margin-left:4px">Abeille'.$i.'</a>';
+            echo '<a class="btn btn-warning refreshNetworkCache'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements."><i class="fas fa-sync"></i></a>';
+            echo '&nbsp;&nbsp;';
         }
     }
-
 
     // Last Demon start time
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
@@ -152,9 +151,9 @@
                     {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
                     <br />
                     <div id="div_routingTable">
-                    <?php
-                        afficheButtons($nbOfZigates);
-                    ?>
+                        <?php
+                            displayButtons($nbOfZigates);
+                        ?>
                         <br />
                         <hr>
                         Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
@@ -193,9 +192,9 @@
                 <div id="graph_network" class="tab-pane">
 
                     <br />
-                    
+
                     <?php
-                        afficheButtons($nbOfZigates);
+                        displayButtons($nbOfZigates);
                     ?>
 
                     <table class="table table-bordered table-condensed"
@@ -373,11 +372,11 @@
                                         foreach ( $route as $destination=>$nextHop ) {
                                             if ( $destination == '0000' ) $destination = 'Ruche';
                                             if ( $nextHop == '0000' )     $nextHop = 'Ruche';
-                                            
+
                                             $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, Abeille);
                                             $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
                                             $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
-                                            
+
                                             echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
                                                 . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
                                                 . ') passera par '.$nextHopEq->getObject()->getName() . '-' .$nextHopEq->getName() . ' ('.$nextHopEq->getLogicalId()

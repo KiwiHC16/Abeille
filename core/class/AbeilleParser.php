@@ -26,95 +26,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
-
     include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
-
-    $deviceInfo = array (
-                         'C05E' => array(
-                                         // Lighting devices
-                                         '0000'=>'On/Off light',
-                                         '0010'=>'On/Off plug-in unit',
-                                         '0100'=>'Dimmable light',
-                                         '010A'=>'Proprio Prise Ikea',   // Pas dans le standard mais remonté par prise Ikea
-                                         '0110'=>'Dimmable plug-in unit',
-                                         '0200'=>'Color light',
-                                         '0210'=>'Extended color light',
-                                         '0220'=>'Color temperature light',
-                                         // Conroller devices
-                                         '0800'=>'Color controller',
-                                         '0810'=>'Color scene controller',
-                                         '0820'=>'Non-color controller',
-                                         '0830'=>'Non-color scene controller',
-                                         '0840'=>'Control bridge',
-                                         '0850'=>'On/Off sensor',
-                                         ),
-                         '0104' => array(
-                                         '0000'=>'On/Off Switch',
-                                         '0001'=>'Level Control Switch',
-                                         '0002'=>'On/Off Output',
-                                         '0003'=>'Level Controllable Output',
-                                         '0004'=>'Scene Selector',
-                                         '0005'=>'Configuration Tool',
-                                         '0006'=>'Remote Control',
-                                         '0007'=>'Combined Interface',
-                                         '0008'=>'Range Extender',
-                                         '0009'=>'Mains Power Outlet',
-                                         '000A'=>'Door Lock',
-                                         '000B'=>'Door Lock Controller',
-                                         '000C'=>'Simple Sensor',
-                                         '000D'=>'Consumption Awareness Device',
-
-                                         '0050'=>'Home Gateway',
-                                         '0051'=>'Smart Plug',
-                                         '0052'=>'White Goods',
-                                         '0053'=>'Meter Interface',
-
-                                         // Lighting
-                                         '0100'=>'On/Off Light',
-                                         '0101'=>'Dimmable Light',
-                                         '0102'=>'Color Dimmable Light',
-                                         '0103'=>'On/Off Light Switch',
-                                         '0104'=>'Dimmer Switch',
-                                         '0105'=>'Color Dimmer Switch',
-                                         '0106'=>'Light Sensor',
-                                         '0107'=>'Occupency Sensor',
-
-                                         // Legrand
-                                         '010A'=>'Legrand xxxx',
-
-                                         // Closures
-                                         '0200'=>'Shade',
-                                         '0201'=>'Shade Controller',
-                                         '0202'=>'Window Covering Device',
-                                         '0203'=>'Window Covering Controller',
-
-                                         // HVAC
-                                         '0300'=>'Heating/Cooling Unit',
-                                         '0301'=>'Thermostat',
-                                         '0302'=>'Temperature Sensor',
-                                         '0303'=>'Pump',
-                                         '0304'=>'Pump Controller',
-                                         '0305'=>'Pressure Sensor',
-                                         '0306'=>'Flow Sensor',
-                                         '0307'=>'Mini Split AC',
-
-                                         // Intruder Alarm Systems
-                                         '0400'=>'IAS Control and Indicating Equipment',
-                                         '0401'=>'IAs Ancillary Equipment',
-                                         '0402'=>'IAS Zone',
-                                         '0403'=>'IAS Warning Device',
-
-                                         // From Xiaomi
-                                         '5F01'=>'Xiaomi Temperature',
-
-                                         // From OSRAM investigation
-                                         '0810'=>'OSRAM Switch',
-
-                                         // From Legrand investigation
-                                         '0B04'=>'Electrical Measurement', // Attribut Id: 0x50B - Active Power
-
-                                         ),
-                         );
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -383,7 +295,6 @@
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
-
 
         }
 
@@ -955,7 +866,7 @@
             $id = substr( $payload, 0  , 4);
 
             $this->deamonlog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
-            
+
             $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         }
 
@@ -1019,7 +930,7 @@
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            
+
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -1619,22 +1530,23 @@
             // <Out cluster list: data each entry is uint16_t> -> 4
             // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
 
-            global $deviceInfo;
-
+            $SQN        = substr($payload, 0, 2);
+            $Status     = substr($payload, 2, 2);
             $SrcAddr    = substr($payload, 4, 4);
+            $Len        = substr($payload, 8, 2);
             $EPoint     = substr($payload,10, 2);
             $profile    = substr($payload,12, 4);
             $deviceId   = substr($payload,16, 4);
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
             $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
-                             . ', SQN='         .substr($payload, 0, 2)
-                             . ', Status='      .substr($payload, 2, 2)
+                             . ', SQN='         .$SQN
+                             . ', Status='      .$Status
                              . ', Addr='        .$SrcAddr
-                             . ', Length='      .substr($payload, 8, 2)
+                             . ', Length='      .$Len
                              . ', EP='          .$EPoint
-                             . ', Profile='     .$profile.'/'.$zgGetProfile($profile).')'
-                             . ', DevId='       .$deviceId.' ('.$deviceInfo[$profile][$deviceId] .')'
+                             . ', Profile='     .$profile.'/'.zgGetProfile($profile)
+                             . ', DevId='       .$deviceId.'/'.zgGetDevice($profile, $deviceId)
                              . ', BitField='    .substr($payload,20, 2))
                              . ', [Modelisation]'
                              ;
@@ -1648,7 +1560,7 @@
                 $this->deamonlog('debug', ' [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
             }
 
-            $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
+            $data = 'zigbee'.zgGetDevice($profile, $deviceId);
             if ( strlen( $data) > 1 ) {
                 $this->mqqtPublish($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
             }

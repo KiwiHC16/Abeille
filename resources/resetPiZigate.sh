@@ -4,7 +4,7 @@ NOW=`date +"%Y-%m-%d %H:%M:%S"`
 echo "[${NOW}] Démarrage de '$(basename $0)'"
 
 echo "Vérification de l'installation WiringPi"
-hash gpio 2>/dev/null
+command -v gpio
 if [ $? -ne 0 ]; then
     echo "= ERREUR: Commande 'gpio' manquante !"
     echo "=         Le package WiringPi est probablement mal installé."

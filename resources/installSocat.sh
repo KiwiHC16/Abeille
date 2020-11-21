@@ -18,7 +18,7 @@ fi
 echo "= Ok, package installé."
 
 echo "Vérification finale de 'socat'"
-hash socat 2>/dev/null
+command -v socat
 if [ $? -ne 0 ]; then
     echo "= ERREUR: Commande 'socat' manquante !"
     echo "=         Le package 'socat' semble être mal installé."

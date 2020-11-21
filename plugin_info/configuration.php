@@ -299,7 +299,7 @@
             <div>
                 <p><i>{{La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.}}</i></p>
                 <p><i>{{Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.}}</i></p>
-                <p><i>{{Attention l'accès aux GPIOs ne se fait pas depuis un container sous Docker (si vous savez faire alors donnez moi la combine). Dans ce cas faites les manipulations à la main depuis le host.}}</i></p>
+                <p><i>{{L'accès aux GPIOs peut se faire depuis un container sous Docker, il faut ajouter --device /dev/mem et --cap_add SYS_RAWIO). Dans ce cas, faites les manipulations au lancement du conteneur.}}</i></p>
             </div>
 
             <div class="form-group">

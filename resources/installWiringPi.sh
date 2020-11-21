@@ -39,7 +39,7 @@ fi
 echo "= Ok"
 
 echo "Vérification finale"
-hash gpio 2>/dev/null
+command -v gpio
 if [ $? -ne 0 ]; then
     echo "= ERREUR: Commande 'gpio' manquante !"
     echo "=         Le package WiringPi semble être mal installé."

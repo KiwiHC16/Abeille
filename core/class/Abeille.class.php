@@ -436,7 +436,6 @@ class Abeille extends eqLogic
                         $i++;
                     }
                 }
-            }
         }
         if (($i * 23) > (60 * 15)) {
             message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas A.", "Contacter KiwiHC15 sur le forum");

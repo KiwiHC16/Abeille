@@ -21,7 +21,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
     include_once __DIR__.'/AbeilleLog.php';
 
     logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)

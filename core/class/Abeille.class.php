@@ -30,7 +30,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
     include_once __DIR__.'/AbeilleMsg.php';
     include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
 
@@ -55,7 +55,7 @@
             if ( $IEEE == 'none' ) {
                 $IEEE = $real->getConfiguration('IEEE','none');
             }
-            
+
             // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X
             if ( $destGhost != $destReal ) {
                 if ( $IEEE == 'none' ) {
@@ -387,7 +387,7 @@
                     $topicArray = explode("/", $eqLogic->getLogicalId());
                     $dest = $topicArray[0];
                     $addr = $topicArray[1];
-                    if (strlen($addr) != 4) 
+                    if (strlen($addr) != 4)
                         continue;
                     // echo "Short: " . $topicArray[1];
                     log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr);

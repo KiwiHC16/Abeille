@@ -7,8 +7,14 @@
     /* Returns Zigate message name based on given '$msgType' */
     function zgGetMsgByType($msgType)
     {
-        /* Type and name of zigate messages (mainly those currently unsupported) */
+        /* Type and name of zigate messages */
         $zgMessages = array(
+            "0200" => "Save record request",
+            "0201" => "Load record request",
+            "0202" => "Delete all records",
+            "0300" => "Host PDM available request",
+            "0302" => "PDM loaded",
+
             "8001" => "Log message",
             "8002" => "Data indication",
             "8006" => "Non “Factory new” Restart",
@@ -30,6 +36,9 @@
             "80A2" => "Remove scene response",
             "8110" => "Write attribute response",
             "8140" => "Configure reporting response",
+            "8200" => "Save record request respose",
+            "8201" => "Load record response",
+            "8300" => "Host PDM available response",
             "8401" => "Zone status change notification",
             "8531" => "Complex descriptor response",
         );

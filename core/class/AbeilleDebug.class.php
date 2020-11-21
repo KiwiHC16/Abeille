@@ -1,8 +1,8 @@
 <?php
 
-include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
 
-class debug extends AbeilleTools {
+class AbeilleDebug extends AbeilleTools {
         public $debug = array(
             "cli"                    => 0, // commande line mode or jeedom
             "Checksum"                => 0, // Debug checksum calculation

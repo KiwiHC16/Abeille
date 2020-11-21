@@ -121,7 +121,7 @@
                     <option value="Abeille">{{Abeille}}</option>
                     <option value="Ruche">{{Ruche}}</option>
                     <?php
-                    require_once dirname(__FILE__) . '/../../resources/AbeilleDeamon/lib/Tools.php';
+                    require_once dirname(__FILE__) . '/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
                     $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
                     $selectBox = array();
@@ -144,7 +144,7 @@
                 <img name="icon_visu" src="" width="160" height="200"/>
             </div>
         </div>
-        
+
         <hr>
         <div class="form-group">
                 <label class="col-sm-3 control-label">{{Documentation}}</label><br>

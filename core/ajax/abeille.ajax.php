@@ -44,7 +44,7 @@ try {
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/../class/Abeille.class.php';
     require_once __DIR__.'/../php/AbeilleZigate.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php'; // deamonlogFilter()
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
 
     include_file('core', 'authentification', 'php');
     if (!isConnect('admin')) {

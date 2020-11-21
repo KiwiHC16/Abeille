@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../lib/Tools.php');
+require_once(dirname(__FILE__).'/../lib/AbeilleTools.php');
 require_once dirname(__FILE__).'/../../../../../core/php/core.inc.php';
 
 ob_implicit_flush();
@@ -18,7 +18,7 @@ class fifo {
      */
     public function __construct($file, $mode, $readWrite)
     {
-        if( !file_exists( $file ) ) 
+        if( !file_exists( $file ) )
         {
             print "creating fifo $file for $mode\n";
             if( !posix_mkfifo( $file, $mode ) )
@@ -37,7 +37,7 @@ class fifo {
     function read() {
     // reads a line from a fifo file
         $line = '';
-        do 
+        do
         {
             $c = fgetc( $this->fp );
             if( ($c != '') and ($c != "\n") and !feof( $this->fp ) ) $line .= $c;
@@ -45,7 +45,7 @@ class fifo {
         return $line;
     }
     */
-    
+
     function read() {
         // reads a line from a fifo file
         $readers = array($this->fp);
@@ -66,7 +66,7 @@ class fifo {
         fputs( $this->fp, $data );
         fflush( $this->fp );
     }
-    
+
     function close()
     {
         fclose($this->fp);

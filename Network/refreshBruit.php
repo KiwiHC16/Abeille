@@ -1,16 +1,16 @@
 <?php
-    
+
     /***
-     * 
+     *
      *
      */
-    
+
     include_once dirname(__FILE__) . "/../../../core/php/core.inc.php";
-    include_once("../resources/AbeilleDeamon/lib/Tools.php");
+    include_once("../resources/AbeilleDeamon/lib/AbeilleTools.php");
     include_once("../resources/AbeilleDeamon/includes/config.php");
     include_once("../resources/AbeilleDeamon/includes/fifo.php");
     include_once("../resources/AbeilleDeamon/includes/function.php");
-        
+
     // Je ne filtre pas sur les équipements qur batterie car j ai eu une réponse d'un interrupteur mural xiaomi. En les reveillant ca se trouve ils repondent.
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {

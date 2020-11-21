@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/AbeilleDebug.class.php';
 
-class AbeilleCmdProcess extends debug {
+class AbeilleCmdProcess extends AbeilleDebug {
 
     // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
     function setParamXiaomi($dest,$Command) {
@@ -610,27 +610,27 @@ class AbeilleCmdProcess extends debug {
 
                 $PDM_E_STATUS_OK = "00";
                 $data = $PDM_E_STATUS_OK;
-                
+
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-                $this->sendCmd($priority,$dest,$cmd,$lenth,$data); 
+                $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
             }
 
             if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_EXISTENCE_RESPONSE") {
                 $cmd = "8208";
 
                 $recordId = $Command['recordId'];
-                
+
                 $recordExist = "00";
 
                 if ($recordExist == "00" ) {
                     $size = '0000';
                     $persistedData = "";
                 }
-                    
+
                 $data = $recordId . $recordExist . $size;
-                
+
                 $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-                $this->sendCmd($priority,$dest,$cmd,$lenth,$data); 
+                $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
             }
         }
 
@@ -2490,5 +2490,5 @@ class AbeilleCmdProcess extends debug {
     }
 }
 
-  
+
 ?>

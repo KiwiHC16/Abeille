@@ -24,7 +24,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
     include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
     include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
 
@@ -158,19 +158,8 @@
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
-    class debug {
-        function deamonlog($loglevel = 'NONE', $message = "")
-        {
-            logMessage($loglevel, $message);
-            // if ($this->debug["cli"] ) {
-                // echo "[".date("Y-m-d H:i:s").'][AbeilleParser][DEBUG.BEN] '.$message."\n";
-            // } else {
-                // AbeilleTools::deamonlogFilter( $loglevel, 'Abeille', 'AbeilleParser', $message );
-            // }
-        }
-    }
 
-    class AbeilleParser extends debug {
+    class AbeilleParser  {
         public $queueKeyParserToAbeille = null;
         public $queueKeyParserToCmd = null;
 
@@ -2641,7 +2630,7 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = pack('H*', $Attribut ); 
+                    $data = pack('H*', $Attribut );
                 }
             }
 
@@ -3484,6 +3473,18 @@
                     }
                 }
             }
+        }
+
+        /**
+         * fonction proxy pour rediriger le log vers le logger.
+         *
+         * @param string $level
+         * @param string $message
+         */
+        public function deamonlog(string $level, string $message)
+        {
+            logMessage($level,$message);
+
         }
     } // class AbeilleParser
 

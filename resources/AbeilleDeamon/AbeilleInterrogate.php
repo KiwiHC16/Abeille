@@ -16,8 +16,7 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
-    include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-
+    include_once __DIR__.'/../../../core/php/core.inc.php';
     include_once dirname(__FILE__).'/includes/config.php';
     include_once dirname(__FILE__).'/includes/function.php';
     include_once dirname(__FILE__).'/includes/fifo.php';

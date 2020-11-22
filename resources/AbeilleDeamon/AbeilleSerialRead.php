@@ -22,7 +22,7 @@
         ini_set('log_errors', 'On');
     }
 
-    include_once __DIR__.'/../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/includes/config.php';
     include_once __DIR__.'/includes/function.php';
     include_once __DIR__.'/includes/fifo.php';

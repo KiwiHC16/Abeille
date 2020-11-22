@@ -1,9 +1,17 @@
 <?php
 
 // require_once __DIR__ . '/../../../../../core/php/core.inc.php';
+require_once __DIR__ . '/../../../core/php/AbeilleLog.php';
 
 class AbeilleTools
 {
+
+    const templateDir = __DIR__ . '/../../../core/config/devices/Template/';
+    const devicesDir = __DIR__ . '/../../../core/config/devices/';
+    const configDir = __DIR__ . '/../../../core/config/';
+    const daemonDir = __DIR__ .'/../';
+    const logDir = __DIR__ . "/../../../../../log/";
+
     /**
      * Get Plugin Log Level.
      *
@@ -83,7 +91,7 @@ class AbeilleTools
     public static function getJSonConfigFilebyCmd($cmd)
     {
 
-        $cmdFilename = __DIR__ . '/../../../core/config/devices/Template/' . $cmd . '.json';
+        $cmdFilename = self::templateDir . $cmd . '.json';
 
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename);
@@ -94,7 +102,7 @@ class AbeilleTools
 
         $cmdJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille','error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return array();
         }
 
@@ -108,12 +116,12 @@ class AbeilleTools
     {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
 
-        $deviceFilename = __DIR__ . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
 
         if (!is_file($deviceFilename)) {
             log::add('Abeille', 'error', 'Nouvel équipement \'' . $device . '\' inconnu. Utilisation de la config par défaut. [Modelisation]');
             $device = 'defaultUnknown';
-            $deviceFilename = __DIR__ . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+            $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
         }
 
         $content = file_get_contents($deviceFilename);
@@ -121,8 +129,8 @@ class AbeilleTools
         // Recupere le template master
         $deviceTemplate = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'L\'équipement \'' . $device . '\' a un mauvais fichier JSON.');
-            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content=' . $content);
+            log::add('Abeille','error', 'L\'équipement \'' . $device . '\' a un mauvais fichier JSON.');
+            log::add('Abeille','debug', 'getJSonConfigFilebyDevices(): content=' . $content);
             return;
         }
 
@@ -159,20 +167,20 @@ class AbeilleTools
     public static function getJSonConfigFiles($jsonFile = null)
     {
 
-        $configDir = __DIR__ . '/../../../core/config/';
+        $configDir = self::configDir;
 
         // self::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
         $confFile = $configDir . $jsonFile;
 
         //file exists ?
         if (!is_file($confFile)) {
-            self::deamonlog('error', $confFile . ' not found.');
+            log::add('Abeille','error', $confFile . ' not found.');
             return;
         }
         // is valid json
         $content = file_get_contents($confFile);
         if (!is_json($content)) {
-            self::deamonlog('error', $confFile . ' is not a valid json.');
+            log::add('Abeille','error', $confFile . ' is not a valid json.');
             return;
         }
 
@@ -193,7 +201,7 @@ class AbeilleTools
     public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
     {
 
-        $deviceFilename = __DIR__ . '/../../../core/config/devices/' . $device . '/' . $device . '.json';
+        $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename' . $deviceFilename);
         if (!is_file($deviceFilename)) {
             // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename' . $deviceFilename);
@@ -204,7 +212,7 @@ class AbeilleTools
 
         $deviceJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille','error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return;
         }
 
@@ -235,9 +243,9 @@ class AbeilleTools
     public static function getDeviceNameFromJson($logger = 'Abeille')
     {
         $return = array();
-        $devicesDir = __DIR__ . '/../../../core/config/devices/';
+        $devicesDir = self::devicesDir;
         if (file_exists($devicesDir) == FALSE) {
-            log::add($logger, 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
+            log::add('Abeille','error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
             return $return;
         }
 
@@ -282,7 +290,8 @@ class AbeilleTools
      *
      * @return array
      */
-    public static function getRunningDaemons(): array {
+    public static function getRunningDaemons(): array
+    {
         exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
         return $running;
     }
@@ -352,18 +361,18 @@ class AbeilleTools
     public static function isMissingDaemons($parameters, $running): bool
     {
         //no cron, no start requested
-        if (AbeilleTools::isAbeilleCronRunning()==false) {
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
             return false;
         }
         $found = self::diffExpectedRunningDaemons($parameters, $running);
         $nbProcessExpected = $found['expected'];
         array_pop($found);
         $result = $nbProcessExpected - array_sum($found);
-        log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '. ($result == 0 ? 'False' : 'True') . ', params: ' . implode(',', $parameters) .
+        log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': ' . ($result == 0 ? 'False' : 'True') . ', params: ' . implode(',', $parameters) .
             ', running: ' . implode(',', $running));
         //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
         if ($result == 1) {
-            log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
+            log::add('Abeille','Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
             message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
         }
 
@@ -382,7 +391,7 @@ class AbeilleTools
         //get socat first
         arsort($found);
         array_reverse($found);
-        log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
+        log::add( 'Abeille','debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
@@ -408,23 +417,21 @@ class AbeilleTools
         $nohup = "/usr/bin/nohup";
         $php = "/usr/bin/php";
         //Path not instantiated classes.
-        $daemonDir = __DIR__ . "/../../../core/php/";
+        $daemonDir = self::daemonDir;
         $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
         $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
-        $logDir = __DIR__ . "/../../../../../log/";
+        $logDir = self::logDir;
 
         unset($matches);
         $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
 
         switch ($daemonFile) {
             case 'cmd':
-                $daemonDir = __DIR__ . "/../../../core/class/";
                 $daemonPhp = "AbeilleCmd.php";
                 $logCmd = " >>" . $logDir . "AbeilleCmd.log 2>&1";
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $logCmd;
                 break;
             case 'parser':
-                $daemonDir = __DIR__ . "/../../../core/class/";
                 $daemonPhp = "AbeilleParser.php";
                 $daemonLog = " >>" . $logDir . "AbeilleParser.log 2>&1";
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $daemonLog;

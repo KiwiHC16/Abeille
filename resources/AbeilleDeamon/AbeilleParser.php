@@ -21,12 +21,12 @@
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
-    include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
-    include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
+    include_once __DIR__.'/includes/config.php';
+    include_once __DIR__.'/includes/function.php';
+    include_once __DIR__.'/includes/fifo.php';
+    include_once __DIR__.'/lib/AbeilleTools.php';
+    include_once __DIR__.'/../../core/php/AbeilleLog.php'; // Abeille log features
+    include_once __DIR__.'/../../core/php/AbeilleZigateConst.php'; // Zigate constants
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161

@@ -8,7 +8,7 @@
 // debug: Permet de definir les fonctions que l on veut dans les logs
 // Tools: Caisse a outils de fonctions.
 
-    
+
     include_once __DIR__.'/AbeilleCmdPrepare.class.php';
 
     class AbeilleCmdQueue extends AbeilleCmdPrepare {
@@ -234,17 +234,26 @@
             }
         }
 
-        function writeToDest($f, $dest, $cmd, $len, $datas) {
-            fwrite($f,pack("H*","01"));
-            fwrite($f,pack("H*",$this->transcode($cmd))); //MSG TYPE
-            fwrite($f,pack("H*",$this->transcode($len))); //LENGTH
-            if (!empty($datas)) {
-                fwrite($f,pack("H*",$this->transcode($this->getChecksum($cmd,$len,$datas)))); //checksum
-                fwrite($f,pack("H*",$this->transcode($datas))); //datas
-            } else {
-                fwrite($f,pack("H*",$this->transcode($this->getChecksum($cmd,$len,"00")))); //checksum
+        function writeToDest($f, $dest, $cmd, $len, $datas)
+        {
+            //
+            if (get_resource_type($f)) {
+                fwrite($f, pack("H*", "01"));
+                fwrite($f, pack("H*", $this->transcode($cmd))); //MSG TYPE
+                fwrite($f, pack("H*", $this->transcode($len))); //LENGTH
+                if (!empty($datas)) {
+                    fwrite($f, pack("H*", $this->transcode($this->getChecksum($cmd, $len, $datas)))); //checksum
+                    fwrite($f, pack("H*", $this->transcode($datas))); //datas
+                } else {
+                    fwrite($f, pack("H*", $this->transcode($this->getChecksum($cmd, $len, "00")))); //checksum
+                }
+                fwrite($f, pack("H*", "03"));
             }
-            fwrite($f,pack("H*","03"));
+            else
+            {
+                $this->deamonlog("debug", "      $dest resource non accessible: $cmd non écrit");
+                $this->deamonlog("error", "      $dest resource non accessible: $cmd non écrit");
+            }
         }
 
         function sendCmdToZigate($dest, $cmd, $len, $datas) {

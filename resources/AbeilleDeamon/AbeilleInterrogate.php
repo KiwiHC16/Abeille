@@ -18,11 +18,11 @@
 
     include_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
 
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/config.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once dirname(__FILE__).'/includes/config.php';
+    include_once dirname(__FILE__).'/includes/function.php';
+    include_once dirname(__FILE__).'/includes/fifo.php';
 
-    include_once dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+    include_once dirname(__FILE__).'/lib/AbeilleTools.php';
 
 
     /*

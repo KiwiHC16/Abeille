@@ -440,7 +440,7 @@ class AbeilleTools
                 $daemonPhp = "AbeilleSocat.php";
                 $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
                 $daemonLog = " >>" . $logDir . $daemonPhp . $nb . '.log 2>&1';
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . $daemonParams . $daemonLog;
+                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " .$daemonParams . $daemonLog;
                 break;
             default:
                 $cmd = "No daemon conf for " . $daemonFile;
@@ -457,6 +457,22 @@ class AbeilleTools
             self::checkWifi($zigateNumber);
     }
 
+
+    /**
+     * @param $zigateNumber
+     */
+    public static function checkWifi($zigateNumber){
+        exec("command -v socat", $out, $ret);
+        if ($ret != 0) {
+            log::add('Abeille', 'error', 'socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration');
+            log::add('Abeille', 'debug', 'socat => ' . implode(', ', $out));
+            message::add("Abeille", "Erreur, socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration");
+
+        } else {
+            log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.' L:'.__LINE__. 'Zigate Wifi active trouvée, socat trouvé');
+        }
+
+    }
 
     public static function getMissingDaemons(array $parameters, $running)
     {

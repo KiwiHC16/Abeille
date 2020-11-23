@@ -420,43 +420,41 @@ class AbeilleTools
             case 'cmd':
                 $daemonDir = __DIR__ . "/../../../core/class/";
                 $daemonPhp = "AbeilleCmd.php";
-                $logCmd = " >>" . $logDir . $daemonPhp . ".log 2>&1";
+                $logCmd = " >>" . $logDir . "AbeilleCmd.log 2>&1";
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $logCmd;
                 break;
             case 'parser':
                 $daemonDir = __DIR__ . "/../../../core/class/";
                 $daemonPhp = "AbeilleParser.php";
-                $daemonLog = " >>" . $logDir . $daemonPhp . ".log 2>&1";
+                $daemonLog = " >>" . $logDir . "AbeilleParser.log 2>&1";
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $daemonLog;
                 break;
             case 'serialread':
                 $daemonPhp = "AbeilleSerialRead.php";
                 $daemonParams = 'Abeille' . $nb . ' ' . $param['AbeilleSerialPort' . $nb] . ' ';
-                $daemonLog = $logLevel . " >>" . $logDir . $daemonPhp . $nb . ".log 2>&1";
+                $daemonLog = $logLevel . " >>" . $logDir . "AbeilleSerialRead" . $nb . ".log 2>&1";
                 exec(system::getCmdSudo() . 'chmod 777 ' . $param['AbeilleSerialPort' . $nb] . ' > /dev/null 2>&1');
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
                 break;
             case 'socat':
                 $daemonPhp = "AbeilleSocat.php";
                 $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
-                $daemonLog = " >>" . $logDir . $daemonPhp . $nb . '.log 2>&1';
+                $daemonLog = " >>" . $logDir . "AbeilleSocat" . $nb . '.log 2>&1';
                 $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " .$daemonParams . $daemonLog;
                 break;
             default:
                 $cmd = "No daemon conf for " . $daemonFile;
         }
         return $cmd;
-
     }
 
     public static function checkRequired($type, $zigateNumber)
     {
         if ($type == 'PI')
             self::checkGpio();
-        if ($type == 'WIFI')
+        else if ($type == 'WIFI')
             self::checkWifi($zigateNumber);
     }
-
 
     /**
      * @param $zigateNumber

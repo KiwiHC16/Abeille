@@ -1,6 +1,6 @@
 <?php
 
-/* This file is part of Jeedom.
+    /* This file is part of Jeedom.
      *
      * Jeedom is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,15 @@
      * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
      */
 
-/* Developers debug features */
-$dbgFile = __DIR__ . "/../../tmp/debug.php";
-if (file_exists($dbgFile)) {
-    include_once $dbgFile;
-    /* Dev mode: enabling PHP errors logging */
-    error_reporting(E_ALL);
-    ini_set('error_log', __DIR__ . '/../../../../log/AbeillePHP.log');
-    ini_set('log_errors', 'On');
-}
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        include_once $dbgFile;
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
@@ -589,7 +589,7 @@ class Abeille extends eqLogic
                If standard user, this should be done by installation process (install.php).
                If user based on GIT, this is a work-around */
         $dbVersion = config::byKey('DbVersion', 'Abeille', '');
-        $dbVersionLast = 20201025;
+        $dbVersionLast = 20201122;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v' . $dbVersion . ' < v' . $dbVersionLast . ' => Mise-à-jour');
             updateConfigDB();
@@ -1171,7 +1171,7 @@ class Abeille extends eqLogic
                     $abeille->refresh();
 
                     $done = 1;
-                }
+                    }
 
                 if (!$done) {
                     $cmds = Cmd::byLogicalId('IEEE-Addr');
@@ -1189,7 +1189,7 @@ class Abeille extends eqLogic
                         echo "\n";
                     }
                 }
-            }
+                            }
             return;
         }
 
@@ -1414,46 +1414,43 @@ class Abeille extends eqLogic
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet n existe pas et je recoie une commande IEEE => je vais chercher l objet avec cette IEEE
+        /* If unknown eq and IEEE received, looking for eq with same IEEE to update logicalName & topic */
         // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-        // log::add('Abeille', 'debug', 'Je devrais entrer dans la rechcher' );
         if (!is_object($elogic) && ($cmdId == "IEEE-Addr")) {
-            log::add('Abeille', 'debug', '!objet&IEEE --> Objet n existe pas et je recoie une IEEE, Je lance la recherche');
+            log::add('Abeille', 'debug', 'message(), !objet & IEEE: Recherche de l\'equipement correspondant');
             // 0 : Short Address is aligned with the one received
             // Short : Short Address is NOT aligned with the one received
             // -1 : Error Nothing found
             $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
-            log::add('Abeille', 'debug', '!objet&IEEE --> J ai fini la recherche avec resultat : ' . $ShortFound);
+            log::add('Abeille', 'debug', 'message(), !objet & IEEE: Trouvé='.$ShortFound);
             if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
 
-                $elogic = self::byLogicalId($dest . "/" . $ShortFound, 'Abeille');
-
+                $elogic = self::byLogicalId($dest."/".$ShortFound, 'Abeille');
                 if (!is_object($elogic)) {
-                    log::add('Abeille', 'debug', '!objet&IEEE --> Un objet trouve avec l adresse IEEE mais n est pas sur la bonne zigate. Abeille ne fait rien automatiquement. L utilisateur doit resoudre la situation.');
+                    log::add('Abeille', 'debug', 'message(), !objet & IEEE: L\'équipement ne semble pas sur la bonne zigate. Abeille ne fait rien automatiquement. L\'utilisateur doit résoudre la situation.');
                     return;
                 }
 
-                log::add('Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique");
+                // log::add('Abeille', 'debug', "message(), !objet & IEEE: Adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique");
+                log::add('Abeille', 'debug', "message(), !objet & IEEE: $value correspond à '".$elogic->getName()."'. Mise-à-jour de l'adresse courte $ShortFound vers $addr.");
                 // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
-                message::add("Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique", '');
+                // message::add("Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique", '');
+                message::add("Abeille", "Nouvelle adresse '".$addr."' pour '".$elogic->getName()."'. Mise à jour automatique.");
 
                 // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
-                log::add('Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; Ancien nom: " . $elogic->getName() . ", nouveau nom: " . str_replace($ShortFound, $addr, $elogic->getName()));
-                $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
+                // log::add('Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; Ancien nom: " . $elogic->getName() . ", nouveau nom: " . str_replace($ShortFound, $addr, $elogic->getName()));
+                // $elogic->setName(str_replace($ShortFound, $addr, $elogic->getName()));
 
-                $elogic->setLogicalId($dest . "/" . $addr);
-
-                $elogic->setConfiguration('topic', $dest . "/" . $addr);
-
+                $elogic->setLogicalId($dest."/".$addr);
+                $elogic->setConfiguration('topic', $dest."/".$addr);
                 $elogic->save();
 
                 // Il faut aussi mettre a jour la commande short address
-                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, $dest . "/" . $addr . "/Short-Addr", $addr);
-
+                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr);
             } else {
-                log::add('Abeille', 'debug', '!objet&IEEE --> Je n ai pas trouvé d Abeille qui corresponde, je ne fais rien.');
+                log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde, je ne fais rien.');
             }
-            log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement');
+            // log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement');
             return;
         }
 

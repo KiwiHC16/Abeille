@@ -1,6 +1,6 @@
 <?php
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    require_once dirname(__FILE__).'/../../core/class/Abeille.class.php';
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
+    require_once __DIR__.'/../../core/class/Abeille.class.php';
         
     $zigateIds = array( '1', '2', '3', '4', '5' );
     
@@ -14,8 +14,7 @@
         
         if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false)) {
             echo "added to queue (".queueKeyFormToCmd."): ".json_encode($msgAbeille)."<br>\n";
-        }
-        else {
+        } else {
             echo "could not add message to queue id: ".$queueKeyId."<br>\n";
         }
     }
@@ -368,6 +367,5 @@
     }
     echo "<br>Fin";
     sleep(1);
-    header ("location:../../../../index.php?v=d&m=Abeille&p=Abeille"); //pphil passage du lien en relatif
-
-    ?>
+    header ("location:../../../../index.php?v=d&m=Abeille&p=Abeille");
+?>

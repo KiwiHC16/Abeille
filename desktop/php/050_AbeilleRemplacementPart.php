@@ -7,7 +7,12 @@
     <select name="ghost" >
     <?php
         foreach (Abeille::byType('Abeille',1) as $eq) {
-            echo '<option value="' . $eq->getId() . '">' . $eq->getObject()->getName() . ' -> ' . $eq->getName() . '</option>';
+            if (is_object($eq->getObject())) {
+                echo '<option value="' . $eq->getId() . '">' . $eq->getObject()->getName() . ' -> ' . $eq->getName() . '</option>';
+            }
+            else {
+                echo '<option value="' . $eq->getId() . '">' . '{{Aucun}}' . ' -> ' . $eq->getName() . '</option>';
+            }
         }
     ?>
     </select>
@@ -15,7 +20,12 @@
     <select name="real" >
     <?php
         foreach (Abeille::byType('Abeille',1) as $eq) {
-            echo '<option value="' . $eq->getId() . '">' . $eq->getObject()->getName() . ' -> ' . $eq->getName() . '</option>';
+            if (is_object($eq->getObject())) {
+                echo '<option value="' . $eq->getId() . '">' . $eq->getObject()->getName() . ' -> ' . $eq->getName() . '</option>';
+            }
+            else {
+                echo '<option value="' . $eq->getId() . '">' . '{{Aucun}}' . ' -> ' . $eq->getName() . '</option>';
+            }
         }
     ?>
     </select>

@@ -135,52 +135,6 @@ class Abeille extends eqLogic
         return $return;
     }
 
-    // public static function execShellCmd( $cmdToExec, $text, $_background = true ) {
-    //     if ($GLOBALS['debugKIWI']) echo $text." start\n";
-    //     log::add('Abeille', 'debug', 'Starting '.$text);
-    //     log::remove('Abeille_'.$text);
-    //     log::add('Abeille_'.$text, 'info', $text.' Start');
-    //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/'.$cmdToExec.' >> ' . log::getPathToLog('Abeille_'.$text) . ' 2>&1';
-    //     if ($_background) $cmd .= ' &';
-    //     if ($GLOBALS['debugKIWI']) echo "cmd: ".$cmd . "\n";
-    //     log::add('Abeille_'.$text, 'info', $cmd);
-    //     shell_exec($cmd);
-    //     log::add('Abeille_'.$text, 'info', 'End'.$text);
-    //     if ($GLOBALS['debugKIWI']) echo $text." end\n";
-    // }
-
-    // public static function syncconfAbeille($_background = true) {
-    //     Abeille::execShellCmd( "syncconf.sh", "syncconfAbeille", $_background );
-    // }
-
-    // public static function checkWiringPi($_background = true) {
-    //     $cmdToExec = "checkWiringPi.sh";
-    //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >/dev/null 2>&1';
-    //     exec($cmd, $out, $status);
-    //     return $status; // Return script status (0=OK)
-    // }
-
-    // public static function installWiringPi($_background = true) {
-    //     $cmdToExec = "installWiringPi.sh";
-    //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-    //     exec($cmd, $out, $status);
-    //     return $status; // Return script status (0=OK)
-    // }
-
-    // public static function installTTY($_background = true) {
-    //     $cmdToExec = "installTTY.sh";
-    //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-    //     exec($cmd, $out, $status);
-    //     return $status; // Return script status (0=OK)
-    // }
-
-    // public static function resetPiZiGate($_background = true) {
-    //     $cmdToExec = "resetPiZigate.sh";
-    //     $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >' . log::getPathToLog('AbeilleConfig') . ' 2>&1';
-    //     exec($cmd, $out, $status);
-    //     return $status; // Return script status (0=OK)
-    // }
-
     /* Looking for missing IEEE addresses */
     public static function tryToGetIEEE()
     {
@@ -250,36 +204,6 @@ class Abeille extends eqLogic
                 }
                 else echo "commandIEEE n existe pas !!!!\n";
             }
-
-        // var_dump($tryToGetIEEEArray);
-
-        // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
-        $eqLogicIds = array_rand($tryToGetIEEEArray, 2);
-        // var_dump($eqLogicIds);
-
-        // Pour ces x Abeilles lance l interrogation
-        foreach ($eqLogicIds as $eqLogicId) {
-            echo "Start Loop: " . $eqLogicId . "\n";
-            // echo "Start Loop Detail: ";
-            $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
-            // var_dump($eqLogic);
-            $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
-            if ($commandIEEE_X) {
-                $addrIEEE_X = $commandIEEE_X->execCmd();
-                if (strlen($addrIEEE_X) < 2) {
-                    list($dest, $NE) = explode('/', $eqLogicX->getLogicalId());
-                    if (strlen($NE) == 4) {
-                        if ($eqLogicX->getIsEnable()) {
-                            log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for ' . $NE);
-                            echo 'Demarrage tryToGetIEEE for ' . $NE . "\n";
-                            $cmd = "/usr/bin/nohup php " . __DIR__ . "/AbeilleInterrogate.php " . $dest . " " . $NE . " >/dev/null 2>&1 &";
-                            // echo "Cmd: ".$cmd."\n";
-                            exec($cmd, $out, $status);
-                        } else echo "Je n essaye pas car Abeille inactive.\n";
-                    } else echo "Je n ai pas recuperé l adresse courte !!!\n";
-                } else echo "IEEE superieure à deux carateres !!! :" . $addrIEEE_X . "\n";
-            } else echo "commandIEEE n existe pas !!!!\n";
-        }
     }
 
     public static function updateConfigAbeille($abeilleIdFilter = false)
@@ -470,16 +394,14 @@ class Abeille extends eqLogic
         return;
     }
 
-    public static function cron()
-    {
-        // Cron tourne toutes les minutes
-        // log::add( 'Abeille', 'debug', '----------- Starting cron ------------------------------------------------------------------------------------------------------------------------' );
+        /* Called every 1 min. Jeedom requirement. */
+        public static function cron() {
+            // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
         $param = self::getParameters();
 
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if ($param['AbeilleActiver' . $i] != 'Y')
                 continue; // Zigate disabled
@@ -492,22 +414,25 @@ class Abeille extends eqLogic
 
         $eqLogics = self::byType('Abeille');
 
-        // Rafraichie l etat poll = 1
-        // log::add('Abeille', 'debug', 'Get etat and Level des ampoules');
+            /* Refresh status for equipements which require 1min polling */
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
+                if ($eqLogic->getConfiguration("poll") != "1")
+                    continue; // No 1min polling requirement
+                if ($eqLogic->getIsEnable() == 0)
+                    continue; // Equipment disabled
             list($dest, $address) = explode("/", $eqLogic->getLogicalId());
-            if (strlen($address) == 4) {
-                if ($eqLogic->getConfiguration("poll") == "1") {
-                    log::add('Abeille', 'debug', 'cron(): GetEtat/GetLevel, addr=' . $address);
-                    $i = $i + 1;
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $dest . "/" . $address . "/ReadAttributeRequest&time=" . (time() + ($i * 3)), "EP=" . $eqLogic->getConfiguration('mainEP') . "&clusterId=0006&attributeId=0000");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $dest . "/" . $address . "/ReadAttributeRequest&time=" . (time() + ($i * 3)), "EP=" . $eqLogic->getConfiguration('mainEP') . "&clusterId=0008&attributeId=0000");
-                }
-            }
+                if (strlen($address) != 4)
+                    continue; // Bad address
+
+                log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
+                $mainEP = $eqLogic->getConfiguration('mainEP');
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
+                $i++;
         }
         if (($i * 3) > 60) {
-            message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 minute.", "Contacter KiwiHC15 sur le Forum");
+                message::add("Abeille", "Danger ! Il y a trop de messages à envoyer dans le cron 1 minute.", "Contacter KiwiHC15 sur le forum." );
         }
 
         // Poll Cmd
@@ -563,7 +488,7 @@ class Abeille extends eqLogic
         }
         if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: " . json_encode($count) . ". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
 
-        // log::add( 'Abeille', 'debug', 'Ending cron ------------------------------------------------------------------------------------------------------------------------' );
+            // log::add( 'Abeille', 'debug', 'cron1: Fin ------------------------------------------------------------------------------------------------------------------------' );
     }
 
     public static function deamon_info()

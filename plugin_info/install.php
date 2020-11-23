@@ -16,6 +16,15 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
+
 include_once __DIR__.'/../../../core/php/core.inc.php';
 
 function Abeille_install() {
@@ -164,11 +173,51 @@ function updateConfigDB() {
             }
         }
 
+        config::save('DbVersion', '20201025', 'Abeille');
+    }
+
+    /* Version 20201122 changes:
+       - blocageTraitementAnnonce defaulted to "Non"
+       - Rename all eq names that use short addr to use Jeedom ID instead. */
+    if (intval($dbVersion) < 20201122) {
         if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
             config::save( 'blocageTraitementAnnonce', 'Non', 'Abeille' ) ;
         }
 
-        config::save('DbVersion', '20201025', 'Abeille');
+        $eqLogics = eqLogic::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            $logicId = $eqLogic->getlogicalId();
+            $logicIdArray = explode("/", $logicId);
+            if (!ctype_xdigit($logicIdArray[1]))
+                continue; // Not an hexa string so might be "Ruche"
+            $network = $logicIdArray[0]; // 'AbeilleX'
+            $addr = $logicIdArray[1]; // Get short addr
+            $name = $eqLogic->getName();
+            $id = $eqLogic->getId(); // Get Jeedom ID for this equipment
+            $pos = stripos($name, $addr); // Any short addr in the name ?
+            if ($pos == FALSE) {
+                /* Current short addr no found in name but could it be
+                   one that missed an update so keeping an old short addr ?
+                   So updating only if format is "AbeilleX-YYYY..." which
+                   sounds like the previous default naming. */
+                $l = strlen($network);
+                if (!substr_compare($name, $network, 0, $l)) {
+                    /* Name starts with "AbeilleX" */
+                    $a = substr($name, $l + 1, 4);
+                    if ((strlen($a) == 4) && ctype_xdigit($a)) {
+                        /* 4 hexa digits found. Assuming an old short addr */
+                        $pos = $l + 1;
+                    }
+                }
+            }
+            if ($pos != FALSE) {
+                $name = substr_replace($name, $id, $pos, 4);
+                $eqLogic->setName($name);
+                $eqLogic->save();
+            }
+        }
+
+    //    config::save('DbVersion', '20201122', 'Abeille');
     }
 }
 

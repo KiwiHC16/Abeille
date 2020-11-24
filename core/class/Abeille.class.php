@@ -177,34 +177,36 @@ class Abeille extends eqLogic
             $tryToGetIEEEArray[] = $key;
         }
 
-        //TODO FIX THIS
-            // Pour ces x Abeilles lance l interrogation
-            foreach ($eqLogicIds as $eqLogicId) {
-                echo "Start Loop: ".$eqLogicId."\n";
-                // echo "Start Loop Detail: ";
-                $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
-                // var_dump($eqLogic);
-                $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
-                if ( $commandIEEE_X ) {
-                    $addrIEEE_X = $commandIEEE_X->execCmd();
-                    if (strlen($addrIEEE_X) < 2 ) {
-                        list( $dest, $NE) = explode('/', $eqLogicX->getLogicalId());
-                        if (strlen($NE) == 4) {
-                            if ( $eqLogicX->getIsEnable() ) {
-                                log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
-                                echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                                $cmd = "/usr/bin/nohup php ".__DIR__."/../php/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
-                                // echo "Cmd: ".$cmd."\n";
-                                exec($cmd, $out, $status);
-                            }
-                            else echo "Je n essaye pas car Abeille inactive.\n";
+        // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
+        $eqLogicIds = array_rand( $tryToGetIEEEArray, 2 );
+
+        // Pour ces x Abeilles lance l interrogation
+        foreach ($eqLogicIds as $eqLogicId) {
+            echo "Start Loop: ".$eqLogicId."\n";
+            // echo "Start Loop Detail: ";
+            $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
+            // var_dump($eqLogic);
+            $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
+            if ( $commandIEEE_X ) {
+                $addrIEEE_X = $commandIEEE_X->execCmd();
+                if (strlen($addrIEEE_X) < 2 ) {
+                    list( $dest, $NE) = explode('/', $eqLogicX->getLogicalId());
+                    if (strlen($NE) == 4) {
+                        if ( $eqLogicX->getIsEnable() ) {
+                            log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
+                            echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+                            $cmd = "/usr/bin/nohup php ".__DIR__."/../php/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
+                            // echo "Cmd: ".$cmd."\n";
+                            exec($cmd, $out, $status);
                         }
-                        else echo "Je n ai pas recuperé l adresse courte !!!\n";
+                        else echo "Je n essaye pas car Abeille inactive.\n";
                     }
-                    else echo "IEEE superieure à deux carateres !!! :".$addrIEEE_X."\n";
+                    else echo "Je n ai pas recuperé l adresse courte !!!\n";
                 }
-                else echo "commandIEEE n existe pas !!!!\n";
+                else echo "IEEE superieure à deux carateres !!! :".$addrIEEE_X."\n";
             }
+            else echo "commandIEEE n existe pas !!!!\n";
+        }
     }
 
     public static function updateConfigAbeille($abeilleIdFilter = false)

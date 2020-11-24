@@ -1260,18 +1260,17 @@ class Abeille extends eqLogic
                 $nodeid = $nodeid . "-" . $index;
             }
 
-            message::add("Abeille", "Création d un nouvel objet Abeille (" . $nodeid . ") en cours, dans quelques secondes rafraîchissez votre dashboard pour le voir.", '');
             $elogic = new Abeille();
-            //id
+            $elogic->setEqType_name('Abeille');
+            $elogic->setName("nouveau-".$addr); // Temp name to have it non empty
+            $elogic->save(); // Save to force Jeedom to assign an ID
 
-            $name = $Filter . "-" . $addr;
+            $name = $Filter."-".$elogic->getId();
+            message::add("Abeille", "Nouvel équipement détecté: ".$name.". Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             $elogic->setName($name);
             $elogic->setLogicalId($nodeid);
             $elogic->setObject_id($parameters_info['AbeilleParentId']);
-            $elogic->setEqType_name('Abeille');
-
             $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
-
             $objetConfiguration = $objetDefSpecific["configuration"];
             log::add('Abeille', 'debug', 'Template configuration: ' . json_encode($objetConfiguration));
             $elogic->setConfiguration('modeleJson', $trimmedValue);

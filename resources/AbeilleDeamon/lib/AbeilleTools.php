@@ -9,7 +9,7 @@ class AbeilleTools
     const templateDir = __DIR__ . '/../../../core/config/devices/Template/';
     const devicesDir = __DIR__ . '/../../../core/config/devices/';
     const configDir = __DIR__ . '/../../../core/config/';
-    const daemonDir = __DIR__ .'/../';
+    const daemonDir = __DIR__ . '/../';
     const logDir = __DIR__ . "/../../../../../log/";
 
     /**
@@ -102,7 +102,7 @@ class AbeilleTools
 
         $cmdJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille','error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return array();
         }
 
@@ -129,8 +129,8 @@ class AbeilleTools
         // Recupere le template master
         $deviceTemplate = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille','error', 'L\'équipement \'' . $device . '\' a un mauvais fichier JSON.');
-            log::add('Abeille','debug', 'getJSonConfigFilebyDevices(): content=' . $content);
+            log::add('Abeille', 'error', 'L\'équipement \'' . $device . '\' a un mauvais fichier JSON.');
+            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content=' . $content);
             return;
         }
 
@@ -174,13 +174,13 @@ class AbeilleTools
 
         //file exists ?
         if (!is_file($confFile)) {
-            log::add('Abeille','error', $confFile . ' not found.');
+            log::add('Abeille', 'error', $confFile . ' not found.');
             return;
         }
         // is valid json
         $content = file_get_contents($confFile);
         if (!is_json($content)) {
-            log::add('Abeille','error', $confFile . ' is not a valid json.');
+            log::add('Abeille', 'error', $confFile . ' is not a valid json.');
             return;
         }
 
@@ -212,7 +212,7 @@ class AbeilleTools
 
         $deviceJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille','error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
             return;
         }
 
@@ -245,7 +245,7 @@ class AbeilleTools
         $return = array();
         $devicesDir = self::devicesDir;
         if (file_exists($devicesDir) == FALSE) {
-            log::add('Abeille','error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
+            log::add('Abeille', 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
             return $return;
         }
 
@@ -372,7 +372,7 @@ class AbeilleTools
             ', running: ' . implode(',', $running));
         //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
         if ($result == 1) {
-            log::add('Abeille','Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
+            log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
             message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
         }
 
@@ -391,7 +391,7 @@ class AbeilleTools
         //get socat first
         arsort($found);
         array_reverse($found);
-        log::add( 'Abeille','debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
+        log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
@@ -447,7 +447,7 @@ class AbeilleTools
                 $daemonPhp = "AbeilleSocat.php";
                 $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
                 $daemonLog = " >>" . $logDir . "AbeilleSocat" . $nb . '.log 2>&1';
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " .$daemonParams . $daemonLog;
+                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
                 break;
             default:
                 $cmd = "No daemon conf for " . $daemonFile;
@@ -466,7 +466,8 @@ class AbeilleTools
     /**
      * @param $zigateNumber
      */
-    public static function checkWifi($zigateNumber){
+    public static function checkWifi($zigateNumber)
+    {
         exec("command -v socat", $out, $ret);
         if ($ret != 0) {
             log::add('Abeille', 'error', 'socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration');
@@ -474,7 +475,7 @@ class AbeilleTools
             message::add("Abeille", "Erreur, socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration");
 
         } else {
-            log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.' L:'.__LINE__. 'Zigate Wifi active trouvée, socat trouvé');
+            log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ' L:' . __LINE__ . 'Zigate Wifi active trouvée, socat trouvé');
         }
 
     }
@@ -519,6 +520,16 @@ class AbeilleTools
 
     }
 
+    /**
+     * simple log function, extended in AbeilleDebug
+     *
+     * @param string $loglevel
+     * @param string $message
+     */
+    function deamonlog($loglevel = 'NONE', $message = "")
+    {
+        log::add('Abeille', $loglevel, $message);
+    }
 
 }
 

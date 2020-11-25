@@ -1,12 +1,14 @@
 
 <?php
     /*
-     * Zigate constants
+     * Zigate & zigbee constants
      */
 
     /* Returns Zigate message name based on given '$msgType' */
     function zgGetMsgByType($msgType)
     {
+        $msgType = strtoupper($msgType);
+
         /* Type and name of zigate messages */
         $zgMessages = array(
             "0200" => "Save record request",
@@ -52,6 +54,8 @@
     /* Returns Zigate PDM event desc based on given '$code' */
     function zgGetPDMEvent($code)
     {
+        $code = strtoupper($code);
+
         /* PDM event codes & desc.
            Returned by command 0x8035 */
        $zgPDMEvents = array(
@@ -81,6 +85,8 @@
     /* Returns zigbee profile name based on given 'profId' */
     function zgGetProfile($profId)
     {
+        $profId = strtoupper($profId);
+
         /* List of known zigbee profiles */
         $profilesTable = array (
             '0104'=>'ZigBee Home Automation (ZHA)',
@@ -256,8 +262,29 @@
             "FF02" => "Xiaomi private",
             "FFFF" => "Xiaomi private"
         );
+
         if (array_key_exists($clustId, $clustersTable))
             return $clustersTable[$clustId];
         return "Cluster ".$clustId." inconnu";
+    }
+
+    /* Returns zigate 8000 cmd status based on given '$status' value. */
+    function zgGet8000Status($status)
+    {
+        $status = strtoupper($status);
+
+        /* List of known devices per profile */
+        $statusesTable = array (
+            "00" => "Success",
+            "01" => "Incorrect parameters",
+            "02" => "Unhandled command",
+            "03" => "Command failed",
+            "04" => "Busy", // Node is carrying out a lengthy operation and is currently unable to handle the incoming command
+            "05" => "Stack already started", // No new configuration accepted
+        );
+
+        if (array_key_exists($status, $statusesTable))
+            return $statusesTable[$status];
+        return "Status ".$status." inconnu";
     }
 ?>

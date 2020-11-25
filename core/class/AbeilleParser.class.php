@@ -458,35 +458,6 @@
             return $fields;
         }
 
-        function displayStatus($status) {
-            $return = "";
-            switch ($status) {
-            case "00":
-                $return = "00-(Success)";
-                break;
-            case "01":
-                $return = "01-(Incorrect Parameters)";
-                break;
-            case "02":
-                $return = "02-(Unhandled Command)";
-                break;
-            case "03":
-                $return = "03-(Command Failed)";
-                break;
-            case "04":
-                $return = "04-(Busy (Node is carrying out a lengthy operation and is currently unable to handle the incoming command) )";
-                break;
-            case "05":
-                $return = "05-(Stack Already Started (no new configuration accepted) )";
-                break;
-            default:
-                $return = $status."-(ZigBee Error Code unknown)";
-                break;
-            }
-
-            return $return;
-        }
-
         function protocolDatas($dest, $datas, $qos, $clusterTab, &$LQI) {
             // datas: trame complete recue sur le port serie sans le start ni le stop.
             // 01: 01 Start
@@ -734,7 +705,7 @@
 
             if ($this->debug['8000']) {
                 $this->deamonlog('debug', $dest.', Type=8000/Status'
-                                 . ', Status='.$this->displayStatus($status)
+                                 . ', Status='.$status.'/'.zgGet8000Status($status)
                                  . ', SQN='.$SQN
                                  . ', PacketType='.$PacketType);
             }

@@ -639,16 +639,19 @@
             if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
 
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
+            
+            
+            $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
+            
+            if ($agressif<2) $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
+            if ($agressif<3) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
+            if ($agressif<4) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
+            if ($agressif<5) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$Addr );
 
-            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$Addr );
-
-            $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            if ($agressif<2) $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            if ($agressif<3) $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            if ($agressif<4) $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            if ($agressif<5) $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */

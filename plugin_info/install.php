@@ -178,10 +178,14 @@ function updateConfigDB() {
 
     /* Version 20201122 changes:
        - blocageTraitementAnnonce defaulted to "Non"
+       - agressifTraitementAnnonce defaulted to 4
        - Rename all eq names that use short addr to use Jeedom ID instead. */
     if (intval($dbVersion) < 20201122) {
         if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
             config::save( 'blocageTraitementAnnonce', 'Non', 'Abeille' ) ;
+        }
+        if ( config::byKey( 'agressifTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
+            config::save( 'agressifTraitementAnnonce', '4', 'Abeille' ) ;
         }
 
         $eqLogics = eqLogic::byType('Abeille');

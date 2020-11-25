@@ -356,12 +356,25 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
                 <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Port de communication avec la PiZigate}}">
+                    <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Bloque le traitement des annonces. Peut être necessaire pour certains equipements. Ce rapporter à la documentation Abeille de l'équipement pour voir si cela est nécessaire.}}">
                         <option value="Non" >{{Non}}</option>
                         <option value="Oui"  >{{Oui}}</option>
                     </select>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Agressivité du traitement des annonces, par defaut le laisser sur 4.}}">{{Agressivité traitement Annonces : }}</label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="agressifTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Agressivité sur le traitement des annonces venant des équipements. Nombre de fois qu'Abeille interroge un équipement.}}">
+                        <option value="4">{{4}}</option>
+                        <option value="3">{{3}}</option>
+                        <option value="2">{{2}}</option>
+                        <option value="1">{{1}}</option>
+                    </select>
+                </div>
+            </div>
+            
         </div>
         <br>
         <br>

@@ -2406,6 +2406,14 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
+        if ( isset($Command['getManufacturerName']) && isset($Command['address']) )
+        {
+            // $this->deamonlog('debug','  Get Manufacturer from: '.$Command['address']);
+            //echo "Get Manufacturer from: ".$Command['address']."\n";
+            if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            $this->getParam( $priority, $dest, $Command['address'], "0000", "0004", $Command['destinationEndPoint'], "0000" );
+        }
+        
         if ( isset($Command['getName']) && isset($Command['address']) )
         {
             // $this->deamonlog('debug','  Get Name from: '.$Command['address']);

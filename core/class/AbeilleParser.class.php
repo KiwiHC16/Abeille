@@ -1410,7 +1410,23 @@
             }
         }
 
-        // Active Endpoints Response
+        // 
+        /**
+         * Active Endpoints Response
+         * 
+         * This method process a Zigbeee message coming from a device indicating existing EP
+         *  Will first decode it.
+         *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
+         *  Then request the configuration of the device and even more infos.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing as actions are requested in the execution
+         */
         function decode8045($dest, $payload, $ln, $qos, $dummy)
         {
             $SrcAddr = substr($payload, 4, 4);
@@ -1431,12 +1447,18 @@
                              . ', [Modelisation]'
                             );
 
+            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getLocation&time=".(time()+2),                "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            
+            // Todo: Probably not needed to ask so many times the info if we already ask 4 times while we receive annonce
+            if (0) {
+                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getLocation&time=".(time()+2),                "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
+                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            }
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );

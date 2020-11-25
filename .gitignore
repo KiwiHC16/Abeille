@@ -54,3 +54,7 @@ AbeilleLQI_MapDataAbeille4.json.lock
 AbeilleLQI_MapDataAbeille5.json
 AbeilleLQI_MapDataAbeille5.json.lock
 /tmp/*
+.buildpath
+.project
+.settings/org.eclipse.php.core.prefs
+.settings/org.eclipse.wst.common.project.facet.core.xml

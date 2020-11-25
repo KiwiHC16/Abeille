@@ -3,13 +3,15 @@
     /*
      * AbeilleParserClass
      *
-     * - Pop data from FIFO file
+     * - Read data from FIFO file (FIFO populated by AbeilleSerialRead)
      * - translate them into a understandable message,
-     * - then publish them to mosquitto
+     * - then publish them to Abeille
+     * 
+     * @param argv
+     *      argv contient le niveau de log. typical call: /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDeamon/lib/../AbeilleParser.php debug
+     *  @return
+     *
      */
-
-
-
     class AbeilleParser  {
         public $queueKeyParserToAbeille = null;
         public $queueKeyParserToCmd = null;
@@ -571,7 +573,21 @@
         /* $this->decode functions
          /*--------------------------------------------------------------------------------------------------*/
 
-        /* 004D/Device announce */
+        /**
+         * 004D/Device announce
+         * This method process a Zigbeee annonce message coming from a device
+         *  Will first decode it.
+         *  Send information to Abeille to update Jeedom
+         *  And start the device identification by requesting EP and IEEE to the device.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ?
+         * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
+         * @param $dummy    ?
+         * 
+         * @return          Does return anything as all action are triggered by sending messages in queues
+         */
         function decode004d($dest, $payload, $ln, $qos, $dummy)
         {
             /* < short address: uint16_t>

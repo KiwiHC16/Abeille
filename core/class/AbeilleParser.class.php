@@ -597,7 +597,7 @@
             $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
-            $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
+            // $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
 
             $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE);
 
@@ -745,7 +745,7 @@
 
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-
+return;
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -2081,15 +2081,6 @@
                     .', AttrStatus='    .$AttributStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
-            // 0005: ModelIdentifier
-            // 0010: Piece (nom utilisé pour Profalux)
-            if (($ClusterId=="0000") && (($AttributId=="0005") || ($AttributId=="0010"))) {
-                $msg .= ', DataByteList='.pack('H*', $Attribut);
-                $msg .= ', [Modelisation]';
-            } else {
-                $msg .= ', DataByteList='.$Attribut;
-            }
-            $this->deamonlog('debug', $dest.', Type='.$msg);
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -2190,9 +2181,49 @@
             }
 
             if ($dataType == "42") {
+                // 0005: ModelIdentifier
+                // 0010: Piece (nom utilisé pour Profalux)
+                if (($ClusterId=="0000") && (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010"))) {
+                    $msg .= ', DataByteList='.pack('H*', $Attribut);
+                    $msg .= ', [Modelisation]';
+                    
+                    if ($AttributId=="0004") {
+                        $trimmedValue = pack('H*', $Attribut);
+                        $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                        $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+                        
+                        if (strlen($trimmedValue )>2) 
+                            $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
+                        
+                        $this->deamonlog('debug', $dest.',        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
+
+                        return;
+                    }
+                    if ( ($AttributId=="0005") || ($AttributId=="0010") ) {
+                        $trimmedValue = pack('H*', $Attribut);
+                        $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                        $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+                        
+                        $needManiufacturer = array('TS0121');
+                        if (in_array($trimmedValue,$needManiufacturer)) {
+                            if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
+                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                            }
+                            else {
+                                return;
+                            }
+                        }
+            
+                        $data = $trimmedValue;
+                        $this->deamonlog('debug', $dest.',        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                    }
+                    
+                } 
+
                 // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
                 // Xiaomi Bouton V2 Carré
-                if (($AttributId == "FF01") && ($AttributSize == "001A")) {
+                elseif (($AttributId == "FF01") && ($AttributSize == "001A")) {
                     $this->deamonlog("debug", "  Champ proprietaire Xiaomi (Bouton carré)" );
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));

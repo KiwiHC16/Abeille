@@ -1131,8 +1131,8 @@ class Abeille extends eqLogic
         }
         $dest = $Filter;
 
+        // log all messages except the one related to Time, which overload the log
         if (!in_array($cmdId, array("Time-Time", "Time-TimeStamp", "Link-Quality"))) {
-            // if ( ($cmdId!="Time-Time") && ($cmdId!="Time-TimeStamp") && ($cmdId!="Link-Quality") ) {
             log::add('Abeille', 'debug', "message(topic='" . $message->topic . "', payload='" . $message->payload . "')");
         }
 
@@ -1208,6 +1208,17 @@ class Abeille extends eqLogic
 
         // log::add('Abeille', 'debug', 'I should have the cmd now' );
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        // Si l objet n existe pas et je recoie son ManufacturerName => Je concerve dans l attente de son nom pour la creation.
+        if (!is_object($elogic) && (preg_match("/^0000-[0-9A-Fa-f]*-*0004/", $cmdId)) ) {
+            
+            $trimmedValue = $value;
+            $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+            $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+            
+            $this->ManufacturerNameTable[] = array( $nodeid => array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue ) );
+                
+        }
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie son nom => je créé l objet.
         if (!is_object($elogic)

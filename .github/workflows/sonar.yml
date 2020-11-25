@@ -6,7 +6,7 @@ name: Sonar
 # events but only for the master branch
 on:
     push:
-        branches: [ master, dev ]
+        branches: [ master, sonar, dev ]
     pull_request:
         types: [ opened, synchronize, reopened ]
 
@@ -27,7 +27,7 @@ jobs:
                     fetch-depth: 0
 
             -   name: SonarCloud Scan
-                uses: SonarSource/sonarcloud-github-action@v1.4
+                uses: SonarSource/sonarcloud-github-action@master
                 env:
                     GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_SONAR }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -39,3 +39,8 @@ jobs:
                     args: >
                         -Dfile.encoding=fr_FR.UTF-8
                         -Dsun.jnu.encoding=fr_FR.UTF-8
+                        -Dsonar.sourceEncoding=UTF-8
+                        -Dsonar.organization=edgd1er
+                        -Dsonar.projectKey=edgd1er_Abeille
+                        -Dsonar.verbose=true
+                        -Dsonar.exclusions='images/,.git/**,.idea/**,.github/**,.scannerwork/**'

@@ -23,6 +23,7 @@
                               "8002"                    => 1,
                               "8009"                    => 1, // Get Network Status
                               "8010"                    => 1, // Zigate Version
+                              "8011"                    => 0,
                               "8024"                    => 1, // Network joined-forme
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
@@ -1073,8 +1074,20 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        /* ACK DATA (since FW 3.1b) = ZPS_EVENT_APS_DATA_CONFIRM
-           Note: NACK = 8702 */
+        /**
+         * ACK DATA (since FW 3.1b) = ZPS_EVENT_APS_DATA_CONFIRM Note: NACK = 8702
+         * 
+         * This method process a Zigbeee message coming from a zigate for Ack APS messages
+         *  Will first decode it.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing 
+         */
         function decode8011($dest, $payload, $ln, $qos, $dummy)
         {
             /*
@@ -1088,7 +1101,7 @@
             $DestEndPoint = substr($payload, 6, 2);
             $ClustID = substr($payload, 8, 4);
 
-            $this->deamonlog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID);
+            if ($this->debug['8011']) $this->deamonlog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID);
         }
 
         function decode8014($dest, $payload, $ln, $qos, $dummy)
@@ -1385,7 +1398,6 @@
             }
         }
 
-        // 
         /**
          * Active Endpoints Response
          * 

@@ -2,7 +2,7 @@
   "TS0121__TZ3000_g5xawfcq": {
     "nameJeedom": "Blitzwolf-BW-SHP13",
     "timeout": "60",
-    "Comment": "Faut modele pour pouvoir selectionner le bon icone. Vrai modele est TS0121",
+    "Comment": "",
     "Categorie": {
       "light": "1"
     },
@@ -17,22 +17,24 @@
       "include2": "societe",
       "include3": "SW",
       "include4": "etatLight",
-      "include5": "levelLight",
       "include8": "On",
       "include9": "Off",
       "include10": "Toggle",
-      "include11": "setLevel",
       "include19": "getEtat",
-      "include20": "getLevel",
       "include21": "getManufacturerName",
       "include22": "getModelIdentifier",
       "include23": "getSWBuild",
       "include24": "Identify",
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
-      "include29": "setReportLevel"
+      "include3 2 2 2 2 2": "PuissanceVoltagePrise",
+      "include3 2 2 2 2": "PuissanceCurrentPrise",
+      "include3 2 2 2": "PuissanceLegrandPrise",
+      "include3 2 2 2 3": "CurrentSummationDelivered",
+      "include3 2 2 2 4": "getPlugPower",
+      "include3 2 2 2 4 2": "getPlugA",
+      "include3 2 2 2 4 2 2": "getPlugV"
     }
   }
 }

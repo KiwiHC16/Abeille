@@ -913,17 +913,23 @@
                 return;
             }
 
-            // Routeurs Link Status
-            // 2020-11-25 22:14:06][debug] Abeille1, Type=8005 (decoded but not processed): status: 00 profile:0000 cluster:8005 srcEndPoint:00 destEndPoint:00 sourceAddressMode:02 srcAddress:BC1F destinationAddressMode:02 dstAddress:Ruche
-            if ( ($profile == "0104") && ($cluster == "0006") ) {
+            // 
+            if ( ($profile == "0104") && ($cluster == "0008") ) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
-                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Routeurs Link Status (decoded but not processed)'. $baseLog );
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - (decoded but not processed)'
+                                . $baseLog 
+                                . ', frameCtrlField='.$frameCtrlField
+                                 . ', SQN='.$SQN
+                                 . ', cmd='.$cmd
+                                 . ', value='.$value
+                                );
 
+                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
                 return;
             }
 

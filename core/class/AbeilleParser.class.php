@@ -26,6 +26,8 @@
                               "8011"                    => 0,
                               "8014"                    => 0,
                               "8024"                    => 0, // Network joined-forme
+                              "8043"                    => 1, // Simple descriptor response
+                              "8045"                    => 1,
                               "8048"                    => 0,
                               "8701"                    => 0,
                               "processAnnonce"          => 1,
@@ -1360,6 +1362,21 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
+        /**
+         * Simple descriptor response
+         * 
+         * This method process a Zigbeee message coming from a device indicating it s simple description
+         *  Will first decode it.
+         *  And send to Abeille only the Type of Equipement. Could be used if the model don't existe based on the name.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing as actions are requested in the execution
+         */
         function decode8043($dest, $payload, $ln, $qos, $clusterTab)
         {
             // <Sequence number: uint8_t>   -> 2
@@ -1385,7 +1402,7 @@
             $deviceId   = substr($payload,16, 4);
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
-            $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
+            if ($this->debug['8043']) $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
                              . ', SQN='         .$SQN
                              . ', Status='      .$Status
                              . ', Addr='        .$SrcAddr
@@ -1397,13 +1414,13 @@
                              . ', [Modelisation]'
                              ;
 
-            $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
+            if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
+                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
             }
-            $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
+            if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)));
+                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)));
             }
 
             $data = 'zigbee'.zgGetDevice($profile, $deviceId);
@@ -1439,7 +1456,7 @@
                 $endPointList = $endPointList . '; '.substr($payload, (10 + $i), 2) ;
             }
 
-            $this->deamonlog('debug', $dest.', Type=8045/Active endpoints response'
+            if ($this->debug['8045']) $this->deamonlog('debug', $dest.', Type=8045/Active endpoints response'
                              . ', SQN='             .substr($payload, 0, 2)
                              . ', Status='          .substr($payload, 2, 2)
                              . ', ShortAddr='       .substr($payload, 4, 4)
@@ -1448,18 +1465,10 @@
                              . ', [Modelisation]'
                             );
 
-            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
-            
-            // Todo: Probably not needed to ask so many times the info if we already ask 4 times while we receive annonce
-            if (0) {
-                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getName&time=".(time()+2),                    "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/getLocation&time=".(time()+2),                "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
-                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+6),    "address=".$SrcAddr.'&endPoint='.           $EP );
-            }
+            $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            if ($EP="0B" ) $this->mqqtPublishFctToCmd(      "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd(                "TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
@@ -2240,8 +2249,8 @@
                         if (strlen($trimmedValue )>2) 
                             $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
                         
-                        $this->deamonlog('debug', $dest.',        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
-
+                        $this->deamonlog('debug', $dest.', Type=decode8100_8102        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                        
                         return;
                     }
                     if ( ($AttributId=="0005") || ($AttributId=="0010") ) {
@@ -2249,8 +2258,8 @@
                         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                         
-                        $needManiufacturer = array('TS0121');
-                        if (in_array($trimmedValue,$needManiufacturer)) {
+                        $needManufacturer = array('TS0121');
+                        if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
                                 $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
                                 unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
@@ -2261,7 +2270,7 @@
                         }
             
                         $data = $trimmedValue;
-                        $this->deamonlog('debug', $dest.',        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                        $this->deamonlog('debug', $dest.', Type=decode8100_8102        (Manufactuerer)ModelId value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
                     }
                     
                 } 

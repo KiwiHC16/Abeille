@@ -2261,11 +2261,18 @@
                         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
                         
+                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
                         $needManufacturer = array('TS0121');
                         if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
-                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName']['time'] +10 > time() ) {
+                                    $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                }
+                                else {
+                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                    return;
+                                }
                             }
                             else {
                                 return;
@@ -2888,7 +2895,8 @@
 
             if ( $abeille) {
 
-                // Initial mode of configuration
+                ///@TODO: retirer ce bout de code et garder uniquement: execAtCreationCmdForOneNE
+                // Initial mode of configuration, l ideal serait de retirer ce bout de code et garder uniquement: execAtCreationCmdForOneNE
                 $arr = array(1, 2);
                 foreach ($arr as &$value) {
                     foreach ( $commandeConfiguration as $config ) {

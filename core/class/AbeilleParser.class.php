@@ -19,7 +19,8 @@
         public $debug = array(
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
-                              "8000"                    => 1, // Status
+                              "8000"                    => 0, // Status
+                              "8002"                    => 1,
                               "8009"                    => 1, // Get Network Status
                               "8010"                    => 1, // Zigate Version
                               "8024"                    => 1, // Network joined-forme
@@ -743,6 +744,21 @@
 
         }
 
+        /**
+         * Data indication
+         * 
+         * This method process a Zigbeee message coming from a device which is unknown from zigate, so Abeille as to deal with it.
+         *  Will first decode it.
+         *  Take action base on message contain
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing as actions are requested in the execution
+         */
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
             // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
 
@@ -760,9 +776,7 @@
                                   0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
                                   );
 
-
-            // https://zigate.fr/documentation/commandes-zigate/
-
+            // Decode first based on https://zigate.fr/documentation/commandes-zigate/
             $status                 = substr($payload, 0, 2);
             $profile                = substr($payload, 2, 4);
             $cluster                = substr($payload, 6, 4);
@@ -772,12 +786,11 @@
             $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
+            $payload                = ""; // Will decode later depending on the message
 
-            // $this->deamonlog("debug",$dest.", Type=8002: payload:".$payload);
-            // $this->deamonlog("debug",$dest.", Type=8002: status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
+            $baseLog = "status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress;
 
-            // Partie a revoir completement: Pourquoi avais je ecris ca ?
-
+            // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
                 $SQN                    = substr($payload,26, 2);
                 $status                 = substr($payload,28, 2);
@@ -785,13 +798,14 @@
                 $index                  = hexdec(substr($payload,32, 2));
                 $tableCount             = hexdec(substr($payload,34, 2));
 
-                $this->deamonlog('debug', $dest.', Type=8002/Routing Table Response'
-                                 . ', SQN='.$SQN
-                                 . ', status='.$status
-                                 . ', tableSize='.$tableSize
-                                 . ', index='.$index
-                                 . ', tableCount='.$tableCount
-                                 );
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Routing Table Response'
+                                . $baseLog
+                                . ', SQN='.$SQN
+                                . ', status='.$status
+                                . ', tableSize='.$tableSize
+                                . ', index='.$index
+                                . ', tableCount='.$tableCount
+                                );
 
                 $routingTable = array();
 
@@ -837,16 +851,8 @@
                 $dataType               = substr($payload,38, 2);
                 $value                  = substr($payload,42, 2).substr($payload,40, 2);
 
-                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
-                                 . ', status='.$status
-                                 . ', profile='.$profile
-                                 . ', cluster='.$cluster
-                                 . ', srcEndPoint='.$srcEndPoint
-                                 . ', destEndPoint='.$destEndPoint
-                                 . ', sourceAddressMode='.$sourceAddressMode
-                                 . ', srcAddress='.$srcAddress
-                                 . ', destinationAddressMode='.$destinationAddressMode
-                                 . ', dstAddress='.$dstAddress
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf'
+                                 . $baseLog
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -868,16 +874,8 @@
                 $dataType               = substr($payload,36, 2);
                 $value                  = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
 
-                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
-                                 . ', status='.$status
-                                 . ', profile='.$profile
-                                 . ', cluster='.$cluster
-                                 . ', srcEndPoint='.$srcEndPoint
-                                 . ', destEndPoint='.$destEndPoint
-                                 . ', sourceAddressMode='.$sourceAddressMode
-                                 . ', srcAddress='.$srcAddress
-                                 . ', destinationAddressMode='.$destinationAddressMode
-                                 . ', dstAddress='.$dstAddress
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance prise TS0121'
+                                 . $baseLog
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -898,16 +896,8 @@
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
-                $this->deamonlog('debug', $dest.', Type=8002/Data indication'
-                                 . ', status='.$status
-                                 . ', profile='.$profile
-                                 . ', cluster='.$cluster
-                                 . ', srcEndPoint='.$srcEndPoint
-                                 . ', destEndPoint='.$destEndPoint
-                                 . ', sourceAddressMode='.$sourceAddressMode
-                                 . ', srcAddress='.$srcAddress
-                                 . ', destinationAddressMode='.$destinationAddressMode
-                                 . ', dstAddress='.$dstAddress
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Interrupteur sur pile TS0043 bouton'
+                                 . $baseLog
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -918,7 +908,21 @@
                 return;
             }
 
-            $this->deamonlog("debug",$dest.", Type=8002 (decoded but not processed): status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress);
+            // Routeurs Link Status
+            // 2020-11-25 22:14:06][debug] Abeille1, Type=8005 (decoded but not processed): status: 00 profile:0000 cluster:8005 srcEndPoint:00 destEndPoint:00 sourceAddressMode:02 srcAddress:BC1F destinationAddressMode:02 dstAddress:Ruche
+            if ( ($profile == "0104") && ($cluster == "0006") ) {
+
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
+                $value                  = substr($payload,32, 2);
+
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Routeurs Link Status (decoded but not processed)'. $baseLog );
+
+                return;
+            }
+
+            if ($this->debug["8002"]) $this->deamonlog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog);
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {

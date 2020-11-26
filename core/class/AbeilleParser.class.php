@@ -17,8 +17,8 @@
         public $queueKeyParserToCmd = null;
 
         public $debug = array(
-                              "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
+
                               "8000"                    => 0, // Status
                               "8002"                    => 0,
                               "8009"                    => 0, // Get Network Status
@@ -30,11 +30,14 @@
                               "8045"                    => 1,
                               "8048"                    => 0,
                               "8701"                    => 0,
+                              
+                              "cleanUpNE"               => 1,
+                              "configureNE"             => 0,
+                              "getNE"                   => 0,
+                              "processActionQueue"      => 1,
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
-                              "cleanUpNE"               => 1,
-                              "Serial"                  => 1,
-                              "processActionQueue"      => 1,
+                              
                               );
 
         // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
@@ -3249,7 +3252,6 @@
             if ( $this->debug['8701'] ) $this->deamonlog('debug', $dest.', Type='.$msg);
         }
 
-        /* 8702/APS data confirm fail */
         /**
          * 8702/APS data confirm fail
          * This method process ????
@@ -3355,6 +3357,14 @@
         // Gestion des annonces
         // ***********************************************************************************************
 
+        /**
+         * getNE
+         * This method send all command needed to the NE to get its state.
+         * 
+         * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * 
+         * @return          Doesn't return anything as all action are triggered by sending messages in queues
+         */
         function getNE( $short )
         {
             $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery'  );
@@ -3367,9 +3377,8 @@
                     foreach ( $getStates as $getState ) {
                         $cmd = $abeille->getCmd('action', $getState);
                         if ( $cmd ) {
-                            $this->deamonlog('debug', 'Type=fct; getNE cmd: '.$getState);
+                            if ( $this->debug['getNE'] ) $this->deamonlog('debug', 'Type=fct; getNE cmd: '.$getState);
                             $cmd->execCmd();
-                            // sleep(0.5);
                         }
                     }
                 }
@@ -3384,8 +3393,16 @@
             }
         }
 
+        /**
+         * configureNE
+         * This method send all command needed to the NE to configure it.
+         * 
+         * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * 
+         * @return          Doesn't return anything as all action are triggered by sending messages in queues
+         */
         function configureNE( $short ) {
-            $this->deamonlog('debug', 'Type=fct; ===> Configure NE Start');
+            if ( $this->debug['configureNE'] ) $this->deamonlog('debug', 'Type=fct; ===> Configure NE Start');
 
             $commandeConfiguration = array( 'BindShortToZigateBatterie',            'setReportBatterie', 'spiritSetReportBatterie',
                                            'BindToZigateEtat',                      'setReportEtat',
@@ -3410,12 +3427,11 @@
                     foreach ( $commandeConfiguration as $config ) {
                         $cmd = $abeille->getCmd('action', $config);
                         if ( $cmd ) {
-                            $this->deamonlog('debug', 'Type=fct; ===> Configure NE cmd: '.$config);
+                            if ( $this->debug['configureNE'] ) $this->deamonlog('debug', 'Type=fct; ===> Configure NE cmd: '.$config);
                             $cmd->execCmd();
-                            //sleep(0.5);
                         }
                         else {
-                            $this->deamonlog('debug', 'Type=fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it');
+                            if ( $this->debug['configureNE'] ) $this->deamonlog('debug', 'Type=fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it');
                         }
                     }
                 }
@@ -3424,7 +3440,7 @@
                 self::execAtCreationCmdForOneNE($short);
             }
 
-            $this->deamonlog('debug', 'Type=fct; ===> Configure NE End');
+            if ( $this->debug['configureNE'] ) $this->deamonlog('debug', 'Type=fct; ===> Configure NE End');
         }
 
         function processActionQueue() {

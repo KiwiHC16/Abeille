@@ -20,7 +20,7 @@
                               "AbeilleParserClass"      => 0,  // Mise en place des class
 
                               "8000"                    => 0, // Status
-                              "8002"                    => 0, // Unknown messages to Zigate
+                              "8002"                    => 1, // Unknown messages to Zigate. Mode Hybrid.
                               "8009"                    => 0, // Get Network Status
                               "8010"                    => 0, // Zigate Version
                               "8011"                    => 0, // ACK DATA
@@ -791,7 +791,7 @@
             $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
-            $payload                = ""; // Will decode later depending on the message
+            // $payload              // Will decode later depending on the message
 
             $baseLog = "status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress;
 
@@ -855,8 +855,8 @@
                 $succes                 = substr($payload,36, 2);
                 $dataType               = substr($payload,38, 2);
                 $value                  = substr($payload,42, 2).substr($payload,40, 2);
-
-                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf'
+                
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
                                  . $baseLog
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
@@ -2275,7 +2275,7 @@
                         $needManufacturer = array('TS0121');
                         if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName']['time'] +10 > time() ) {
+                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
                                     $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
                                     unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
                                 }

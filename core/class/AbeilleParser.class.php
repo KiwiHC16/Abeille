@@ -20,11 +20,14 @@
                               "cli"                     => 0, // commande line mode or jeedom
                               "AbeilleParserClass"      => 0,  // Mise en place des class
                               "8000"                    => 0, // Status
-                              "8002"                    => 1,
-                              "8009"                    => 1, // Get Network Status
-                              "8010"                    => 1, // Zigate Version
+                              "8002"                    => 0,
+                              "8009"                    => 0, // Get Network Status
+                              "8010"                    => 0, // Zigate Version
                               "8011"                    => 0,
-                              "8024"                    => 1, // Network joined-forme
+                              "8014"                    => 0,
+                              "8024"                    => 0, // Network joined-forme
+                              "8048"                    => 0,
+                              "8701"                    => 0,
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
                               "cleanUpNE"               => 1,
@@ -1104,6 +1107,21 @@
             if ($this->debug['8011']) $this->deamonlog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID);
         }
 
+        /**
+         * “Permit join” status
+         * 
+         * This method process a Zigbeee message coming from a zigate findicating the Join Permit Status
+         * Will first decode it.
+         * Send the info to Abeille to update ruche command
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing 
+         */
         function decode8014($dest, $payload, $ln, $qos, $dummy)
         {
             // “Permit join” status
@@ -1114,11 +1132,11 @@
 
             $data = substr($payload, 0, 2);
 
-            $this->deamonlog('debug', $dest.', Type=8014/Permit join status response: PermitJoinStatus='.$data);
+            if ($this->debug['8011']) $this->deamonlog('debug', $dest.', Type=8014/Permit join status response: PermitJoinStatus='.$data);
             if ($data == "01")
-                $this->deamonlog('info', 'Zigate'.substr($dest, 7, 1).' en mode INCLUSION');
+            if ($this->debug['8011']) $this->deamonlog('info', 'Zigate'.substr($dest, 7, 1).' en mode INCLUSION');
             else
-                $this->deamonlog('info', 'Zigate'.substr($dest, 7, 1).': FIN du mode inclusion');
+            if ($this->debug['8011']) $this->deamonlog('info', 'Zigate'.substr($dest, 7, 1).': FIN du mode inclusion');
 
             $SrcAddr = "Ruche";
             $ClusterId = "permitJoin";
@@ -1451,14 +1469,29 @@
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
         }
 
-        /* 8048/Leave indication */
+        /**
+         * 8048/Leave indication
+         * 
+         * This method process a Zigbeee message coming from a device indicating Leaving
+         *  Will first decode it.
+         *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
+         *  Then request the configuration of the device and even more infos.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ? 
+         * @param $qos      ?
+         * @param $dummy    ?
+         * 
+         * @return          Nothing as actions are requested in the execution
+         */
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
             $IEEE = substr($payload, 0, 16);
             $RejoinStatus = substr($payload, 16, 2);
 
             $msgDecoded = '8048/Leave indication, ExtAddr='.$IEEE.', RejoinStatus='.$RejoinStatus;
-            $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
+            if ($this->debug['8048']) $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             /*
             $cmds = Cmd::byLogicalId('IEEE-Addr');
@@ -3180,8 +3213,20 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
 
-        /* 0x8701/Router Discovery Confirm
-           Warning: potential swap between statuses. */
+        
+        /**
+         * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.
+         * This method process ????
+         *  Will first decode it.
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ?
+         * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
+         * @param $dummy    ?
+         * 
+         * @return          Does return anything as all action are triggered by sending messages in queues
+         */
         function decode8701($dest, $payload, $ln, $qos, $dummy)
         {
             // NWK Code Table Chap 10.2.3 from JN-UG-3113
@@ -3196,7 +3241,7 @@
                    .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
                    .', Addr='.$Addr;
-            $this->deamonlog('debug', $dest.', Type='.$msg);
+            if ( $this->debug['8701'] )$this->deamonlog('debug', $dest.', Type='.$msg);
         }
 
         /* 8702/APS data confirm fail */

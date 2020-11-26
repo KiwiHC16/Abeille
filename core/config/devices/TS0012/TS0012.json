@@ -1,0 +1,31 @@
+{
+  "TS0012": {
+    "nameJeedom": "Zemismart tactile 2gang sans neutre",
+    "timeout": "60",
+    "Comment": "",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "5ceosfqs766sgdfzsddsddzze5d44",
+      "icone": "TS0002",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etatCharge0",
+      "include4 2": "etatCharge1",
+      "include5": "On",
+      "include5 2": "On1",
+      "include6": "Off",
+      "include6 2": "Off1",
+      "include7": "Toggle",
+      "include7 2": "Toggle1",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier"
+    }
+  }
+}

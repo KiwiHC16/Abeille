@@ -619,15 +619,11 @@
             
             $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
             
-            if ($agressif<2) $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
-            if ($agressif<3) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
-            if ($agressif<4) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
-            if ($agressif<5) $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+6), "address=".$Addr );
-
-            if ($agressif<2) $this->actionQueue[] = array( 'when'=>time()+1, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            if ($agressif<3) $this->actionQueue[] = array( 'when'=>time()+2, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            if ($agressif<4) $this->actionQueue[] = array( 'when'=>time()+4, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
-            if ($agressif<5) $this->actionQueue[] = array( 'when'=>time()+6, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            for ($i = 0; $i < $agressif; $i++) {
+                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE", 'parm2'=>"Addr", 'parm3'=>$IEEE );
+            }
+            
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -3241,10 +3237,24 @@
                    .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
                    .', Addr='.$Addr;
-            if ( $this->debug['8701'] )$this->deamonlog('debug', $dest.', Type='.$msg);
+            if ( $this->debug['8701'] ) $this->deamonlog('debug', $dest.', Type='.$msg);
         }
 
         /* 8702/APS data confirm fail */
+        /**
+         * 8702/APS data confirm fail
+         * This method process ????
+         *  Will first decode it.
+         *  Send the info to Ruche
+         * 
+         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $payload  Parameter sent by the device in the zigbee message
+         * @param $ln       ?
+         * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
+         * @param $dummy    ?
+         * 
+         * @return          Does return anything as all action are triggered by sending messages in queues
+         */
         function decode8702($dest, $payload, $ln, $qos, $dummy)
         {
             global $allErrorCode;
@@ -3257,7 +3267,7 @@
             // <seq number: uint8_t>
             $status = substr($payload, 0, 2);
 
-            $this->deamonlog('debug', $dest.', Type=8702/APS Data Confirm Fail'
+            if ( $this->debug['8701'] ) $this->deamonlog('debug', $dest.', Type=8702/APS Data Confirm Fail'
                              . ', Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                              . ', SrcEP='.substr($payload, 2, 2)
                              . ', DestEP='.substr($payload, 4, 2)

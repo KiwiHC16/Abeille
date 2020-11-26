@@ -20,16 +20,16 @@
                               "AbeilleParserClass"      => 0,  // Mise en place des class
 
                               "8000"                    => 0, // Status
-                              "8002"                    => 0,
+                              "8002"                    => 0, // Unknown messages to Zigate
                               "8009"                    => 0, // Get Network Status
                               "8010"                    => 0, // Zigate Version
-                              "8011"                    => 0,
-                              "8014"                    => 0,
+                              "8011"                    => 0, // ACK DATA
+                              "8014"                    => 0, // Permit Join
                               "8024"                    => 0, // Network joined-forme
                               "8043"                    => 1, // Simple descriptor response
-                              "8045"                    => 1,
-                              "8048"                    => 0,
-                              "8701"                    => 0,
+                              "8045"                    => 1, //
+                              "8048"                    => 0, //
+                              "8701"                    => 0, //
                               
                               "cleanUpNE"               => 1,
                               "configureNE"             => 0,
@@ -1417,19 +1417,29 @@
                              . ', [Modelisation]'
                              ;
 
-            if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
-            for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
+            if ($Status=="00") {
+                if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
+                for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
+                    if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
+                }
+                if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
+                for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
+                    if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)));
+                }
+
+                $data = 'zigbee'.zgGetDevice($profile, $deviceId);
+                if ( strlen( $data) > 1 ) {
+                    $this->mqqtPublish($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
+                }
             }
-            if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
-            for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)));
+            elseif ($Status=="83") {
+                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] Simple Descriptor Not Active');
+            }
+            else {
+                if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] Simple Descriptor status inconnu.');
             }
 
-            $data = 'zigbee'.zgGetDevice($profile, $deviceId);
-            if ( strlen( $data) > 1 ) {
-                $this->mqqtPublish($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
-            }
+
         }
 
         /**

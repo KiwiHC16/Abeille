@@ -1534,6 +1534,27 @@ class Abeille extends eqLogic
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        // Si l objet exist et on recoie une MACCapa
+        // e.g. Un NE renvoie son annonce
+        
+        if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
+
+            $AC = 0b00000100;
+            $Rx = 0b00001000;
+
+            log::add('Abeille', 'debug', 'MACCapa-MACCapa;' . $value . '; saved into eqlogic');
+            
+            $elogic->setConfiguration('MACCapa', $value);
+            if ( (base_convert( $value, 16, 2 ) & base_convert( $AC, 16, 2 ))>0 ) $elogic->setConfiguration('AC_Power', 1);      else $elogic->setConfiguration('AC_Power', 0);
+            if ( (base_convert( $value, 16, 2 ) & base_convert( $Rx, 16, 2 ))>0 ) $elogic->setConfiguration('RxOnWhenIdle', 1);  else $elogic->setConfiguration('RxOnWhenIdle', 0);
+            $elogic->save();
+            $elogic->refresh();
+
+            return;
+        }
+        
+
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour
         if (is_object($elogic) && is_object($cmdlogic)) {
             /* Traitement particulier pour les batteries */

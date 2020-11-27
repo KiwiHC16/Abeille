@@ -136,13 +136,18 @@ class Abeille extends eqLogic
         return $return;
     }
 
-    /* Looking for missing IEEE addresses */
+    /**
+     * Looking for missing IEEE addresses
+     * Will fetch information from zigbee network to get all missing IEEE
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function tryToGetIEEE()
     {
         log::add('Abeille', 'debug', 'Recherche des adresses IEEE manquantes.');
         $tryToGetIEEEArray = array();
         $eqLogics = Abeille::byType('Abeille');
-        // var_dump($eqLogics);
+
         foreach ($eqLogics as $key => $eqLogic) {
             if ($eqLogic->getIsEnable() != 1) {
                 log::add('Abeille', 'debug', '  Eq \'' . $eqLogic->getLogicalId() . '\' désactivé => ignoré');

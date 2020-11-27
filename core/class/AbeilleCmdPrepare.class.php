@@ -61,6 +61,21 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     );
                     break;
                     //----------------------------------------------------------------------------
+                case "AnnonceManufacturer":
+                        if (strlen($msg) == 2) {
+                            // $this->deamonlog('info', 'Preparation de la commande annonce pour EP');
+                            $Command = array(
+                                "ReadAttributeRequest" => "1",
+                                "priority" => $priority,
+                                "dest" => $dest,
+                                "address" => $address,
+                                "clusterId" => "0000",
+                                "attributeId" => "0004",
+                                "EP" => $msg,
+                            );
+                        }
+                    break;
+                    //----------------------------------------------------------------------------
                 case "Annonce":
                     if (strlen($msg) == 2) {
                         // $this->deamonlog('info', 'Preparation de la commande annonce pour EP');

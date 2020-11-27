@@ -70,16 +70,29 @@
 
     if ( (300<=$test) && ($test<400) ) {
         if ($test==300) {
+            echo "Test Cron function\n";
+            Abeille::cron();
+        }
+        if ($test==301) {
             echo "Test Cron15 function\n";
             Abeille::cron15();
         }
-        if ($test==301) {
+        if ($test==302) {
             echo "Test CronHourly function\n";
             Abeille::cronHourly();
         }
-        if ($test==302) {
+        if ($test==303) {
             echo "Test CronDaily function\n";
             Abeille::cronDaily();
+        }
+
+        if ($test==310) {
+            echo "Test getIEEE\n";
+            var_dump( Abeille::getIEEE('Abeille1/B529') );
+        }
+        if ($test==311) {
+            echo "Test getEqFromIEEE\n";
+            var_dump( Abeille::getEqFromIEEE('842E14FFFE1396F5') );
         }
     }
 ?>

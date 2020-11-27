@@ -229,21 +229,45 @@ class Abeille extends eqLogic
      */
     public static function pollingCmd($period)
     {
-        foreach ($AbeilleCmd::searchConfiguration('Polling', 'Abeille') as $key => $cmd) {
+        foreach (AbeilleCmd::searchConfiguration('Polling', 'Abeille') as $key => $cmd) {
             if ($cmd->getConfiguration('Polling') == $period) {
                 $cmd->execute();
             }
         }
     }
 
+    /**
+     * getIEEE
+     * get IEEE from the eqLogic
+     * 
+     * @param   $address    logicalId of the eqLogic
+     * 
+     * @return              Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function getIEEE($address) {
-        if (strlen(Abeille::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-            return Abeille::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
+        if (strlen(self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
+            return self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
         } else {
-            return AbeilleCmd::byEqLogicIdAndLogicalId(Abeille::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
+            return AbeilleCmd::byEqLogicIdAndLogicalId(self::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
         }
     }
 
+    /**
+     * getEqFromIEEE
+     * get eqLogic from IEEE
+     * 
+     * @param   $IEEE    IEEE of the device
+     * 
+     * @return           eq with this IEEE or Null if not found
+     */
+    public static function getEqFromIEEE($IEEE) {
+        foreach (self::searchConfiguration('IEEE','Abeille') as $eq ) {
+            if ($eq->getConfiguration('IEEE') == $IEEE) {
+                return $eq;
+            }
+        }
+        return null;
+    }
     /**
      * cronDaily
      * Called by Jeedom every days.
@@ -1087,7 +1111,7 @@ class Abeille extends eqLogic
     public static function message($message)
     {
 
-        // log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+        log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
 
         $topicArray = explode("/", $message->topic);
         if (sizeof($topicArray) != 3) {
@@ -1196,28 +1220,11 @@ class Abeille extends eqLogic
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
-
-        // log::add('Abeille', 'debug', 'Looking for nodeId: '.$nodeid );
         $elogic = self::byLogicalId($nodeid, 'Abeille');
-
-        // log::add('Abeille', 'debug', 'Looking for cmd of nodeId: '.$cmdId );
         if (is_object($elogic)) {
             $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $cmdId);
         }
 
-        // log::add('Abeille', 'debug', 'I should have the cmd now' );
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet n existe pas et je recoie son ManufacturerName => Je concerve dans l attente de son nom pour la creation.
-        if (!is_object($elogic) && (preg_match("/^0000-[0-9A-Fa-f]*-*0004/", $cmdId)) ) {
-            
-            $trimmedValue = $value;
-            $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
-            $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            
-            $this->ManufacturerNameTable[] = array( $nodeid => array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue ) );
-                
-        }
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie son nom => je créé l objet.
         if (!is_object($elogic)
@@ -1469,6 +1476,7 @@ class Abeille extends eqLogic
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie une commande => je drop la cmd
         // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
+        /*
         if (!is_object($elogic)) {
             log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
             // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
@@ -1478,6 +1486,7 @@ class Abeille extends eqLogic
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
             return;
         }
+        */
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet exist et on recoie une IEEE
@@ -1534,8 +1543,7 @@ class Abeille extends eqLogic
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet exist et on recoie une MACCapa
-        // e.g. Un NE renvoie son annonce
-        
+        // e.g. Un NE renvoie son annonce    
         if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
 
             $AC = 0b00000100;

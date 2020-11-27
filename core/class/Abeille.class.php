@@ -320,6 +320,14 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------');
     }
 
+    /**
+     * cron15
+     * Called by Jeedom every 15 minutes.
+     * Will send a message Annonce to equipement to refresh TimeOut status
+     * Will execute all action cmd needed to refresh some info command
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function cron15()
     {
 
@@ -345,52 +353,39 @@ class Abeille extends eqLogic
         $eqLogics = Abeille::byType('Abeille');
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
-            $enabled = $eqLogic->getIsEnable();
-            if ($enabled == 0)
-                continue; // Equipment disabled
-            if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
-                $topicArray = explode("/", $eqLogic->getLogicalId());
-                $dest = $topicArray[0];
-                $addr = $topicArray[1];
-                if (strlen($addr) != 4)
-                    continue;
-                // echo "Short: " . $topicArray[1];
-                log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr);
-                // Ca devrait être le fonctionnement normal
-                $mainEP = $eqLogic->getConfiguration("mainEP");
-                if (strlen($mainEP) > 1) {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
-                    $i++;
-                }
+            $poll = 0;
+            
+            // Equipment enabled ?
+            if (!$eqLogic->getIsEnable())
+                continue; 
+            
+            // We don t take virtual eqLogic like Remote Control. eqLogic existe by not the real device.
+            list($dest,$addr) = explode("/", $eqLogic->getLogicalId());
+            if (strlen($addr) != 4)
+                continue;
+
+            if ( $eqLogic->getConfiguration("RxOnWhenIdle",'none') == 1 ) 
+                $poll = 1;
+            
+            if ( strlen($eqLogic->getConfiguration("battery_type",'')) == 0 )
+                $poll += 10;
+            
+            if ( $eqLogic->getConfiguration("poll",'none') == "15" )
+                $poll += 100;                
+                
+            if ($poll>0) {
+                log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr.' Poll criteria: '.$poll);
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP",'01'));
+                $i++;
             }
         }
+
         if (($i * 23) > (60 * 15)) {
             message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas A.", "Contacter KiwiHC15 sur le forum");
         }
 
-        // Rafraichie l etat poll = 15
-        log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements nécessitant un polling.');
-        $i = 0;
-        foreach ($eqLogics as $eqLogic) {
-            $enabled = $eqLogic->getIsEnable();
-            if ($enabled == 0)
-                continue; // Equipment disabled
-            $dest = explode("/", $eqLogic->getLogicalId())[0];
-            $address = explode("/", $eqLogic->getLogicalId())[1];
-            if (strlen($address) != 4)
-                continue; // Incorrect address
-            if ($eqLogic->getConfiguration("poll") == "15") {
-                log::add('Abeille', 'debug', 'cron15(): GetEtat/GetLevel adresse ' . $address);
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $dest . "/" . $address . "/ReadAttributeRequest&time=" . (time() + ($i * 13)), "EP=" . $eqLogic->getConfiguration('mainEP') . "&clusterId=0006&attributeId=0000");
-                $i++;
-            }
-        }
-        if (($i * 13) > (60 * 15)) {
-            message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas B.", "Contacter KiwiHC16 sur le forum");
-        }
-
-        // Poll Cmd
-        self::pollingCmd("cron15");
+        // Execute Action Cmd to refresh Info command
+        // self::pollingCmd("cron15");
 
         log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
 

@@ -66,4 +66,11 @@
 
         
     }
+
+    if ( (300<=$test) && ($test<400) ) {
+        if ($test==300) {
+            echo "Test Cron15 function\n";
+            Abeille::cron15();
+        }
+    }
 ?>

@@ -1425,6 +1425,13 @@
                              ;
 
             if ($Status=="00") {
+                // Envoie l info a Abeille
+                $ClusterId = "SimpleDesc";
+                $AttributId = "DeviceDescription";
+                $data = zgGetDevice($profile, $deviceId);
+                $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+                
+                // Decode le message dans les logs
                 if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
                 for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
                     if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
@@ -1445,8 +1452,6 @@
             else {
                 if ($this->debug['8043']) $this->deamonlog('debug', '  [Modelisation] Simple Descriptor status inconnu.');
             }
-
-
         }
 
         /**

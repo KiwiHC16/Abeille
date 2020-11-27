@@ -340,29 +340,29 @@ class Abeille extends eqLogic
             log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
         }
 
-            log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements sur secteur.');
-            /* TODO: We should interrogate only if eq itself did not send anything since a while */
-            $eqLogics = Abeille::byType('Abeille');
-            $i = 0;
-            foreach ($eqLogics as $eqLogic) {
-                $enabled = $eqLogic->getIsEnable();
-                if ($enabled == 0)
-                    continue; // Equipment disabled
-                if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
-                    $topicArray = explode("/", $eqLogic->getLogicalId());
-                    $dest = $topicArray[0];
-                    $addr = $topicArray[1];
-                    if (strlen($addr) != 4)
-                        continue;
-                    // echo "Short: " . $topicArray[1];
-                    log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr);
-                    // Ca devrait être le fonctionnement normal
-                    $mainEP = $eqLogic->getConfiguration("mainEP");
-                    if (strlen($mainEP) > 1) {
-                        Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
-                        $i++;
-                    }
+        log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements sur secteur.');
+        /* TODO: We should interrogate only if eq itself did not send anything since a while */
+        $eqLogics = Abeille::byType('Abeille');
+        $i = 0;
+        foreach ($eqLogics as $eqLogic) {
+            $enabled = $eqLogic->getIsEnable();
+            if ($enabled == 0)
+                continue; // Equipment disabled
+            if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
+                $topicArray = explode("/", $eqLogic->getLogicalId());
+                $dest = $topicArray[0];
+                $addr = $topicArray[1];
+                if (strlen($addr) != 4)
+                    continue;
+                // echo "Short: " . $topicArray[1];
+                log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr);
+                // Ca devrait être le fonctionnement normal
+                $mainEP = $eqLogic->getConfiguration("mainEP");
+                if (strlen($mainEP) > 1) {
+                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
+                    $i++;
                 }
+            }
         }
         if (($i * 23) > (60 * 15)) {
             message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas A.", "Contacter KiwiHC15 sur le forum");

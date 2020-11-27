@@ -882,5 +882,15 @@
     "display": {
       "forceReturnLineAfter": "1"
     }
+  },
+  "SystemMessage": {
+    "name": "SystemMessage",
+    "order": 28,
+    "isHistorized": "0",
+    "isVisible": "1",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": ""
   }
 }

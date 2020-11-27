@@ -1757,3 +1757,340 @@ class Abeille extends eqLogic
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// La suite is Used for test
+// en ligne de comande =>
+// "php Abeille.class.php 1" to run the script to create any of the item listed in array L1057
+// "php Abeille.class.php 2" to run the script to create a ruche object
+// "php Abeille.class.php" to parse the file and verify syntax issues.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if (isset($argv[1])) {
+    $debugKIWI = $argv[1];
+} else {
+    $debugKIWI = 0;
+}
+
+if ($debugKIWI != 0) {
+    echo "Debut Abeille.class.php test mode\n";
+    $message = new stdClass();
+
+    switch ($debugKIWI) {
+
+        // Creation des objets sur la base des modeles pour verifier la bonne creation dans Abeille
+        case "1":
+            $items = AbeilleTools::getDeviceNameFromJson('Abeille');
+            $parameters_info = Abeille::getParameters();
+            //problem icon creation
+            foreach ($items as $item) {
+                $name = str_replace(' ', '.', $item);
+                $message->topic = substr($parameters_info['AbeilleTopic'], 0, -1) . "Abeille/$name/0000-0005";
+                $message->payload = $item;
+                Abeille::message($message);
+                sleep(2);
+            }
+            break;
+
+        // Demande la creation de la ruche
+        case "2":
+            $message->topic = "CmdRuche/Ruche/CreateRuche";
+            $message->payload = "ttyUSB0";
+            Abeille::message($message);
+            break;
+
+        // Verifie qu on recupere les IEEE pour les remplacer dans les commandes
+        case "3":
+            $ruche = new Abeille();
+            $command = new AbeilleCmd();
+
+            // Recupere IEEE de la Ruche/ZiGate
+            $rucheId = $ruche->byLogicalId('Abeille/Ruche', 'Abeille')->getId();
+            echo 'Id pour abeille Ruche: ' . $rucheId . "\n";
+
+            $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
+            echo 'IEEE pour  Ruche: ' . $rucheIEEE . "\n";
+
+            // $currentCommandId = $this->getId();
+            // $currentObjectId = $this->getEqLogic_id();
+            $currentObjectId = 284;
+            echo 'Id pour current abeille: ' . $currentObjectId . "\n";
+
+            $commandIEEE = $command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
+            // print_r( $command->execCmd() );
+            echo 'IEEE pour current abeille: ' . $commandIEEE . "\n";
+
+            // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+            // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+            // echo "\n";
+            // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+
+            $request = str_replace('#addrIEEE#', "'" . $commandIEEE . "'", $request);
+            $request = str_replace('#ZiGateIEEE#', "'" . $rucheIEEE . "'", $request);
+
+            break;
+
+        // Testing Dependancy info
+        case "4":
+            $ruche = new Abeille();
+
+            // echo "Testing Dependancy info\n";
+            // var_dump( $ruche::getDependencyInfo() );
+
+            echo "Testing deamon info\n";
+            var_dump($ruche::deamon_info());
+            break;
+
+        // Cherche l objet qui a une IEEE specifique
+        case "5":
+            // Info ampoue T7
+            $lookForIEEE = "000B57fffE490C2A";
+            $checkShort = "2096";
+
+            if (0) {
+                $abeilles = Abeille::byType('Abeille');
+                // var_dump( $abeilles );
+
+                foreach ($abeilles as $num => $abeille) {
+                    //var_dump( $abeille );
+                    // var_dump( $abeille->getCmd('Info', 'IEEE-Addr' ) );
+                    $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
+                    if ($cmdIEEE) {
+                        // var_dump( $cmd );
+
+                        if ($cmdIEEE->execCmd() == $lookFor) {
+                            echo "Found it\n";
+                            $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
+                            if ($cmdShort) {
+                                echo $cmdShort->execCmd() . " ";
+                                if ($cmdShort->execCmd() == $check) {
+                                    echo "Success ";
+
+                                    return 1;
+                                } else {
+                                    echo "Pas success du tout ";
+
+                                    return 0;
+                                }
+                            }
+                        }
+                        echo $cmdIEEE->execCmd() . "\n-----\n";
+                    }
+                }
+
+                return $cmd;
+            } else {
+                Abeille::fetchShortFromIEEE($lookForIEEE, $checkShort);
+            }
+
+            break;
+
+        // Ask Model Identifier to all equipement without battery info, those equipement should be awake
+        case "6":
+            log::add('Abeille', 'debug', 'Ping routers to check Online status');
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                // echo "Battery: ".$collectBattery = $eqLogic->getStatus("battery")."\n";
+                // echo "Battery: ".$collectBattery = $eqLogic->getConfiguration("battery_type")." - ";
+                if (strlen($eqLogic->getConfiguration("battery_type")) == 0) {
+                    $topicArray = explode("/", $eqLogic->getLogicalId());
+                    $addr = $topicArray[1];
+                    if (strlen($addr) == 4) {
+                        echo "Short: " . $topicArray[1];
+                        Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/" . $addr . "/Annonce", "Default");
+                    }
+
+                }
+                echo "\n";
+            }
+            break;
+
+        // Check Inclusion status
+        case "7":
+            echo "Check inclusion status\n";
+            echo Abeille::checkInclusionStatus(Abeille::getParameters()['AbeilleSerialPort1']);
+
+            break;
+
+        // Check cleanup
+        case "8":
+            echo "Check cleanup\n";
+            Abeille::deamon_start_cleanup();
+            break;
+
+        // Affichage Commandes
+        case "9":
+            // echo "Test Affichage\n";
+            //  toggleAffichageNetwork
+            //  toggleAffichageTime
+            //  toggleAffichageAdditionalCommand
+
+            // Abeille::CmdAffichage( "affichageNetwork", "toggle" );
+            Abeille::CmdAffichage("affichageNetwork", "N");
+            Abeille::CmdAffichage("affichageTime", "N");
+            Abeille::CmdAffichage("affichageCmdAdd", "N");
+
+            break;
+
+        // Test jeeObject::all() function
+        case "10":
+            // $object = jeeObject::rootObject()->getId();
+            $object = jeeObject::all();
+            print_r($object);
+            break;
+
+        case "11":
+            Abeille::syncconfAbeille(false);
+            break;
+
+        case "12":
+            $cmds = Cmd::byLogicalId('IEEE-Addr');
+            foreach ($cmds as $cmd) {
+                if ($cmd->execCmd() == '00158D0001A66CA3') {
+                    $abeille = $cmd->getEqLogic();
+                    $abeille->setIsEnable(0);
+                    $abeille->save();
+                    $abeille->refresh();
+                }
+                echo "\n";
+            }
+            break;
+
+        // Envoie un message a Abeille
+        case "13":
+            $message->topic = "Abeille1/92e9/0001-01-0021";
+            $message->payload = "33";
+            Abeille::message($message);
+            break;
+
+        case "14":
+            Abeille::updateConfigAbeille();
+            break;
+
+        case "15":
+            $abeilles = Abeille::byType('Abeille');
+            foreach ($abeilles as $abeilleId => $abeille) {
+                // var_dump($abeille->getCmd());
+                // var_dump($abeille);
+                echo $abeille->getId();
+                return;
+            }
+            break;
+
+        case "16":
+            Abeille::cron15();
+            break;
+
+        case "17":
+            // On verifie le cron
+            var_dump(cron::byClassAndFunction('Abeille', 'deamon'));
+            echo "Is Object: " . is_object(cron::byClassAndFunction('Abeille', 'deamon')) . "\n";
+            echo "running: " . cron::byClassAndFunction('Abeille', 'deamon')->running() . "\n";
+            break;
+
+        case "18":
+            Abeille::deamon();
+            break;
+
+        case "19":
+            Abeille::deamon_start();
+            break;
+
+        case "20":
+            Abeille::cronDaily();
+            break;
+
+        case "21":
+            var_dump(Abeille::getParameters());
+            break;
+
+        case "22":
+            echo "Debut case 22\n";
+            $from = "Abeille1";
+            $to = "Abeille3";
+            $abeilles = Abeille::byType('Abeille');
+            foreach ($abeilles as $abeilleId => $abeille) {
+                // var_dump($abeille->getCmd());
+                // var_dump($abeille);
+                echo $abeille->getId() . "-> " . $abeille->getLogicalId() . "\n";
+                if (preg_match("/^" . $from . "\//", $abeille->getLogicalId())) {
+                    echo "to process: " . str_replace($from, $to, $abeille->getLogicalId()) . "\n";
+                    $abeille->setLogicalId(str_replace($from, $to, $abeille->getLogicalId()));
+
+                    echo "Name: " . $abeille->getName() . " - ";
+                    $abeille->setName(str_replace($from, $to, $abeille->getName()));
+                    echo "Name: " . $abeille->getName() . "\n";
+
+                    echo "Conf: " . $abeille->getConfiguration('topic') . " - ";
+                    $abeille->setConfiguration('topic', str_replace($from, $to, $abeille->getConfiguration('topic')));
+                    echo "Conf: " . $abeille->getConfiguration('topic') . "\n";
+
+                    $abeille->save();
+                }
+            }
+            echo "\n";
+            break;
+        case "23":
+            Abeille::tryToGetIEEE();
+            break;
+        case "24":
+            // Debug:   log::level::Abeille    {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"} => 100 / debug
+            // Default: log::level::Abeille    {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"} => 100 / debug
+            // Info:    log::level::Abeille    {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"} => 200 / info
+            echo log::getLogLevel('Abeille') . "\n";
+            echo log::convertLogLevel(log::getLogLevel('Abeille')) . "\n";
+
+            break;
+        case "25":
+            // Test message management
+            message::add("Abeille", "Test5.", "Contactez KiwiHC16 sur le Forum.");
+            break;
+        case "26":
+            // Test message management
+            $addr = "2317";
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/" . $addr . "/managementNetworkUpdateRequest", "");
+            break;
+        case "27":
+            // Test message management
+            $addr = "df3b";
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/" . $addr . "/Mgmt_Rtg_req", "");
+            break;
+        case "28":
+            $cmds = AbeilleCmd::searchConfiguration('Polling', 'Abeille');
+            var_dump($cmds);
+            break;
+        case "29":
+            $cmds = AbeilleCmd::searchConfigurationEqLogic(579, 'PollingOnCmdChange', 'action');
+            var_dump($cmds);
+            break;
+        case "30":
+            // Replace a cmd by an other
+            jeedom::replaceTag(array('#17009#' => '#17251#'));
+            break;
+        case "31":
+            //Remove an eq
+            Abeille::byLogicalId('Abeille1/C359', 'Abeille', 0)->remove();
+            break;
+        case "32":
+            Abeille::replaceGhost(588, 601);
+            break;
+        case "33":
+
+            break;
+        case "34":
+            // Test Bind
+            // 00158D0001ECBCBB <- zigate
+            // 00124B0022292CF1 <- Touch
+            // 00124B002242A288 <- Temp
+
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0001&reportToAddress=00158D0001ECBCBB");
+
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0402&reportToAddress=00158D0001ECBCBB");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/setReport", "targetEndpoint=01&ClusterId=0402&AttributeId=0000&AttributeType=20&MaxInterval=3500");
+
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/bindShort", "targetExtendedAddress=00124B002242A288&targetEndpoint=01&ClusterId=0405&reportToAddress=00158D0001ECBCBB");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityUserCmd, "CmdAbeille1/7f56/setReport", "targetEndpoint=01&ClusterId=0405&AttributeId=0000&AttributeType=20&MaxInterval=3500");
+            break;
+    } // switch
+
+    echo "Fin Abeille.class.php test mode\n";
+}

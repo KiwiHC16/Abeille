@@ -621,6 +621,11 @@
 
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
             
+            // If this IEEE is already in Abeille we stop the process of creation in Abeille, but we send IEEE and Addr to update Addr if needed.
+            if (Abeille::getEqFromIEEE($IEEE)) {
+                $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+                return;
+            }
             
             $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
             

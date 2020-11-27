@@ -2636,13 +2636,14 @@
             $this->decode8100_8102("8102", $dest, $payload, $ln, $qos, $quality);
         }
 
-        // function decode8110($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.', Type=8110/Write Attribute Response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
+        function decode8110($dest, $payload, $ln, $qos, $dummy)
+        {
+            $this->deamonlog('debug', $dest.', Type=8110/Write Attribute Response (Decoded but not processed yet)'
+                        //    . ': Dest='.$dest
+                        //    . ', Level=0x'.substr($payload, 0, 2)
+                        //    . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  
+                         );
+        }
 
         function decode8120($dest, $payload, $ln, $qos, $dummy)
         {
@@ -2653,7 +2654,7 @@
             // <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
 
-            $this->deamonlog('debug', $dest.', Type=8120/Configure Reporting response (decoded but not Processed)'
+            $this->deamonlog('debug', $dest.', Type=8120/Configure Reporting response (Decoded but not processed yet)'
                              . ', SQN='             .substr($payload, 0, 2)
                              . ', SrcAddr='         .substr($payload, 2, 4)
                              . ', EndPoint='        .substr($payload, 6, 2)
@@ -2669,14 +2670,15 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
-        // function decode8140($dest, $payload, $ln, $qos, $dummy)
-        // {
+        function decode8140($dest, $payload, $ln, $qos, $dummy)
+        {
             // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
-            // $this->deamonlog('debug', $dest.', Type=8140/Configure Reporting response (ignoré)'
-                             // . ': Dest='.$dest
-                             // . ', Level=0x'.substr($payload, 0, 2)
-                             // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))   );
-        // }
+            $this->deamonlog('debug', $dest.', Type=8140/Configure Reporting response (Decoded but not processed yet)'
+                            // . ': Dest='.$dest
+                            // . ', Level=0x'.substr($payload, 0, 2)
+                            // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  
+                             );
+        }
 
         // Codé sur la base des messages Xiaomi Inondation
         function decode8401($dest, $payload, $ln, $qos, $dummy)

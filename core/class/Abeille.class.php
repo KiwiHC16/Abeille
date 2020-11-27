@@ -392,9 +392,19 @@ class Abeille extends eqLogic
         return;
     }
 
-        /* Called every 1 min. Jeedom requirement. */
-        public static function cron() {
-            // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
+    /**
+     * cron15
+     * Called by Jeedom every 1 minutes.
+     * Pull Zigate to keep esplink open
+     * Polling 1 minute sur etat et level
+     * Refresh health information
+     * Refresh inclusion state
+     * Exec Cmd action which are needed to refresh cmd info
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function cron() {
+        // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
         $param = self::getParameters();
 
         // https://github.com/jeelabs/esp-link
@@ -407,27 +417,27 @@ class Abeille extends eqLogic
                 continue; // Serial port undefined
 
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille" . $i . "/Ruche/getVersion&time=" . (time() + 20), "Version");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille" . $i . "/Ruche/getNetworkStatus&time=" . (time() + 24), "getNetworkStatus");
+            // beille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille" . $i . "/Ruche/getNetworkStatus&time=" . (time() + 24), "getNetworkStatus");
         }
 
         $eqLogics = self::byType('Abeille');
 
-            /* Refresh status for equipements which require 1min polling */
+        /* Refresh status for equipements which require 1min polling */
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration("poll") != "1")
-                    continue; // No 1min polling requirement
-                if ($eqLogic->getIsEnable() == 0)
-                    continue; // Equipment disabled
+            if (!$eqLogic->getIsEnable())
+                continue; // Equipment disabled
+            if ($eqLogic->getConfiguration("poll") != "1")
+                continue; // No 1min polling requirement
+            
             list($dest, $address) = explode("/", $eqLogic->getLogicalId());
-                if (strlen($address) != 4)
-                    continue; // Bad address
+            if (strlen($address) != 4)
+                continue; // Bad address, needed for virtual device
 
-                log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
-                $mainEP = $eqLogic->getConfiguration('mainEP');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
-                $i++;
+            log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP','01')."&clusterId=0006&attributeId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP','01')."&clusterId=0008&attributeId=0000");
+            $i++;
         }
         if (($i * 3) > 60) {
                 message::add("Abeille", "Danger ! Il y a trop de messages à envoyer dans le cron 1 minute.", "Contacter KiwiHC15 sur le forum." );
@@ -443,17 +453,12 @@ class Abeille extends eqLogic
         //$eqLogics = self::byType('Abeille');
 
         foreach ($eqLogics as $eqLogic) {
-
             if ($eqLogic->getTimeout() > 0) {
                 if (strtotime($eqLogic->getStatus('lastCommunication')) > 0) {
                     $last = strtotime($eqLogic->getStatus('lastCommunication'));
                 } else {
                     $last = 0;
                 }
-
-                // log::add('Abeille', 'debug', '--');
-                // log::add( 'Abeille', 'debug', 'Name: '.$eqLogic->getName().' Last: '.$last.' Timeout: '.$eqLogic->getTimeout( ).'s - Last+TimeOut: '.($last + $eqLogic->getTimeout()).' now: '.time().' Delta: '.(time( ) - ($last + $eqLogic->getTimeout())) );
-
                 // Alerte sur TimeOut Defini
                 if (($last + (60 * $eqLogic->getTimeout())) > time()) {
                     // Ok
@@ -464,11 +469,8 @@ class Abeille extends eqLogic
                     $eqLogic->setStatus('state', 'Time Out Last Communication');
                     $eqLogic->setStatus('timeout', 1);
                 }
-
                 // ===============================================================================================================================
-
                 // log::add( 'Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus( "lastCommunication" ).' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus( 'timeout' ).' state: '.$eqLogic->getStatus('state'));
-
             } else {
                 $eqLogic->setStatus('state', '-');
                 $eqLogic->setStatus('timeout', 0);

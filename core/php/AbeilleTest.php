@@ -11,6 +11,7 @@
 
     include_once __DIR__.'/AbeilleLog.php';
 
+    include_once __DIR__.'/../class/Abeille.class.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
     $abeilleCmdQueue = new AbeilleCmdQueue('debug');
@@ -71,6 +72,14 @@
         if ($test==300) {
             echo "Test Cron15 function\n";
             Abeille::cron15();
+        }
+        if ($test==301) {
+            echo "Test CronHourly function\n";
+            Abeille::cronHourly();
+        }
+        if ($test==302) {
+            echo "Test CronDaily function\n";
+            Abeille::cronDaily();
         }
     }
 ?>

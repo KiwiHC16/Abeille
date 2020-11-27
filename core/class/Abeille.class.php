@@ -214,24 +214,44 @@ class Abeille extends eqLogic
 
     }
 
+    /**
+     * pollingCmd
+     * Collect all cmd with Polling define and execute it
+     * 
+     * @param   $period One of the crons: cron, cron15, cronHourly....
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function pollingCmd($period)
     {
-        $cmds = AbeilleCmd::searchConfiguration('Polling', 'Abeille');
-        foreach ($cmds as $key => $cmd) {
-            echo $cmd->getName() . " - " . $cmd->getConfiguration('Polling') . "\n";
+        foreach ($AbeilleCmd::searchConfiguration('Polling', 'Abeille') as $key => $cmd) {
             if ($cmd->getConfiguration('Polling') == $period) {
                 $cmd->execute();
             }
         }
     }
 
+    public static function getIEEE($address) {
+        if (strlen(Abeille::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
+            return Abeille::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
+        } else {
+            return AbeilleCmd::byEqLogicIdAndLogicalId(Abeille::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
+        }
+    }
+
+    /**
+     * cronDaily
+     * Called by Jeedom every days.
+     * Refresh LQI
+     * Poll Cmd cronDaily
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function cronDaily()
     {
         log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
-        /*
-             * Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
-             */
-        log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
+        // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
+        log::add('Abeille', 'debug', 'cronDaily: Lancement de l\'analyse réseau (AbeilleLQI.php)');
         $ROOT = __DIR__ . "/../../Network";
         $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
         for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
@@ -247,61 +267,37 @@ class Abeille extends eqLogic
         self::pollingCmd("cronDaily");
     }
 
+    /**
+     * cronHourly
+     * Called by Jeedom every 60 minutes.
+     * Refresh Ampoule Ikea Bind et set Report
+     * 
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
     public static function cronHourly()
     {
         log::add('Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------');
-
-        //--------------------------------------------------------
-        // Check Zigate Presence
-
         log::add('Abeille', 'debug', 'Check Zigate Presence');
 
         $param = self::getParameters();
 
         //--------------------------------------------------------
-        // Pull IEEE
-        // self::tryToGetIEEE();
-
-        //--------------------------------------------------------
         // Refresh Ampoule Ikea Bind et set Report
-
         log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
 
         $eqLogics = Abeille::byType('Abeille');
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
-            // log::add('Abeille', 'debug', 'Icone: '.$eqLogic->getConfiguration("icone"));
+            // Filtre sur Ikea
             if (strpos("_" . $eqLogic->getConfiguration("icone"), "IkeaTradfriBulb") > 0) {
                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
                 $i = $i + 1;
 
-                $ruche = new Abeille();
-                $commandIEEE = new AbeilleCmd();
-
                 // Recupere IEEE de la Ruche/ZiGate
-                $rucheId = $ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getId();
-                // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
+                $ZiGateIEEE = $this->getIEEE($dest.'/Ruche');
 
-                if (strlen($ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-                    $ZiGateIEEE = $ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration('IEEE', 'none');
-                } else {
-                    $ZiGateIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
-                    // log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $ZiGateIEEE);
-                }
-
-                $abeille = new Abeille();
-                $commandIEEE = new AbeilleCmd();
-
-                // Recupere IEEE de la Ruche/ZiGate
-                $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-                // log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
-
-                if (strlen($abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-                    $addrIEEE = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getConfiguration('IEEE', 'none');
-                } else {
-                    $addrIEEE = $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'IEEE-Addr')->execCmd();
-                    // log::add('Abeille', 'debug', 'IEEE pour abeille: ' . $addrIEEE);
-                }
+                // Recupere IEEE de l Abeille
+                $addrIEEE = $this->getIEEE($dest.'/'.$addr);
 
                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: ' . $addr);
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $dest . "/Ruche/bindShort&time=" . (time() + (($i * 33) + 1)), "address=" . $addr . "&targetExtendedAddress=" . $addrIEEE . "&targetEndpoint=01&ClusterId=0006&reportToAddress=" . $ZiGateIEEE);
@@ -313,7 +309,8 @@ class Abeille extends eqLogic
         if (($i * 33) > (3600)) {
             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
         }
-
+        
+        //--------------------------------------------------------
         // Poll Cmd
         self::pollingCmd("cronHourly");
 

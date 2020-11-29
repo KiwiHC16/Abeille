@@ -31,8 +31,9 @@
         ini_set('log_errors', 'On');
     }
 
-    $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
+    // $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
 
+    /* Log feature for debug purposes */
     function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
     {
         if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
@@ -81,7 +82,7 @@
 
             if (!file_exists($path)) {
                 $status = -1;
-                $error = "Le fichier ".$file." n'existe pas.";
+                $error = "Le fichier '".$file."' n'existe pas.";
             }
             if ($status == 0) {
                 $mtime = filemtime($path);
@@ -90,31 +91,83 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'mtime'=> $mtime)));
         }
 
+        /* Get temp file last modification time.
+           'file' is relative to Jeedom temp directory.
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'getTmpFileModificationTime') {
+            $file = init('file');
+
+            $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            $status = 0;
+            $error = "";
+            $mtime = 0;
+
+            if ($file == "") {
+                $status = -1;
+                $error = "Nom du fichier manquant.";
+            }
+            if (!file_exists($path)) {
+                $status = -1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                clearstatcache(TRUE, $path);
+                $mtime = filemtime($path);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'mtime'=> $mtime)));
+        }
+
+        /* Retrieve file content from Jeedom temp directory.
+           'file' is relative to Jeedom official temp dir.
+           WARNING: Only 'text' content is supported right now.
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'getTmpFile') {
+            $file = init('file');
+            // TODO: If required, add mode=string/array
+
+            $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            $status = 0;
+            $error = "";
+
+            if (!file_exists($path)) {
+                $status = -1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                // $content = file($path); // $content = array, 1 element per line
+                $content = file_get_contents($path); // $content is string
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        }
+
         /* Create compressed file with all logs.
+           Result is 'AbeilleLogs-YYMMDD.<ext>' in Jeedom temp directory.
            Returns: status=0 if found, -1 else */
         if (init('action') == 'createLogsZipFile') {
             $status = 0;
             $error = "";
 
-            $logsDir = $pluginRoot."/tmp/AbeilleLogs";
+            $tmpDir = jeedom::getTmpFolder("Abeille");
+            $logsDir = $tmpDir."/AbeilleLogs";
             if (file_exists($logsDir)) {
-                $cmd = "cd ".$pluginRoot."; sudo rm -f tmp/AbeilleLogs/*";
+                $cmd = "sudo rm -f ".$logsDir."/*";
                 exec($cmd, $out, $status);
             } else {
-                if (!file_exists($pluginRoot."/tmp"))
-                    mkdir($pluginRoot."/tmp");
                 if (!file_exists($logsDir))
                     mkdir($logsDir);
             }
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
-            $cmd = "cd ".$pluginRoot."; sudo cp ../../log/Abeille* tmp/AbeilleLogs";
-            $cmd .= "; sudo cp tmp/*.log tmp/AbeilleLogs";
-            $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
+            $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
+            $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
+            $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
+            // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
             exec($cmd, $out, $status);
 
             /* Searching for available compression tool */
-            // TODO: Select tool according to what's available.
+            // TODO: Tcharp38. Select tool according to what's available.
             $tool = "gzip";
             // $tool = "bzip2";
 
@@ -126,7 +179,7 @@
                 -r => Travel the directory structure recursively
                 */
                 $zipFile .= ".tgz";
-                $cmd = "cd ".$pluginRoot."/tmp/AbeilleLogs; sudo tar cvf - * | gzip -c >../".$zipFile;
+                $cmd = "cd ".$logsDir."; sudo tar cvf - * | gzip -c >../".$zipFile;
             }
             if ($tool == "bzip2") {
                 /* bzip2
@@ -135,7 +188,7 @@
                 -q => Quiet
                 */
                 $zipFile .= ".bz2";
-                $cmd = "cd ".$pluginRoot."/tmp/AbeilleLogs; sudo tar cvf - * | bzip2 -zqc >../".$zipFile;
+                $cmd = "cd ".$logsDir."; sudo tar cvf - * | bzip2 -zqc >../".$zipFile;
             }
 
             exec($cmd, $out, $status);

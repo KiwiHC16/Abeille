@@ -1,21 +1,20 @@
 <?php
     /*
      * Support page
-     * Output all required datas for support on window and in "tmp/supportPage.log".
+     * - Output all required datas for support on window and in "supportPage.log" file.
+     * - Allows to download support page only or all logs at once.
      */
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once(__DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php');
+    // include_once(__DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'); // What for ?
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
     }
     */
     $eqLogics = Abeille::byType('Abeille');
-    $tmpDir = __DIR__.'/../../tmp';
-    if (file_exists($tmpDir) == FALSE)
-        mkdir($tmpDir);
-    $logFile = $tmpDir.'/supportPage.log';
+    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+    $logFile = $tmpDir.'/AbeilleSupportPage.log';
     echo '<script>';
     echo 'var js_logFile = "'.$logFile.'";';
     echo 'var js_tmpDir = "'.$tmpDir.'";';
@@ -113,7 +112,7 @@
     //------------------------------------------------------------------------------------------
     echoAndLog($logFile, "Extraction des informations nécessaires au support.\n\n", 0);
 
-    getFileAndPrint($logFile, '/var/www/html/plugins/Abeille/plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
+    getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
 
     /* Connect to DB */
     $link = mysqli_connect($CONFIG['db']['host'], $CONFIG['db']['username'], $CONFIG['db']['password'], $CONFIG['db']['dbname']);
@@ -136,7 +135,8 @@
 
 <script>
     $('#bt_DownloadSupportPage').click(function() {
-        window.open('core/php/downloadFile.php?pathfile='+js_logFile, "_blank", null);
+        // window.open('core/php/downloadFile.php?pathfile='+js_logFile, "_blank", null);
+        window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+js_logFile, "_blank", null);
     });
 
     /* Pack and download all log at once */
@@ -152,16 +152,17 @@
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'createZipFile' !");
+                bootbox.alert("ERREUR 'createLogsZipFile' !");
             },
             success: function (json_res) {
                 res = JSON.parse(json_res.result);
                 if (res.status != 0) {
-                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                    var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
                     alert(msg);
                 } else {
                     // window.location.reload();
-                    window.open('core/php/downloadFile.php?pathfile='+js_tmpDir+'/'+res.zipFile, "_blank", null);
+                    // window.open('core/php/downloadFile.php?pathfile='+js_tmpDir+'/'+res.zipFile, "_blank", null);
+                    window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+js_tmpDir+'/'+res.zipFile, "_blank", null);
                 }
             }
         });

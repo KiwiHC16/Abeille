@@ -99,9 +99,7 @@
             $GLOBALS["logNbOfLines"]++;
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {
-                $tmpDir = __DIR__.'/../../tmp';
-                if (file_exists($tmpDir) == FALSE)
-                    mkdir($tmpDir);
+                $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
                 $tmpLogFile = $GLOBALS["logFile"];
                 if (substr($tmpLogFile, -4) == ".log")
                     $tmpLogFile = substr($tmpLogFile, 0, -4); // Removing extension
@@ -109,7 +107,7 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
-                file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] Log précédent sauvé sous \'tmp/'.$tmpLogFile.'\'\n', FILE_APPEND);
+                file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel)."] Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }

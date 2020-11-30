@@ -19,32 +19,11 @@
  * Javascript developer features
  */
 
-/* Check which equipements are selected for given zigate number (zgNb).
-   Returns: object {zgNb:<zigateNb>, nb:<nbOfSelectedEq>, ids:[<arrayOfEqIds>]} */
-function getSelectedEqs(zgNb) {
-    var selected = new Object;
-    selected["zgNb"] = zgNb; // Zigate number
-    selected["nb"] = 0; // Number of selected equipments
-    selected["ids"] = new Array; // Array of eq IDs
-    eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
-    for (var i = 0; i < eqZigate.length; i++) {
-        var eqId = eqZigate[i].id;
-        var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
-        if (checked == false)
-            continue;
-
-        selected["nb"]++;
-        selected["ids"].push(eqId);
-    }
-    console.log('selected["nb"]='+selected["nb"]);
-    return selected;
-}
-
 /* Called when 'setTimeout' button is pressed
    Allows to modify timeout of selected equipements. */
 function setBeesTimeout(zgNb) {
     console.log("setBeesTimeout(zgNb="+zgNb+")");
-    
+
     var sel = getSelectedEqs(zgNb);
     console.log(sel);
     if (sel["nb"] == 0) {
@@ -53,7 +32,7 @@ function setBeesTimeout(zgNb) {
     }
     $("#abeilleModal").dialog({
         title: "{{Modification du timeout}}",
-        autoOpen: false,  
+        autoOpen: false,
         resizable: false,
         modal: true,
         height: 300,
@@ -66,7 +45,7 @@ function setBeesTimeout(zgNb) {
 /* Called when 'monitor' button is pressed */
 function monitorIt(zgNb, zgPort) {
     console.log("monitorIt(zgNb="+zgNb+", zpPort="+zgPort+")");
-    
+
     var sel = getSelectedEqs(zgNb);
     console.log(sel);
     if (sel["nb"] == 0) {

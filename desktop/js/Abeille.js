@@ -255,41 +255,48 @@ $('#bt_createRemote10').on('click', function () {
                           }
                           );
 
-/* Developer feature.
-   Removes selected equipments in Jeedom DB only. Zigate is untouched. */
-   function removeBeesJeedom(zgNb) {
-    console.log("removeBeesJeedom(zgNb="+zgNb+")");
-
+/* Check which equipements are selected for given zigate number (zgNb).
+   Returns: object {zgNb:<zigateNb>, nb:<nbOfSelectedEq>, ids:[<arrayOfEqIds>]} */
+function getSelectedEqs(zgNb) {
+    var selected = new Object;
+    selected["zgNb"] = zgNb; // Zigate number
+    selected["nb"] = 0; // Number of selected equipments
+    selected["ids"] = new Array; // Array of eq IDs
     eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
-
-    /* Any selected ? */
-    var nbSelected = 0;
     for (var i = 0; i < eqZigate.length; i++) {
         var eqId = eqZigate[i].id;
         var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
-        if (checked == true)
-            nbSelected++;
+        if (checked == false)
+            continue;
+
+        selected["nb"]++;
+        selected["ids"].push(eqId);
     }
-    console.log("nbSelected="+nbSelected);
-    if (nbSelected == 0) {
+    console.log('selected["nb"]='+selected["nb"]);
+    return selected;
+}
+
+/* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
+function removeBeesJeedom(zgNb) {
+    console.log("removeBeesJeedom(zgNb="+zgNb+")");
+
+    /* Any selected ? */
+    var sel = getSelectedEqs(zgNb);
+    console.log(sel);
+    if (sel["nb"] == 0) {
         alert("Aucun équipement sélectionné !")
         return;
     }
+    var eqList = sel["ids"];
+    console.log("eqList="+eqList);
 
-    bootbox.confirm('{{Vous êtes sur le point de supprimer les équipements selectionnés.<br>Etes vous sur de vouloir continuer ?}}', function (result) {
+    var msg = "{{Vous êtes sur le point de supprimer de Jeedom les équipements selectionnés.";
+    msg += "<br>Cela n'affecte pas le réseau connu de la zigate.";
+    msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+    bootbox.confirm(msg, function (result) {
         if (result == false)
             return
 
-        var eqList = Array();
-        for (var i = 0; i < eqZigate.length; i++) {
-            var eqId = eqZigate[i].id;
-            var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
-            if (checked == false)
-                continue;
-            eqList.push(eqId);
-        }
-
-        console.log("eqList="+eqList);
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
@@ -306,7 +313,7 @@ $('#bt_createRemote10').on('click', function () {
                 window.location.reload();
                 res = JSON.parse(json_res.result);
                 if (res.status != 0) {
-                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.errors;
+                    var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.errors;
                     alert(msg);
                 }
             }

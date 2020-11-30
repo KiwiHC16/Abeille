@@ -6,7 +6,7 @@
      * - Read data from FIFO file (FIFO populated by AbeilleSerialRead)
      * - translate them into a understandable message,
      * - then publish them to Abeille
-     * 
+     *
      * @param argv
      *      argv contient le niveau de log. typical call: /usr/bin/php /var/www/html/plugins/Abeille/resources/AbeilleDeamon/lib/../AbeilleParser.php debug
      *  @return
@@ -30,14 +30,14 @@
                               "8045"                    => 1, //
                               "8048"                    => 0, //
                               "8701"                    => 0, //
-                              
+
                               "cleanUpNE"               => 1,
                               "configureNE"             => 0,
                               "getNE"                   => 0,
                               "processActionQueue"      => 1,
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
-                              
+
                               );
 
         // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
@@ -560,13 +560,13 @@
          *  Will first decode it.
          *  Send information to Abeille to update Jeedom
          *  And start the device identification by requesting EP and IEEE to the device.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $ln       ?
          * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
          * @param $dummy    ?
-         * 
+         *
          * @return          Does return anything as all action are triggered by sending messages in queues
          */
         function decode004d($dest, $payload, $ln, $qos, $dummy)
@@ -620,21 +620,21 @@
             if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
 
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
-            
+
             // If this IEEE is already in Abeille we stop the process of creation in Abeille, but we send IEEE and Addr to update Addr if needed.
             if (Abeille::getEqFromIEEE($IEEE)) {
                 $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
                 return;
             }
-            
+
             $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
-            
+
             for ($i = 0; $i < $agressif; $i++) {
                 $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
             }
-            
+
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -757,17 +757,17 @@
 
         /**
          * Data indication
-         * 
+         *
          * This method process a Zigbeee message coming from a device which is unknown from zigate, so Abeille as to deal with it.
          *  Will first decode it.
          *  Take action base on message contain
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
+         *
          * @return          Nothing as actions are requested in the execution
          */
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
@@ -861,7 +861,7 @@
                 $succes                 = substr($payload,36, 2);
                 $dataType               = substr($payload,38, 2);
                 $value                  = substr($payload,42, 2).substr($payload,40, 2);
-                
+
                 if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
                                  . $baseLog
                                  . ', frameCtrlField='.$frameCtrlField
@@ -919,7 +919,7 @@
                 return;
             }
 
-            // 
+            //
             if ( ($profile == "0104") && ($cluster == "0008") ) {
 
                 $frameCtrlField         = substr($payload,26, 2);
@@ -928,7 +928,7 @@
                 $value                  = substr($payload,32, 2);
 
                 if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - (decoded but not processed)'
-                                . $baseLog 
+                                . $baseLog
                                 . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -1092,17 +1092,17 @@
 
         /**
          * ACK DATA (since FW 3.1b) = ZPS_EVENT_APS_DATA_CONFIRM Note: NACK = 8702
-         * 
+         *
          * This method process a Zigbeee message coming from a zigate for Ack APS messages
          *  Will first decode it.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
-         * @return          Nothing 
+         *
+         * @return          Nothing
          */
         function decode8011($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1122,18 +1122,18 @@
 
         /**
          * “Permit join” status
-         * 
+         *
          * This method process a Zigbeee message coming from a zigate findicating the Join Permit Status
          * Will first decode it.
          * Send the info to Abeille to update ruche command
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
-         * @return          Nothing 
+         *
+         * @return          Nothing
          */
         function decode8014($dest, $payload, $ln, $qos, $dummy)
         {
@@ -1379,17 +1379,17 @@
 
         /**
          * Simple descriptor response
-         * 
+         *
          * This method process a Zigbeee message coming from a device indicating it s simple description
          *  Will first decode it.
          *  And send to Abeille only the Type of Equipement. Could be used if the model don't existe based on the name.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
+         *
          * @return          Nothing as actions are requested in the execution
          */
         function decode8043($dest, $payload, $ln, $qos, $clusterTab)
@@ -1435,7 +1435,7 @@
                 $AttributId = "DeviceDescription";
                 $data = zgGetDevice($profile, $deviceId);
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-                
+
                 // Decode le message dans les logs
                 if ($this->debug['8043']) $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
                 for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
@@ -1461,18 +1461,18 @@
 
         /**
          * Active Endpoints Response
-         * 
+         *
          * This method process a Zigbeee message coming from a device indicating existing EP
          *  Will first decode it.
          *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
          *  Then request the configuration of the device and even more infos.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
+         *
          * @return          Nothing as actions are requested in the execution
          */
         function decode8045($dest, $payload, $ln, $qos, $dummy)
@@ -1506,18 +1506,18 @@
 
         /**
          * 8048/Leave indication
-         * 
+         *
          * This method process a Zigbeee message coming from a device indicating Leaving
          *  Will first decode it.
          *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
          *  Then request the configuration of the device and even more infos.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ? 
+         * @param $ln       ?
          * @param $qos      ?
          * @param $dummy    ?
-         * 
+         *
          * @return          Nothing as actions are requested in the execution
          */
         function decode8048($dest, $payload, $ln, $qos, $dummy)
@@ -2165,6 +2165,7 @@
                     .', AttrStatus='    .$AttributStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
+            $this->deamonlog('debug', $dest.', Type='.$msg);
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -2270,24 +2271,24 @@
                 if (($ClusterId=="0000") && (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010"))) {
                     $msg .= ', DataByteList='.pack('H*', $Attribut);
                     $msg .= ', [Modelisation]';
-                    
-                    if ($AttributId=="0004") {
+
+                    if ($AttributId=="0004") { // 0x0004 ManufacturerName string
                         $trimmedValue = pack('H*', $Attribut);
                         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-                        
-                        if (strlen($trimmedValue )>2) 
+
+                        if (strlen($trimmedValue )>2)
                             $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
-                        
-                        $this->deamonlog('debug', $dest.', Type=decode8100_8102        Manufactuerer value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
-                        
+
+                        $this->deamonlog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+
                         return;
                     }
-                    if ( ($AttributId=="0005") || ($AttributId=="0010") ) {
+                    if ( ($AttributId=="0005") || ($AttributId=="0010") ) { // 0x0005 ModelIdentifier string
                         $trimmedValue = pack('H*', $Attribut);
                         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-                        
+
                         ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
                         $needManufacturer = array('TS0121');
                         if (in_array($trimmedValue,$needManufacturer)) {
@@ -2305,12 +2306,13 @@
                                 return;
                             }
                         }
-            
+
                         $data = $trimmedValue;
-                        $this->deamonlog('debug', $dest.', Type=decode8100_8102        (Manufactuerer)ModelId value:' . pack('H*', $Attribut) . ' / trimmed value: ->' . $trimmedValue . '<- '.json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                        // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
+                        // $this->deamonlog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                        $this->deamonlog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
                     }
-                    
-                } 
+                }
 
                 // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
                 // Xiaomi Bouton V2 Carré
@@ -2464,7 +2466,7 @@
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
 
                     $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
@@ -2477,7 +2479,7 @@
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ));
 
                     $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt',$qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
@@ -2494,7 +2496,7 @@
                     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
                     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
                     // $this->deamonlog('debug', 'Temperature: '  .$temperature);
                     // $this->deamonlog('debug', 'Humidity: '     .$humidity);
                     // $this->deamonlog('debug', 'Pression: '     .$pression);
@@ -2571,7 +2573,7 @@
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
 
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
@@ -2585,7 +2587,7 @@
 
                     $voltage        = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
 
-                    $this->deamonlog('debug', '  SrcAddr='.$SrcAddr.', Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    $this->deamonlog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
 
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
@@ -2651,7 +2653,7 @@
             $this->deamonlog('debug', $dest.', Type=8110/Write Attribute Response (Decoded but not processed yet)'
                         //    . ': Dest='.$dest
                         //    . ', Level=0x'.substr($payload, 0, 2)
-                        //    . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  
+                        //    . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))
                          );
         }
 
@@ -2663,14 +2665,14 @@
             // <Cluster id: uint16_t>
             // <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
-
-            $this->deamonlog('debug', $dest.', Type=8120/Configure Reporting response (Decoded but not processed yet)'
-                             . ', SQN='             .substr($payload, 0, 2)
-                             . ', SrcAddr='         .substr($payload, 2, 4)
-                             . ', EndPoint='        .substr($payload, 6, 2)
-                             . ', ClusterId='       .substr($payload, 8, 4)
-                             . ', Attribute='       .substr($payload,12, 4)
-                             . ', Status='          .substr($payload,16, 2)  );
+            $msg = '8120/Configure Reporting response'
+                . ', SQN='     .substr($payload, 0, 2)
+                . ', Addr='    .substr($payload, 2, 4)
+                . ', EP='      .substr($payload, 6, 2)
+                . ', ClustId=' .substr($payload, 8, 4)
+                . ', Attr='    .substr($payload,12, 4)
+                . ', Status='  .substr($payload,16, 2);
+            $this->deamonlog('debug', $dest.', Type='.$msg);
 
             // Envoie channel
             $SrcAddr = "Ruche";
@@ -2686,7 +2688,7 @@
             $this->deamonlog('debug', $dest.', Type=8140/Configure Reporting response (Decoded but not processed yet)'
                             // . ': Dest='.$dest
                             // . ', Level=0x'.substr($payload, 0, 2)
-                            // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))  
+                            // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))
                              );
         }
 
@@ -2724,18 +2726,18 @@
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
 
-        
+
         /**
          * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.
          * This method process ????
          *  Will first decode it.
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $ln       ?
          * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
          * @param $dummy    ?
-         * 
+         *
          * @return          Does return anything as all action are triggered by sending messages in queues
          */
         function decode8701($dest, $payload, $ln, $qos, $dummy)
@@ -2760,13 +2762,13 @@
          * This method process ????
          *  Will first decode it.
          *  Send the info to Ruche
-         * 
+         *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $ln       ?
          * @param $qos      ? Probably not needed anymore. Historical param from mosquitto broker needs
          * @param $dummy    ?
-         * 
+         *
          * @return          Does return anything as all action are triggered by sending messages in queues
          */
         function decode8702($dest, $payload, $ln, $qos, $dummy)
@@ -2863,9 +2865,9 @@
         /**
          * getNE
          * This method send all command needed to the NE to get its state.
-         * 
+         *
          * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-         * 
+         *
          * @return          Doesn't return anything as all action are triggered by sending messages in queues
          */
         function getNE( $short )
@@ -2899,9 +2901,9 @@
         /**
          * configureNE
          * This method send all command needed to the NE to configure it.
-         * 
+         *
          * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-         * 
+         *
          * @return          Doesn't return anything as all action are triggered by sending messages in queues
          */
         function configureNE( $short ) {
@@ -2954,7 +2956,7 @@
             foreach ( $this->actionQueue as $key=>$action ) {
                 if ( $action['when'] < time() ) {
                     if ( method_exists($this, $action['what']) ) {
-                        if ( $this->debug['processActionQueue'] ) { $this->deamonlog('debug', 'Type=fct; processActionQueue, action: '.json_encode($action)); }
+                        if ( $this->debug['processActionQueue'] ) { $this->deamonlog('debug', 'processActionQueue(): action: '.json_encode($action)); }
                         $fct = $action['what'];
                         if ( isset($action['parm0']) ) {
                             $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);

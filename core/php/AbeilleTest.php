@@ -83,10 +83,38 @@
 
     // Send a message to Abeille's queue
     if ( (200<=$test) && ($test<300) ) {
-        if ($test==200) {
-            echo "Send a Systeme Message to the Ruche to be used by a scenario by the user\n";
-            // public static function publishMosquitto($queueId, $priority, $topic, $payload)
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/Ruche/SystemMessage", "Le message");
+        switch($test) {
+            case 200:
+                echo "Send a Systeme Message to the Ruche to be used by a scenario by the user\n";
+                // public static function publishMosquitto($queueId, $priority, $topic, $payload)
+                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/Ruche/SystemMessage", "Le message");
+                break;
+            case 201:
+                echo "Send a Systeme Message to the Ruche1 and clean it after 5 sec\n";
+                AbeilleTools::sendMessageToRuche("daemonTest1","this is test message from zigate1");
+                sleep( 5);
+                AbeilleTools::sendMessageToRuche("daemonTest1","");
+                break;
+            case 202:
+                echo "Send a Systeme Message to the Ruche2 and clean it after 5 sec\n";
+                AbeilleTools::sendMessageToRuche("daemonTest2","this is test message from zigate2");
+                sleep( 5);
+                AbeilleTools::sendMessageToRuche("daemonTest2","");
+                break;
+            case 203:
+                echo "Send a Systeme Message to the Ruche1 and 2 and clean them after 5 sec\n";
+                AbeilleTools::sendMessageToRuche("daemonTest1","this is test message from zigate1");
+                AbeilleTools::sendMessageToRuche("daemonTest2","this is test message from zigate2");
+                sleep( 5);
+                AbeilleTools::clearSystemMessage($parameters);
+                break;
+            case 204:
+                echo "Send a Systeme Message to the Ruche1 and 2 and clean zigate 1 after 5 sec\n";
+                AbeilleTools::sendMessageToRuche("daemonTest1","this is test message from zigate1");
+                AbeilleTools::sendMessageToRuche("daemonTest2","this is test message from zigate2");
+                sleep( 5);
+                AbeilleTools::clearSystemMessage($parameters,'1');
+                break;
         }
 
         if ($test==201) {
@@ -99,9 +127,31 @@
 
     // Test Methode/Function
     if ( (300<=$test) && ($test<400) ) {
-        if ($test==300) {
-            echo "Test Cron function\n";
-            Abeille::cron();
+        switch ($test) {
+            case 300:
+                echo "Test Cron function\n";
+                Abeille::cron();
+                break;
+            case 301:
+                echo "Test Cron15 function\n";
+                Abeille::cron15();
+                break;
+            case 302:
+                echo "Test CronHourly function\n";
+                Abeille::cronHourly();
+                break;
+            case 303:
+                echo "Test CronDaily function\n";
+                Abeille::cronDaily();
+                break;
+            case 310:
+                echo "Test getIEEE\n";
+                var_dump(Abeille::getIEEE('Abeille1/B529'));
+                break;
+            case 311:
+                echo "Test getEqFromIEEE\n";
+                var_dump(Abeille::getEqFromIEEE('842E14FFFE1396F5'));
+                break;
         }
         if ($test==301) {
             echo "Test Cron15 function\n";

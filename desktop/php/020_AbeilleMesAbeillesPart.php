@@ -1,9 +1,6 @@
 <legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
-   
 
 <?php
-
-
     $NbOfZigatesON = 0; // Number of enabled zigates
     $eqAll = array(); // All equipments, sorted per zigate
     for ( $i=1; $i<=$zigateNb; $i++ ) {
@@ -21,15 +18,15 @@
         echo "&nbsp&nbsp&nbsp";
         echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
 
+        /* Remove equipments from Jeedom only */
+        echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-left: 8px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
+
         if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
             echo '<br>';
             $port = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
 
-            /* Remove equipments from Jeedom only */
-            echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-primary btn-xs" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
-
             /* Set timeout on selected equipements */
-            echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
+            echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
 
         echo '<div class="eqLogicThumbnailContainer">';

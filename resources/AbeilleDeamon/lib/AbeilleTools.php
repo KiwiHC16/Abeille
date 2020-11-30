@@ -390,12 +390,13 @@ class AbeilleTools
         array_splice($found, -1, 1);
         //get socat first
         arsort($found);
-        array_reverse($found);
+        $found = array_reverse($found);
         log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
             if ($value == 0) {
+                AbeilleTools::sendMessageToRuche($daemon);
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
                 log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: restarting ' . $daemon . ': ' . $cmd);
@@ -455,6 +456,43 @@ class AbeilleTools
         return $cmd;
     }
 
+    /**
+     * send a message to a ruche according to the splitted daemonnameX
+     * where daemonname and zigateNbr are extracted.
+     *
+     * @param $daemon
+     */
+    public static function sendMessageToRuche($daemon, $message=""){
+        $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
+        unset($matches);
+        $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
+        $messageToSend = ($message == "") ? "" : "$daemonName: $message";
+        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate ' . $zigateNbr);
+        Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
+            "Abeille$zigateNbr/Ruche/SystemMessage", $messageToSend);
+    }
+
+    /**
+     * clean messages displayed by all zigates if no parameters or all
+     *
+     * @param array $parameters jeedom Abeille's config
+     * @param string $which     number, from 1 to 9
+     */
+    public static function clearSystemMessage($parameters, $which = 'all')
+    {
+        if ($which == 'all') {
+            for ($n = 1; $n <= $parameters['zigateNb']; $n++) {
+                if ($parameters['AbeilleActiver' . $n] == "Y") {
+                    log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $n);
+                    AbeilleTools::sendMessageToRuche("daemon$n", "");
+                }
+            }
+        } else {
+            log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $which);
+            AbeilleTools::sendMessageToRuche("daemon$which", "");
+        }
+    }
+
     public static function checkRequired($type, $zigateNumber)
     {
         if ($type == 'PI')
@@ -480,9 +518,28 @@ class AbeilleTools
 
     }
 
-    public static function getMissingDaemons(array $parameters, $running)
+    /**
+     * return missing daemon comparing active zigate and running daemons
+     *
+     * @param array $parameters
+     * @param $running
+     *
+     * @return string of comma separated missing daemon
+     */
+    public static function getMissingDaemons(array $parameters, $running): string
     {
         $found = self::diffExpectedRunningDaemons($parameters, $running);
+        $missing = "";
+        foreach ($found as $daemon => $value) {
+            if ($value == 0) {
+                $missing .= ", $daemon";
+            }
+        }
+        if (strlen($missing) > 1) {
+            return substr($missing, 2);
+        } else {
+            return "";
+        }
     }
 
     /**

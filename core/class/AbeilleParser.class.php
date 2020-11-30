@@ -1663,16 +1663,16 @@
                              . ', ExtAddr='                     .substr($payload,30,16)
                              . ', Depth='                       .hexdec(substr($payload,46, 2))
                              . ', LinkQuality='                 .hexdec(substr($payload,48, 2))
-                             . ', BitMapOfAttributes='          .substr($payload,50, 2)
+                             . ', BitMapOfAttr='                .substr($payload,50, 2)
                              . ', SrcAddr='                     .substr($payload,52, 4) );
 
-            $srcAddress           = substr($payload, 52, 4);
             $index                = substr($payload, 8, 2);
             $NeighbourAddr        = substr($payload, 10, 4);
             $NeighbourIEEEAddress = substr($payload, 30,16);
             $lqi                  = hexdec(substr($payload, 48, 2));
             $Depth                = hexdec(substr($payload, 46, 2));
             $bitMapOfAttributes   = substr($payload, 50, 2); // to be $this->decoded
+            $srcAddress           = substr($payload, 52, 4);
             // $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
 
             $data =
@@ -1698,7 +1698,7 @@
             // Ca ne va marcher que pour les équipements en eveil.
             // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
             if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') && ($NeighbourAddr!="0000") ) {
-                $this->deamonlog('debug', $dest.', Type=804E/Management LQI response: NeighbourAddr='.$NeighbourAddr.' qui n est pas dans Jeedom, essayons de l interroger, si en sommail une intervention utilisateur sera necessaire.');
+                $this->deamonlog('debug', '  NeighbourAddr='.$NeighbourAddr." n'est pas dans Jeedom. Essayons de l'interroger. Si en sommeil une intervention utilisateur sera necessaire.");
 
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
                 $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );

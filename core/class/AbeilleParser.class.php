@@ -939,6 +939,52 @@
                 return;
             }
 
+            // Remontée etat relai module Legrand 20AX
+            // [2020-12-01 12:57:29][debug] Reçu: "8002 00191F000104FC41010102 D2B9 02 0000 18 1D 0A 0000 3003010010017B"
+            if ( ($profile == "0104") && ($cluster == "FC41") ) {
+
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
+
+                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
+                $dataType               = substr($payload,36, 2);
+                $value                  = substr($payload,38, 2);
+
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée etat relai module Legrand 20AX '
+                                    . $baseLog
+                                    . ', frameCtrlField='.$frameCtrlField
+                                    . ', SQN='.$SQN
+                                    . ', cmd='.$cmd
+                                    . ', attribute='.$attribute
+                                    . ', dataType='.$dataType
+                                    . ', value='.$value.' - '.hexdec($value)
+                                    );
+
+                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                // if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
+                if ( strlen($payload)==50 ) {
+                    $attribute              = substr($payload,42, 2).substr($payload,40, 2);
+                    $dataType               = substr($payload,44, 2);
+                    $value                  = substr($payload,46, 2);
+
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée etat relai module Legrand 20AX '
+                                    . $baseLog
+                                    . ', frameCtrlField='.$frameCtrlField
+                                    . ', SQN='.$SQN
+                                    . ', cmd='.$cmd
+                                    . ', attribute='.$attribute
+                                    . ', dataType='.$dataType
+                                    . ', value='.$value.' - '.hexdec($value)
+                                    );
+
+                    $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                }
+
+                return;
+            }
+
             if ($this->debug["8002"]) $this->deamonlog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog);
         }
 

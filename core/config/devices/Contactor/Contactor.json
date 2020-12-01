@@ -22,7 +22,10 @@
       "include22": "getModelIdentifier",
       "include23": "getSWBuild",
       "include26 2": "BindToZigatePuissanceLegrand",
-      "include28 2": "setReportPuissanceLegrand"
+      "include26 2 2": "BindToZigateEtatLegrand",
+      "include28 2": "setReportPuissanceLegrand",
+      "include28 2 2": "LegrandContactorMode",
+      "include28 2 2 2": "LegrandContactorEtat"
     }
   }
 }

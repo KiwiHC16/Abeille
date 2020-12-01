@@ -1,8 +1,8 @@
 {
-  "BindToZigatePuissanceLegrand": {
-    "Comment": "Used to bind the Prise Legrand to zigate pour la puissance",
+  "BindToZigateEtatLegrand": {
+    "Comment": "Used to bind the Prise Legrand to zigate pour l etat et le mode",
     "isVisible": 0,
-    "name": "BindToZigatePuissanceLegrand",
+    "name": "BindToZigateEtatLegrand",
     "order": 27,
     "isHistorized": "0",
     "Type": "action",
@@ -10,9 +10,9 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5csdf07c766qd2188f",
+      "uniqId": "5csdf07c766qd2188fqsfg",
       "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0B04&reportToAddress=#ZiGateIEEE#",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=FC41&reportToAddress=#ZiGateIEEE#",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "10"

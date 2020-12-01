@@ -1,0 +1,16 @@
+{
+  "FC41-#EP#-0001": {
+    "isVisible": 1,
+    "name": "Etat",
+    "order": 17,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "invertBinary": "0",
+    "template": "badge",
+    "configuration": {
+      "uniqId": "5c0sdsd7c76621c24",
+      "visibilityCategory": "Network"
+    }
+  }
+}

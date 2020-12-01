@@ -7,6 +7,7 @@
         sort( $resultIcone );
         
         echo "<h1>{{Equipments}}</h1>";
+        echo "Un clic sur le -Nom Zigbee- vous amenera dans le répertoire ou de la doc est conservée. Si pas de doc, message -erreur 404-<br><br>";
         echo "<table>";
         echo "<th>Nom Zigbee</th><th>Nom Generique</th><th>Icone</th>";
         foreach ( $resultIcone as $values ) echo '<tr><td>'.$values['nameZigbee'].'</td><td>'.$values['nameDescription'].'</td><td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td></tr>'."\n";
@@ -66,29 +67,23 @@
     // Main
     //----------------------------------------------------------------------------------------------------
 
+    $baseUrlDoc = 'https://github.com/KiwiHC16/AbeilleDoc/tree/master/source/docProduits/';
+    
     // Recupere les info.
     foreach ( glob( '/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file ) {
-        // echo $file."\n";
-        // echo basename(dirname($file));
+        
         if ( basename(dirname($file)) == "Template" ) {
             continue;
         }
 
+        // Collect all core info of the product
         $name = basename($file, ".json");
-        // echo $name."\n";
         $contentJSON = file_get_contents( $file );
         $content = JSON_decode( $contentJSON, true );
-        $resultIcone[] = array( 'nameZigbee'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
+        $url = $baseUrlDoc . $name .'/doc/';
+        $resultIcone[] = array( 'nameZigbee'=>'<a href="'.$url.'">'.$name.'</a>', 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
 
-        /*
-        echo "File:\n";
-        var_dump( $file );
-        echo "Content:\n";
-        var_dump( $content );
-        echo "resultIcone:\n";
-        var_dump( $resultIcone );
-        */
-
+        // Collect all information related to Command used by the products 
         foreach ( $content[$name]['Commandes'] as $include ) {
             $resultRaw[] = array( 'nameZigbee'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'fonction'=>$include );
             $result[] = "<tr><td>".$content[$name]["nameJeedom"]."</td><td>".$name."</td><td>".$include."</td></tr>";

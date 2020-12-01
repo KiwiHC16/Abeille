@@ -7,6 +7,7 @@
     include_once __DIR__.'/../../../../core/php/core.inc.php';
 
     $curLogLevelNb = 0; // Abeille log level number: 0=none, 1=error/default, 2=warning, 3=info, 4=debug
+    $logDir = ''; // Log directory
     $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1')
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
@@ -50,11 +51,15 @@
        return "0";
     }
 
-    /* Library config for logs */
+    /* Library config for logs.
+       'lFile' = log file name or absolut path.
+         If not absolut path, log dir = Jeedom default (/var/www/html/log)
+         If absolut path, this is the taken destination. */
     function logSetConf($lFile = '')
     {
         $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
-        $GLOBALS["logFile"] = $lFile;
+        $GLOBALS["logDir"] = "";
+        $GLOBALS["logFile"] = "";
         $GLOBALS["logNbOfLines"] = 0;
 
         /* Taking Jeedom config with a margin to avoid Jeedom truncates
@@ -63,9 +68,16 @@
 
         if ($lFile == "")
             return; // Output of STDOUT
+        if (substr($lFile, 0, 1) == "/") {
+            $GLOBALS["logDir"] = dirname($lFile);
+            $GLOBALS["logFile"] = basename($lFile);
+        } else {
+            $GLOBALS["logDir"] = __DIR__."/../../../../log/"; // Jeedom default log dir
+            $GLOBALS["logFile"] = $lFile;
+        }
 
         /* What is number of lines in current log ? */
-        $logPath = __DIR__."/../../../../log/".$lFile;
+        $logPath = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
         if (file_exists($logPath) == FALSE)
             return;
         $cmd = "wc -l ".$logPath." | awk '{print $1}'";
@@ -94,7 +106,7 @@
             echo ('['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n");
             fflush(STDOUT);
         } else {
-            $lFile = __DIR__.'/../../../../log/'.$GLOBALS["logFile"];
+            $lFile = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
             file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
 

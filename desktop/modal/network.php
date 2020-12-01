@@ -193,7 +193,6 @@
                 <div id="graph_network" class="tab-pane">
 
                     <br />
-
                     <?php
                         displayButtons($nbOfZigates);
                     ?>

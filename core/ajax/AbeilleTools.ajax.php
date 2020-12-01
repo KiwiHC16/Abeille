@@ -178,8 +178,8 @@
                 -c => Write output on standard output
                 -r => Travel the directory structure recursively
                 */
-                $zipFile .= ".tgz";
-                $cmd = "cd ".$logsDir."; sudo tar cvf - * | gzip -c >../".$zipFile;
+                $zipFile .= ".tar.gz";
+                $cmd = "cd ".$logsDir."; sudo tar cvf - * | gzip -c >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
             }
             if ($tool == "bzip2") {
                 /* bzip2
@@ -188,7 +188,7 @@
                 -q => Quiet
                 */
                 $zipFile .= ".bz2";
-                $cmd = "cd ".$logsDir."; sudo tar cvf - * | bzip2 -zqc >../".$zipFile;
+                $cmd = "cd ".$logsDir."; sudo tar cvf - * | bzip2 -zqc >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
             }
 
             exec($cmd, $out, $status);
@@ -196,6 +196,30 @@
                 $error = "Erreur '".$cmd."'";
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'zipFile' => $zipFile)));
+        }
+
+        /* Remove given file from Jeedom temp directory.
+           'file' is relative to Jeedom official temp dir.
+           Returns: status=0 if ok, 1 =not found, -1=other error */
+        if (init('action') == 'delTmpFile') {
+            $file = init('file');
+
+            $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            $status = 0;
+            $error = "";
+
+            if (!file_exists($path)) {
+                $status = 1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                if (unlink($path) == FALSE) {
+                    $status = -1;
+                    $error = "Impossible de détruire '".$file."'.";
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

@@ -38,9 +38,10 @@ $("#nodeTo").off().change(function () {
 function updateZigBeeJsonCache(zigateX) {
     // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
     // Show progress in AlertDiv
-    setTimeout(function () {
-        updateAlertFromZigBeeJsonLog(true, zigateX);
-    }, 2000);
+    // Tcharp38: currently disabled. Some issues linked to tmp migration.
+    // setTimeout(function () {
+    //     updateAlertFromZigBeeJsonLog(true, zigateX);
+    // }, 2000);
     $.ajax({
             url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+zigateX,
             async: true,
@@ -69,7 +70,7 @@ function updateZigBeeJsonCache(zigateX) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
                     displayNetLinks(zigateX);
-                    updateAlertFromZigBeeJsonLog(false, zigateX);
+                    // updateAlertFromZigBeeJsonLog(false, zigateX); // Tcharp38 temp disable
                 }
                 $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
                 window.setTimeout(function () {
@@ -176,14 +177,16 @@ function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
                     level: 'success'
                 });
                 //if LQI log contains done, then loop display of log is disabled
-                _autoUpdate = data.toLowerCase().includes("done")?0:1;
-                if (_autoUpdate) {
-                    setTimeout(function () {
-                        updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX);
-                    }, 1000);
-                }
+                // Tcharp38: temp disabled due to tmp migration issue
+                // _autoUpdate = data.toLowerCase().includes("done")?0:1;
+                // if (_autoUpdate) {
+                //     setTimeout(function () {
+                //         updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX);
+                //     }, 1000);
+                // }
                 // when LQI request is done, alertDiv is hidden.
-                else {
+                // else {
+                    {
                     setTimeout(function () {
                         $('#div_networkZigbeeAlert').hide();
                     }, 5000);
@@ -200,19 +203,29 @@ function network_display(zigateX) {
     var graph = Viva.Graph.graph();
 
     // Load JSON-encoded data from the server using a GET HTTP request.
+    // var request = $.ajax({
+    //     url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
+    //     dataType: "json",
+    //     cache: false
+    // });
     var request = $.ajax({
-        url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        type: 'POST',
+        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        data: {
+            action: 'getTmpFile',
+            file : "AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        },
         dataType: "json",
         cache: false
     });
 
     request.done(function (json) {
-        //Sort objects to have list array sorted on Voisin values
-        // empty array ?
-        //console.log(json);
-        if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1) {
-            //console.log('Fichier vide, rien a traiter.');
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
+        res = JSON.parse(json.result);
+        if (res.status != 0) {
+            var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+        } else if (res.content == "") {
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
         } else {
                  
             // On parcours le json ligne à ligne
@@ -221,8 +234,7 @@ function network_display(zigateX) {
             // On prend la voisine et on la met dans la liste link des voisines: astuce: aTemp et push.
                  
             console.log('Visiblement j ai un json a utiliser');
-            //process the json array
-            // $('#div_networkZigbeeAlert').showAlert({message: '{{Action réalisée avec succès}}', level: 'success'})
+            var json = JSON.parse(res.content);
             json.data.sort(function (a, b) {
                 if (a.Voisin_Name == b.Voisin_Name) {
                     return 0;
@@ -388,7 +400,6 @@ function network_display(zigateX) {
                 }, 200);
                 */
             }
-
         }
     });
 
@@ -405,28 +416,29 @@ function network_display(zigateX) {
     });
 };
 
+/* Display nodes table */
 function displayNetLinks(zigateX) {
-    // Generate la table qui est affichée dans le modale tab "Table des noeuds".
+    console.log("displayNetLinks(zgNb="+zigateX+")");
     var jqXHR = $.ajax({
-        url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        type: 'POST',
+        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        data: {
+            action: 'getTmpFile',
+            file : "AbeilleLQI_MapDataAbeille"+zigateX+".json",
+        },
         dataType: "json",
         cache: false
     });
 
     jqXHR.done(function (json, textStatus, jqXHR) {
-        // empty array ?
-        if (typeof json == 'undefined' || json.length < 1 || json.data.length < 1 || json.data.includes('OOPS')) {
-            //console.log('Fichier vide, rien a traiter.');
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide, rien a traiter}}', level: 'danger'});
+        res = JSON.parse(json.result);
+        if (res.status != 0) {
+            var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+        } else if (res.content == "") {
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
         } else {
-            // $('#div_networkZigbeeAlert').showAlert({
-            //     message: '{{Données récupérées avec succès}}',
-            //     level: 'success'
-            // });
-            // setTimeout(function () {
-            //     $('#div_networkZigbeeAlert').hide()
-            // }, 2000);
-            //Sort objects to have Voisin list array
+            var json = JSON.parse(res.content);
             var nodes = json.data;
             nodes.sort(function (a, b) {
                 if (a.Voisin_Name == b.Voisin_Name) {
@@ -589,23 +601,24 @@ function displayNetLinks(zigateX) {
                 type: 'POST',
                 url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
                 data: {
-                    action: 'getFileModificationTime',
-                    path: "tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json"
+                    action: 'getTmpFileModificationTime',
+                    file: "AbeilleLQI_MapDataAbeille"+zigateX+".json"
                 },
                 dataType: 'json',
                 global: false,
+                cache: false,
                 error: function (request, status, error) {
-                    bootbox.alert("ERREUR 'getFileModificationTime' !<br>"+"status="+status+"<br>error="+error);
+                    bootbox.alert("ERREUR 'getTmpFileModificationTime' !<br>"+"status="+status+"<br>error="+error);
                 },
                 success: function (json_res) {
                     console.log(json_res);
                     res = JSON.parse(json_res.result);
                     if (res.status != 0) {
-                        var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                        var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
                         alert(msg);
                     } else {
                         // window.location.reload();
-                        console.log("timestamp="+res.mtime);
+                        console.log("getTmpFileModificationTime() => "+res.mtime);
                         const date = new Date(res.mtime * 1000);
                         var out = date.toLocaleDateString()+' '+date.toLocaleTimeString();
                         $('#idInfosDate').empty().append(out);

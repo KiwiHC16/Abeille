@@ -35,7 +35,8 @@
     */
     
     // -----------------------------------------------------------------------------------------------------------
-    $DataFile = "tmp/AbeilleLQI_MapDataAbeille".$zigateId.".json";
+    $tmpDir = jeedom::getTmpFolder("Abeille");
+    $DataFile = $tmpDir."/AbeilleLQI_MapDataAbeille".$zigateId.".json";
     
     if ( $Cache == "Refresh Cache" ) {
         // Ici on n'utilise pas le cache donc on lance la collecte

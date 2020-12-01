@@ -139,7 +139,7 @@ class Abeille extends eqLogic
     /**
      * Looking for missing IEEE addresses
      * Will fetch information from zigbee network to get all missing IEEE
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function tryToGetIEEE()
@@ -222,9 +222,9 @@ class Abeille extends eqLogic
     /**
      * pollingCmd
      * Collect all cmd with Polling define and execute it
-     * 
+     *
      * @param   $period One of the crons: cron, cron15, cronHourly....
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function pollingCmd($period)
@@ -239,9 +239,9 @@ class Abeille extends eqLogic
     /**
      * getIEEE
      * get IEEE from the eqLogic
-     * 
+     *
      * @param   $address    logicalId of the eqLogic
-     * 
+     *
      * @return              Does not return anything as all action are triggered by sending messages in queues
      */
     public static function getIEEE($address) {
@@ -255,9 +255,9 @@ class Abeille extends eqLogic
     /**
      * getEqFromIEEE
      * get eqLogic from IEEE
-     * 
+     *
      * @param   $IEEE    IEEE of the device
-     * 
+     *
      * @return           eq with this IEEE or Null if not found
      */
     public static function getEqFromIEEE($IEEE) {
@@ -273,14 +273,14 @@ class Abeille extends eqLogic
      * Called by Jeedom every days.
      * Refresh LQI
      * Poll Cmd cronDaily
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cronDaily()
     {
         log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
         // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
-        log::add('Abeille', 'debug', 'cronDaily: Lancement de l\'analyse réseau (AbeilleLQI.php)');
+        log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
         $ROOT = __DIR__ . "/../../Network";
         $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
         for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
@@ -300,7 +300,7 @@ class Abeille extends eqLogic
      * cronHourly
      * Called by Jeedom every 60 minutes.
      * Refresh Ampoule Ikea Bind et set Report
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cronHourly()
@@ -338,7 +338,7 @@ class Abeille extends eqLogic
         if (($i * 33) > (3600)) {
             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
         }
-        
+
         //--------------------------------------------------------
         // Poll Cmd
         self::pollingCmd("cronHourly");
@@ -351,19 +351,15 @@ class Abeille extends eqLogic
      * Called by Jeedom every 15 minutes.
      * Will send a message Annonce to equipement to refresh TimeOut status
      * Will execute all action cmd needed to refresh some info command
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cron15()
     {
 
-        log::add('Abeille', 'debug', 'Starting cron15 ------------------------------------------------------------------------------------------------------------------------');
+        log::add('Abeille', 'debug', 'cron15: Démarrage --------------------------------');
 
-        /**
-         * Look every 15 minutes if the kernel driver is not in error
-         */
-        // $param = self::getParameters();
-
+        /* Look every 15 minutes if the kernel driver is not in error */
         log::add('Abeille', 'debug', 'Check USB driver potential crash');
         $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
         $output = array();
@@ -371,62 +367,75 @@ class Abeille extends eqLogic
         $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
         if ($usbZigateStatus != '0') {
             message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le demon.");
-            log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
+            log::add('Abeille', 'debug', 'cron15: Fin --------------------------------');
         }
 
-        log::add('Abeille', 'debug', 'cron15(): Interrogation des équipements sur secteur.');
-        /* TODO: We should interrogate only if eq itself did not send anything since a while */
+        log::add('Abeille', 'debug', 'cron15: Interrogation des équipements sans nouvelles depuis plus de 15mins.');
         $eqLogics = Abeille::byType('Abeille');
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
-            $poll = 0;
-            
-            // Equipment enabled ?
             if (!$eqLogic->getIsEnable())
-                continue; 
-            
+                continue; // Equipment disabled
+            // TODO: Tcharp38. The following should be done only if eq is on "active" zigate.
+
+            $eqName = $eqLogic->getname();
+
             // We don t take virtual eqLogic like Remote Control. eqLogic existe by not the real device.
             list($dest,$addr) = explode("/", $eqLogic->getLogicalId());
             if (strlen($addr) != 4)
                 continue;
 
-            if ( $eqLogic->getConfiguration("RxOnWhenIdle",'none') == 1 ) 
+            /* Checking if received some news in the last 15mins */
+            $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
+            if (is_object($cmd)) { // Cmd found
+                $lastComm = $cmd->execCmd();
+                if ($lastComm + (15 * 60) > time())
+                    continue; // Alive within last 15mins. No need to interrogate.
+            } else
+                log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
+
+            /* No news in the last 15mins. Need to interrogate this eq */
+            $mainEP = $eqLogic->getConfiguration("mainEP");
+            if (strlen($mainEP) <= 1) {
+                log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
+                continue;
+            }
+            $poll = 0;
+            if ( $eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1 )
                 $poll = 1;
-            
-            if ( strlen($eqLogic->getConfiguration("battery_type",'')) == 0 )
+
+            if ( strlen($eqLogic->getConfiguration("battery_type", '')) == 0 )
                 $poll += 10;
-            
-            if ( $eqLogic->getConfiguration("poll",'none') == "15" )
-                $poll += 100;                
-                
-            if ($poll>0) {
-                log::add('Abeille', 'debug', 'cron15(): Interrogation adresse '.$addr.' Poll criteria: '.$poll);
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $eqLogic->getConfiguration("mainEP",'01'));
+
+            if ( $eqLogic->getConfiguration("poll", 'none') == "15" )
+                $poll += 100;
+
+            if ($poll > 0) {
+                log::add('Abeille', 'debug', "cron15: Interrogation de '".$eqName."' (adresse ".$addr.", poll-reason=".$poll.")");
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
                 $i++;
             }
         }
-
-        if (($i * 23) > (60 * 15)) {
-            message::add("Abeille", "Danger il y a trop de messages à envoyer dans le cron 15 minutes. Cas A.", "Contacter KiwiHC15 sur le forum");
+        if (($i * 23) > (15 * 60)) { // A msg every 23sec must fit in 15mins.
+            message::add("Abeille", "Danger ! Il y a trop de messages à envoyer dans le cron 15 minutes.", "Contacter KiwiHC15 sur le forum");
         }
 
         // Execute Action Cmd to refresh Info command
         // self::pollingCmd("cron15");
 
-        log::add('Abeille', 'debug', 'Ending cron15 ------------------------------------------------------------------------------------------------------------------------');
-
+        log::add('Abeille', 'debug', 'cron15:Terminé --------------------------------');
         return;
     }
 
     /**
-     * cron15
+     * cron1
      * Called by Jeedom every 1 minutes.
      * Pull Zigate to keep esplink open
      * Polling 1 minute sur etat et level
      * Refresh health information
      * Refresh inclusion state
      * Exec Cmd action which are needed to refresh cmd info
-     * 
+     *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cron() {
@@ -455,14 +464,15 @@ class Abeille extends eqLogic
                 continue; // Equipment disabled
             if ($eqLogic->getConfiguration("poll") != "1")
                 continue; // No 1min polling requirement
-            
+
             list($dest, $address) = explode("/", $eqLogic->getLogicalId());
             if (strlen($address) != 4)
                 continue; // Bad address, needed for virtual device
 
             log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP','01')."&clusterId=0006&attributeId=0000");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$eqLogic->getConfiguration('mainEP','01')."&clusterId=0008&attributeId=0000");
+            $mainEP = $eqLogic->getConfiguration('mainEP');
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
             $i++;
         }
         if (($i * 3) > 60) {
@@ -1476,16 +1486,16 @@ class Abeille extends eqLogic
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie une commande => je drop la cmd
         // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
-        
+
         if (!is_object($elogic)) {
             log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
             // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
-            
+
             // EP 01
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "01");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Default");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
-            
+
             // EP 0B
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "0B");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Hue");
@@ -1494,8 +1504,8 @@ class Abeille extends eqLogic
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
 
-           
-            
+
+
             return;
         }
 
@@ -1554,14 +1564,14 @@ class Abeille extends eqLogic
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet exist et on recoie une MACCapa
-        // e.g. Un NE renvoie son annonce    
+        // e.g. Un NE renvoie son annonce
         if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
 
             $AC = 0b00000100;
             $Rx = 0b00001000;
 
             log::add('Abeille', 'debug', 'MACCapa-MACCapa;' . $value . '; saved into eqlogic');
-            
+
             $elogic->setConfiguration('MACCapa', $value);
             if ( (base_convert( $value, 16, 2 ) & base_convert( $AC, 16, 2 ))>0 ) $elogic->setConfiguration('AC_Power', 1);      else $elogic->setConfiguration('AC_Power', 0);
             if ( (base_convert( $value, 16, 2 ) & base_convert( $Rx, 16, 2 ))>0 ) $elogic->setConfiguration('RxOnWhenIdle', 1);  else $elogic->setConfiguration('RxOnWhenIdle', 0);
@@ -1570,7 +1580,7 @@ class Abeille extends eqLogic
 
             return;
         }
-        
+
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour

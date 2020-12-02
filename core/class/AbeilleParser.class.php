@@ -1897,16 +1897,16 @@
             // <endpoint: uint8_t>          -> 2
             // <Cluster id: uint16_t>       -> 4
             // <address_mode: uint8_t>      -> 2
-            // <SrcAddr: uint16_t>      -> 4
-            // <cmd: uint8>                 -> 2
+            // <SrcAddr: uint16_t>          -> 4
+            // <status: uint8>              -> 2
 
             $this->deamonlog('debug', $dest.', Type=8095/Remote button pressed (ONOFF_UPDATE) a group response)'
                              . ', SQN='          .substr($payload, 0, 2)
                              . ', EndPoint='     .substr($payload, 2, 2)
                              . ', ClusterId='    .substr($payload, 4, 4)
-                             . ', StatusId='     .substr($payload, 8, 2)
+                             . ', Addr Mode='    .substr($payload, 8, 2)
                              . ', SrcAddr='      .substr($payload,10, 4)
-                             . ', Cmd='          .substr($payload,14, 2) );
+                             . ', Status='       .substr($payload,14, 2) );
 
             $source         = substr($payload,10, 4);
             $ClusterId      = "Click";

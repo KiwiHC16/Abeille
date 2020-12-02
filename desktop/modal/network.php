@@ -417,8 +417,8 @@
 <script type="text/javascript">
     <?php
         for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-            echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNetLinks('.$i.'); });'."\n";
-            echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { updateZigBeeJsonCache('.$i.'); setTimeout(function () { $(\'#div_networkZigbeeAlert\').hide() }, 5000); });'."\n";
+            echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNodes('.$i.'); });'."\n";
+            echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayNodes('.$i.'); });'."\n";
         }
 
         $eqLogics = Abeille::byType('Abeille');

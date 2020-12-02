@@ -15,7 +15,7 @@
  */
 
 $("#tab_nodes").off("click").on("click", function () {
-    displayNetLinks(1);
+    displayNodes(1);
 });
 
 $("#tab_graph").off("click").on("click", function () {
@@ -35,47 +35,41 @@ $("#nodeTo").off().change(function () {
     filterColumnOnValue(value, 2);
 });
 
-function updateZigBeeJsonCache(zigateX) {
-    // Lance le script de recuperation des LQI aupres des Abeilles routeurs.
-    // Show progress in AlertDiv
-    // Tcharp38: currently disabled. Some issues linked to tmp migration.
-    // setTimeout(function () {
-    //     updateAlertFromZigBeeJsonLog(true, zigateX);
-    // }, 2000);
+/* Launch AbeilleLQI.php to collect network informations.
+   Progress is displayed in 'AlertDiv' */
+function refreshLQICache(zigateX) {
+    console.log("refreshLQICache(zgNb="+zigateX+")");
+
+    /* Collect status displayed every 1sec */
+    setTimeout(function () { refreshLQICollectStatus(true, zigateX); }, 1000);
+
     $.ajax({
             url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+zigateX,
             async: true,
             error: function (jqXHR, status, error) {
-                //console.log("updateZigBeeJsonCache error status: " + status);
-                //console.log("updateZigBeeJsonCache error msg: " + error);
+                //console.log("refreshLQICache error status: " + status);
+                //console.log("refreshLQICache error msg: " + error);
                 $('#table_routingTable tbody').empty()
                 $('#div_networkZigbeeAlert').showAlert({
-                    message: 'Error, while processing zigbee network information, please see logs',
+                    message: 'ERREUR ! Impossible de démarrer la collecte.',
                     level: 'danger'
                 });
-                window.setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide()
-                }, 10000);
-
+                window.setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
             },
             success: function (data, status, jqhr) {
-                //console.log("updateZigBeeJsonCache success status: " + status);
-                //console.log("updateZigBeeJsonCache success msg: " + data);
+                //console.log("refreshLQICache success status: " + status);
+                //console.log("refreshLQICache success msg: " + data);
                 // php file checks for write rights
-
-                var levelAlert = "danger";
-                var timeAlert = 5000;
-                var messageAlert = data;
+                console.log("AbeilleLQI.php output="+data);
                 if (data.indexOf("successfully") >= 0) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
-                    displayNetLinks(zigateX);
-                    // updateAlertFromZigBeeJsonLog(false, zigateX); // Tcharp38 temp disable
+                    // displayNodes(zigateX);
+                    // refreshLQICollectStatus(false, zigateX);
+                } else {
+                    $('#div_networkZigbeeAlert').showAlert({message: data, level: "danger"});
+                    window.setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
                 }
-                $('#div_networkZigbeeAlert').showAlert({message: messageAlert, level: levelAlert});
-                window.setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide()
-                }, 3000);
             }
         }
     );
@@ -138,58 +132,61 @@ function getAbeilleLog(_autoUpdate, _log) {
     });
 }
 
-function updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX) {
+/* Read & display lock file content until "done" found */
+function refreshLQICollectStatus(_autoUpdate, zigateX) {
+    console.log("refreshLQICollectStatus(zgNb="+zigateX+")");
+
     $.ajax({
         type: 'GET',
-        url: '/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
-        dataType: 'html',
+        // url: '/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
+        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        data: {
+            action: 'getTmpFile',
+            file : "AbeilleLQI_MapDataAbeille"+zigateX+".json.lock",
+        },
+        // dataType: 'html',
+        dataType: "json",
         global: false,
         cache: false,
         error: function (request, status, error) {
-            console.log("updateAlertFromZigBeeJsonLog url: " + url);
-            console.log("updateAlertFromZigBeeJsonLog error status: " + status);
-            console.log("updateAlertFromZigBeeJsonLog error msg: " + error);
+            console.log("refreshLQICollectStatus: error status=" + status);
+            console.log("refreshLQICollectStatus: error msg=" + error);
             $('#div_networkZigbeeAlert').showAlert({
-                message: "Error, cannot read status file, please refresh cache.",
+                message: "ERREUR ! Problème du lecture du fichier de lock.",
                 level: 'danger'
             });
             _autoUpdate = 0;
-            setTimeout(function () {
-                $('#div_networkZigbeeAlert').hide();
-            }, 5000);
+            setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
         },
-        success: function (data) {
-            //console.log("updateAlertFromZigBeeJsonLog success data: " + data);
-            //console.log("updateAlertFromZigBeeJsonLog success data includes oops: " + data.toLowerCase().includes("oops"));
-            //error in treatment
-            if (data.toLowerCase().includes("oops")) {
-                $('#div_networkZigbeeAlert').showAlert({
-                    message: "Error, cannot read status file, please refresh cache.",
-                    level: 'danger'});
+        success: function (json_res) {
+            res = JSON.parse(json_res.result); // res.status, res.error, res.content
+            if (res.status != 0) {
+                var msg = "ERREUR ! Quelque chose s'est mal passé ("+res.error+")";
+                $('#div_networkZigbeeAlert').showAlert({ message: msg, level: 'danger' });
                 _autoUpdate = 0;
-                setTimeout(function () {
-                    $('#div_networkZigbeeAlert').hide();
-                }, 3000);
+                setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
+            } else {
+                var data = res.content;
+                console.log("Status='"+data+"'");
+                var alertLevel = 'success';
+            if (data.toLowerCase().includes("oops")) {
+                    alertLevel = 'danger';
+                    _autoUpdate = 0;
+                } else if (data.toLowerCase().includes("done")) {
+                    data = "Collecte terminée";
+                _autoUpdate = 0;
             }
-            else {
                 $('#div_networkZigbeeAlert').showAlert({
                     message: data ,
-                    level: 'success'
+                    level: alertLevel
                 });
-                //if LQI log contains done, then loop display of log is disabled
-                // Tcharp38: temp disabled due to tmp migration issue
+
+                /* Collect status display stops when "done" found */
                 // _autoUpdate = data.toLowerCase().includes("done")?0:1;
-                // if (_autoUpdate) {
-                //     setTimeout(function () {
-                //         updateAlertFromZigBeeJsonLog(_autoUpdate, zigateX);
-                //     }, 1000);
-                // }
-                // when LQI request is done, alertDiv is hidden.
-                // else {
-                    {
-                    setTimeout(function () {
-                        $('#div_networkZigbeeAlert').hide();
-                    }, 5000);
+                if (_autoUpdate) { // Next status update in 1s
+                    setTimeout(function () { refreshLQICollectStatus(_autoUpdate, zigateX); }, 1000);
+                } else { // Keep last message 10sec then hide
+                    setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
                 }
             }
         }
@@ -417,8 +414,9 @@ function network_display(zigateX) {
 };
 
 /* Display nodes table */
-function displayNetLinks(zigateX) {
-    console.log("displayNetLinks(zgNb="+zigateX+")");
+function displayNodes(zigateX) {
+    console.log("displayNodes(zgNb="+zigateX+")");
+
     var jqXHR = $.ajax({
         type: 'POST',
         url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
@@ -433,10 +431,10 @@ function displayNetLinks(zigateX) {
     jqXHR.done(function (json, textStatus, jqXHR) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
             $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         } else if (res.content == "") {
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau}}', level: 'danger'});
         } else {
             var json = JSON.parse(res.content);
             var nodes = json.data;
@@ -567,9 +565,7 @@ function displayNetLinks(zigateX) {
                         message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
                         level: 'info'
                     });
-                    setTimeout(function () {
-                        $('#div_networkZigbeeAlert').hide()
-                    }, 4000);
+                    setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 5000);
                 } else {
                     window.location.href = document.location.origin = '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
                 }
@@ -583,9 +579,7 @@ function displayNetLinks(zigateX) {
                         message: '{{Pas de correspondance trouvée entre le noeud zigbee et jeedom. Ce noeud n\'existe pas dans jeedom et/ou l\'analyse de réseau n\'est pas actualisée}}',
                         level: 'info'
                     });
-                    setTimeout(function () {
-                        $('#div_networkZigbeeAlert').hide()
-                    }, 4000);
+                    setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 5000);
                 } else {
                     window.location.href = document.location.origin + '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
                 }
@@ -629,16 +623,14 @@ function displayNetLinks(zigateX) {
     });
 
     jqXHR.fail(function (json, textStatus, jqXHR) {
-        //console.log("network.js: displayNetLinks: fail: " + textStatus);
+        //console.log("network.js: displayNodes: fail: " + textStatus);
         var msg = 'Données du réseau non trouvées. Forcez la réinterrogation.';
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         $('#table_routingTable tbody').empty()
     });
 
     jqXHR.always(function (json, textStatus, jqXHR) {
-        setTimeout(function () {
-            $('#div_networkZigbeeAlert').hide()
-        }, 10000);
+        setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
     })
 }
 

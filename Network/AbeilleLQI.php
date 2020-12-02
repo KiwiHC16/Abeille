@@ -16,11 +16,11 @@
     include_once("../resources/AbeilleDeamon/includes/function.php");
     include_once __DIR__."/../core/php/AbeilleLog.php"; // Log library
 
-    function KiwiLog($message = "")
-    {
-        global $debugKiwi;
-        if ($debugKiwi && strlen($message) > 0) echo $message . "<br>\n";
-    }
+    // function KiwiLog($message = "")
+    // {
+    //     global $debugKiwi;
+    //     if ($debugKiwi && strlen($message) > 0) echo $message . "<br>\n";
+    // }
 
     // ---------------------------------------------------------------------------------------------------------------------------
     function message() {
@@ -48,8 +48,8 @@
         logMessage("debug", "Recu ".json_encode($message));
 
         if (strpos( "_".$message->topic, "LQI") != 1) {
-            echo "LQI not\n";
-            logMessage("debug", "  Message non LQI => Inattentu");
+            // echo "LQI not\n";
+            logMessage("debug", "  Message non LQI => Inattendu.");
             return;
         }
 
@@ -150,7 +150,7 @@
         $msgAbeille->message['topic'] = "Cmd".$dest."/Ruche/Management_LQI_request";
         $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
 
-        KiwiLog("publishLQI: ".json_encode($msgAbeille));
+        // KiwiLog("publishLQI: ".json_encode($msgAbeille));
 
         if (msg_send( $queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false)) {
             log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode($msgAbeille));
@@ -209,13 +209,6 @@
     $debugKiwiCli = 0; // if called form shell
     if ( $debugKiwiCli ) $_GET['zigate']=1;
 
-    $LQI                        = array();
-    $knownNE_FromAbeille        = array();
-    $knownObject_FromAbeille    = array();
-    $NE_All_BuildFromLQI        = array();
-
-    $abeilleParameters = Abeille::getParameters();
-
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log");
     logMessage("debug", "Démarrage d'AbeilleLQI.");
 
@@ -227,31 +220,38 @@
         /* Zigate number passed as arg ? (called from shell/cron case) */
         if (!isset($argv[1])) {
             logMessage("debug", "  Paramètre zigate manquant => arret");
-            return;
+            exit;
         }
         $zgNb = $argv[1];
     } else
         $zgNb = $_GET['zigate'];
     if (($zgNb < 1) or ($zgNb > maxNbOfZigate)) {
         logMessage("debug", "  Mauvaise valeur de zigate => arret");
-        return;
+        exit;
     }
+
+    $LQI                        = array();
+    $knownNE_FromAbeille        = array();
+    $knownObject_FromAbeille    = array();
+    $NE_All_BuildFromLQI        = array();
+
+    $abeilleParameters = Abeille::getParameters();
 
     $netName = "Abeille".$zgNb; // Abeille network
 
     $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
 
-    $tmpDir = jeedom::getTmpFolder("Abeille");
+    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
     $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
     $lockFile = $dataFile.".lock";
     $nbwritten = 0;
 
     if (file_exists($lockFile)) {
         $content = file_get_contents($lockFile);
-        KiwiLog($lockFile . ' content: ' . $content);
+        logMessage("debug", "Contenu du lock='".$content."'");
         if (strpos("_".$content, "done") != 1) {
-            echo 'Oops, une collecte est déja en cours... Veuillez attendre la fin de l\'opération';
+            echo 'ERROR: Collect already ongoing';
             logMessage("debug", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
             exit;
         }
@@ -260,7 +260,7 @@
     $nbwritten = file_put_contents($lockFile, "init");
     if ($nbwritten<1) {
         unlink($lockFile);
-        echo 'Oops, je ne peux pas écrire sur ' . $lockFile;
+        echo "ERROR: Can't write lock file";
         logMessage("debug", "Impossible d'écrire le fichier lock (".$lockFile.") => arret");
         exit;
     }
@@ -271,13 +271,13 @@
         $knownNE_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
         $knownObject_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getObject()->getName();
     }
-    if ( $debugKiwiCli ) { echo json_encode($knownObject_FromAbeille)."\n"; }
+    // if ( $debugKiwiCli ) { echo json_encode($knownObject_FromAbeille)."\n"; }
 
     // Let's start at least with Ruche
     $NE_All_BuildFromLQI[$netName."/Ruche"] = array("LQI_Scan_Done" => 0);
 
     logMessage("debug", "Equipements connus de Jeedom: ".json_encode($knownNE_FromAbeille));
-    KiwiLog( "NE to scan: ".json_encode($NE_All_BuildFromLQI) );
+    logMessage("debug", "Equipements à interroger: ".json_encode($NE_All_BuildFromLQI));
 
     $NE_All_continue = 1;   // Controle le while sur la liste des NE
     $NE_continue = 1;       // controle la boucle sur l interrogation de la table des voisines d un NE particulier
@@ -291,8 +291,8 @@
         // Let's continue with Routers found
         // foreach ($knownNE as $name => $neAddress) {
         foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
-            KiwiLog("=============================================================");
-            KiwiLog("Start Loop with : ".$currentNeAddress);
+            logMessage("debug", "=============================================================");
+            logMessage("debug", "Start Loop with : ".$currentNeAddress);
 
             list( $netName, $addr ) = explode( '/', $currentNeAddress) ;
             if ( $addr == "Ruche" ) { $addr = "0000"; }
@@ -306,7 +306,7 @@
                     $done++;
                 }
             }
-            KiwiLog("AbeilleLQI main: " . $done . " of " . $total);
+            logMessage("debug", "Status: ".$done."/".$total);
 
             //-----------------------------------------------------------------------------
             // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
@@ -317,15 +317,15 @@
                 $name = "Inconnu-" . $currentNeAddress;
             }
 
-            $nbwritten = file_put_contents($lockFile, $done . " of " . $total . ' (' . $name . ' - ' . $currentNeAddress . ')');
+            $nbwritten = file_put_contents($lockFile, $done."/".$total.' ('.$name.' - '.$currentNeAddress.')');
             if ($nbwritten<1) {
-                unlink($lockFile);
-                echo 'Oops, je ne peux pas écrire sur ' . $lockFile;
+                echo "ERROR: Can't write lock file";
                 logMessage("error", "Impossible d'écrire sur fichier de lock.");
+                unlink($lockFile);
                 exit;
             }
 
-            KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );
+            // KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );
 
             if ($currentNeStatus['LQI_Scan_Done'] == 0) {
                 $NE_All_continue = 1;
@@ -348,11 +348,11 @@
 
     //write json to file
     if (file_put_contents($dataFile, $json)) {
-        echo "JSON file created successfully...\n";
-        logMessage("error", "AbeilleLQI terminé sans erreurs.");
+        echo "Ok: Collect ended successfully";
+        logMessage("info", "AbeilleLQI terminé sans erreurs.");
     } else {
         unlink($dataFile);
-        echo "Oops! Error creating json file...\n";
+        echo "ERROR: Data file write pb.";
     }
 
     // print_r( $NE_All );

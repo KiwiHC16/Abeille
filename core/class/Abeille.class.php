@@ -605,8 +605,7 @@ class Abeille extends eqLogic
         // ******************************************************************************************************************
         // Remove temporary files
         for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
-            $lockFile = jeedom::getTmpFolder('Abeille') . '/../../tmp/AbeilleLQI_MapDataAbeille' . $i . '.json.lock';
-            log::add('Abeille', 'debug', 'deamon_start_cleanup(), file: '.$lockFile ); 
+            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI_MapDataAbeille'.$i.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
                 log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de ' . $lockFile);

@@ -1913,7 +1913,7 @@
             $AttributId     = "Middle";
             $data           = substr($payload,14, 2);
 
-            $this->mqqtPublish($dest .'/'.$source, $ClusterId, $AttributId, $data);
+            $this->mqqtPublish($dest.'/'.$source, $ClusterId, $AttributId, $data);
         }
 
         //----------------------------------------------------------------------------------------------------------------

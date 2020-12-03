@@ -286,6 +286,41 @@ class AbeilleTools
     }
 
     /**
+     * CheckAlldeamones and send systemMessage to zigateX if needed
+     *
+     * @param $parameters
+     * @param $running
+     * @return mixed
+     */
+    public static function checkAllDaemons($parameters,$running){
+        //get last start to limit restart requests
+        if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
+            $return['state'] = "nok";
+            for ($retry = 1; $retry <= 3; $retry++) {
+                AbeilleTools::restartMissingDaemons($parameters, $running);
+                if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
+                    $return['state'] = "ok";
+                    break;
+                } else {
+                    //clear systemMessage
+                    //$daemons=implode(" ", AbeilleTools::getMissingDaemons($parameters,$running));
+                    $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
+                    log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' missing daemons ' . $daemons);
+                    if (len($daemons) == 0) {
+                        AbeilleTools::clearSystemMessage($parameters, 'all');
+                    } else {
+                        AbeilleTools::sendMessageToRuche($daemons, "");
+                    }
+                }
+            }
+            //After restart daemons, if still are missing, then no hope.
+            if (AbeilleTools::isMissingDaemons($parameters, $running)) {
+                return $return;
+            }
+        }
+    }
+
+    /**
      * get running processes for Abeille plugin
      *
      * @return array
@@ -344,8 +379,7 @@ class AbeilleTools
                     $found['cmd']++;
             }
         }
-
-        log::add('Abeille', 'debug', 'Tools:getRunningDaemons: nbExpected: ' . $nbProcessExpected .
+        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': nbExpected: ' . $nbProcessExpected .
             ', found: ' . implode(',', $found));
 
         return $found;
@@ -391,7 +425,8 @@ class AbeilleTools
         //get socat first
         arsort($found);
         $found = array_reverse($found);
-        log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
+        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.
+            ' : lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
@@ -399,12 +434,14 @@ class AbeilleTools
                 AbeilleTools::sendMessageToRuche($daemon);
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
-                log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: restarting ' . $daemon . ': ' . $cmd);
-                log::add('Abeille', 'info', 'Tools:restartMissingDaemons: restarting Abeille' . $daemon);
+                log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.
+                    ': restarting ' . $daemon . ': ' . $cmd);
+                log::add('Abeille', 'info', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille' . $daemon);
                 exec($cmd . ' &');
             }
+
         }
-        log::add('Abeille', 'debug', 'Tools:restartMissingDaemons: missing daemons:' . $missing);
+        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:' . $missing);
     }
 
     /**

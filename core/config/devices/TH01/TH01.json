@@ -13,7 +13,9 @@
       "mainEP": "#EP#"
     },
     "Commandes": {
-      "include2": "nom"
+      "include2": "nom",
+      "include2 3 2": "Batterie-Pourcent-Ikea",
+      "include2 2 2": "BindToPowerConfig"
     }
   }
 }

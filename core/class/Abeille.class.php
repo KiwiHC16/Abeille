@@ -1120,8 +1120,10 @@ class Abeille extends eqLogic
 
     public static function message($message)
     {
-
-        log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
+        // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
+        // and keep the 3 lines below which print all messages except Time-Time, Time-TimeStamp and Link-Quality that we get for every message.
+        // Divide by 3 the log quantity and ease the log reading
+        // log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
 
         $topicArray = explode("/", $message->topic);
         if (sizeof($topicArray) != 3) {
@@ -1131,9 +1133,9 @@ class Abeille extends eqLogic
 
         $parameters_info = self::getParameters();
 
-        // if (!preg_match("(Time|Link-Quality)", $message->topic)) {
-        // log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-        // }
+        if (!preg_match("(Time|Link-Quality)", $message->topic)) {
+            log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+        }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // demande de creation de ruche au cas ou elle n'est pas deja crée....

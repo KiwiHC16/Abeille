@@ -65,6 +65,11 @@
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/Ruche/SystemMessage", "Le message");
         }
 
+        if ($test==201) {
+            echo "Send a Systeme Message to the SonOff Inter to tesst Batterie level info command\n";
+            // public static function publishMosquitto($queueId, $priority, $topic, $payload)
+            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/9CD5/0001-01-0021", "37");
+        }
         
     }
 

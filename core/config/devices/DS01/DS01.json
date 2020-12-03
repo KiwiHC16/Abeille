@@ -1,7 +1,7 @@
 {
   "DS01": {
     "nameJeedom": "SONOFF Wireless Door/Window Sensor",
-    "timeout": "60",
+    "timeout": "140",
     "Comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4",
     "Categorie": {
       "security": "1"
@@ -14,7 +14,9 @@
     },
     "Commandes": {
       "include2": "nom",
-      "include1": "etatSonoff"
+      "include1": "etatSonoff",
+      "include2 3 2": "Batterie-Pourcent-Ikea",
+      "include2 2 2": "BindToPowerConfig"
     }
   }
 }

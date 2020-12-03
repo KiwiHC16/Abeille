@@ -1,7 +1,7 @@
 {
   "TH01": {
     "nameJeedom": "SonOff SNZB-02",
-    "timeout": "60",
+    "timeout": "140",
     "battery_type": "1xCR2450",
     "Categorie": {
       "automatism": "1"
@@ -15,7 +15,13 @@
     "Commandes": {
       "include2": "nom",
       "include2 3 2": "Batterie-Pourcent-Ikea",
-      "include2 2 2": "BindToPowerConfig"
+      "include2 2 2": "BindToPowerConfig",
+      "include2 2 2 2": "BindToZigateTemperature",
+      "include2 2 2 2 2": "setReportTemperature",
+      "include2 2 2 2 2 3": "temperature",
+      "include2 2 2 2 3": "BindToZigateHumidity",
+      "include2 2 2 2 2 2": "setReportHumidity",
+      "include2 2 2 2 2 2 2": "humidite"
     }
   }
 }

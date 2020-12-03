@@ -73,6 +73,7 @@
         
     }
 
+    // Test Methode/Function
     if ( (300<=$test) && ($test<400) ) {
         if ($test==300) {
             echo "Test Cron function\n";
@@ -99,5 +100,18 @@
             echo "Test getEqFromIEEE\n";
             var_dump( Abeille::getEqFromIEEE('842E14FFFE1396F5') );
         }
+
+        if ($test==320) {
+            echo "Test AbeilleParser::execAtCreationCmdForOneNE\n";
+                $address = "Abeille1/7147";
+                $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId( $address,'Abeille')->getId(), 'execAtCreation', 'action' );
+                foreach ( $cmds as $key => $cmd ) {
+                    // self::deamonlog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
+                    // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
+                    echo 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay')."\n";
+                }
+            
+        }
+
     }
 ?>

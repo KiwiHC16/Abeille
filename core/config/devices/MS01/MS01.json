@@ -1,7 +1,7 @@
 {
   "MS01": {
     "nameJeedom": "SONOFF Wireless IR Sensor",
-    "timeout": "60",
+    "timeout": "140",
     "Comment": "https://github.com/KiwiHC16/Abeille/issues/1324",
     "Categorie": {
       "security": "1"
@@ -14,7 +14,9 @@
     },
     "Commandes": {
       "include2": "nom",
-      "include1": "etatSonOffIR"
+      "include1": "etatSonOffIR",
+      "include2 3 2": "Batterie-Pourcent-Ikea",
+      "include2 2 2": "BindToPowerConfig"
     }
   }
 }

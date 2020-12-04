@@ -184,6 +184,9 @@ function updateConfigDB() {
         if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
             config::save( 'blocageTraitementAnnonce', 'Non', 'Abeille' ) ;
         }
+        if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'none', 1 ) == "none" ) {
+            config::save( 'blocageRecuperationEquipement', 'Oui', 'Abeille' ) ;
+        }
         if ( config::byKey( 'agressifTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
             config::save( 'agressifTraitementAnnonce', '4', 'Abeille' ) ;
         }

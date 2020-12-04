@@ -362,6 +362,16 @@
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du de la recuperation d equipement inconnus, par defaut le laisser sur Oui.}}">{{Blocage recuperation equipement : }}</label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="blocageRecuperationEquipement" style="width:150px" data-toggle="tooltip" title="{{Si un equipement se manifeste mais n est pas connu par Abeille, Abeille peut essayer de le recuperer. Dans certaine situation cela peut rendre Abeille instalble.}}">
+                        <option value="Oui">{{Oui}}</option>
+                        <option value="Non">{{Non}}</option>
+                    </select>
+                </div>
+            </div>
             
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Agressivité du traitement des annonces, par defaut le laisser sur 4.}}">{{Agressivité traitement Annonces : }}</label>

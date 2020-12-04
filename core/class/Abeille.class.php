@@ -1486,27 +1486,40 @@ class Abeille extends eqLogic
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet n existe pas et je recoie une commande => je drop la cmd
+        // Si l objet n existe pas et je recoie une commande => je drop la cmd but I try to get the device into Abeille
         // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
-
         if (!is_object($elogic)) {
-            log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
-            // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
 
-            // EP 01
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "01");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Default");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
+            // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality 
+            if (!preg_match("(Time|Link-Quality)", $message->topic)) {
 
-            // EP 0B
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "0B");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Hue");
+                // If the user lock then I'll not try to recover/get the device but leave a message.
+                if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'none', 1 ) == '' ) {
+                
+                    log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
+                    // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
 
-            // EP 03
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
+                    // EP 01
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "01");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Default");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
 
+                    // EP 0B
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "0B");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Hue");
 
+                    // EP 03
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
+                }
+                else {
+                    if (!Abeille::checkInclusionStatus($dest)) {
+                        // message::add("Abeille", "Des informations remontent pour un equipement inconnu d Abeille avec pour adresse ".$addr." et pour la commande ".$cmdId );
+                        log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
+                    }
+                }
+
+            }
 
             return;
         }

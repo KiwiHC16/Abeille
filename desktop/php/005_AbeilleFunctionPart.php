@@ -2,7 +2,7 @@
 /* Display beehive or bee card */
 function displayBeeCard($eqLogic, $files, $zgNb) {
     // find opacity
-    $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+    $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 
     // Find icone
     $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
@@ -14,11 +14,14 @@ function displayBeeCard($eqLogic, $files, $zgNb) {
 
     // Affichage
     $id = $eqLogic->getId();
-    echo '<div class="eqLogicDisplayCardB">';
-    echo    '<input id="idBeeChecked'.$zgNb.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
-    echo    '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $id . '" style="background-color : #ffffff ; width : 200px;' . $opacity . '" >';
-    echo    '<table><tr><td><img src="plugins/Abeille/images/' . $path . '.png"  /></td><td>' . $eqLogic->getHumanName(true, true) . '</td></tr></table>';
-    echo    '</div>';
-    echo '</div>';
+    echo '<div>';
+	echo    '<input id="idBeeChecked'.$zgNb.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+	echo 	'<br/>';
+	echo 	'<div class="eqLogicDisplayCard cursor'.$opacity.'" style="width: 130px" data-eqLogic_id="' .$id .'">';
+	echo 		'<img src="plugins/Abeille/images/' . $path . '.png"/>';
+	echo 		'<br/>';
+	echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
+	echo 	'</div>';
+	echo '</div>';
 }
 ?>

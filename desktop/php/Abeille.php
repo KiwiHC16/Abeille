@@ -37,67 +37,53 @@ if (file_exists($dbgFile)) {
 ?>
 
 <!-- For all modals on 'Abeilles' page. -->
-<div id="abeilleModal" style="display:none;"></div>
+<div class="row row-overflow" id="abeilleModal">
 
-    <!-- Barre verticale de recherche à gauche de la page  -->
-    <div class="row row-overflow">
-        <div class="col-lg-2 col-sm-3 col-sm-4">
-            <div class="bs-sidebar">
-                <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-                    <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/>
-                    </li>
-<?php
-                    foreach ($eqLogics as $eqLogic) {
-                        echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
-                    }
-?>
-                </ul>
-            </div>
-        </div><!-- Fin - Barre verticale de recherche à gauche de la page  -->
+	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
-    <!-- Barre d outils horizontale  -->
-    <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px; ">
+		<!-- Barre d outils horizontale  -->
+		<div class="col-xs-12 eqLogicThumbnailDisplay">
 
-        <!-- Icones de toutes les modales  -->
-        <?php include '010_AbeilleGestionPart.php'; ?>
+			<!-- Icones de toutes les modales  -->
+			<?php include '010_AbeilleGestionPart.php'; ?>
 
-        <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
+			<!-- Icones de toutes les abeilles  -->
+			<?php include '020_AbeilleMesAbeillesPart.php'; ?>
+				
+			<legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+			<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
+				
+				<!-- Gestion des groupes et des scenes  -->
+				<?php include '030_AbeilleGroupPart.php'; ?>
+				
+				<!-- Gestion des groupes et des scenes  -->
+				<?php include '040_AbeilleScenePart.php'; ?>
+			
+			</div>
 
-            <!-- Icones de toutes les abeilles  -->
-            <?php include '020_AbeilleMesAbeillesPart.php'; ?>
+			<!-- Gestion des ghosts / remplacement d equipements  -->
+			<?php include '050_AbeilleRemplacementPart.php'; ?>
 
-            <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+			<!-- Gestion des parametres Zigate -->
+			<?php include '060_AbeilleZigatePart.php'; ?>
+			
+			<!-- Affichage des details zigate  -->
+			<?php include '070_AbeilleDetailsPart.php'; ?>
 
-            <!-- Gestion des groupes et des scenes  -->
-            <?php include '030_AbeilleGroupPart.php'; ?>
+			<!-- Affichage de la zone developpeur  -->
+			<?php include '080_AbeilleZoneDevPart.php'; ?>
 
-            <!-- Gestion des groupes et des scenes  -->
-            <?php include '040_AbeilleScenePart.php'; ?>
-
-        </form>
-
-        <!-- Gestion des ghosts / remplacement d equipements  -->
-        <?php include '050_AbeilleRemplacementPart.php'; ?>
-
-        <!-- Gestion des parametres Zigate -->
-        <?php include '060_AbeilleZigatePart.php'; ?>
-        <hr>
-
-        <!-- Affichage des details zigate  -->
-        <?php include '070_AbeilleDetailsPart.php'; ?>
-
-        <!-- Affichage de la zone developpeur  -->
-        <?php include '080_AbeilleZoneDevPart.php'; ?>
-
-    </div> <!-- Fin - Barre d outils horizontale  -->
+		</div> <!-- Fin - Barre d outils horizontale  -->
+	
+	</form>
 
     <!-- Affichage des informations d un equipement - tab : Equipement / Param / Commandes  -->
-    <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px; display: none;">
-
+    <div class="col-xs-12 eqLogic" style="display: none;">
+	
         <!-- Affichage de la zone developpeur  -->
         <?php include '100_AbeilleEntete.php'; ?>
 
-        <!-- AAffichage des informations specifiques d un equipement  -->
+        <!-- Affichage des informations specifiques d un equipement  -->
         <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 
             <!-- Affichage des informations specifiques a cet equipement: Equipement tab  -->
@@ -111,9 +97,10 @@ if (file_exists($dbgFile)) {
             <!-- Affichage des informations specifiques a cet equipement: Command tab -->
             <?php include '130_AbeilleCommandes.php'; ?>
 
-
         </div>
+
     </div>
+
 </div>
 
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>

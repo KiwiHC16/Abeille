@@ -36,23 +36,24 @@
 
         if ($test==100) {
             echo "Test pour BSO\n";
+            echo "pgp AbeilleTest.php 100 angle";
             $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/moveToLiftAndTiltBSO';
-            $msgAbeille->message['payload'] = 'EP=01&Inclinaison=60&duration=FFFF';
+            $msgAbeille->message['payload'] = 'EP=01&Inclinaison='.$argv[2].'&duration=FFFF';
         }  
         
-        if ($test==101) {
+        if ($test==109) {
             echo "On Off Test\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/OnOff';
             $msgAbeille->message['payload'] = 'Action=Toggle&EP=01';
         }
 
-        if ($test==102) {
+        if ($test==110) {
             echo "Reset Ruche\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/reset';
             $msgAbeille->message['payload'] = 'reset';
         }
         
-        if ($test==103) {
+        if ($test==111) {
             echo "Used to Test PDM messages and dev the PDM feature\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/PDM';
             $msgAbeille->message['payload'] = 'E_SL_MSG_PDM_HOST_AVAILABLE';

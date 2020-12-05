@@ -14,47 +14,64 @@
     include_once __DIR__.'/../class/Abeille.class.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
-    $abeilleCmdQueue = new AbeilleCmdQueue('debug');
-    $message = new MsgAbeille();
-    $message->priority = 1;
-
     $test = $argv[1];
     echo "Running test: ".$test."\n";
     
-    if ($test==1) {
-        echo "Send a command in binary format directly to AbeilleCMd to be written on serie port\n";
-        $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "0283E4010102" );
+    if ( (000<=$test) && ($test<100) ) {
+        echo "To execute this test Abeille Daemon has to be stopped.\n";
+        $cmdQueue = new AbeilleCmdQueue('debug');
+        
+        if ($test==1) {
+            echo "Send a command in binary format directly to AbeilleCMd to be written on serie port\n";
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "0283E4010102" );
+        }
     }
 
     // Send a L2 Command to the queue to be processed 
     if ( (100<=$test) && ($test<200) ) {
-        
+        echo "To execute this test Abeille Daemon has to run.\n";
+
+        $msgAbeille = new MsgAbeille;
+        $msgAbeille->priority = 1;
+
         if ($test==100) {
             echo "Test pour BSO\n";
-            $message->topic = 'CmdAbeille1/25c9/moveToLiftAndTiltBSO';
-            $message->payload = 'EP=01&Inclinaison=60&duration=FFFF';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/moveToLiftAndTiltBSO';
+            $msgAbeille->message['payload'] = 'EP=01&Inclinaison=60&duration=FFFF';
         }  
         
         if ($test==101) {
             echo "On Off Test\n";
-            $message->topic = 'CmdAbeille1/83E4/OnOff';
-            $message->payload = 'Action=Toggle&EP=01';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/OnOff';
+            $msgAbeille->message['payload'] = 'Action=Toggle&EP=01';
         }
 
         if ($test==102) {
             echo "Reset Ruche\n";
-            $message->topic = 'CmdAbeille1/Ruche/reset';
-            $message->payload = 'reset';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/reset';
+            $msgAbeille->message['payload'] = 'reset';
         }
         
         if ($test==103) {
             echo "Used to Test PDM messages and dev the PDM feature\n";
-            $message->topic = 'CmdAbeille1/Ruche/PDM';
-            $message->payload = 'E_SL_MSG_PDM_HOST_AVAILABLE';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/PDM';
+            $msgAbeille->message['payload'] = 'E_SL_MSG_PDM_HOST_AVAILABLE';
         }
 
-        $cmdQueue->procmsg($message);
-        $cmdQueue->processCmdQueueToZigate();
+        // Send the command to the queue for processing
+        $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
+        if ( $queueKeyAbeilleToCmd ) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msgAbeille, true, false)) {
+                echo "Msg sent: " . json_encode($msgAbeille) . "\n";
+            } else {
+                echo "Could not send Msg\n";
+            }
+        }
+        else {
+            echo "Can t connect to the queue !\n";
+        }
+        
+
     }
 
     // Send a message to Abeille's queue
@@ -114,4 +131,6 @@
         }
 
     }
+
+    echo "End of the test.\n";
 ?>

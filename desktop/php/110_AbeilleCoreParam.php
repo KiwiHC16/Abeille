@@ -13,11 +13,14 @@
             <div class="col-sm-3">
                 <select class="eqLogicAttr form-control"            data-l1key="object_id">
                     <option value="">{{Aucun}}</option>
-                    <?php
-                    foreach (jeeObject::all() as $object) {
-                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                    }
-                    ?>
+                     <?php
+						$options = '';
+						foreach ((jeeObject::buildTree(null, false)) as $object) {
+							$decay = $object->getConfiguration('parentNumber');
+							$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
+						}
+						echo $options;
+					?>
                 </select>
             </div>
         </div>

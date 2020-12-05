@@ -1,4 +1,5 @@
-<legend><i class="fa fa-table"></i> {{Mes Abeilles}}</legend>
+<legend><i class="fas fa-table"></i> {{Mes Abeilles}}</legend>
+<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic"/>
 
 <?php
     $NbOfZigatesON = 0; // Number of enabled zigates
@@ -6,20 +7,20 @@
     for ( $i=1; $i<=$zigateNb; $i++ ) {
         if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled
-
+		
         $NbOfZigatesON++;
         if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {
-            echo 'Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
+            echo '<label style="margin: 10px 0px 0px 10px">Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName().'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include'.$i.'" class="fa fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
+        echo '<i id="bt_include'.$i.'" class="fas fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include_stop'.$i.'" class="fa fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
+        echo '<i id="bt_include_stop'.$i.'" class="fas fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_createRemote'.$i.'"class="fa fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
-
+        echo '<i id="bt_createRemote'.$i.'"class="fas fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
+		
         /* Remove equipments from Jeedom only */
-        echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-left: 8px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
+        echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
 
         if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
             echo '<br>';
@@ -28,13 +29,14 @@
             /* Set timeout on selected equipements */
             echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
-
-        echo '<div class="eqLogicThumbnailContainer">';
+		
+		echo '<div class="eqLogicThumbnailContainer">';
         $dir = dirname(__FILE__) . '/../../images/';
         $files = scandir($dir);
         $eqPerZigate = array(); // All equipements linked to current zigate
         /* Display beehive card then bee cards */
-        foreach ($eqLogics as $eqLogic) {
+        		
+		foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
             if ($eqLogicId != "Abeille".$i."/Ruche")
                 continue;
@@ -44,7 +46,8 @@
             $eq['logicalId'] = $eqLogicId;
             $eqPerZigate[] = $eq;
         }
-        foreach ($eqLogics as $eqLogic) {
+        
+		foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
             list( $net, $addr ) = explode( "/", $eqLogicId);
             if ( $net != 'Abeille'. $i)
@@ -74,3 +77,4 @@
         echo "</div>";
     }
 ?>
+

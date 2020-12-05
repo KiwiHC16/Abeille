@@ -15,7 +15,7 @@
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
     $abeilleCmdQueue = new AbeilleCmdQueue('debug');
-    $message = new object();
+    $message = new MsgAbeille();
     $message->priority = 1;
 
     $test = $argv[1];

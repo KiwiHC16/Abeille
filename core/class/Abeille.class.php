@@ -1494,8 +1494,13 @@ class Abeille extends eqLogic
             if (!preg_match("(Time|Link-Quality)", $message->topic)) {
 
                 // If the user lock then I'll not try to recover/get the device but leave a message.
-                if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'none', 1 ) == '' ) {
-                
+                if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
+                    if (!Abeille::checkInclusionStatus($dest)) {
+                        // message::add("Abeille", "Des informations remontent pour un equipement inconnu d Abeille avec pour adresse ".$addr." et pour la commande ".$cmdId );
+                        log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
+                    }
+                }
+                else {
                     log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
                     // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
 
@@ -1511,12 +1516,6 @@ class Abeille extends eqLogic
                     // EP 03
                     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
                     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
-                }
-                else {
-                    if (!Abeille::checkInclusionStatus($dest)) {
-                        // message::add("Abeille", "Des informations remontent pour un equipement inconnu d Abeille avec pour adresse ".$addr." et pour la commande ".$cmdId );
-                        log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
-                    }
                 }
 
             }

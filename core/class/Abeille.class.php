@@ -525,7 +525,7 @@ class Abeille extends eqLogic
         if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: " . json_encode($count) . ". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
 
         // log::add( 'Abeille', 'debug', 'cron1: Fin ------------------------------------------------------------------------------------------------------------------------' );
-        AbeilleTools::checkAllDaemons($param, implode(', ', AbeilleTools::getRunningDaemons()));
+        AbeilleTools::checkAllDaemons($param, AbeilleTools::getRunningDaemons());
     }
 
     public static function deamon_info()
@@ -1474,7 +1474,7 @@ class Abeille extends eqLogic
         // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
         if (!is_object($elogic)) {
 
-            // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality 
+            // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality
             if (!preg_match("(Time|Link-Quality)", $message->topic)) {
 
                 // If the user lock then I'll not try to recover/get the device but leave a message.

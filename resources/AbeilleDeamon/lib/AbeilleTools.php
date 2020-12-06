@@ -292,32 +292,31 @@ class AbeilleTools
      * @param $running
      * @return mixed
      */
-    public static function checkAllDaemons($parameters,$running){
+    public static function checkAllDaemons($parameters, $running)
+    {
+        //remove all message before each check
+        AbeilleTools::clearSystemMessage($parameters,'all');
         //get last start to limit restart requests
         if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
             $return['state'] = "nok";
-            for ($retry = 1; $retry <= 3; $retry++) {
-                AbeilleTools::restartMissingDaemons($parameters, $running);
-                if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
-                    $return['state'] = "ok";
-                    break;
-                } else {
-                    //clear systemMessage
-                    //$daemons=implode(" ", AbeilleTools::getMissingDaemons($parameters,$running));
-                    $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
-                    log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' missing daemons ' . $daemons);
-                    if (len($daemons) == 0) {
-                        AbeilleTools::clearSystemMessage($parameters, 'all');
-                    } else {
-                        AbeilleTools::sendMessageToRuche($daemons, "");
-                    }
-                }
-            }
-            //After restart daemons, if still are missing, then no hope.
-            if (AbeilleTools::isMissingDaemons($parameters, $running)) {
-                return $return;
-            }
+            AbeilleTools::restartMissingDaemons($parameters, $running);
         }
+        //After restart daemons, if still are missing, then no hope.
+        if (AbeilleTools::isMissingDaemons($parameters, $running)) {
+            return $return;
+        }
+
+        $return['state'] = "ok";
+        //clear systemMessage
+        //$daemons=implode(" ", AbeilleTools::getMissingDaemons($parameters,$running));
+        $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
+        if (len($daemons) == 0) {
+            AbeilleTools::clearSystemMessage($parameters, 'all');
+        } else {
+            log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons ' . $daemons);
+            AbeilleTools::sendMessageToRuche($daemons, 'daemons manquants ' . $daemons);
+        }
+
     }
 
     /**
@@ -325,7 +324,8 @@ class AbeilleTools
      *
      * @return array
      */
-    public static function getRunningDaemons(): array
+    public
+    static function getRunningDaemons(): array
     {
         exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
         return $running;
@@ -338,7 +338,8 @@ class AbeilleTools
      * @param $running
      * @return array
      */
-    public static function diffExpectedRunningDaemons($parameters, $running): array
+    public
+    static function diffExpectedRunningDaemons($parameters, $running): array
     {
         $nbZigate = $parameters['zigateNb'];
         $nbProcessExpected = 2; // parser and cmd
@@ -367,20 +368,20 @@ class AbeilleTools
             $match = [];
             if (preg_match('/\K Abeille([0-9]) /', $line, $match)) {
                 $abeille = $match[1];
-                if (stristr($line, "AbeilleSerialRead.php"))
+                if (stristr($line, "abeilleserialread.php"))
                     $found['serialRead' . $abeille]++;
-                if (stristr($line, 'AbeilleSocat.php')) {
+                if (stristr($line, 'abeillesocat.php')) {
                     $found['socat' . $abeille]++;
                 }
             } else {
-                if (stristr($line, "AbeilleParser.php"))
+                if (stristr($line, "abeilleparser.php"))
                     $found['parser']++;
-                if (stristr($line, "AbeilleCmd.php"))
+                if (stristr($line, "abeillecmd.php"))
                     $found['cmd']++;
             }
         }
-        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': nbExpected: ' . $nbProcessExpected .
-            ', found: ' . implode(',', $found));
+
+        //log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': nbExpected: '.$nbProcessExpected . ', found: ' . json_encode($found));
 
         return $found;
     }
@@ -392,7 +393,8 @@ class AbeilleTools
      * AbeilleType,AbeilleSerialPortX, IpWifiZigateX, AbeilleActiverX
      * @param $running
      */
-    public static function isMissingDaemons($parameters, $running): bool
+    public
+    static function isMissingDaemons($parameters, $running): bool
     {
         //no cron, no start requested
         if (AbeilleTools::isAbeilleCronRunning() == false) {
@@ -402,22 +404,23 @@ class AbeilleTools
         $nbProcessExpected = $found['expected'];
         array_pop($found);
         $result = $nbProcessExpected - array_sum($found);
-        log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': ' . ($result == 0 ? 'False' : 'True') . ', params: ' . implode(',', $parameters) .
-            ', running: ' . implode(',', $running));
+        log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': '
+            . ($result == 0 ? 'False' : 'True') . ',   found: ' . json_encode($found));
         //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
-        if ($result == 1) {
+        if ($result > 1) {
             log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
             message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
         }
 
-        return $result != 0;
+        return $result > 0;
     }
 
     /**
      * @param array $parameters
      * @param $running
      */
-    public static function restartMissingDaemons(array $parameters, $running)
+    public
+    static function restartMissingDaemons(array $parameters, $running)
     {
         $lastLaunch = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
         $found = self::diffExpectedRunningDaemons($parameters, $running);
@@ -425,23 +428,24 @@ class AbeilleTools
         //get socat first
         arsort($found);
         $found = array_reverse($found);
-        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.
-            ' : lastLaunch: ' . $lastLaunch . ',running:' . print_r($found, true));
+        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .
+            ' : lastLaunch: ' . $lastLaunch . ', found:' . json_encode($found));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
             if ($value == 0) {
-                AbeilleTools::sendMessageToRuche($daemon);
+                AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
-                log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.
-                    ': restarting ' . $daemon . ': ' . $cmd);
-                log::add('Abeille', 'info', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille' . $daemon);
+                log::add('Abeille', 'info',
+                    __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': restarting Abeille' . $daemon. '/'. $value);
+                log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .
+                    ': restarting  XXXXX  Abeille XXXXX' . $daemon . ': ' . $cmd);
                 exec($cmd . ' &');
             }
 
         }
-        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:' . $missing);
+        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons:' . $missing);
     }
 
     /**
@@ -450,7 +454,8 @@ class AbeilleTools
      * @param $daemonFile
      * @return String
      */
-    public static function getStartCommand($param, $daemonFile): string
+    public
+    static function getStartCommand($param, $daemonFile): string
     {
         $nohup = "/usr/bin/nohup";
         $php = "/usr/bin/php";
@@ -499,12 +504,14 @@ class AbeilleTools
      *
      * @param $daemon
      */
-    public static function sendMessageToRuche($daemon, $message=""){
+    public
+    static function sendMessageToRuche($daemon, $message = "")
+    {
         $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
         unset($matches);
         $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
         $messageToSend = ($message == "") ? "" : "$daemonName: $message";
-        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate ' . $zigateNbr);
+        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' sending ' . $messageToSend . ' to zigate ' . $zigateNbr);
         Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
             "Abeille$zigateNbr/Ruche/SystemMessage", $messageToSend);
     }
@@ -513,9 +520,10 @@ class AbeilleTools
      * clean messages displayed by all zigates if no parameters or all
      *
      * @param array $parameters jeedom Abeille's config
-     * @param string $which     number, from 1 to 9
+     * @param string $which number, from 1 to 9
      */
-    public static function clearSystemMessage($parameters, $which = 'all')
+    public
+    static function clearSystemMessage($parameters, $which = 'all')
     {
         if ($which == 'all') {
             for ($n = 1; $n <= $parameters['zigateNb']; $n++) {
@@ -530,7 +538,8 @@ class AbeilleTools
         }
     }
 
-    public static function checkRequired($type, $zigateNumber)
+    public
+    static function checkRequired($type, $zigateNumber)
     {
         if ($type == 'PI')
             self::checkGpio();
@@ -541,7 +550,8 @@ class AbeilleTools
     /**
      * @param $zigateNumber
      */
-    public static function checkWifi($zigateNumber)
+    public
+    static function checkWifi($zigateNumber)
     {
         exec("command -v socat", $out, $ret);
         if ($ret != 0) {
@@ -563,13 +573,17 @@ class AbeilleTools
      *
      * @return string of comma separated missing daemon
      */
-    public static function getMissingDaemons(array $parameters, $running): string
+    public
+    static function getMissingDaemons(array $parameters, $running): string
     {
         $found = self::diffExpectedRunningDaemons($parameters, $running);
         $missing = "";
         foreach ($found as $daemon => $value) {
             if ($value == 0) {
                 $missing .= ", $daemon";
+                AbeilleTools::sendMessageToRuche($daemon, "processus manquant: $daemon");
+                log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': messageToRuche: '.$daemon.' manquant');
+
             }
         }
         if (strlen($missing) > 1) {
@@ -585,7 +599,8 @@ class AbeilleTools
      * typiquement c'est a executer une seule fois, lors de l'installation des dépendances.
      * je l'isole ici en cas de besoin
      */
-    public static function checkGpio()
+    public
+    static function checkGpio()
     {
         exec("command -v gpio && gpio -v", $out, $ret);
         if ($ret != 0) {
@@ -603,7 +618,8 @@ class AbeilleTools
      *
      * @return false
      */
-    public static function isAbeilleCronRunning()
+    public
+    static function isAbeilleCronRunning()
     {
         if (is_object(cron::byClassAndFunction('Abeille', 'deamon')) &
             (cron::byClassAndFunction('Abeille', 'deamon')->running())) {

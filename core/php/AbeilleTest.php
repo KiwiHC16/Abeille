@@ -16,18 +16,18 @@
 
     $test = $argv[1];
     echo "Running test: ".$test."\n";
-    
+
     if ( (000<=$test) && ($test<100) ) {
         echo "To execute this test Abeille Daemon has to be stopped.\n";
         $cmdQueue = new AbeilleCmdQueue('debug');
-        
+
         if ($test==1) {
             echo "Send a command in binary format directly to AbeilleCMd to be written on serie port\n";
             $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "0283E4010102" );
         }
     }
 
-    // Send a L2 Command to the queue to be processed 
+    // Send a L2 Command to the queue to be processed
     if ( (100<=$test) && ($test<200) ) {
         echo "To execute this test Abeille Daemon has to run.\n";
 
@@ -39,8 +39,8 @@
             echo "pgp AbeilleTest.php 100 angle";
             $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/moveToLiftAndTiltBSO';
             $msgAbeille->message['payload'] = 'EP=01&Inclinaison='.$argv[2].'&duration=FFFF';
-        }  
-        
+        }
+
         if ($test==109) {
             echo "On Off Test\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/OnOff';
@@ -52,7 +52,7 @@
             $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/reset';
             $msgAbeille->message['payload'] = 'reset';
         }
-        
+
         if ($test==111) {
             echo "Used to Test PDM messages and dev the PDM feature\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/PDM';
@@ -77,7 +77,7 @@
         else {
             echo "Can t connect to the queue !\n";
         }
-        
+
 
     }
 
@@ -96,10 +96,10 @@
                 AbeilleTools::sendMessageToRuche("daemonTest1","");
                 break;
             case 202:
-                echo "Send a Systeme Message to the Ruche2 and clean it after 5 sec\n";
-                AbeilleTools::sendMessageToRuche("daemonTest2","this is test message from zigate2");
+                echo "Send a Systeme Message to the Ruche3 and clean it after 5 sec\n";
+                AbeilleTools::sendMessageToRuche("daemonTest3","this is test message from zigate3");
                 sleep( 5);
-                AbeilleTools::sendMessageToRuche("daemonTest2","");
+                AbeilleTools::sendMessageToRuche("daemonTest3","");
                 break;
             case 203:
                 echo "Send a Systeme Message to the Ruche1 and 2 and clean them after 5 sec\n";
@@ -122,7 +122,7 @@
             // public static function publishMosquitto($queueId, $priority, $topic, $payload)
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/9CD5/0001-01-0021", "37");
         }
-        
+
     }
 
     // Test Methode/Function
@@ -184,7 +184,7 @@
                     // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
                     echo 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay')."\n";
                 }
-            
+
         }
 
     }

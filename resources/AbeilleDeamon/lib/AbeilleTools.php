@@ -310,7 +310,7 @@ class AbeilleTools
         //clear systemMessage
         //$daemons=implode(" ", AbeilleTools::getMissingDaemons($parameters,$running));
         $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
-        if (len($daemons) == 0) {
+        if (strlen($daemons) == 0) {
             AbeilleTools::clearSystemMessage($parameters, 'all');
         } else {
             log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons ' . $daemons);

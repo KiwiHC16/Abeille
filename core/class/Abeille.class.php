@@ -323,10 +323,10 @@ class Abeille extends eqLogic
                 $i = $i + 1;
 
                 // Recupere IEEE de la Ruche/ZiGate
-                $ZiGateIEEE = $this->getIEEE($dest.'/Ruche');
+                $ZiGateIEEE = self::getIEEE($dest.'/Ruche');
 
                 // Recupere IEEE de l Abeille
-                $addrIEEE = $this->getIEEE($dest.'/'.$addr);
+                $addrIEEE = self::getIEEE($dest.'/'.$addr);
 
                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: ' . $addr);
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $dest . "/Ruche/bindShort&time=" . (time() + (($i * 33) + 1)), "address=" . $addr . "&targetExtendedAddress=" . $addrIEEE . "&targetEndpoint=01&ClusterId=0006&reportToAddress=" . $ZiGateIEEE);

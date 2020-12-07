@@ -25,10 +25,16 @@
         return $out[0];
     }
 
-    /* GIT: Fetch --all */
-    function gitFetchAll()
+    /* GIT: Fetch --all
+       Removes any local tracking for branches that no longer exist on remote.
+       'turbo' = 1 => For quickest fetch to get branches list only.
+     */
+    function gitFetchAll($turbo = 0)
     {
-        exec("cd plugins/Abeille; git fetch --all", $out, $ret);
+        if ($turbo)
+            exec("cd plugins/Abeille; sudo git fetch -p --depth 1 --all", $out, $ret);
+        else
+            exec("cd plugins/Abeille; sudo git fetch -p --all", $out, $ret);
     }
 
     /* GIT: Returns all known branches as an array */

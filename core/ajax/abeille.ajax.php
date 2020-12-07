@@ -214,7 +214,7 @@ try {
             abeille::deamon_start(); // Restarting daemon
         }
 
-        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
+        ajax::success(json_encode(array('status' => $status)));
     }
 
     if (init('action') == 'resetPiZiGate') {
@@ -242,9 +242,13 @@ try {
         $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
+        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+        abeille::deamon_stop(); // Stopping daemon
         $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
         $cmd = 'nohup '.__DIR__.'/../../tmp/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
         exec($cmd);
+        //logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
+        //abeille::deamon_start(); // Restarting daemon
 
         ajax::success(json_encode(array('status' => $status)));
     }

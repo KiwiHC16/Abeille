@@ -895,12 +895,12 @@
             if ( ($profile == "0104") && ($cluster == "0702") ) {
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0a - report attribut";
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0A - report attribut";
                 $attribute              = substr($payload,34, 2).substr($payload,32, 2);
                 $dataType               = substr($payload,36, 2);
 
                 // Remontée puissance prise TS0121 Issue: #1288
-                if ( ($attribute == '0000') && (dataType==25) ) {
+                if ( ($attribute == '0000') && ($dataType==25) ) {
                     // '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
                     $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
                     if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance prise TS0121 '

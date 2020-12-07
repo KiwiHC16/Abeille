@@ -85,7 +85,7 @@
                             echo $localBranch;
                             echo '</div>';
                             /* List branches */
-                            gitFetchAll();
+                            gitFetchAll(1);
                             $Branches = gitGetAllBranches();
                             echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
                             foreach ($Branches as $b) {
@@ -767,7 +767,7 @@
             if (branchName == js_curBranch) {
                 document.getElementById("idSwitchBranch").innerText = "Mettre-à-jour";
             } else {
-                document.getElementById("idSwitchBranch").innerText = "Changer";
+                document.getElementById("idSwitchBranch").innerText = "Basculer";
             }
         });
 

@@ -59,6 +59,12 @@
             $msgAbeille->message['payload'] = 'E_SL_MSG_PDM_HOST_AVAILABLE';
         }
 
+        if ($test==112) {
+            echo "Test envoie Cmd With Tempo\n";
+            $msgAbeille->message['topic'] =  'Tempo'.'CmdAbeille1/ADDE/ReadAttributeRequest' . '&time=' . (time() + 3);
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0B04&attributeId=050B&AttributeType=29';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

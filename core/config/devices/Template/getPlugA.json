@@ -17,7 +17,7 @@
       "execAtCreationDelay": "10",
       "Polling": "cron15",
       "PollingOnCmdChange": "0006-01-0000",
-      "PollingOnCmdChangeDelay": "5",
+      "PollingOnCmdChangeDelay": "3",
       "visibilityCategory": "additionalCommand"
     }
   }

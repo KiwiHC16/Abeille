@@ -108,12 +108,18 @@ class AbeilleTemplate
     /*
     * Will return the configuration for the device stored in the template
     *
-    * @return          Return return the configuration (array) for the device stored in the template
+    * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
     */
-    public static function getConfigurationFromTemplate( $uniqId ) {
+    public static function getConfigurationFromTemplate( $uniqId, $item ) {
         $jsonArray = self::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
-            return $jsonArray[$key]["configuration"];
+            if (isset($jsonArray[$key]["configuration"][$item])) {
+                return $jsonArray[$key]["configuration"][$item];
+            }
+            else {
+                return '';
+            }
+            
         }
     }
 
@@ -159,10 +165,13 @@ foreach ( $abeilles as $abeille ) {
     $uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
 
     if ( $uniqId!='') {
-        echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
+        echo '   '."TimeOut :".$abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
+        echo '   '."icone   :".$abeille->getConfiguration('icone') . ' <-> ' . $abeilleTemplate->getConfigurationFromTemplate($uniqId, 'icone') . "\n";
+        echo '   '."mainEP  :".$abeille->getConfiguration('mainEP') . ' <-> ' . $abeilleTemplate->getConfigurationFromTemplate($uniqId, 'mainEP') . "\n";
+        echo '   '."poll    :".$abeille->getConfiguration('poll') . ' <-> ' . $abeilleTemplate->getConfigurationFromTemplate($uniqId, 'poll') . "\n";
     }
     else {
-        echo $abeille->getTimeout() . ' <-> ' . "\n";
+        // echo $abeille->getTimeout() . ' <-> ' . "\n";
     }
     
 

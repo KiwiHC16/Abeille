@@ -81,6 +81,55 @@ class AbeilleTemplate
         }
     }
 
+    /**
+     * Will return the timeout for the device stored in the template
+     *
+     * @return          Return return the timeout for the device stored in the template
+     */
+    public static function getTimeOutJeedomFromTemplate( $uniqId ) {
+        $jsonArray = self::getJsonForUniqId( $uniqId );
+        foreach ( $jsonArray as $key=>$data ) {
+            return $jsonArray[$key]["timeout"];
+        }
+    }
+
+    /*
+    * Will return the categories for the device stored in the template
+    *
+    * @return          Return return the categories (array) for the device stored in the template
+    */
+   public static function getCategorieFromTemplate( $uniqId ) {
+       $jsonArray = self::getJsonForUniqId( $uniqId );
+       foreach ( $jsonArray as $key=>$data ) {
+           return $jsonArray[$key]["Categorie"];
+       }
+   }
+
+    /*
+    * Will return the configuration for the device stored in the template
+    *
+    * @return          Return return the configuration (array) for the device stored in the template
+    */
+    public static function getConfigurationFromTemplate( $uniqId ) {
+        $jsonArray = self::getJsonForUniqId( $uniqId );
+        foreach ( $jsonArray as $key=>$data ) {
+            return $jsonArray[$key]["configuration"];
+        }
+    }
+
+    /*
+    * Will return the Commandes for the device stored in the template
+    *
+    * @return          Return return the Commandes (array) for the device stored in the template
+    */
+    public static function getCommandesFromTemplate( $uniqId ) {
+        $jsonArray = self::getJsonForUniqId( $uniqId );
+        foreach ( $jsonArray as $key=>$data ) {
+            return $jsonArray[$key]["Commandes"];
+        }
+    }
+    
+
 }
 
 // '5c07c76620sdsfs8a7'
@@ -91,9 +140,10 @@ $test = new AbeilleTemplate;
 // var_dump( $test->uniqIdUsedByAnAbeille('Abeille1/3EFE') );
 // var_dump( $test->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
 // var_dump( $test->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
-// var_dump( $test->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
 
-var_dump( $test->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
+var_dump( $test->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
+
+//var_dump( $test->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
 
 
 

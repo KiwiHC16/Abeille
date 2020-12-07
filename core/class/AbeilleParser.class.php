@@ -2291,6 +2291,7 @@
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
+
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$SrcAddr
                     .', EP='            .$EPoint
@@ -2299,7 +2300,10 @@
                     .', AttrStatus='    .$AttributStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
+
             $this->deamonlog('debug', $dest.', Type='.$msg);
+
+            if ($AttributStatus!='00') { return; }
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null

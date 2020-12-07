@@ -7,7 +7,7 @@
     "Type": "info",
     "subType": "binary",
     "invertBinary": "0",
-    "template": "badge",
+    "template": "",
     "configuration": {
       "uniqId": "5c0sdsd7c76621c24",
       "visibilityCategory": "Network"

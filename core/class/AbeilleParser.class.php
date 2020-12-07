@@ -895,37 +895,15 @@
             if ( ($profile == "0104") && ($cluster == "0702") ) {
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0a - report attribut";
                 $attribute              = substr($payload,34, 2).substr($payload,32, 2);
                 $dataType               = substr($payload,36, 2);
-                $value                  = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
 
-                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance prise TS0121'
-                                 . $baseLog
-                                 . ', frameCtrlField='.$frameCtrlField
-                                 . ', SQN='.$SQN
-                                 . ', cmd='.$cmd
-                                 . ', attribute='.$attribute
-                                 . ', dataType='.$dataType
-                                 . ', value='.$value.' - '.hexdec($value)
-                                 );
-
-                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
-                return;
-            }
-
-            // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
-            if ( ($profile == "0104") && ($cluster == "0B04") ) {
-
-                $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
-                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
-                $succes                 = substr($payload,36, 2);
-                $dataType               = substr($payload,38, 2);
-                $value                  = substr($payload,42, 2).substr($payload,40, 2);
-
-                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
+                // Remontée puissance prise TS0121 Issue: #1288
+                if ( ($attribute == '0000') && (dataType==25) ) {
+                    // '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
+                    $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance prise TS0121 '
                                     . $baseLog
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN
@@ -935,8 +913,40 @@
                                     . ', value='.$value.' - '.hexdec($value)
                                     );
 
-                $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
-                return;
+                    $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                    return;
+                }
+            }
+
+            // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
+            if ( ($profile == "0104") && ($cluster == "0B04") ) {
+
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0a - report attribut";
+                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
+                $dataType               = substr($payload,36, 2);
+
+                // Remontée puissance module Legrand 20AX
+                if ( ($attribute == '050B') && ($dataType == '29') ) {
+                    // '29' => array( 'Int16', 2 ), // Signed 16-bit int
+                    $value = substr($payload,40, 2).substr($payload,38, 2);
+
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf(?) '
+                        . $baseLog
+                        . ', frameCtrlField='.$frameCtrlField
+                        . ', SQN='.$SQN
+                        . ', cmd='.$cmd
+                        . ', attribute='.$attribute
+                        . ', dataType='.$dataType
+                        . ', value='.$value.' - '.hexdec($value)
+                        );
+
+                    $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                    return;
+                }
+                
             }
 
             // Remontée etat relai module Legrand 20AX

@@ -43,11 +43,11 @@ class AbeilleTemplate
     }
 
     /**
-     * Will return the json file for a template uniqId
+     * Will return the json file name for a template uniqId
      *
-     * @return          Return the json file for a template uniqId or -1 if not found
+     * @return          Return the json file name for a template uniqId or -1 if not found
      */
-    public static function getJsonForUniqId( $uniqId ) {
+    public static function getJsonFileNameForUniqId( $uniqId ) {
         $templateFiles = glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json'); 
         foreach( $templateFiles as $templateFile ) {
             $json = file_get_contents( $templateFile );
@@ -56,6 +56,17 @@ class AbeilleTemplate
             }
         }
         return -1;
+    }
+
+    /**
+     * Will return the json file for a template uniqId
+     *
+     * @return          Return the json file for a template uniqId or -1 if not found
+     */
+    public static function getJsonForUniqId( $uniqId ) {
+        $jsonText = file_get_contents( self::getJsonFileNameForUniqId( $uniqId ));
+        $json = json_decode($jsonText);
+        return $json;
     }
 }
 
@@ -67,7 +78,9 @@ $test = new AbeilleTemplate();
 // var_dump( $test->uniqIdUsedByAnAbeille('Abeille1/3EFE') );
 // var_dump( $test->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
 
-var_dump( $test->getJsonForUniqId('5c07c76620sdsfs8a7') );
+// var_dump( $test->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
+
+var_dump( $test->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
 
 
 ?>

@@ -5,17 +5,6 @@ include_once __DIR__.'/Abeille.class.php';
 class AbeilleTemplate
 {
     /**
-     * Will update an  eqLogic based on a new version of the template
-     *
-     * @return          Does not return anything as all action on in the DB
-     */
-    public static function updateEqlogicFromNewTemplate( $abeilleLogicalId ) {
-        // uniqId
-        $templateUnitId = Abeille::byTypeAndSearhConfiguration( 'Abeille', 'uniqId' );
-        echo $templateUnitId."\n";
-    }
-
-    /**
      * Will retour the Template (uniqId) used by an Abeille
      *
      * @return          Return retour the Template (uniqId) used by an Abeille

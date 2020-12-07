@@ -1102,6 +1102,31 @@ class Abeille extends eqLogic
         return;
     }
 
+    public static function interrogateUnknowNE( $dest, $addr ) {
+        if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
+            log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne cherche pas a le recupérer, param: blocage recuperation equipment.");
+            return;
+        }
+        else {
+            log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
+
+            // EP 01
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "01");
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Default");
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
+
+            // EP 0B
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "0B");
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Hue");
+
+            // EP 03
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
+
+            return;
+        }
+    }
+
     public static function message($message)
     {
         // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
@@ -1463,7 +1488,8 @@ class Abeille extends eqLogic
                 // Il faut aussi mettre a jour la commande short address
                 Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, $dest . "/" . $addr . "/Short-Addr", $addr);
             } else {
-                log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde, je ne fais rien.');
+                log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde.');
+                self::interrogateUnknowNE( $dest, $addr );
             }
             // log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement');
             return;
@@ -1476,31 +1502,12 @@ class Abeille extends eqLogic
 
             // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality
             if (!preg_match("(Time|Link-Quality)", $message->topic)) {
-
-                // If the user lock then I'll not try to recover/get the device but leave a message.
-                if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
-                    if (!Abeille::checkInclusionStatus($dest)) {
-                        // message::add("Abeille", "Des informations remontent pour un equipement inconnu d Abeille avec pour adresse ".$addr." et pour la commande ".$cmdId );
-                        log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
-                    }
+                
+                if (!Abeille::checkInclusionStatus($dest)) {
+                    log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
                 }
-                else {
-                    log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne process pas la commande, j'essaye d interroger l equipement pour le créer.");
-                    // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityNeWokeUp, $dest."/".$addr."/Short-Addr", $addr );
-
-                    // EP 01
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "01");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Default");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceProfalux", "Default");
-
-                    // EP 0B
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "0B");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "Hue");
-
-                    // EP 03
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/AnnonceManufacturer", "03");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
-                }
+            
+                self::interrogateUnknowNE( $dest, $addr );
 
             }
 

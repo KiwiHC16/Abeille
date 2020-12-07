@@ -1707,6 +1707,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['IEEE_Address_request']) )
         {
+            // IEEE Address request
             $cmd = "0041";
 
             // <target short address: uint16_t> -> 4

@@ -86,7 +86,7 @@ class AbeilleTemplate
      *
      * @return          Return return the timeout for the device stored in the template
      */
-    public static function getTimeOutJeedomFromTemplate( $uniqId ) {
+    public static function getTimeOutFromTemplate( $uniqId ) {
         $jsonArray = self::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             return $jsonArray[$key]["timeout"];
@@ -134,17 +134,21 @@ class AbeilleTemplate
 
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
+$logicalId = 'Abeille1/3EFE';
 
-$test = new AbeilleTemplate;
+$abeille = Abeille::byLogicalId( $logicalId, 'Abeille', false );
 
-// var_dump( $test->uniqIdUsedByAnAbeille('Abeille1/3EFE') );
-// var_dump( $test->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
-// var_dump( $test->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
+// echo $abeille->getTimeout() . "\n";
+// var_dump( $abeille );
 
-var_dump( $test->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
+$abeilleTemplate = new AbeilleTemplate;
 
-//var_dump( $test->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
+$uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
+// var_dump( $abeilleTemplate->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
+// var_dump( $abeilleTemplate->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
+// var_dump( $abeilleTemplate->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
+// var_dump( $abeilleTemplate->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
 
-
+echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
 
 ?>

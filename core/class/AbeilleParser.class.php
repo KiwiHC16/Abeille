@@ -923,34 +923,112 @@
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0a - report attribut";
-                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
-                $dataType               = substr($payload,36, 2);
+                $cmd                    = substr($payload,30, 2); 
+                
+                if ( $cmd == "01" ) $cmdTxt = "01 - read attribut response ";
+                if ( $cmd == "0A" ) $cmdTxt = "0A - report attribut ";
 
-                // Remontée puissance module Legrand 20AX
-                if ( ($attribute == '050B') && ($dataType == '29') ) {
-                    // '29' => array( 'Int16', 2 ), // Signed 16-bit int
-                    $value = substr($payload,40, 2).substr($payload,38, 2);
+                
+                if ( $cmd == '01') {
+                    $attribute  = substr($payload,34, 2).substr($payload,32, 2);
+                    $status     = substr($payload,36, 2);
+                    $dataType   = substr($payload,38, 2);
 
-                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf(?) '
-                        . $baseLog
-                        . ', frameCtrlField='.$frameCtrlField
-                        . ', SQN='.$SQN
-                        . ', cmd='.$cmd
-                        . ', attribute='.$attribute
-                        . ', dataType='.$dataType
-                        . ', value='.$value.' - '.hexdec($value)
-                        );
+                    if ($status!='00') {
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - le status est erroné ne process pas la commande');
+                        return;
+                    }
 
-                    $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                    // example: Remontée V prise Blitzwolf BW-SHP13
+                    if (($attribute == '0505') && ($dataType == '21') ) {
+                        // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+                        $value = substr($payload,42, 2).substr($payload,40, 2);
 
-                    return;
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée V Blitzwolf '
+                            . $baseLog
+                            . ', frameCtrlField='.$frameCtrlField
+                            . ', SQN='.$SQN
+                            . ', cmd='.$cmdTxt
+                            . ', attribute='.$attribute
+                            . ', dataType='.$dataType
+                            . ', value='.$value.' - '.hexdec($value)
+                            );
+
+                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                        return;
+                    }
+
+                    // example: Remontée A prise Blitzwolf BW-SHP13
+                    if (($attribute == '0508') && ($dataType == '21') ) {
+                        // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+                        $value = substr($payload,42, 2).substr($payload,40, 2);
+
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée A Blitzwolf '
+                            . $baseLog
+                            . ', frameCtrlField='.$frameCtrlField
+                            . ', SQN='.$SQN
+                            . ', cmd='.$cmdTxt
+                            . ', attribute='.$attribute
+                            . ', dataType='.$dataType
+                            . ', value='.$value.' - '.hexdec($value)
+                            );
+
+                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                        return;
+                    }
+
+                    // example: Remontée puissance prise Blitzwolf BW-SHP13
+                    if (($attribute == '050B') && ($dataType == '29') ) {
+                        // '29' => array( 'Int16', 2 ), // Signed 16-bit int
+                        $value = substr($payload,42, 2).substr($payload,40, 2);
+
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
+                            . $baseLog
+                            . ', frameCtrlField='.$frameCtrlField
+                            . ', SQN='.$SQN
+                            . ', cmd='.$cmdTxt
+                            . ', attribute='.$attribute
+                            . ', dataType='.$dataType
+                            . ', value='.$value.' - '.hexdec($value)
+                            );
+
+                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                        return;
+                    }
                 }
+
+                // exemple: emontée puissance module Legrand 20AX
+                if ( ($cmd == '0A') ) {
+                    $attribute = substr($payload,34, 2).substr($payload,32, 2);
+                    $dataType  = substr($payload,36, 2);
+                    if ( ($attribute == '050B') && ($dataType == '29') ) {
+                        // '29' => array( 'Int16', 2 ), // Signed 16-bit int
+                        $value = substr($payload,40, 2).substr($payload,38, 2);
+
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf(?) '
+                            . $baseLog
+                            . ', frameCtrlField='.$frameCtrlField
+                            . ', SQN='.$SQN
+                            . ', cmd='.$cmd
+                            . ', attribute='.$attribute
+                            . ', dataType='.$dataType
+                            . ', value='.$value.' - '.hexdec($value)
+                            );
+
+                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+
+                        return;
+                    }
+                }
+
+                
                 
             }
 
             // Remontée etat relai module Legrand 20AX
-            // [2020-12-01 12:57:29][debug] Reçu: "8002 00191F000104FC41010102 D2B9 02 0000 18 1D 0A 0000 3003010010017B"
             if ( ($profile == "0104") && ($cluster == "FC41") ) {
 
                 $frameCtrlField         = substr($payload,26, 2);

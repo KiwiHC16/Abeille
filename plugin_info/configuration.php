@@ -122,6 +122,18 @@
             </div>
         </div>
 
+        <legend><i class="fa fa-list-alt"></i> {{Mise à jour}}</legend>
+        <div id="Update">
+            <?php
+                $tmpDir = jeedom::getTmpFolder('Abeille');
+                echo '{{Repertoire Temporaire}}: '.$tmpDir.'<br>';
+                exec ( 'df  --output=avail -BM '.$tmpDir, $output );
+                echo '{{Espace disponible}}: '.$output[1].'<br>';
+                $tmpSpaceAvailable = str_replace( 'M', '', $output[1] );
+                if ( $tmpSpaceAvailable < 100 ) echo '<span style="color:orange">{{L espace disponible est trop faible pour faire une mise a jour. <a href="https://community.jeedom.com/tags/plugin-abeille">Contactez nous sur le forum.</a>}}</span><br>';
+            ?>   
+        </div>
+
         <legend><i class="fa fa-list-alt"></i> {{Zigates}}</legend>
         <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="Connection">

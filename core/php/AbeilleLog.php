@@ -91,6 +91,7 @@
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.
        '\n' is automatically added at end of line.
+       If 'logLevel' is empty, always log and do not print log level.
        WARNING: A call to 'logSetConf()' is expected once prior to 'logMessage()'. */
     function logMessage($logLevel, $msg)
     {
@@ -103,10 +104,16 @@
         /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
 
         if ($GLOBALS["logFile"] == '') {
+            if ($logLevel == "")
+                echo ('['.date('Y-m-d H:i:s').'] '.$msg."\n");
+            else
             echo ('['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n");
             fflush(STDOUT);
         } else {
             $lFile = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
+            if ($logLevel == "")
+                file_put_contents($lFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
+            else
             file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
 
@@ -119,6 +126,9 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
+                if ($logLevel == "")
+                    file_put_contents($lFile, '['.date('Y-m-d H:i:s')."] Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
+                else
                 file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel)."] Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }

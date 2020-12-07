@@ -134,21 +134,37 @@ class AbeilleTemplate
 
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
-$logicalId = 'Abeille1/3EFE';
+// $logicalId = 'Abeille1/3EFE';
 
-$abeille = Abeille::byLogicalId( $logicalId, 'Abeille', false );
+// $abeille = Abeille::byLogicalId( $logicalId, 'Abeille', false );
 
 // echo $abeille->getTimeout() . "\n";
 // var_dump( $abeille );
 
 $abeilleTemplate = new AbeilleTemplate;
 
-$uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
+// $uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
 // var_dump( $abeilleTemplate->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
 // var_dump( $abeilleTemplate->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
 // var_dump( $abeilleTemplate->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
 // var_dump( $abeilleTemplate->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
 
-echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
+// echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
 
+$abeilles = Abeille::byType('Abeille');
+foreach ( $abeilles as $abeille ) {
+    echo $abeille->getName(). " : "; 
+    $logicalId = $abeille->getLogicalId();
+
+    $uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
+
+    if ( $uniqId!='') {
+        echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
+    }
+    else {
+        echo $abeille->getTimeout() . ' <-> ' . "\n";
+    }
+    
+
+}
 ?>

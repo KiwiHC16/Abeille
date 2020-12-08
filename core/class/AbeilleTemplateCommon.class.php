@@ -41,9 +41,39 @@ class AbeilleTemplateCommon
         $uniqIdList = array();
         $templateFiles = glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json');
         foreach( $templateFiles as $templateFile ) {
-            $json = file_get_contents( $templateFile );
+            $jsonText = file_get_contents( $templateFile );
             $jsonArray = json_decode($jsonText, true);
-            
+            if (!isset($jsonArray)) continue;
+            $keys = array_keys ( $jsonArray );
+            if (count($keys)!=1) { 
+                echo "Skipping file: ".$templateFile." as can t read it.\n";
+                continue;
+            }
+            $key = $keys[0];
+            if (isset($jsonArray[$key]['configuration'])) {
+                if (isset($jsonArray[$key]['configuration']['uniqId'])) 
+                    $uniqIdList[] = $jsonArray[$key]['configuration']['uniqId'];
+                else 
+                    echo "File: ".$templateFile." has no uniqId.\n";
+            }
+            else {
+                echo "Configuration chapter not set in json.\n";
+            }
+        }
+        return $uniqIdList;
+    }
+
+    /**
+    * Will return all uniqId duplicated in the template
+    *
+    * @return          Return return all uniqId duplicated
+    */
+    public static function duplicatedUniqId() {
+        $doublon = array_count_values (AbeilleTemplateCommon::getAllUniqId());
+        foreach ($doublon as $uniqId=>$nb) {
+            if ($nb>1) {
+                echo $uniqId." -> ".$nb."\n";
+            }
         }
     }
 }

@@ -38,9 +38,8 @@ if (0) {
     
 }
 
-AbeilleTemplateCmd::compareAllCmdWithTemplate();
+AbeilleTemplateCommon::duplicatedUniqId();
 
-
-
+// TODO compare topic et payload
 
 ?>

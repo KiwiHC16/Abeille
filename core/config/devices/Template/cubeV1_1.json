@@ -1,0 +1,16 @@
+{
+  "0012-02-0055": {
+    "isVisible": 0,
+    "name": "Mouvement",
+    "order": 2,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c766230711",
+      "visibilityCategory": "All"
+    }
+  }
+}

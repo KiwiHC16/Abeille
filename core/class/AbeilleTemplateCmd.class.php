@@ -61,30 +61,24 @@ class AbeilleTemplateCmd
         
         if (isset($configurationArray[$item])) return $configurationArray[$item];
         else return '';
-            
-        
     }
 
         /**
-    * Will return the configuration item for the device stored in the template
-    * @param            uniqId of the template that we want to use
-    * @param            item in the configuration that we want 
+    * Will compare cmd from Abeille to their template
     *
-    * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
+    * @return          Return no, will echo the result during execution.
     */
     public static function compareAllCmdWithTemplate() {
         $items = array( 'isVisible'=>'getIsVisible',
-                /*
-                'name'=>'getName',
-                'isHistorized'=>'getHistory', 
-                'Type'=>'getType', 
-                'subType'=>'getSubType',
-                'template'=>'getTemplate',
-                */
-            );
+                        'name'=>'getName',
+                        'isHistorized'=>'getIsHistorized', 
+                        'Type'=>'getType', 
+                        'subType'=>'getSubType',
+                    );
 
             // 'order'=>'getOrder'
             // invertBinary setDisplay('invertBinary'
+            // 'template'=>'getTemplate',
 
         // Take Abeile one by one and check if Template value is identical
         foreach ( Abeille::byType('Abeille') as $abeille ) {

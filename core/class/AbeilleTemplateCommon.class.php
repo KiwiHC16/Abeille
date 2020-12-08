@@ -12,7 +12,7 @@ class AbeilleTemplateCommon
         $templateFiles = glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json'); 
         foreach( $templateFiles as $templateFile ) {
             $json = file_get_contents( $templateFile );
-            if ( strpos($json, $uniqId) > 1 ) {
+            if ( strpos($json, '"'.$uniqId.'"') > 1 ) {
                 return $templateFile;
             }
         }
@@ -25,7 +25,9 @@ class AbeilleTemplateCommon
      * @return          Return the json array for a template uniqId or -1 if not found
      */
     public static function getJsonForUniqId( $uniqId ) {
-        $jsonText = file_get_contents( self::getJsonFileNameForUniqId( $uniqId ));
+        $file = self::getJsonFileNameForUniqId( $uniqId );
+        if ( $file == -1 ) return -1;
+        $jsonText = file_get_contents( $file );
         $jsonArray = json_decode($jsonText, true);
         return $jsonArray;
     }

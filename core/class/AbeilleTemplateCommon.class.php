@@ -1,40 +1,35 @@
 <?php
 
-class AbeilleTemplateCmd
+class AbeilleTemplateCommon
 {
-
     /**
-     * Will retour the Template (uniqId) used by a Cmd for specific Abeille
-     * @param           eqLogicalIdRef  logicalId of the Abeille
-     * @param           logicalId       logicalId of the Cmd
-     * 
+     * Will retour the Template (uniqId) used by an Abeille
+     *
      * @return          Return retour the Template (uniqId) used by an Abeille
      */
-    public static function uniqIdUsedByAnAbeilleCmd( $eqLogicalIdRef, $logicalId ) {
-        // return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, 'Abeille', false )->getConfiguration('uniqId', '');
-        $eqLogicalId = Abeille::byLogicalId( $eqLogicalIdRef, 'Abeille', false )->getId();
-        return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, false )->getConfiguration('uniqId', '');
+    public static function uniqIdUsedByAnAbeille( $logicalId ) {
+        return Abeille::byLogicalId( $logicalId, 'Abeille', false )->getConfiguration('uniqId', '');
     }
 
     /**
-     * Will collect all Cmd with a specific template (uniqId)
+     * Will collect all Abeille with a specific template (uniqId)
      *
-     * @return          Return all Cmd with a specific template (uniqId)
+     * @return          Return all abeille with a specific template (uniqId)
      */
-    public static function getCmdByTemplateUniqId( $uniqId ) {
-        $return = array();
-        $allCmdWithUniqId = AbeilleCmd::searchConfiguration( 'uniqId' );
+    public static function getEqLogicsByTemplateUniqId( $uniqId ) {
+        // uniqId
+        $allAbeillesWithUniqId = Abeille::byTypeAndSearhConfiguration( 'Abeille', 'uniqId' );
 
-        foreach ( $allCmdWithUniqId as $key=>$cmdWithUniqId ) {
-            if ( $cmdWithUniqId->getConfiguration('uniqId', '') == $uniqId ) {
-                $return[] = $cmdWithUniqId;
+        foreach ( $allAbeillesWithUniqId as $key=>$abeillesWithUniqId ) {
+            if ( $abeillesWithUniqId->getConfiguration('uniqId', '') == $uniqId ) {
+                $return[] = $abeillesWithUniqId;
             }
         }
 
         return $return;
     }
 
-    /** TODO
+    /**
      * Will return the json file name for a template uniqId
      *
      * @return          Return the json file name for a template uniqId or -1 if not found
@@ -50,7 +45,7 @@ class AbeilleTemplateCmd
         return -1;
     }
 
-    /** TODO
+    /**
      * Will return the json array for a template uniqId
      *
      * @return          Return the json array for a template uniqId or -1 if not found
@@ -61,7 +56,7 @@ class AbeilleTemplateCmd
         return $jsonArray;
     }
 
-    /** TODO
+    /**
      * Will return the name o fthe device store n the template
      *
      * @return          Return the name o fthe device store n the template
@@ -73,7 +68,7 @@ class AbeilleTemplateCmd
         }
     }
 
-    /** TODO
+    /**
      * Will return the timeout for the device stored in the template
      *
      * @return          Return return the timeout for the device stored in the template
@@ -85,7 +80,7 @@ class AbeilleTemplateCmd
         }
     }
 
-    /* TODO 
+    /*
     * Will return the categories for the device stored in the template
     *
     * @return          Return return the categories (array) for the device stored in the template
@@ -97,7 +92,7 @@ class AbeilleTemplateCmd
        }
    }
 
-    /* TODO
+    /*
     * Will return the configuration for the device stored in the template
     *
     * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
@@ -115,7 +110,7 @@ class AbeilleTemplateCmd
         }
     }
 
-    /* TODO
+    /*
     * Will return the Commandes for the device stored in the template
     *
     * @return          Return return the Commandes (array) for the device stored in the template
@@ -129,6 +124,5 @@ class AbeilleTemplateCmd
     
 
 }
-
 
 ?>

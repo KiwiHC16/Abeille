@@ -16,7 +16,9 @@
       "include1": "SW",
       "include2": "societe",
       "include3": "nom",
-      "include4": "etatSwitchDouble",
+      "include4": "etatSwitchDouble_1",
+      "include4 3": "etatSwitchDouble_2",
+      "include4 3 2": "etatSwitchDouble_3",
       "include4 2": "Batterie-Volt",
       "include5": "Batterie-Pourcent",
       "include6": "Xiaomi-ff01"

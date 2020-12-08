@@ -3,6 +3,16 @@
 include_once __DIR__.'/../../../core/php/core.inc.php';
 
 /**
+ * Function pour executer une commande shell et mettre le resultat dans le log
+ * @param    commande shell a executer
+ * @return  none
+ */
+function Abeille_pre_update_log($cmd) {
+    exec( $cmd, $output);
+    log::add('Abeille', 'debug', $cmd.' -> '.json_encode($output));
+}
+
+/**
  * Function call before doing the update of the plugin from the Market
  * @param       none
  * @return      nothing
@@ -11,8 +21,13 @@ function Abeille_pre_update() {
 
     log::add('Abeille', 'debug', 'Launch of Abeille_pre_update()');
 
+    log::add('Abeille', 'debug', 'Abeille tmp dir : '.jeedom::getTmpFolder("Abeille"));
+    Abeille_pre_update_log('df -h');
+    
+
     log::add('Abeille', 'debug', 'End of Abeille_pre_update()');
 
 }
 
+Abeille_pre_update();
 ?>

@@ -1,9 +1,9 @@
 <?php
 
-include_once __DIR__.'../class/Abeille.class.php';
-include_once __DIR__.'../class/AbeilleTemplateCommon.class.php';
-include_once __DIR__.'../class/AbeilleTemplateEq.class.php';
-include_once __DIR__.'../class/AbeilleTemplateCmd.class.php';
+include_once __DIR__.'/../class/Abeille.class.php';
+include_once __DIR__.'/../class/AbeilleTemplateCommon.class.php';
+include_once __DIR__.'/../class/AbeilleTemplateEq.class.php';
+include_once __DIR__.'/../class/AbeilleTemplateCmd.class.php';
 
 
 // '5c07c76620sdsfs8a7'

@@ -7,7 +7,7 @@
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07592627bb7",
+      "uniqId": "5c07lihsvh592627bb7",
       "icone": "LCT015",
       "mainEP": "0B",
       "poll": "1"
@@ -54,7 +54,7 @@
       "include37": "2200K",
       "include38": "2700K",
       "include39": "4000K",
-      "include40": "temperatureLight2",  
+      "include40": "temperatureLight2",
       "include40 2 2": "setTemperatureLight2",
       "include41": "5000K"
     }

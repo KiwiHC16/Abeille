@@ -9,7 +9,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c07c76624ea4",
+      "uniqId": "5c07c76624ea41",
       "topic": "setReportSpirit",
       "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MinInterval=43100&MaxInterval=43300",
       "visibilityCategory": "Network"

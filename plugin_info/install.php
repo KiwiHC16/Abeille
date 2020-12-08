@@ -27,6 +27,13 @@
 
 include_once __DIR__.'/../../../core/php/core.inc.php';
 
+/**
+ * Fonction exécutée automatiquement après l'installation du plugin
+ * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
+ * 
+ * @param   none
+ * @return none
+ */
 function Abeille_install() {
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (!is_object($cron)) {
@@ -228,6 +235,13 @@ function updateConfigDB() {
     }
 }
 
+/**
+ * Fonction exécutée automatiquement après la mise à jour du plugin
+ * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
+ * 
+ * @param   none
+ * @return none
+ */
 function Abeille_update() {
 
     message::add('Abeille', 'Mise à jour en cours...', null, null);
@@ -256,6 +270,13 @@ function Abeille_update() {
     message::add('Abeille', 'Mise à jour terminée', null, null);
 }
 
+/**
+ * Fonction exécutée automatiquement après la suppression du plugin
+ * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
+ * 
+ * @param   none
+ * @return none
+ */
 function Abeille_remove() {
     $cron = cron::byClassAndFunction('Abeille', 'deamon');
     if (is_object($cron)) {

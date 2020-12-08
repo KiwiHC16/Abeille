@@ -287,4 +287,49 @@
             return $statusesTable[$status];
         return "Status ".$status." inconnu";
     }
+
+    /* Returns a string corresponding to 804E bitmap info, based on given '$bitMap' value.
+       Example: "RxONWhenIdle/Parent/PermitJoinON/Coordinator" */
+    function zgGet804EBitMap($bitMap)
+    {
+        $bitMap = strtoupper($bitMap);
+        $desc = "";
+
+        // Bit map of attributes Described below: uint8_t
+        //    bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)
+        //    bit 2-3 Permit Join status (1- On 0-Off)
+        //    bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)
+        //    bit 6-7 Rx On When Idle status (1-On 0-Off)
+        $rx = ($bitMap >> 6) & 0x3;
+        switch ($rx) {
+        case 0: $desc .= "RxOFFWhenIdle"; break;
+        case 1: $desc .= "RxONWhenIdle"; break;
+        default; $desc .= "?"; break;
+        }
+
+        $rel = ($bitMap >> 4) & 0x3;
+        switch ($rel) {
+        case 0: $desc .= "/Parent"; break;
+        case 1: $desc .= "/Child"; break;
+        case 2: $desc .= "/Sibling"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        $pj = ($bitMap >> 2) & 0x3;
+        switch ($rel) {
+        case 0: $desc .= "/PermitJoinON"; break;
+        case 1: $desc .= "/PermitJoinOFF"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        $dt = ($bitMap >> 0) & 0x3;
+        switch ($rel) {
+        case 0: $desc .= "/Coordinator"; break;
+        case 1: $desc .= "/Router"; break;
+        case 2; $desc .= "/EndDevice"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        return $desc;
+    }
 ?>

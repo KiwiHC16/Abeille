@@ -30,8 +30,9 @@ echo "uniqId: ".$uniqId."\n";
 
 // echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
 
-echo AbeilleTemplateCmd::getNameFromTemplate($uniqId)."\n";
+var_dump(AbeilleTemplateCmd::getMainParamFromTemplate($uniqId, 'name'));
+var_dump(AbeilleTemplateCmd::getMainParamFromTemplate($uniqId, 'configuration'));
     
-
+var_dump(AbeilleTemplateCmd::getConfigurationFromTemplate($uniqId, 'visibilityCategory'));
 
 ?>

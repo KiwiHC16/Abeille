@@ -32,6 +32,20 @@ class AbeilleTemplateCommon
         return $jsonArray;
     }
 
+    /**
+     * Will return all uniqId
+     *
+     * @return          Return return all uniqId
+     */
+    public static function getAllUniqId( ) {
+        $uniqIdList = array();
+        $templateFiles = glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json');
+        foreach( $templateFiles as $templateFile ) {
+            $json = file_get_contents( $templateFile );
+            $jsonArray = json_decode($jsonText, true);
+            
+        }
+    }
 }
 
 ?>

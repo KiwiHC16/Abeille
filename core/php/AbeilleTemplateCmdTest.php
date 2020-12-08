@@ -38,49 +38,7 @@ if (0) {
     
 }
 
-$items = array( 'isVisible'=>'getIsVisible',
-/*
-                'name'=>'getName',
-                'isHistorized'=>'getHistory', 
-                'Type'=>'getType', 
-                'subType'=>'getSubType',
-                'template'=>'getTemplate',
-                */
-            );
-// 'order'=>'getOrder'
-// invertBinary setDisplay('invertBinary'
-
-// Take Abeile one by one and check if Template value is identical
-foreach ( Abeille::byType('Abeille') as $abeille ) {
-    // Don't proceed with Ruche as specific template
-    if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
-
-    echo "\nAbeille: ".$abeille->getName()."\n";
-    foreach ( $abeille->getCmd() as $cmd ) {
-        $uniqId = $cmd->getConfiguration( 'uniqId', -1 );
-        if ( $uniqId == -1 ) {
-            echo "    ".$abeille->getCmd().": This cmd doesn t have a uniqId, I can t identify it s template !\n";
-            continue;
-        }
-        if (AbeilleTemplateCommon::getJsonFileNameForUniqId($uniqId)==-1) {
-            echo "    ".$cmd->getName().": This uniqId (".$uniqId."), doesn t correspond to any template !\n";
-            continue;
-        }
-
-        foreach ( $items as $item=>$fct ) {
-            $templateValue = AbeilleTemplateCmd::getMainParamFromTemplate($uniqId, $item);
-            if ( $templateValue == -1 ) {
-                echo "    ".$cmd->getName().": Error template not found for this parameter (".$uniqId."->".$item.") !\n";
-                continue;
-            }
-            if ($cmd->$fct() != $templateValue) {
-                echo "    ".$cmd->getName().": ".$cmd->$fct().' <-> '.$templateValue."\n";
-                // var_dump(AbeilleTemplateCommon::getJsonFileNameForUniqId( $uniqId ));
-            }
-        }
-    }
-    
-}
+AbeilleTemplateCmd::compareAllCmdWithTemplate();
 
 
 

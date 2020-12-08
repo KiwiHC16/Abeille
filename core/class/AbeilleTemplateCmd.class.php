@@ -34,43 +34,17 @@ class AbeilleTemplateCmd
         return $return;
     }
 
-    /** TODO
-     * Will return the json file name for a template uniqId
-     *
-     * @return          Return the json file name for a template uniqId or -1 if not found
+    /**
+     * Will return the name of the cmd stored in the template
+     * @param           uniqId Id du template
+     * 
+     * @return          Return return the name of the cmd stored in the template
      */
-    public static function getJsonFileNameForUniqId( $uniqId ) {
-        $templateFiles = glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json'); 
-        foreach( $templateFiles as $templateFile ) {
-            $json = file_get_contents( $templateFile );
-            if ( strpos($json, $uniqId) > 1 ) {
-                return $templateFile;
-            }
-        }
-        return -1;
-    }
-
-    /** TODO
-     * Will return the json array for a template uniqId
-     *
-     * @return          Return the json array for a template uniqId or -1 if not found
-     */
-    public static function getJsonForUniqId( $uniqId ) {
-        $jsonText = file_get_contents( self::getJsonFileNameForUniqId( $uniqId ));
-        $jsonArray = json_decode($jsonText, true);
-        return $jsonArray;
-    }
-
-    /** TODO
-     * Will return the name o fthe device store n the template
-     *
-     * @return          Return the name o fthe device store n the template
-     */
-    public static function getNameJeedomFromTemplate( $uniqId ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
-        foreach ( $jsonArray as $key=>$data ) {
-            return $jsonArray[$key]["nameJeedom"];
-        }
+    public static function getNameFromTemplate( $uniqId ) {
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
+        $keys = array_keys ( $jsonArray );
+        if (count($keys)!=1) return 0;
+        else return $jsonArray[$keys[0]]['name'];
     }
 
     /** TODO
@@ -79,7 +53,7 @@ class AbeilleTemplateCmd
      * @return          Return return the timeout for the device stored in the template
      */
     public static function getTimeOutFromTemplate( $uniqId ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             return $jsonArray[$key]["timeout"];
         }
@@ -91,7 +65,7 @@ class AbeilleTemplateCmd
     * @return          Return return the categories (array) for the device stored in the template
     */
    public static function getCategorieFromTemplate( $uniqId ) {
-       $jsonArray = self::getJsonForUniqId( $uniqId );
+       $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
        foreach ( $jsonArray as $key=>$data ) {
            return $jsonArray[$key]["Categorie"];
        }
@@ -103,7 +77,7 @@ class AbeilleTemplateCmd
     * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
     */
     public static function getConfigurationFromTemplate( $uniqId, $item ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             if (isset($jsonArray[$key]["configuration"][$item])) {
                 return $jsonArray[$key]["configuration"][$item];

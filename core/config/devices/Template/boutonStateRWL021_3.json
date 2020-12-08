@@ -1,0 +1,18 @@
+{
+  "fc00-02-0002-Event": {
+    "isVisible": 1,
+    "name": "EventButtonLumPlus",
+    "order": 3,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "string",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c673466232203",
+      "repeatEventManagement": "always",
+      "visibilityCategory": "All"
+    }
+  }
+}

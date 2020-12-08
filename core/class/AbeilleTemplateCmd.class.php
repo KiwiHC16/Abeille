@@ -18,18 +18,18 @@ class AbeilleCmdTemplate
         return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, false )->getConfiguration('uniqId', '');
     }
 
-    /** TODO
-     * Will collect all Abeille with a specific template (uniqId)
+    /**
+     * Will collect all Cmd with a specific template (uniqId)
      *
-     * @return          Return all abeille with a specific template (uniqId)
+     * @return          Return all Cmd with a specific template (uniqId)
      */
-    public static function getEqLogicsByTemplateUniqId( $uniqId ) {
-        // uniqId
-        $allAbeillesWithUniqId = Abeille::byTypeAndSearhConfiguration( 'Abeille', 'uniqId' );
+    public static function getCmdByTemplateUniqId( $uniqId ) {
+        $return = array();
+        $allCmdWithUniqId = AbeilleCmd::searchConfiguration( 'uniqId' );
 
-        foreach ( $allAbeillesWithUniqId as $key=>$abeillesWithUniqId ) {
-            if ( $abeillesWithUniqId->getConfiguration('uniqId', '') == $uniqId ) {
-                $return[] = $abeillesWithUniqId;
+        foreach ( $allCmdWithUniqId as $key=>$cmdWithUniqId ) {
+            if ( $cmdWithUniqId->getConfiguration('uniqId', '') == $uniqId ) {
+                $return[] = $cmdWithUniqId;
             }
         }
 
@@ -143,12 +143,13 @@ $logicalId = '0000-01-0004';
 // echo $abeille->getTimeout() . "\n";
 // var_dump( $abeille );
 
-$abeilleCmdTemplate = new AbeilleCmdTemplate;
+// $abeilleCmdTemplate = new AbeilleCmdTemplate;
 
-$uniqId = $abeilleCmdTemplate->uniqIdUsedByAnAbeilleCmd($eqLogicalIdRef, $logicalId);
+$uniqId = AbeilleCmdTemplate::uniqIdUsedByAnAbeilleCmd($eqLogicalIdRef, $logicalId);
 
 echo "uniqId: ".$uniqId."\n";
-// var_dump( $abeilleTemplate->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
+var_dump( AbeilleCmdTemplate::getCmdByTemplateUniqId($uniqId) );
+
 // var_dump( $abeilleTemplate->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
 // var_dump( $abeilleTemplate->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
 // var_dump( $abeilleTemplate->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );

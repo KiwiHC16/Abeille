@@ -1,0 +1,20 @@
+{
+  "0012-02-0055": {
+    "isVisible": 1,
+    "name": "etat2",
+    "order": 3,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c76e237ef2",
+      "repeatEventManagement": "always",
+      "returnStateTime": "1",
+      "returnStateValue": "0",
+      "AbeilleRejectValue": "0",
+      "visibilityCategory": "All"
+    }
+  }
+}

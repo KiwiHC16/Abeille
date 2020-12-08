@@ -14,7 +14,9 @@
     "Commandes": {
       "include1": "SW",
       "include2": "nom",
-      "include3": "cube",
+      "include3": "cube_1",
+      "include3 2": "cube_2",
+      "include3 2 2": "cube_3",
       "include4": "Batterie-Volt",
       "include5": "Batterie-Pourcent",
       "include6": "Xiaomi-ff01"

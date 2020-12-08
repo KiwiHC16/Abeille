@@ -1,0 +1,16 @@
+{
+  "000C-03-ff05": {
+    "isVisible": 1,
+    "name": "Rotation (?)",
+    "order": 3,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "string",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c76622fb23",
+      "visibilityCategory": "All"
+    }
+  }
+}

@@ -26,7 +26,8 @@ function Abeille_pre_update() {
 
     log::add('Abeille', 'debug', 'Abeille tmp dir : '.jeedom::getTmpFolder("Abeille"));
     Abeille_pre_update_log('df -h');
-    
+    Abeille_pre_update_log("df  --output=avail -BM ".jeedom::getTmpFolder());
+    Abeille_pre_update_log("du -sh /var/www/html/plugins/Abeille");
 
     log::add('Abeille', 'debug', 'End of Abeille_pre_update()');
 

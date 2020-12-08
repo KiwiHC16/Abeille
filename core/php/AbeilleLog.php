@@ -95,13 +95,15 @@
        WARNING: A call to 'logSetConf()' is expected once prior to 'logMessage()'. */
     function logMessage($logLevel, $msg)
     {
-        if (logGetLevelNumber($logLevel) > $GLOBALS["curLogLevelNb"])
-            return; // Nothing to do for current log level
+        if ($logLevel != "") {
+            if (logGetLevelNumber($logLevel) > $GLOBALS["curLogLevelNb"])
+                return; // Nothing to do for current log level
 
-        $logLevel = strtolower(trim($logLevel));
-        if ($logLevel == "warning")
-            $logLevel = "warn";
-        /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+            $logLevel = strtolower(trim($logLevel));
+            if ($logLevel == "warning")
+                $logLevel = "warn";
+            /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+        }
 
         if ($GLOBALS["logFile"] == '') {
             if ($logLevel == "")

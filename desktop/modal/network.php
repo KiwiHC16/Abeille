@@ -3,14 +3,16 @@
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
- 
+
+    /* Add network & refresh button for all active zigates */
     function displayButtons($nbOfZigates) {
         echo 'Afficher réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
-            echo '<a class="btn btn-success displayNodes'.$i.'" style="margin-left:4px">Abeille'.$i.'</a>';
-            echo '<a class="btn btn-warning refreshNetworkCache'.$i.'" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements."><i class="fas fa-sync"></i></a>';
+
+            echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayNodes('.$i.')">Abeille'.$i.'</a>';
+            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
         }
     }
@@ -128,7 +130,7 @@
 <!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
 <!--script type="text/javascript" src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
-<!-- Bandeau pour afficher les messages d alerte -->
+<!-- Area to display alert message -->
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
 
 <!-- Affichage de tous les Tab. -->
@@ -146,7 +148,7 @@
 
             <div id="network-tab-content" class="tab-content">
 
-                <!-- tab Table des noeuds -->
+                <!-- tab "nodes table" -->
                 <div id="route_network" class="tab-pane active">
                     <br />
                     {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
@@ -377,9 +379,9 @@
                                             $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
                                             $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
 
-					    if (!is_object($sourceEq)) 	continue;		
-					    if (!is_object($destinationEq)) 	continue;		
-					    if (!is_object($nextHopEq)) 	continue;		
+					    if (!is_object($sourceEq)) 	continue;
+					    if (!is_object($destinationEq)) 	continue;
+					    if (!is_object($nextHopEq)) 	continue;
 
                                             echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
                                                 . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
@@ -416,10 +418,10 @@
 
 <script type="text/javascript">
     <?php
-        for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-            echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNodes('.$i.'); });'."\n";
-            echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayNodes('.$i.'); });'."\n";
-        }
+        // for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
+        //     echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNodes('.$i.'); });'."\n";
+        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayNodes('.$i.'); });'."\n";
+        // }
 
         $eqLogics = Abeille::byType('Abeille');
 

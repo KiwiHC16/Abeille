@@ -64,7 +64,7 @@ function refreshLQICache(zigateX) {
                 if (data.indexOf("successfully") >= 0) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
-                    // displayNodes(zigateX);
+                    displayNodes(zigateX);
                     // refreshLQICollectStatus(false, zigateX);
                 } else {
                     $('#div_networkZigbeeAlert').showAlert({message: data, level: "danger"});
@@ -224,12 +224,12 @@ function network_display(zigateX) {
         } else if (res.content == "") {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
         } else {
-                 
+
             // On parcours le json ligne à ligne
             // On regarde la source et l'ajoute a la table nodes si pas deja existante
             // on regarde la voisine et l ajoute à la table nodes si pas deja existante
             // On prend la voisine et on la met dans la liste link des voisines: astuce: aTemp et push.
-                 
+
             console.log('Visiblement j ai un json a utiliser');
             var json = JSON.parse(res.content);
             json.data.sort(function (a, b) {
@@ -288,7 +288,7 @@ function network_display(zigateX) {
                     nodes[currentJsonNode.Voisine].Type     = currentJsonNode.Type;
                     console.log('current node - It s a new node so I create it in the table from voisine : '+JSON.stringify(nodes[currentJsonNode.Voisine]));
                 }
-                 
+
                 //Add Voisine as link to NE
                 aTemp = nodes[currentJsonNode.NE].links;
                 aTemp.push(currentJsonNode.Voisine);
@@ -297,7 +297,7 @@ function network_display(zigateX) {
 
             // maintenant que l on a toutes les informations dans nodes on va créer le graph.
             // https://github.com/anvaka/VivaGraphJS
-                 
+
             // On defini le type par defaut de la zigate
             // nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
             console.log('node ruche ('+zigateX+'): '+JSON.stringify(nodes['Abeille'+zigateX+'/Ruche']));
@@ -310,7 +310,7 @@ function network_display(zigateX) {
                 // graph.addNode( node, { name: nodes[node].name, route: nodes[node].route, Quality: nodes[node].lqi, Type: nodes[node].Type } );
                 // graph.addNode( node, nodes[node].name ); // graph but all NE are yellow
                  graph.addNode( node, { name: nodes[node].name, Type: nodes[node].Type } ); // nodeId, { node.data }
-                 
+
                 for (link in nodes[node].links) {
                     if (nodes[node].name != null && nodes[node].links[link] != null) {
                         console.log('adding link: ' + nodes[node].name + ' <-> ' + nodes[node].links[link]);
@@ -324,7 +324,7 @@ function network_display(zigateX) {
                 console.log('Render the graph.');
                 var graphics = Viva.Graph.View.svgGraphics();
                 var nodeSize = 10;
-                 
+
                 // Je ne sais pas ce que cela fait mais si pas present alors erreur dans log console Safari.
                  /*
                 var highlightRelatedNodes = function (nodeId, isOn) {
@@ -339,17 +339,17 @@ function network_display(zigateX) {
 
                 graphics.node(function (node) {
                     var nodeSize = 10;
-                              
+
                     var nodecolor = '#E5E500';
                     if (typeof node.data != 'undefined') {
                         if (node.data.Type == 'Coordinator')    { nodecolor = '#a65ba6'; }
                         if (node.data.Type == 'End Device')     { nodecolor = '#7BCC7B'; }
                         if (node.data.Type == 'Router')         { nodecolor = '#00a2e8'; }
                     }
-                    
+
                     var ui = Viva.Graph.svg('g');
                     var img = Viva.Graph.svg('rect').attr("width", nodeSize).attr("height", nodeSize).attr("fill", nodecolor);
-                              
+
                     var svgText = Viva.Graph.svg('text').attr('y', '0px').text('?');
                     if (typeof node.data != 'undefined') {
                         if (typeof node.data.Type != 'undefined') {
@@ -360,13 +360,13 @@ function network_display(zigateX) {
 
                     ui.append(svgText);
                     ui.append(img);
-                              
+
                               /*
                     $(ui).hover(function (node) {
                         var nodeText = 'name: ';
                         + node.data.name + ', route: ' + node.data.route +
                                                    ', Quality: ' + node.data.lqi + ', Type: ' + node.data.Type;
-                                                   
+
                         $('#nodeName').html(nodeText);
 
                         highlightRelatedNodes(node.id, true);
@@ -374,7 +374,7 @@ function network_display(zigateX) {
                         highlightRelatedNodes(node.id, false);
                     });
                  */
-                 
+
                     return ui;
                 }).placeNode(function (nodeUI, pos) {
                     nodeUI.attr('transform',
@@ -431,7 +431,7 @@ function displayNodes(zigateX) {
     jqXHR.done(function (json, textStatus, jqXHR) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
+            var msg = "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau}}";
             $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         } else if (res.content == "") {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau}}', level: 'danger'});
@@ -486,15 +486,15 @@ function displayNodes(zigateX) {
                 tbody += '<td id="neId">';
                 tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJName + '">' + nodeJName + '</span> ';
                 tbody += '</td>';
-               
+
                 tbody += '<td id="neName">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Objet + '</i></div>';
                 tbody += '</td>';
-                
+
                 tbody += '<td id="neObjet">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
                 tbody += '</td>';
-               
+
                 //Process Voisine to jeedom Id
                 nodeJName = nodes[nodeFromJson].Voisine;
                 //zigbee LQI result is not null
@@ -504,34 +504,34 @@ function displayNodes(zigateX) {
                     nodeJId = 'not found in jeedom DB';
                 }
                 //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
-                
+
                 tbody += '<td id="vid">';
                 tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodes[nodeFromJson].Voisine + '">' + nodes[nodeFromJson].Voisine + '</span>';
                 tbody += '</td>';
-                
+
                 tbody += '<td id="vObjet">';
                 tbody += nodes[nodeFromJson].Voisine_Objet;
                 tbody += '</td>';
-               
+
                 tbody += '<td id="vname">';
                 tbody += nodes[nodeFromJson].Voisine_Name;
                 tbody += '</td>';
-                
+
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
                 tbody += '</td>';
-                
+
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
                 tbody += '</td>';
-                
+
                 tbody += '<td id="lqi">';
                 // tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '  ';
                 tbody += (nodes[nodeFromJson].LinkQualityDec <=  50) ? '<span class="label label-danger"  style="font-size : 1em;" >' : '';
                 tbody += ((nodes[nodeFromJson].LinkQualityDec > 50)&&(nodes[nodeFromJson].LinkQualityDec <= 100)) ? '<span class="label label-warning" style="font-size : 1em;">'  : '';
                 tbody += (nodes[nodeFromJson].LinkQualityDec >  100) ? '<span class="label label-success" style="font-size : 1em;">'  : '';
                 tbody += nodes[nodeFromJson].LinkQualityDec +'</span></td>';
-                
+
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
                 tbody += '</td>';

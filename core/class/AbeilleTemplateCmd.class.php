@@ -11,9 +11,8 @@ class AbeilleTemplateCmd
      * @return          Return retour the Template (uniqId) used by an Abeille
      */
     public static function uniqIdUsedByAnAbeilleCmd( $eqLogicalIdRef, $logicalId ) {
-        // return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, 'Abeille', false )->getConfiguration('uniqId', '');
         $eqLogicalId = Abeille::byLogicalId( $eqLogicalIdRef, 'Abeille', false )->getId();
-        return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, false )->getConfiguration('uniqId', '');
+        return AbeilleCmd::byEqLogicIdAndLogicalId( $eqLogicalId, $logicalId, false )->getConfiguration('uniqId', '-1');
     }
 
     /**
@@ -43,6 +42,7 @@ class AbeilleTemplateCmd
      */
     public static function getMainParamFromTemplate( $uniqId, $param ) {
         $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
+        if ($jsonArray == -1) return -1;
         $keys = array_keys ( $jsonArray );
         if (count($keys)!=1) return 0;
         if (!isset($jsonArray[$keys[0]][$param])) return 0;

@@ -10,7 +10,7 @@
     "template": "",
     "Comment": "Declenchement sur changement etat et polling toutes les 15 minutes pour realigner.",
     "configuration": {
-      "uniqId": "5c07c76623cd1",
+      "uniqId": "5c07c7662ibz33cd1",
       "topic": "ReadAttributeRequest",
       "request": "EP=#EP#&clusterId=0B04&attributeId=050B&AttributeType=29",
       "execAtCreation": "Yes",

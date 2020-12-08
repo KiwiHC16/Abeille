@@ -10,7 +10,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5csdf07c766qd2188f",
+      "uniqId": "5csdf07cer766dsqd2188ft",
       "topic": "bindShort",
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0B04&reportToAddress=#ZiGateIEEE#",
       "visibilityCategory": "Network",

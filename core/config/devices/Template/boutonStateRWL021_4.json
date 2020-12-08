@@ -14,21 +14,5 @@
       "repeatEventManagement": "always",
       "visibilityCategory": "All"
     }
-  },
-  "fc00-02-0004-Duree": {
-    "isVisible": 1,
-    "name": "DureeButtonO",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "string",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5aa7896623224",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
-    }
   }
 }

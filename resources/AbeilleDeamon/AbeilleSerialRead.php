@@ -61,14 +61,22 @@
     $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
-    exec("stty -F ".$serial." sane", $out);
-    exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out);
+    exec("stty -F ".$serial." sane", $out, $status);
+    if ($status != 0) {
+        logMessage('debug', 'ERR stty -F '.$serial.' sane');
+    }
+    exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
+    if ($status != 0) {
+        logMessage('debug', 'ERR stty -F '.$serial.' speed 115200 cs8 -parenb -cstopb -echo raw');
+    }
 
     // Si le lien tombe a l ouverture de $serial c est peut etre par ce que le serveur n'est pas dispo.
     // Il semblerai que le lien pts soit créé même si la liaison n'est pas établie.
     $f = fopen($serial, "r");
     if ($f == FALSE) {
         logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
+        exec('sudo lsof -Fcn '.$serial, $out);
+        logMessage('debug', 'sudo lsof -Fcn => \''.implode(",", $out).'\'');
         exit(4);
     }
     stream_set_blocking($f, TRUE); // Should be blocking read but is it default ?

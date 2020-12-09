@@ -37,7 +37,7 @@ class AbeilleTemplateCmd {
      * @param           uniqId Id du template que l selectionne
      * @param           param un des paramatres principaux comme: name, isVisible, order, type, subtype, invertBinary, template...
      *
-     * @return          Return return the 'main' parameter for the device stored in the template
+     * @return          Return the 'main' parameter for the device stored in the template
      */
     public static function getMainParamFromTemplate( $uniqId, $param ) {
         $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
@@ -65,7 +65,7 @@ class AbeilleTemplateCmd {
         /**
     * Will compare cmd from Abeille to their template
     *
-    * @return          Return no, will echo the result during execution.
+    * @return          Return no, Will compare cmd from Abeille to their template and will echo the result during execution.
     */
     public static function compareAllCmdWithTemplate() {
         $items = array( 'isVisible'=>'getIsVisible',
@@ -103,7 +103,7 @@ class AbeilleTemplateCmd {
                         continue;
                     }
                     if ($cmd->$fct() != $templateValue) {
-                        echo "    ".$cmd->getName().": ".$cmd->$fct().' <-> '.$templateValue."\n";
+                        echo "    ".$cmd->getName()." - ".$item.": ".$cmd->$fct().' <-> '.$templateValue."\n";
                         // var_dump(AbeilleTemplateCommon::getJsonFileNameForUniqId( $uniqId ));
                     }
                 }

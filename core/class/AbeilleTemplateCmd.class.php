@@ -64,8 +64,8 @@ class AbeilleTemplateCmd {
 
         /**
     * Will compare cmd from Abeille to their template
-    *
-    * @return          Return no, Will compare cmd from Abeille to their template and will echo the result during execution.
+    * 
+    * @return          Return no, Will compare cmd from Abeille to their template and will echo the result during execution in html format.
     */
     public static function compareAllCmdWithTemplate() {
         $items = array( 'isVisible'=>'getIsVisible',
@@ -84,33 +84,36 @@ class AbeilleTemplateCmd {
             // Don't proceed with Ruche as specific template
             if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
             echo "\n";
+            echo "---------------<\ br>\n";
             if ($abeille->getObject()) 
                 echo $abeille->getObject()->getName()." - ";
             echo $abeille->getName()."\n";
+            echo "<table>";
+            echo "<tr><th>Cmd Name</th><th>Param</th><th>Jeedom Vaule</th><th>Template Value</th></tr>\n";
             foreach ( $abeille->getCmd() as $cmd ) {
                 $uniqId = $cmd->getConfiguration( 'uniqId', -1 );
                 if ( $uniqId == -1 ) {
-                    echo "    ".$abeille->getCmd().": This cmd doesn t have a uniqId, I can t identify it s template !\n";
+                    echo "<tr><td>".$cmd->getName().": This cmd doesn t have a uniqId, I can t identify it s template !</td><td></td><td></td><td></td></tr>\n";
                     continue;
                 }
                 if (AbeilleTemplateCommon::getJsonFileNameForUniqId($uniqId)==-1) {
-                    echo "    ".$cmd->getName().": This uniqId (".$uniqId."), doesn t correspond to any template !\n";
+                    echo "<tr><td>".$cmd->getName().": This uniqId (".$uniqId."), doesn t correspond to any template !</td><td></td><td></td><td></td></tr>\n";
                     continue;
                 }
 
                 foreach ( $items as $item=>$fct ) {
                     $templateValue = AbeilleTemplateCmd::getMainParamFromTemplate($uniqId, $item);
                     if ( $templateValue == -1 ) {
-                        echo "    ".$cmd->getName().": Error template not found for this parameter (".$uniqId."->".$item.") !\n";
+                        echo "<tr><td>".$cmd->getName().": Error template not found for this parameter (".$uniqId."->".$item.") !</td><td></td><td></td><td></td></tr>\n";
                         continue;
                     }
                     if ($cmd->$fct() != $templateValue) {
-                        echo "    ".$cmd->getName()." - ".$item.": ".$cmd->$fct().' <-> '.$templateValue."\n";
+                        echo "<tr><td>".$cmd->getName()."</td><td>".$item."</td><td>".$cmd->$fct().'</td><td>'.$templateValue."</td></tr>\n";
                         // var_dump(AbeilleTemplateCommon::getJsonFileNameForUniqId( $uniqId ));
                     }
                 }
             }
-            
+            echo "</table>";
         }
     }
 

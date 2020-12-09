@@ -84,7 +84,7 @@ class AbeilleTemplateCmd {
             // Don't proceed with Ruche as specific template
             if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
             echo "\n";
-            if ($abeille->getObjet()) 
+            if ($abeille->getObject()) 
                 echo "Objet: ".$abeille->getObject()->getName()." - ";
             echo "Abeille: ".$abeille->getName()."\n";
             foreach ( $abeille->getCmd() as $cmd ) {

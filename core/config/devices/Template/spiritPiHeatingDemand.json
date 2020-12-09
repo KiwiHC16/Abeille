@@ -1,9 +1,9 @@
 {
   "0201-#EP#-0008": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "Pi Heating Demand",
     "order": 2,
-    "isHistorized": "1",
+    "isHistorized": "0",
     "Type": "info",
     "subType": "numeric",
     "generic_type": "",

@@ -1,6 +1,6 @@
 {
   "spiritHostFlagsChildLockSet": {
-    "isVisible": 1,
+    "isVisible": 0,
     "name": "Child Lock",
     "order": 14,
     "isHistorized": "0",

@@ -4,7 +4,7 @@
     "isVisible": 0,
     "name": "Valve Position",
     "order": 2,
-    "isHistorized": "1",
+    "isHistorized": "0",
     "Type": "info",
     "subType": "numeric",
     "generic_type": "",

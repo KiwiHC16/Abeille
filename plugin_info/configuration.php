@@ -37,6 +37,8 @@
     }
     require_once __DIR__.'/../core/class/Abeille.class.php';
 
+    include_once __DIR__."/../core/class/AbeillePreInstall.class.php";
+
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
     echo '<script>var js_NbMaxOfZigates = '.$zigateNbMax.';</script>'; // PHP to JS
@@ -120,18 +122,6 @@
                     ?>
                 </select>
             </div>
-        </div>
-
-        <legend><i class="fa fa-list-alt"></i> {{Mise à jour}}</legend>
-        <div id="Update">
-            <?php
-                $tmpDir = jeedom::getTmpFolder('Abeille');
-                echo '{{Repertoire Temporaire}}: '.$tmpDir.'<br>';
-                exec ( 'df  --output=avail -BM '.$tmpDir, $output );
-                echo '{{Espace disponible}}: '.$output[1].'<br>';
-                $tmpSpaceAvailable = str_replace( 'M', '', $output[1] );
-                if ( $tmpSpaceAvailable < 100 ) echo '<span style="color:orange">{{L espace disponible est trop faible pour faire une mise a jour. <a href="https://community.jeedom.com/tags/plugin-abeille">Contactez nous sur le forum.</a>}}</span><br>';
-            ?>   
         </div>
 
         <legend><i class="fa fa-list-alt"></i> {{Zigates}}</legend>
@@ -359,6 +349,17 @@
 
         <br />
         <br />
+        <legend><i class="fa fa-list-alt"></i> {{Mise à jour (Vérification)}}</legend>
+        <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
+        <div id="UpdateCheck">
+            <?php
+                AbeillePreInstall::Abeille_pre_update_analysis( 0, 1);
+            ?>   
+        </div>
+
+
+        <br />
+        <br />
         <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
         <div id="optionsAvancees">
             <div>
@@ -415,6 +416,7 @@
     $("#Connection").hide();
     $("#zigatewifi").hide();
     $("#PiZigate").hide();
+    $("#UpdateCheck").hide();
 
     $('#idZigatesShowHide').on('click', function () {
             var Label = document.getElementById("idZigatesShowHide").innerText;
@@ -589,6 +591,21 @@
                 document.getElementById("idPiShowHide").innerText = "Afficher";
                 document.getElementById("idPiShowHide").className = "btn btn-success";
                 $("#PiZigate").hide();
+            }
+        }
+    );
+
+    $('#idUpdateCheckShowHide').on('click', function () {
+            var Label = document.getElementById("idUpdateCheckShowHide").innerText;
+            console.log("idUpdateCheckShowHide click: Label=" + Label);
+            if (Label == "Afficher") {
+                document.getElementById("idUpdateCheckShowHide").innerText = "Cacher";
+                document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
+                $("#UpdateCheck").show();
+            } else {
+                document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
+                document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
+                $("#UpdateCheck").hide();
             }
         }
     );

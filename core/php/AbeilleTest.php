@@ -1,7 +1,7 @@
 <?php
 /*
- This php code allow to inkect messages in the system while it's running for tests purposes
- Set the "if condition" to run the test you want.
+ This php code allow to inject messages in the system while it's running for tests purposes
+ php AbeilleTest.php testNumber
 */
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';

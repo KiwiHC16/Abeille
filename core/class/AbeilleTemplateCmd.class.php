@@ -1,7 +1,6 @@
 <?php
 
-class AbeilleTemplateCmd
-{
+class AbeilleTemplateCmd {
 
     /**
      * Will retour the Template (uniqId) used by a Cmd for specific Abeille

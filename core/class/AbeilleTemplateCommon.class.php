@@ -1,10 +1,11 @@
 <?php
 
-class AbeilleTemplateCommon
-{
+class AbeilleTemplateCommon {
 
     /**
      * Will return the json file name for a template uniqId
+     * Will return the first file found in the search.
+     * As uniqId is supposed to be uniq it should be the one.
      *
      * @return          Return the json file name for a template uniqId or -1 if not found
      */

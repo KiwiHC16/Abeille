@@ -1,7 +1,6 @@
 <?php
 
-class AbeilleTemplateEq
-{
+class AbeilleTemplateEq {
     /**
      * Will retour the Template (uniqId) used by an Abeille
      * @param           logicalId of an Abeille
@@ -19,7 +18,7 @@ class AbeilleTemplateEq
      * @return          Return all abeille with a specific template (uniqId)
      */
     public static function getEqLogicsByTemplateUniqId( $uniqId ) {
-        
+
         $allAbeillesWithUniqId = Abeille::byTypeAndSearhConfiguration( 'Abeille', 'uniqId' );
 
         foreach ( $allAbeillesWithUniqId as $key=>$abeillesWithUniqId ) {

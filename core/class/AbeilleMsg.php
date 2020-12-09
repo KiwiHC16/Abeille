@@ -7,3 +7,6 @@ class MsgAbeille
     public $priority;
     public $message;
 }
+
+?>
+

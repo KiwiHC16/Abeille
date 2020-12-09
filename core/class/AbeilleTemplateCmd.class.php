@@ -83,8 +83,10 @@ class AbeilleTemplateCmd {
         foreach ( Abeille::byType('Abeille') as $abeille ) {
             // Don't proceed with Ruche as specific template
             if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
-
-            echo "\nAbeille: ".$abeille->getName()."\n";
+            echo "\n";
+            if ($abeille->getObjet()) 
+                echo "Objet: ".$abeille->getObjet()->getName()." - ";
+            echo "Abeille: ".$abeille->getName()."\n";
             foreach ( $abeille->getCmd() as $cmd ) {
                 $uniqId = $cmd->getConfiguration( 'uniqId', -1 );
                 if ( $uniqId == -1 ) {

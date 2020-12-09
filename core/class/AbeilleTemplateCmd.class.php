@@ -85,8 +85,8 @@ class AbeilleTemplateCmd {
             if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
             echo "\n";
             if ($abeille->getObject()) 
-                echo "Objet: ".$abeille->getObject()->getName()." - ";
-            echo "Abeille: ".$abeille->getName()."\n";
+                echo $abeille->getObject()->getName()." - ";
+            echo $abeille->getName()."\n";
             foreach ( $abeille->getCmd() as $cmd ) {
                 $uniqId = $cmd->getConfiguration( 'uniqId', -1 );
                 if ( $uniqId == -1 ) {

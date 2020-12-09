@@ -7,7 +7,7 @@ class AbeilleTemplateCmd {
      * @param           eqLogicalIdRef  logicalId of the Abeille
      * @param           logicalId       logicalId of the Cmd
      * 
-     * @return          Return retour the Template (uniqId) used by an Abeille
+     * @return          Return the Template (uniqId) used by a Cmd for specific Abeille
      */
     public static function uniqIdUsedByAnAbeilleCmd( $eqLogicalIdRef, $logicalId ) {
         $eqLogicalId = Abeille::byLogicalId( $eqLogicalIdRef, 'Abeille', false )->getId();

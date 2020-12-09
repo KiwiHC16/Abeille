@@ -5,6 +5,10 @@ include_once __DIR__.'/../class/AbeilleTemplateCommon.class.php';
 include_once __DIR__.'/../class/AbeilleTemplateEq.class.php';
 include_once __DIR__.'/../class/AbeilleTemplateCmd.class.php';
 
+/**
+ * File to test functions on class AbeilleTemplateCmd and AbeilleTemplateCommon
+ */
+
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
 
@@ -38,7 +42,34 @@ if (0) {
     
 }
 
-AbeilleTemplateCommon::duplicatedUniqId();
+$uniqId = '5c07c76620sdsfs8a7';
+
+switch ($argv[1]) {
+    case '-help':
+    case '--help':    
+        echo "File to test functions on class AbeilleTemplateCmd and AbeilleTemplateCommon\n";
+        echo "php AbeilleTemplateCmdTest.php testId\n";
+    break;
+
+    case  8:
+        echo "File for uniqId:\n";
+        echo AbeilleTemplateCommon::getJsonFileNameForUniqId($uniqId)."\n";
+    break;
+    case  9:
+        echo "List all uniqId.\n";
+        var_dump(AbeilleTemplateCommon::getJsonForUniqId());
+    break;
+    case 10:
+        echo "List all uniqId.\n";
+        var_dump(AbeilleTemplateCommon::getAllUniqId());
+    break;
+    case 11:
+        echo "Check if we have uniqId doublon dans tous les templates JSON.\n";
+        AbeilleTemplateCommon::duplicatedUniqId();
+    break;
+
+}
+
 
 // TODO compare topic et payload
 

@@ -60,19 +60,19 @@ switch ($argv[1]) {
     break;
 
     // AbeilleTemplateCommon Tests Area
-    case 10:
+    case 010:
         echo "File for uniqId:\n";
         echo AbeilleTemplateCommon::getJsonFileNameForUniqId($uniqIdEq)."\n";
     break;
-    case 11:
+    case 011:
         echo "List all uniqId.\n";
         var_dump(AbeilleTemplateCommon::getJsonForUniqId());
     break;
-    case 12:
+    case 012:
         echo "List all uniqId.\n";
         var_dump(AbeilleTemplateCommon::getAllUniqId());
     break;
-    case 12:
+    case 013:
         echo "Check if we have uniqId doublon dans tous les templates JSON.\n";
         AbeilleTemplateCommon::duplicatedUniqId();
     break;

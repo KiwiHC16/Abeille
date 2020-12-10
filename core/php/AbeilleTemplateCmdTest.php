@@ -5,9 +5,18 @@ include_once __DIR__.'/../class/AbeilleTemplateCommon.class.php';
 include_once __DIR__.'/../class/AbeilleTemplateEq.class.php';
 include_once __DIR__.'/../class/AbeilleTemplateCmd.class.php';
 
+
+
+
 /**
  * File to test functions on class AbeilleTemplateCmd and AbeilleTemplateCommon
+ * 
+ * CLI: php AbeilleTemplateCmdTest.php 104
+ * Web: http://abeille/plugins/Abeille/core/php/AbeilleTemplateCmdTest.php?testToRun=104
  */
+
+ // get test to run from cli or http
+$testToRun = $argv[1].$_GET['testToRun'];
 
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
@@ -51,7 +60,7 @@ $param              = 'name';
 $item               = 'repeatEventManagement';
 
 // Process the test requested
-switch ($argv[1]) {
+switch ($testToRun) {
     // Generic answer
     case '-help':
     case '--help':    
@@ -95,7 +104,7 @@ switch ($argv[1]) {
         var_dump(AbeilleTemplateCmd::getConfigurationFromTemplate( $uniqIdCmd, $item ) );
     break;
     case 104:
-        echo "Will compare cmd from Abeille to their template and will echo the result during execution.\n";
+        echo "Will compare cmd from Abeille to their template and will echo the result during execution.<br>\n";
         AbeilleTemplateCmd::compareAllCmdWithTemplate();
     break;
 }

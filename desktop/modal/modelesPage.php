@@ -127,8 +127,6 @@ switch ($testToRun) {
         var_dump(AbeilleTemplateCmd::getConfigurationFromTemplate( $uniqIdCmd, $item ) );
     break;
     case 104:
-        echo "Will compare Abeilles to their template and will echo the result during execution.<br>\n";
-        
         AbeilleTemplateCommon::compareTemplateHtmlEntete();
         foreach ( Abeille::byType('Abeille') as $abeille ) {
             // Don't proceed with Ruche as specific template

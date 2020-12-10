@@ -94,8 +94,8 @@ class AbeilleTemplateEq {
      * 
      */
     public static function compareAllParamWithTemplateHtmlEnteteTable() {
-        echo "<table>";
-        echo "<tr><th>Param</th><th>Jeedom Value</th><th>Template Value</th></tr>\n";
+        echo "<table>\n";
+        echo '<tr><th style="text-align:center;">{{Paramètre}}</th><th style="text-align:center;">Jeedom</th><th style="text-align:center;">{{Modèle}}</th></tr>'."\n";
     }
 
     /**
@@ -103,7 +103,7 @@ class AbeilleTemplateEq {
      * 
      */
     public static function compareAllParamWithTemplateHtmlPiedTable() {
-        echo "</table><br>";
+        echo "</table><br>\n";
     }
 
     /**
@@ -120,11 +120,9 @@ class AbeilleTemplateEq {
     }
     
     public static function compareAllParamWithTemplate($abeille) {
-        echo '<hr><br>';
-        echo "<h1>";
-        if ($abeille->getObject()) 
-            echo $abeille->getObject()->getName()." / ";
-        echo $abeille->getName()."</h1>"; 
+        echo "<hr>\n";
+        echo "<br>\n";
+        echo "<h1>".$abeille->getHumanName()."</h1>\n"; 
 
         $logicalId = $abeille->getLogicalId();
         $uniqId = AbeilleTemplateEq::uniqIdUsedByAnAbeille($logicalId);

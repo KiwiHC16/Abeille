@@ -19,6 +19,28 @@ include_once __DIR__.'/../class/AbeilleTemplateCmd.class.php';
 if (isset($argv[1])) $testToRun = $argv[1];
 if (isset($_GET['testToRun'])) $testToRun = $_GET['testToRun'];
 
+
+// '5c07c76620sdsfs8a7'
+// Abeille1/3EFE
+// $logicalId = 'Abeille1/3EFE';
+
+// $abeille = Abeille::byLogicalId( $logicalId, 'Abeille', false );
+
+// echo $abeille->getTimeout() . "\n";
+// var_dump( $abeille );
+
+// $abeilleTemplate = new AbeilleTemplateEq;
+
+// $uniqId = $abeilleTemplate->uniqIdUsedByAnAbeille($logicalId);
+// var_dump( $abeilleTemplate->getEqLogicsByTemplateUniqId('5c07c76620sdsfs8a7') );
+// var_dump( $abeilleTemplate->getJsonFileNameForUniqId('5c07c76620sdsfs8a7') );
+// var_dump( $abeilleTemplate->getJsonForUniqId( '5c07c76620sdsfs8a7' ) );
+// var_dump( $abeilleTemplate->getNameJeedomFromTemplate('5c07c76620sdsfs8a7') );
+
+// echo $abeille->getTimeout() . ' <-> ' . $abeilleTemplate->getTimeOutFromTemplate($uniqId) . "\n";
+
+
+
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
 

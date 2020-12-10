@@ -78,7 +78,7 @@ class AbeilleTemplateCmd {
      * 
      */
     public static function compareAllCmdWithTemplateHtmlPiedTable() {
-        echo "</table>";
+        echo "</table><br><br>";
     }
 
     /**

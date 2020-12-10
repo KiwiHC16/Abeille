@@ -147,16 +147,8 @@ class AbeilleTemplateEq {
 
                 echo '<tr><td><span style="color:'.$color.'">'.$item.'<span></td>    <td style="text-align:center;">'    .$abeille->$fct0($item) . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::$fct1($uniqId, $item)     . "</td></tr>\n";
             }
-            /*
-                echo '<tr><td>TimeOut</td>  <td style="text-align:center;">'    .$abeille->getTimeout()                 . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getTimeOutFromTemplate($uniqId)                    . "</td></tr>\n";
-                echo '<tr><td>icone</td>    <td style="text-align:center;">'    .$abeille->getConfiguration('icone')    . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'icone')     . "</td></tr>\n";
-                echo '<tr><td>mainEP</td>   <td style="text-align:center;">'    .$abeille->getConfiguration('mainEP')   . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'mainEP')    . "</td></tr>\n";
-                echo '<tr><td>poll</td>     <td style="text-align:center;">'    .$abeille->getConfiguration('poll')     . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'poll')      . "</td></tr>\n";
-                */
         }
-        else {
-            // echo $abeille->getTimeout() . ' <-> ' . "\n";
-        }
+
         self::compareAllParamWithTemplateHtmlPiedTable();
     }
 

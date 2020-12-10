@@ -64,6 +64,11 @@ $('#bt_supportPage').on('click', function () {
     $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=supportPage').dialog('open');
 });
 
+$('#bt_template').on('click', function () {
+    $('#md_modal').dialog({title: "{{Modeles}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=modelesPage&testToRun=104').dialog('open');
+});
+
 $('#bt_networkAbeilleList').on('click', function () {
                                $('#md_modal').dialog({title: "{{Réseau Abeille}}"});
                                $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=network').dialog('open');

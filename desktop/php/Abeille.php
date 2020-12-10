@@ -24,6 +24,7 @@ $outils = array(
     'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
     'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
     'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
+    'modele'    => array( 'bouton'=>'bt_template',              'icon'=>'fa-money-check',   'text'=>'{{Modeles}}' ),
     );
 
 /* Developers debug features */

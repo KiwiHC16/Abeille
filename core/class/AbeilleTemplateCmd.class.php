@@ -79,6 +79,7 @@ class AbeilleTemplateCmd {
             // invertBinary setDisplay('invertBinary'
             // 'template'=>'getTemplate',
 
+        echo "<html><head><style>table,th,td{border: 1px solid black;border-collapse: collapse;}</style></head><body>";
         // Take Abeile one by one and check if Template value is identical
         foreach ( Abeille::byType('Abeille') as $abeille ) {
             // Don't proceed with Ruche as specific template
@@ -113,7 +114,7 @@ class AbeilleTemplateCmd {
                     }
                 }
             }
-            echo "</table>";
+            echo "</table></body></html>";
         }
     }
 

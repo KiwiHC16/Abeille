@@ -43,6 +43,10 @@ class AbeillePreInstall {
         $tmpSpaceAvailable = str_replace( 'M', '', $output[1] );
         unset( $output );
 
+        // It is possible to get the size of the zip file downloaded by jeedom by: wget https://github.com/KiwiHC16/Abeille/archive/stable.zip -O /dev/null
+        // The command wget --spider doesn't give the size on github.
+        // So we have to download the complete file to know its size, so it's not a good solution.
+        // Let's use the current size of the install plugin to have an idea.
         exec ( 'du -sh /var/www/html/plugins/Abeille', $output );
         list($AbeilleSize, $folder) = explode('M',$output[0]);
         unset( $output ); 

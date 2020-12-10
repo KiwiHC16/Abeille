@@ -2376,18 +2376,16 @@
                         $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
                     }
                     if ( ($EPoint=="02") || ($EPoint=="15")) {
-                    // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
-                    // On va envoyer ca sur la meme variable que le champ ff01
-                    $hexNumber = substr($payload, 24, 8);
-                    $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-                    $bin = pack('H*', $hexNumberOrder );
-                    $data = unpack("f", $bin )[1];
+                        // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
+                        // On va envoyer ca sur la meme variable que le champ ff01
+                        $hexNumber = substr($payload, 24, 8);
+                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                        $bin = pack('H*', $hexNumberOrder );
+                        $data = unpack("f", $bin )[1];
 
-                    $puissanceValue = $data;
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
-
-                    // Relay Double
-                    $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '02-0055',    $puissanceValue,    $qos);
+                        $puissanceValue = $data;
+                        // Relay Double - Prise Xiaomi
+                        $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId,     $EPoint.'-'.$AttributId,    $puissanceValue,    $qos);
                     }
                 } else {
                     // Example Cube Xiaomi

@@ -21,10 +21,7 @@
       "include8": "getEtat",
       "include9": "getManufacturerName",
       "include10": "getModelIdentifier",
-      "include11": "conso",
-      "include12": "Xiaomi-ff01",
-      "include13": "puissance",
-      "include13 2": "Group-Membership"
+      "include13": "puissanceEP15"
     }
   }
 }

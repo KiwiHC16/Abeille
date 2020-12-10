@@ -3,6 +3,22 @@
 class AbeilleTemplateCommon {
 
     /**
+     * 
+     * 
+     */
+    public static function compareTemplateHtmlEntete() {
+        echo "<html><head><style>table,th,td{border: 1px solid black;border-collapse: collapse;}</style></head><body>";
+    }
+
+    /**
+     * 
+     * 
+     */
+    public static function compareTemplateHtmlPiedDePage() {
+        echo "</body></html>";
+    }
+
+    /**
      * Will return the json file name for a template uniqId
      * Will return the first file found in the search.
      * As uniqId is supposed to be uniq it should be the one.

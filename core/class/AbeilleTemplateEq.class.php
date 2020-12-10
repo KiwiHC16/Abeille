@@ -50,7 +50,7 @@ class AbeilleTemplateEq {
      * @return          Return return the timeout for the device stored in the template
      */
     public static function getTimeOutFromTemplate( $uniqId ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             return $jsonArray[$key]["timeout"];
         }
@@ -63,7 +63,7 @@ class AbeilleTemplateEq {
      * @return          Return the categories (array) for the device stored in the template
      */
    public static function getCategorieFromTemplate( $uniqId ) {
-       $jsonArray = self::getJsonForUniqId( $uniqId );
+       $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
        foreach ( $jsonArray as $key=>$data ) {
            return $jsonArray[$key]["Categorie"];
        }
@@ -77,7 +77,7 @@ class AbeilleTemplateEq {
      * @return          Return the configuration item for the device stored in the template if exist otherwise ''
      */
     public static function getConfigurationFromTemplate( $uniqId, $item ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             if (isset($jsonArray[$key]["configuration"][$item])) {
                 return $jsonArray[$key]["configuration"][$item];
@@ -96,12 +96,28 @@ class AbeilleTemplateEq {
      * @return          Return the Commandes (array) for the device stored in the template
      */
     public static function getCommandesFromTemplate( $uniqId ) {
-        $jsonArray = self::getJsonForUniqId( $uniqId );
+        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
             return $jsonArray[$key]["Commandes"];
         }
     }
     
+    public static function compareAllParamWithTemplate($abeille) {
+        echo $abeille->getName(). " : "; 
+            $logicalId = $abeille->getLogicalId();
+
+            $uniqId = AbeilleTemplateEq::uniqIdUsedByAnAbeille($logicalId);
+
+            if ( $uniqId!='') {
+                echo '   '."TimeOut :".$abeille->getTimeout() . ' <-> ' . AbeilleTemplateEq::getTimeOutFromTemplate($uniqId) . "\n";
+                echo '   '."icone   :".$abeille->getConfiguration('icone') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'icone') . "\n";
+                echo '   '."mainEP  :".$abeille->getConfiguration('mainEP') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'mainEP') . "\n";
+                echo '   '."poll    :".$abeille->getConfiguration('poll') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'poll') . "\n";
+            }
+            else {
+                // echo $abeille->getTimeout() . ' <-> ' . "\n";
+            }
+    }
 
 }
 

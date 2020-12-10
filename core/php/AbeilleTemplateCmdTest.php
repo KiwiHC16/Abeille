@@ -16,7 +16,8 @@ include_once __DIR__.'/../class/AbeilleTemplateCmd.class.php';
  */
 
  // get test to run from cli or http
-$testToRun = $argv[1].$_GET['testToRun'];
+if (isset($argv[1])) $testToRun = $argv[1];
+if (isset($_GET['testToRun'])) $testToRun = $_GET['testToRun'];
 
 // '5c07c76620sdsfs8a7'
 // Abeille1/3EFE
@@ -104,8 +105,15 @@ switch ($testToRun) {
         var_dump(AbeilleTemplateCmd::getConfigurationFromTemplate( $uniqIdCmd, $item ) );
     break;
     case 104:
-        echo "Will compare cmd from Abeille to their template and will echo the result during execution.<br>\n";
-        AbeilleTemplateCmd::compareAllCmdWithTemplate();
+        echo "Will compare Abeilles to their template and will echo the result during execution.<br>\n";
+        
+        AbeilleTemplateCommon::compareTemplateHtmlEntete();
+        foreach ( Abeille::byType('Abeille') as $abeille ) {
+            AbeilleTemplateEq::compareAllParamWithTemplate($abeille);
+            AbeilleTemplateCmd::compareAllCmdWithTemplate($abeille);
+        }
+        AbeilleTemplateCommon::compareTemplateHtmlPiedDePage();
+        
     break;
 }
 

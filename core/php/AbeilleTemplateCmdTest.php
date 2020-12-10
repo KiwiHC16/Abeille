@@ -109,6 +109,8 @@ switch ($testToRun) {
         
         AbeilleTemplateCommon::compareTemplateHtmlEntete();
         foreach ( Abeille::byType('Abeille') as $abeille ) {
+            // Don't proceed with Ruche as specific template
+            if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
             AbeilleTemplateEq::compareAllParamWithTemplate($abeille);
             AbeilleTemplateCmd::compareAllCmdWithTemplate($abeille);
         }

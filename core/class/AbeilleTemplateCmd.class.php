@@ -62,21 +62,7 @@ class AbeilleTemplateCmd {
         else return '';
     }
 
-    /**
-     * 
-     * 
-     */
-    public static function compareAllCmdWithTemplateHtmlEntete() {
-        echo "<html><head><style>table,th,td{border: 1px solid black;border-collapse: collapse;}</style></head><body>";
-    }
 
-    /**
-     * 
-     * 
-     */
-    public static function compareAllCmdWithTemplateHtmlPiedDePage() {
-        echo "</body></html>";
-    }
 
     /**
      * 
@@ -112,20 +98,7 @@ class AbeilleTemplateCmd {
             // invertBinary setDisplay('invertBinary'
             // 'template'=>'getTemplate',
 
-       
-        // Take Abeile one by one and check if Template value is identical
-            
-        // Don't proceed with Ruche as specific template
-        if (strpos($abeille->getLogicalId(), 'Ruche')>1) return;
-
-        /*
-        echo "\n";
-        echo "<br><hr><br>\n";
-        if ($abeille->getObject()) 
-            echo $abeille->getObject()->getName()." - ";
-        echo $abeille->getName()."\n";
-        */
-
+        // Take Abeile and check if Template value is identical
         self::compareAllCmdWithTemplateHtmlEnteteTable();
 
         foreach ( $abeille->getCmd() as $cmd ) {

@@ -90,6 +90,23 @@ class AbeilleTemplateEq {
     }
 
     /**
+     * 
+     * 
+     */
+    public static function compareAllParamWithTemplateHtmlEnteteTable() {
+        echo "<table>";
+        echo "<tr><th>Param</th><th>Jeedom Value</th><th>Template Value</th></tr>\n";
+    }
+
+    /**
+     * 
+     * 
+     */
+    public static function compareAllParamWithTemplateHtmlPiedTable() {
+        echo "</table><br>";
+    }
+
+    /**
      * Will return the Commandes for the device stored in the template
      * @param           uniqId identify the json template
      *
@@ -103,20 +120,44 @@ class AbeilleTemplateEq {
     }
     
     public static function compareAllParamWithTemplate($abeille) {
-        echo $abeille->getName(). " : "; 
-            $logicalId = $abeille->getLogicalId();
+        echo '<hr><br>';
+        echo "<h1>";
+        if ($abeille->getObject()) 
+            echo $abeille->getObject()->getName()." / ";
+        echo $abeille->getName()."</h1>"; 
 
-            $uniqId = AbeilleTemplateEq::uniqIdUsedByAnAbeille($logicalId);
+        $logicalId = $abeille->getLogicalId();
+        $uniqId = AbeilleTemplateEq::uniqIdUsedByAnAbeille($logicalId);
 
-            if ( $uniqId!='') {
-                echo '   '."TimeOut :".$abeille->getTimeout() . ' <-> ' . AbeilleTemplateEq::getTimeOutFromTemplate($uniqId) . "\n";
-                echo '   '."icone   :".$abeille->getConfiguration('icone') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'icone') . "\n";
-                echo '   '."mainEP  :".$abeille->getConfiguration('mainEP') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'mainEP') . "\n";
-                echo '   '."poll    :".$abeille->getConfiguration('poll') . ' <-> ' . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'poll') . "\n";
+        self::compareAllParamWithTemplateHtmlEnteteTable();
+
+        if ( $uniqId!='') {
+            $items = array(
+                'TimeOut'   => array( 'getTimeout', 'getTimeOutFromTemplate' ),
+                'icone'     => array( 'getConfiguration', 'getConfigurationFromTemplate' ),
+                'mainEP'    => array( 'getConfiguration', 'getConfigurationFromTemplate' ),
+                'poll'      => array( 'getConfiguration', 'getConfigurationFromTemplate' ),
+            );
+            
+            foreach ( $items as $item=>$fcts ) {
+                $fct0 = $fcts[0];
+                $fct1 = $fcts[1];
+                
+                if ($abeille->$fct0($item)==AbeilleTemplateEq::$fct1($uniqId, $item)) $color="green"; else $color="red";
+
+                echo '<tr><td><span style="color:'.$color.'">'.$item.'<span></td>    <td style="text-align:center;">'    .$abeille->$fct0($item) . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::$fct1($uniqId, $item)     . "</td></tr>\n";
             }
-            else {
-                // echo $abeille->getTimeout() . ' <-> ' . "\n";
-            }
+            /*
+                echo '<tr><td>TimeOut</td>  <td style="text-align:center;">'    .$abeille->getTimeout()                 . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getTimeOutFromTemplate($uniqId)                    . "</td></tr>\n";
+                echo '<tr><td>icone</td>    <td style="text-align:center;">'    .$abeille->getConfiguration('icone')    . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'icone')     . "</td></tr>\n";
+                echo '<tr><td>mainEP</td>   <td style="text-align:center;">'    .$abeille->getConfiguration('mainEP')   . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'mainEP')    . "</td></tr>\n";
+                echo '<tr><td>poll</td>     <td style="text-align:center;">'    .$abeille->getConfiguration('poll')     . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::getConfigurationFromTemplate($uniqId, 'poll')      . "</td></tr>\n";
+                */
+        }
+        else {
+            // echo $abeille->getTimeout() . ' <-> ' . "\n";
+        }
+        self::compareAllParamWithTemplateHtmlPiedTable();
     }
 
 }

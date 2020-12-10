@@ -49,12 +49,12 @@ class AbeilleTemplateCmd {
     }
 
     /**
-    * Will return the configuration item for the device stored in the template
-    * @param            uniqId of the template that we want to use
-    * @param            item in the configuration that we want 
-    *
-    * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
-    */
+     * Will return the configuration item for the device stored in the template
+     * @param            uniqId of the template that we want to use
+     * @param            item in the configuration that we want 
+     *
+     * @return          Return return the configuration item for the device stored in the template if exist otherwise ''
+     */
     public static function getConfigurationFromTemplate( $uniqId, $item ) {
         $configurationArray = self::getMainParamFromTemplate( $uniqId, 'configuration' );
         
@@ -62,11 +62,11 @@ class AbeilleTemplateCmd {
         else return '';
     }
 
-        /**
-    * Will compare cmd from Abeille to their template
-    * 
-    * @return          Return no, Will compare cmd from Abeille to their template and will echo the result during execution in html format.
-    */
+    /**
+     * Will compare cmd from Abeille to their template
+     * 
+     * @return          Return no, Will compare cmd from Abeille to their template and will echo the result during execution in html format.
+     */
     public static function compareAllCmdWithTemplate() {
         $items = array( 'isVisible'=>'getIsVisible',
                         'name'=>'getName',
@@ -85,7 +85,7 @@ class AbeilleTemplateCmd {
             // Don't proceed with Ruche as specific template
             if (strpos($abeille->getLogicalId(), 'Ruche')>1) continue;
             echo "\n";
-            echo "---------------<\ br>\n";
+            echo "<br><hr><br>\n";
             if ($abeille->getObject()) 
                 echo $abeille->getObject()->getName()." - ";
             echo $abeille->getName()."\n";

@@ -159,7 +159,7 @@
                         ?>
                         <br />
                         <hr>
-                        Date des informations affichées : <span id="idInfosDate" style="width:150px; font-weight:bold">-</span>
+                        Informations affichées : <span id="idDisplayedNetwork" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idDisplayedDate" style="width:150px; font-weight:bold">-</span>
                         <br />
                         <br />
 

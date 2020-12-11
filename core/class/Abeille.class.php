@@ -278,18 +278,13 @@ class Abeille extends eqLogic
     public static function cronDaily()
     {
         log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
+
         // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
         log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
         $ROOT = __DIR__ . "/../../Network";
-        $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1', 1);
-        for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
-            $zgEnabled = config::byKey('AbeilleActiver' . $zgNb, 'Abeille', 'N', 1);
-            if ($zgEnabled != 'Y')
-                continue; // Zigate disabled
-            $cmd = "cd " . $ROOT . "; nohup /usr/bin/php AbeilleLQI.php " . $zgNb . " 1>/dev/null 2>/dev/null &";
-            log::add('Abeille', 'debug', 'cronD: cmd=\'' . $cmd . '\'');
-            exec($cmd);
-        }
+        $cmd = "cd " . $ROOT . "; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
+        log::add('Abeille', 'debug', 'cronD: cmd=\'' . $cmd . '\'');
+        exec($cmd);
 
         // Poll Cmd
         self::pollingCmd("cronDaily");

@@ -41,7 +41,7 @@ function refreshLQICache(zigateX) {
     console.log("refreshLQICache(zgNb="+zigateX+")");
 
     /* Collect status displayed every 1sec */
-    setTimeout(function () { refreshLQICollectStatus(true, zigateX); }, 1000);
+    setTimeout(function () { trackLQICollectStatus(true, zigateX); }, 1000);
 
     $.ajax({
             url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+zigateX,
@@ -65,7 +65,7 @@ function refreshLQICache(zigateX) {
                     levelAlert = "info";
                     $('#table_routingTable').trigger("update");
                     displayNodes(zigateX);
-                    // refreshLQICollectStatus(false, zigateX);
+                    // trackLQICollectStatus(false, zigateX);
                 } else {
                     $('#div_networkZigbeeAlert').showAlert({message: data, level: "danger"});
                     window.setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
@@ -133,8 +133,8 @@ function getAbeilleLog(_autoUpdate, _log) {
 }
 
 /* Read & display lock file content until "done" found */
-function refreshLQICollectStatus(_autoUpdate, zigateX) {
-    console.log("refreshLQICollectStatus(zgNb="+zigateX+")");
+function trackLQICollectStatus(_autoUpdate, zigateX) {
+    console.log("trackLQICollectStatus(zgNb="+zigateX+")");
 
     $.ajax({
         type: 'GET',
@@ -149,8 +149,8 @@ function refreshLQICollectStatus(_autoUpdate, zigateX) {
         global: false,
         cache: false,
         error: function (request, status, error) {
-            console.log("refreshLQICollectStatus: error status=" + status);
-            console.log("refreshLQICollectStatus: error msg=" + error);
+            console.log("trackLQICollectStatus: error status=" + status);
+            console.log("trackLQICollectStatus: error msg=" + error);
             $('#div_networkZigbeeAlert').showAlert({
                 message: "ERREUR ! Problème du lecture du fichier de lock.",
                 level: 'danger'
@@ -169,22 +169,23 @@ function refreshLQICollectStatus(_autoUpdate, zigateX) {
                 var data = res.content;
                 console.log("Status='"+data+"'");
                 var alertLevel = 'success';
-            if (data.toLowerCase().includes("oops")) {
+                if (data.toLowerCase().includes("oops")) {
                     alertLevel = 'danger';
                     _autoUpdate = 0;
                 } else if (data.toLowerCase().includes("done")) {
+                    // Reminder: done/<timestamp>/<status
                     data = "Collecte terminée";
-                _autoUpdate = 0;
-            }
+                    _autoUpdate = 0; // Stop status refresh
+                }
                 $('#div_networkZigbeeAlert').showAlert({
-                    message: data ,
+                    message: data,
                     level: alertLevel
                 });
 
                 /* Collect status display stops when "done" found */
                 // _autoUpdate = data.toLowerCase().includes("done")?0:1;
                 if (_autoUpdate) { // Next status update in 1s
-                    setTimeout(function () { refreshLQICollectStatus(_autoUpdate, zigateX); }, 1000);
+                    setTimeout(function () { trackLQICollectStatus(_autoUpdate, zigateX); }, 1000);
                 } else { // Keep last message 10sec then hide
                     setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
                 }
@@ -431,10 +432,9 @@ function displayNodes(zigateX) {
     jqXHR.done(function (json, textStatus, jqXHR) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau}}";
-            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else if (res.content == "") {
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau}}', level: 'danger'});
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else {
             var json = JSON.parse(res.content);
             var nodes = json.data;
@@ -612,10 +612,11 @@ function displayNodes(zigateX) {
                         alert(msg);
                     } else {
                         // window.location.reload();
+                        $('#idDisplayedNetwork').empty().append("Abeille"+zigateX);
                         console.log("getTmpFileModificationTime() => "+res.mtime);
                         const date = new Date(res.mtime * 1000);
                         var out = date.toLocaleDateString()+' '+date.toLocaleTimeString();
-                        $('#idInfosDate').empty().append(out);
+                        $('#idDisplayedDate').empty().append(out);
                     }
                 }
             });

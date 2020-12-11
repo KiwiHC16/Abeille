@@ -1,361 +1,404 @@
 <?php
 
     /*
-     * LQI
+     * LQI collector to draw nodes table & network graph
+     * Called once a day by cron, or on user request from "Network" pages.
      *
-     * Send LQI request to the network
-     * Process 804E answer messages
-     * to draw LQI (Link Quality Indicator)
-     * to draw NE Hierarchy
+     * Starting from zigate (coordinator), send LQI request to get neighbour table
+     * - Send request thru AbeilleCmd (004E cmd)
+     * - Get response from AbeilleParser (804E cmd)
+     * - Identify each neighbour
+     * - If neighbour is router, added to list for interrogation
      */
 
+    /* Developers debug features */
+    $dbgFile = __DIR__."/../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        include_once $dbgFile;
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
+
     include_once __DIR__."/../../../core/php/core.inc.php";
-    include_once("../resources/AbeilleDeamon/lib/AbeilleTools.php");
     include_once("../resources/AbeilleDeamon/includes/config.php");
-    include_once("../resources/AbeilleDeamon/includes/fifo.php");
-    include_once("../resources/AbeilleDeamon/includes/function.php");
     include_once __DIR__."/../core/php/AbeilleLog.php"; // Log library
 
-    // function KiwiLog($message = "")
-    // {
-    //     global $debugKiwi;
-    //     if ($debugKiwi && strlen($message) > 0) echo $message . "<br>\n";
+    /* Add to list a new eq (router or coordinator) to interrogate.
+       Check first is not aleady in the list. */
+    function newEqToInterrogate($logicId) {
+        global $eqToInterrogate;
+        global $eqKnownFromAbeille;
+
+        /* Checking if not already in the list */
+        foreach ($eqToInterrogate as $Eq) {
+            if ($Eq['LogicId'] == $logicId)
+                return; // Already there
+        }
+
+        if (isset($eqKnownFromAbeille[$logicId]))
+            $eqName = $eqKnownFromAbeille[$logicId];
+        else
+            $eqName = "Inconnu";
+        list($netName, $addr) = explode( '/', $logicId);
+        $eqToInterrogate[] = array(
+            "LogicId" => $logicId,
+            "Name" => $eqName,
+            "Addr" => $addr,
+            "TableEntries" => 0,    // Nb of entries in its table
+            "TableIndex" => 0,      // Index to interrogate
+        );
+        logMessage("", "Nouvel eq à interroger: '".$eqName."' (".$logicId.")");
+    }
+
+    /* Remove any pending messages from parser */
+    // function msgFromParserFlush() {
+    //     global $queueKeyParserToLQI;
+    //     $max_msg_size = 512;
+    //     while (msg_receive($queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT));
     // }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
-    function message() {
+    /* Treat request responses (804E) from parser.
+       Returns: 0=OK, -1=fatal error, 1=timeout */
+    function msgFromParser($eqIndex) {
+        logMessage("", "msgFromParser(eqIndex=".$eqIndex.")");
+
         global $LQI;
-        global $abeilleParameters;
         global $queueKeyParserToLQI;
-        global $NE_All_BuildFromLQI;
-        global $knownNE_FromAbeille;
-        global $knownObject_FromAbeille;
-        global $NE;
-        global $NE_continue;
+        global $eqToInterrogate;
+        global $eqKnownFromAbeille;
+        global $objKnownFromAbeille;
 
-        // KiwiLog("Check if message");
+        usleep(200000); // A first delay of 200ms to let response to come back
+        $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
+        for ($t = 0; $t < $timeout; $t += 1) {
+            // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueKeyParserToLQI)));
+            if (msg_receive($queueKeyParserToLQI, 0, $msg_type, 1024, $msg_json, FALSE, MSG_IPC_NOWAIT, $error_code) == TRUE)
+                break; // Message received
 
-        $max_msg_size = 512;
+            if ($error_code == 42) { // No message
+                sleep(1); // Sleep 1s
+                continue;
+            }
 
-        if (msg_receive( $queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
-            $message = new stdClass();
-            $message->topic = $msg->message['topic'];
-            $message->payload = $msg->message['payload'];
-        } else {
-            return;
+            /* It's an error */
+            logMessage("", "  Error ".$error_code."/".posix_strerror($error_code));
+            return -1;
+        }
+        if ($t >= $timeout) {
+            logMessage("", "  Time-out !");
+            return 1;
+        }
+        // Note: What to do if mesg received does not match interrogated eq ?
+        //       This currently can't appear since requests are done sequentially
+        //       so no risk to get an answer from an unexpected source.
+
+        // logMessage("", "  Recu ".$msg_json);
+        $msg = json_decode($msg_json);
+        if ($msg->Type != "804E") {
+            logMessage("", "  Message non LQI => Inattendu.");
+            return -1;
         }
 
-        logMessage("debug", "Recu ".json_encode($message));
+        /* Message format reminder
+            $msg = array(
+                'Type' => '804E',
+                'SrcAddr' => $SrcAddr,
+                'TableEntries' => $NTableEntries,
+                'TableListCount' => $NTableListCount,
+                'StartIndex' => $StartIndex,
+                'List' => $NList
+                    $N = array(
+                        "Addr"     => substr($payload, $j + 0, 4),
+                        "ExtPANId" => substr($payload, $j + 4, 16),
+                        "ExtAddr"  => substr($payload, $j + 20, 16),
+                        "Depth"    => substr($payload, $j + 36, 2),
+                        "LQI"      => substr($payload, $j + 38, 2),
+                        "BitMap"   => substr($payload, $j + 40, 2)
+                )
+            ); */
 
-        if (strpos( "_".$message->topic, "LQI") != 1) {
-            // echo "LQI not\n";
-            logMessage("debug", "  Message non LQI => Inattendu.");
-            return;
-        }
+        $tableEntries = $msg->TableEntries; // Total entries on interrogated eq
+        $tableListCount = $msg->TableListCount; // Number of neighbours liste in msg
+        $startIndex = $msg->StartIndex;
+        $NList = $msg->List; // List of neighbours
+        // logMessage("", "NList=".json_encode($NList));
+        logMessage("", "  tableEntries=".$tableEntries.", tableListCount=".$tableListCount.", startIndex=".$startIndex);
 
-        // Crée les variables dans la chaine et associe la valeur.
-        $parameters = proper_parse_str($message->payload);
-        unset($parameters['srcAddress']); // remove this info that looks strange and I don t understand it so create confusion.
+        /* Updating collect infos for this coordinator/router */
+        $eqToInterrogate[$eqIndex]['TableEntries'] = hexdec($tableEntries);
+        $eqToInterrogate[$eqIndex]['TableIndex'] = hexdec($startIndex) + hexdec($tableListCount);
 
-        // Si je recois des message vide c'est que je suis à la fin de la table et je demande l arret de l envoie des requetes LQI et je dis que le NE a ete interrogé
-        if ($parameters['BitmapOfAttributes'] == "") {
-            $NE_continue = 0;
-            $NE_All_BuildFromLQI[$NE] = array("LQI_Scan_Done" => 1);
-            return;
-        }
+        $NE = $eqToInterrogate[$eqIndex]["LogicId"];
 
+        $parameters = array();
         $parameters['NE'] = $NE;
-        $parameters['NE_Name'] = $knownNE_FromAbeille[$NE];
-        $parameters['NE_Objet'] = $knownObject_FromAbeille[$NE];
-
-        list( $dest, $addr ) = explode( '/', $NE );
-
+        $parameters['NE_Name'] = $eqKnownFromAbeille[$NE];
+        $parameters['NE_Objet'] = $objKnownFromAbeille[$NE];
+        list($netName, $addr) = explode( '/', $NE );
         if (strlen($parameters['NE_Name']) == 0) {
             $parameters['NE_Name'] = "Inconnu-" . $parameters['IEEE_Address'];
             $parameters['NE_Objet'] = "Inconnu";
         }
 
-        list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
-        if ( $voisineAddr == "0000" ) $voisineAddr = "Ruche";
-        $parameters['Voisine'] = $dest . "/" . $voisineAddr;
-        if ( isset($knownNE_FromAbeille[$parameters['Voisine']]) ) {
-            $parameters['Voisine_Name'] = $knownNE_FromAbeille[$parameters['Voisine']];
-            $parameters['Voisine_Objet'] = $knownObject_FromAbeille[$parameters['Voisine']];
-        } else {
-            $parameters['Voisine_Name'] = $parameters['Voisine'];
-            $parameters['Voisine_Objet'] = "Inconnu";
-        }
+        /* Going thru neighbours list */
+        for ($nIndex = 0; $nIndex < hexdec($tableListCount); $nIndex++ ) {
+            $N = $NList[$nIndex];
+            logMessage("", "  N=".json_encode($N));
 
-        // echo "Voisine: " . $parameters['Voisine'] . " Voisine Name: " . $parameters['Voisine_Name'] . "\n";
+            // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
+            if ( $N->Addr == "0000" ) $N->Addr = "Ruche";
 
-        // Decode Bitmap Attribut
-        // Bit map of attributes Described below: uint8_t
-        // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
-        // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
-        // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
-        // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x00) {
-            $parameters['Type'] = "Coordinator";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x01) {
-            $parameters['Type'] = "Router";
-            if (isset($NE_All_BuildFromLQI[$parameters['Voisine']])) { // deja dans la list donc on ne fait rien
+            $parameters['Voisine'] = $netName."/".$N->Addr;
+            if ( isset($eqKnownFromAbeille[$parameters['Voisine']]) ) {
+                $parameters['Voisine_Name'] = $eqKnownFromAbeille[$parameters['Voisine']];
+                $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
             } else {
-                $NE_All_BuildFromLQI[$parameters['Voisine']] = array("LQI_Scan_Done" => 0);
+                $parameters['Voisine_Name'] = $parameters['Voisine'];
+                $parameters['Voisine_Objet'] = "Inconnu";
             }
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x02) {
-            $parameters['Type'] = "End Device";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00000011) == 0x03) {
-            $parameters['Type'] = "Unknown";
+
+            $parameters['Depth'] = $N->Depth;
+            $parameters['LinkQualityDec'] = hexdec($N->LQI);
+
+            // Decode Bitmap Attribut
+            // Bit map of attributes Described below: uint8_t
+            // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
+            // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
+            // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
+            // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
+            $Attr = hexdec($N->BitMap);
+            $AttrType = $Attr & 0b00000011;
+            if ($AttrType == 0) {
+                $parameters['Type'] = "Coordinator";
+            } else if ($AttrType == 1) {
+                $parameters['Type'] = "Router";
+                newEqToInterrogate($parameters['Voisine']);
+            } else if ($AttrType== 2) {
+                $parameters['Type'] = "End Device";
+            } else { // $AttrType== 3
+                $parameters['Type'] = "Unknown";
+            }
+
+            $AttrRel = ($Attr & 0b00110000) >> 4;
+            if ($AttrRel == 0) {
+                $parameters['Relationship'] = "Parent";
+            } else if ($AttrRel == 1) {
+                $parameters['Relationship'] = "Child";
+            } else if ($AttrRel == 2) {
+                $parameters['Relationship'] = "Sibling";
+            } else { // if ($AttrRel == 3)
+                $parameters['Relationship'] = "Unknown";
+            }
+
+            $AttrRx = ($Attr & 0b11000000) >> 6;
+            if ($AttrRx == 0) {
+                $parameters['Rx'] = "Rx-Off";
+            } else if ($AttrRx == 1) {
+                $parameters['Rx'] = "Rx-On";
+            } else { // 2 or 3
+                $parameters['Rx'] = "Rx-Unknown";
+            }
+
+            $LQI[] = $parameters;
         }
 
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x00) {
-            $parameters['Relationship'] = "Parent";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x10) {
-            $parameters['Relationship'] = "Child";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x20) {
-            $parameters['Relationship'] = "Sibling";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b00110000) == 0x30) {
-            $parameters['Relationship'] = "Unknown";
-        }
-
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x00) {
-            $parameters['Rx'] = "Rx-Off";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x40) {
-            $parameters['Rx'] = "Rx-On";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0x80) {
-            $parameters['Rx'] = "Rx-Unknown";
-        }
-        if ((hexdec($parameters['BitmapOfAttributes']) & 0b11000000) == 0xC0) {
-            $parameters['Rx'] = "Rx-Unknown";
-        }
-
-        $parameters['LinkQualityDec'] = hexdec($parameters['LinkQuality']);
-
-        $LQI[] = $parameters;
+        return 0;
     }
 
-    function mqqtPublishLQI( $dest, $addr, $index ) {
-        global $queueKeyLQIToCmd;
-
+    /* Send msg to 'AbeilleCmd'
+       Returns: 0=OK, -1=ERROR (fatal since queue issue) */
+    function msgToCmd($dest, $addr, $index) {
         $msgAbeille = new MsgAbeille;
-
         $msgAbeille->message['topic'] = "Cmd".$dest."/Ruche/Management_LQI_request";
         $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
+        logMessage("", "msgToCmd: ".json_encode($msgAbeille));
 
-        // KiwiLog("publishLQI: ".json_encode($msgAbeille));
-
-        if (msg_send( $queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false)) {
-            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Msg sent: '.json_encode($msgAbeille));
-        } else {
-            log::add('Abeille', 'debug', '(AbeilleLQI - mqqtPublishLQI) Could not send Msg');
+        global $queueKeyLQIToCmd;
+        if (msg_send($queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false) == FALSE) {
+            logMessage('error', "msgToCmd: Impossible d'envoyer le message vers AbeilleCmd");
+            return -1;
         }
+        return 0;
     }
 
-    // function hex2str($hex) {
-    //     $str = '';
-    //     for ($i = 0; $i < strlen($hex); $i += 2) {
-    //         $str .= chr(hexdec(substr($hex, $i, 2)));
-    //     }
+    /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
+       Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
+    function interrogateEq($netName, $addr, $eqIndex) {
+        global $eqToInterrogate;
 
-    //     return $str;
-    // }
-
-    // function displayClusterId($cluster) {
-    //     return 'Cluster ID: ' . $cluster . '-' . $GLOBALS['clusterTab']["0x" . $cluster];
-    // }
-
-    function collectInformation( $netName, $addr ) {
-        $indexTable = 0;
-
-        while ($GLOBALS['NE_continue']) {
-
-            mqqtPublishLQI( $netName, $addr, sprintf("%'.02x", $indexTable) );
-
-            $indexTable++;
-            // if ($indexTable > count($GLOBALS['knownNE'])+10) {
-            // Pour l instant je met une valeur en dure. 30 voisines max.
-            if ($indexTable > 30) {
-                $GLOBALS['NE_continue'] = 0;
+        while (TRUE) {
+            $eq = $eqToInterrogate[$eqIndex]; // Read eq status
+            msgToCmd($netName, $addr, sprintf("%'.02X", $eq['TableIndex']));
+            $ret = msgFromParser($eqIndex);
+            if ($ret == 1) {
+                /* If time-out, cancel interrogation for current eq only */
+                logMessage("", "Time-out => Abandon de l'interrogation de '".$eq['Name']."' (".$eq['Addr'].").");
+                return 1;
+            }
+            if ($ret != 0) {
+                /* Something failed. Stopping collect since might be due to several reasons
+                   like some daemons crash & restarted */
+                return -1;
             }
 
-            for ($i = 1; $i <= 3; $i++) {
-                message();
-                sleep(1);
-            }
+            $eq = $eqToInterrogate[$eqIndex]; // Read eq status
+            if ($eq['TableIndex'] >= $eq['TableEntries'])
+                break; // Exiting interrogation loop
         }
-        // On vide les derniers messages qui trainent
-        for ($i = 1; $i <= 3; $i++) {
-            message();
-            sleep(1);
-        }
+
+        /* Removing any pending message from parser */
+        // msgFromParserFlush(); // What for ?
+        return 0;
     }
 
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
      /*--------------------------------------------------------------------------------------------------*/
-    // Bouton GetLQI(x)
-    // refreshNetworkCache refreshCache(x) dans desktop/modal/network.php -> desktop/js/network.js -> updateZigBeeJsonCache(x) -> AbeilleLQI.php?zigate=(x)
-    // Pour tester en shell, declarer $_GET['zigate']=(x) en decommentant la ligne suivante et faire un php AbeilleLQI.php
-
-    $debugKiwi = 0;
-    $debugKiwiCli = 0; // if called form shell
-    if ( $debugKiwiCli ) $_GET['zigate']=1;
+    // To test in shell mode: php AbeilleLQI.php <zgNb>
 
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log");
-    logMessage("debug", "Démarrage d'AbeilleLQI.");
+    logMessage("", "Démarrage d'AbeilleLQI.");
 
     /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
        collected in the same way.
        URL => use $_GET[]
        Cmd line/shell => use $argv[] */
-    if (!isset($_GET['zigate'])) {
-        /* Zigate number passed as arg ? (called from shell/cron case) */
-        if (!isset($argv[1])) {
-            logMessage("debug", "  Paramètre zigate manquant => arret");
-            exit;
-        }
+    if (isset($_GET['zigate'])) { // Zigate nb passed as URL ?
+        $zgNb = $_GET['zigate'];
+    } else if (isset($argv[1])) { // Zigate nb passed as args ?
         $zgNb = $argv[1];
     } else
-        $zgNb = $_GET['zigate'];
-    if (($zgNb < 1) or ($zgNb > maxNbOfZigate)) {
-        logMessage("debug", "  Mauvaise valeur de zigate => arret");
+        $zgNb = -1;
+    if (($zgNb != -1) && (($zgNb < 1) or ($zgNb > 10))) {
+        logMessage("", "  Mauvaise valeur de zigate => arret");
         exit;
     }
 
-    $LQI                        = array();
-    $knownNE_FromAbeille        = array();
-    $knownObject_FromAbeille    = array();
-    $NE_All_BuildFromLQI        = array();
+    if ($zgNb == -1) {
+        logMessage("", "Interrogation de toutes les zigates actives");
+        $zgStart = 1;
+        $zgEnd = config::byKey('zigateNb', 'Abeille', '1', 1);
+    } else {
+        logMessage("", "Interrogation de la zigate ".$zgNb);
+        $zgStart = $zgNb;
+        $zgEnd = $zgNb;
+    }
 
-    $abeilleParameters = Abeille::getParameters();
-
-    $netName = "Abeille".$zgNb; // Abeille network
+    // Collecting known equipments list
+    $eqLogics = eqLogic::byType('Abeille');
+    $eqKnownFromAbeille        = array();
+    $objKnownFromAbeille    = array();
+    foreach ($eqLogics as $eqLogic) {
+        $eqKnownFromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
+        $objKnownFromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getObject()->getName();
+    }
+    logMessage("", "Equipements connus de Jeedom: ".json_encode($eqKnownFromAbeille));
 
     $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
 
-    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
-    $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
-    $lockFile = $dataFile.".lock";
-    $nbwritten = 0;
+    for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
+        if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y') {
+            logMessage("", "Zigate ".$zgNb." désactivée => Ignorée.");
+            continue;
+        }
 
-    if (file_exists($lockFile)) {
-        $content = file_get_contents($lockFile);
-        logMessage("debug", "Contenu du lock='".$content."'");
-        if (strpos("_".$content, "done") != 1) {
-            echo 'ERROR: Collect already ongoing';
-            logMessage("debug", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
+        $netName = "Abeille".$zgNb; // Abeille network
+        $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+        $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
+        $lockFile = $dataFile.".lock";
+        $nbwritten = 0;
+        if (file_exists($lockFile)) {
+            $content = file_get_contents($lockFile);
+            logMessage("", "Contenu ".$netName." lock='".$content."'");
+            if (strpos("_".$content, "done") != 1) {
+                echo 'ERROR: Collect already ongoing';
+                logMessage("", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
+                // TODO: Check if process is still really there
+                exit;
+            }
+        }
+        $nbwritten = file_put_contents($lockFile, "init");
+        if ($nbwritten < 1) {
+            unlink($lockFile);
+            echo "ERROR: Can't write lock file";
+            logMessage("", "Impossible d'écrire le fichier lock (".$lockFile.") => arret");
             exit;
         }
-    }
 
-    $nbwritten = file_put_contents($lockFile, "init");
-    if ($nbwritten<1) {
-        unlink($lockFile);
-        echo "ERROR: Can't write lock file";
-        logMessage("debug", "Impossible d'écrire le fichier lock (".$lockFile.") => arret");
-        exit;
-    }
+        $LQI = array(); // Result from interrogations
+        $eqToInterrogate = array();
+        newEqToInterrogate("Abeille".$zgNb."/Ruche");
 
-    // On recupere les infos d'Abeille
-    $eqLogics = eqLogic::byType('Abeille');
-    foreach ($eqLogics as $eqLogic) {
-        $knownNE_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
-        $knownObject_FromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getObject()->getName();
-    }
-    // if ( $debugKiwiCli ) { echo json_encode($knownObject_FromAbeille)."\n"; }
+        $done = 0;
+        $eqIndex = 0; // Index of eq to interrogate
+        $collectStatus = 0;
+        while (TRUE) {
+            logMessage("", "==========");
+            $total = count($eqToInterrogate);
+            logMessage("", "Zigate ".$zgNb.": progression ".$done."/".$total);
 
-    // Let's start at least with Ruche
-    $NE_All_BuildFromLQI[$netName."/Ruche"] = array("LQI_Scan_Done" => 0);
-
-    logMessage("debug", "Equipements connus de Jeedom: ".json_encode($knownNE_FromAbeille));
-    logMessage("debug", "Equipements à interroger: ".json_encode($NE_All_BuildFromLQI));
-
-    $NE_All_continue = 1;   // Controle le while sur la liste des NE
-    $NE_continue = 1;       // controle la boucle sur l interrogation de la table des voisines d un NE particulier
-
-    // Let's start the loop to collect all LQI
-    while ($NE_All_continue) {
-
-        // Par defaut je ne continu pas. Si je trouve au moins un NE je continue, je ferai donc une boucle à vide à la fin.
-        $NE_All_continue = 0;
-
-        // Let's continue with Routers found
-        // foreach ($knownNE as $name => $neAddress) {
-        foreach ($NE_All_BuildFromLQI as $currentNeAddress => $currentNeStatus) {
-            logMessage("debug", "=============================================================");
-            logMessage("debug", "Start Loop with : ".$currentNeAddress);
-
-            list( $netName, $addr ) = explode( '/', $currentNeAddress) ;
+            $currentNeAddress = $eqToInterrogate[$eqIndex]['LogicId'];
+            list( $netName, $addr ) = explode('/', $currentNeAddress);
             if ( $addr == "Ruche" ) { $addr = "0000"; }
 
-            //-----------------------------------------------------------------------------
-            // Estimation du travail restant et info dans le fichier lock
-            $total = count($NE_All_BuildFromLQI);
-            $done = 0;
-            foreach ($NE_All_BuildFromLQI as $neAddressProgress => $neStatusProgress) {
-                if ($neStatusProgress['LQI_Scan_Done'] == 1) {
-                    $done++;
-                }
-            }
-            logMessage("debug", "Status: ".$done."/".$total);
-
-            //-----------------------------------------------------------------------------
-            // Variable globale qui me permet de savoir quel NE on est en cours d'interrogation car dans le message de retour je n'ai pas cette info.
             $NE = $currentNeAddress;
 
-            $name = $knownNE_FromAbeille[$currentNeAddress];
+            $name = $eqKnownFromAbeille[$currentNeAddress];
             if (strlen($name) == 0) {
                 $name = "Inconnu-" . $currentNeAddress;
             }
 
-            $nbwritten = file_put_contents($lockFile, $done."/".$total.' ('.$name.' - '.$currentNeAddress.')');
-            if ($nbwritten<1) {
+            logMessage("", "Interrogation de '".$name."' (".$addr.")");
+            $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
+            if ($nbwritten < 1) {
                 echo "ERROR: Can't write lock file";
-                logMessage("error", "Impossible d'écrire sur fichier de lock.");
+                logMessage("", "Impossible d'écrire sur fichier de lock.");
                 unlink($lockFile);
                 exit;
             }
 
-            // KiwiLog( "All info collected so far: ".json_encode($NE_All_BuildFromLQI) );
+            $ret = interrogateEq($netName, $addr, $eqIndex);
+            $done++;
+            if ($ret == -1) {
+                $collectStatus = -1; // Collect interrupted due to error
+                logMessage("", "Collecte interrompue pour la zigate ".$zgNb." pour cause d'erreurs.");
+                break;
+            }
+            if ($ret == 1) {
+                $collectStatus = 1; // At least 1 interrogation canceled due to timeout
+            }
 
-            if ($currentNeStatus['LQI_Scan_Done'] == 0) {
-                $NE_All_continue = 1;
-                $NE_continue = 1;
-                logMessage("debug", "Interrogation de '".$name."' (".$netName."-".$addr.")");
-                collectInformation( $netName, $addr );
-                $NE_All_BuildFromLQI[$NE]['LQI_Scan_Done'] = 1;
-                sleep(5);
+            /* End of list ? */
+            if (($eqIndex + 1) == count($eqToInterrogate))
+                break;
+            $eqIndex++;
+        }
+
+        /* Write JSON cache only if collect completed successfully or on timeout */
+        if ($collectStatus != -1) {
+            // Encode array to json
+            $json = json_encode(array('data' => $LQI));
+
+            // Write json to file
+            if (file_put_contents($dataFile, $json)) {
+                echo "Ok: ".$netName." collect ended successfully";
             } else {
-                // echo "Already done\n";
+                unlink($dataFile);
+                echo "ERROR: Data file write pb.";
             }
         }
+
+        // Announce end of processing with status
+        switch ($collectStatus) {
+        case 0: $status = "ok"; break;
+        case 1: $status = "partial"; break; // Ok but some eq may be missing
+        default: $status = "error"; break; // Interrupted
+        }
+        file_put_contents($lockFile, "done/".time()."/".$status);
     }
 
-    //announce end of processing
-    file_put_contents($lockFile, "done - ".date('l jS \of F Y h:i:s A'));
-
-    // encode array to json
-    $json = json_encode(array('data' => $LQI));
-
-    //write json to file
-    if (file_put_contents($dataFile, $json)) {
-        echo "Ok: Collect ended successfully";
-        logMessage("info", "AbeilleLQI terminé sans erreurs.");
-    } else {
-        unlink($dataFile);
-        echo "ERROR: Data file write pb.";
-    }
-
-    // print_r( $NE_All );
-    // print_r( $voisine );
-    // print_r( $LQI );
+    logMessage("", "AbeilleLQI terminé.");
 ?>

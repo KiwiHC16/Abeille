@@ -263,6 +263,27 @@
             }
         }
 
+        /* Send message to 'AbeilleLQI'.
+           Returns: 0=OK, -1=ERROR */
+        function msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList)
+        {
+            $msg = array(
+                'Type' => '804E',
+                'SrcAddr' => $SrcAddr,
+                'TableEntries' => $NTableEntries,
+                'TableListCount' => $NTableListCount,
+                'StartIndex' => $StartIndex,
+                'List' => $NList
+            );
+
+            if (msg_send($this->queueKeyParserToLQI, 1, json_encode($msg), FALSE, FALSE, $error_code) == TRUE) {
+                return 0;
+            }
+
+            $this->deamonlog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$error_code.")");
+            return -1;
+        }
+
         /*
         function mqqtPublishAnnounce( $SrcAddr, $data)
         {
@@ -923,12 +944,12 @@
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); 
-                
+                $cmd                    = substr($payload,30, 2);
+
                 if ( $cmd == "01" ) $cmdTxt = "01 - read attribut response ";
                 if ( $cmd == "0A" ) $cmdTxt = "0A - report attribut ";
 
-                
+
                 if ( $cmd == '01') {
                     $attribute  = substr($payload,34, 2).substr($payload,32, 2);
                     $status     = substr($payload,36, 2);
@@ -1024,8 +1045,8 @@
                     }
                 }
 
-                
-                
+
+
             }
 
             // Remontée etat relai module Legrand 20AX
@@ -1759,6 +1780,7 @@
 
         }
 
+        /* 804E/Management LQI response */
         function decode804E($dest, $payload, $ln, $qos, &$LQI)
         {
             // <Sequence number: uint8_t>
@@ -1766,81 +1788,70 @@
             // <Neighbour Table Entries : uint8_t>
             // <Neighbour Table List Count : uint8_t>
             // <Start Index : uint8_t>
-            // <List of Entries elements described below :>
-            // Note: If Neighbour Table list count is 0, there are no elements in the list.
-            //  NWK Address : uint16_t
-            //  Extended PAN ID : uint64_t
-            //  IEEE Address : uint64_t
-            //  Depth : uint_t
-            //  Link Quality : uint8_t
-            //  Bit map of attributes Described below: uint8_t
-            //  bit 0-1 Device Type
-            //  (0-Coordinator 1-Router 2-End Device)
-            //  bit 2-3 Permit Join status
-            //  (1- On 0-Off)
-            //  bit 4-5 Relationship
-            //  (0-Parent 1-Child 2-Sibling)
-            //  bit 6-7 Rx On When Idle status
-            //  (1-On 0-Off)
-            // <Src Address : uint16_t> ( only from v3.1a) => Cette valeur est tres surprenante. Ne semble pas valide ou je ne la comprend pas.
+            // <List of elements described below :> (empty if 'Neighbour Table list count' is 0)
+            //      NWK Address : uint16_t
+            //      Extended PAN ID : uint64_t
+            //      IEEE Address : uint64_t
+            //      Depth : uint_t
+            //      Link Quality : uint8_t
+            //      Bit map of attributes Described below: uint8_t
+            //          bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)
+            //          bit 2-3 Permit Join status (1- On 0-Off)
+            //          bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)
+            //          bit 6-7 Rx On When Idle status (1-On 0-Off)
+            // <Src Address : uint16_t> (only since v3.1a)
+            // Note: It looks like there is an LQI byte at end of frame
 
-            // Le paquet contient 2 LQI mais je ne vais en lire qu'un à la fois pour simplifier le code
+            $SQN = substr($payload, 0, 2);
+            $Status = substr($payload, 2, 2);
+            $NTableEntries = substr($payload, 4, 2);
+            $NTableListCount = substr($payload, 6, 2);
+            $StartIndex = substr($payload, 8, 2);
+            $SrcAddr = substr($payload, 10 + ($NTableListCount * 42), 4); // 21 bytes per neighbour entry
 
-            $this->deamonlog('debug', $dest.', Type=804E/Management LQI response'
-                             . ', SQN='                         .substr($payload, 0, 2)
-                             . ', Status='                      .substr($payload, 2, 2)
-                             . ', NeighbourTableEntries='       .substr($payload, 4, 2)
-                             . ', NeighbourTableListCount='     .substr($payload, 6, 2)
-                             . ', StartIndex='                  .substr($payload, 8, 2)
-                             . ', NWKAddr='                     .substr($payload,10, 4)
-                             . ', ExtPANId='                    .substr($payload,14,16)
-                             . ', ExtAddr='                     .substr($payload,30,16)
-                             . ', Depth='                       .hexdec(substr($payload,46, 2))
-                             . ', LinkQuality='                 .hexdec(substr($payload,48, 2))
-                             . ', BitMapOfAttr='                .substr($payload,50, 2)
-                             . ', SrcAddr='                     .substr($payload,52, 4) );
+            $decoded = '804E/Management LQI response'
+                .', SQN='                       .$SQN
+                .', Status='                    .$Status
+                .', NeighbourTableEntries='     .$NTableEntries
+                .', NeighbourTableListCount='   .$NTableListCount
+                .', StartIndex='                .$StartIndex
+                .', SrcAddr='                   .$SrcAddr;
+            $this->deamonlog('debug', $dest.', Type='.$decoded);
 
-            $index                = substr($payload, 8, 2);
-            $NeighbourAddr        = substr($payload, 10, 4);
-            $NeighbourIEEEAddress = substr($payload, 30,16);
-            $lqi                  = hexdec(substr($payload, 48, 2));
-            $Depth                = hexdec(substr($payload, 46, 2));
-            $bitMapOfAttributes   = substr($payload, 50, 2); // to be $this->decoded
-            $srcAddress           = substr($payload, 52, 4);
-            // $LQI[$srcAddress]     = array($Neighbour=>array('LQI'=>$lqi, 'depth'=>$Depth, 'tree'=>$bitMapOfAttributes, ));
+            $j = 10; // Neighbours list starts at char 10
+            $NList = []; // List of neighbours
+            for ($i = 0; $i < hexdec($NTableListCount); $j += 42, $i++) {
+                $N = array(
+                    "Addr"     => substr($payload, $j + 0, 4),
+                    "ExtPANId" => substr($payload, $j + 4, 16),
+                    "ExtAddr"  => substr($payload, $j + 20, 16),
+                    "Depth"    => substr($payload, $j + 36, 2),
+                    "LQI"      => substr($payload, $j + 38, 2),
+                    "BitMap"   => substr($payload, $j + 40, 2)
+                );
+                $NList[] = $N; // Add to neighbours list
+                $this->deamonlog('debug', '  NAddr='.$N['Addr']
+                    .', NExtPANId='.$N['ExtPANId']
+                    .', NExtAddr='.$N['ExtAddr']
+                    .', NDepth='.$N['Depth']
+                    .', NLQI='.$N['LQI']
+                    .', NBitMap='.$N['BitMap'].' => '.zgGet804EBitMap($N['BitMap']));
 
-            $data =
-            "srcAddress="                   .substr($payload,52, 4)
-            ."&NeighbourTableEntries="      .substr($payload, 4, 2)
-            ."&Index="                      .substr($payload, 8, 2)
-            ."&ExtendedPanId="              .substr($payload,14,16)
-            ."&IEEE_Address="               .substr($payload,30,16)
-            ."&Depth="                      .substr($payload,46, 2)
-            ."&LinkQuality="                .substr($payload,48, 2)
-            ."&BitmapOfAttributes="         .substr($payload,50, 2);
+                // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
+                // Ca ne va marcher que pour les équipements en eveil.
+                // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
+                if (($N['Addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['Addr'], 'Abeille')) {
+                    $this->deamonlog('debug', '  NeighbourAddr='.$N['Addr']." n'est pas dans Jeedom. Essayons de l'interroger. Si en sommeil une intervention utilisateur sera necessaire.");
 
-            // $this->deamonlog('debug', ';Level=0x'.substr($payload, 0, 2));
-            // $this->deamonlog('debug', 'Message=');
-            // $this->deamonlog('debug',$this->hex2str(substr($payload, 2, strlen($payload) - 2)));
+                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01" );
+                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03" );
+                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B" );
+                }
 
-            //function $this->mqqtPublishLQI( $Addr, $Index, $data, $qos = 0)
-            $this->mqqtPublishLQI( $NeighbourAddr, $index, $data);
-
-            if ( strlen($NeighbourAddr) !=4 ) { return; }
-
-            // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
-            // Ca ne va marcher que pour les équipements en eveil.
-            // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
-            if ( !Abeille::byLogicalId( $dest.'/'.$NeighbourAddr, 'Abeille') && ($NeighbourAddr!="0000") ) {
-                $this->deamonlog('debug', '  NeighbourAddr='.$NeighbourAddr." n'est pas dans Jeedom. Essayons de l'interroger. Si en sommeil une intervention utilisateur sera necessaire.");
-
-                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=01" );
-                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=03" );
-                $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$NeighbourAddr."&destinationEndPoint=0B" );
+                $this->mqqtPublishCmdFct( $dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
             }
 
-            $this->mqqtPublishCmdFct( $dest."/".$NeighbourAddr."/IEEE-Addr", $NeighbourIEEEAddress);
-                 // Abeille / short addr / Cluster ID - Attr ID -> data
+            $this->msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList);
         }
 
         //----------------------------------------------------------------------------------------------------------------

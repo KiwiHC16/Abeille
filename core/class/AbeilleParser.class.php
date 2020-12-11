@@ -404,22 +404,24 @@
         function getFF01IdName($id) {
             $IdName = array(
                 '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
-                '03' => "tbd1",
-                '05' => "tbd2",
-                '07' => "tbd3",
-                '08' => "tbd4",
-                '09' => "tbd5",
-                '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2)
+                '03' => "Device Temperature", // Based on #1344
+                '05' => "tbd2",             // Type Associé 21 donc 16bitUint
+                '07' => "tbd3",             // Type associé 27 donc 64bitUint
+                '08' => "tbd4",             // ??
+                '09' => "tbd5",             // ??
+                '0b' => "tbd0b",            // Type associé 20 donc 8bitUint
+                '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2), Etat On/Off Prise Xiaomi
                 '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
                 '66' => "Pression",          // Based on Temperature Capteur V2
                 '6E' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
                 '6F' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
-                '94' => "tbd6",
+                '94' => "tbd6",             // Type associé ??
                 '95' => "Consommation",     // Based on Prise Xiaomi
-                '96' => "tbd8",
-                '97' => "tbd9",
-                '98' => "Puissance",        // Based on Aqara Double Relay
-                '9B' => "tbd11",
+                '96' => "Voltage",          // Based on #1344
+                '97' => "Current",          // Based on #1344
+                '98' => "Puissance",        // Based on Aqara Double Relay nad #1344
+                '9A' => "tbd9A",            // Type associé 20 donc une donnée 8bitUint
+                '9B' => "tbd11",            // Type associé 10 donc une donnée binaire
             );
             if (array_key_exists($id, $IdName))
                 return $IdName[$id];
@@ -1071,6 +1073,45 @@
                 }
 
                 return;
+            }
+
+            // Prise Xiaomi
+            if ( ($profile == "0104") && ($cluster == "FCC0") ) {
+                $this->deamonlog('debug', " KIWI Etape 1 ".__LINE__);
+                $FCF            = substr($payload,26, 2);
+                if ( $FCF=='1C' ) {
+                    $this->deamonlog('debug', " KIWI Etape 3 ".__LINE__);
+                    $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
+                    if ( $Manufacturer=='115F' ) {
+                        $this->deamonlog('debug', " KIWI Etape 4 ".__LINE__);
+                        $SQN            = substr($payload,32, 2);
+                        $Cmd            = substr($payload,34, 2);
+                        if ( $Cmd=='0A') {
+                            $this->deamonlog('debug', " KIWI Etape 5 ".__LINE__);
+                            $Attribut   = substr($payload,38, 2).substr($payload,36, 2);
+                            if ( $Attribut=='00F7' ) {
+                                $this->deamonlog('debug', " KIWI Etape 6 ".__LINE__);
+                                $dataType = substr($payload,40, 2);
+                                if ( $dataType == "41" ) {
+                                    $this->deamonlog('debug', " KIWI Etape 7 ".__LINE__);
+                                    $dataLength = hexdec(substr($payload,42, 2));
+                                    $this->deamonlog('debug', " KIWI Etape 8 :".$dataLength." ".__LINE__);
+                                    // Je suppose que je suis avec un message Xiaomi Prise que je decode comme les champs FF01
+                                    $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength));
+                                    $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Prise)");
+                                    $this->deamonlog('debug', "  ".json_encode($FCC0));
+
+                                    $this->mqqtPublish($dest."/".$srcAddress, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"], $qos);    // Device Temperature
+                                    $this->mqqtPublish($dest."/".$srcAddress, '0006', '01-0000',     $FCC0["Etat SW 1 Binaire"]["valueConverted"],  $qos);    // On Off Etat
+                                    $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--conso--',   $FCC0["Consommation"]["valueConverted"],       $qos);    // Consumption
+                                    $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--volt--',    $FCC0["Voltage"]["valueConverted"],            $qos);    // Voltage
+                                    $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--current--', $FCC0["Current"]["valueConverted"],            $qos);    // Current
+                                    $this->mqqtPublish($dest."/".$srcAddress, '000C', '15-0055',     $FCC0["Puissance"]["valueConverted"],          $qos);    // Puissance
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             if ($this->debug["8002"]) $this->deamonlog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog);

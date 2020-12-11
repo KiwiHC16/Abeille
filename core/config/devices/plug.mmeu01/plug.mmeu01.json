@@ -21,7 +21,11 @@
       "include8": "getEtat",
       "include9": "getManufacturerName",
       "include10": "getModelIdentifier",
-      "include13": "puissanceEP15"
+      "include13": "puissanceEP15",
+      "include13 2": "conso",
+      "include13 2 2": "VoltagePrise",
+      "include13 2 2 2": "CurrentPrise_mA",
+      "include13 2 2 2 2": "temperaturePrise"
     }
   }
 }

@@ -12,6 +12,7 @@
     include_once __DIR__.'/AbeilleLog.php';
 
     include_once __DIR__.'/../class/Abeille.class.php';
+    include_once __DIR__.'/../class/AbeilleParser.class.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
     $test = $argv[1];
@@ -131,52 +132,29 @@
             case 300:
                 echo "Test Cron function\n";
                 Abeille::cron();
-                break;
+            break;
             case 301:
                 echo "Test Cron15 function\n";
                 Abeille::cron15();
-                break;
+            break;
             case 302:
                 echo "Test CronHourly function\n";
                 Abeille::cronHourly();
-                break;
+            break;
             case 303:
                 echo "Test CronDaily function\n";
                 Abeille::cronDaily();
-                break;
+            break;
             case 310:
                 echo "Test getIEEE\n";
                 var_dump(Abeille::getIEEE('Abeille1/B529'));
-                break;
+            break;
             case 311:
                 echo "Test getEqFromIEEE\n";
                 var_dump(Abeille::getEqFromIEEE('842E14FFFE1396F5'));
-                break;
-        }
-        if ($test==301) {
-            echo "Test Cron15 function\n";
-            Abeille::cron15();
-        }
-        if ($test==302) {
-            echo "Test CronHourly function\n";
-            Abeille::cronHourly();
-        }
-        if ($test==303) {
-            echo "Test CronDaily function\n";
-            Abeille::cronDaily();
-        }
-
-        if ($test==310) {
-            echo "Test getIEEE\n";
-            var_dump( Abeille::getIEEE('Abeille1/B529') );
-        }
-        if ($test==311) {
-            echo "Test getEqFromIEEE\n";
-            var_dump( Abeille::getEqFromIEEE('842E14FFFE1396F5') );
-        }
-
-        if ($test==320) {
-            echo "Test AbeilleParser::execAtCreationCmdForOneNE\n";
+            break;
+            case 320:
+                echo "Test AbeilleParser::execAtCreationCmdForOneNE\n";
                 $address = "Abeille1/7147";
                 $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId( $address,'Abeille')->getId(), 'execAtCreation', 'action' );
                 foreach ( $cmds as $key => $cmd ) {
@@ -184,9 +162,15 @@
                     // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
                     echo 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay')."\n";
                 }
-
-        }
-
+            break;
+            case 330:
+                echo "Decodage trame prise Xiaomi a l adressse: 4AAE\n";
+                $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
+                $trame = "8002005495000104FCC00101024AAE0200001C5F11E40AF700413D64100103281A9839FE542C429539F187773E963900200F459739A8223C43052101009A20100821160107270000000000000000092100040B20009B100199";
+                $abeilleParser = new AbeilleParser;
+                $abeilleParser->protocolDatas("Abeille1", $trame, 0, $clusterTab, $LQI);  
+            break;
+            }
     }
 
     echo "End of the test.\n";

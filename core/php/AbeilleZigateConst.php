@@ -292,7 +292,7 @@
        Example: "RxONWhenIdle/Parent/PermitJoinON/Coordinator" */
     function zgGet804EBitMap($bitMap)
     {
-        $bitMap = strtoupper($bitMap);
+        $bitMap = hexdec($bitMap);
         $desc = "";
 
         // Bit map of attributes Described below: uint8_t
@@ -316,14 +316,14 @@
         }
 
         $pj = ($bitMap >> 2) & 0x3;
-        switch ($rel) {
+        switch ($pj) {
         case 0: $desc .= "/PermitJoinON"; break;
         case 1: $desc .= "/PermitJoinOFF"; break;
         default; $desc .= "/?"; break;
         }
 
         $dt = ($bitMap >> 0) & 0x3;
-        switch ($rel) {
+        switch ($dt) {
         case 0: $desc .= "/Coordinator"; break;
         case 1: $desc .= "/Router"; break;
         case 2; $desc .= "/EndDevice"; break;

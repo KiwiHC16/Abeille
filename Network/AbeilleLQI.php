@@ -36,6 +36,7 @@
             if ($Eq['LogicId'] == $logicId)
                 return; // Already there
         }
+        // TODO: What to do if mesg received does not match interrogated eq ?
 
         if (isset($eqKnownFromAbeille[$logicId]))
             $eqName = $eqKnownFromAbeille[$logicId];

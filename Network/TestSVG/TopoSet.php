@@ -1,6 +1,5 @@
 <?php
-    
-    require_once dirname(__FILE__) . "/../../../../core/php/core.inc.php";
+    require_once __DIR__."/../../../../core/php/core.inc.php";
     
     echo "Php Begin - ";
 
@@ -16,15 +15,11 @@
             $eqLogic->setConfiguration('positionX',$abeille->x);
             $eqLogic->setConfiguration('positionY',$abeille->y);
             $eqLogic->save();
-            echo "Position de l abeille: ".$id." sauvegarde en BD\n";
-        }
-        else {
+            echo "Position de l'abeille: ".$id." sauvegarde en BD\n";
+        } else {
             echo "Objet inconnu: ".$id."\n";
         }
-     
     }
     
      echo " - Php End";
-    
 ?>
-

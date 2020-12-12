@@ -76,8 +76,9 @@ $('#bt_networkAbeilleList').on('click', function () {
                                });
 
 $('#bt_networkAbeille').on('click', function () {
-                           window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.php");
-                           });
+    // window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.php");
+    window.open("index.php?v=d&m=Abeille&p=AbeilleNetworkGraph");
+});
 
 $('#bt_graph').on('click', function () {
                                window.open("plugins/Abeille/Network/AbeilleLQI_Map.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All");

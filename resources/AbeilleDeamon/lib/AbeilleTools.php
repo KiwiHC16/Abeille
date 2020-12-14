@@ -251,38 +251,24 @@ class AbeilleTools
 
         $dh = opendir($devicesDir);
         while (($dirEntry = readdir($dh)) !== false) {
-            if (($dirEntry == ".") || ($dirEntry == ".."))
-                continue;
-            if (($dirEntry == "listeCompatibilite.php") || ($dirEntry == "Template"))
+         
+            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) ) 
                 continue;
 
-            $file = $dirEntry . ".json";
-            $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $file;
-            if (file_exists($fullPath) == FALSE) {
+            $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $dirEntry . ".json";
+            if (!file_exists($fullPath)) {
                 log::add($logger, 'warning', "Fichier introuvable: " . $file);
                 return $return;
             }
 
             try {
-                $content = file_get_contents($fullPath);
-                //echo("nomCourt : $file : type : " . filetype($dirEntry . $file) . " \n");
-                //echo("fullName: " . $dirEntry . $file . DIRECTORY_SEPARATOR . $file . '.json' . " \n");
-                $temp = explode(":", $content);
-                $atemp = explode('"', str_replace(array("\r", "\n"), '', $temp[0]));
-                $found = $atemp[1];
-                if ($found != "" and strlen($found) > 1) {
-                    //echo 'file:' .$file.' / nom: ' . $found . " \n";
-                    array_push($return, $found);
-                }
+                $return[] = array_keys(json_decode(file_get_contents($fullPath),1))[0];
             } catch (Exception $e) {
                 log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $file);
             }
         }
 
-        //filter out empty value
-        return array_filter($return, function ($value) {
-            return strlen($value) > 1;
-        });
+        return $return;
     }
 
     /**
@@ -654,5 +640,7 @@ class AbeilleTools
     }
 
 }
+
+// var_dump(AbeilleTools::getDeviceNameFromJson());
 
 ?>

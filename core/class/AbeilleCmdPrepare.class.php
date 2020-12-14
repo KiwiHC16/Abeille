@@ -219,6 +219,25 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     );
                     break;
                     //----------------------------------------------------------------------------
+                case "OnOff4":
+                    if ($msg == "On") {
+                        $actionId = "01";
+                    } elseif ($msg == "Off") {
+                        $actionId = "00";
+                    } elseif ($msg == "Toggle") {
+                        $actionId = "02";
+                    }
+                    $Command = array(
+                        "onoff" => "1",
+                        "addressMode" => "02",
+                        "priority" => $priority,
+                        "dest" => $dest,
+                        "address" => $address,
+                        "destinationEndpoint" => "04",
+                        "action" => $actionId,
+                    );
+                    break;
+                    //----------------------------------------------------------------------------
                 case "OnOffHue":
                     if ($msg == "On") {
                         $actionId = "01";

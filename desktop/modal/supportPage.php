@@ -123,11 +123,11 @@
         exit();
     }
 
-    requestAndPrint($logFile, $link, "SELECT * FROM `update` WHERE `name` = 'Abeille'", "{{Version (Jeedom DB)}}", 1, 1);
-    requestAndPrint($logFile, $link, "SELECT * FROM `cron` WHERE `class` = 'Abeille'", "{{Liste des cron}}",          1, 1);
-    requestAndPrint($logFile, $link, "select * from config where plugin = 'Abeille'", "{{Configuration du plugin}}",  1, 1);
-    requestAndPrint($logFile, $link, "select * from eqLogic where eqType_name = 'Abeille'", "{{Liste des abeilles}}", 1, 1);
-    requestAndPrint($logFile, $link, "SELECT * FROM cmd WHERE eqType = 'Abeille'", "{{Liste des commandes}}",         0, 1);
+    requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "{{Version (Jeedom DB)}}",      1, 1);
+    requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "{{Liste des cron}}",           1, 1);
+    requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "{{Configuration du plugin}}",  1, 1);
+    requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "{{Liste des abeilles}}",       1, 1);
+    requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "{{Liste des commandes}}",      0, 1);
 
     mysqli_close($link);
 ?>

@@ -74,6 +74,23 @@
         }
     }
 
+    function getFileFilterAndPrint($logFile,  $file, $title, $filter, $printModal, $printFile) {
+
+        if ( $printModal ) {
+            echoTitle($logFile, $title);
+            if ($file = fopen($file, "r")) {
+                while(!feof($file)) {
+                    $textperline = fgets($file);
+                    if (strpos($textperline,'Modelisation'))
+                        echoAndLog($logFile, $textperline."\n");
+                }
+                fclose($file);
+            }
+            echoAndLog($logFile, "\n");
+        }
+
+    }
+
     function requestAndPrint($logFile, $link, $sql, $title, $printModal, $printFile) {
         if ( $printModal ) {
             echoTitle($logFile, $title);
@@ -113,6 +130,8 @@
     echoAndLog($logFile, "Extraction des informations nécessaires au support.\n\n", 0);
 
     getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
+    
+    getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "{{AbeilleParser / Modelisation}}", "Modelisation", 1, 1);
 
     /* Connect to DB */
     $link = mysqli_connect($CONFIG['db']['host'], $CONFIG['db']['username'], $CONFIG['db']['password'], $CONFIG['db']['dbname']);

@@ -131,15 +131,22 @@
 
     getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
     
+    echoTitle($logFile, '{{Linux}}');
+    exec('cat /etc/issue', $result1);
+    echoAndLog($logFile, json_encode($result1)."<br>", 1);
+    exec('uname -a', $result2);
+    echoAndLog($logFile, json_encode($result2)."<br><br>", 1);
+
     echoTitle($logFile, '{{Firmware}}');
     for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+        echo "Zigate: ".$i."<br>";
         if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
             $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille');
             foreach ( $ruche->getCmd() as $cmd ) {
                 if ($cmd->getLogicalId()=='SW-Application')
-                    echo 'SW-Application: '.$cmd->execCmd().'<br>';
+                    echoAndLog($logFile,'SW-Application: '.$cmd->execCmd().'<br>', 1);
                 if ($cmd->getLogicalId()=='SW-SDK')
-                    echo 'SW-SDK: '.$cmd->execCmd().'<br>';
+                    echoAndLog($logFile,'SW-SDK: '.$cmd->execCmd(), 1);
             }
         }
         echo '<br>';

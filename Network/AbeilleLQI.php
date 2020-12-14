@@ -289,13 +289,21 @@
 
     // Collecting known equipments list
     $eqLogics = eqLogic::byType('Abeille');
-    $eqKnownFromAbeille        = array();
-    $objKnownFromAbeille    = array();
+    $eqKnownFromAbeille = array();
+    $objKnownFromAbeille = array();
     foreach ($eqLogics as $eqLogic) {
-        $eqKnownFromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getName();
-        $objKnownFromAbeille[$eqLogic->getLogicalId()] = $eqLogic->getObject()->getName();
+        $eqLogicId = $eqLogic->getLogicalId();
+        $eqKnownFromAbeille[$eqLogicId] = $eqLogic->getName();
+        $eqParent = $eqLogic->getObject();
+        if (!is_object($eqParent))
+            $objName = "";
+        else
+            $objName = $eqParent->getName();
+        $objKnownFromAbeille[$eqLogicId] = $objName;
+        logMessage("", "  Eq='".$eqLogicId."', objname='".$objKnownFromAbeille[$eqLogicId]."'");
     }
     logMessage("", "Equipements connus de Jeedom: ".json_encode($eqKnownFromAbeille));
+    logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
     $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );

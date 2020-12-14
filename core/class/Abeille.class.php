@@ -1668,9 +1668,9 @@ class Abeille extends eqLogic
         $msgAbeille->message['payload'] = $payload;
 
         if (msg_send($queue, $priority, $msgAbeille, true, false)) {
-            log::add('Abeille', 'debug', 'Msg sent: ' . json_encode($msgAbeille) . ' on queue: ' . $queueId);
+            log::add('Abeille', 'debug', 'Msg sent: ' . json_encode($msgAbeille->message) . ' on queue: ' . $queueId);
         } else {
-            log::add('Abeille', 'debug', 'Could not send Msg: ' . json_encode($msgAbeille) . ' on queue: ' . $queueId);
+            log::add('Abeille', 'debug', 'Could not send Msg: ' . json_encode($msgAbeille->message) . ' on queue: ' . $queueId);
         }
     }
 
@@ -1783,25 +1783,27 @@ class Abeille extends eqLogic
                 $cmdlogic->setConfiguration($confKey, $confValue);
             }
             // template
-            $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-            $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-            $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+            if (isset($cmdValueDefaut["template"])) $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
+            if (isset($cmdValueDefaut["template"])) $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+            if (isset($cmdValueDefaut["isHistorized"])) $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
             $cmdlogic->setType($cmdValueDefaut["Type"]);
             $cmdlogic->setSubType($cmdValueDefaut["subType"]);
             // unite
-            $cmdlogic->setDisplay('invertBinary', '0');
+            if (isset($cmdValueDefaut["invertBinary"])) $cmdlogic->setDisplay('invertBinary', '0');
             // La boucle est pour info et pour action
-            foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-                // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-                $cmdlogic->setDisplay($confKey, $confValue);
+            if (isset($cmdValueDefaut["display"])) {
+                foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                    // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                    $cmdlogic->setDisplay($confKey, $confValue);
+                }
             }
-            $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+            if (isset($cmdValueDefaut["isVisible"])) $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
             // value
             // html
             // alert
 
             $cmdlogic->save();
-            $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
+            // $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
         }
     }
 }

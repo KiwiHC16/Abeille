@@ -348,32 +348,44 @@ class AbeilleTools
         $found['cmd'] = 0;
         $found['parser'] = 0;
 
+        // Count number of processes we should have based on configuration, init $found['process x'] to 0.
         for ($n = 1; $n <= $nbZigate; $n++) {
             if ($parameters['AbeilleActiver' . $n] == "Y") {
                 $activedZigate++;
+
+                // e.g. "AbeilleType2":"WIFI", "AbeilleSerialPort2":"/dev/zigate2"
+                // SerialRead + Socat
                 if (stristr($parameters['AbeilleSerialPort' . $n], '/dev/zigate')) {
-                    $nbProcessExpected += 2; // Socat + SerialRead
+                    $nbProcessExpected += 2; 
                     $found['serialRead' . $n] = 0;
                     $found['socat' . $n] = 0;
                 }
+                
+                // e.g. "AbeilleType1":"USB", "AbeilleSerialPort1":"/dev/ttyUSB3"
+                // SerialRead
                 if (preg_match("(tty|monit)", $parameters['AbeilleSerialPort' . $n])) {
                     $nbProcessExpected++;
                     $found['serialRead' . $n] = 0;
-                } // SerialRead
+                } 
             }
         }
         $found['expected'] = $nbProcessExpected;
 
+        // Search processes runnning and increase $found['process x'] each time we find one.
         foreach ($running as $line) {
             $match = [];
-            if (preg_match('/\K Abeille([0-9]) /', $line, $match)) {
+            if (preg_match('/AbeilleSerialRead.php Abeille([0-9]) /', $line, $match)) {
                 $abeille = $match[1];
                 if (stristr($line, "abeilleserialread.php"))
                     $found['serialRead' . $abeille]++;
+            }
+            elseif (preg_match('/AbeilleSocat.php \/dev\/zigate([0-9]) /', $line, $match)) {
+                $abeille = $match[1];
                 if (stristr($line, 'abeillesocat.php')) {
                     $found['socat' . $abeille]++;
                 }
-            } else {
+            } 
+            else {
                 if (stristr($line, "abeilleparser.php"))
                     $found['parser']++;
                 if (stristr($line, "abeillecmd.php"))

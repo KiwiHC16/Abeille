@@ -170,6 +170,36 @@
                 $abeilleParser = new AbeilleParser;
                 $abeilleParser->protocolDatas("Abeille1", $trame, 0, $clusterTab, $LQI);  
             break;
+            case 331:
+                echo "Test daemon monitoring\n";
+                
+                echo "Parameters:\n";
+                // $parameters = Abeille::getParameters();
+                $json = '{"parametersCheck":"ok","parametersCheck_message":"","AbeilleParentId":"125","zigateNb":"4","AbeilleType1":"USB","AbeilleSerialPort1":"\/dev\/ttyUSB3","IpWifiZigate1":"192.168.4.1:23","AbeilleActiver1":"Y","AbeilleType2":"WIFI","AbeilleSerialPort2":"\/dev\/zigate2","IpWifiZigate2":"192.168.4.106:23","AbeilleActiver2":"Y","AbeilleType3":"USB","AbeilleSerialPort3":"\/dev\/ttyUSB2","IpWifiZigate3":"192.168.4.119:23","AbeilleActiver3":"Y","AbeilleType4":"WIFI","AbeilleSerialPort4":"\/dev\/zigate4","IpWifiZigate4":"192.168.4.107:23","AbeilleActiver4":"Y"}';
+                $parameters = json_decode($json,1);
+                // var_dump($parameters);
+                // echo "Parameters: ".json_encode($parameters)."\n";
+                // echo "Nb zigate: ".$parameters['zigateNb']."\n";
+
+                // $running = AbeilleTools::getRunningDaemons();
+                // Kiwi Pro Simu
+                $running[] = "845 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /dev/zigate2 debug 192.168.4.106:23";
+                $running[] = "847 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /dev/zigate4 debug 192.168.4.107:23";
+                $running[] = "873 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSerialRead.php Abeille1 /dev/ttyUSB3 debug";
+                $running[] = "878 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSerialRead.php Abeille2 /dev/zigate2 debug";
+                $running[] = "883 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSerialRead.php Abeille3 /dev/ttyUSB2 debug";
+                $running[] = "892 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSerialRead.php Abeille4 /dev/zigate4 debug";
+                $running[] = "896 /usr/bin/php /var/www/html/plugins/Abeille/core/class/AbeilleParser.php debug";
+                $running[] = "899 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../../core/class/AbeilleCmd.php debug";
+
+                echo "Running: ".json_encode($running)."\n";
+                echo "\n";
+
+                $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
+                echo "Diff: ".json_encode($diff)."\n";
+                echo "\n";
+
+            break;
             }
     }
 

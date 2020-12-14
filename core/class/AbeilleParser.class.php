@@ -1098,25 +1098,18 @@
 
             // Prise Xiaomi
             if ( ($profile == "0104") && ($cluster == "FCC0") ) {
-                $this->deamonlog('debug', " KIWI Etape 1 ".__LINE__);
                 $FCF            = substr($payload,26, 2);
                 if ( $FCF=='1C' ) {
-                    $this->deamonlog('debug', " KIWI Etape 3 ".__LINE__);
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
                     if ( $Manufacturer=='115F' ) {
-                        $this->deamonlog('debug', " KIWI Etape 4 ".__LINE__);
                         $SQN            = substr($payload,32, 2);
                         $Cmd            = substr($payload,34, 2);
                         if ( $Cmd=='0A') {
-                            $this->deamonlog('debug', " KIWI Etape 5 ".__LINE__);
                             $Attribut   = substr($payload,38, 2).substr($payload,36, 2);
                             if ( $Attribut=='00F7' ) {
-                                $this->deamonlog('debug', " KIWI Etape 6 ".__LINE__);
                                 $dataType = substr($payload,40, 2);
                                 if ( $dataType == "41" ) {
-                                    $this->deamonlog('debug', " KIWI Etape 7 ".__LINE__);
                                     $dataLength = hexdec(substr($payload,42, 2));
-                                    $this->deamonlog('debug', " KIWI Etape 8 :".$dataLength." ".__LINE__);
                                     // Je suppose que je suis avec un message Xiaomi Prise que je decode comme les champs FF01
                                     $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength));
                                     $this->deamonlog('debug', "  Champ proprietaire Xiaomi (Prise)");

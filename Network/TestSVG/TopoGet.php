@@ -5,7 +5,12 @@
     
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
-        $device['objectName']   = $eqLogic->getObject()->getName();
+        $eqParent = $eqLogic->getObject();
+        if (!is_object($eqParent))
+            $objName = "";
+        else
+            $objName = $eqParent->getName();
+        $device['objectName']   = $objName;
         $device['name']         = $eqLogic->getName();
         $device['logicalId']    = $eqLogic->getLogicalId();
         $device['id']           = $eqLogic->getId();

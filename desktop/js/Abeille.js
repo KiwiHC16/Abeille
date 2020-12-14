@@ -81,8 +81,8 @@ $('#bt_networkAbeille').on('click', function () {
 });
 
 $('#bt_graph').on('click', function () {
-                               window.open("plugins/Abeille/Network/AbeilleLQI_Map.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All");
-                               });
+    window.open("plugins/Abeille/Network/AbeilleLQI_Map.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All");
+});
 
 $('#bt_listeCompatibilite').on('click', function () {
                                $('#md_modal').dialog({title: "{{Liste Compatibilite}}"});

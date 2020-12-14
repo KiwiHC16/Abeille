@@ -131,6 +131,22 @@
 
     getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
     
+    echoTitle($logFile, '{{Firmware}}');
+    for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+        if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
+            $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille');
+            foreach ( $ruche->getCmd() as $cmd ) {
+                if ($cmd->getLogicalId()=='SW-Application')
+                    echo 'SW-Application: '.$cmd->execCmd().'<br>';
+                if ($cmd->getLogicalId()=='SW-SDK')
+                    echo 'SW-SDK: '.$cmd->execCmd().'<br>';
+            }
+        }
+        echo '<br>';
+    }
+    echo '<br>';
+
+
     getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "{{AbeilleParser / Modelisation}}", "Modelisation", 1, 1);
 
     /* Connect to DB */

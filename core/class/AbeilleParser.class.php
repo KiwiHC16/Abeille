@@ -1852,6 +1852,11 @@
                 .', SrcAddr='                   .$SrcAddr;
             $this->deamonlog('debug', $dest.', Type='.$decoded);
 
+            if ($Status != "00") {
+                $this->deamonlog('debug', "  Status != 00 => abandon du decode");
+                return;
+            }
+
             $j = 10; // Neighbours list starts at char 10
             $NList = []; // List of neighbours
             for ($i = 0; $i < hexdec($NTableListCount); $j += 42, $i++) {

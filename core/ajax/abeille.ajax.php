@@ -133,7 +133,6 @@ try {
         $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType;
         $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
-        // $status = 0;
 
         /* Read Zigate FW version */
         $version = 0; // FW version

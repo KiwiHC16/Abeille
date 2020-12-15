@@ -179,7 +179,7 @@
     }
 
     function linuxDetails($logFile) {
-        echoTitle($logFile, '{{Linux}}');
+        echoTitle($logFile, '2/ {{Linux}}');
         exec('cat /etc/issue', $result1);
         echoAndLog($logFile, json_encode($result1)."\n", 1);
         exec('uname -a', $result2);
@@ -188,7 +188,7 @@
 
     function zigateDetails($logFile) {
         $space = '    ';
-        echoTitle($logFile, '{{Firmware}}');
+        echoTitle($logFile, '3/ {{Firmware}}');
         for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
             echoAndLog($logFile,"Zigate: ".$i."\n");
             if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
@@ -215,11 +215,11 @@
             exit();
         }
 
-        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "{{Version (Jeedom DB)}}",      1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "{{Liste des cron}}",           1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "{{Configuration du plugin}}",  1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "{{Liste des abeilles}}",       1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "{{Liste des commandes}}",      0, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "5/ {{Version (Jeedom DB)}}",      1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "6/ {{Liste des cron}}",           1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "7/ {{Configuration du plugin}}",  1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "8/ {{Liste des abeilles}}",       1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "9/ {{Liste des commandes}}",      0, 1);
 
         mysqli_close($link);
     }
@@ -227,14 +227,16 @@
     // Main
     //------------------------------------------------------------------------------------------
     echoAndLog($logFile, "Extraction des informations nécessaires au support.\n\n", 0);
+    echoAndLog($logFile, 'Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n", 0);
+    echoAndLog($logFile, "Pour l integration d un nouvel equipement ajoutez le chapitre 4.\n\n", 0);
 
-    getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "{{Version (AbeilleVersion.inc)}}", 1, 1);
+    getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "1/ {{Version (AbeilleVersion.inc)}}", 1, 1);
     
     linuxDetails($logFile);
 
     zigateDetails($logFile);
 
-    getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "{{AbeilleParser / Modelisation}}", "Modelisation", 1, 1);
+    getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "4/ {{AbeilleParser / Modelisation}}", "Modelisation", 1, 1);
 
     dataInDdDetails($logFile,$CONFIG);
 

@@ -43,13 +43,13 @@
     {
         zgLog('debug', "zgWrite(".$zgMsg.")");
         if ($zgF == FALSE) {
-            // zgLog("zgWrite() END: fopen ERROR");
+            zgLog('error', "zgWrite() END: fopen ERROR");
             return -1;
         }
         $status = fwrite($zgF, pack("H*", $zgMsg));
         fflush($zgF);
         if ($status == FALSE) {
-            // zgLog("zgWrite() END: fwrite ERROR");
+            zgLog('error', "zgWrite() END: fwrite ERROR");
             return -1;
         }
         // zgLog("zgWrite() END");
@@ -62,7 +62,7 @@
     {
         zgLog('debug', "zgRead()");
         if ($zgF == FALSE) {
-            // zgLog("zgRead() ERROR: bad desc for reading");
+            zgLog('error', "zgRead() ERROR: bad desc for reading");
             return -1;
         }
         $decode = false;
@@ -85,9 +85,9 @@
                     $zgMsg .= $c;
                 }
             }
-            // zgLog("  zgMsg=" . $zgMsg . "");
+            // zgLog('debug', "  zgMsg=" . $zgMsg . "");
         }
-        zgLog('debug', 'Read='.$zgMsg);
+        zgLog('debug', '  Read='.$zgMsg);
         return 0;
     }
 
@@ -147,49 +147,48 @@
 
     /* Send "Get Version" to zgPort to get FW version.
        Returns: 0=OK, -1=ERROR */
-       function zgGetVersion($zgPort, &$version)
-       {
-           // zgLog("zgGetVersion()");
-           $version = 0;
-           $zgF = fopen($zgPort, "w+"); // Zigate input/output
-           if ($zgF == FALSE) {
-               zgLog("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port " . $zgPort);
-               return -1;
-           }
+    function zgGetVersion($zgPort, &$version)
+    {
+        zgLog('debug', "zgGetVersion()");
+        $version = 0;
+        $zgF = fopen($zgPort, "w+"); // Zigate input/output
+        if ($zgF == FALSE) {
+            zgLog("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port ".$zgPort);
+            return -1;
+        }
 
-           zgLog('debug', 'Interrogation de la Zigate sur port '.$zgPort);
-           $fr = zgComposeFrame("0010");
-           $status = zgWrite($zgF, $fr); // Sending "Get Version" command
-           // $status = zgWrite($zgF, "01021010021002101003"); // Sending "Get Version" command
-           $zgMsg = "";
-           if ($status == 0) {
-               $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
-           }
-           if ($status == 0) {
-               $zgMsgType = substr($zgMsg, 0, 4);
-               if ($zgMsgType != "8000") {
-                   zgLog('debug', 'Mauvaise réponse. 8000 attendu.');
-                   $status = -1;
-               }
-           }
-           if ($status == 0)
-               $status = zgRead($zgF, $zgMsg); // Expecting 8010 'Version list' frame
-           if ($status == 0) {
-               $zgMsgType = substr($zgMsg, 0, 4);
-               if ($zgMsgType != "8010") {
-                   zgLog('debug', 'Mauvaise réponse. 8010 attendu.');
-                   $status = -1;
-               } else {
-                   $version = substr($zgMsg, 14, 4);
-                   zgLog('info', 'FW version '.$version);
-               }
-           }
+        zgLog('debug', 'Interrogation de la Zigate sur port '.$zgPort);
+        $fr = zgComposeFrame("0010");
+        $status = zgWrite($zgF, $fr); // Sending "Get Version" command
+        $zgMsg = "";
+        if ($status == 0) {
+            $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
+        }
+        if ($status == 0) {
+            $zgMsgType = substr($zgMsg, 0, 4);
+            if ($zgMsgType != "8000") {
+                zgLog('debug', 'Mauvaise réponse. 8000 attendu.');
+                $status = -1;
+            }
+        }
+        if ($status == 0)
+            $status = zgRead($zgF, $zgMsg); // Expecting 8010 'Version list' frame
+        if ($status == 0) {
+            $zgMsgType = substr($zgMsg, 0, 4);
+            if ($zgMsgType != "8010") {
+                zgLog('debug', 'Mauvaise réponse. 8010 attendu.');
+                $status = -1;
+            } else {
+                $version = substr($zgMsg, 14, 4);
+                zgLog('info', 'FW version '.$version);
+            }
+        }
 
-           fclose($zgF); // Close file desc
-           return $status;
-       }
+        fclose($zgF); // Close file desc
+        return $status;
+    }
 
-       /* Send "Get Devices List" (cmd 0x0015) to zgPort to get list of known devices.
+    /* Send "Get Devices List" (cmd 0x0015) to zgPort to get list of known devices.
        'zgDevices' is an array of known devices.
        Each device is himself an array with the following keys, with addr & ieee UPPER case
            ['id', 'addr', 'ieee', 'power, 'link']

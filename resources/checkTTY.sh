@@ -64,9 +64,24 @@ if [ "${TYPE}" == "PI" ]; then
         exit 4
     fi
     echo "= Ok"
+
+    echo "Configuration du port série"
+    stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw
+    if [ $? -ne 0 ]; then
+        echo " = ERREUR: stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw";
+        exit 5
+    fi
+    echo "= Ok"
+
+    # Note: Do not perform PiZigate reset unless you flush messages sent
+    #       on startup.
+    echo "Configuration des GPIOs"
+    gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 1
+    echo "= Ok"
+
 elif [ "${TYPE}" == "WIFI" ]; then
     echo "= ERREUR: Type 'WIFI' inattendu ici."
-    exit 5
+    exit 6
 fi
 
 exit 0

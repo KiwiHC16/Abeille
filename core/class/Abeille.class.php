@@ -302,7 +302,7 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------');
         log::add('Abeille', 'debug', 'Check Zigate Presence');
 
-        $param = self::getParameters();
+        $param = AbeilleTools::getParameters();
 
         //--------------------------------------------------------
         // Refresh Ampoule Ikea Bind et set Report
@@ -435,7 +435,7 @@ class Abeille extends eqLogic
     public static function cron()
     {
         // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
-        $param = self::getParameters();
+        $param = AbeilleTools::getParameters();
 
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
@@ -535,7 +535,7 @@ class Abeille extends eqLogic
 
         // On vérifie que le demon est demarrable
         // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
-        $parameters = self::getParameters();
+        $parameters = AbeilleTools::getParameters();
         if ($parameters['parametersCheck'] != "ok") {
             log::add('Abeille', 'warning', 'deamon_info(): parametersCheck NOT ok');
             $return['launchable'] = $parameters['parametersCheck'];
@@ -650,7 +650,7 @@ class Abeille extends eqLogic
 
         self::deamon_start_cleanup();
 
-        $param = self::getParameters();
+        $param = AbeilleTools::getParameters();
 
         /* Configuring GPIO for PiZigate if one active found.
                PiZigate reminder (using 'WiringPi'):
@@ -669,7 +669,7 @@ class Abeille extends eqLogic
         //demarrage d'un cron pour le plugin.
         cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-        $parameters = self::getParameters();
+        $parameters = AbeilleTools::getParameters();
         $running = AbeilleTools::getRunningDaemons();
         AbeilleTools::restartMissingDaemons($parameters, $running);
 
@@ -702,7 +702,7 @@ class Abeille extends eqLogic
     public static function mapAbeillePort($Abeille)
     {
 
-        $param = self::getParameters();
+        $param = AbeilleTools::getParameters();
 
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if ($Abeille == "Abeille" . $i) return basename($param['AbeilleSerialPort' . $i]);
@@ -718,7 +718,7 @@ class Abeille extends eqLogic
     public static function mapPortAbeille($port)
     {
 
-        $param = self::getParameters();
+        $param = AbeilleTools::getParameters();
 
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if ($port == $param['AbeilleSerialPort' . $i]) return "Abeille" . $i;
@@ -885,26 +885,6 @@ class Abeille extends eqLogic
         }
     }
 
-    public static function getParameters()
-    {
-        $return = array();
-        $return['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
-        $return['parametersCheck_message'] = "";
-
-        //Most Fields are defined with default values
-        $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1', 1);
-        $return['zigateNb'] = config::byKey('zigateNb', 'Abeille', '1', 1);
-
-        for ($i = 1; $i <= $return['zigateNb']; $i++) {
-            $return['AbeilleType' . $i] = config::byKey('AbeilleType' . $i, 'Abeille', 'none', 1);
-            $return['AbeilleSerialPort' . $i] = config::byKey('AbeilleSerialPort' . $i, 'Abeille', 'none', 1);
-            $return['IpWifiZigate' . $i] = config::byKey('IpWifiZigate' . $i, 'Abeille', '192.168.0.1', 1);
-            $return['AbeilleActiver' . $i] = config::byKey('AbeilleActiver' . $i, 'Abeille', 'N', 1);
-        }
-
-        return $return;
-    }
-
     // public static function checkParameters() {
     //     // return 1 si Ok, 0 si erreur
     //     $param = Abeille::getParameters();
@@ -1047,7 +1027,7 @@ class Abeille extends eqLogic
             return;
         }
 
-        $parameters_info = self::getParameters();
+        $parameters_info = AbeilleTools::getParameters();
 
         $convert = array(
             "affichageNetwork" => "Network",
@@ -1135,7 +1115,7 @@ class Abeille extends eqLogic
             return;
         }
 
-        $parameters_info = self::getParameters();
+        $parameters_info = AbeilleTools::getParameters();
 
         if (!preg_match("(Time|Link-Quality)", $message->topic)) {
             log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
@@ -1402,8 +1382,10 @@ class Abeille extends eqLogic
                 $cmdlogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
                 // template
-                $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-                $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+                if (isset($cmdValueDefaut["template"])) {
+                    $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
+                    $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+                }
                 $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                 $cmdlogic->setType($cmdValueDefaut["Type"]);
                 $cmdlogic->setSubType($cmdValueDefaut["subType"]);
@@ -1419,7 +1401,7 @@ class Abeille extends eqLogic
                 }
                 // La boucle est pour info et pour action
                 // isVisible
-                $parameters_info = self::getParameters();
+                $parameters_info = AbeilleTools::getParameters();
                 $isVisible = $cmdValueDefaut["isVisible"];
 
                 if (array_key_exists("display", $cmdValueDefaut))
@@ -1497,11 +1479,11 @@ class Abeille extends eqLogic
 
             // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality
             if (!preg_match("(Time|Link-Quality)", $message->topic)) {
-                
+
                 if (!Abeille::checkInclusionStatus($dest)) {
                     log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
                 }
-            
+
                 self::interrogateUnknowNE( $dest, $addr );
 
             }
@@ -1657,7 +1639,7 @@ class Abeille extends eqLogic
 
     public static function publishMosquitto($queueId, $priority, $topic, $payload)
     {
-        $parameters_info = Abeille::getParameters();
+        $parameters_info = AbeilleTools::getParameters();
         log::add('Abeille', 'debug', 'Envoi du message topic: ' . $topic . ' payload: ' . $payload . ' vers ' . $queueId);
 
         $queue = msg_get_queue($queueId);
@@ -1696,7 +1678,7 @@ class Abeille extends eqLogic
             */
 
         message::add("Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.", '');
-        $parameters_info = self::getParameters();
+        $parameters_info = AbeilleTools::getParameters();
         $elogic = new Abeille();
         //id
         $elogic->setName("Ruche-" . $dest);

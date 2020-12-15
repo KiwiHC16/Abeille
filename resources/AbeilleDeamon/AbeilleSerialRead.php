@@ -58,6 +58,17 @@
         exit(3);
     }
 
+    //check already running
+    $parameters = AbeilleTools::getParameters();
+    $running = AbeilleTools::getRunningDaemons();
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    #Two at least expected,the original and this one
+    if ($daemons["serialRead".$abeilleNb] > 1){
+        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
+        exit(3);
+    }
+
     $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');

@@ -56,6 +56,8 @@
     $dest = $argv[1];
     $addressShort = $argv[2];
 
+
+
     while ( time() < $timeEnd ) {
         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/IEEE_Address_request", "address=".$addressShort."&shortAddress=".$addressShort );
         echo ".";

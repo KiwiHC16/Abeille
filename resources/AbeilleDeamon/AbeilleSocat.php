@@ -43,9 +43,20 @@
         exit(2);
     }
 
-    /* Now we can extract network number to properly identify log file. */
+     /* Now we can extract network number to properly identify log file. */
     $abeilleNb = (int)substr($serial, 11); // '/dev/zigateX' => Zigate number X (ex: 1)
     logSetConf("AbeilleSocat".$abeilleNb.".log"); // Log to file with line nb check
+
+    //check already running
+    $parameters = AbeilleTools::getParameters();
+    $running = AbeilleTools::getRunningDaemons();
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    #Two at least expected,the original and this one
+    if ($daemons["socat".$abeilleNb] > 1){
+        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
+        exit(3);
+    }
 
     $nohup 	= "/usr/bin/nohup";
     $sudo   = "/usr/bin/sudo";

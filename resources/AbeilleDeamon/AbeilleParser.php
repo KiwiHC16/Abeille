@@ -160,12 +160,22 @@
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
 
- 
+
     // ***********************************************************************************************
     // MAIN
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
+    //check already running
+    $parameters = AbeilleTools::getParameters();
+    $running = AbeilleTools::getRunningDaemons();
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    #Two at least expected,the original and this one
+    if ($daemons["parser"] > 1){
+        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
+        exit(3);
+    }
 
     try {
         // On crée l objet AbeilleParser

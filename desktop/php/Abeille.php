@@ -14,7 +14,7 @@ $eqLogics = eqLogic::byType('Abeille');
 
 $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 
-$parametersAbeille = Abeille::getParameters();
+$parametersAbeille = AbeilleTools::getParameters();
 
 $outils = array(
     'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
@@ -50,16 +50,16 @@ if (file_exists($dbgFile)) {
 
 			<!-- Icones de toutes les abeilles  -->
 			<?php include '020_AbeilleMesAbeillesPart.php'; ?>
-				
+
 			<legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
 			<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
-				
+
 				<!-- Gestion des groupes et des scenes  -->
 				<?php include '030_AbeilleGroupPart.php'; ?>
-				
+
 				<!-- Gestion des groupes et des scenes  -->
 				<?php include '040_AbeilleScenePart.php'; ?>
-			
+
 			</div>
 
 			<!-- Gestion des ghosts / remplacement d equipements  -->
@@ -67,7 +67,7 @@ if (file_exists($dbgFile)) {
 
 			<!-- Gestion des parametres Zigate -->
 			<?php include '060_AbeilleZigatePart.php'; ?>
-			
+
 			<!-- Affichage des details zigate  -->
 			<?php include '070_AbeilleDetailsPart.php'; ?>
 
@@ -75,12 +75,12 @@ if (file_exists($dbgFile)) {
 			<?php include '080_AbeilleZoneDevPart.php'; ?>
 
 		</div> <!-- Fin - Barre d outils horizontale  -->
-	
+
 	</form>
 
     <!-- Affichage des informations d un equipement - tab : Equipement / Param / Commandes  -->
     <div class="col-xs-12 eqLogic" style="display: none;">
-	
+
         <!-- Affichage de la zone developpeur  -->
         <?php include '100_AbeilleEntete.php'; ?>
 

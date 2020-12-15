@@ -137,7 +137,7 @@
             logSetConf("AbeilleParser.log");
 
             if ($this->debug["AbeilleParserClass"]) $this->deamonlog("debug", "AbeilleParser constructor");
-            $this->parameters_info = Abeille::getParameters();
+            $this->parameters_info = AbeilleTools::getParameters();
 
                         // $this->requestedlevel = $argv[7];
             $this->requestedlevel = '' ? 'none' : $argv[1];

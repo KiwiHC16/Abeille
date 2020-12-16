@@ -258,7 +258,7 @@ class AbeilleTools
             $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $dirEntry . ".json";
             if (!file_exists($fullPath)) {
                 log::add($logger, 'warning', "Fichier introuvable: " . $file);
-                return $return;
+                continue;
             }
 
             try {

@@ -4,14 +4,17 @@
         throw new Exception('{{401 - Accès non autorisé}}');
     }
 
-    /* Add network & refresh button for all active zigates */
-    function displayButtons($nbOfZigates) {
+    /* Add network display & refresh buttons for all active zigates */
+    function displayButtons($nbOfZigates, $what="linksTable") {
         echo 'Afficher réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
-            echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayNodes('.$i.')">Abeille'.$i.'</a>';
+            if ($what == "linksTable")
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayNodes('.$i.')">Abeille'.$i.'</a>';
+            else // "linksGraph"
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="network_display('.$i.')">Abeille'.$i.'</a>';
             echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
         }
@@ -155,7 +158,7 @@
                     <br />
                     <div id="div_routingTable">
                         <?php
-                            displayButtons($nbOfZigates);
+                            displayButtons($nbOfZigates, "linksTable");
                         ?>
                         <br />
                         <hr>
@@ -196,7 +199,7 @@
 
                     <br />
                     <?php
-                        displayButtons($nbOfZigates);
+                        displayButtons($nbOfZigates, "linksGraph");
                     ?>
 
                     <table class="table table-bordered table-condensed"

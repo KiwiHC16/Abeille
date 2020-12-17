@@ -1,5 +1,7 @@
 <?php
 
+    include_once __DIR__.'/../../core/class/AbeilleMsg.php';
+
     /*
      * AbeilleParserClass
      *
@@ -236,6 +238,7 @@
             }
         }
 
+        /*
         function mqqtPublishLQI( $Addr, $Index, $data)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
@@ -261,7 +264,7 @@
             else {
                 $this->deamonlog("debug","(fct mqqtPublishLQI ParserToLQI) could not add message to queue (queueKeyParserToLQI) with error code : ".$errorcode);
             }
-        }
+        } */
 
         /* Send message to 'AbeilleLQI'.
            Returns: 0=OK, -1=ERROR */
@@ -657,7 +660,6 @@
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
             }
-
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -775,7 +777,6 @@
                     message::add("Abeille","Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
                 }
             }
-
         }
 
         /**
@@ -1046,9 +1047,6 @@
                         return;
                     }
                 }
-
-
-
             }
 
             // Remontée etat relai module Legrand 20AX
@@ -1811,7 +1809,6 @@
                              . ', ScannedChannelsCount=0x'.$ScannedChannelsCount
                              . ', Channels='.json_encode($results)
                              );
-
         }
 
         /* 804E/Management LQI response */
@@ -3164,8 +3161,6 @@
         public function deamonlog(string $level, string $message)
         {
             logMessage($level,$message);
-
         }
     } // class AbeilleParser
-
 ?>

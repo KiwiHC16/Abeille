@@ -494,6 +494,17 @@
             return $fields;
         }
 
+         /**
+         * protocolDatas receive messages from the serial port and will check the CRC, ig Ok will ask for the decoding of the message
+         * 
+         * @param dest          Zigate sending the message
+         * @param datas         Message sent by the zigate
+         * @param qos           Not used anymore, there due to legacy code
+         * @param clusterTab    Table of the Cluster definition
+         * @param LQI           LQI from the message received
+         * 
+         * @return tab          Retourne chaine vide
+         */
         function protocolDatas($dest, $datas, $qos, $clusterTab, &$LQI) {
             // datas: trame complete recue sur le port serie sans le start ni le stop.
             // 01: 01 Start
@@ -518,8 +529,13 @@
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
             $crctmp = $crctmp ^ hexdec($datas[0].$datas[1]) ^ hexdec($datas[2].$datas[3]);
 
-            //taille message
+            // Taille message
+            // see github: AbeilleParser Erreur CRC #1562
             $ln = $datas[4].$datas[5].$datas[6].$datas[7];
+            if ( hexdec($ln) > 150 ) {
+                $this->deamonlog('error', 'Le message recu est beaucoup trop long. On ne le process pas.');
+                return $tab;
+            }
             $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
 
             //acquisition du CRC

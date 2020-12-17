@@ -129,6 +129,7 @@
             $path = jeedom::getTmpFolder("Abeille").'/'.$file;
             $status = 0;
             $error = "";
+            $content = "";
 
             if (!file_exists($path)) {
                 $status = -1;

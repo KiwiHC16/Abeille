@@ -251,8 +251,8 @@ class AbeilleTools
 
         $dh = opendir($devicesDir);
         while (($dirEntry = readdir($dh)) !== false) {
-         
-            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) ) 
+
+            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) )
                 continue;
 
             $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $dirEntry . ".json";
@@ -289,7 +289,7 @@ class AbeilleTools
         for ($i = 1; $i <= $return['zigateNb']; $i++) {
             $return['AbeilleType' . $i] = config::byKey('AbeilleType' . $i, 'Abeille', 'none', 1);
             $return['AbeilleSerialPort' . $i] = config::byKey('AbeilleSerialPort' . $i, 'Abeille', 'none', 1);
-            $return['IpWifiZigate' . $i] = config::byKey('IpWifiZigate' . $i, 'Abeille', '192.168.0.1', 1);
+            $return['IpWifiZigate' . $i] = config::byKey('IpWifiZigate' . $i, 'Abeille', '', 1);
             $return['AbeilleActiver' . $i] = config::byKey('AbeilleActiver' . $i, 'Abeille', 'N', 1);
         }
 
@@ -367,17 +367,17 @@ class AbeilleTools
                 // e.g. "AbeilleType2":"WIFI", "AbeilleSerialPort2":"/dev/zigate2"
                 // SerialRead + Socat
                 if (stristr($parameters['AbeilleSerialPort' . $n], '/dev/zigate')) {
-                    $nbProcessExpected += 2; 
+                    $nbProcessExpected += 2;
                     $found['serialRead' . $n] = 0;
                     $found['socat' . $n] = 0;
                 }
-                
+
                 // e.g. "AbeilleType1":"USB", "AbeilleSerialPort1":"/dev/ttyUSB3"
                 // SerialRead
                 if (preg_match("(tty|monit)", $parameters['AbeilleSerialPort' . $n])) {
                     $nbProcessExpected++;
                     $found['serialRead' . $n] = 0;
-                } 
+                }
             }
         }
         $found['expected'] = $nbProcessExpected;
@@ -395,7 +395,7 @@ class AbeilleTools
                 if (stristr($line, 'abeillesocat.php')) {
                     $found['socat' . $abeille]++;
                 }
-            } 
+            }
             else {
                 if (stristr($line, "abeilleparser.php"))
                     $found['parser']++;

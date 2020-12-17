@@ -15,10 +15,12 @@
  */
 
 $("#tab_nodes").off("click").on("click", function () {
+    /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
     displayNodes(1);
 });
 
 $("#tab_graph").off("click").on("click", function () {
+    /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
     network_display(1);
 });
 
@@ -165,6 +167,9 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
                 $('#div_networkZigbeeAlert').showAlert({ message: msg, level: 'danger' });
                 _autoUpdate = 0;
                 setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
+            } else if (res.content == "") {
+                $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier lock vide}}', level: 'danger'});
+                setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
             } else {
                 var data = res.content;
                 console.log("Status='"+data+"'");
@@ -191,8 +196,7 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
                 }
             }
         }
-    })
-    ;
+    });
 }
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....

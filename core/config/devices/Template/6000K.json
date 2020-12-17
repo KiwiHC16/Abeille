@@ -1,0 +1,21 @@
+{
+  "6000K": {
+    "isVisible": 1,
+    "name": "6000K",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c7sfsdfd66215d3",
+      "topic": "setTemperature",
+      "request": "EP=#EP#&slider=6000",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

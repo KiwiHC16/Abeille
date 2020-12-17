@@ -1,0 +1,24 @@
+{
+  "setTemperatureLight_2700_6500": {
+    "isVisible": 1,
+    "name": "setTemperatureLight_2700_6500",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "generic_type": "LIGHT_SET_COLOR_TEMP",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c766254lkuaeima4",
+      "topic": "setTemperature",
+      "request": "EP=#EP#&slider=#slider#",
+      "minValue": "2700",
+      "maxValue": "6500",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

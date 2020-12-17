@@ -652,6 +652,34 @@ class Abeille extends eqLogic
 
         $param = AbeilleTools::getParameters();
 
+        /* Checking config */
+        for ($zgNb = 1; $zgNb <= $param['zigateNb']; $zgNb++) {
+            if ($param['AbeilleActiver'.$zgNb] != 'Y')
+                continue; // Disabled
+
+            /* This zigate is enabled. Checking other parameters */
+            $error = "";
+            $sp = $param['AbeilleSerialPort'.$zgNb];
+            if (($sp == 'none') || ($sp == "")) {
+                $error = "Port série de la zigate ".$zgNb." INVALIDE";
+            }
+            if ($error == "") {
+log::add('Abeille', 'debug', 'LAAAAAAA0');
+                if ($param['AbeilleType'.$zgNb] == "WIFI") {
+                    $wifiAddr = $param['IpWifiZigate'.$zgNb];
+log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
+                    if (($wifiAddr == 'none') || ($wifiAddr == "")) {
+                        $error = "Adresse Wifi de la zigate ".$zgNb." INVALIDE";
+                    }
+                }
+            }
+            if ($error != "") {
+                $param['AbeilleActiver'.$zgNb] = 'N';
+                config::save('AbeilleActiver'.$zgNb, 'N', 'Abeille');
+                log::add('Abeille', 'error', $error." ! Zigate désactivée.");
+            }
+        }
+
         /* Configuring GPIO for PiZigate if one active found.
                PiZigate reminder (using 'WiringPi'):
                - port 0 = RESET

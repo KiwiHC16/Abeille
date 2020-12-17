@@ -2406,6 +2406,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $temperature . $duration ;
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+
+            if ( $addressMode != "01" ) {
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0300&attributeId=0007" );
+            }
         }
 
         if ( isset($Command['getManufacturerName']) && isset($Command['address']) )

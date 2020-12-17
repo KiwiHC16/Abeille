@@ -1,0 +1,21 @@
+{
+  "0300-#EP#-0007": {
+    "isVisible": 1,
+    "name": "TemperatureLight",
+    "order": 4,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "invertBinary": "0",
+    "template": "",
+    "unite": "K",
+    "configuration": {
+      "uniqId": "5c07c76098gred562403e",
+      "historizeRound": "0",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

@@ -350,7 +350,6 @@ class Abeille extends eqLogic
      */
     public static function cron15()
     {
-
         log::add('Abeille', 'debug', 'cron15: Démarrage --------------------------------');
 
         /* Look every 15 minutes if the kernel driver is not in error */
@@ -616,10 +615,9 @@ class Abeille extends eqLogic
     }
 
     /* Starting all daemons.
-           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
+       Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
     public static function deamon_start($_debug = false)
     {
-
         log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
 
         /* Developers debug features.
@@ -664,10 +662,8 @@ class Abeille extends eqLogic
                 $error = "Port série de la zigate ".$zgNb." INVALIDE";
             }
             if ($error == "") {
-log::add('Abeille', 'debug', 'LAAAAAAA0');
                 if ($param['AbeilleType'.$zgNb] == "WIFI") {
                     $wifiAddr = $param['IpWifiZigate'.$zgNb];
-log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
                         $error = "Adresse Wifi de la zigate ".$zgNb." INVALIDE";
                     }
@@ -729,7 +725,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
      */
     public static function mapAbeillePort($Abeille)
     {
-
         $param = AbeilleTools::getParameters();
 
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
@@ -745,7 +740,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
      */
     public static function mapPortAbeille($port)
     {
-
         $param = AbeilleTools::getParameters();
 
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
@@ -803,7 +797,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
 
     public static function dependancy_info()
     {
-
         log::add('Abeille', 'warning', '-------------------------------------> dependancy_info()');
 
         // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
@@ -844,7 +837,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
 
     public static function deamon()
     {
-
         try {
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
             $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
@@ -1015,7 +1007,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
 
                     return $return;
                 }
-
             }
         }
 
@@ -1513,7 +1504,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
                 }
 
                 self::interrogateUnknowNE( $dest, $addr );
-
             }
 
             return;
@@ -1591,7 +1581,6 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
             return;
         }
 
-
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour
         if (is_object($elogic) && is_object($cmdlogic)) {
@@ -1667,26 +1656,47 @@ log::add('Abeille', 'debug', 'LAAAAAAA='.$wifiAddr);
 
     public static function publishMosquitto($queueId, $priority, $topic, $payload)
     {
-        $parameters_info = AbeilleTools::getParameters();
-        log::add('Abeille', 'debug', 'Envoi du message topic: ' . $topic . ' payload: ' . $payload . ' vers ' . $queueId);
+        static $queueStatus = []; // "ok" or "error"
 
         $queue = msg_get_queue($queueId);
+        if ($queue == FALSE) {
+            // log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+            return;
+        }
+        if (($stat = msg_stat_queue($queue)) == FALSE) {
+            return; // Something wrong
+        }
+
+        /* To avoid plenty errors, checking if someone really reads the queue.
+           If not, do nothing but a message to user first time.
+           Note: Assuming potential pb if more than 50 pending messages. */
+        $pendMsg = $stat['msg_qnum']; // Pending messages
+        if ($pendMsg > 50) {
+            if (file_exists("/proc/") && !file_exists("/proc/".$stat['msg_lrpid'])) {
+                /* Receiver process seems down */
+                if (isset($queueStatus[$queueId]) && ($queueStatus[$queueId] == "error"))
+                    return; // Queue already marked "in error"
+                message::add("Abeille", "Alerte ! Démon arrété ou planté. (Re)démarrage nécessaire.", '');
+                $queueStatus[$queueId] = "error";
+                return;
+            }
+        }
+
+        $parameters_info = AbeilleTools::getParameters();
 
         $msgAbeille = new MsgAbeille;
-
         $msgAbeille->message['topic'] = $topic;
         $msgAbeille->message['payload'] = $payload;
 
-        if (msg_send($queue, $priority, $msgAbeille, true, false)) {
-            log::add('Abeille', 'debug', 'Msg sent: ' . json_encode($msgAbeille->message) . ' on queue: ' . $queueId);
-        } else {
-            log::add('Abeille', 'debug', 'Could not send Msg: ' . json_encode($msgAbeille->message) . ' on queue: ' . $queueId);
-        }
+        if (msg_send($queue, $priority, $msgAbeille, true, false, $error_code)) {
+            log::add('Abeille', 'debug', "publishMosquitto(): Envoyé '".json_encode($msgAbeille->message)."' vers queue ".$queueId);
+            $queueStatus[$queueId] = "ok"; // Status ok
+        } else
+            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".json_encode($msgAbeille->message)."' vers queue ".$queueId);
     }
 
     public static function createRuche($message = null)
     {
-
         $dest = $message->payload;
         $elogic = self::byLogicalId($dest . "/Ruche", 'Abeille');
         if (is_object($elogic)) {

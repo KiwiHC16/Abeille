@@ -144,7 +144,7 @@
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
                 <li class="active"  id="tab_nodes">    <a href="#route_network"   data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
                 <li                 id="tab_graph">    <a href="#graph_network"   data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
-                <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li>
+                <!-- <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li> -->
                 <li                 id="tab_test1">    <a href="#test1"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
                 <li                 id="tab_test2">    <a href="#test2"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Routes}}                 </a></li>
             </ul>

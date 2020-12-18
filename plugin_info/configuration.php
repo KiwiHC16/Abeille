@@ -354,7 +354,7 @@
         <div id="UpdateCheck">
             <?php
                 AbeillePreInstall::Abeille_pre_update_analysis( 0, 1);
-            ?>   
+            ?>
         </div>
 
 
@@ -385,7 +385,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Agressivité du traitement des annonces, par defaut le laisser sur 4.}}">{{Agressivité traitement Annonces : }}</label>
                 <div class="col-lg-5">
@@ -397,7 +397,7 @@
                     </select>
                 </div>
             </div>
-            
+
         </div>
         <br>
         <br>

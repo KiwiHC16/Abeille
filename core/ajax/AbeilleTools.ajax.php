@@ -31,6 +31,12 @@
         ini_set('log_errors', 'On');
     }
 
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_file('core', 'authentification', 'php');
+    if (!isConnect()) {
+        ajax::error(json_encode(array('status' => -1, 'error' => "Non connecté ou session expirée.")));
+    }
+
     // $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
 
     /* Log feature for debug purposes */
@@ -46,13 +52,7 @@
 
     try {
 
-        require_once __DIR__.'/../../../../core/php/core.inc.php';
         include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
-
-        include_file('core', 'authentification', 'php');
-        if (!isConnect('admin')) {
-            throw new Exception('401 Unauthorized');
-        }
 
         ajax::init();
 

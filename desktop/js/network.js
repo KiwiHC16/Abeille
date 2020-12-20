@@ -162,8 +162,9 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
         },
         success: function (json_res) {
             res = JSON.parse(json_res.result); // res.status, res.error, res.content
+            console.log("res="+JSON.stringify(res));
             if (res.status != 0) {
-                var msg = "ERREUR ! Quelque chose s'est mal passé ("+res.error+")";
+                var msg = "ERREUR ! "+res.error;
                 $('#div_networkZigbeeAlert').showAlert({ message: msg, level: 'danger' });
                 _autoUpdate = 0;
                 setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);

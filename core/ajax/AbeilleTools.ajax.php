@@ -118,6 +118,31 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'mtime'=> $mtime)));
         }
 
+        /* Retrieve file content relative to Abeille plugin directory.
+           'file' is relative to Abeille dir.
+           WARNING: Only 'text' content is supported right now.
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'getFile') {
+            $file = init('file');
+            // TODO: If required, add mode=string/array
+
+            $path = __DIR__.'/../../'.$file;
+            $status = 0;
+            $error = "";
+            $content = "";
+
+            if (!file_exists($path)) {
+                $status = -1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                // $content = file($path); // $content = array, 1 element per line
+                $content = file_get_contents($path); // $content is string
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        }
+
         /* Retrieve file content from Jeedom temp directory.
            'file' is relative to Jeedom official temp dir.
            WARNING: Only 'text' content is supported right now.

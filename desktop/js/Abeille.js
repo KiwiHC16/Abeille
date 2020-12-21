@@ -60,8 +60,9 @@ $('#bt_healthAbeille').on('click', function () {
                           });
 
 $('#bt_supportPage').on('click', function () {
-    $('#md_modal').dialog({title: "{{Support}}"});
-    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=supportPage').dialog('open');
+    // $('#md_modal').dialog({title: "{{Support}}"});
+    // $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=supportPage').dialog('open');
+    window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
 });
 
 $('#bt_template').on('click', function () {

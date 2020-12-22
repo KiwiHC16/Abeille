@@ -496,13 +496,13 @@
 
          /**
          * protocolDatas receive messages from the serial port and will check the CRC, ig Ok will ask for the decoding of the message
-         * 
+         *
          * @param dest          Zigate sending the message
          * @param datas         Message sent by the zigate
          * @param qos           Not used anymore, there due to legacy code
          * @param clusterTab    Table of the Cluster definition
          * @param LQI           LQI from the message received
-         * 
+         *
          * @return tab          Retourne chaine vide
          */
         function protocolDatas($dest, $datas, $qos, $clusterTab, &$LQI) {
@@ -651,7 +651,8 @@
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
             // $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
 
-            $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE);
+            // Tcharp38: Why ? $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE);
+            $this->mqqtPublishFct($dest."/".$Addr, "enable", $IEEE);
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);

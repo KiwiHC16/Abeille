@@ -382,7 +382,7 @@ class Abeille extends eqLogic
             $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
             if (is_object($cmd)) { // Cmd found
                 $lastComm = $cmd->execCmd();
-                if ($lastComm + (15 * 60) > time())
+                if ((time() - $lastComm) <= (15 * 60))
                     continue; // Alive within last 15mins. No need to interrogate.
             } else
                 log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
@@ -1192,44 +1192,62 @@ class Abeille extends eqLogic
         }
         $type = 'topic';         // type = topic car pas json
 
-        // Si cmd activate/desactivate NE based on IEEE Leaving/Joining
+        /* Treat "enable" (device announce) or "disable" (leave indication) cmds. */
         if (($cmdId == "enable") || ($cmdId == "disable")) {
-            log::add('Abeille', 'debug', 'Entering enable/disable: ' . $cmdId);
+            log::add('Abeille', 'debug', 'message(): cmd='.$cmdId.', net='.$Filter.', IEEE='.$value);
 
-            $abeilles = self::byType('Abeille');
-            foreach ($abeilles as $key => $abeille) {
-                $done = 0;
+            /* Look for corresponding equipment (identified via its IEEE addr) */
+            $allBees = self::byType('Abeille');
+            $missingIEEE = array(); // List of eq with missing IEEE
+            foreach ($allBees as $key=>$bee) {
+                $beeLogicId = $bee->getLogicalId(); // Ex: 'Abeille1/xxxx'
+                list($net, $oldAddr) = explode( "/", $beeLogicId);
+                if ($net != $Filter) // TODO: $Filter = 'AbeilleX' ??
+                    continue; // Not on expected network
 
-                if ($abeille->getConfiguration('IEEE', 'none') == $value) {
-                    if ($cmdId == "enable") {
-                        $abeille->setIsEnable(1);
-                    } else {
-                        $abeille->setIsEnable(0);
-                        message::add("Abeille", "Equipement '" . $abeille->getName() . "' désactivé. Il a probablement quitté le réseau.", '');
-                    }
-                    $abeille->save();
-                    $abeille->refresh();
-
-                    $done = 1;
+                $ieee = $bee->getConfiguration('IEEE', 'none');
+                if ($ieee == 'none') {
+                    $missingIEEE[] = $bee;
+                    continue; // No registered IEEE
                 }
+                if ($ieee != $value)
+                    continue; // Not the right equipment
 
-                if (!$done) {
-                    $cmds = Cmd::byLogicalId('IEEE-Addr');
-                    foreach ($cmds as $cmd) {
-                        if ($cmd->execCmd() == $value) {
-                            $abeille = $cmd->getEqLogic();
-                            if ($cmdId == "enable") {
-                                $abeille->setIsEnable(1);
-                            } else {
-                                $abeille->setIsEnable(0);
-                            }
-                            $abeille->save();
-                            $abeille->refresh();
-                        }
-                        echo "\n";
-                    }
+                $matchingBee = $bee;
+                break; // No need to go thru other equipments
+            }
+
+            /* If eq not found, might be due to missing IEEE. Let's check */
+            if (!isset($matchingBee) && (sizeof($missingIEEE) != 0)) {
+                log::add('Abeille', 'debug', 'message(): cmd='.$cmdId.' => vérification des adresses IEEE manquantes');
+                foreach ($missingIEEE as $bee) {
+                    $cmd = $bee->getCmd('info', 'IEEE-Addr');
+                    if ($cmd->execCmd() != $value)
+                        continue; // Still not the correct eq
+
+                    $matchingBee = $bee;
+                    break; // No need to go thru other equipments
                 }
             }
+
+            if (isset($matchingBee)) {
+                if ($cmdId == "enable") {
+                    $bee->setIsEnable(1);
+                    /* Updating logical ID since short address changed with device announce */
+                    $oldLogicId = $bee->getLogicalId();
+                    $nodeid = $Filter.'/'.$addr;
+                    $bee->setLogicalId($nodeid);
+                    log::add('Abeille', 'debug', 'message(): Mise-à-jour '.$oldLogicId.' => '.$nodeid);
+                    message::add("Abeille", "'".$bee->getName()."' a rejoint le réseau.", '');
+                } else {
+                    $bee->setIsEnable(0);
+                    message::add("Abeille", "'".$bee->getName()."' a quitté le réseau => désactivé.", '');
+                }
+                $bee->save();
+                $bee->refresh();
+            } else
+                log::add('Abeille', 'debug', 'message(): Eq '.$Filter.'-'.$value.' pas trouvé dans Jeedom.');
+
             return;
         }
 

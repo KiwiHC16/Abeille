@@ -1,0 +1,19 @@
+{
+  "On7": {
+    "isVisible": 1,
+    "name": "On7",
+    "order": 10,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "LIGHT_ON",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+	"uniqId": "ute5c07c766220f0",
+      "topic": "OnOff7",
+      "request": "On",
+      "visibilityCategory": "All"
+    }
+  }
+}

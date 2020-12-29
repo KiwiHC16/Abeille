@@ -13,7 +13,7 @@
   "video_link": "https://m.youtube.com/channel/UCPLBWX8drp5_gzmxyL3mtow",
   "languages": "french",
   "forum_link": "https://www.jeedom.com/forum/viewtopic.php?f=59&t=33573&p=575280&hilit=abeille#p575280",
-  "compatibility": "docker, rpi, diy",
+  "compatibility": "docker, rpi, diy, v4",
   "hasDependency": "1",
   "hasOwnDeamon": "1",
   "maxDependancyInstallTime": "45"

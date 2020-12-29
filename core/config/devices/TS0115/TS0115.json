@@ -7,8 +7,8 @@
       "automatism": "1"
     },
     "configuration": {
-      "uniqId": "5ceosfqs766sgdfzzze5d44",
-      "icone": "TS0003",
+      "uniqId": "5ceosfqs766dggdqgsgdfzzze5d44",
+      "icone": "TS0115",
       "mainEP": "01"
     },
     "Commandes": {
@@ -19,14 +19,17 @@
       "include4 2": "etatCharge1",
       "include4 2 2": "etatCharge2",
       "include4 2 2 2": "etatCharge3",
+      "include4 2 2 2 2": "etatCharge6",
       "include5": "On",
       "include5 2": "On1",
       "include5 2 2": "On2",
       "include5 2 2 2": "On3",
+      "include5 2 2 2 2": "On6",
       "include6": "Off",
       "include6 2": "Off1",
       "include6 2 2": "Off2",
       "include6 2 2 2": "Off3",
+      "include6 2 2 2 2": "Off6",
       "include14": "getEtat",
       "include15": "getManufacturerName",
       "include16": "getModelIdentifier"

@@ -298,7 +298,7 @@
                                 Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
 <?php
-                                echo '<a class="btn btn-success refreshBruitAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                                echo '<a class="btn btn-success refreshBruitAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
 
                                 function afficheGraph( $title, $logicalId, $values ) {
                                 // Vertical
@@ -337,7 +337,7 @@
                                     }
                                     echo '</svg>';
                                       if ( $logicalId != "" ) {
-                                            echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fa fa-refresh" ></i>{{Collecter}}</a><br /><br />';
+                                            echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fas fa-sync" ></i>{{Collecter}}</a><br /><br />';
 
                                       }
                                     echo "<br /><br />";
@@ -367,7 +367,7 @@
 
                 <div id="test2" class="tab-pane" >
                     <?php
-                                echo '<a class="btn btn-success refreshRoutesAll"><i class="fa fa-refresh" ></i>{{Tout collecter}}</a><br /><br />';
+                                echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
                                 echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
 
                                 function afficheRouteTable( $routingTable ) {

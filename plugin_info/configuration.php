@@ -215,7 +215,7 @@
                     </div>
                     <div>
                         <?php
-                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
+                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
                             echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         ?>
                         <span class="label label-success" style="font-size:1em">-?-</span>
@@ -239,8 +239,8 @@
                         ?>
                         </select>
                         <?php
-                            echo '<a id="idUpdateFW'.$i.'" class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fa fa-refresh"></i> {{Mettre à jour}}</a>';
-                            // echo '<a id="idResetE2P'.$i.'" class="btn btn-warning ml4px" onclick="resetE2P('.$i.')" title="{{Effacement de l\'EEPROM}}"><i class="fa fa-refresh"></i> {{Effacer E2P}}</a>';
+                            echo '<a id="idUpdateFW'.$i.'" class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
+                            // echo '<a id="idResetE2P'.$i.'" class="btn btn-warning ml4px" onclick="resetE2P('.$i.')" title="{{Effacement de l\'EEPROM}}"><i class="fas fa-sync"></i> {{Effacer E2P}}</a>';
                         ?>
                     </div>
                 </div>
@@ -250,7 +250,7 @@
                     <div class="col-lg-4 confs1">
                         <?php
                         echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
-                        // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fa fa-refresh"></i> {{Tester}}</a>';
+                        // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
                         // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         ?>
                             <!-- <span class="label label-success" style="font-size:1em;">-?-</span> -->
@@ -288,7 +288,7 @@
                     <a class="socatStatus" title="Status d'installation du package">
                         <span class="label label-success" style="font-size:1em;">-?-</span>
                     </a>
-                    <a class="btn btn-warning" id="bt_installSocat" title="Installation automatique du package"><i class="fa fa-refresh"></i>{{Installer}}</a>
+                    <a class="btn btn-warning" id="bt_installSocat" title="Installation automatique du package"><i class="fas fa-sync"></i>{{Installer}}</a>
                 </div>
             </div>
         </div>
@@ -310,8 +310,8 @@
                     <a class="WiringPiStatus" title="Status du package">
                         <span class="label label-success" style="font-size:1em;">-?-</span>
                     </a>
-                    <a class="btn btn-warning" id="bt_checkWiringPi" title="{{Vérification de l'installation}}"><i class="fa fa-refresh"></i> {{Retester}}</a>
-                    <a class="btn btn-warning" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fa fa-refresh"></i> {{Installer}}</a>
+                    <a class="btn btn-warning" id="bt_checkWiringPi" title="{{Vérification de l'installation}}"><i class="fas fa-sync"></i> {{Retester}}</a>
+                    <a class="btn btn-warning" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
                 </div>
             </div>
 
@@ -335,14 +335,14 @@
                             }
                         ?>
                     </select>
-                    <a class="btn btn-warning" id="bt_installTTY" title="{{Tentative d'activation du port}}"><i class="fa fa-refresh"></i> {{Activer}}</a>
+                    <a class="btn btn-warning" id="bt_installTTY" title="{{Tentative d'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-lg-4 control-label">{{Reset (HW) PiZigate : }}</label>
                 <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_resetPiZigate" title="{{Reset HW de la PiZigate}}"><i class="fa fa-refresh"></i> {{Reset}}</a>
+                    <a class="btn btn-warning" id="bt_resetPiZigate" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
                 </div>
             </div>
         </div>

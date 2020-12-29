@@ -35,9 +35,9 @@
         include_file('desktop', '404', 'php');
         die();
     }
-    require_once __DIR__.'/../core/class/Abeille.class.php';
 
-    include_once __DIR__."/../core/class/AbeillePreInstall.class.php";
+    require_once __DIR__.'/../core/class/Abeille.class.php';
+    include_once __DIR__."/../core/php/AbeillePreInstall.php";
 
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
@@ -353,7 +353,7 @@
         <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="UpdateCheck">
             <?php
-                AbeillePreInstall::Abeille_pre_update_analysis( 0, 1);
+                Abeille_pre_update_analysis(0, 1);
             ?>
         </div>
 

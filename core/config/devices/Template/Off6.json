@@ -11,8 +11,8 @@
     "template": "",
     "configuration": {
       "uniqId": "5rt86fhcqds07c76621fee",
-      "topic": "OnOff7",
-      "request": "Off",
+      "topic": "OnOff",
+      "request": "Action=Off&EP=07",
       "visibilityCategory": "All"
     }
   }

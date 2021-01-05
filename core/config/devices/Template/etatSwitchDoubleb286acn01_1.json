@@ -10,9 +10,6 @@
     "template": "",
     "configuration": {
       "uniqId": "5c07c76e237ef1",
-      "AbeilleRejectValue": "0",
-      "returnStateValue": "0",
-      "returnStateTime": "1",
       "repeatEventManagement": "always",
       "visibilityCategory": "All"
     }

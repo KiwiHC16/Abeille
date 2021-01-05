@@ -11,9 +11,6 @@
     "configuration": {
       "uniqId": "5c07ce66237ef3",
       "repeatEventManagement": "always",
-      "returnStateTime": "1",
-      "returnStateValue": "0",
-      "AbeilleRejectValue": "0",
       "visibilityCategory": "All"
     }
   }

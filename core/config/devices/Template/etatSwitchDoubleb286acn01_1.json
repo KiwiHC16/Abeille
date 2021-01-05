@@ -5,7 +5,7 @@
     "order": 2,
     "isHistorized": "1",
     "Type": "info",
-    "subType": "binary",
+    "subType": "numeric",
     "invertBinary": "0",
     "template": "",
     "configuration": {

@@ -56,6 +56,8 @@
                 /* Listing log files from Jeedom temp directory */
                 foreach (glob($tmpDir."/*.log") as $path) {
                     $fileName = basename($path);
+                    if ($fileName == "AbeilleKeyInfos.log")
+                        continue; // Avoid old log
                     echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-TMP">'.$fileName.'</a></li>';
                 }
             ?>

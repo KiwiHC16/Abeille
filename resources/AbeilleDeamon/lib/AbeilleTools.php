@@ -243,6 +243,12 @@ class AbeilleTools
     public static function getDeviceNameFromJson($logger = 'Abeille')
     {
         $return = array();
+        $dirCount = 0;
+        $dirExcluded = 0;
+        $fileMissing = 0;
+        $fileIllisible = 0;
+        $fileCount = 0;
+
         $devicesDir = self::devicesDir;
         if (file_exists($devicesDir) == FALSE) {
             log::add('Abeille', 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
@@ -251,23 +257,33 @@ class AbeilleTools
 
         $dh = opendir($devicesDir);
         while (($dirEntry = readdir($dh)) !== false) {
+            $dirCount++;
 
-            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) )
+            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) ) {
+                $dirExcluded++;
                 continue;
+            }
 
             $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $dirEntry . ".json";
             if (!file_exists($fullPath)) {
-                log::add($logger, 'warning', "Fichier introuvable: " . $file);
+                log::add($logger, 'warning', "Fichier introuvable: " . $fullPath);
+                $fileMissing++;
                 continue;
             }
 
             try {
-                $return[] = array_keys(json_decode(file_get_contents($fullPath),1))[0];
+                $returnOneMore[] = array_keys(json_decode(file_get_contents($fullPath),1))[0];
             } catch (Exception $e) {
-                log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $file);
+                log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $fullPath);
+                $fileIllisible++;
+                continue;
             }
+
+            $return[] = $returnOneMore;
+            $fileCount++;
         }
 
+        log::add($logger, 'debug', "Nb repertoire template parcourus: " . $dirCount . " dont " .  $dirExcluded . " exclus soit " . ($dirCount-$dirExcluded) . ". " . $fileCount . " fichiers template ajoutés à la liste, " . $fileMissing++ . " introuvables et " . $fileIllisible . " templates illisibles." );
         return $return;
     }
 

@@ -127,6 +127,12 @@ switch ($testToRun) {
         var_dump(AbeilleTemplateCmd::getConfigurationFromTemplate( $uniqIdCmd, $item ) );
     break;
     case 104:
+        // Ce cas est utilisé pour afficher le modale Modele.
+        echo "{{Affiche les differences trouvées entre les modèles et les équipements dans Abeille.}}<br>";
+        echo "{{Une différence peut provenir d une modification faite par l utilisateur, ou une evolution du modele.}}<br>";
+        echo "{{Difference ne veut pas dire que cela ne fonctionne pas.}}<br>";
+        echo "{{Pour l instant c est un audit pour les developpeurs. L idée a terme estU de pouvoir mettre a jour les equipements si le modele evolue.}}<br>";
+        echo "{{Actuellement le meilleur moyen pour mettre à jour un equipement si son modele change est de le supprimer de le re-créer.}}<br>";
         AbeilleTemplateCommon::compareTemplateHtmlEntete();
         foreach ( Abeille::byType('Abeille') as $abeille ) {
             // Don't proceed with Ruche as specific template

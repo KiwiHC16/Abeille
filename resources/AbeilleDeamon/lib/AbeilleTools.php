@@ -272,7 +272,7 @@ class AbeilleTools
             }
 
             try {
-                $returnOneMore[] = array_keys(json_decode(file_get_contents($fullPath),1))[0];
+                $returnOneMore = array_keys(json_decode(file_get_contents($fullPath),1))[0];
             } catch (Exception $e) {
                 log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $fullPath);
                 $fileIllisible++;

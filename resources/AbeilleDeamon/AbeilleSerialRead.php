@@ -93,21 +93,22 @@
     stream_set_blocking($f, TRUE); // Should be blocking read but is it default ?
 
     $transcode = false;
-    $trame = ""; // Transcoded message from Zigate
+    $frame = ""; // Transcoded message from Zigate
     $step = "WAITSTART";
     $ecrc = 0; // Expected CRC
     $ccrc = 0; // Calculated CRC
     $byteIdx = 0; // Byte number
 
     /* Protocol reminder:
-       00   : 01 = start
-       01-02: Msg Type
-       03-04: Length
-       05   : crc
-       xx   : payload
-       last : 03 = stop
+       00    : 01 = start
+       01-02 : Msg Type
+       03-04 : Length => Payload size + 1 byte for LQI
+       05    : crc
+       xx    : payload
+       last-1: LQI
+       last  : 03 = stop
 
-       CRC = 0x00 XOR MSG-TYPE XOR LENGTH XOR PAYLOAD
+       CRC = 0x00 XOR MSG-TYPE XOR LENGTH XOR PAYLOAD XOR LQI
      */
 
     while (true) {
@@ -126,12 +127,12 @@
             /* Waiting for "01" start byte.
                Bytes outside 01..03 markers are unexpected. */
             if ($byte != "01") {
-                $trame .= $byte; // Unexpected outside 01..03 markers => error
+                $frame .= $byte; // Unexpected outside 01..03 markers => error
             } else {
                 /* "01" start found */
-                if ($trame != "")
-                    logMessage('error', 'Trame en dehors marqueurs: '.json_encode($trame));
-                $trame = "";
+                if ($frame != "")
+                    logMessage('error', 'Trame en dehors marqueurs: '.json_encode($frame));
+                $frame = "";
                 $step = "WAITEND";
                 $byteIdx = 1; // Next byte is index 1
                 $ccrc = 0;
@@ -140,15 +141,15 @@
             /* Waiting for "03" end byte */
             if ($byte == "03") {
                 if ($ccrc != $ecrc)
-                    logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($trame, 0, 12).'...'.substr($trame, -2, 2));
+                    logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
 
-                $trameToSend = array( 'dest'=>$abeille, 'trame'=>$trame );
-                if (msg_send( $queueKeySerieToParser, 1, json_encode($trameToSend), false, false) == FALSE) {
-                    logMessage('error', 'ERREUR de transmission: '.json_encode($trame));
+                $msgToSend = array( 'dest'=>$abeille, 'trame'=>$frame );
+                if (msg_send( $queueKeySerieToParser, 1, json_encode($msgToSend), false, false) == FALSE) {
+                    logMessage('error', 'ERREUR de transmission: '.json_encode($frame));
                 } else {
-                    logMessage('debug', 'Reçu: '.json_encode($trame));
+                    logMessage('debug', 'Reçu: '.json_encode($frame));
                 }
-                $trame = ""; // Already transmitted or displayed
+                $frame = ""; // Already transmitted or displayed
                 $step = "WAITSTART";
             } else {
                 if ($byte == "02") {
@@ -158,7 +159,7 @@
                         $byte = sprintf("%02X", (hexdec($byte) ^ 0x10));
                         $transcode = false;
                     }
-                    $trame .= $byte;
+                    $frame .= $byte;
                     if ($byteIdx == 5)
                         $ecrc = hexdec($byte); // Byte 5 is expected CRC
                     else

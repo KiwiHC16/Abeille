@@ -495,35 +495,28 @@
         }
 
          /**
-         * protocolDatas receive messages from the serial port and will check the CRC, ig Ok will ask for the decoding of the message
+         * protocolDatas: Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
          *
          * @param dest          Zigate sending the message
          * @param datas         Message sent by the zigate
-         * @param qos           Not used anymore, there due to legacy code
          * @param clusterTab    Table of the Cluster definition
-         * @param LQI           LQI from the message received
+         * @param LQI           Output: LQI from the message received
          *
-         * @return tab          Retourne chaine vide
+         * @return Status       0=OK, -1=ERROR
          */
-        function protocolDatas($dest, $datas, $qos, $clusterTab, &$LQI) {
-            // datas: trame complete recue sur le port serie sans le start ni le stop.
-            // 01: 01 Start
-            // 02-03: Msg Type
-            // 04-05: Length
-            // 06: crc
-            // 07-: Data / Payload
-            // Last 8 bit is Link quality (modif zigate)
-            // xx: 03 Stop
+        function protocolDatas($dest, $datas, $clusterTab, &$LQI) {
+            // Reminder: message format received from Zigate.
+            // 01/start & 03/end are already removed.
+            //   00-03 : Msg Type (2 bytes)
+            //   04-07 : Length (2 bytes) => optional payload + LQI
+            //   08-09 : crc (1 byte)
+            //   10... : Optional data / payload
+            //   Last  : LQI (1 byte)
 
-            $tab = "";
             $crctmp = 0;
 
             $length = strlen($datas);
-            // Message trop court pour etre un vrai message
-            if ($length < 12) { return -1; }
-
-            //$this->deamonlog('debug','protocolDatas: '.$datas);
-            //$this->deamonlog('debug', ' Data ('.$length.'>12 char): '.$datas);
+            if ($length < 10) { return -1; } // Too short. Min=MsgType+Len+Crc
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
@@ -532,27 +525,32 @@
             // Taille message
             // see github: AbeilleParser Erreur CRC #1562
             $ln = $datas[4].$datas[5].$datas[6].$datas[7];
-            if ( hexdec($ln) > 150 ) {
+            $ln = hexdec($ln);
+            if ( $ln > 150 ) {
                 $this->deamonlog('error', 'Le message recu est beaucoup trop long. On ne le process pas.');
-                return $tab;
+                return 0;
             }
             $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
 
             //acquisition du CRC
             $crc = strtolower($datas[8].$datas[9]);
 
-            //payload
-            $payload = "";
-            for ($i = 0; $i < hexdec($ln); $i++) {
-                $payload .= $datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)];
+            /* Payload.
+               Payload size is 'Length' - 1 (excluding LQI) but CRC takes LQI into account.
+               See https://github.com/fairecasoimeme/ZiGate/issues/325# */
+            $payloadSize = ($length - 12) / 2; // Real payload size in Bytes. Removing MsgType+Len+Crc+LQI
+            if ($payloadSize != ($ln - 1))
+                $this->deamonlog('debug', 'WARNING: Length ('.$ln.') != real payload + LQI size ('.$payloadSize.')');
+            $payload = substr($datas, 10, $payloadSize * 2);
+            // $this->deamonlog('debug', 'type='.$type.', payload='.$payload);
+            for ($i = 0; $i < $ln; $i++) {
+                // $payload .= $datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)];
                 $crctmp = $crctmp ^ hexdec($datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)]);
             }
 
-            // RSSI
+            // LQI
             $quality = $datas[10 + ($i * 2) - 2].$datas[10 + ($i * 2) - 1];
             $quality = hexdec( $quality );
-
-            // $payloadLength = strlen($payload) - 2;
 
             //verification du CRC
             if (hexdec($crc) != $crctmp) {
@@ -564,8 +562,8 @@
             //Traitement PAYLOAD
             $param1 = "";
             if (($type == "8003") || ($type == "8043")) $param1 = $clusterTab;
-            if ($type == "804E") $param1=$LQI;
-            if ($type == "8102") $param1=$quality;
+            // if ($type == "804E") $param1 = $LQI; // Tcharp38: no longer used
+            if ($type == "8102") $param1 = $quality;
 
             $fct = "decode".$type;
             // $this->deamonlog('debug','Calling function: '.$fct);
@@ -578,18 +576,18 @@
             // On vérifie que l on est sur la bonne zigate.
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
                 if ( !in_array($fct, $commandAcceptedUntilZigateIdentified) ) {
-                    return;
+                    return 0;
                 }
             }
 
             if ( method_exists($this, $fct) ) {
-                $this->$fct($dest, $payload, $ln, $qos, $param1); }
+                $this->$fct($dest, $payload, $ln, 0, $param1); }
             else {
                 $msgName = zgGetMsgByType($type);
                 $this->deamonlog('debug', $dest.', Type='.$type.'/'.$msgName.', ignoré (non supporté).');
             }
 
-            return $tab;
+            return 0;
         }
 
         /*--------------------------------------------------------------------------------------------------*/
@@ -633,7 +631,8 @@
                     0x01 The device was on the Network, but change its route
                          the device was not reset
                     0x02, 0x03 The device was on the network and coming back.
-                          Here we can assumed the device was not reset. */
+                         Here we can assumed the device was not reset. */
+            /* See https://github.com/fairecasoimeme/ZiGate/issues/325# */
 
             $Addr       = substr($payload, 0, 4);
             $IEEE       = substr($payload, 4, 16);
@@ -757,12 +756,12 @@
             $SQN        = substr($payload, 2, 2);
             $PacketType = substr($payload, 4, 4);
 
-            if ($this->debug['8000']) {
+            // if ($this->debug['8000']) { // Tcharp38: Should not be disabled. Might be useful to see error in user logs.
                 $this->deamonlog('debug', $dest.', Type=8000/Status'
                                  . ', Status='.$status.'/'.zgGet8000Status($status)
                                  . ', SQN='.$SQN
                                  . ', PacketType='.$PacketType);
-            }
+            // }
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
             // $SrcAddr    = "Ruche";
@@ -1829,7 +1828,7 @@
         }
 
         /* 804E/Management LQI response */
-        function decode804E($dest, $payload, $ln, $qos, &$LQI)
+        function decode804E($dest, $payload, $ln, $qos, $dummy)
         {
             // <Sequence number: uint8_t>
             // <status: uint8_t>
@@ -2110,16 +2109,6 @@
                              . ', scene extensions max lenght: '  .substr($payload,30, 4)
                              . ', scene extensions : '            .substr($payload,34, 2) );
         }
-
-        // function decode80a1($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.', Type=80a1/? (ignoré)');
-        // }
-
-        // function decode80a2($dest, $payload, $ln, $qos, $dummy)
-        // {
-            // $this->deamonlog('debug', $dest.', Type=80a2/? (ignoré)');
-        // }
 
         function decode80A3($dest, $payload, $ln, $qos, $dummy)
         {

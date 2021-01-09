@@ -195,7 +195,7 @@
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
                 // $AbeilleParser->deamonlog( 'debug', 'Message pulled from queue queueKeySerieToParser: '.$dataJson );
                 $data = json_decode( $dataJson );
-                $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
+                $AbeilleParser->protocolDatas( $data->dest, $data->trame, $clusterTab, $LQI);
             }
             // $AbeilleParser->processAnnonce($NE);
             // $AbeilleParser->cleanUpNE($NE);

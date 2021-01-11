@@ -71,14 +71,14 @@ Démons:
                     $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
                     if ($commandIEEE) {
                         $addrIEEE = strtoupper($commandIEEE->execCmd());
-                        if (strlen($addrIEEE) > 2 ) {
-                            if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
-                                $IEEE_Table[$addrIEEE] += 1;
-                            }
-                            else {
-                                $IEEE_Table[$addrIEEE] = 1;
-                            }
-                        }
+                    }
+                }
+                if (strlen($addrIEEE) > 2 ) {
+                    if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
+                        $IEEE_Table[$addrIEEE] += 1;
+                    }
+                    else {
+                        $IEEE_Table[$addrIEEE] = 1;
                     }
                 }
             }

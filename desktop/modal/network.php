@@ -4,17 +4,19 @@
         throw new Exception('{{401 - Accès non autorisé}}');
     }
 
+    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php'; // URL for docs
+
     /* Add network display & refresh buttons for all active zigates */
     function displayButtons($nbOfZigates, $what="linksTable") {
-        echo 'Afficher réseau :';
+        echo 'Réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
             if ($what == "linksTable")
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayNodes('.$i.')">Abeille'.$i.'</a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$i.')">Abeille'.$i.'</a>';
             else // "linksGraph"
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="network_display('.$i.')">Abeille'.$i.'</a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$i.')">Abeille'.$i.'</a>';
             echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
         }
@@ -63,13 +65,13 @@
 ?>
 
 <style>
-    #graph_network {
+    #idLinksGraphTab {
         height: 80%;
         width: 90%;
         position: absolute;
     }
 
-    #graph_network > svg {
+    #idLinksGraphTab > svg {
         height: 100%;
         width: 100%
     }
@@ -125,36 +127,38 @@
     .rediconcolor {
         color: red;
     }
+
+    .filter {
+        width: 140px
+    }
 </style>
 
-<!-- <link rel="stylesheet" href="/3rdparty/font-awesome5/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="/3rdparty/jquery.tablesorter/jquery.tablesorter.pager.min.css">
 <script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/vivagraph/vivagraph.min.js"></script>
-<!--script type="text/javascript" src="/core/php/getResource.php?file=3rdparty/jquery.tablesorter/jquery.tablesorter.min.js"></script-->
-<!--script type="text/javascript" src="/core/php/getResource.php?file=plugins/Abeille/3rdparty/vivagraph/vivagraph.min.js"></script-->
 
 <!-- Area to display alert message -->
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
 
-<!-- Affichage de tous les Tab. -->
 <div class='network' nid='' id="div_templateNetwork">
     <div class="container-fluid">
         <div id="content">
 
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
-                <li class="active"  id="tab_nodes">    <a href="#route_network"   data-toggle="tab"> <i class="fa fa-table">       </i> {{Table des noeuds}}      </a></li>
-                <li                 id="tab_graph">    <a href="#graph_network"   data-toggle="tab"> <i class="fa fa-picture-o">   </i> {{Graphique du réseau}}   </a></li>
+                <li class="active" id="tab_nodes"> <a href="#idLinksTableTab" data-toggle="tab"> <i class="fa fa-table">     </i> {{Table des liens}}    </a></li>
+                <li                id="tab_graph"> <a href="#idLinksGraphTab" data-toggle="tab"> <i class="fa fa-picture-o"> </i> {{Graphique des liens}}</a></li>
                 <!-- <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li> -->
-                <li                 id="tab_test1">    <a href="#test1"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Bruit}}                 </a></li>
-                <li                 id="tab_test2">    <a href="#test2"           data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Routes}}                 </a></li>
+                <li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fa fa-tachometer"></i> {{Bruit}}              </a></li>
+                <li                id="tab_routes"><a href="#idRoutesTab"     data-toggle="tab"> <i class="fa fa-tachometer"></i> {{Routes}}             </a></li>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
 
-                <!-- tab "nodes table" -->
-                <div id="route_network" class="tab-pane active">
+                <!-- Links table -->
+                <div id="idLinksTableTab" class="tab-pane active">
                     <br />
-                    {{Noeuds connus du réseau et LQI (<a href="http://kiwihc16.free.fr/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />
+                    <?php
+                    echo '{{Noeuds connus du réseau et LQI (<a href="'.urlUserMan.'/Radio.html" target="_blank">Link Quality Indicator</a>) associé. Informations remises-à-jour une fois par jour.}}<br />';
+                    ?>
                     <br />
                     <div id="div_routingTable">
                         <?php
@@ -162,17 +166,17 @@
                         ?>
                         <br />
                         <hr>
-                        Informations affichées : <span id="idDisplayedNetwork" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idDisplayedDate" style="width:150px; font-weight:bold">-</span>
+                        Actuel : <span id="idCurrentNetworkLT" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLT" style="width:150px; font-weight:bold">-</span>
                         <br />
                         <br />
 
                         <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par emetteur">{{Source}}</label>
-                        <select class="filterSource" id="nodeFrom"> </select>
+                        <select class="filter" id="nodeFrom"> </select>
 
                         <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par destinataire">{{Destinataire}}</label>
-                        <select class="filterRecipient" id="nodeTo"> </select>
+                        <select class="filter" id="nodeTo"> </select>
 
-                        <table class="table table-condensed tablesorter" id="table_routingTable">
+                        <table class="table table-condensed tablesorter" id="idLinksTable">
                             <thead>
                                 <tr>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
@@ -194,13 +198,27 @@
                     </div>
                 </div>
 
-                <!-- tab Graphique du réseau -->
-                <div id="graph_network" class="tab-pane">
+                <!-- Links graph -->
+                <div id="idLinksGraphTab" class="tab-pane">
 
                     <br />
                     <?php
                         displayButtons($nbOfZigates, "linksGraph");
                     ?>
+                    <br />
+                    <hr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Actuel :</td>
+                                <td><span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span></td>
+                            </tr>
+                            <tr>
+                                <td>Afficher :</td>
+                                <td><label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <table class="table table-bordered table-condensed"
                            style="width: 150px;position:fixed;margin-top : 25px;">
@@ -230,11 +248,11 @@
                         </tbody>
                     </table>
 
-                    <span id="graph-node-name" style="width: 100%;height: 100%"></span>
+                    <!-- <span id="graph-node-name" style="width: 100%;height: 100%"></span> -->
                 </div>
 
-<!-- tab Résumé -->
-                <div id="summary_network" class="tab-pane" >
+                <!-- tab Résumé -->
+                <!-- <div id="summary_network" class="tab-pane" >
                     <br />
 
                     <div class="panel panel-primary">
@@ -268,14 +286,9 @@
                             <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $nbDaemons ?></span> </p>
                         </div>
                     </div>
-
-
-
-
                 </div>
-
-<!-- tab Bruit -->
-
+ -->
+                <!-- tab Bruit -->
                 <div id="test1" class="tab-pane" >
                                 (Ce texte devra etre mis dans la doc)<br />
                                 Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br />
@@ -359,13 +372,11 @@
                                         afficheGraph( $eqLogic->getName(), $eqLogic->getLogicalId(), $eqLogic->getConfiguration('localZigbeeChannelPower') );
                                     }
                                 }
-
 ?>
                 </div>
 
-<!-- tab Route -->
-
-                <div id="test2" class="tab-pane" >
+                <!-- tab Route -->
+                <div id="idRoutesTab" class="tab-pane" >
                     <?php
                                 echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
                                 echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
@@ -409,11 +420,6 @@
 				afficheRouteTable( $routingTable );
                     ?>
                 </div>
-
-<!-- tab fin -->
-
-
-
             </div> <!-- div id="network-tab-content" class="tab-content" -->
         </div> <!-- div id="content" -->
     </div> <!-- div class="container-fluid" -->
@@ -422,8 +428,8 @@
 <script type="text/javascript">
     <?php
         // for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-        //     echo '$(".btn.displayNodes'.$i.'")       .off("click").on("click", function () { displayNodes('.$i.'); });'."\n";
-        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayNodes('.$i.'); });'."\n";
+        //     echo '$(".btn.displayLinksTable'.$i.'")       .off("click").on("click", function () { displayLinksTable('.$i.'); });'."\n";
+        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayLinksTable('.$i.'); });'."\n";
         // }
 
         $eqLogics = Abeille::byType('Abeille');

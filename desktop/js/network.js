@@ -14,14 +14,16 @@
  * along with Plugin Abeille for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var currentZigateLG = 1; // Current zigate displayed in links graph
+
 $("#tab_nodes").off("click").on("click", function () {
     /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
-    displayNodes(1);
+    displayLinksTable(1);
 });
 
 $("#tab_graph").off("click").on("click", function () {
     /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
-    network_display(1);
+    displayLinksGraph(1);
 });
 
 $("#tab_summary").off("click").on("click", function () {
@@ -51,7 +53,7 @@ function refreshLQICache(zigateX) {
             error: function (jqXHR, status, error) {
                 //console.log("refreshLQICache error status: " + status);
                 //console.log("refreshLQICache error msg: " + error);
-                $('#table_routingTable tbody').empty()
+                $('#idLinksTable tbody').empty()
                 $('#div_networkZigbeeAlert').showAlert({
                     message: 'ERREUR ! Impossible de démarrer la collecte.',
                     level: 'danger'
@@ -65,8 +67,8 @@ function refreshLQICache(zigateX) {
                 console.log("AbeilleLQI.php output="+data);
                 if (data.indexOf("successfully") >= 0) {
                     levelAlert = "info";
-                    $('#table_routingTable').trigger("update");
-                    displayNodes(zigateX);
+                    $('#idLinksTable').trigger("update");
+                    displayLinksTable(zigateX);
                     // trackLQICollectStatus(false, zigateX);
                 } else {
                     $('#div_networkZigbeeAlert').showAlert({message: data, level: "danger"});
@@ -201,16 +203,13 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
 }
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....
-function network_display(zigateX) {
+function displayLinksGraph(zigateX) {
+    console.log("displayLinksGraph("+zigateX+")");
+
     // Step 1. We create a graph object.
     var graph = Viva.Graph.graph();
 
-    // Load JSON-encoded data from the server using a GET HTTP request.
-    // var request = $.ajax({
-    //     url: "/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille"+zigateX+".json",
-    //     dataType: "json",
-    //     cache: false
-    // });
+    // Load JSON-encoded data from the server.
     var request = $.ajax({
         type: 'POST',
         url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
@@ -225,10 +224,10 @@ function network_display(zigateX) {
     request.done(function (json) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
             $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         } else if (res.content == "") {
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else {
 
             // On parcours le json ligne à ligne
@@ -277,6 +276,7 @@ function network_display(zigateX) {
                     nodes[currentJsonNode.NE]       = {};
                     nodes[currentJsonNode.NE].NE    = currentJsonNode.NE;
                     nodes[currentJsonNode.NE].name  = currentJsonNode.NE_Name;
+                    nodes[currentJsonNode.NE].object= currentJsonNode.NE_Objet;
                     nodes[currentJsonNode.NE].links = [];
                     // nodes[currentJsonNode.NE].route = currentJsonNode.NeighbourTableEntries;
                     console.log('current node - It s a new node so I create it in the table from source : '+JSON.stringify(nodes[currentJsonNode.NE]));
@@ -288,6 +288,7 @@ function network_display(zigateX) {
                     nodes[currentJsonNode.Voisine]          = {};
                     nodes[currentJsonNode.Voisine].NE       = currentJsonNode.Voisine;
                     nodes[currentJsonNode.Voisine].name     = currentJsonNode.Voisine_Name;
+                    nodes[currentJsonNode.Voisine].object   = currentJsonNode.Voisine_Objet;
                     nodes[currentJsonNode.Voisine].links    = [];
                     nodes[currentJsonNode.Voisine].route    = 1;
                     nodes[currentJsonNode.Voisine].lqi      = currentJsonNode.LinkQualityDec;
@@ -309,13 +310,17 @@ function network_display(zigateX) {
             console.log('node ruche ('+zigateX+'): '+JSON.stringify(nodes['Abeille'+zigateX+'/Ruche']));
             nodes['Abeille'+zigateX+'/Ruche'].Type = 'Coordinator';
 
-
+            var showObject = document.getElementById("idShowObject").checked; // Checked to display parent object
             for (node in nodes) {
 
                 console.log('Adding node: '+node+' name: ' + nodes[node].name + ' route: ' + nodes[node].route + ', Quality: ' + nodes[node].lqi + ', Type: ' + nodes[node].Type);
                 // graph.addNode( node, { name: nodes[node].name, route: nodes[node].route, Quality: nodes[node].lqi, Type: nodes[node].Type } );
                 // graph.addNode( node, nodes[node].name ); // graph but all NE are yellow
-                 graph.addNode( node, { name: nodes[node].name, Type: nodes[node].Type } ); // nodeId, { node.data }
+                if (showObject)
+                    var nodeName = nodes[node].object+"/"+nodes[node].name;
+                else
+                    var nodeName = nodes[node].name;
+                graph.addNode( node, { name: nodeName, Type: nodes[node].Type } ); // nodeId, { node.data }
 
                 for (link in nodes[node].links) {
                     if (nodes[node].name != null && nodes[node].links[link] != null) {
@@ -393,15 +398,47 @@ function network_display(zigateX) {
                 var layout = Viva.Graph.Layout.forceDirected(graph, { springLength: idealLength, springCoeff: 0.0008, stableThreshold: 0.9, dragCoeff: 0.009, gravity: -1.2, thetaCoeff: 0.8 });
 
                 //remove previous one
-                $('#graph_network svg').remove();
+                $('#idLinksGraphTab svg').remove();
 
-                var renderer = Viva.Graph.View.renderer(graph, { layout: layout, graphics: graphics, prerender: 10, container: document.getElementById('graph_network') });
+                var renderer = Viva.Graph.View.renderer(graph, { layout: layout, graphics: graphics, prerender: 10, container: document.getElementById('idLinksGraphTab') });
                 renderer.run();
                 /*setTimeout(function () {
                     renderer.pause();
                     renderer.reset();
                 }, 200);
                 */
+
+                            /* Get network collect time */
+                $.ajax({
+                    type: 'POST',
+                    url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+                    data: {
+                        action: 'getTmpFileModificationTime',
+                        file: "AbeilleLQI_MapDataAbeille"+zigateX+".json"
+                    },
+                    dataType: 'json',
+                    global: false,
+                    cache: false,
+                    error: function (request, status, error) {
+                        bootbox.alert("ERREUR 'getTmpFileModificationTime' !<br>"+"status="+status+"<br>error="+error);
+                    },
+                    success: function (json_res) {
+                        console.log(json_res);
+                        res = JSON.parse(json_res.result);
+                        if (res.status != 0) {
+                            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
+                            alert(msg);
+                        } else {
+                            // window.location.reload();
+                            $('#idCurrentNetworkLG').empty().append("Abeille"+zigateX);
+                            console.log("getTmpFileModificationTime() => "+res.mtime);
+                            const date = new Date(res.mtime * 1000);
+                            var out = date.toLocaleDateString()+' '+date.toLocaleTimeString();
+                            $('#idCurrentDateLG').empty().append(out);
+                            currentZigateLG = zigateX;
+                        }
+                    }
+                });
             }
         }
     });
@@ -420,8 +457,8 @@ function network_display(zigateX) {
 };
 
 /* Display nodes table */
-function displayNodes(zigateX) {
-    console.log("displayNodes(zgNb="+zigateX+")");
+function displayLinksTable(zigateX) {
+    console.log("displayLinksTable(zgNb="+zigateX+")");
 
     var jqXHR = $.ajax({
         type: 'POST',
@@ -437,7 +474,8 @@ function displayNodes(zigateX) {
     jqXHR.done(function (json, textStatus, jqXHR) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
+            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
+            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
         } else if (res.content == "") {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else {
@@ -544,7 +582,7 @@ function displayNodes(zigateX) {
             }
 
             //construct table , append value to select button
-            $('#table_routingTable tbody').empty().append(tbody);
+            $('#idLinksTable tbody').empty().append(tbody);
             var nodeFrom = $('#nodeFrom').empty(),
                 nodeTo = $('#nodeTo').empty();
 
@@ -561,7 +599,7 @@ function displayNodes(zigateX) {
                 nodeTo.append(new Option(item, idx));
             });
 
-            $("#table_routingTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
+            $("#idLinksTable>tbody>tr>td:nth-child(1)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
                 //console.log("eqType: " + eqTypeId);
                 if (eqTypeId.indexOf('not found') >= 0) {
@@ -576,7 +614,7 @@ function displayNodes(zigateX) {
                 }
             });
 
-            $("#table_routingTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
+            $("#idLinksTable>tbody>tr>td:nth-child(3)").off("click").on("click", function () {
                 var eqTypeId = $(this).children(1).attr('data-nodeid');
                 //console.log("eqType: " + eqTypeId);
                 if (eqTypeId.indexOf('not found') >= 0) {
@@ -589,13 +627,13 @@ function displayNodes(zigateX) {
                     window.location.href = document.location.origin + '/index.php?v=d&p=Abeille&m=Abeille&id=' + eqTypeId;
                 }
             });
-            $("#table_routingTable").tablesorter({
+            $("#idLinksTable").tablesorter({
                 sortList: [[0, 0], [1, 0]]
             });
-            $('#table_routingTable').trigger('update');
+            $('#idLinksTable').trigger('update');
             var nodes = json.data;
 
-            /* Get network info time */
+            /* Get network collect time */
             $.ajax({
                 type: 'POST',
                 url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
@@ -617,11 +655,11 @@ function displayNodes(zigateX) {
                         alert(msg);
                     } else {
                         // window.location.reload();
-                        $('#idDisplayedNetwork').empty().append("Abeille"+zigateX);
+                        $('#idCurrentNetworkLT').empty().append("Abeille"+zigateX);
                         console.log("getTmpFileModificationTime() => "+res.mtime);
                         const date = new Date(res.mtime * 1000);
                         var out = date.toLocaleDateString()+' '+date.toLocaleTimeString();
-                        $('#idDisplayedDate').empty().append(out);
+                        $('#idCurrentDateLT').empty().append(out);
                     }
                 }
             });
@@ -629,10 +667,10 @@ function displayNodes(zigateX) {
     });
 
     jqXHR.fail(function (json, textStatus, jqXHR) {
-        //console.log("network.js: displayNodes: fail: " + textStatus);
+        //console.log("network.js: displayLinksTable: fail: " + textStatus);
         var msg = 'Données du réseau non trouvées. Forcez la réinterrogation.';
         $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
-        $('#table_routingTable tbody').empty()
+        $('#idLinksTable tbody').empty()
     });
 
     jqXHR.always(function (json, textStatus, jqXHR) {
@@ -644,7 +682,7 @@ function filterColumnOnValue(data, col) {
     var filterValue = data;
     var filterColumn = col;
     //console.log('filtering col ' + filterColumn + ' on value ' + filterValue);
-    $('#table_routingTable > tbody > tr').each(function (idx, val) {
+    $('#idLinksTable > tbody > tr').each(function (idx, val) {
         //console.log(val);
         switch (filterValue) {
             case 'None':
@@ -664,3 +702,9 @@ function filterColumnOnValue(data, col) {
         }
     })
 }
+
+/* Refresh display if node name changed */
+$("#idShowObject").on('change', function(event) {
+    console.log("idShowObject click");
+    displayLinksGraph(currentZigateLG); // Refresh current links graph
+});

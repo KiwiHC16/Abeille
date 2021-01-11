@@ -64,12 +64,43 @@ if (file_exists($dbgFile)) {
         <!-- Gestion des ghosts / remplacement d equipements  -->
         <?php include '050_AbeilleRemplacementPart.php'; ?>
 
+        <!-- Gestion des parametres Zigate -->
+        <?php include '060_AbeilleZigatePart.php'; ?>
+
+        <!-- Affichage des details zigate  -->
+        <?php include '070_AbeilleDetailsPart.php'; ?>
+
         <!-- Affichage de la zone developpeur  -->
         <?php include '080_AbeilleZoneDevPart.php'; ?>
 
     </div> <!-- Fin - Barre d outils horizontale  -->
 
 	</form>
+
+    <!-- Affichage des informations d un equipement - tab : Equipement / Param / Commandes  -->
+    <div class="col-xs-12 eqLogic" style="display: none;">
+
+        <!-- Affichage de la zone developpeur  -->
+        <?php include '100_AbeilleEntete.php'; ?>
+
+        <!-- Affichage des informations specifiques d un equipement  -->
+        <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
+
+            <!-- Affichage des informations specifiques a cet equipement: Equipement tab  -->
+            <div role="tabpanel" class="tab-pane active" id="eqlogictab">
+            <?php include '110_AbeilleCoreParam.php'; ?>
+            </div>
+
+            <!-- Affichage des informations specifiques a cet equipement: Param tab -->
+            <?php include '120_AbeilleParam.php'; ?>
+
+            <!-- Affichage des informations specifiques a cet equipement: Command tab -->
+            <?php include '130_AbeilleCommandes.php'; ?>
+
+        </div>
+
+    </div>
+
 </div>
 
 <!-- Scripts -->

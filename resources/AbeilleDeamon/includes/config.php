@@ -18,6 +18,9 @@
     define('queueKeyAbeilleToAbeille',      121);
     define('queueKeyAbeilleToCmd',          123);
 
+    define('queueKeyMonToZigate',           124); // For monitoring: messages to zigate
+    define('queueKeyMonFromZigate',         125); // For monitoring: messages from zigate
+
     define('queueKeyParserToAbeille',       221);
     define('queueKeyParserToCmd',           223);
     define('queueKeyParserToLQI',           225);
@@ -43,4 +46,8 @@
     define('maxNbOfZigate',        10);
 
     define('maxRetryDefault',       3);
+
+    /* URL to access documentations */
+    define('urlProducts', "https://github.com/KiwiHC16/AbeilleDoc/blob/master/docs/products");
+    define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
 ?>

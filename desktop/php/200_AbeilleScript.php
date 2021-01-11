@@ -1,4 +1,22 @@
+<?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
+<?php include_file('desktop', 'AbeilleDev', 'js', 'Abeille'); ?>
+<?php include_file('core', 'plugin.template', 'js'); ?>
+
 <script>
+    /* Remove default Jeedom 'onclick' event for 'eqLogicDisplayCard' class
+       and replace it by a new one. */
+    $(".eqLogicDisplayCard").off("click");
+    $(".eqLogicDisplayCard").on('click', function () {
+        console.log("eqLogicDisplayCard click");
+        if (!isset($(this).attr('data-eqLogic_id'))) {
+          console.log("ERROR: 'data-eqLogic_id' is not defined");
+          return;
+        }
+        var eqId = $(this).attr('data-eqLogic_id');
+        console.log("eqId="+eqId);
+        window.location.href = "index.php?v=d&m=Abeille&p=AbeilleEq&id="+eqId;
+    });
+
     /* Show or hide developer area.
        If developer mode is enabled, default is to always expand this area. */
     $('#idDevGrpShowHide').on('click', function () {
@@ -16,7 +34,7 @@
     });
     if ((typeof js_dbgDeveloperMode != 'undefined') && (js_dbgDeveloperMode == 1)) {
         var Label = document.getElementById("idDevGrpShowHide").innerText;
-        document.querySelector('#idDevGrpShowHide').click(); 
+        document.querySelector('#idDevGrpShowHide').click();
     }
 
     $("#sel_icon").change(function () {
@@ -66,5 +84,4 @@ for ($i = 1; $i <= 10; $i++) {
  <?php
 }
 ?>
-
 </script>

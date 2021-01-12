@@ -7,18 +7,18 @@ class AbeilleCmd extends cmd
 
         log::add('Abeille', 'Debug', 'execute ->' . $this->getType() . '<- function with options ->' . json_encode($_options) . '<-');
 
-// cmdId : 12676 est le level d une ampoule
-// la cmdId 12680 a pour value 12676
-// Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
-// On le voit dans le log avec:
-// [2020-01-30 03:39:22][DEBUG] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
+        // cmdId : 12676 est le level d une ampoule
+        // la cmdId 12680 a pour value 12676
+        // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
+        // On le voit dans le log avec:
+        // [2020-01-30 03:39:22][DEBUG] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
         if (isset($_options['cmdIdUpdated'])) return;
 
         switch ($this->getType()) {
             case 'action' :
-//
+
                 /* ------------------------------ */
-// Topic est l arborescence MQTT: La fonction Zigate
+                // Topic est l arborescence MQTT: La fonction Zigate
 
                 $Abeilles = new Abeille();
 
@@ -36,9 +36,9 @@ class AbeilleCmd extends cmd
                 }
 
                 if (strpos("_" . $this->getConfiguration('topic'), "CmdAbeille") == 1) {
-// if ( $NE->getConfiguration('Zigate') > 1 ) {
-//     $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
-// }
+                // if ( $NE->getConfiguration('Zigate') > 1 ) {
+                //     $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
+                // }
                     $topicNEArray = explode("/", $NE->getConfiguration("topic"));
                     $destNE = str_replace("Abeille", "", $topicNEArray[0]);
                     $topic = str_replace("CmdAbeille", "CmdAbeille" . $destNE, $topic);
@@ -50,26 +50,26 @@ class AbeilleCmd extends cmd
                 $dest = substr($topicArray[0], 3);
 
                 /* ------------------------------ */
-// Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+                // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($topic, "#addrGroup#") > 0) {
                     $topic = str_replace("#addrGroup#", $NE->getConfiguration("Groupe"), $topic);
                 }
 
-// -------------------------------------------------------------------------
-// Process Request
+                // -------------------------------------------------------------------------
+                // Process Request
                 $request = $this->getConfiguration('request', '1');
-// request: c'est le payload dans la page de configuration pour une commande
-// C est les parametres de la commande pour la zigate
+                // request: c'est le payload dans la page de configuration pour une commande
+                // C est les parametres de la commande pour la zigate
                 log::add('Abeille', 'Debug', 'request: ' . $request);
 
                 /* ------------------------------ */
-// Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+                // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($request, "#addrGroup#") > 0) {
                     $request = str_replace("#addrGroup#", $NE->getConfiguration("Groupe"), $request);
                 }
 
                 /* ------------------------------ */
-// Je fais les remplacement dans les parametres
+                // Je fais les remplacement dans les parametres
                 if (strpos($request, '#onTime#') > 0) {
                     $onTimeHex = sprintf("%04s", dechex($NE->getConfiguration("onTime") * 10));
                     $request = str_replace("#onTime#", $onTimeHex, $request);
@@ -79,7 +79,7 @@ class AbeilleCmd extends cmd
                     $ruche = new Abeille();
                     $command = new AbeilleCmd();
 
-// Recupere IEEE de la Ruche/ZiGate
+                    // Recupere IEEE de la Ruche/ZiGate
                     $rucheId = $ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getId();
                     log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
 
@@ -94,16 +94,16 @@ class AbeilleCmd extends cmd
                     $currentObjectId = $this->getEqLogic_id();
                     log::add('Abeille', 'debug', 'Id pour current abeille: ' . $currentObjectId);
 
-// ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
+                    // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
                     $commandIEEE = $command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
 
-// print_r( $command->execCmd() );
+                    // print_r( $command->execCmd() );
                     log::add('Abeille', 'debug', 'IEEE pour current abeille: ' . $commandIEEE);
 
-// $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
-// print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
-// echo "\n";
-// print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
+                    // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
+                    // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
+                    // echo "\n";
+                    // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
 
                     $request = str_replace('#addrIEEE#', $commandIEEE, $request);
                     $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);

@@ -17,12 +17,13 @@ class AbeilleCmd extends cmd
         switch ($this->getType()) {
             case 'action' :
 
+                list($dest,$addr) = explode("/", $this->getEqLogic()->getLogicalId());
+
                 // Needed for Telecommande
                 // "topic":"CmdAbeille\/Ruche\/sceneGroupRecall"
                 // "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
                 // il faut recuperer la zigate controlant ce groupe pour cette telecommande et l addGroup du groupe vient des param
-                if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
-                    list($dest,$addr) = explode("/", $this->getEqLogic()->getLogicalId());
+                if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {    
                     $topic = str_replace("Abeille", $dest, $topic);
                 }
                 else {
@@ -50,49 +51,33 @@ class AbeilleCmd extends cmd
                 log::add('Abeille', 'Debug', 'request: ' . $request);
 
                 /* ------------------------------ */
-                // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
+                // // Je fais les remplacement dans les parametres (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($request, "#addrGroup#") > 0) {
                     $request = str_replace("#addrGroup#", $this->getEqLogic()->getConfiguration("Groupe"), $request);
                 }
 
-                /* ------------------------------ */
-                // Je fais les remplacement dans les parametres
                 if (strpos($request, '#onTime#') > 0) {
                     $onTimeHex = sprintf("%04s", dechex($this->getEqLogic()->getConfiguration("onTime") * 10));
                     $request = str_replace("#onTime#", $onTimeHex, $request);
                 }
 
                 if (strpos($request, '#addrIEEE#') > 0) {
-                    $ruche = new Abeille();
-                    $command = new AbeilleCmd();
-
-                    // Recupere IEEE de la Ruche/ZiGate
-                    $rucheId = $ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getId();
-                    log::add('Abeille', 'debug', 'Id pour abeille Ruche: ' . $rucheId);
-
-                    if (strlen($ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-                        $rucheIEEE = $ruche->byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration('IEEE', 'none');
-                    } else {
-                        $rucheIEEE = $commandIEEE->byEqLogicIdAndLogicalId($rucheId, 'IEEE-Addr')->execCmd();
+                    $commandIEEE = $this->getEqLogic()->getConfiguration("IEEE",'none');
+                    if (strlen($commandIEEE)!=16) {
+                        log::add('Abeille', 'Debug', 'Adresse IEEE de l equipement ' . $this->getEqLogic()->getHumanName() . ' inconnue');
+                        return true;
                     }
-                    log::add('Abeille', 'debug', 'IEEE pour  Ruche: ' . $rucheIEEE);
-
-                    $currentCommandId = $this->getId();
-                    $currentObjectId = $this->getEqLogic_id();
-                    log::add('Abeille', 'debug', 'Id pour current abeille: ' . $currentObjectId);
-
-                    // ne semble pas rendre la main si l'objet n'a pas de champ "IEEE-Addr"
-                    $commandIEEE = $command->byEqLogicIdAndLogicalId($currentObjectId, 'IEEE-Addr')->execCmd();
-
-                    // print_r( $command->execCmd() );
-                    log::add('Abeille', 'debug', 'IEEE pour current abeille: ' . $commandIEEE);
-
-                    // $elogic->byLogicalId( 'Abeille/b528', 'Abeille' );
-                    // print_r( $objet->byLogicalId( 'Abeille/b528', 'Abeille' )->getId() );
-                    // echo "\n";
-                    // print_r( $command->byEqLogicIdAndLogicalId( $objetId, "IEEE-Addr" )->getLastValue() );
-
                     $request = str_replace('#addrIEEE#', $commandIEEE, $request);
+                }
+
+                if (strpos($request, '#ZiGateIEEE#') > 0) {
+                    // Logical Id ruche de la forme: Abeille1/Ruche
+                    $rucheIEEE = Abeille::byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration("IEEE",'none');
+                    log::add('Abeille', 'Debug', 'Adresse IEEE de la ruche ' . $rucheIEEE);
+                    if (strlen($rucheIEEE)!=16) {
+                        log::add('Abeille', 'Debug', 'Adresse IEEE de la ruche ' . $this->getEqLogic()->getHumanName() . ' inconnue');
+                        return true;
+                    }
                     $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
                 }
 

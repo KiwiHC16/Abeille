@@ -1326,7 +1326,7 @@ class Abeille extends eqLogic
             $objetConfiguration = $objetDefSpecific["configuration"];
             log::add('Abeille', 'debug', 'Template configuration: ' . json_encode($objetConfiguration));
             $elogic->setConfiguration('modeleJson', $trimmedValue);
-            $elogic->setConfiguration('topic', $nodeid);
+            // $elogic->setConfiguration('topic', $nodeid); // not needed as the info is in logicalId.
             $elogic->setConfiguration('type', $type);
             $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
             $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
@@ -1395,7 +1395,7 @@ class Abeille extends eqLogic
                     $cmdlogic->setConfiguration('topic', $cmd);
                 }
                 if ($cmdValueDefaut["Type"] == "action") {
-                    $cmdlogic->setConfiguration('retain', '0');
+                    // $cmdlogic->setConfiguration('retain', '0'); // not needed anymore, was used for mosquitto
 
                     if (isset($cmdValueDefaut["value"])) {
                         // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
@@ -1409,7 +1409,7 @@ class Abeille extends eqLogic
                 // La boucle est pour info et pour action
                 foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-                    $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue));
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
 
                     // Ne pas effacer, en cours de dev.
                     // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
@@ -1814,9 +1814,9 @@ class Abeille extends eqLogic
                 // $cmdlogic->setConfiguration('topic', $nodeid . '/' . $cmd);
                 $cmdlogic->setConfiguration('topic', $cmd);
             }
-            if ($cmdValueDefaut["Type"] == "action") {
-                $cmdlogic->setConfiguration('retain', '0');
-            }
+            // if ($cmdValueDefaut["Type"] == "action") {  // not needed as mosquitto is not used anymore
+            //    $cmdlogic->setConfiguration('retain', '0');
+            // }
             foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                 $cmdlogic->setConfiguration($confKey, $confValue);
             }

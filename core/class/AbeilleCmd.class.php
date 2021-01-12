@@ -17,42 +17,29 @@ class AbeilleCmd extends cmd
         switch ($this->getType()) {
             case 'action' :
 
-                /* ------------------------------ */
-                // Topic est l arborescence MQTT: La fonction Zigate
-
-                $Abeilles = new Abeille();
-
-                $NE_Id = $this->getEqLogic_id();
-                $NE = $Abeilles->byId($NE_Id);
-
-                if (strpos("_" . $this->getConfiguration('topic'), "CmdAbeille") == 1) {
-                    $topic = $this->getConfiguration('topic');
-                } else {
-                    if (strpos("_" . $this->getConfiguration('topic'), "CmdCreate") == 1) {
-                        $topic = $this->getConfiguration('topic');
-                    } else {
-                        $topic = "Cmd" . $NE->getConfiguration('topic') . "/" . $this->getConfiguration('topic');
-                    }
+                // Needed for Telecommande
+                // "topic":"CmdAbeille\/Ruche\/sceneGroupRecall"
+                // "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
+                // il faut recuperer la zigate controlant ce groupe pour cette telecommande et l addGroup du groupe vient des param
+                if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
+                    list($dest,$addr) = explode("/", $this->getEqLogic()->getLogicalId());
+                    $topic = str_replace("Abeille", $dest, $topic);
                 }
-
-                if (strpos("_" . $this->getConfiguration('topic'), "CmdAbeille") == 1) {
-                // if ( $NE->getConfiguration('Zigate') > 1 ) {
-                //     $topic = str_replace( "CmdAbeille", "CmdAbeille".$NE->getConfiguration("Zigate"), $topic );
+                else {
+                    $topic = "Cmd" . $this->getEqLogic()->getLogicalId() . "/" . $this->getConfiguration('topic');
+                }
+                
+                // CmdCreate n est dans aucun template donc ne semble pas necessaire dans execute()
+                // if (strpos($this->getConfiguration('topic'), "CmdCreate") === 0) {
+                //         $topic = $this->getConfiguration('topic');
                 // }
-                    $topicNEArray = explode("/", $NE->getConfiguration("topic"));
-                    $destNE = str_replace("Abeille", "", $topicNEArray[0]);
-                    $topic = str_replace("CmdAbeille", "CmdAbeille" . $destNE, $topic);
-                }
-
+                
                 log::add('Abeille', 'Debug', 'topic: ' . $topic);
-
-                $topicArray = explode("/", $topic);
-                $dest = substr($topicArray[0], 3);
 
                 /* ------------------------------ */
                 // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($topic, "#addrGroup#") > 0) {
-                    $topic = str_replace("#addrGroup#", $NE->getConfiguration("Groupe"), $topic);
+                    $topic = str_replace("#addrGroup#", $this->getEqLogic()->getConfiguration("Groupe"), $topic);
                 }
 
                 // -------------------------------------------------------------------------
@@ -65,13 +52,13 @@ class AbeilleCmd extends cmd
                 /* ------------------------------ */
                 // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($request, "#addrGroup#") > 0) {
-                    $request = str_replace("#addrGroup#", $NE->getConfiguration("Groupe"), $request);
+                    $request = str_replace("#addrGroup#", $this->getEqLogic()->getConfiguration("Groupe"), $request);
                 }
 
                 /* ------------------------------ */
                 // Je fais les remplacement dans les parametres
                 if (strpos($request, '#onTime#') > 0) {
-                    $onTimeHex = sprintf("%04s", dechex($NE->getConfiguration("onTime") * 10));
+                    $onTimeHex = sprintf("%04s", dechex($this->getEqLogic()->getConfiguration("onTime") * 10));
                     $request = str_replace("#onTime#", $onTimeHex, $request);
                 }
 

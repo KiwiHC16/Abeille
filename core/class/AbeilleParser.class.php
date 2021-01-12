@@ -2768,6 +2768,12 @@
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                 }
 
+                // ne traite pas les FF01 inconnus
+                elseif ($AttributId == "FF01") {
+                    $this->deamonlog("debug", "Champ FF01 non traite car inconnu." );
+                    return;
+                }
+
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
                 elseif (($AttributId == "FF02")) {
                     // Non decodé a ce stade

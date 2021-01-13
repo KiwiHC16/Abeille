@@ -88,7 +88,7 @@ class Abeille extends eqLogic
                             if ($ghostCmd->getIsHistorized() == 1) {
                                 // -- migrer l historique des commandes AbeilleY/YYYY vers AbeilleX/XXXX, les instances des commandes dans scenario et autres
                                 // history::copyHistoryToCmd('#17009#', '#17251#');
-                                echo 'Copy history from ' . $ghostCmd->getName() . ' to ' . $realCmd->getName() . "\n";
+                                // echo 'Copy history from ' . $ghostCmd->getName() . ' to ' . $realCmd->getName() . "\n";
                                 history::copyHistoryToCmd($ghostCmd->getId(), $realCmd->getId());
                             }
                         }
@@ -1238,10 +1238,10 @@ class Abeille extends eqLogic
                     $nodeid = $Filter.'/'.$addr;
                     $bee->setLogicalId($nodeid);
                     log::add('Abeille', 'debug', 'message(): Mise-à-jour '.$oldLogicId.' => '.$nodeid);
-                    message::add("Abeille", "'".$bee->getName()."' a rejoint le réseau.", '');
+                    message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
                 } else {
                     $bee->setIsEnable(0);
-                    message::add("Abeille", "'".$bee->getName()."' a quitté le réseau => désactivé.", '');
+                    message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');
                 }
                 $bee->save();
                 $bee->refresh();
@@ -1399,7 +1399,7 @@ class Abeille extends eqLogic
 
                     if (isset($cmdValueDefaut["value"])) {
                         // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                        log::add('Abeille', 'debug', 'Define cmd info pour cmd action: ' . $elogic->getName() . " - " . $cmdValueDefaut["value"]);
+                        log::add('Abeille', 'debug', 'Define cmd info pour cmd action: ' . $elogic->getHumanName() . " - " . $cmdValueDefaut["value"]);
 
                         $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $elogic->getName(), $cmdValueDefaut["value"]);
                         $cmdlogic->setValue($cmdPointeur_Value->getId());
@@ -1486,10 +1486,10 @@ class Abeille extends eqLogic
                 }
 
                 // log::add('Abeille', 'debug', "message(), !objet & IEEE: Adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique");
-                log::add('Abeille', 'debug', "message(), !objet & IEEE: $value correspond à '" . $elogic->getName() . "'. Mise-à-jour de l'adresse courte $ShortFound vers $addr.");
+                log::add('Abeille', 'debug', "message(), !objet & IEEE: $value correspond à '" . $elogic->getHumanName() . "'. Mise-à-jour de l'adresse courte $ShortFound vers $addr.");
                 // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
                 // message::add("Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - " . $elogic->getName() . ", on fait la mise a jour automatique", '');
-                message::add("Abeille", "Nouvelle adresse '" . $addr . "' pour '" . $elogic->getName() . "'. Mise à jour automatique.");
+                message::add("Abeille", "Nouvelle adresse '" . $addr . "' pour '" . $elogic->getHumanName() . "'. Mise à jour automatique.");
 
                 // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
                 // log::add('Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; Ancien nom: " . $elogic->getName() . ", nouveau nom: " . str_replace($ShortFound, $addr, $elogic->getName()));

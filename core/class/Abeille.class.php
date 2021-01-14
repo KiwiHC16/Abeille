@@ -1410,6 +1410,7 @@ class Abeille extends eqLogic
                 foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                     // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
+                    $cmdlogic->setConfiguration($confKey, $confValue);
 
                     // Ne pas effacer, en cours de dev.
                     // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));

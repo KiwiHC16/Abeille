@@ -5,7 +5,7 @@
         }
     }
 
-/* Developers debug features & PHP errors */
+    /* Developers debug features & PHP errors */
     $dbgFile = __DIR__."/../../tmp/debug.php";
     if (file_exists($dbgFile)) {
         // include_once $dbgFile;
@@ -26,7 +26,7 @@
         exit();
     }
 
-
+    /* The following part is executed only if no equipment selected (no id) */
     include '005_AbeilleFunctionPart.php';
 
     sendVarToJS('eqType', 'Abeille');
@@ -34,24 +34,15 @@
     $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
     $parametersAbeille = AbeilleTools::getParameters();
 
-$outils = array(
-    'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
-    'netList'   => array( 'bouton'=>'bt_networkAbeilleList',    'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
-    'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
-    'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
-    'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
-    'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
-    'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
-    );
-
-/* Developers debug features */
-$dbgFile = __DIR__."/../../tmp/debug.php";
-if (file_exists($dbgFile)) {
-    // include_once $dbgFile;
-    include $dbgFile;
-    $dbgDeveloperMode = TRUE;
-    echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
-}
+    $outils = array(
+        'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
+        'netList'   => array( 'bouton'=>'bt_networkAbeilleList',    'icon'=>'fa-sitemap',       'text'=>'{{Network List}}' ),
+        'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
+        'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
+        'compat'    => array( 'bouton'=>'bt_listeCompatibilite',    'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
+        'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
+        'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
+        );
 ?>
 
 <!-- For all modals on 'Abeilles' page. -->

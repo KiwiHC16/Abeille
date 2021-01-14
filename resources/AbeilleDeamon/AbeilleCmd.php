@@ -20,10 +20,8 @@
     include_once __DIR__.'/includes/config.php';
     include_once __DIR__.'/includes/function.php';
     include_once __DIR__.'/includes/fifo.php';
-
     include_once __DIR__.'/../../core/class/AbeilleMsg.php';
     include_once __DIR__.'/../../core/php/AbeilleLog.php';
-
     include_once __DIR__.'/../../core/class/AbeilleCmdQueue.class.php';
 
     // ***********************************************************************************************
@@ -32,6 +30,8 @@
     // exemple d appel
     // php AbeilleCmd.php debug
     //check already running
+    logSetConf("AbeilleCmd.log");
+    logMessage('info', 'AbeilleCmd starting');
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
@@ -44,7 +44,6 @@
 
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
-        logMessage("info", "Démarrage du démon 'AbeilleCmd'");
 
         $last = 0;
         while (true) {

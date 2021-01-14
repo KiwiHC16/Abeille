@@ -24,7 +24,7 @@ class AbeilleCmd extends cmd
                 // "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
                 // il faut recuperer la zigate controlant ce groupe pour cette telecommande et l addGroup du groupe vient des param
                 if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {    
-                    $topic = str_replace("Abeille", $dest, $topic);
+                    $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
                 }
                 else {
                     $topic = "Cmd" . $this->getEqLogic()->getLogicalId() . "/" . $this->getConfiguration('topic');

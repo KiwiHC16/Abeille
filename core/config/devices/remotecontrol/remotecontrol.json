@@ -10,7 +10,8 @@
       "icone": "remotecontrol",
       "battery_type": "",
       "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "paramType": "telecommande"
     },
     "Commandes": {
       "include1": "offGroup",

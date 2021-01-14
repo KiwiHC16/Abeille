@@ -1,13 +1,12 @@
 <?php
-// Classes Heritage
-// AbeilleCmd.php -> AbeilleCmdQueue(class) -> AbeilleCmdPrepare(class) -> AbeilleCmdProcess(class) -> debug(class) -> AbeilleTools(class)
-// AbeilleCmd.php: process pour l envoie des messages à la zigate
-// AbeilleCmdQueue: gere les queues d'envoie des messqges
-// AbeilleCmdPrepare: Prend la demande utilisateur et fait le mapping avec la commnande zigate
-// AbeilleCmdProcess: Encode la demande utilisateur en binaire pour la zigate
-// debug: Permet de definir les fonctions que l on veut dans les logs
-// Tools: Caisse a outils de fonctions.
-
+    // Classes Heritage
+    // AbeilleCmd.php -> AbeilleCmdQueue(class) -> AbeilleCmdPrepare(class) -> AbeilleCmdProcess(class) -> debug(class) -> AbeilleTools(class)
+    // AbeilleCmd.php: process pour l envoie des messages à la zigate
+    // AbeilleCmdQueue: gere les queues d'envoie des messqges
+    // AbeilleCmdPrepare: Prend la demande utilisateur et fait le mapping avec la commnande zigate
+    // AbeilleCmdProcess: Encode la demande utilisateur en binaire pour la zigate
+    // debug: Permet de definir les fonctions que l on veut dans les logs
+    // Tools: Caisse a outils de fonctions.
 
     include_once __DIR__.'/AbeilleCmdPrepare.class.php';
 
@@ -45,9 +44,6 @@
         public $zigateAvailable = array();        // Si on pense la zigate dispo ou non.
 
         function __construct($debugLevel='debug') {
-            /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleCmd.log");
-
             $this->deamonlog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             $this->deamonlog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 

@@ -664,7 +664,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "moveToLiftAndTiltBSO":
-                     
+
                      $fields = preg_split("/[=&]+/", $msg);
                      if (count($fields) > 1) {
                          $parameters = proper_parse_str( $msg );
@@ -1162,7 +1162,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
 
                 default:
-                    $this->deamonlog('warning', '  AbeilleCommand unknown: '.$action );
+                    // $this->deamonlog('warning', '  AbeilleCommand unknown: '.$action );
                     break;
             } // switch
         } // if $address != "Ruche"
@@ -1461,13 +1461,15 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
         /*---------------------------------------------------------*/
 
-        $this->deamonlog('debug','  calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
-        $this->processCmd( $Command );
+        if (!isset($Command)) {
+            $this->deamonlog('debug', '  WARNING: Unknown command ! (topic='.$topic.')', 1);
+        } else {
+            $this->deamonlog('debug', '  calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
+            $this->processCmd( $Command );
+        }
 
         return;
     }
-
-    
 }
-  
+
 ?>

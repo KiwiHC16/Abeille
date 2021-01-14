@@ -1,21 +1,19 @@
 <?php
 
-class AbeilleCmd extends cmd
-{
-    public function execute($_options = null)
+    class AbeilleCmd extends cmd
     {
+        public function execute($_options = null)
+        {
+            logMessage('debug', 'execute(type='.$this->getType().', options='.json_encode($_options).')');
 
-        log::add('Abeille', 'Debug', 'execute ->' . $this->getType() . '<- function with options ->' . json_encode($_options) . '<-');
+            // cmdId : 12676 est le level d une ampoule
+            // la cmdId 12680 a pour value 12676
+            // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
+            // On le voit dans le log avec:
+            // [2020-01-30 03:39:22][debug] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
+            if (isset($_options['cmdIdUpdated'])) return;
 
-        // cmdId : 12676 est le level d une ampoule
-        // la cmdId 12680 a pour value 12676
-        // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
-        // On le voit dans le log avec:
-        // [2020-01-30 03:39:22][DEBUG] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
-        if (isset($_options['cmdIdUpdated'])) return;
-
-        switch ($this->getType()) {
-            case 'action' :
+            if ($this->getType() == 'action') {
 
                 list($dest,$addr) = explode("/", $this->getEqLogic()->getLogicalId());
 
@@ -23,19 +21,19 @@ class AbeilleCmd extends cmd
                 // "topic":"CmdAbeille\/Ruche\/sceneGroupRecall"
                 // "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
                 // il faut recuperer la zigate controlant ce groupe pour cette telecommande et l addGroup du groupe vient des param
-                if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {    
+                if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
                     $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
                 }
                 else {
                     $topic = "Cmd" . $this->getEqLogic()->getLogicalId() . "/" . $this->getConfiguration('topic');
                 }
-                
+
                 // CmdCreate n est dans aucun template donc ne semble pas necessaire dans execute()
                 // if (strpos($this->getConfiguration('topic'), "CmdCreate") === 0) {
                 //         $topic = $this->getConfiguration('topic');
                 // }
-                
-                log::add('Abeille', 'Debug', 'topic: ' . $topic);
+
+                logMessage('debug', 'topic: ' . $topic);
 
                 /* ------------------------------ */
                 // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
@@ -48,7 +46,7 @@ class AbeilleCmd extends cmd
                 $request = $this->getConfiguration('request', '1');
                 // request: c'est le payload dans la page de configuration pour une commande
                 // C est les parametres de la commande pour la zigate
-                log::add('Abeille', 'Debug', 'request: ' . $request);
+                logMessage('debug', 'request: ' . $request);
 
                 /* ------------------------------ */
                 // // Je fais les remplacement dans les parametres (ex: addGroup pour telecommande Ikea 5 btn)
@@ -64,7 +62,7 @@ class AbeilleCmd extends cmd
                 if (strpos($request, '#addrIEEE#') > 0) {
                     $commandIEEE = $this->getEqLogic()->getConfiguration("IEEE",'none');
                     if (strlen($commandIEEE)!=16) {
-                        log::add('Abeille', 'Debug', 'Adresse IEEE de l equipement ' . $this->getEqLogic()->getHumanName() . ' inconnue');
+                        logMessage('debug', 'Adresse IEEE de l equipement ' . $this->getEqLogic()->getHumanName() . ' inconnue');
                         return true;
                     }
                     $request = str_replace('#addrIEEE#', $commandIEEE, $request);
@@ -73,9 +71,9 @@ class AbeilleCmd extends cmd
                 if (strpos($request, '#ZiGateIEEE#') > 0) {
                     // Logical Id ruche de la forme: Abeille1/Ruche
                     $rucheIEEE = Abeille::byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration("IEEE",'none');
-                    log::add('Abeille', 'Debug', 'Adresse IEEE de la ruche ' . $rucheIEEE);
+                    logMessage('debug', 'Adresse IEEE de la ruche ' . $rucheIEEE);
                     if (strlen($rucheIEEE)!=16) {
-                        log::add('Abeille', 'Debug', 'Adresse IEEE de la ruche ' . $this->getEqLogic()->getHumanName() . ' inconnue');
+                        logMessage('debug', 'Adresse IEEE de la ruche ' . $this->getEqLogic()->getHumanName() . ' inconnue');
                         return true;
                     }
                     $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
@@ -102,27 +100,26 @@ class AbeilleCmd extends cmd
                 $msgAbeille->message['topic'] = $topic;
                 $msgAbeille->message['payload'] = $request;
 
-                log::add('Abeille', 'Debug', 'topic: ' . $topic . ' request: ' . $request);
+                logMessage('debug', 'topic: ' . $topic . ' request: ' . $request);
 
                 if (strpos($topic, "CmdCreate") === 0) {
                     $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
                     if (msg_send($queueKeyAbeilleToAbeille, 1, $msgAbeille, true, false)) {
-                        log::add('Abeille', 'debug', '(CmdCreate) Msg sent: ' . json_encode($msgAbeille));
+                        logMessage('debug', '(CmdCreate) Msg sent: ' . json_encode($msgAbeille));
                     } else {
-                        log::add('Abeille', 'debug', '(CmdCreate) Could not send Msg');
+                        logMessage('debug', '(CmdCreate) Could not send Msg');
                     }
                 } else {
                     $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msgAbeille, true, false)) {
-                        log::add('Abeille', 'debug', '(All) Msg sent: ' . json_encode($msgAbeille));
+                        logMessage('debug', '(All) Msg sent: ' . json_encode($msgAbeille));
                     } else {
-                        log::add('Abeille', 'debug', '(All) Could not send Msg');
+                        logMessage('debug', '(All) Could not send Msg');
                     }
                 }
-        }
+            } // End type==action
 
-        return true;
-    }
-}
-
+            return true;
+        } // End public function execute()
+    } // End class AbeilleCmd extends cmd
 ?>

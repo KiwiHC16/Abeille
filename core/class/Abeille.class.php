@@ -1338,10 +1338,12 @@ class Abeille extends eqLogic
             if (isset($objetConfiguration['battery_type'])) {
                 $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
             }
-            if (isset($objetConfiguration['Groupe'])) {
+            if (isset($objetConfiguration['paramType']))
+                $elogic->setConfiguration('paramType', $objetConfiguration['paramType']);
+            if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
                 $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
             }
-            if (isset($objetConfiguration['onTime'])) {
+            if (isset($objetConfiguration['onTime'])) { // Tcharp38: What for ?
                 $elogic->setConfiguration('onTime', $objetConfiguration['onTime']);
             }
             if (isset($objetConfiguration['Zigate'])) {

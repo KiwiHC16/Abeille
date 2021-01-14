@@ -205,9 +205,10 @@
         <?php
             } // End zigate case
 
-            if (($eqLogic->getConfiguration('battery_type', '') != "")) {
+            /* If battery powered eq. 'battery_type' is defined in original JSON file */
+            if ($eqLogic->getConfiguration('battery_type', '') != "") {
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Equipement sur piles.}}</label>';
+                echo '<label class="col-sm-3 control-label">{{Equipement sur piles}}</label>';
                 echo '</div>';
 
                 echo '<div class="form-group" >';
@@ -220,33 +221,31 @@
                 echo '<hr>';
             }
 
-            // Tcharp38: Is 'telecommande' really stored in config today ?
-            // if (($eqLogic->getConfiguration('paramType', 'notDefined') == "telecommande") || ($eqLogic->getConfiguration('paramType', 'notDefined') == "notDefined"))  {
-
+            /* If eq is a remote control. 'paramType' is defined in original JSON file */
+            if ($eqLogic->getConfiguration('paramType', '') == "telecommande") {
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Telecommande}}</label>';
+                echo '<label class="col-sm-3 control-label">{{Télécommande}}</label>';
                 echo '</div>';
 
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Groupe}}</label>';
+                echo '<label class="col-sm-3 control-label">{{Adresse groupe}}</label>';
                 echo '<div class="col-sm-3">';
-                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse courte en hex sur 4 digits, ex:AE12}}"/>';
+                echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>';
                 echo '</div>';
                 echo '</div>';
 
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{on time (s)}}</label>';
+                echo '<label class="col-sm-3 control-label">{{Durée (s)}}</label>';
                 echo '<div class="col-sm-3">';
                 echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>';
                 echo '</div>';
                 echo '</div>';
 
                 echo '<hr>';
-            //}
+            }
 
-            // Tcharp38: Is 'paramABC' really stored in config today ?
-            //if ( ($eqLogic->getConfiguration('paramType', 'notDefined') == "paramABC") || ($eqLogic->getConfiguration('paramType', 'notDefined') == "notDefined") )  {
-
+            /* If eq is ?. 'paramType' is defined in original JSON file */
+            if ($eqLogic->getConfiguration('paramType', '') == "paramABC") {
                 echo '<div class="form-group">';
                 echo '<label class="col-sm-3 control-label">{{Calibration (y=ax2+bx+c)}}</label>';
                 echo '</div>';
@@ -271,7 +270,7 @@
                 echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="paramC" placeholder="{{nombre}}"/>';
                 echo '</div>';
                 echo '</div>';
-            //}
+            }
         ?>
 
 </form>

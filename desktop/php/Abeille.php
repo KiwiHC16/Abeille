@@ -1,20 +1,38 @@
 <?php
-if(0){
-    if (!isConnect('admin')) {
-        throw new Exception('{{401 - Accès non autorisé}}');
+    if(0){
+        if (!isConnect('admin')) {
+            throw new Exception('{{401 - Accès non autorisé}}');
+        }
     }
-}
-?>
 
-<?php include '005_AbeilleFunctionPart.php'; ?>
+/* Developers debug features & PHP errors */
+    $dbgFile = __DIR__."/../../tmp/debug.php";
+    if (file_exists($dbgFile)) {
+        // include_once $dbgFile;
+        include $dbgFile;
+        $dbgDeveloperMode = TRUE;
+        echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
 
-<?php
-sendVarToJS('eqType', 'Abeille');
-$eqLogics = eqLogic::byType('Abeille');
+    if (isset($_GET['id'])) { // If 'id' is set, let's redirect to 'AbeilleEq' page
+        $uri = parse_url($_SERVER['REQUEST_URI']);
+        // Replace "p=Abeille" by "p=AbeilleEq"
+        $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);
+        header("Location: index.php?".$newuri);
+        exit();
+    }
 
-$zigateNb = config::byKey('zigateNb', 'Abeille', '1');
 
-$parametersAbeille = AbeilleTools::getParameters();
+    include '005_AbeilleFunctionPart.php';
+
+    sendVarToJS('eqType', 'Abeille');
+    $eqLogics = eqLogic::byType('Abeille');
+    $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
+    $parametersAbeille = AbeilleTools::getParameters();
 
 $outils = array(
     'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),

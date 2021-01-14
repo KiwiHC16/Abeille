@@ -35,20 +35,10 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
         <div class="col-sm-3">
-            <?php
-            echo '<span>'.$eqAddr.'</span>';
-            ?>
+            <span> <?php echo $eqAddr; ?> </span>
             /
             <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
         </div>
-        <?php
-            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-                echo '<div class="col-sm-3">';
-                echo 'config->logicalId=<span>'.$eqLogicId.'</span>';
-                echo ', config->topic=<span class="eqLogicAttr" data-l1key="configuration" data-l2key="topic"></span>';
-                echo '</div>';
-            }
-        ?>
     </div>
 
     <div class="form-group">

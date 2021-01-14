@@ -61,11 +61,17 @@
             <div class="col-sm-3">
                 <span class="eqLogicAttr" data-l1key="id"></span>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Logical Id}}</label>
             <?php
                 if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-                    echo '<div class="col-sm-3">';
-                    echo 'config->logicalId=<span>'.$eqLogicId.'</span>';
-                    echo '</div>';
+            ?>
+                    <div class="col-sm-3">
+                        <span class="eqLogicAttr" data-l1key="logicalId"></span>
+                    </div>
+            <?php
                 }
             ?>
         </div>

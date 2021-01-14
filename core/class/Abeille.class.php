@@ -121,16 +121,32 @@ class Abeille extends eqLogic
         return round(100 - ((($max - ($voltage / 1000)) / ($max - $min)) * 100));
     }
 
-    // Is it the health of the plugin level menu Analyse->santé ? A verifier.
+    /**
+     * Function return data for santé page
+     * 
+     * @param none
+     * 
+     * @return test   title/decription of the test  
+     * @return result test result 
+     * @return advice comment by question mark icone
+     * @return state  if the test was successful or not
+     */
     public static function health()
     {
         $return = array();
+        $result = '';
+
+        for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+            if ( config::byKey('AbeilleActiver'.$i, 'Abeille', '1', 1) ) {
+                $result .= config::byKey('AbeilleSerialPort'.$i, 'Abeille', '', 1);
+            }
+        }
 
         $return[] = array(
-            'test' => 'OK',
-            'result' => 'OK',
-            'advice' => 'OK',
-            'state' => 'OK',
+            'test' => 'Ports: ',             // title of the line
+            'result' => $result,             // Text which be printed in the line
+            'advice' => 'Ports utilisés',    // Text printed when mouse is on question mark icone
+            'state' => true,                // Status du plugin: true line will be green, false line will be red.
         );
 
         return $return;

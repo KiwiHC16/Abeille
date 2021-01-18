@@ -141,14 +141,12 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
     console.log("trackLQICollectStatus(zgNb="+zigateX+")");
 
     $.ajax({
-        type: 'GET',
-        // url: '/plugins/Abeille/tmp/AbeilleLQI_MapDataAbeille'+zigateX+'.json.lock',
+        type: 'POST',
         url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
         data: {
             action: 'getTmpFile',
             file : "AbeilleLQI_MapDataAbeille"+zigateX+".json.lock",
         },
-        // dataType: 'html',
         dataType: "json",
         global: false,
         cache: false,
@@ -224,8 +222,8 @@ function displayLinksGraph(zigateX) {
     request.done(function (json) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
-            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+            // -1 = Most probably file not found
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else if (res.content == "") {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else {
@@ -408,7 +406,7 @@ function displayLinksGraph(zigateX) {
                 }, 200);
                 */
 
-                            /* Get network collect time */
+                /* Get network collect time */
                 $.ajax({
                     type: 'POST',
                     url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
@@ -474,8 +472,8 @@ function displayLinksTable(zigateX) {
     jqXHR.done(function (json, textStatus, jqXHR) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;
-            $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+            // -1 = Most probably file not found
+            $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else if (res.content == "") {
             $('#div_networkZigbeeAlert').showAlert({message: '{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}', level: 'danger'});
         } else {

@@ -17,9 +17,9 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        include_once $dbgFile;
+        // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -611,10 +611,10 @@ class Abeille extends eqLogic
         /* Developers debug features.
                Since deamon_start() is static, could not find a way to reuse global variables.
                WARNING: Since php file is cached, it sometimes requires delay or restart to
-                 get last content of 'debug.php' */
-        $dbgFile = __DIR__ . "/../../tmp/debug.php";
-        if (file_exists($dbgFile))
-            include $dbgFile;
+                 get last content of 'debug.json' */
+        $dbgFile = __DIR__ . "/../../tmp/debug.json";
+        // if (file_exists($dbgFile))
+        //     include $dbgFile;
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
@@ -1211,13 +1211,13 @@ class Abeille extends eqLogic
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie son ManufacturerName => Je concerve dans l attente de son nom pour la creation.
         if (!is_object($elogic) && (preg_match("/^0000-[0-9A-Fa-f]*-*0004/", $cmdId)) ) {
-            
+
             $trimmedValue = $value;
             $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
             $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            
+
             $this->ManufacturerNameTable[] = array( $nodeid => array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue ) );
-                
+
         }
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si l objet n existe pas et je recoie son nom => je créé l objet.

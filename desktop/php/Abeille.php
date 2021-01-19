@@ -6,10 +6,9 @@
     }
 
     /* Developers debug features & PHP errors */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        // include_once $dbgFile;
-        include $dbgFile;
+        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         /* Dev mode: enabling PHP errors logging */

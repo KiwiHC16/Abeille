@@ -1,29 +1,37 @@
 <br/>
 <legend><i class="fa fa-cog"></i> {{Zone developpeurs}}</legend>
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
-	
+
 	<br/>
 	<span style="font-weight:bold">Attention !! Cette partie est réservée aux developpeurs.</span> Ne pas s'y aventurer sauf sur leur demande expresse.<br>
-	Elle ne contient que des fonctionalités de test ou en cours de developpement, pour lesquels il ne sera fourni <span style="font-weight:bold">aucun support</span>.<br>
+	Elle ne contient que des fonctionalités de test ou en cours de developpement, pour lesquelles il ne sera fourni <span style="font-weight:bold">aucun support</span>.<br>
 	<br/>
 	<a id="idDevGrpShowHide" class="btn btn-success">Montrer</a>
 	<div id="idDevGrp" style="display:none">
 		<hr>
 		<br/>
-		<label>Fonctionalités cachées:</label>
+		<!-- <label>Fonctionalités cachées:</label>
 		<?php
 			if (file_exists($dbgFile))
-				echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Supprime le fichier debug.php">';
-			else    
-				echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Crée le fichier debug.php avec les valeurs par defaut.">';
+				echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
+			else
+				echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
 		?>
-		<br/>
+		<br/> -->
 
-		<!-- Following functionalities are visible only if 'tmp/debug.php' file exists (developer mode). -->
+		<!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
+		<?php if (isset($dbgConfig)) { ?>
+		<label>Log parser. Désactiver:</label>
 		<?php
-			if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-			}
+			if (isset($dbgConfig['dbgParserLog'])) {
+				$dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
+				echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px" value="'.$dbgParserLog.'">';
+			} else
+				echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
 		?>
+		<input type="button" onclick="saveChanges()" value="Sauver" title="Sauve la config dans 'debug.json'">
+		<br/>
+		<?php } ?>
 
 		<!-- Misc -->
 		<input type="submit" name="submitButton" value="Identify">
@@ -61,5 +69,5 @@
 
 	</div> <!-- End of developer area -->
 	<br/><br/>
-	
+
 </div>

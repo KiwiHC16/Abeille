@@ -83,27 +83,21 @@ function monitorIt(zgNb, zgPort) {
     });
 }
 
-/* Called when 'developer mode' must be enabled or disabled.
-   This means creating or deleting "tmp/debug.php" file. */
-function xableDevMode(enable) {
-    console.log("xableDevMode(enable=" + enable + ")");
-    if (enable == 1) {
-        /* Enable developer mode by creating debug.php then restart */
-        var devAction = 'createDevConfig';
-    } else {
-        var devAction = 'deleteDevConfig';
-    }
+/* For dev mode. Called to save debug config change in 'tmp/debug.json'. */
+function saveChanges() {
+    console.log("saveChanges()");
 
+    /* Get current config */
     $.ajax({
         type: 'POST',
         url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
         data: {
-            action: devAction
+            action: 'readDevConfig'
         },
         dataType: 'json',
         global: false,
         error: function (request, status, error) {
-            bootbox.alert("ERREUR '"+devAction+"' !<br>status="+status+"<br>error="+error);
+            bootbox.alert("ERREUR 'readDevConfig' !<br>status="+status+"<br>error="+error);
         },
         success: function (json_res) {
             console.log(json_res);
@@ -111,41 +105,50 @@ function xableDevMode(enable) {
             if (res.status != 0) {
                 var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
                 alert(msg);
+                return;
+            }
+
+            /* Update config */
+            devConfig = JSON.parse(res.config);
+
+            var dbgParserDisableList = document.getElementById('idParserLog').value;
+            console.log("dbgParserDisableList="+dbgParserDisableList);
+            if (dbgParserDisableList != "") {
+                var dbgParserLog = [];
+                var res = dbgParserDisableList.split(" ");
+                res.forEach(function(value) {
+                    console.log("value="+value);
+                    dbgParserLog.push(value);
+                });
+                devConfig["dbgParserLog"] = dbgParserLog;
             } else
-                window.location.reload(true);
-    }
+                devConfig["dbgParserLog"] = [];
+
+            /* Save config */
+            jsonConfig = JSON.stringify(devConfig);
+            console.log("New devConfig="+jsonConfig);
+            $.ajax({
+                type: 'POST',
+                url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+                data: {
+                    action: 'writeDevConfig',
+                    devConfig: jsonConfig
+                },
+                dataType: 'json',
+                global: false,
+                error: function (request, status, error) {
+                    bootbox.alert("ERREUR 'writeDevConfig' !<br>status="+status+"<br>error="+error);
+                },
+                success: function (json_res) {
+                    console.log(json_res);
+                    res = JSON.parse(json_res.result);
+                    if (res.status != 0) {
+                        var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                        alert(msg);
+                        return;
+                    }
+                }
+            });
+        }
     });
 }
-
-/* Called when 'developer mode' must be enabled or disabled.
-   This means creating or deleting "tmp/debug.php" file. */
-// function xableAbeillePHP(enable) {
-//     console.log("xableAbeillePHP(enable=" + enable + ")");
-//     var devConfig = new Object;
-//     if (enable == 1)
-//         devConfig["dbgAbeillePHP"] = true;
-//     else
-//         devConfig["dbgAbeillePHP"] = false;
-//     $.ajax({
-//         type: 'POST',
-//         url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
-//         data: {
-//             action: 'updateDevConfig',
-//             devConfig: devConfig
-//         },
-//         dataType: 'json',
-//         global: false,
-//         error: function (request, status, error) {
-//             bootbox.alert("ERREUR 'updateDevConfig' !<br>status="+status+"<br>error="+error);
-//         },
-//         success: function (json_res) {
-//             console.log(json_res);
-//             res = JSON.parse(json_res.result);
-//             if (res.status != 0) {
-//                 var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
-//                 alert(msg);
-//             } else
-//                 window.location.reload(true);
-//         }
-//     });
-// }

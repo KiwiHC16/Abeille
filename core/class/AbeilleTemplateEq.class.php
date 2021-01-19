@@ -4,7 +4,7 @@ class AbeilleTemplateEq {
     /**
      * Will retour the Template (uniqId) used by an Abeille
      * @param           logicalId of an Abeille
-     * 
+     *
      * @return          Return the Template (uniqId) used by an Abeille
      */
     public static function uniqIdUsedByAnAbeille( $logicalId ) {
@@ -59,7 +59,7 @@ class AbeilleTemplateEq {
     /**
      * Will return the categories for the device stored in the template
      * @param           uniqId identify the json template
-     * 
+     *
      * @return          Return the categories (array) for the device stored in the template
      */
    public static function getCategorieFromTemplate( $uniqId ) {
@@ -72,7 +72,7 @@ class AbeilleTemplateEq {
     /**
      * Will return the configuration for the device stored in the template
      * @param           uniqId identify the json template
-     * @param           item field defined in configuration part of the template 
+     * @param           item field defined in configuration part of the template
      *
      * @return          Return the configuration item for the device stored in the template if exist otherwise ''
      */
@@ -85,13 +85,13 @@ class AbeilleTemplateEq {
             else {
                 return '';
             }
-            
+
         }
     }
 
     /**
-     * 
-     * 
+     *
+     *
      */
     public static function compareAllParamWithTemplateHtmlEnteteTable() {
         echo "<table>\n";
@@ -99,8 +99,8 @@ class AbeilleTemplateEq {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      */
     public static function compareAllParamWithTemplateHtmlPiedTable() {
         echo "</table><br>\n";
@@ -118,11 +118,11 @@ class AbeilleTemplateEq {
             return $jsonArray[$key]["Commandes"];
         }
     }
-    
+
     public static function compareAllParamWithTemplate($abeille) {
         echo "<hr>\n";
         echo "<br>\n";
-        echo "<h1>".$abeille->getHumanName()."</h1>\n"; 
+        echo "<h1>".$abeille->getHumanName()."</h1>\n";
 
         $logicalId = $abeille->getLogicalId();
         $uniqId = AbeilleTemplateEq::uniqIdUsedByAnAbeille($logicalId);
@@ -136,11 +136,11 @@ class AbeilleTemplateEq {
                 'mainEP'    => array( 'getConfiguration', 'getConfigurationFromTemplate' ),
                 'poll'      => array( 'getConfiguration', 'getConfigurationFromTemplate' ),
             );
-            
+
             foreach ( $items as $item=>$fcts ) {
                 $fct0 = $fcts[0];
                 $fct1 = $fcts[1];
-                
+
                 if ($abeille->$fct0($item)==AbeilleTemplateEq::$fct1($uniqId, $item)) $color="green"; else $color="red";
 
                 echo '<tr><td><span style="color:'.$color.'">'.$item.'<span></td>    <td style="text-align:center;">'    .$abeille->$fct0($item) . '</td><td style="text-align:center;">'    . AbeilleTemplateEq::$fct1($uniqId, $item)     . "</td></tr>\n";

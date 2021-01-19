@@ -1098,6 +1098,7 @@
             }
 
             // Remontée etat relai module Legrand 20AX
+            // 80020019F4000104 FC41 010102D2B9020000180B0A000030000100100084
             if ( ($profile == "0104") && ($cluster == "FC41") ) {
 
                 $frameCtrlField         = substr($payload,26, 2);
@@ -1120,8 +1121,8 @@
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
 
-                // if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
-                if ( strlen($payload)==50 ) {
+                if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
+                if ( strlen($payload)>42 ) {
                     $attribute              = substr($payload,42, 2).substr($payload,40, 2);
                     $dataType               = substr($payload,44, 2);
                     $value                  = substr($payload,46, 2);

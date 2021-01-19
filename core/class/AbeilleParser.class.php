@@ -843,6 +843,7 @@
 
             // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
+
                 $SQN                    = substr($payload,26, 2);
                 $status                 = substr($payload,28, 2);
                 $tableSize              = hexdec(substr($payload,30, 2));
@@ -889,6 +890,37 @@
                 }
 
                 return;
+            }
+            
+            // Boutons lateraux de la telecommande
+            if ( ($profile == "0104") && ($cluster == "0005") ) {
+                $frameCtrlField = substr($payload,26, 2);
+                if ( $frameCtrlField=='05' ) {
+                    $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
+                    if ( $Manufacturer=='117C' ) {
+
+                        $SQN                    = substr($payload,32, 2);
+                        $cmd                    = substr($payload,34, 2); 
+                        if ( $cmd != "07" ) { 
+                            if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
+                            return;
+                        }
+                        $remainingData          = substr($payload,36, 8);
+                        $value                  = substr($payload,36, 2);
+
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Telecommande Ikea Ronde'
+                                        . $baseLog
+                                        . ', frameCtrlField='.$frameCtrlField
+                                        . ', Manufacturer='.$Manufacturer
+                                        . ', SQN='.$SQN
+                                        . ', cmd='.$cmd
+                                        . ', value='.$value
+                                        );
+
+                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
+                        return;    
+                    }
+                }
             }
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs

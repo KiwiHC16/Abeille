@@ -17,7 +17,7 @@
  */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.php";
+    $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -30,7 +30,7 @@ include_once __DIR__.'/../../../core/php/core.inc.php';
 /**
  * Fonction exécutée automatiquement après l'installation du plugin
  * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
- * 
+ *
  * @param   none
  * @return none
  */
@@ -238,7 +238,7 @@ function updateConfigDB() {
 /**
  * Fonction exécutée automatiquement après la mise à jour du plugin
  * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
- * 
+ *
  * @param   none
  * @return none
  */
@@ -273,7 +273,7 @@ function Abeille_update() {
 /**
  * Fonction exécutée automatiquement après la suppression du plugin
  * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
- * 
+ *
  * @param   none
  * @return none
  */

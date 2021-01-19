@@ -9,9 +9,17 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        include_once $dbgFile;
+        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
+        if (isset($dbgConfig["dbgParserLog"])) {
+            /* Convert array to associative one */
+            $arr = $dbgConfig["dbgParserLog"];
+            $dbgParserLog = [];
+            foreach ($arr as $idx => $value) {
+                $dbgParserLog[$value] = 1;
+            }
+        }
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -167,10 +175,12 @@
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
     //check already running
+    logSetConf("AbeilleParser.log");
+    logMessage("info", "Démarrage d'AbeilleParser");
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
-    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    logMessage('debug', 'Daemons status: '.json_encode($daemons));
     #Two at least expected,the original and this one
     if ($daemons["parser"] > 1){
         logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
@@ -180,7 +190,6 @@
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
-        logMessage("info", "(Re)Démarrage d'AbeilleParser");
 
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
         $LQI = array();
@@ -207,8 +216,8 @@
         unset($AbeilleParser);
     }
     catch (Exception $e) {
-        $AbeilleParser->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
+        logMessage('debug', 'error: '.json_encode($e->getMessage()));
     }
 
-    $AbeilleParser->deamonlog('info', 'Fin du script');
+    logMessage('info', 'AbeilleParser: arret du démon');
 ?>

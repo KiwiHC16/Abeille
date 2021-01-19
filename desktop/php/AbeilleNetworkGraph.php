@@ -1,7 +1,7 @@
 
 <?php
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);

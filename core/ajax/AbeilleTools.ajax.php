@@ -21,9 +21,9 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.php";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        include_once $dbgFile;
+        // include_once $dbgFile;
         $dbgDeveloperMode = TRUE;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);

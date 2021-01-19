@@ -17,15 +17,15 @@
     */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.php";
+    $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        include_once $dbgFile;
+        // $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
-        include_once __DIR__."/../core/php/AbeilleGit.php"; // Developer functions/features
+        include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP');
+        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
@@ -357,7 +357,6 @@
             ?>
         </div>
 
-
         <br />
         <br />
         <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
@@ -395,6 +394,18 @@
                         <option value="2">{{2}}</option>
                         <option value="1">{{1}}</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
+                <div class="col-lg-5">
+                    <?php
+                        if (file_exists($dbgFile))
+                            echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
+                        else
+                            echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
+                    ?>
                 </div>
             </div>
 
@@ -774,6 +785,42 @@
     })
 
     /* Developers mode only */
+
+    /* Called when 'developer mode' must be enabled or disabled.
+    This means creating or deleting "tmp/debug.json" file. */
+    function xableDevMode(enable) {
+        console.log("xableDevMode(enable="+enable+")");
+        if (enable == 1) {
+            /* Enable developer mode by creating debug.json then restart */
+            var devAction = 'writeDevConfig';
+        } else {
+            var devAction = 'deleteDevConfig';
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+            data: {
+                action: devAction,
+                devConfig: ''
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR '"+devAction+"' !<br>status="+status+"<br>error="+error);
+            },
+            success: function (json_res) {
+                console.log(json_res);
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                    alert(msg);
+                } else
+                    window.location.reload();
+            }
+        });
+    }
+
     if ((typeof js_dbgDeveloperMode != 'undefined')) {
         console.log("Developer mode");
 

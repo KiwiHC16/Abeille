@@ -36,7 +36,8 @@
       "include11 2 2 2 2 2": "BlancGroup",
       "include11 2 2 2 2 2 2": "BleuGroup",
       "include11 2 2 2 2 2 2 2": "RougeGroup",
-      "include11 2 2 2 2 2 2 2 2": "VertGroup"
+      "include11 2 2 2 2 2 2 2 2": "VertGroup",
+      "include11 2 2 2 2 2 2 2 2 2": "IkeaTeleCmdLeftRigth"
     }
   }
 }

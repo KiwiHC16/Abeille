@@ -1,0 +1,19 @@
+{
+  "0005-01-0000": {
+    "isVisible": 1,
+    "name": "LeftRight",
+    "order": 9,
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "badge",
+    "unite": "",
+    "configuration": {
+      "uniqId": "5c07c7662165dsfsfdssde",
+      "minValue": "0",
+      "visibilityCategory": "All"
+    }
+  }
+}

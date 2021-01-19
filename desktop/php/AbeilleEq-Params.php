@@ -22,36 +22,60 @@
     </div>
     <hr>
 
-    <div class="form-group">
-    <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-    <div class="col-sm-3">
-        <?php
-            $res = getCmdResult($eqId, 'Time-Time');
-            echo '<span>'.$res.'</span>';
-        ?>
-    </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
-        <div class="col-sm-3">
-            <span> <?php echo $eqAddr; ?> </span>
-            /
-            <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
+    <?php
+        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+    ?>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Id}}</label>
+            <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="id"></span>
+            </div>
         </div>
-    </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Logical Id}}</label>
+            <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="logicalId"></span>
+            </div>
+        </div>
+
+        </br>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
+            <div class="col-sm-3">
+                <span> <?php echo $eqAddr; ?> </span>
+                /
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
+            </div>
+        </div>
+
+    <?php
+            }
+    ?>
+    </br>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Documentation}}</label>
+        <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
         <div class="col-sm-3">
             <?php
-                $model = $eqLogic->getConfiguration('modeleJson', '');
-                if ($model != '') {
-                    echo '<a href="'.urlProducts.'/'.$model.'" target="_blank">Voir ici si présente</a>';
-                }
+                $res = getCmdResult($eqId, 'Time-Time');
+                echo '<span>'.$res.'</span>';
             ?>
         </div>
     </div>
+
+    </br>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
+        <div class="col-sm-3">
+            <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
+        </div>
+    </div>
+
+    </br>
 
     <hr>
 

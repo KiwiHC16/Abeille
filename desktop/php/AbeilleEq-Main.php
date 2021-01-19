@@ -56,32 +56,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Id}}</label>
-            <div class="col-sm-3">
-                <span class="eqLogicAttr" data-l1key="id"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Logical Id}}</label>
-            <?php
-                if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-            ?>
-                    <div class="col-sm-3">
-                        <span class="eqLogicAttr" data-l1key="logicalId"></span>
-                    </div>
-            <?php
-                }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
-            <div class="col-sm-3">
-                <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
-            </div>
-        </div>
+        <hr>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Note}}</label>
@@ -92,6 +67,20 @@
 
         <hr>
 
+        <div class="form-group">
+        <label class="col-sm-3 control-label">{{Documentation}}</label>
+        <div class="col-sm-3">
+            <?php
+                $model = $eqLogic->getConfiguration('modeleJson', '');
+                if ($model != '') {
+                    echo '<a href="'.urlProducts.'/'.$model.'" target="_blank">Voir ici si présente</a>';
+                }
+            ?>
+        </div>
+
+        <hr>
+        </br>
+        
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>
         </div>

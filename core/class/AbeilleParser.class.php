@@ -21,21 +21,21 @@
         public $debug = array(
                               "AbeilleParserClass"      => 0,  // Mise en place des class
 
-                              "8000"                    => 0, // Status
+                              "8000"                    => 1, // Status
                               "8002"                    => 1, // Unknown messages to Zigate. Mode Hybrid.
-                              "8009"                    => 0, // Get Network Status
-                              "8010"                    => 0, // Zigate Version
-                              "8011"                    => 0, // ACK DATA
-                              "8014"                    => 0, // Permit Join
-                              "8024"                    => 0, // Network joined-forme
+                              "8009"                    => 1, // Get Network Status
+                              "8010"                    => 1, // Zigate Version
+                              "8011"                    => 1, // ACK DATA
+                              "8014"                    => 1, // Permit Join
+                              "8024"                    => 1, // Network joined-forme
                               "8043"                    => 1, // Simple descriptor response
                               "8045"                    => 1, //
-                              "8048"                    => 0, //
-                              "8701"                    => 0, //
+                              "8048"                    => 1, //
+                              "8701"                    => 1, //
 
                               "cleanUpNE"               => 1,
-                              "configureNE"             => 0,
-                              "getNE"                   => 0,
+                              "configureNE"             => 1,
+                              "getNE"                   => 1,
                               "processActionQueue"      => 1,
                               "processAnnonce"          => 1,
                               "processAnnonceStageChg"  => 1,
@@ -756,12 +756,12 @@
             $SQN        = substr($payload, 2, 2);
             $PacketType = substr($payload, 4, 4);
 
-            // if ($this->debug['8000']) { // Tcharp38: Should not be disabled. Might be useful to see error in user logs.
+            if ($this->debug['8000']) { // Tcharp38: Should not be disabled. Might be useful to see error in user logs. Voir flag a prendre en compte quand en mode dev et a ne pas prendre si pas mode dev. cf issue en cours.
                 $this->deamonlog('debug', $dest.', Type=8000/Status'
                                  . ', Status='.$status.'/'.zgGet8000Status($status)
                                  . ', SQN='.$SQN
                                  . ', PacketType='.$PacketType);
-            // }
+            }
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
             // $SrcAddr    = "Ruche";
@@ -2389,7 +2389,10 @@
 
             $this->deamonlog('debug', $dest.', Type='.$msg);
 
-            if ($AttributStatus!='00') { return; }
+            if ($AttributStatus!='00') { 
+                $this->deamonlog('debug', "  erreur, attribut status not null");
+                return; 
+            }
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -2512,7 +2515,7 @@
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
                         ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                        $needManufacturer = array('TS0121');
+                        $needManufacturer = array('TS0043','TS0115','TS0121');
                         if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
                                 if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {

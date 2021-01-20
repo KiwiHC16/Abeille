@@ -971,7 +971,7 @@
                 if ($cmd == '00') {
                     $attributTime                  = substr($payload,34, 2) . substr($payload,32, 2);
                     $attributTimeZone              = substr($payload,38, 2) . substr($payload,36, 2);
-                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed)'
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
                                     . $baseLog
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN

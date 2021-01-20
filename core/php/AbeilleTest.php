@@ -119,6 +119,12 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0007';
         }
 
+        if ($test==121) {
+            echo "Test envoie Cmd to get batterie voltage\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0001&attributeId=0021';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

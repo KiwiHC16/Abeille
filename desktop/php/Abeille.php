@@ -17,7 +17,7 @@
         ini_set('log_errors', 'On');
     }
 
-    if (isset($_GET['id'])) { // If 'id' is set, let's redirect to 'AbeilleEq' page
+    if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
         $uri = parse_url($_SERVER['REQUEST_URI']);
         // Replace "p=Abeille" by "p=AbeilleEq"
         $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);

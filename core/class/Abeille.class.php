@@ -719,12 +719,11 @@ class Abeille extends eqLogic
         AbeilleTools::restartMissingDaemons($parameters, $running);
 
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        log::add('Abeille', 'debug', 'deamon_start(): ***** Envoi de la creation de ruche par défaut ********');
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if (($param['AbeilleSerialPort' . $i] == 'none') or ($param['AbeilleActiver' . $i] != 'Y'))
                 continue; // Undefined or disabled
 
-            log::add('Abeille', 'debug', 'deamon_start(): ***** ruche ' . $i . ' (Abeille): ' . basename($param['AbeilleSerialPort' . $i]));
+            log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche ' . $i . ' (Abeille): ' . basename($param['AbeilleSerialPort' . $i]));
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" . $i);
             log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee ' . $i . ' ********');
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/startNetwork", "StartNetwork");
@@ -732,6 +731,27 @@ class Abeille extends eqLogic
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setTimeServer", "");
             log::add('Abeille', 'debug', 'deamon_start(): ***** getNetworkStatus ' . $i . ' ********');
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/getNetworkStatus", "getNetworkStatus");
+
+            // Set the mode of the zigate, important from 3.1D.
+            $version = "";
+            $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille');
+            if ($ruche) {
+                $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
+                if ($cmdlogic) {
+                    $version = $cmdlogic->execCmd();
+                }
+            }
+            if ($version == '031D') {
+                log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in hybrid mode ********');
+                message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "hybride");
+            }
+            else {
+                log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in normal mode ********');
+                message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "normal");
+            }
+
         }
 
         log::add('Abeille', 'debug', 'deamon_start(): Terminé');

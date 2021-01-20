@@ -167,7 +167,16 @@
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
-
+    /* Parser log function.
+       If 'dev mode' & 'debug' level: message can be filtered according to "debug.json" */
+    function parserLog($level, $msg, $type = '') {
+        if (($type != '') && ($level == "debug")) {
+            global $dbgParserLog;
+            if (isset($dbgParserLog) && isset($dbgParserLog[$type]))
+                return; // Log disabled for this type
+        }
+        logMessage($level, $msg);
+    }
 
     // ***********************************************************************************************
     // MAIN
@@ -179,7 +188,7 @@
     logMessage("info", "Démarrage d'AbeilleParser");
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     #Two at least expected,the original and this one
     if ($daemons["parser"] > 1){

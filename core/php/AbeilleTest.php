@@ -37,9 +37,14 @@
 
         if ($test==100) {
             echo "Test pour BSO\n";
-            echo "pgp AbeilleTest.php 100 angle";
-            $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/moveToLiftAndTiltBSO';
-            $msgAbeille->message['payload'] = 'EP=01&Inclinaison='.$argv[2].'&duration=FFFF';
+            echo "php AbeilleTest.php 100 adrese lift inclinaison duree\n";
+            echo "adresse: 4 digit\n";
+            echo "lift: 2 digit\n";
+            echo "inclinaison: 2 digit\n";
+            echo "duree: 4 digit, FFFF pour vitesse max\n";
+            
+            $msgAbeille->message['topic'] = 'CmdAbeille1/'.$argv[1].'/moveToLiftAndTiltBSO';
+            $msgAbeille->message['payload'] = 'EP=01&lift='.$argv[2].'&inclinaison='.$argv[3].'&duration='.$argv[4];
         }
 
         if ($test==109) {

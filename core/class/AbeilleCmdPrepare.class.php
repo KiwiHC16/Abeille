@@ -677,8 +677,9 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                       "dest" => $dest,
                                       "address" => $address,
                                       "destinationEndpoint" => "01",
-                                      "inclinaison" => $parameters['Inclinaison'],        // Valeur entre 0 et 90
-                                      "duration" => $parameters['duration'],              // FFFF to have max speed of tilt
+                                      "lift"        => $parameters['lift'],
+                                      "inclinaison" => $parameters['inclinaison'],        // Valeur entre 0 et 90
+                                      "duration"    => $parameters['duration'],              // FFFF to have max speed of tilt
                                       );
                     break;
                     //----------------------------------------------------------------------------

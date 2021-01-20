@@ -15,8 +15,9 @@
     "Commandes": {
       "include2": "nom",
       "include1": "etatSonoff",
-      "include2 3 2": "Batterie-Pourcent-Ikea",
-      "include2 2 2": "BindToPowerConfig"
+      "include2 3 2": "Batterie-Pourcent-Heiman",
+      "include2 2 2": "BindToPowerConfig",
+      "include2 2 2 3": "setReportBatterie"
     }
   }
 }

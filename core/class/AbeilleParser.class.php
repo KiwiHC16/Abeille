@@ -2396,9 +2396,9 @@
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
             if ($type == "8100")
-                $msg = '8100/Read individual attribute response';
+                $msg = $dest.', 8100/Read individual attribute response';
             else
-                $msg = '8102/Attribut report';
+                $msg = $dest.', 8102/Attribut report';
 
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$SrcAddr
@@ -2409,12 +2409,13 @@
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
 
-            $this->deamonlog('debug', $dest.', Type='.$msg);
-
             if ($AttributStatus!='00') { 
-                $this->deamonlog('debug', "  erreur, attribut status not null");
+                $msg .= " -> erreur, attribut status not null, probablement tentative de lecture d un parametre non disponible. ";
+                $this->deamonlog('debug', $msg );
                 return; 
             }
+
+            $this->deamonlog('debug', $dest.', Type='.$msg);
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null

@@ -2415,11 +2415,13 @@
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
 
-            parserLog('debug', $dest.', Type='.$msg, $type);
             if ($AttributStatus!='00') {
-                parserLog('debug', '  Status!=0 => Probably read attempt on non existent param', $type);
+                $msg .= '  Status!=0 => Probably read attempt on non existent param';
+                parserLog('debug', $msg, $type);
                 return;
             }
+
+            parserLog('debug', $dest.', Type='.$msg, $type);
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null

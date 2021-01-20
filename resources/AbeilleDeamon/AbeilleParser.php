@@ -210,15 +210,19 @@
 
         while (true) {
 
+            // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
-                // $AbeilleParser->deamonlog( 'debug', 'Message pulled from queue queueKeySerieToParser: '.$dataJson );
                 $data = json_decode( $dataJson );
                 $AbeilleParser->protocolDatas( $data->dest, $data->trame, $clusterTab, $LQI);
             }
-            // $AbeilleParser->processAnnonce($NE);
-            // $AbeilleParser->cleanUpNE($NE);
+
+            // Check if we have any action scheduled and waiting to be processed
             $AbeilleParser->processActionQueue();
 
+            // Check if we have any command waiting for the device to wake up
+            $AbeilleParser->processWakeUpQueue();
+
+            // Sleep not tu use CPU for nothing
             time_nanosleep( 0, 10000000 ); // 1/100s
         }
 

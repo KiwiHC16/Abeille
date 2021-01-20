@@ -538,6 +538,11 @@ class Abeille extends eqLogic
         AbeilleTools::checkAllDaemons($param, AbeilleTools::getRunningDaemons());
     }
 
+    /**
+     * daemon info monitor the daemons and report information to update configuration page in jeedom
+     * @param none
+     * @return array with state, launchable, launchable_message
+     */
     public static function deamon_info()
     {
         $debug_deamon_info = 0;

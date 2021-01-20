@@ -10,28 +10,6 @@
 	<div id="idDevGrp" style="display:none">
 		<hr>
 		<br/>
-		<!-- <label>Fonctionalités cachées:</label>
-		<?php
-			if (file_exists($dbgFile))
-				echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
-			else
-				echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
-		?>
-		<br/> -->
-
-		<!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
-		<?php if (isset($dbgConfig)) { ?>
-		<label>Log parser. Désactiver:</label>
-		<?php
-			if (isset($dbgConfig['dbgParserLog'])) {
-				$dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
-				echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px" value="'.$dbgParserLog.'">';
-			} else
-				echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
-		?>
-		<input type="button" onclick="saveChanges()" value="Sauver" title="Sauve la config dans 'debug.json'">
-		<br/>
-		<?php } ?>
 
 		<!-- Misc -->
 		<input type="submit" name="submitButton" value="Identify">

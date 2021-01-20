@@ -19,7 +19,7 @@
     /* Developers debug features */
     $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        // $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
+        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
@@ -408,6 +408,24 @@
                     ?>
                 </div>
             </div>
+
+		    <!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
+            <?php
+            if (isset($dbgConfig)) {
+                echo '<div class="form-group">';
+                echo '<label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>';
+                echo '<div class="col-lg-5">';
+                if (isset($dbgConfig['dbgParserLog'])) {
+                    $dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
+                    echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px" value="'.$dbgParserLog.'">';
+                } else
+                    echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
+                echo '<input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">';
+                echo '</div>';
+                echo '</div>';
+                echo '<br/>';
+            }
+            ?>
 
         </div>
         <br>
@@ -942,4 +960,76 @@
         });
     }
 
+    /* For dev mode. Called to save debug config change in 'tmp/debug.json'. */
+    function saveChanges() {
+        console.log("saveChanges()");
+
+        /* Get current config */
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+            data: {
+                action: 'readDevConfig'
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'readDevConfig' !<br>status="+status+"<br>error="+error);
+            },
+            success: function (json_res) {
+                console.log(json_res);
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                    alert(msg);
+                    return;
+                }
+
+                /* Update config */
+                devConfig = JSON.parse(res.config);
+
+                var dbgParserDisableList = document.getElementById('idParserLog').value;
+                console.log("dbgParserDisableList="+dbgParserDisableList);
+                if (dbgParserDisableList != "") {
+                    var dbgParserLog = [];
+                    var res = dbgParserDisableList.split(" ");
+                    res.forEach(function(value) {
+                        console.log("value="+value);
+                        dbgParserLog.push(value);
+                    });
+                    devConfig["dbgParserLog"] = dbgParserLog;
+                } else
+                    devConfig["dbgParserLog"] = [];
+
+                /* Save config */
+                jsonConfig = JSON.stringify(devConfig);
+                console.log("New devConfig="+jsonConfig);
+                $.ajax({
+                    type: 'POST',
+                    url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+                    data: {
+                        action: 'writeDevConfig',
+                        devConfig: jsonConfig
+                    },
+                    dataType: 'json',
+                    global: false,
+                    error: function (request, status, error) {
+                        bootbox.alert("ERREUR 'writeDevConfig' !<br>status="+status+"<br>error="+error);
+                    },
+                    success: function (json_res) {
+                        console.log(json_res);
+                        res = JSON.parse(json_res.result);
+                        if (res.status != 0) {
+                            var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                            alert(msg);
+                            return;
+                        } else {
+                            // TODO: Restart daemons
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
 </script>

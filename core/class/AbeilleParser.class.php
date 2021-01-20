@@ -951,7 +951,7 @@
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
-                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - (decoded but not processed)'
+                if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - (decoded but not processed) '
                                 . $baseLog
                                 . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
@@ -961,6 +961,28 @@
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
                 return;
+            }
+
+            if ( ($profile == "0104") && ($cluster == "000A") ) {
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2);
+
+                if ($cmd == '00') {
+                    $attributTime                  = substr($payload,34, 2) . substr($payload,32, 2);
+                    $attributTimeZone              = substr($payload,38, 2) . substr($payload,36, 2);
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed)'
+                                    . $baseLog
+                                    . ', frameCtrlField='.$frameCtrlField
+                                    . ', SQN='.$SQN
+                                    . ', cmd='.$cmd
+                                    . ', attributTime='.$attributTime
+                                    . ', attributTimeZone='.$attributTimeZone
+                                    );
+
+                    // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
+                    return;
+                }
             }
 
             // Remontée puissance prise TS0121 Issue: #1288
@@ -1121,7 +1143,7 @@
 
                 $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
 
-                if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
+                // if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
                 if ( strlen($payload)>42 ) {
                     $attribute              = substr($payload,42, 2).substr($payload,40, 2);
                     $dataType               = substr($payload,44, 2);

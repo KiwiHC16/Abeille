@@ -2402,9 +2402,9 @@
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
             if ($type == "8100")
-                $msg = $dest.', Type=8100/Read individual attribute response';
+                $msg = '8100/Read individual attribute response';
             else
-                $msg = $dest.', Type=8102/Attribut report';
+                $msg = '8102/Attribut report';
 
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$SrcAddr
@@ -2417,7 +2417,7 @@
 
             if ($AttributStatus!='00') {
                 $msg .= '  Status!=0 => Probably read attempt on non existent param';
-                parserLog('debug', $msg, $type);
+                parserLog('debug', $dest.', Type='.$msg, $type);
                 return;
             }
 

@@ -17,6 +17,10 @@
     class AbeilleParser  {
         public $queueKeyParserToAbeille = null;
         public $queueKeyParserToCmd = null;
+        public $parameters_info;
+        public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
+        public $wakeUpQueue; // queue of command to be sent when the device wakes up.
+        public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
 
         // public $debug = array(
         //                       "AbeilleParserClass"      => 0,  // Mise en place des class
@@ -129,8 +133,6 @@
             return array('?'.$type.'?', 0);
         }
 
-        public $parameters_info;
-        public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
 
         function __construct() {
             global $argv;
@@ -581,10 +583,10 @@
             }
 
             if ( method_exists($this, $fct) ) {
-                $this->$fct($dest, $payload, $ln, 0, $param1); }
+                $this->$fct($dest, $payload, $ln, 0, $param1); 
+            }
             else {
-                $msgName = zgGetMsgByType($type);
-                parserLog('debug', $dest.', Type='.$type.'/'.$msgName.', ignoré (non supporté).');
+                parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).', ignoré (non supporté).');
             }
 
             return 0;
@@ -637,6 +639,9 @@
             $Addr       = substr($payload, 0, 4);
             $IEEE       = substr($payload, 4, 16);
             $MACCapa    = substr($payload, 20, 2);
+
+            $this->whoTalked[] = $dest.'/'.$Addr;
+
             if (strlen($payload) > 22)
                 $Rejoin = substr($payload, 22, 2);
             else
@@ -712,6 +717,8 @@
             $ClusterId  = "0006-".$EPS;
             $AttributId = "0000";
             $data       = substr($payload, 30,  2);
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $msgDecoded = "0100/?";
             parserLog('debug', $dest.', Type='.$msgDecoded);
@@ -837,6 +844,8 @@
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             // $payload              // Will decode later depending on the message
+
+            $this->whoTalked[] = $dest.'/'.$srcAddress;
 
             $baseLog = "status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress;
 
@@ -1272,6 +1281,8 @@
             $Ext_PAN_ID         = substr($payload,24,16);
             $Channel            = hexdec(substr($payload,40, 2));
 
+            $this->whoTalked[] = $dest.'/'.$ShortAddress;
+
             $msgDecoded = '8009/Network state response, ShortAddr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Channel='.$Channel;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
 
@@ -1638,6 +1649,9 @@
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $data = substr($payload, 4,16);
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
+
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -1680,6 +1694,8 @@
             $profile    = substr($payload,12, 4);
             $deviceId   = substr($payload,16, 4);
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             parserLog('debug', $dest.', Type=8043/Simple descriptor response'
                              . ', SQN='         .$SQN
@@ -1743,6 +1759,8 @@
         {
             $SrcAddr = substr($payload, 4, 4);
             $EP = substr($payload, 10, 2);
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $endPointList = "";
             for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
@@ -1916,6 +1934,8 @@
             $NTableListCount = substr($payload, 6, 2);
             $StartIndex = substr($payload, 8, 2);
             $SrcAddr = substr($payload, 10 + ($NTableListCount * 42), 4); // 21 bytes per neighbour entry
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $decoded = '804E/Management LQI response'
                 .', SQN='                       .$SQN
@@ -2100,6 +2120,8 @@
             $AttributId     = "Down";
             $data           = substr($payload,14, 2);
 
+            $this->whoTalked[] = $dest.'/'.$source;
+
             $this->mqqtPublish($dest.'/'.$source, $ClusterId, $AttributId, $data);
         }
 
@@ -2124,6 +2146,8 @@
             $ClusterId      = "Click";
             $AttributId     = "Middle";
             $data           = substr($payload,14, 2);
+
+            $this->whoTalked[] = $dest.'/'.$source;
 
             $this->mqqtPublish($dest.'/'.$source, $ClusterId, $AttributId, $data);
         }
@@ -2350,6 +2374,8 @@
             $attr3          = substr($payload,16, 2);
             $source         = substr($payload,18, 4);
 
+            $this->whoTalked[] = $dest.'/'.$source;
+
             parserLog('debug', $dest.', Type=80A7/Remote button pressed (LEFT/RIGHT) (Processed->$this->decoded but not sent to MQTT)'
                              . ', SQN='          .$seqNumber
                              . ', EndPoint='     .$endpoint
@@ -2397,6 +2423,8 @@
             $dataType           = substr($payload, 18, 2);
             $AttributSize       = substr($payload, 20, 4);
             $Attribut           = substr($payload, 24, hexdec($AttributSize) * 2);
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
@@ -2982,6 +3010,8 @@
             $AttributId = "0000";
             $data       = substr($payload,14, 4);
 
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
+
             // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
@@ -3209,6 +3239,13 @@
             parserLog('debug', 'Type=fct; ===> Configure NE End', 'configureNE');
         }
 
+        /**
+         * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:
+         * $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+         * 
+         * @param $this->actionQueue
+         * @return none
+         */
         function processActionQueue() {
             if ( !($this->actionQueue) ) return;
             if ( count($this->actionQueue) < 1 ) return;
@@ -3228,5 +3265,51 @@
                 }
             }
         }
+
+        /**
+         * With device on battery we have to wait for them to wake up before sending them command:
+         * $this->wakeUpQueue[] = array( 'which'=>logicalId, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+         * 
+         * @param logicalId
+         * @param $this->wakeUpQueue
+         * @return none
+         */
+        function processWakeUpQueue() {
+            if ( !($this->wakeUpQueue) ) {
+                unset($this->whoTalked);
+                return;
+            }
+            if ( count($this->wakeUpQueue)<1 ) {
+                unset($this->whoTalked);
+                return;
+            }
+            if ( !($this->whoTalked) ) return;
+            if ( count($this->whoTalked) < 1 ) return;
+
+            parserLog('debug', 'processWakeUpQueue(): ------------------------------>');
+
+            foreach( $this->whoTalked as $keyWho=>$who ) {
+                parserLog('debug', 'processWakeUpQueue(): '.$who.' talked');
+                foreach ( $this->wakeUpQueue as $keyWakeUp=>$action ) {
+                    if ( $action['which'] == $who ) {
+                        if ( method_exists($this, $action['what']) ) {
+                            parserLog('debug', 'processWakeUpQueue(): action: '.json_encode($action), 'processWakeUpQueue');
+                            $fct = $action['what'];
+                            if ( isset($action['parm0']) ) {
+                                $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
+                            } else {
+                                $this->$fct($action['addr']);
+                            }
+                            unset($this->wakeUpQueue[$keyWakeUp]);
+                        }
+                    }
+                    unset($this->whoTalked[$keyWho]);
+                }
+            }
+
+            parserLog('debug', 'processWakeUpQueue(): <------------------------------');
+
+        }
+
     } // class AbeilleParser
 ?>

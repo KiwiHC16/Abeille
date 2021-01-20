@@ -2402,9 +2402,9 @@
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
             if ($type == "8100")
-                $msg = '8100/Read individual attribute response';
+                $msg = $dest.', 8100/Read individual attribute response';
             else
-                $msg = '8102/Attribut report';
+                $msg = $dest.', 8102/Attribut report';
 
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$SrcAddr

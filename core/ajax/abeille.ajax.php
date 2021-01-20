@@ -67,7 +67,7 @@ try {
 
         /* Checks addr is responding to ping and socat is installed. */
         $cmdToExec = "checkWifi.sh ".$zgPort;
-        $cmd = '/bin/bash ' . __DIR__ . '/../../resources/' . $cmdToExec . ' >>' . log::getPathToLog('AbeilleConfig.log') . ' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         // $status = 0;
 
@@ -98,25 +98,25 @@ try {
     }
 
     if (init('action') == 'checkSocat') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installSocat') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'checkWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
 
     if (init('action') == 'installWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -131,7 +131,7 @@ try {
 
         /* Checks port exists and is not already used */
         $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType;
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         /* Read Zigate FW version */
@@ -148,7 +148,7 @@ try {
     }
 
     if (init('action') == 'installTTY') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -162,7 +162,7 @@ try {
 
         logToFile('AbeilleConfig.log', 'info', 'Vérification des paramètres');
         $cmdToExec = "updateFirmware.sh check ".$zgPort;
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         $version = 0; // FW version
@@ -173,7 +173,7 @@ try {
             /* Updating FW and reset Zigate */
             logToFile('AbeilleConfig.log', 'info', 'Programming');
             $cmdToExec = "updateFirmware.sh flash ".$zgPort." ".$zgFwFile;
-            $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             /* Reading FW version */
@@ -189,6 +189,7 @@ try {
     }
 
     /* Reset EEPROM but check parameters first, prior to shutdown daemon */
+    /* Tcharp38: No longer required. Never terminated and not sure it is still required with reset PDM */
     if (init('action') == 'resetE2P') {
         $zgPort = init('zgport');
 
@@ -196,7 +197,7 @@ try {
 
         logToFile('AbeilleConfig.log', 'debug', 'Vérification des paramètres');
         $cmdToExec = "updateFirmware.sh check ".$zgPort;
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         if ($status == 0) {
@@ -206,7 +207,7 @@ try {
             /* Reset EEPROM */
             logToFile('AbeilleConfig.log', 'info', 'Reset EEPROM');
             $cmdToExec = "updateFirmware.sh eraseeeprom ".$zgPort;
-            $cmd = '/bin/bash '.__DIR__.'/../../resources/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
@@ -217,7 +218,7 @@ try {
     }
 
     if (init('action') == 'resetPiZiGate') {
-        $cmd = '/bin/bash '.__DIR__.'/../../resources/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success();
     }
@@ -238,7 +239,7 @@ try {
             unlink($doneFile); // Removing 'switchBranch.done' file
 
         /* Creating a copy of 'switchBranch.sh' in 'tmp' */
-        $cmd = 'cd '.__DIR__.'/../../resources/; sudo cp -p switchBranch.sh ../tmp/switchBranch.sh >> '.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
         logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');

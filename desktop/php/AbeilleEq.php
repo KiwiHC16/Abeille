@@ -17,6 +17,8 @@
 
     if (!isset($_GET['id']))
         exit("ERROR: Missing 'id'");
+    if (!is_numeric($_GET['id']))
+        exit("ERROR: 'id' is not numeric");
 
     $eqId = $_GET['id'];
     $eqLogic = eqLogic::byId($eqId);

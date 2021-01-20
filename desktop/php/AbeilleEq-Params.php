@@ -207,14 +207,18 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Mode</label>
-                <div class="col-sm-3">
-                    <button type="button" onclick="sendZigate('SetMode', 'Normal')">Normal</button>
-                    <button type="button" onclick="sendZigate('SetMode', 'Raw')">Raw</button>
-                    <button type="button" onclick="sendZigate('SetMode', 'Hybride')">Hybride</button>
-                </div>
-            </div>
+            <?php
+                if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+                    echo '<div class="form-group">';
+                    echo '<label class="col-sm-3 control-label">Mode</label>';
+                    echo '<div class="col-sm-3">';
+                    echo '<button type="button" onclick="sendZigate(\'SetMode\', \'Normal\')">Normal</button>';
+                    echo '<button type="button" onclick="sendZigate(\'SetMode\', \'Raw\')">Raw</button>';
+                    echo '<button type="button" onclick="sendZigate(\'SetMode\', \'Hybride\')">Hybride</button>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            ?>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">PDM</label>

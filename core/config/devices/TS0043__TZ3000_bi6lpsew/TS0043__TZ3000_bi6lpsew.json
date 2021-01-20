@@ -1,7 +1,7 @@
 {
   "TS0043__TZ3000_bi6lpsew": {
     "nameJeedom": "LoraTap Remote 3 boutons sur piles",
-    "timeout": "60",
+    "timeout": "250",
     "Comment": "https://github.com/KiwiHC16/Abeille/issues/1406",
     "Categorie": {
       "automatism": "1"

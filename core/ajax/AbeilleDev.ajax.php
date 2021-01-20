@@ -142,7 +142,7 @@ logToFile("AbeilleDebug.log", "debug", "Ici action==monitor, eqId=".$eqId);
             if (unlink($dbgFile) == FALSE) {
                 $status = -1;
                 $error = "Impossible de détruire le fichier de config.";
-                    }
+            }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

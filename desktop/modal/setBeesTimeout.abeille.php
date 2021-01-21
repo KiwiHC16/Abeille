@@ -4,15 +4,17 @@
     }
 ?>
 
-Entrez la valeur de timeout (en min) à appliquer aux équipements selectionnés.
-<br>
-<br>
-<label>Timeout</label>
-<input id="idTimeoutVal" class="form-control" style="width:60px;"/>
-<br>
-<br>
-<br>
-<a id="idApplyTimeout" class="btn btn-danger pull-left" >{{Appliquer}}</a>
+<div style="margin: 10px 10px">
+    Entrez la valeur de timeout (en min) à appliquer aux équipements selectionnés.
+    <br>
+    <br>
+    <label>Timeout</label>
+    <input id="idTimeoutVal" class="form-control" style="width:60px;"/>
+    <br>
+    <br>
+    <br>
+    <a id="idApplyTimeout" class="btn btn-danger pull-left" >{{Appliquer}}</a>
+</div>
 
 <script>
     $('#idApplyTimeout').on('click', function () {

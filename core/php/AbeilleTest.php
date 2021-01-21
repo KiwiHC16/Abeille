@@ -43,8 +43,8 @@
             echo "inclinaison: 2 digit\n";
             echo "duree: 4 digit, FFFF pour vitesse max\n";
             
-            $msgAbeille->message['topic'] = 'CmdAbeille1/'.$argv[1].'/moveToLiftAndTiltBSO';
-            $msgAbeille->message['payload'] = 'EP=01&lift='.$argv[2].'&inclinaison='.$argv[3].'&duration='.$argv[4];
+            $msgAbeille->message['topic'] = 'CmdAbeille1/'.$argv[2].'/moveToLiftAndTiltBSO';
+            $msgAbeille->message['payload'] = 'EP=01&lift='.$argv[3].'&inclinaison='.$argv[4].'&duration='.$argv[5];
         }
 
         if ($test==109) {

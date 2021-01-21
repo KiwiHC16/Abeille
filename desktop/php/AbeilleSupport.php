@@ -84,6 +84,7 @@
 
 <script>
     function displayLog(logType, logFile) {
+        console.log("displayLog("+logType+", "+logFile+")");
         let action = "";
         if (logType == "JEEDOM-LOG") {
             action = "getFile";
@@ -94,7 +95,7 @@
         }
 
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
             data: {
                 action: action,
@@ -107,6 +108,7 @@
                 $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile+" => ERREUR");
             },
             success: function (json_res) {
+                // console.log(json_res);
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
                     $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile+" => ERREUR");

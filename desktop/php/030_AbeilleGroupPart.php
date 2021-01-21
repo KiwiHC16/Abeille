@@ -1,10 +1,12 @@
 <br/>
 <label style="margin-right : 20px">{{Groupes}}</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>
+<?php
+echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
+?>
 <br/>
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
-	
+
 	<div id="leftMargin" style="float: left; width:2%;">.
 	</div>
 	<div id="leftThing" style="float: left; width:40%;">
@@ -17,11 +19,11 @@
 				</tr>
 			</thead>
 			<tbody>
-			
+
 				<?php
 					$abeille = new Abeille();
 					$commandIEEE = new AbeilleCmd();
-						
+
 					foreach ($eqLogics as $key => $eqLogic) {
 						$name= "";
 						$groupMember = "";
@@ -47,7 +49,7 @@
 						if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
 					}
 				?>
-				
+
 			</tbody>
 		</table>
 	</div>

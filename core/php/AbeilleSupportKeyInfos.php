@@ -4,6 +4,14 @@
      * - Output is a log file (AbeilleKeyInfos.log) in Jeedom TMP dir
      */
 
+    /* Log function for debug purposes */
+    // function logToFile($msg = "")
+    // {
+    //     $logFile = "AbeilleDebug.log";
+    //     $logDir = __DIR__.'/../../../../log/';
+    //     file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
+    // }
+
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     // include_once(__DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'); // What for ?
     /*

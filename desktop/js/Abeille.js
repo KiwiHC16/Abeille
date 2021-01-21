@@ -265,6 +265,7 @@ $('#bt_createRemote10').on('click', function () {
 /* Check which equipements are selected for given zigate number (zgNb).
    Returns: object {zgNb:<zigateNb>, nb:<nbOfSelectedEq>, ids:[<arrayOfEqIds>]} */
 function getSelectedEqs(zgNb) {
+    console.log("getSelectedEqs("+zgNb+")");
     var selected = new Object;
     selected["zgNb"] = zgNb; // Zigate number
     selected["nb"] = 0; // Number of selected equipments

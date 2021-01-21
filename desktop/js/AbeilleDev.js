@@ -37,7 +37,6 @@ function setBeesTimeout(zgNb) {
         modal: true,
         height: 300,
         width: 400,
-        closeText: "",
     });
     $('#abeilleModal').load('index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgNb='+zgNb).dialog('open');
 }

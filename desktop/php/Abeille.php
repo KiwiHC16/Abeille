@@ -44,9 +44,11 @@
         );
 ?>
 
-<!-- For all modals on 'Abeilles' page. -->
+<!-- For all modals on 'Abeille' page. -->
 <div class="row row-overflow" id="abeilleModal">
+</div>
 
+<div>
 	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
     <!-- Barre d outils horizontale  -->

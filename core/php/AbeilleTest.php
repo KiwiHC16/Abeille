@@ -24,8 +24,8 @@
         $cmdQueue = new AbeilleCmdQueue('debug');
 
         if ($test==1) {
-            echo "ON / OFF with no effects: Toggle\n";
-            $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "02".$argv[2]."010102" );
+            echo "Send a command in binary format directly to AbeilleCMd to be written on serie port\n";
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "0283E4010102" );
         }
 
         if ($test==2) {
@@ -71,9 +71,39 @@
 
             $FrameControlField      = "11";
             $SQN                    = "00";
-            $cmd                    = "00"; // Up
+            $cmd                    = "00"; // 00: Up, 01: Down, 02: Stop, 04: Go to lift value (not supported), 05: Got to lift pourcentage.
 
             $data2 = $FrameControlField . $SQN . $cmd;
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0530', $lenth, $data );
+
+        }
+
+        if ($test==4) {
+            echo "Windows Covering test for Store Ikea: lift to %\n";
+
+            $addressMode            = "02";                // 01 pour groupe, 02 pour NE
+            $targetShortAddress     = $argv[2];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profile                = "0104";
+            $cluster                = "0102";
+            $securityMode           = "02";
+            $radius                 = "30";
+            // $dataLength = "16";
+
+            $FrameControlField      = "11";
+            $SQN                    = "00";
+            $cmd                    = "05"; // 00: Up, 01: Down, 02: Stop, 04: Go to lift value (not supported), 05: Got to lift pourcentage.
+            $liftValue              = $argv[3];
+
+            $data2 = $FrameControlField . $SQN . $cmd . $liftValue . $liftValue;
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;

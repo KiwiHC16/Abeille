@@ -901,6 +901,13 @@
                 return;
             }
             
+            // Cluster 0x0001 Power
+            if ( ($profile == "0104") && ($cluster == "0001") ) {
+                // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
+                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                return;
+            }
+
             // Boutons lateraux de la telecommande
             if ( ($profile == "0104") && ($cluster == "0005") ) {
                 $frameCtrlField = substr($payload,26, 2);
@@ -994,6 +1001,13 @@
                     // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
                     return;
                 }
+            }
+
+            // Cluster 0x0402 Temperature
+            if ( ($profile == "0104") && ($cluster == "0402") ) {
+                // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
+                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                return;
             }
 
             // Remontée puissance prise TS0121 Issue: #1288

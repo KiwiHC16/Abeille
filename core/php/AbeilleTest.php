@@ -125,6 +125,18 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0001&attributeId=0021';
         }
 
+        if ($test==122) {
+            echo "Test envoie Cmd to bind a cluster\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/bindShort';
+            $msgAbeille->message['payload'] = 'targetExtendedAddress=00158D0001FFD6E9&targetEndpoint=01&ClusterId=0102&reportToAddress=00158D0001B22E24';
+        }
+
+        if ($test==123) {
+            echo "Test envoie Cmd to setReport an attribut\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/setReport';
+            $msgAbeille->message['payload'] = 'targetEndpoint=01&ClusterId=0102&AttributeId=0008&AttributeType=20';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {
@@ -137,8 +149,6 @@
         else {
             echo "Can t connect to the queue !\n";
         }
-
-
     }
 
     // Send a message to Abeille's queue
@@ -176,13 +186,6 @@
                 AbeilleTools::clearSystemMessage($parameters,'1');
                 break;
         }
-
-        if ($test==201) {
-            echo "Send a Systeme Message to the SonOff Inter to tesst Batterie level info command\n";
-            // public static function publishMosquitto($queueId, $priority, $topic, $payload)
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/9CD5/0001-01-0021", "37");
-        }
-
     }
 
     // Test Methode/Function

@@ -435,7 +435,7 @@
                 '07' => "tbd3",             // Type associé 27 donc 64bitUint
                 '08' => "tbd4",             // ??
                 '09' => "tbd5",             // ??
-                '0b' => "tbd0b",            // Type associé 20 donc 8bitUint
+                '0B' => "tbd0b",            // Type associé 20 donc 8bitUint
                 '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2), Etat On/Off Prise Xiaomi
                 '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
                 '66' => "Pression",          // Based on Temperature Capteur V2
@@ -1198,29 +1198,30 @@
 
             // Prise Xiaomi
             if ( ($profile == "0104") && ($cluster == "FCC0") ) {
-                $FCF            = substr($payload,26, 2);
+                $FCF = substr($payload,26, 2);
                 if ( $FCF=='1C' ) {
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
                     if ( $Manufacturer=='115F' ) {
-                        $SQN            = substr($payload,32, 2);
-                        $Cmd            = substr($payload,34, 2);
+                        $SQN = substr($payload,32, 2);
+                        $Cmd = substr($payload,34, 2);
                         if ( $Cmd=='0A') {
                             $Attribut   = substr($payload,38, 2).substr($payload,36, 2);
                             if ( $Attribut=='00F7' ) {
                                 $dataType = substr($payload,40, 2);
-                                if ( $dataType == "41" ) {
+                                if ( $dataType == "41" ) { // 0x41 Octet stream
                                     $dataLength = hexdec(substr($payload,42, 2));
                                     // Je suppose que je suis avec un message Xiaomi Prise que je decode comme les champs FF01
-                                    $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength));
-                                    parserLog('debug', "  Champ proprietaire Xiaomi (Prise)");
+                                    parserLog('debug', "  Champ proprietaire FCCO Xiaomi (Prise)");
+                                    parserLog('debug', "        dataLength: ".$dataLength);
+                                    $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength*2));
                                     parserLog('debug', "  ".json_encode($FCC0));
 
-                                    $this->mqqtPublish($dest."/".$srcAddress, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"], $qos);    // Device Temperature
                                     $this->mqqtPublish($dest."/".$srcAddress, '0006', '01-0000',     $FCC0["Etat SW 1 Binaire"]["valueConverted"],  $qos);    // On Off Etat
+                                    $this->mqqtPublish($dest."/".$srcAddress, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"], $qos);    // Device Temperature
+                                    $this->mqqtPublish($dest."/".$srcAddress, '000C', '15-0055',     $FCC0["Puissance"]["valueConverted"],          $qos);    // Puissance
                                     $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--conso--',   $FCC0["Consommation"]["valueConverted"],       $qos);    // Consumption
                                     $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--volt--',    $FCC0["Voltage"]["valueConverted"],            $qos);    // Voltage
                                     $this->mqqtPublish($dest."/".$srcAddress, 'tbd',  '--current--', $FCC0["Current"]["valueConverted"],            $qos);    // Current
-                                    $this->mqqtPublish($dest."/".$srcAddress, '000C', '15-0055',     $FCC0["Puissance"]["valueConverted"],          $qos);    // Puissance
                                 }
                             }
                         }

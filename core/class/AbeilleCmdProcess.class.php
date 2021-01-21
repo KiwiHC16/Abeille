@@ -1887,7 +1887,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $ManfufacturerCode      = "1011"; // inverted
             $transactionSequence    = "01";
             $cmdId                  = "10";  // Cmd Proprio Profalux
-            $option                 = "02";  // Je ne touche que le Tilt
+            $option                 = "03";  // Je ne touche que le Tilt
             // $Lift                   = "00";  // Not used / between 1 and 254 (see CurrentLevel attribute)
             $Lift                   = sprintf( "%02s",dechex($Command['lift']));
             // $Tilt                   = "2D";  // 2D move to 45deg / between 0 and 90 (See CurrentOrentation attribute)

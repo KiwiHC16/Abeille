@@ -1,0 +1,34 @@
+{
+  "eTRV0100": {
+    "nameJeedom": "Dansfoss Ally Radiator Thermostat 014G2461",
+    "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
+    "timeout": "0",
+    "Categorie": {
+      "heating": "1"
+    },
+    "configuration": {
+      "uniqId": "5cfdgh0asd6rt7sdsdf8620b6b",
+      "icone": "eTRV0100",
+      "mainEP": "#EP#",
+      "battery_type": "2x1,5V LR6 (AA)",
+      "poll": "1"
+    },
+    "Commandes": {
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild",
+      "include24": "Identify",
+      "include25 2 2 2": "spiritTemperatureConsigne",
+      "include25 2 2": "spiritTemperatureConsigneGet",
+      "include25 2": "spiritTemperatureConsigneSet",
+      "include25 2 2 2 2": "spiritTemperature",
+      "include25 2 2 3": "spiritTemperatureGet",
+      "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
+      "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
+      "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie"
+    }
+  }
+}

@@ -18,13 +18,71 @@
     $test = $argv[1];
     echo "Running test: ".$test."\n";
 
+    // "Send a command in binary format directly to AbeilleCMd to be written on serie port\n"
     if ( (000<=$test) && ($test<100) ) {
         echo "To execute this test Abeille Daemon has to be stopped.\n";
         $cmdQueue = new AbeilleCmdQueue('debug');
 
         if ($test==1) {
-            echo "Send a command in binary format directly to AbeilleCMd to be written on serie port\n";
-            $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "0283E4010102" );
+            echo "ON / OFF with no effects: Toggle\n";
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0092', '0006', "02".$argv[2]."010102" );
+        }
+
+        if ($test==2) {
+            echo "ON / OFF with no effects: Toggle avec command zigate 0530 idem as test == 1\n";
+
+            $addressMode            = "02";                // 01 pour groupe, 02 pour NE
+            $targetShortAddress     = $argv[2];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profile                = "0104";
+            $cluster                = "0006";
+            $securityMode           = "02";
+            $radius                 = "30";
+            // $dataLength = "16";
+
+            $FrameControlField      = "11";
+            $SQN                    = "00";
+            $cmd                    = "02"; // Toggle
+
+            $data2 = $FrameControlField . $SQN . $cmd;
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0530', $lenth, $data );
+        }
+
+        if ($test==3) {
+            echo "Windows Covering test for Store Ikea: Up\n";
+
+            $addressMode            = "02";                // 01 pour groupe, 02 pour NE
+            $targetShortAddress     = $argv[2];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profile                = "0104";
+            $cluster                = "0102";
+            $securityMode           = "02";
+            $radius                 = "30";
+            // $dataLength = "16";
+
+            $FrameControlField      = "11";
+            $SQN                    = "00";
+            $cmd                    = "00"; // Up
+
+            $data2 = $FrameControlField . $SQN . $cmd;
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $cmdQueue->sendCmdToZigate( 'Abeille1', '0530', $lenth, $data );
+
         }
     }
 

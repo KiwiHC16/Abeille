@@ -66,9 +66,9 @@
     //----------------------------------------------------------------------------------------------------
     // Main
     //----------------------------------------------------------------------------------------------------
-
-    $baseUrlDoc = 'https://github.com/KiwiHC16/AbeilleDoc/tree/master/source/docProduits/';
     
+    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+
     // Recupere les info.
     foreach ( glob( '/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file ) {
         
@@ -80,8 +80,8 @@
         $name = basename($file, ".json");
         $contentJSON = file_get_contents( $file );
         $content = JSON_decode( $contentJSON, true );
-        $url = $baseUrlDoc . $name .'/doc/';
-        $resultIcone[] = array( 'nameZigbee'=>'<a href="'.$url.'">'.$name.'</a>', 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
+
+        $resultIcone[] = array( 'nameZigbee'=>'<a href="'.urlProducts.'/'.$name.'">'.$name.'</a>', 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
 
         // Collect all information related to Command used by the products 
         foreach ( $content[$name]['Commandes'] as $include ) {

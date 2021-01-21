@@ -1,5 +1,7 @@
 <label style="margin-right : 20px">Scenes</label>
-<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/Scenes.html"><i class="fas fa-book"></i>Documentation</a>
+<?php
+echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Scenes.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
+?>
 <br/>
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
@@ -15,7 +17,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			
+
 				<?php
 					$abeille = new Abeille();
 					$commandIEEE = new AbeilleCmd();
@@ -41,7 +43,7 @@
 							$sceneTele = $eqLogic->getConfiguration('Scene');
 							$print = 1;
 						}
-						
+
 						if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$sceneTele.'</td><td align="center" class="one">'.$sceneMember.'</td></tr>';
 					}
 				?>
@@ -49,7 +51,7 @@
             </tbody>
         </table>
     </div>
-	
+
     <div id="rightMargin" style="float: left; width:2%;">.
 	</div>
 	<div id="rightThing" style="float: left; width:40%;">

@@ -1,11 +1,13 @@
 </br>
 <legend><i class="fas fa-cogs"></i> {{Remplacement d equipements }}</legend>
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
-	
+
 	<br/>
 	<label style="margin-right : 20px">Remplacement d equipement</label>
-	<a class="btn btn-primary btn-xs" target="_blank" href="http://kiwihc16.free.fr/"><i class="fas fa-book"></i>Documentation</a>
-	
+	<?php
+	// TODO: Full URL to point on eq replacement chapter
+	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'"><i class="fas fa-book"></i>{{Documentation}}</a>';
+	?>
 	<form action="/plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 		<br/>
 		Ghost / Equipement Cassé:
@@ -42,6 +44,6 @@
 		</br><br/>
 	</form>
 
-</div>	
+</div>
 
 

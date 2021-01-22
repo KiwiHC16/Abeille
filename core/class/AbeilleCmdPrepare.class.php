@@ -481,9 +481,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $valuePrepared = $parameters['value'];
 
                     // Example: set Temperature Danfoss Radiator Head
-                    if ( $parameters['attributeType'] = '29' )  $valuePrepared = sprintf( "%04X", $parameters['value']*100 );
-
-                    $valuePrepared = 'D107';
+                    if ( $parameters['attributeType'] = '29' )  {
+                        $valuePrepared = sprintf( "%04X", $parameters['value']*100 );
+                        $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1] ;
+                    }
 
                     $Command = array(
                                         "WriteAttributeRequestGeneric" => "1",

@@ -1,0 +1,24 @@
+{
+  "danfossTemperatureConsigneSet": {
+    "isVisible": 1,
+    "name": "Set Consigne",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "generic_type": "",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "5c07c7632543sfggjgqxe4",
+      "topic": "WriteAttributeRequestGeneric",
+      "request": "EP=01&Proprio=&clusterId=0201&attributeId=0012&attributeType=29&value=#slider#",
+      "minValue": "5",
+      "maxValue": "30",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

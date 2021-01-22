@@ -103,9 +103,21 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
     }
 
-    function setParam2($dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Param, $dataType, $proprio) {
+    /**
+     * setParam2: send the commande to zigate to send a write attribute on zigbee network
+     * 
+     * @param dest
+     * @param address
+     * @param clusterId
+     * @param attributeId
+     * @param destinationEndPoint
+     * @param Param
+     * @param dataType
+     *
+     * @return none
+     */
+    function setParam2( $dest, $address, $clusterId, $attributeId, $destinationEndPoint, $Param, $dataType) {
         $this->deamonlog('debug', "  command setParam2");
-        // Msg Type = 0x0530
 
         $priority = $Command['priority'];
 
@@ -133,34 +145,30 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // <destination endpoint (value ignored for group address): uint8_t>    -> 1
         // => 34 -> 0x22
 
-        $addressMode = "02";
-        $targetShortAddress = $address;
-        $sourceEndpoint = "01";
-        $destinationEndpoint = $destinationEndPoint; // "01";
-        $profileID = "0104"; // "0000";
-        $clusterID = $clusterId; // "0021";
-        $securityMode = "02"; // ???
-        $radius = "30";
-        // $dataLength = "16";
+        $addressMode            = "02";
+        $targetShortAddress     = $address;
+        $sourceEndpoint         = "01";
+        $destinationEndpoint    = $destinationEndPoint;
+        $profileID              = "0104";
+        $clusterID              = $clusterId;
+        $securityMode           = "02"; // ???
+        $radius                 = "30";
+        // $dataLength <- calculated later
 
-        $frameControl = "00";
+        $frameControl               = "00";
         $transqactionSequenceNumber = "1A"; // to be reviewed
-        $commandWriteAttribute = "02";
+        $commandWriteAttribute      = "02";
 
         $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
-        // $dataType = "42"; // string
-        // $Param = "53616C6F6E31202020202020202020";
-        // $Param = "Salon2         ";
+
         $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
         $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
-        // $attributValue = $Param; // "53616C6F6E31202020202020202020"; //$Param;
 
         $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
 
-        // $dataLength = "16";
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-        $this->deamonlog('debug', "data2: ".$data2 );
-        $this->deamonlog('debug', "length data2: ".$dataLength );
+        // $this->deamonlog('debug', "data2: ".$data2 );
+        // $this->deamonlog('debug', "length data2: ".$dataLength );
 
         $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
@@ -173,9 +181,15 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
     }
 
+    /**
+     * setParam3: send the commande to zigate to send a write attribute on zigbee network with a proprio field
+     * 
+     * @param dest
+     * @param Command with following info: Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
+     * 
+     * @return none
+     */
     function setParam3($dest,$Command) {
-        // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
-
         $this->deamonlog('debug', "command setParam3");
 
         $priority = $Command['priority'];
@@ -205,28 +219,28 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // <destination endpoint (value ignored for group address): uint8_t>    -> 1
         // => 34 -> 0x22
 
-        $addressMode = "02";
+        $addressMode        = "02";
         $targetShortAddress = $Command['address'];
-        $sourceEndpoint = "01";
+        $sourceEndpoint     = "01";
 
         if ( isset($Command['destinationEndpoint']) ) {
-                if ( $Command['destinationEndpoint']>1 ) {
-            $destinationEndpoint = $Command['destinationEndpoint'];
+            if ( $Command['destinationEndpoint']>1 ) {
+                $destinationEndpoint = $Command['destinationEndpoint'];
+            }
+            else {
+                $destinationEndpoint = "01";
+            }
         }
         else {
             $destinationEndpoint = "01";
-        } // $destinationEndPoint; // "01";
-        }
-            else {
-            $destinationEndpoint = "01";
         }
 
-        $profileID = "0104";
-        $clusterID = $Command['clusterId'];
+        $profileID      = "0104";
+        $clusterID      = $Command['clusterId'];
 
-        $securityMode = "02"; // ???
-        $radius = "30";
-        // $dataLength = define later
+        $securityMode   = "02"; // ???
+        $radius         = "30";
+        // $dataLength <- define later
 
         $frameControlAPS = "40";   // APS Control Field
         // If Ack Request 0x40 If no Ack then 0x00
@@ -240,20 +254,14 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $Proprio = $Command['Proprio'][2].$Command['Proprio'][3].$Command['Proprio'][0].$Command['Proprio'][1];
 
         $transqactionSequenceNumber = "1A"; // to be reviewed
-        $commandWriteAttribute = "02";
+        $commandWriteAttribute      = "02";
 
-        // $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
         $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
 
-        // $dataType = "42"; // string
         $dataType = $Command['attributeType'];
 
-        // $Param = $Command['value'];
-        // $lengthAttribut = sprintf("%02s",dechex(strlen( $Param )));
-        // $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
         $attributValue = $Command['value'];
 
-        // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $lengthAttribut . $attributValue;
         $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
@@ -272,8 +280,15 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
     }
 
-    // Needed for fc01 of Legrand Dimmer
-    // clusterId=fc01&attributeId=0000&attributeType=09&value=0101
+    /**
+     * setParam4: send the commande to zigate to send a write attribute on zigbee network with a proprio field
+     *  Needed for fc01 of Legrand Dimmer
+     * 
+     * @param dest
+     * @param Command with following info: clusterId=fc01&attributeId=0000&attributeType=09&value=0101
+     * 
+     * @return none
+     */
     function setParam4($dest,$Command) {
 
         $this->deamonlog('debug', "command setParam4");
@@ -305,41 +320,37 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // <destination endpoint (value ignored for group address): uint8_t>    -> 1
         // => 34 -> 0x22
 
-        $addressMode = "02";
+        $addressMode        = "02";
         $targetShortAddress = $Command['address'];
-        $sourceEndpoint = "01";
+        $sourceEndpoint     = "01";
         if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
 
-        $profileID = "0104";
-        $clusterID = $Command['clusterId'];
+        $profileID          = "0104";
+        $clusterID          = $Command['clusterId'];
 
-        $securityMode = "02"; // ???
-        $radius = "30";
-        // $dataLength = define later
+        $securityMode       = "02"; // ???
+        $radius             = "30";
+        // $dataLength <- calculated later
 
-        $frameControlAPS = "40";   // APS Control Field
-        // If Ack Request 0x40 If no Ack then 0x00
-        // Avec 0x40 j'ai un default response
+        $frameControlAPS    = "40";   // APS Control Field - If Ack Request 0x40 If no Ack then 0x00 - Avec 0x40 j'ai un default response
 
-        $frameControlZCL = "10";   // ZCL Control Field
-        // Disable Default Response + Not Manufacturer Specific
+        $frameControlZCL    = "10";   // ZCL Control Field - Disable Default Response + Not Manufacturer Specific
 
-        $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+        $frameControl       = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
         $transqactionSequenceNumber = "1A"; // to be reviewed
-        $commandWriteAttribute = "02";
+        $commandWriteAttribute      = "02";
 
-        $attributeId = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+        $attributeId        = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
 
-        $dataType = $Command['attributeType'];
-        $attributValue = $Command['value'];
+        $dataType           = $Command['attributeType'];
+        $attributValue      = $Command['value'];
 
-        // $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
         $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-        $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
+        // $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
 
         $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 

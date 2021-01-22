@@ -438,28 +438,22 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+                    
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                     $consigne = sprintf( "%04X", $parameters['value']*100 );
                     $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
 
                     $Command = array(
-                                     "WriteAttributeRequest" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     // "Proprio" => $keywords[1],
-                                     "Proprio" => $parameters['Proprio'],
-                                     // "clusterId" => $keywords[3],
-                                     "clusterId" => $parameters['clusterId'],
-                                     // "attributeId" => $keywords[5],
-                                     "attributeId" => $parameters['attributeId'],
-                                     // "attributeType" => $keywords[7],
-                                     "attributeType" => $parameters['attributeType'],
-                                     // "value" => $keywords[9],
-                                     "value" => $consigneHex,
-                                     // "repeat" => $parameters['repeat'],
+                                     "WriteAttributeRequest"    => "1",
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
+                                     "address"                  => $address,
+                                     "Proprio"                  => $parameters['Proprio'],
+                                     "clusterId"                => $parameters['clusterId'],
+                                     "attributeId"              => $parameters['attributeId'],
+                                     "attributeType"            => $parameters['attributeType'],
+                                     "value"                    => $consigneHex,
 
                                      );
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');

@@ -12,12 +12,49 @@
 
 Démons:
 <?php
-    if (Abeille::deamon_info()['state'] == 'ok') {
-        echo "<span class=\"label label-success\" style=\"font-size:1em;\">OK</span>";
-    } else {
-        echo "<span class=\"label label-danger\" style=\"font-size:1em;\">NOK</span>";
-        echo "  Attention ! Un ou plusieurs démons ne tournent pas.";
+    /* Log function for debug purposes */
+    function logToFile($msg = "")
+    {
+        $logFile = 'AbeilleDebug.log';
+        $logDir = __DIR__.'/../../../../log/';
+        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
     }
+
+    function displayDaemonStatus($diff, $name, &$oneMissing) {
+        $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
+        if ($diff[$nameLow] == 1)
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">'.$name.'</span>';
+        else {
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">'.$name.'</span>';
+            $oneMissing = TRUE;
+        }
+    }
+
+    $parameters = AbeilleTools::getParameters();
+// logToFile("parameters=".json_encode($parameters));
+    $running = AbeilleTools::getRunningDaemons();
+    $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
+// logToFile("diff=".json_encode($diff));
+    $oneMissing = FALSE;
+    displayDaemonStatus($diff, "Cmd", $oneMissing);
+    displayDaemonStatus($diff, "Parser", $oneMissing);
+    $nbOfZigates = $parameters['zigateNb'];
+    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+        if ($parameters['AbeilleActiver'.$zgNb] != "Y")
+            continue; // Zigate disabled
+        displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
+        if ($parameters['AbeilleType'.$zgNb] == "WIFI")
+            displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
+    }
+    if ($oneMissing)
+        echo " Attention ! Un ou plusieurs démons ne tournent pas.";
+
+    // if (Abeille::deamon_info()['state'] == 'ok') {
+    //     echo "<span class=\"label label-success\" style=\"font-size:1em;\">OK</span>";
+    // } else {
+    //     echo "<span class=\"label label-danger\" style=\"font-size:1em;\">NOK</span>";
+    //     echo "  Attention ! Un ou plusieurs démons ne tournent pas.";
+    // }
 ?>
 
 <table class="table table-condensed tablesorter" id="table_healthAbeille">

@@ -262,7 +262,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         $attributValue = $Command['value'];
 
-        $data2 = $frameControl . $Proprio. $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+        $data2 = $frameControl . $Proprio . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
@@ -281,8 +281,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
     }
 
     /**
-     * setParam4: send the commande to zigate to send a write attribute on zigbee network with a proprio field
-     *  Needed for fc01 of Legrand Dimmer
+     * setParam4: send the commande to zigate to send a write attribute on zigbee network without a proprio field
      * 
      * @param dest
      * @param Command with following info: clusterId=fc01&attributeId=0000&attributeType=09&value=0101
@@ -347,6 +346,97 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $attributValue      = $Command['value'];
 
         $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
+
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+        // $this->deamonlog('debug', "data2: ".$data2 . " length data2: ".$dataLength );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug', "data: ".$data );
+        // $this->deamonlog('debug', "lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
+    /**
+     * setParamGeneric: send the commande to zigate to send a write attribute on zigbee network 
+     * This setParam try to be generic because there are too many setParam function above
+     * Target: On long term would replace all of them.
+     * 
+     * @param dest
+     * @param Command with following info: clusterId=fc01&attributeId=0000&attributeType=09&value=0101
+     * 
+     * @return none
+     */
+    function setParamGeneric($dest,$Command) {
+
+        $this->deamonlog('debug', "command setParam4");
+
+        $priority = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+        // <data: auint8_t>
+        // APS Part <= data
+        // dummy 00 to align mesages                                            -> 1
+        // <target extended address: uint64_t>                                  -> 8
+        // <target endpoint: uint8_t>                                           -> 1
+        // <cluster ID: uint16_t>                                               -> 2
+        // <destination address mode: uint8_t>                                  -> 1
+        // <destination address:uint16_t or uint64_t>                           -> 8
+        // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+        // => 34 -> 0x22
+
+        $addressMode        = "02";
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint     = "01";
+        if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+        $profileID          = "0104";
+        $clusterID          = $Command['clusterId'];
+
+        $securityMode       = "02"; // ???
+        $radius             = "30";
+        // $dataLength <- calculated later
+
+        $frameControlAPS    = "40";   // APS Control Field - If Ack Request 0x40 If no Ack then 0x00 - Avec 0x40 j'ai un default response
+
+        if ($Command['Proprio'] == '' ) {
+            $frameControlZCL    = "10";   // ZCL Control Field - Disable Default Response + Not Manufacturer Specific
+        }
+        else {
+            $frameControlZCL    = "14";   // ZCL Control Field - Disable Default Response + Manufacturer Specific
+        }
+        $Proprio = $Command['Proprio'];
+        
+        $frameControl       = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
+
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute      = "02";
+
+        $attributeId        = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+
+        $dataType           = $Command['attributeType'];
+        $attributValue      = $Command['value'];
+
+        $data2 = $frameControl . $Proprio . $transqactionSequenceNumber . $commandWriteAttribute . $attributeId . $dataType . $attributValue;
 
         $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
@@ -1948,6 +2038,12 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if ( (isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']) )
         {
             $this->setParam3( $dest, $Command );
+        }
+
+        // WriteAttributeRequest ------------------------------------------------------------------------------------
+        if ( (isset($Command['WriteAttributeRequestGeneric'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['attributeType']) && isset($Command['value']) )
+        {
+            $this->setParamGeneric( $dest, $Command );
         }
 
         // WriteAttributeRequestVibration ------------------------------------------------------------------------------------

@@ -469,6 +469,37 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
+                case "WriteAttributeRequestGeneric":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+
+                    $this->deamonlog('debug', ' Msg Received: '.$msg);
+
+                    // Par defaut
+                    $valuePrepared = $parameters['value'];
+
+                    // Example: set Temperature Danfoss Radiator Head
+                    if ( $parameters['attributeType'] = '29' )  $valuePrepared = sprintf( "%04X", $parameters['value']*100 );
+
+                    $valuePrepared = 'D107';
+
+                    $Command = array(
+                                        "WriteAttributeRequestGeneric" => "1",
+                                        "priority"         => $priority,
+                                        "dest"             => $dest,
+                                        "address"          => $address,
+                                        "EP"               => $parameters['EP'],
+                                        "Proprio"          => $parameters['Proprio'],
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $valuePrepared,
+                                        );
+                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
+                    break;
+                    //----------------------------------------------------------------------------
                 case "WriteAttributeRequestActivateDimmer":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {

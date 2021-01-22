@@ -330,16 +330,16 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     }
 
                     $Command = array(
-                        "OnOffTimed"           => "1",
-                        "addressMode"          => "01",
-                        "priority"             => $priority,
-                        "dest"                 => $dest,
-                        "address"              => $address,
-                        "destinationEndpoint"  => "01", // Set but not send on radio
-                        "action"               => $actionId,
-                        "onTime"               => $parameters['onTime'],
-                        "offWaitTime"          => $parameters['offWaitTime'],
-                    );
+                                    "OnOffTimed"           => "1",
+                                    "addressMode"          => "01",
+                                    "priority"             => $priority,
+                                    "dest"                 => $dest,
+                                    "address"              => $address,
+                                    "destinationEndpoint"  => "01", // Set but not send on radio
+                                    "action"               => $actionId,
+                                    "onTime"               => $parameters['onTime'],
+                                    "offWaitTime"          => $parameters['offWaitTime'],
+                                );
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequest":
@@ -347,26 +347,22 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                     // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                     $Command = array(
-                        "WriteAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        // "Proprio" => $keywords[1],
-                        "Proprio" => $parameters['Proprio'],
-                        // "clusterId" => $keywords[3],
-                        "clusterId" => $parameters['clusterId'],
-                        // "attributeId" => $keywords[5],
-                        "attributeId" => $parameters['attributeId'],
-                        // "attributeType" => $keywords[7],
-                        "attributeType" => $parameters['attributeType'],
-                        // "value" => $keywords[9],
-                        "value" => $parameters['value'],
-                    );
+                                    "WriteAttributeRequest" => "1",
+                                    "priority"          => $priority,
+                                    "dest"              => $dest,
+                                    "address"           => $address,
+
+                                    "Proprio"           => $parameters['Proprio'],
+                                    "clusterId"         => $parameters['clusterId'],
+                                    "attributeId"       => $parameters['attributeId'],
+                                    "attributeType"     => $parameters['attributeType'],
+                                    "value"             => $parameters['value'],
+                                );
                     $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
@@ -375,26 +371,21 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
-                    // Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=03010000&repeat=1
                     $Command = array(
                                      "WriteAttributeRequestVibration" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     // "Proprio" => $keywords[1],
-                                     "Proprio" => $parameters['Proprio'],
-                                     // "clusterId" => $keywords[3],
-                                     "clusterId" => $parameters['clusterId'],
-                                     // "attributeId" => $keywords[5],
-                                     "attributeId" => $parameters['attributeId'],
-                                     // "attributeType" => $keywords[7],
-                                     "attributeType" => $parameters['attributeType'],
-                                     // "value" => $keywords[9],
-                                     "value" => $parameters['value'],
-                                     "repeat" => $parameters['repeat'],
+                                     "priority"         => $priority,
+                                     "dest"             => $dest,
+                                     "address"          => $address,
+
+                                     "Proprio"          => $parameters['Proprio'],
+                                     "clusterId"        => $parameters['clusterId'],
+                                     "attributeId"      => $parameters['attributeId'],
+                                     "attributeType"    => $parameters['attributeType'],
+                                     "value"            => $parameters['value'],
+                                     "repeat"           => $parameters['repeat'],
 
                                      );
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
@@ -405,30 +396,23 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
-                    // $consigne = sprintf( "%06X", $parameters['value'] );
                     $consigne = $parameters['value'];
                     $consigneHex = $consigne[4].$consigne[5].$consigne[2].$consigne[3].$consigne[0].$consigne[1];
 
                     $Command = array(
                                      "WriteAttributeRequest" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     // "Proprio" => $keywords[1],
-                                     "Proprio" => $parameters['Proprio'],
-                                     // "clusterId" => $keywords[3],
-                                     "clusterId" => $parameters['clusterId'],
-                                     // "attributeId" => $keywords[5],
-                                     "attributeId" => $parameters['attributeId'],
-                                     // "attributeType" => $keywords[7],
-                                     "attributeType" => $parameters['attributeType'],
-                                     // "value" => $keywords[9],
-                                     "value" => $consigneHex,
-                                     // "repeat" => $parameters['repeat'],
+                                     "priority"         => $priority,
+                                     "dest"             => $dest,
+                                     "address"          => $address,
 
+                                     "Proprio"          => $parameters['Proprio'],
+                                     "clusterId"        => $parameters['clusterId'],
+                                     "attributeId"      => $parameters['attributeId'],
+                                     "attributeType"    => $parameters['attributeType'],
+                                     "value"            => $consigneHex,
                                      );
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
@@ -438,7 +422,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    
+
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                     $consigne = sprintf( "%04X", $parameters['value']*100 );
@@ -461,33 +445,26 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestValveSpiritConsigne":
                 case "WriteAttributeRequestTrvSpiritMode":
-                $fields = preg_split("/[=&]+/", $msg);
+                    $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+
                     $this->deamonlog('debug', '  Msg Received: '.$msg);
 
                     $consigne = sprintf( "%02X", $parameters['value'] );
-                    $consigneHex = $consigne; // $consigne[2].$consigne[3].$consigne[0].$consigne[1];
+                    $consigneHex = $consigne;
 
                     $Command = array(
                                      "WriteAttributeRequest" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     // "Proprio" => $keywords[1],
-                                     "Proprio" => $parameters['Proprio'],
-                                     // "clusterId" => $keywords[3],
-                                     "clusterId" => $parameters['clusterId'],
-                                     // "attributeId" => $keywords[5],
-                                     "attributeId" => $parameters['attributeId'],
-                                     // "attributeType" => $keywords[7],
-                                     "attributeType" => $parameters['attributeType'],
-                                     // "value" => $keywords[9],
-                                     "value" => $consigneHex,
-                                     // "repeat" => $parameters['repeat'],
-
+                                     "priority"         => $priority,
+                                     "dest"             => $dest,
+                                     "address"          => $address,
+                                     "Proprio"          => $parameters['Proprio'],
+                                     "clusterId"        => $parameters['clusterId'],
+                                     "attributeId"      => $parameters['attributeId'],
+                                     "attributeType"    => $parameters['attributeType'],
+                                     "value"            => $consigneHex,
                                      );
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
@@ -497,22 +474,18 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    // $keywords = preg_split("/[=&]+/", $msg);
+
                     $this->deamonlog('debug', ' Msg Received: '.$msg);
 
                     $Command = array(
                                      "WriteAttributeRequestActivateDimmer" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     // "Proprio" => $keywords[1],
-                                     "clusterId" => $parameters['clusterId'],
-                                     // "attributeId" => $keywords[5],
-                                     "attributeId" => $parameters['attributeId'],
-                                     // "attributeType" => $keywords[7],
-                                     "attributeType" => $parameters['attributeType'],
-                                     // "value" => $keywords[9],
-                                     "value" => $parameters['value'],
+                                     "priority"         => $priority,
+                                     "dest"             => $dest,
+                                     "address"          => $address,
+                                     "clusterId"        => $parameters['clusterId'],
+                                     "attributeId"      => $parameters['attributeId'],
+                                     "attributeType"    => $parameters['attributeType'],
+                                     "value"            => $parameters['value'],
                                      );
                     $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
@@ -566,15 +539,15 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                         $Command = array(
-                            "setLevel"             => "1",
-                            "addressMode"          => "02",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address"              => $address,
-                            "destinationEndpoint"  => $parameters['EP'],
-                            "Level"                => intval($parameters['Level'] * 255 / 100),
-                            "duration"             => $parameters['duration'],
-                        );
+                                        "setLevel"             => "1",
+                                        "addressMode"          => "02",
+                                        "priority" => $priority,
+                                        "dest" => $dest,
+                                        "address"              => $address,
+                                        "destinationEndpoint"  => $parameters['EP'],
+                                        "Level"                => intval($parameters['Level'] * 255 / 100),
+                                        "duration"             => $parameters['duration'],
+                                    );
                     }
                     break;
                     //----------------------------------------------------------------------------

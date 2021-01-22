@@ -743,12 +743,12 @@ class Abeille extends eqLogic
             }
             if ($version == '031D') {
                 log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in hybrid mode ********');
-                message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
+                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "hybride");
             }
             else {
                 log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in normal mode ********');
-                message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
+                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "normal");
             }
 

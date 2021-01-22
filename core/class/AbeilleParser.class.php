@@ -793,9 +793,11 @@
 
             if ($PacketType == "0002") {
                 if ( $status == "00" ) {
-                    message::add("Abeille", "Le mode de fonctionnement de la zigate a bien été modifié.","" );
+                    parserLog("debug","Le mode de fonctionnement de la zigate a bien été modifié.");
+                    // message::add("Abeille", "Le mode de fonctionnement de la zigate a bien été modifié.","" );
                 }
                 else {
+                    parserLog("debug","Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.");
                     message::add("Abeille", "Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
                 }
             }

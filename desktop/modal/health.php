@@ -1,6 +1,6 @@
 <?php
-    require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/AbeilleTools.php');
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');

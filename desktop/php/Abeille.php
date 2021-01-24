@@ -5,6 +5,14 @@
         }
     }
 
+    /* Log function for debug purposes */
+    function logToFile($msg = "")
+    {
+        $logFile = 'AbeilleDebug.log';
+        $logDir = __DIR__.'/../../../../log/';
+        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
+    }
+
     /* Developers debug features & PHP errors */
     $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
@@ -30,6 +38,26 @@
 
     sendVarToJS('eqType', 'Abeille');
     $eqLogics = eqLogic::byType('Abeille');
+    /* Creating a per Zigate list of eq ids.
+       For each zigate, the first eq is the zigate.
+       $eqPerZigate[zgNb][0] => id for zigate
+       $eqPerZigate[zgNb][1] => id for next eq... */
+    $eqPerZigate = array(); // All equipements id per zigate
+    foreach ($eqLogics as $eqLogic) {
+        $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
+        list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
+        $zgNb = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
+        $eqId = $eqLogic->getId();
+        if (($eqAddr == "0000") || ($eqAddr == "Ruche")) {
+            if (isset($eqPerZigate[$zgNb]))
+                array_unshift($eqPerZigate[$zgNb], $eqId);
+            else
+                $eqPerZigate[$zgNb][] = $eqId;
+        } else
+            $eqPerZigate[$zgNb][] = $eqId;
+    }
+    if (isset($dbgConfig))
+        logToFile("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
     $parametersAbeille = AbeilleTools::getParameters();
 
@@ -51,17 +79,17 @@
 <div>
 	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
-    <!-- Barre d outils horizontale  -->
+        <!-- Barre d outils horizontale  -->
 		<div class="col-xs-12 eqLogicThumbnailDisplay">
 
         <!-- Icones de toutes les modales  -->
         <?php include '010_AbeilleGestionPart.php'; ?>
 
-            <!-- Icones de toutes les abeilles  -->
-            <?php include '020_AbeilleMesAbeillesPart.php'; ?>
+        <!-- Icones de toutes les abeilles  -->
+        <?php include '020_AbeilleMesAbeillesPart.php'; ?>
 
-            <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
-			<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
+        <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+        <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
             <!-- Gestion des groupes et des scenes  -->
             <?php include '030_AbeilleGroupPart.php'; ?>
@@ -69,7 +97,7 @@
             <!-- Gestion des groupes et des scenes  -->
             <?php include '040_AbeilleScenePart.php'; ?>
 
-			</div>
+        </div>
 
         <!-- Gestion des ghosts / remplacement d equipements  -->
         <?php include '050_AbeilleRemplacementPart.php'; ?>

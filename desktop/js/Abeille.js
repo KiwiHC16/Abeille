@@ -270,9 +270,9 @@ function getSelectedEqs(zgNb) {
     selected["zgNb"] = zgNb; // Zigate number
     selected["nb"] = 0; // Number of selected equipments
     selected["ids"] = new Array; // Array of eq IDs
-    eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq for current zigate
+    eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq IDs for current zigate
     for (var i = 0; i < eqZigate.length; i++) {
-        var eqId = eqZigate[i].id;
+        var eqId = eqZigate[i];
         var checked = document.getElementById("idBeeChecked"+zgNb+"-"+eqId).checked;
         if (checked == false)
             continue;

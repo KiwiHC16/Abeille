@@ -222,7 +222,7 @@
                         </a>
                         <?php
                             echo '<select id="idFW'.$i.'" style="width:55px" title="{{Firmwares disponibles}}">';
-                            foreach (ls('/var/www/html/plugins/Abeille/Zigate_Module/', '*.bin') as $fwName) {
+                            foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                                 $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
                                 if (substr($fwVers, -4) == ".dev") {
                                     /* FW for developer mode only */
@@ -240,7 +240,6 @@
                         </select>
                         <?php
                             echo '<a id="idUpdateFW'.$i.'" class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
-                            // echo '<a id="idResetE2P'.$i.'" class="btn btn-warning ml4px" onclick="resetE2P('.$i.')" title="{{Effacement de l\'EEPROM}}"><i class="fas fa-sync"></i> {{Effacer E2P}}</a>';
                         ?>
                     </div>
                 </div>

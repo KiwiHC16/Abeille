@@ -13,13 +13,14 @@
 <table id="table_cmd" class="table table-bordered table-condensed">
     <thead>
     <tr>
-        <th style="width: 50px;">#</th>
-        <th style="width: 300px;">{{Nom}}</th>
+        <th style="width:  80px;">{{#}}</th>
+        <th style="width: 150px;">{{Nom}}</th>
         <th style="width: 120px;">{{Sous-Type}}</th>
-        <th style="width: 400px;">{{Topic}}</th>
+        <th style="width: 300px;">{{Topic}}</th>
         <th style="width: 600px;">{{Payload}}</th>
+        <th style="width: 150px;">{{Unité/Cron}}</th>
         <th style="width: 150px;">{{Paramètres}}</th>
-        <th style="width: 80px;"></th>
+        <th style="width: 80px;">{{Détails}}</th>
     </tr>
     </thead>
     <tbody>

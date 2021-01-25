@@ -1,10 +1,8 @@
-# Abeille
-
-## Firmware Changelog
+# Zigate firmware change log
 
 https://zigate.fr/2020/09/01/note-dinformation-septembre-2020/
 
-### Version 3.1d
+## Version 3.1d
 
 * Add 0x8002 command (raw command) when cluster or attribute is unknown. https://github.com/fairecasoimeme/ZiGate/pull/287 / https://github.com/fairecasoimeme/ZiGate/pull/314
 * Add PDMonHost commands for future implementation https://github.com/fairecasoimeme/ZiGate/pull/281
@@ -30,9 +28,7 @@ https://zigate.fr/2020/09/01/note-dinformation-septembre-2020/
 * Change MAX_PACKET_SIZE ( for PDMonHost implementation)
 * Fix some other bugs
 
-
-
-### Version 3.1b
+## Version 3.1b
 
 Add E_SL_MSG_APS_DATA_ACK (0x8011 command) to catch ack and nack when there are lost messages or not https://github.com/fairecasoimeme/ZiGate/issues/239
 Add ZPS_eAplAfUnicastAckDataReq to the 0x0110 command instead of ZPS_eAplAfUnicastDataReq https://github.com/fairecasoimeme/ZiGate/issues/106
@@ -46,7 +42,7 @@ Fix issue to use string data type for write attribute command (0x110) https://gi
 Fix dupplicate « Device announce »
 Remove #define ZED_TIMEOUT_INDEX_DEFAULT to ZED_TIMEOUT_256_MIN value.
 
-### Version 3.1a
+## Version 3.1a
 Add Raw Mode, command 0x0002 (zigpy ) https://github.com/fairecasoimeme/ZiGate/issues/129 + https://github.com/fairecasoimeme/ZiGate/issues/153
 Add PDM migration for version changing
 Add support of cluster IAS_WD (0x0502). To manage alarm siren
@@ -74,7 +70,7 @@ Remove Multistate_Input_Basic server
 Remove Analog Input basic server
 Remove double case and tidying code ZPS_ZDP_MGMT_LEAVE_RSP_CLUSTER_ID was checked twice.
 
-### Version 3.0d
+## Version 3.0d
 Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
 
 Fix max number group table to 5. https://github.com/KiwiHC16/Abeille/issues/80
@@ -82,20 +78,20 @@ Fix wrong output cluster count and attributes. https://github.com/fairecasoimeme
 Add Short Address to 0x8062 / Get Group. https://github.com/fairecasoimeme/ZiGate/issues/19
 Add new command 0x0009 / 0x8009 –> NetworkState. Give network State. https://github.com/fairecasoimeme/ZiGate/issues/15
 
-### Version 3.0c
+## Version 3.0c
 Fix Attributes Data conversion uint32. Real and true value from consumption data device
 Fix Get Xiaomi private data from cluster 0x0000 attributes 0xFF01 with specific manufacturer 0x115F
 
-### Version 3.0b
+## Version 3.0b
 Up to 80 devices. 50 ZiGate’s children and 30 others devices linked to routers
 Add new command. 0x015 (Get Devices List) and 0x8015 for the response. More details on https://zigate.fr/wiki/commandes-zigate/
 Fix other minor bugs and enhancements
 
-### Version 3.0a
+## Version 3.0a
 Change max number controled devices to 60
 Fix some bugs
 
-### Version 3.0
+## Version 3.0
 Add Orvibo ZigBee material compatibility (Device 0x0A)
 Add Pressure measurement management (Xiaomi aqara)
 Add Analog input basic cluster management (Xiaomi aqara)
@@ -108,5 +104,5 @@ Fix multi-endpoint device compatibility (For example Cube magic Xiaomi)
 Fix private cluster management
 Fix some bugs and add debugs
 
-### Initial Version
+## Initial Version
 JN-AN-1216-Zigbee-3-0-IoT-ControlBridge

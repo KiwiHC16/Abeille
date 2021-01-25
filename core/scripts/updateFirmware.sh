@@ -7,7 +7,7 @@ NOW=`date +"%Y-%m-%d %H:%M:%S"`
 echo "[${NOW}] Démarrage de '$(basename $0)' $@"
 
 PROG=/var/www/html/plugins/Abeille/Zigate_Module/JennicModuleProgrammerRPI3
-FW_DIR=/var/www/html/plugins/Abeille/Zigate_Module
+FW_DIR=/var/www/html/plugins/Abeille/resources/fw_zigate
 
 # Qq tests preliminaires
 echo "Vérifications préliminaires"

@@ -1118,6 +1118,31 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                     break;
                     //----------------------------------------------------------------------------
+                case "setReportRaw":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+
+                    $Command = array(
+                                     "setReportRaw"             => "1",
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
+                                     "address"                  => $address,
+                                     "targetEndpoint"           => $parameters['targetEndpoint'],
+                                     "ClusterId"                => $parameters['ClusterId'],
+                                     "AttributeId"              => $parameters['AttributeId'],
+                                     );
+                    if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
+
+                    if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
+                    if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
+                    if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
+                    if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
+
+                    if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
+                    break;
+                    //----------------------------------------------------------------------------
                 case "WindowsCovering":
                     $fields = preg_split("/[=&]+/", $msg);
                       if (count($fields) > 1) {

@@ -1261,11 +1261,71 @@ class AbeilleCmdProcess extends AbeilleDebug {
             
             $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
 
-            //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
-            // $lenth = "0017";
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->deamonlog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
+
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+        }
+
+        // setReportRaw
+        // Title => setReportRaw
+        // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
+        // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
+        if ( isset($Command['setReportRaw']) ) {
+            $this->deamonlog('debug', " command setReportRaw");
+
+            $cmd = "0530";
+
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1
+            //                                                                                12 -> 0x0C
+            // <data: auint8_t>
+            // ZCL Control Field
+            // ZCL SQN
+            // Commad Id
+            // ....
+
+            $addressMode            = "02";
+            $targetShortAddress     = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profileID              = "0104";
+            $clusterID              = "0B04";
+            $securityMode           = "02";
+            $radius                 = "1E";
+
+            $zclControlField        = "10";
+            $transactionSequence    = "01";
+            $cmdId                  = "06";
+            $directionReport        = "00";
+            $attributeType          = "29";
+            $attribut               = "0B05";
+            $MinInterval            = "0A00";
+            $MaxInterval            =  "1400";
+            $change                 = "0200";
+
+            $data2 = $zclControlField . $transactionSequence . $cmdId . $directionReport . $attribut . $attributeType . $MinInterval . $MaxInterval . $change;
+
+            $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+            $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+            // $this->deamonlog('debug', "  Data: ".$data." len: ".$lenth );
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }

@@ -357,6 +357,18 @@ class Abeille extends eqLogic
     }
 
     /**
+     * cron30
+     * Called by Jeedom every 30 minutes.
+     * pollingCmd
+     *
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function cron30() {
+        // Poll Cmd
+        self::pollingCmd("cron30");
+    }
+
+    /**
      * cron15
      * Called by Jeedom every 15 minutes.
      * Will send a message Annonce to equipement to refresh TimeOut status
@@ -435,6 +447,31 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'cron15:Terminé --------------------------------');
         return;
     }
+
+    /**
+     * cron10
+     * Called by Jeedom every 10 minutes.
+     * pollingCmd
+     *
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function cron10() {
+        // Poll Cmd
+        self::pollingCmd("cron10");
+    }
+
+    /**
+     * cron5
+     * Called by Jeedom every 5 minutes.
+     * pollingCmd
+     *
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function cron5() {
+        // Poll Cmd
+        self::pollingCmd("cron5");
+    }
+
 
     /**
      * cron1

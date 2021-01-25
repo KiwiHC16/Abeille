@@ -5,7 +5,7 @@ include_once __DIR__.'/AbeilleDebug.class.php';
 class AbeilleCmdProcess extends AbeilleDebug {
 
     // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
-    function setParamXiaomi($dest,$Command) {
+    function ReportParamXiaomi($dest,$Command) {
         // Write Attribute request
         // Msg Type = 0x0110
 
@@ -1222,49 +1222,50 @@ class AbeilleCmdProcess extends AbeilleDebug {
             //      Timeout : uint16_t              -> 4
             //      Change : uint8_t                -> 2
 
-            $addressMode            = "02";                     // 01 = short
+            $addressMode            = "02";
             $targetShortAddress     = $Command['address'];
-            // $sourceEndpoint         = "01";
-            if ( isset( $Command['sourceEndpoint'] ) ) {
-                if ( hexdec($Command['sourceEndpoint'])>1 ) {
-                    $sourceEndpoint = $Command['sourceEndpoint'];
+            if ( isset( $Command['sourceEndpoint'] ) ) { $sourceEndpoint = $Command['sourceEndpoint']; } else { $sourceEndpoint = "01"; }
+            if ( isset( $Command['targetEndpoint'] ) ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
+            $ClusterId              = $Command['ClusterId'];
+            $direction              = "00";                     // 
+            $manufacturerSpecific   = "00";                     // 
+            $manufacturerId         = "0000";                   // 
+            $numberOfAttributes     = "01";                     // One element at a time
+
+            if ( isset( $Command['AttributeDirection'] ) ) { $AttributeDirection = $Command['AttributeDirection']; } else { $AttributeDirection = "00"; } // See if below                    
+            
+            $AttributeId            = $Command['AttributeId'];    // "0000"
+
+            if ( $AttributeDirection == "00" ) { 
+                if ( isset($Command['AttributeType']) ) {$AttributeType = $Command['AttributeType']; } 
+                else { 
+                    $this->deamonlog('error', "set Report with an AttributeType not defines for equipment: ". $targetShortAddress . " attribut: " . $AttributeId . " can t process" );
+                    return;
                 }
-                else {
-                    $sourceEndpoint = "01";
-                }
+                if ( isset($Command['MinInterval']) )   { $MinInterval  = $Command['MinInterval']; } else { $MinInterval    = "0000"; }
+                if ( isset($Command['MaxInterval']) )   { $MaxInterval  = $Command['MaxInterval']; } else { $MaxInterval    = "0000"; }
+                if ( isset($Command['Change']) )        { $Change       = $Command['Change']; }      else { $Change         = "00"; }
+                $Timeout = "ABCD"; 
+            }
+            else if ( $AttributeDirection == "01" ) { 
+                $AttributeType          = "12";     // Put crappy info to see if they are passed to zigbee by zigate but it's not.
+                $MinInterval            = "3456";   // Need it to respect cmd 0120 format.
+                $MaxInterval            = "7890";
+                $Change                 = "12";
+                if ( isset($Command['Timeout']) )   { $Timeout      = $Command['Timeout']; }     else { $Timeout        = "0000"; }
             }
             else {
-                $sourceEndpoint = "01";
+                $this->deamonlog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $targetShortAddress . " attribut: " . $AttributeId . " can t process");
+                return;
             }
-            // $targetEndpoint    = "01";
-            if ( hexdec($Command['targetEndpoint'])>1 ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
-            $ClusterId              = $Command['ClusterId'];
-            $direction              = "00";                     // To Server / To Client
-            $manufacturerSpecific   = "00";                     // Tx Server / Rx Client
-            $manufacturerId         = "0000";                   // ?
-            $numberOfAttributes     = "01";                     // One element at a time
-            $AttributeDirection     = "00";                     // ?
-
-            // E_ZCL_BOOL            = 0x10,                                    -> Etat Ampoule Ikea
-            // E_ZCL_UINT8           = 0x20,              // Unsigned 8 bit     -> Level Ampoule Ikea
-            // cf chap 7.1.3 of JN-UG-3113 v1.2
-            $AttributeType          = $Command['AttributeType'];
-
-            $AttributeId            = $Command['AttributeId'];    // "0000"
-            //$AttributeId            = "0000";
-
-            // $MinInterval            = "0000";
-            if ( isset($Command['MinInterval']) ) { $MinInterval = $Command['MinInterval']; } else { $MinInterval = "0000"; }
-            if ( isset($Command['MaxInterval']) ) { $MaxInterval = $Command['MaxInterval']; } else { $MaxInterval = "0000"; }
-            $Timeout                = "0000";
-            $Change                 = "00";
-
-            //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
-            $lenth = "0017";
-
+            
             $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
 
-            // $this->deamonlog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
+            //  2 + 4 + 2 + 2 + 4 + 2 + 2 + 4 + 2    + 2 + 2 + 4 + 4 + 4 + 4 + 2 = 46/2 => 23 => 17
+            // $lenth = "0017";
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $this->deamonlog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change);
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }

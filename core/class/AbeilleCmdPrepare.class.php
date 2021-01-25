@@ -1101,16 +1101,21 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
                     $Command = array(
                                      "setReport"                => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
                                      "address"                  => $address,
                                      "targetEndpoint"           => $parameters['targetEndpoint'],
                                      "ClusterId"                => $parameters['ClusterId'],
-                                     "AttributeType"            => $parameters['AttributeType'],
                                      "AttributeId"              => $parameters['AttributeId'],
-                                     "MinInterval"              => str_pad(dechex($parameters['MinInterval']),4,0,STR_PAD_LEFT),
-                                     "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
                                      );
+                    if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
+
+                    if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
+                    if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
+                    if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
+                    if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
+
+                    if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                     break;
                     //----------------------------------------------------------------------------
                 case "WindowsCovering":

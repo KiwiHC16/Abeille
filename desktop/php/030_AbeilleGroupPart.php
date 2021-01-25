@@ -6,7 +6,6 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 <br/>
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
-
 	<div id="leftMargin" style="float: left; width:2%;">.
 	</div>
 	<div id="leftThing" style="float: left; width:40%;">
@@ -19,37 +18,42 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 				</tr>
 			</thead>
 			<tbody>
-
 				<?php
 					$abeille = new Abeille();
 					$commandIEEE = new AbeilleCmd();
 
-					foreach ($eqLogics as $key => $eqLogic) {
-						$name= "";
-						$groupMember = "";
-						$groupTele = "";
-						$print=0;
+					// foreach ($eqLogics as $key => $eqLogic) {
+					for ($zgNb = 1; $zgNb <= $zigateNb; $zgNb++) {
+						if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+							continue; // This Zigate is disabled
 
-						$abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+						foreach ($eqPerZigate[$zgNb] as $eqId) {
+							$eqLogic = eqLogic::byId($eqId);
+							$name= "";
+							$groupMember = "";
+							$groupTele = "";
+							$print=0;
 
-						$name = $eqLogic->getHumanName(true);
+							$abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
 
-						if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-							if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-								$groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
+							$name = $eqLogic->getHumanName(true);
+
+							if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
+								if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
+									$groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
+									$print = 1;
+								}
+							}
+
+							if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
+								$groupTele = $eqLogic->getConfiguration('Groupe');
 								$print = 1;
 							}
-						}
 
-						if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-							$groupTele = $eqLogic->getConfiguration('Groupe');
-							$print = 1;
-						}
-
-						if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
-					}
+							if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
+						} // For each eqPerZigate[]
+					} // For each active zigate
 				?>
-
 			</tbody>
 		</table>
 	</div>
@@ -81,6 +85,5 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 			</tr>
 		</table>
 	</div>
-
 </div>
 <br/>

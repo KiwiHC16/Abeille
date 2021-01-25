@@ -15,7 +15,7 @@
       "request": "EP=#EP#&clusterId=0B04&attributeId=0508&AttributeType=29",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "10",
-      "Polling": "cron15",
+      "Polling": "cron",
       "PollingOnCmdChange": "0006-01-0000",
       "PollingOnCmdChangeDelay": "3",
       "visibilityCategory": "additionalCommand"

@@ -1308,11 +1308,16 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $transactionSequence    = "01";
             $cmdId                  = "06";
             $directionReport        = "00";
-            $attributeType          = "29";
-            $attribut               = "0B05";
-            $MinInterval            = "0A00";
-            $MaxInterval            =  "1400";
-            $change                 = "0200";
+
+            // $attributeType          = "29";      // Puissance
+            $attributeType          = "21";         // A
+
+            // $attribut               = "0B05";    // Puissance
+            $attribut               = "0805";       // A
+
+            $MinInterval            = "0500";
+            $MaxInterval            = "2C01";
+            $change                 = "0100";
 
             $data2 = $zclControlField . $transactionSequence . $cmdId . $directionReport . $attribut . $attributeType . $MinInterval . $MaxInterval . $change;
 

@@ -1,20 +1,20 @@
 <?php
 
-/* This file is part of Jeedom.
- *
- * Jeedom is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Jeedom is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
- */
+    /* This file is part of Jeedom.
+    *
+    * Jeedom is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Jeedom is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+    */
 
     /* Developers debug features */
     $dbgFile = __DIR__."/../tmp/debug.json";
@@ -188,8 +188,8 @@ function updateConfigDB() {
        - agressifTraitementAnnonce defaulted to 4
        - Rename all eq names that use short addr to use Jeedom ID instead. */
     if (intval($dbVersion) < 20201122) {
-        if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'none', 1 ) == "none" ) {
-            config::save( 'blocageTraitementAnnonce', 'Non', 'Abeille' ) ;
+        if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
+            config::save('blocageTraitementAnnonce', 'Non', 'Abeille') ;
         }
         if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'none', 1 ) == "none" ) {
             config::save( 'blocageRecuperationEquipement', 'Oui', 'Abeille' ) ;

@@ -415,8 +415,19 @@ function addCmdToTable(_cmd) {
 		tr += '<td>';//5
 		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" ' + disabled + ' placeholder="{{Payload}}">';
         tr += '</td>';
-        tr += '<td>';        
-        tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="Polling"  style="width : 90px;" placeholder="{{Cron}}">';
+        tr += '<td>';   
+        // 
+        tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
+        tr += '         <option value="">Aucun</option>';
+        tr += '         <option value="cron">1 min</option>';
+        tr += '         <option value="cron5">5 min</option>';
+        tr += '         <option value="cron10">10 min</option>';
+        tr += '         <option value="cron15">15 min</option>';
+        tr += '         <option value="cron30">30 min</option>';
+        tr += '         <option value="cronHourly">Heure</option>';
+        tr += '         <option value="cronDaily">Jour</option>';
+		tr += '     </select>';     
+        // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="Polling"  style="width : 90px;" placeholder="{{Cron}}">';
         tr += '</td>';
 		// tr += '</select></span>';
         // tr += '</td>';

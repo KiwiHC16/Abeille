@@ -1051,77 +1051,84 @@
                 if ( $cmd == "0A" ) $cmdTxt = "0A - report attribut ";
 
                 if ( $cmd == '01') {
-                    $attribute  = substr($payload,34, 2).substr($payload,32, 2);
-                    $status     = substr($payload,36, 2);
-                    $dataType   = substr($payload,38, 2);
 
-                    if ($status!='00') {
-                        parserLog('debug', $dest.', Type=8002/Data indication - le status est erroné ne process pas la commande', "8002");
-                        return;
+                    $attributs = substr($payload,32);
+                    parserLog('debug', $dest.', Type=8002/Data indication - Attributs received: '.$attributs, "8002");
+
+                    while ( strlen($attributs) > 0 ) {
+
+                        $attribute  = substr($attributs, 2, 2).substr($attributs, 0, 2);
+                        $status     = substr($attributs, 4, 2);
+                        $dataType   = substr($attributs, 6, 2);
+
+                        $listType = array("21", "29");
+                        if ( in_array( $dataType, $listType) ) {
+                            $valueRevHex = substr($attributs, 8, 4);
+                            $value = $valueRevHex[2].$valueRevHex[3].$valueRevHex[0].$valueRevHex[1];
+                            $attributs = substr($attributs,12);
+                        }
+                        parserLog('debug', $dest.', Type=8002/Data indication - Attributs analysis: ' . $attribute . '-' . $status . '-' . $dataType . '-' . $value . '->' . $attributs, "8002");
+
+                        if ($status!='00') {
+                            parserLog('debug', $dest.', Type=8002/Data indication - le status est erroné ne process pas la commande', "8002");
+                            continue;
+                        }
+
+                        // example: Remontée V prise Blitzwolf BW-SHP13
+                        if (($attribute == '0505') && ($dataType == '21') ) {
+                            // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+
+                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée V Blitzwolf '
+                                . $baseLog
+                                . ', frameCtrlField='.$frameCtrlField
+                                . ', SQN='.$SQN
+                                . ', cmd='.$cmdTxt
+                                . ', attribute='.$attribute
+                                . ', dataType='.$dataType
+                                . ', value='.$value.' - '.hexdec($value),
+                                "8002"
+                                );
+
+                            $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                        }
+
+                        // example: Remontée A prise Blitzwolf BW-SHP13
+                        if (($attribute == '0508') && ($dataType == '21') ) {
+                            // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+
+                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée A Blitzwolf '
+                                . $baseLog
+                                . ', frameCtrlField='.$frameCtrlField
+                                . ', SQN='.$SQN
+                                . ', cmd='.$cmdTxt
+                                . ', attribute='.$attribute
+                                . ', dataType='.$dataType
+                                . ', value='.$value.' - '.hexdec($value),
+                                "8002"
+                                );
+
+                            $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                        }
+
+                        // example: Remontée puissance prise Blitzwolf BW-SHP13
+                        if (($attribute == '050B') && ($dataType == '29') ) {
+                            // '29' => array( 'Int16', 2 ), // Signed 16-bit int
+
+                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
+                                . $baseLog
+                                . ', frameCtrlField='.$frameCtrlField
+                                . ', SQN='.$SQN
+                                . ', cmd='.$cmdTxt
+                                . ', attribute='.$attribute
+                                . ', dataType='.$dataType
+                                . ', value='.$value.' - '.hexdec($value),
+                                "8002"
+                                );
+
+                            $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
+                        }
                     }
-
-                    // example: Remontée V prise Blitzwolf BW-SHP13
-                    if (($attribute == '0505') && ($dataType == '21') ) {
-                        // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
-                        $value = substr($payload,42, 2).substr($payload,40, 2);
-
-                        parserLog('debug', $dest.', Type=8002/Data indication - Remontée V Blitzwolf '
-                            . $baseLog
-                            . ', frameCtrlField='.$frameCtrlField
-                            . ', SQN='.$SQN
-                            . ', cmd='.$cmdTxt
-                            . ', attribute='.$attribute
-                            . ', dataType='.$dataType
-                            . ', value='.$value.' - '.hexdec($value),
-                            "8002"
-                            );
-
-                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
-
-                        return;
-                    }
-
-                    // example: Remontée A prise Blitzwolf BW-SHP13
-                    if (($attribute == '0508') && ($dataType == '21') ) {
-                        // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
-                        $value = substr($payload,42, 2).substr($payload,40, 2);
-
-                        parserLog('debug', $dest.', Type=8002/Data indication - Remontée A Blitzwolf '
-                            . $baseLog
-                            . ', frameCtrlField='.$frameCtrlField
-                            . ', SQN='.$SQN
-                            . ', cmd='.$cmdTxt
-                            . ', attribute='.$attribute
-                            . ', dataType='.$dataType
-                            . ', value='.$value.' - '.hexdec($value),
-                            "8002"
-                            );
-
-                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
-
-                        return;
-                    }
-
-                    // example: Remontée puissance prise Blitzwolf BW-SHP13
-                    if (($attribute == '050B') && ($dataType == '29') ) {
-                        // '29' => array( 'Int16', 2 ), // Signed 16-bit int
-                        $value = substr($payload,42, 2).substr($payload,40, 2);
-
-                        parserLog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
-                            . $baseLog
-                            . ', frameCtrlField='.$frameCtrlField
-                            . ', SQN='.$SQN
-                            . ', cmd='.$cmdTxt
-                            . ', attribute='.$attribute
-                            . ', dataType='.$dataType
-                            . ', value='.$value.' - '.hexdec($value),
-                            "8002"
-                            );
-
-                        $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value) );
-
-                        return;
-                    }
+                    return;
                 }
 
                 // exemple: emontée puissance module Legrand 20AX

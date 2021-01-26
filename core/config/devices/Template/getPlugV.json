@@ -10,15 +10,14 @@
     "template": "",
     "Comment": "Declenchement sur changement etat et polling toutes les 15 minutes pour realigner.",
     "configuration": {
-      "uniqId": "5c07c7662ddsscdfsd3cd1",
+      "uniqId": "20210126_1319",
       "topic": "ReadAttributeRequest",
-      "request": "EP=#EP#&clusterId=0B04&attributeId=0505&AttributeType=29",
+      "request": "EP=#EP#&clusterId=0B04&attributeId=0505",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "10",
       "Polling": "cron",
       "PollingOnCmdChange": "0006-01-0000",
-      "PollingOnCmdChangeDelay": "5",
-      "visibilityCategory": "additionalCommand"
+      "PollingOnCmdChangeDelay": "5"
     }
   }
 }

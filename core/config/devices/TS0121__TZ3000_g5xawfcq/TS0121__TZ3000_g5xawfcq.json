@@ -7,7 +7,7 @@
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5cfdgh0azezsd6rt78620b6b",
+      "uniqId": "20210126_1321",
       "icone": "Blitzwolf-BW-SHP13",
       "mainEP": "#EP#",
       "poll": "1"
@@ -32,9 +32,7 @@
       "include3 2 2 2 2": "PuissanceCurrentPrise",
       "include3 2 2 2": "PuissanceLegrandPrise",
       "include3 2 2 2 3": "CurrentSummationDelivered",
-      "include3 2 2 2 4": "getPlugPower",
-      "include3 2 2 2 4 2": "getPlugA",
-      "include3 2 2 2 4 2 2": "getPlugV"
+      "include3 2 2 2 4 2 2": "getPlugVAW"
     }
   }
 }

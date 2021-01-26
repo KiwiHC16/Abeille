@@ -640,9 +640,16 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $zclControlField        = "10";
         $transactionSequence    = "01";
         $cmdId                  = "00";
-        $attribut               = reverse_hex($Command['attributeId1']).reverse_hex($Command['attributeId2']).reverse_hex($Command['attributeId3']);       // A
 
-        $data2 = $zclControlField . $transactionSequence . $cmdId . $attribut;
+        $$attributs = "";
+        $attributList           = explode(',',$Command['attributeId']);
+        $this->deamonlog('debug', "     attribut list: ".json_encode($attributList));
+        foreach ($attributList as $attribut) {
+            $attributs .=  reverse_hex(str_pad( $attribut, 4, "0", STR_PAD_LEFT));
+            $this->deamonlog('debug', "     attributs: ".$attributs);
+        }
+
+        $data2 = $zclControlField . $transactionSequence . $cmdId . $attributs;
 
         $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
 
@@ -2196,7 +2203,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         // ReadAttributeRequestMulti ------------------------------------------------------------------------------------
-        if ( (isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId1']) )
+        if ( (isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) )
         {
             $this->getParamMulti( $Command );
         }

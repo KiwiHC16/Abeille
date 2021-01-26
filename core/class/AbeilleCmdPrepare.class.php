@@ -581,9 +581,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "EP"                       => $parameters['EP'],
                                      "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
                                      "Proprio"                  => $parameters['Proprio'],
-                                     "attributeId1"             => $parameters['attributeId1'],
-                                     "attributeId2"             => $parameters['attributeId2'],
-                                     "attributeId3"             => $parameters['attributeId3'],
+                                     "attributeId"             => $parameters['attributeId'],
                                      );
                     $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                     break;

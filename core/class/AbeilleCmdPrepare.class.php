@@ -530,14 +530,14 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $this->deamonlog('debug', '  Msg received: '.json_encode($msg).' from NE');
                     if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                     $Command = array(
-                                     "ReadAttributeRequest" => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address"      => $address,
-                                     "clusterId"    => $parameters['clusterId'],   // Don't change the speeling here but in the template
-                                     "attributeId"  => $parameters['attributeId'],
-                                     "EP"           => $parameters['EP'],
-                                     "Proprio"      => $parameters['Proprio'],
+                                     "ReadAttributeRequest"     => "1",
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
+                                     "address"                  => $address,
+                                     "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+                                     "attributeId"              => $parameters['attributeId'],
+                                     "EP"                       => $parameters['EP'],
+                                     "Proprio"                  => $parameters['Proprio'],
                                      );
                     $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                     break;
@@ -564,6 +564,28 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "clusterId" => $keywords[1],
                                      "attributeId" => $keywords[3],
                                      );
+                    break;
+                       //----------------------------------------------------------------------------
+                case "ReadAttributeRequestMulti":
+                    $keywords = preg_split("/[=&]+/", $msg);
+                    if (count($keywords) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    $this->deamonlog('debug', '  Msg received: '.json_encode($msg).' from NE');
+                    if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+                    $Command = array(
+                                     "ReadAttributeRequestMulti"     => "1",
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
+                                     "address"                  => $address,
+                                     "EP"                       => $parameters['EP'],
+                                     "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+                                     "Proprio"                  => $parameters['Proprio'],
+                                     "attributeId1"             => $parameters['attributeId1'],
+                                     "attributeId2"             => $parameters['attributeId2'],
+                                     "attributeId3"             => $parameters['attributeId3'],
+                                     );
+                    $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "setLevel":

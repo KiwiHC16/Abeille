@@ -602,6 +602,62 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
     }
 
+    function getParamMulti($Command) {
+        $this->deamonlog('debug', " command getParamMultiRaw");
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1
+        //                                                                                12 -> 0x0C
+        // <data: auint8_t>
+        // ZCL Control Field
+        // ZCL SQN
+        // Commad Id
+        // ....
+
+        $priority               = $Command['priority'];
+        $dest                   = $Command['dest'];
+
+        $addressMode            = "02";
+        $targetShortAddress     = $Command['address'];
+        $sourceEndpoint         = "01";
+        $destinationEndpoint    = "01";
+        $profileID              = "0104";
+        $clusterID              = $Command['clusterId'];
+        $securityMode           = "02";
+        $radius                 = "1E";
+
+        $zclControlField        = "10";
+        $transactionSequence    = "01";
+        $cmdId                  = "00";
+        $attribut               = reverse_hex($Command['attributeId1']).reverse_hex($Command['attributeId2']).reverse_hex($Command['attributeId3']);       // A
+
+        $data2 = $zclControlField . $transactionSequence . $cmdId . $attribut;
+
+        $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+
+        $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
+        $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+
+        $data = $data1 . $data2;
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+        // $this->deamonlog('debug', "  Data: ".$data." len: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+    }
+
     // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
     function getParamHue($priority,$dest,$address,$clusterId,$attributeId) {
         $this->deamonlog('debug','getParamHue');
@@ -2137,6 +2193,12 @@ class AbeilleCmdProcess extends AbeilleDebug {
             {
                 $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], "0000" );
             }
+        }
+
+        // ReadAttributeRequestMulti ------------------------------------------------------------------------------------
+        if ( (isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId1']) )
+        {
+            $this->getParamMulti( $Command );
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------

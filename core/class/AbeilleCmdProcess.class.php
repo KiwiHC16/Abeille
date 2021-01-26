@@ -601,9 +601,20 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
     }
-
+    /**
+     * getParamMulti
+     * 
+     * Read Attribut from a specific cluster. Can read multiple attribut in one message.
+     * Doesn't ask for APS ACk, for default Response ZCL to reduce traffic on net
+     * 
+     * @param Command including priority, dest, address, EP, clusterId, Proprio, attributId
+     * proprio not implemented yet
+     * 
+     * 
+     * @return none, 
+     */
     function getParamMulti($Command) {
-        $this->deamonlog('debug', " command getParamMultiRaw");
+        $this->deamonlog('debug', " command getParamMulti");
 
         $cmd = "0530";
 
@@ -631,9 +642,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $addressMode            = "02";
         $targetShortAddress     = $Command['address'];
         $sourceEndpoint         = "01";
-        $destinationEndpoint    = "01";
-        $profileID              = "0104";
+        $destinationEndpoint    = $Command['EP'];
         $clusterID              = $Command['clusterId'];
+        $profileID              = "0104";
         $securityMode           = "02";
         $radius                 = "1E";
 
@@ -649,14 +660,20 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->deamonlog('debug', "     attributs: ".$attributs);
         }
 
-        $data2 = $zclControlField . $transactionSequence . $cmdId . $attributs;
+        $sep = "";
+        $data2 = $zclControlField . $sep . $transactionSequence . $sep.  $cmdId . $sep . $attributs;
+        $sep = "-";
+        $data2Txt = $zclControlField . $sep . $transactionSequence . $sep.  $cmdId . $sep . $attributs;
 
         $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
 
-        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+        $sep = "";
+        $data1 = $addressMode . $sep . $targetShortAddress . $sep . $sourceEndpoint . $sep . $destinationEndpoint . $sep . $clusterID . $sep . $profileID . $sep . $securityMode . $sep . $radius . $sep . $dataLength;
+        $sep = "-";
+        $data1Txt = $addressMode . $sep . $targetShortAddress . $sep . $sourceEndpoint . $sep . $destinationEndpoint . $sep . $clusterID . $sep . $profileID . $sep . $securityMode . $sep . $radius . $sep . $dataLength;
 
-        $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) );
-        $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) );
+        $this->deamonlog('debug', "  Data1: ".$data1Txt );
+        $this->deamonlog('debug', "  Data2: ".$data2Txt );
 
         $data = $data1 . $data2;
         $lenth = sprintf("%04s",dechex(strlen( $data )/2));

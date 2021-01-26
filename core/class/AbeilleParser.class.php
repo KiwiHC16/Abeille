@@ -583,7 +583,7 @@
             }
 
             if ( method_exists($this, $fct) ) {
-                $this->$fct($dest, $payload, $ln, 0, $param1); 
+                $this->$fct($dest, $payload, $ln, 0, $param1);
             }
             else {
                 parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).', ignoré (non supporté).');
@@ -902,7 +902,7 @@
 
                 return;
             }
-            
+
             // Cluster 0x0001 Power
             if ( ($profile == "0104") && ($cluster == "0001") ) {
                 // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
@@ -918,8 +918,8 @@
                     if ( $Manufacturer=='117C' ) {
 
                         $SQN                    = substr($payload,32, 2);
-                        $cmd                    = substr($payload,34, 2); 
-                        if ( $cmd != "07" ) { 
+                        $cmd                    = substr($payload,34, 2);
+                        if ( $cmd != "07" ) {
                             if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
                             return;
                         }
@@ -936,7 +936,7 @@
                                         );
 
                         $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
-                        return;    
+                        return;
                     }
                 }
             }
@@ -1519,12 +1519,12 @@
             // Get Time server Response (v3.0f)
             // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
             $Timestamp = substr($payload, 0, 8);
-            parserLog('debug', $dest.', Type=8017/Get Time server Response: Timestamp='.hexdec($Timestamp) );
+            parserLog('debug', $dest.', Type=8017/Get Time server Response, Timestamp='.hexdec($Timestamp), "8017");
 
             $SrcAddr = "Ruche";
             $ClusterId = "ZiGate";
             $AttributId = "Time";
-            $data = date( DATE_RFC2822, hexdec($Timestamp) );
+            $data = date(DATE_RFC2822, hexdec($Timestamp));
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -3266,7 +3266,7 @@
         /**
          * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:
          * $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-         * 
+         *
          * @param $this->actionQueue
          * @return none
          */
@@ -3293,7 +3293,7 @@
         /**
          * With device on battery we have to wait for them to wake up before sending them command:
          * $this->wakeUpQueue[] = array( 'which'=>logicalId, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-         * 
+         *
          * @param logicalId
          * @param $this->wakeUpQueue
          * @return none

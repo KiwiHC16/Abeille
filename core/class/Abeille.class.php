@@ -22,7 +22,7 @@ if (file_exists($dbgFile)) {
     // include_once $dbgFile;
     /* Dev mode: enabling PHP errors logging */
     error_reporting(E_ALL);
-    ini_set('error_log', __DIR__ . '/../../../../log/AbeillePHP.log');
+    ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
     ini_set('log_errors', 'On');
 }
 
@@ -123,11 +123,11 @@ class Abeille extends eqLogic
 
     /**
      * Function return data for santé page
-     * 
+     *
      * @param none
-     * 
-     * @return test   title/decription of the test  
-     * @return result test result 
+     *
+     * @return test   title/decription of the test
+     * @return result test result
      * @return advice comment by question mark icone
      * @return state  if the test was successful or not
      */

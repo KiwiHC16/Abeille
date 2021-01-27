@@ -135,10 +135,16 @@
             $msgAbeille->message['payload'] = 'EP=01&lift='.$argv[3].'&inclinaison='.$argv[4].'&duration='.$argv[5];
         }
 
-        if ($test==109) {
+        if ($test==108) {
             echo "On Off Test\n";
             $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/OnOff';
             $msgAbeille->message['payload'] = 'Action=Toggle&EP=01';
+        }
+
+        if ($test==109) {
+            echo "On Off Test\n";
+            $msgAbeille->message['topic'] = 'CmdAbeille1/3EFE/OnOff';
+            $msgAbeille->message['payload'] = 'Toggle';
         }
 
         if ($test==110) {

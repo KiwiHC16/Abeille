@@ -1214,9 +1214,9 @@ class Abeille extends eqLogic
 
         $parameters_info = AbeilleTools::getParameters();
 
-        if (!preg_match("(Time|Link-Quality)", $message->topic)) {
-            log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
-        }
+        // if (!preg_match("(Time|Link-Quality)", $message->topic)) {
+        //    log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
+        // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // demande de creation de ruche au cas ou elle n'est pas deja crée....

@@ -443,12 +443,11 @@ class AbeilleTools
         $nbProcessExpected = $found['expected'];
         array_pop($found);
         $result = $nbProcessExpected - array_sum($found);
-        log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': '
-            . ($result == 0 ? 'False' : 'True') . ',   found: ' . json_encode($found));
+        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': ' . ($result == 0 ? 'False' : 'True') . ',   found: ' . json_encode($found));
         //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
         if ($result > 1) {
             log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
-            message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
+            // message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
         }
 
         return $result > 0;
@@ -467,8 +466,7 @@ class AbeilleTools
         //get socat first
         arsort($found);
         $found = array_reverse($found);
-        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .
-            ' : lastLaunch: ' . $lastLaunch . ', found:' . json_encode($found));
+        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' : lastLaunch: ' . $lastLaunch . ', found:' . json_encode($found));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
@@ -476,15 +474,13 @@ class AbeilleTools
                 AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
-                log::add('Abeille', 'info',
-                    __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': restarting Abeille' . $daemon. '/'. $value);
-                log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .
-                    ': restarting  XXXXX  Abeille XXXXX' . $daemon . ': ' . $cmd);
+                // log::add('Abeille', 'info', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': restarting Abeille' . $daemon. '/'. $value);
+                // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .': restarting  XXXXX  Abeille XXXXX' . $daemon . ': ' . $cmd);
                 exec($cmd . ' &');
             }
 
         }
-        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons:' . $missing);
+        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons:' . $missing);
     }
 
     /**
@@ -550,9 +546,11 @@ class AbeilleTools
         unset($matches);
         $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
         $messageToSend = ($message == "") ? "" : "$daemonName: $message";
-        log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' sending ' . $messageToSend . ' to zigate ' . $zigateNbr);
+        // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' sending ' . $messageToSend . ' to zigate ' . $zigateNbr);
+        if ( strlen($messageToSend) > 2 ) {
         Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
             "Abeille$zigateNbr/Ruche/SystemMessage", $messageToSend);
+        }
     }
 
     /**
@@ -567,12 +565,12 @@ class AbeilleTools
         if ($which == 'all') {
             for ($n = 1; $n <= $parameters['zigateNb']; $n++) {
                 if ($parameters['AbeilleActiver' . $n] == "Y") {
-                    log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $n);
+                    // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $n);
                     AbeilleTools::sendMessageToRuche("daemon$n", "");
                 }
             }
         } else {
-            log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $which);
+            // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $which);
             AbeilleTools::sendMessageToRuche("daemon$which", "");
         }
     }

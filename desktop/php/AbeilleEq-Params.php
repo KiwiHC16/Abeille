@@ -22,40 +22,6 @@
     </div>
     <hr>
 
-    <?php
-    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-    ?>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Id}}</label>
-            <div class="col-sm-3">
-                <span class="eqLogicAttr" data-l1key="id"></span>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Logical Id}}</label>
-            <div class="col-sm-3">
-                <span class="eqLogicAttr" data-l1key="logicalId"></span>
-            </div>
-        </div>
-
-        </br>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
-            <div class="col-sm-3">
-                <span> <?php echo $eqAddr; ?> </span>
-                /
-                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
-            </div>
-        </div>
-
-    <?php
-    }
-    ?>
-    </br>
-
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
         <div class="col-sm-3">
@@ -170,7 +136,7 @@
                         $res = getCmdResult($eqId, 'Network-Channel');
                         echo '<span title="{{Canal actuel}}">'.$res.'</span>';
                     ?>
-                    <input type="text" id="idChannelMask" placeholder="07FFF800" title="{{Masque des canaux autorisés (en hexa). 1 bit par canal.}}" style="margin-left:10px; width:100px">
+                    <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
                     <button type="button" onclick="sendZigate('SetChannelMask', '')">Modifier</button>
                 </div>
             </div>

@@ -81,7 +81,9 @@
         },
         success: function (data) {
             console.log("jeedom.eqLogic.print() success");
-            console.log("data="+data);
+            console.log("data follows:");
+            console.log(data);
+
             // $('body .eqLogicAttr').value('');
             if(isset(data) && isset(data.timeout) && data.timeout == 0){
                 data.timeout = '';
@@ -273,11 +275,12 @@
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setChannelMask';
             mask = document.getElementById("idChannelMask").value;
             console.log("mask="+mask);
-            if (mask == "")
+            if (mask == "") {
+                alert("Masque vide.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).");
                 return; // Empty
-            function isHex(h) {
-                var a = parseInt(h,16);
-                return (a.toString(16) === h)
+            }
+            function isHex(str) {
+                return /^[A-F0-9]+$/i.test(str)
             }
             if (!isHex(mask)) {
                 alert("Le masque doit être une valeur hexa");
@@ -285,10 +288,13 @@
             }
             var maskI = parseInt(mask, 16); // Convert hex string to number
             if ((maskI & 0x7fff800) == 0) {
-                alert("Aucun canal actif entre 11 et 26. Veuillez corriger.")
+                alert("Aucun canal actif entre 11 et 26.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
                 return;
             }
-            // TODO: More checks to add ?
+            if ((maskI & ~0x7fff800) != 0) {
+                alert("Les canaux inférieurs à 11 et supérieurs à 26 sont invalides.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
+                return;
+            }
             payload = mask;
             break;
         case "SetTXPower":
@@ -392,7 +398,7 @@
             tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom : 5px;" /></span>';
             tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
             tr += '</td>';
-            
+
             <?php
             if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
             ?>
@@ -402,7 +408,7 @@
 
             tr += '<td>'; // Col 5 = Paramètres commande Abeille
             tr += '</td>';
-            <?php } 
+            <?php }
             ?>
 
             tr += '<td>'; // Col 6 = Unité
@@ -417,7 +423,7 @@
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 40%;display : inline-block;">';
             tr += '</td>';
 
-            tr += '<td>'; // Col 8 = Conf Adv / Tester 
+            tr += '<td>'; // Col 8 = Conf Adv / Tester
             if (is_numeric(_cmd.id)) {
                 tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
                 tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
@@ -444,7 +450,7 @@
             tr += '<td>'; // Col 1 = Id
             tr += ' <span class="cmdAttr" data-l1key="id"></span>';
             tr += '</td>';
-            
+
             tr += '<td>'; // Col 2 = Jeedom name
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name"  style="width : 140px;" placeholder="{{Nom de l\'info}}">';
             tr += '</td>';
@@ -457,16 +463,16 @@
             <?php
             if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
             ?>
-                tr += '<td>'; // Col 4 = Abeille command name 
+                tr += '<td>'; // Col 4 = Abeille command name
                 tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
                 tr += '</td>';
 
                 tr += '<td>'; // Col 5 = Paramètres commande Abeille
                 tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
                 tr += '</td>';
-            <?php } 
+            <?php }
             ?>
-            tr += '<td>'; // Col 6 = Polling(cron) / 
+            tr += '<td>'; // Col 6 = Polling(cron) /
             tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
             tr += '         <option value="">Aucun</option>';
             tr += '         <option value="cron">1 min</option>';
@@ -483,7 +489,7 @@
             tr += '     </select></br>';
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}"><br/>';
             tr += '</td>';
-            
+
             tr += '<td>'; // Col 7 = Affiche
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br> ';
             tr += '</td>';

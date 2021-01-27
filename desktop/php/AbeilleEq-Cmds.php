@@ -26,7 +26,7 @@
                 <th style="width:  20px;">{{Supprimer}}</th>
                 <th style="width: 80px;"></th>
         <?php
-            } 
+            }
             else {
         ?>
                 <th style="width:  80px;">{{#}}</th>

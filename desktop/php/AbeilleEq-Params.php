@@ -35,7 +35,8 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Id}}</label>
         <div class="col-sm-3">
-            <span class="eqLogicAttr" data-l1key="id"></span>
+            <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
+            <?php echo '<span>'.$eqId.'</span>'; ?>
         </div>
     </div>
 

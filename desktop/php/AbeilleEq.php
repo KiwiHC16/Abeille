@@ -65,7 +65,7 @@
     </div>
 </div>
 
-<!-- <?php include_file('core', 'plugin.template', 'js'); ?> -->
+<?php include_file('core', 'plugin.template', 'js'); ?>
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
 <script>
     /* AbeilleEq page opened. Let's update display content.
@@ -201,13 +201,6 @@
         // }
     });
 
-    /* Click on 'advanced config' button.
-       From 'core/js/plugin.template.js' */
-    $('.eqLogic .eqLogicAction[data-action=configure]').off('click').on('click', function () {
-        $('#md_modal').dialog({title: "{{Configuration de l'équipement}}"});
-        $('#md_modal').load('index.php?v=d&modal=eqLogic.configure&eqLogic_id=' + $('.eqLogicAttr[data-l1key=id]').value()).dialog('open');
-    });
-
 	/*
 	 * Equipement page
 	 */
@@ -254,9 +247,9 @@
             else
                 topic = 'CmdAbeille'+js_zgNb+'/Ruche/setCertificationFCC';
             break;
-        case "StartNetwork":
+        case "StartNetwork": // Not required for end user but for developper.
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/startNetwork';
-            payload = 'StartNetwork'; // Really required ? Kiwi: Pour l utilisateur non mais pour le dev oui.
+            payload = 'StartNetwork';
             break;
         case "SetMode":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setModeHybride';

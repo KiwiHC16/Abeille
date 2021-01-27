@@ -22,6 +22,40 @@
     </div>
     <hr>
 
+    <?php
+    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+    ?>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Id}}</label>
+            <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="id"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Logical Id}}</label>
+            <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="logicalId"></span>
+            </div>
+        </div>
+
+        </br>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
+            <div class="col-sm-3">
+                <span> <?php echo $eqAddr; ?> </span>
+                /
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
+            </div>
+        </div>
+
+    <?php
+    }
+    ?>
+    </br>
+
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
         <div class="col-sm-3">

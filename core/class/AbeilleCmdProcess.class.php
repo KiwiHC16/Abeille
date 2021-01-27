@@ -2576,7 +2576,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
 
         if ( $addressMode != "01" ) {
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
         }
     }
 

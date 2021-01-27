@@ -602,10 +602,10 @@ class Abeille extends eqLogic
         // si la cron tourne alors le plugin a été démarré.
         if (AbeilleTools::isAbeilleCronRunning() == false) {
             $return['state'] = "nok";
-            log::add('Abeille', 'warning', 'deamon_info(): Le plugin n\'est pas démarré. la cron ne tourne pas');
+            // log::add('Abeille', 'warning', 'deamon_info(): Le plugin n\'est pas démarré. la cron ne tourne pas');
             return $return;
         }
-        log::add('Abeille', 'info', 'deamon_info(): Le plugin est démarré. la cron tourne');
+        // log::add('Abeille', 'info', 'deamon_info(): Le plugin est démarré. la cron tourne');
 
         // Nb de demon devant tourner: Parser + cmd + n x ( Zigate serial ) + socat si wifi
 

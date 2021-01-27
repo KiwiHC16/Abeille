@@ -234,7 +234,7 @@
         if ($test==124) {
             echo "Test envoie Cmd to DiscoverAttributesCommand\n";
             $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/DiscoverAttributesCommand';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0008&startAttributeId=0000&maxAttributeId=FF';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&startAttributeId=0000&maxAttributeId=FF';
         }
 
         // Send the command to the queue for processing

@@ -2997,10 +2997,48 @@
         function decode8140($dest, $payload, $ln, $qos, $dummy)
         {
             // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
+            // https://zigate.fr/documentation/commandes-zigate/
+            // Obj-> ZiGate	0x8140	Attribute Discovery response	
+            // <complete: uint8_t>	
+            // <attribute type: uint8_t>	
+            // <attribute id: uint16_t>	
+            // <Src Addr: uint16_t> (added only from 3.0f version)	
+            // <Src EndPoint: uint8_t> (added only from 3.0f version)	
+            // <Cluster id: uint16_t> (added only from 3.0f version)
+
+            // Abeille Serial Example
+            //                                     Cmd  Len  CRC Co Type Attr   Addr EP Clus LQI
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 01  01 20   0000   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 00  01 20   0001   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 03  01 20   0002   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 20   0003   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 67  01 42   0004   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 66  01 42   0005   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 65  01 42   0006   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 16  01 30   0007   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 73  01 42   0010   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 23  01 42   4000   1B53 01 0000 A2"
+            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 21   FFFD   1B53 01 0000 A2"
+
+            // Payload
+            // Co Type Attr Addr EP Clus 
+            // 01 20   0000 1B53 01 0000
+            // Co = complete
+
+            $completed  = substr( $payload, 0, 2);
+            $type       = substr( $payload, 2, 2);
+            $Attr       = substr( $payload, 4, 4);
+            $Addr       = substr( $payload, 8, 4);
+            $EP         = substr( $payload,12, 2);
+            $Cluster    = substr( $payload,14, 4);
+
             parserLog('debug', $dest.', Type=8140/Configure Reporting response (Decoded but not processed yet)'
-                            // . ': Dest='.$dest
-                            // . ', Level=0x'.substr($payload, 0, 2)
-                            // . ', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))
+                            . ': Dest='         .$dest
+                            . ', completed: '   .$completed
+                            . ', type: '        .$type
+                            . ', Attr: '        .$Attr
+                            . ', EP: '          .$EP
+                            . ', Cluster: '     .$Cluster
                              );
         }
 

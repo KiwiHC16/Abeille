@@ -41,6 +41,13 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
         if ($address != "Ruche") {
             $this->deamonlog("debug", '  Address != Ruche', $this->debug['procmsg3']);
+
+            $convertOnOff = array(
+                "On"      => "01",
+                "Off"     => "00",
+                "Toggle"  => "02",
+            );
+
             switch ($action) {
                     //----------------------------------------------------------------------------
                 case "managementNetworkUpdateRequest":
@@ -148,11 +155,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if ($this->debug['procmsg3']) {
                         $this->deamonlog("debug", '  OnOff with dest: '.$dest);
                     }
-                    $convertOnOff = array(
-                        "On"      => "01",
-                        "Off"     => "00",
-                        "Toggle"  => "02",
-                    );
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -180,79 +182,51 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOff2":
-                    if ($msg == "On") {
-                        $actionId = "01";
-                    } elseif ($msg == "Off") {
-                        $actionId = "00";
-                    } elseif ($msg == "Toggle") {
-                        $actionId = "02";
-                    }
                     $Command = array(
-                        "onoff" => "1",
-                        "addressMode" => "02",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "destinationEndpoint" => "02",
-                        "action" => $actionId,
+                        "onoffraw"                 => "1",
+                        "dest"                  => $dest,
+                        "priority"              => $priority,
+                        "addressMode"           => "02",
+                        "address"               => $address,
+                        "destinationEndpoint"   => "02",
+                        "action"                => $convertOnOff[$msg],
                     );
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOff3":
                 case "OnOffOSRAM":
-                    if ($msg == "On") {
-                        $actionId = "01";
-                    } elseif ($msg == "Off") {
-                        $actionId = "00";
-                    } elseif ($msg == "Toggle") {
-                        $actionId = "02";
-                    }
                     $Command = array(
-                        "onoff" => "1",
-                        "addressMode" => "02",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "destinationEndpoint" => "03",
-                        "action" => $actionId,
+                        "onoffraw"                 => "1",
+                        "dest"                  => $dest,
+                        "priority"              => $priority,
+                        "addressMode"           => "02",
+                        "address"               => $address,
+                        "destinationEndpoint"   => "03",
+                        "action"                => $convertOnOff[$msg],
                     );
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOff4":
-                    if ($msg == "On") {
-                        $actionId = "01";
-                    } elseif ($msg == "Off") {
-                        $actionId = "00";
-                    } elseif ($msg == "Toggle") {
-                        $actionId = "02";
-                    }
                     $Command = array(
-                        "onoff" => "1",
-                        "addressMode" => "02",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "destinationEndpoint" => "04",
-                        "action" => $actionId,
+                        "onoffraw"              => "1",
+                        "dest"                  => $dest,
+                        "priority"              => $priority,
+                        "addressMode"           => "02",
+                        "address"               => $address,
+                        "destinationEndpoint"   => "04",
+                        "action"                => $convertOnOff[$msg],
                     );
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOffHue":
-                    if ($msg == "On") {
-                        $actionId = "01";
-                    } elseif ($msg == "Off") {
-                        $actionId = "00";
-                    } elseif ($msg == "Toggle") {
-                        $actionId = "02";
-                    }
                     $Command = array(
-                        "onoff" => "1",
-                        "addressMode" => "02",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "destinationEndpoint" => "0B",
-                        "action" => $actionId,
+                        "onoffraw"                 => "1",
+                        "dest"                  => $dest,
+                        "priority"              => $priority,
+                        "addressMode"           => "02",
+                        "address"               => $address,
+                        "destinationEndpoint"   => "0B",
+                        "action"                => $convertOnOff[$msg],
                     );
                     break;
                     //----------------------------------------------------------------------------

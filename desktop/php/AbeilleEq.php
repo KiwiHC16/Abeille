@@ -468,7 +468,10 @@
             tr += '         <option value="cronHourly">Heure</option>';
             tr += '         <option value="cronDaily">Jour</option>';
             tr += '     </select></br>';
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" style="height : 33px;" placeholder="{{Commande Abeille}}"><br/></br>';
+             tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
+            tr += '         <option value="">Aucun</option>';
+            tr += '         <?php foreach ( $eqLogic->getCmd('info') as $cmd ) { echo "<option value=\"".$cmd->getConfiguration("topic")."\">".$cmd->getName()."</option>"; } ?>';
+            tr += '     </select></br>';
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}"><br/>';
             tr += '</td>';
             

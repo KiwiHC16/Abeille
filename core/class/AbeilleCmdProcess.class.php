@@ -652,7 +652,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $transactionSequence    = "01";
         $cmdId                  = "00";
 
-        $$attributs = "";
+        $attributs = "";
         $attributList           = explode(',',$Command['attributeId']);
         $this->deamonlog('debug', "     attribut list: ".json_encode($attributList));
         foreach ($attributList as $attribut) {

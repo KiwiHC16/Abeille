@@ -43,6 +43,8 @@
         public $zigateNb;
         public $zigateAvailable = array();        // Si on pense la zigate dispo ou non.
 
+        public $statCmd = array();
+
         function __construct($debugLevel='debug') {
             $this->deamonlog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             $this->deamonlog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
@@ -66,6 +68,16 @@
             }
 
             $this->deamonlog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
+        }
+
+        public function incStatCmd( $cmd ) {
+            if ( isset($this->statCmd[$cmd]) ) {
+                $this->statCmd[$cmd]++;
+            }
+            else {
+                $this->statCmd[$cmd]=1;
+            }
+            $this->deamonlog('debug', 'incStatCmd(): '.json_encode($this->statCmd) );
         }
 
         public function publishMosquitto( $queueKeyId, $priority, $topic, $payload ) {
@@ -170,6 +182,8 @@
 
         function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
             $this->deamonlog("debug", "      sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
+
+            $this->incStatCmd($cmd);
 
             $i = str_replace( 'Abeille', '', $dest );
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {

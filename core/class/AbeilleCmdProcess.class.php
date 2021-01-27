@@ -537,48 +537,14 @@ class AbeilleCmdProcess extends AbeilleDebug {
             Manufacturer specific :
             0 – No
             1 – Yes
-
-            8 16 8 8 16 8 8 16 8 16 -> 2 4 2 2 4 2 2 4 2 4 -> 28/2d -> 14d -> 0x0E
-
-            19:07:11.771 -> 01 02 11 02 10 02 10 02 1E 91 02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10 03
-            00:15:32.115 -> 01 02 11 02 10 02 10 02 1E 91 02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10 03
-            00:15:32.221 <- 01 80 00 00 04 86 00 03 01 00 03
-            00:20:29.130 <- 01 80 00 00 04 80 00 05 01 00 03
-            80 00 00 04 84 00 01 01 00
-            00:15:32.248 <- 01 81 00 00 0D 02 03 B3 28 01 00 06 00 00 00 10 00 01 00 03
-            00:20:29.156 <- 01 81 00 00 0D 05 05 B3 28 01 00 06 00 00 00 10 00 01 01 03
-            81 00 00 0D 00 01 b3 28 01 00 06 00 00 00 10 00 01 00
-            81 00 00 0D 06 06 b3 28 01 00 06 00 00 00 10 00 01 01
-
-            01: start
-            02 11 02 10: Msg Type: 02 11 => 01 02 10 => 00 ==> 0100 (read attribute request)
-            02 10 02 1E: Length: 00 0E
-            91: Chrksum
-            02 12 B3 28 02 11 02 11 02 10 02 16 02 10 02 10 02 10 02 10 02 11 02 10 02 10: data
-            02 12: address mode: 02
-            B3 28: Short address: B328
-            02 11: Source EndPoint: 01
-            02 11: Dest EndPoint: 01
-            02 10 02 16: Cluster Id: 00 06 (General On/Off)
-            02 10: Direction: 0 (from server to client)
-            02 10: manufacturer specific: 00 (No)
-            02 10 02 10 : manufacturer id: 00 00
-            02 11: number of attributes: 01
-            02 10 02 10: attributes list: data list of uint16_t  each: 00 00
-
-            */
-        // $param = "02B3280101000600000000010000";
-        // echo $param;
-        // $this->sendCmd($priority, $dest, "0100", "000E", $param );
-        // $this->sendCmd($priority, $dest, "0100", "000E", "02B3280101000600000000010000");
+        */
 
         $cmd = "0100";
-        // $lenth = "000E";
+
         $addressMode = "02";
-        // $address = $Command['address'];
+        // $address = $Command['address']; in the fct call
         $sourceEndpoint = "01";
-        // $destinationEndpoint = "01";
-        //$ClusterId = "0006";
+
         $ClusterId = $clusterId;
         $Direction = "00";
         if ( (strlen($Proprio)<1) || ($Proprio="0000") ) {
@@ -591,8 +557,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
         $numberOfAttributes = "01";
         $attributesList = $attributeId;
-        //      02              B328        01              01                      0006            00          00                      0000            01                      0000
-        //      02              faec        01              01                      0500           00           01                      115f            01                      fff1
+
         $data = $addressMode . $address . $sourceEndpoint . $destinationEndPoint . $ClusterId . $Direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $attributesList;
 
         $lenth = sprintf("%04s",dechex(strlen( $data )/2));

@@ -389,24 +389,29 @@
             tr += '</td>';
 
             tr += '<td>'; // Col 3 = Type & sub-type
-            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom : 5px;" />';
+            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom : 5px;" /></span>';
             tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
             tr += '</td>';
-
+            
+            <?php
+            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+            ?>
             tr += '<td>'; // Col 4 = Abeille command name
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" >';
             tr += '</td>';
 
             tr += '<td>'; // Col 5 = Paramètres commande Abeille
             tr += '</td>';
+            <?php } 
+            ?>
 
             tr += '<td>'; // Col 6 = Unité
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="unite" style="width : 90px;" placeholder="{{Unité}}">';
             tr += '</td>';
 
             tr += '<td>'; // Col 7 = Hist / Affiche / Min/Max
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> </br>';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> </br>';
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span>';
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span>';
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary" checked/>{{Inverser}}</label></span> </br>';
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> - ';
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 40%;display : inline-block;">';
@@ -445,18 +450,22 @@
             tr += '</td>';
 
             tr += '<td>'; // Col 3 = Type & sub-type
-            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom : 5px;" />';
+            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom : 5px;" /></span>';
             tr += '     <span class="subType" subType="' + init(_cmd.subType) + '" style=""></span>';
             tr += '</td>';
 
-            tr += '<td>'; // Col 4 = Abeille command name 
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
-            tr += '</td>';
+            <?php
+            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+            ?>
+                tr += '<td>'; // Col 4 = Abeille command name 
+                tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
+                tr += '</td>';
 
-            tr += '<td>'; // Col 5 = Paramètres commande Abeille
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
-            tr += '</td>';
-
+                tr += '<td>'; // Col 5 = Paramètres commande Abeille
+                tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
+                tr += '</td>';
+            <?php } 
+            ?>
             tr += '<td>'; // Col 6 = Polling(cron) / 
             tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
             tr += '         <option value="">Aucun</option>';
@@ -468,7 +477,7 @@
             tr += '         <option value="cronHourly">Heure</option>';
             tr += '         <option value="cronDaily">Jour</option>';
             tr += '     </select></br>';
-             tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
+            tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
             tr += '         <option value="">Aucun</option>';
             tr += '         <?php foreach ( $eqLogic->getCmd('info') as $cmd ) { echo "<option value=\"".$cmd->getConfiguration("topic")."\">".$cmd->getName()."</option>"; } ?>';
             tr += '     </select></br>';

@@ -341,40 +341,46 @@ function addCmdToTable(_cmd) {
 	}
 
 	if (init(_cmd.type) == 'info') {
-		var disabled = (init(_cmd.configuration.virtualAction) == '1') ? 'disabled' : '';
-		var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-		tr += '<td>';//1
+        var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
+        
+		tr += '<td>'; //Id
 		tr += '     <span class="cmdAttr" data-l1key="id"></span>';
-		tr += '</td>';
-		tr += '<td>';//2
+        tr += '</td>';
+        
+		tr += '<td>'; // Nom
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 140px;" placeholder="{{Nom de l\'info}}">';
         tr += '</td>';
-		tr += '<td>';//3
+
+		tr += '<td>'; // Type / Sous Type
 		tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="margin-bottom : 5px;" />';
 		tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
-        tr += '<td>';//4
-		tr += '     <span class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" ' + disabled + ' placeholder="{{Topic}}" readonly=true>';
-        //tr += '</td>';
-        tr += '<td>';//5
+
+        tr += '<td>'; // Topic
+        tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="configuration" data-l2key="topic" style="margin-bottom : 5px;" placeholder="{{Topic}}"/>';
+		// tr += '     <span class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}" >';
         tr += '</td>';
-        tr += '<td>';//6
+
+        tr += '<td>'; // Unité
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="unite" style="width : 90px;" placeholder="{{Unité}}">';
         tr += '</td>';
+
         tr += '<td>';
-		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
-		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
-		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary" checked/>{{Inverser}}</label></span> ';
-		tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> ';
+		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> </br>';
+		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> </br>';
+		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary" checked/>{{Inverser}}</label></span> </br>';
+		tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> - ';
         tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 40%;display : inline-block;">';
-		tr += '</td>';
-		tr += '<td>';//7
+        tr += '</td>';
+        
+		tr += '<td>';
 		if (is_numeric(_cmd.id)) {
 			tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
 			tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
 		}
         tr += '     <i class="fa fa-minus-circle cmdAction cursor" data-action="remove"></i>';
         tr += '</td>';
+
         tr += '</tr>';
         
 		$('#table_cmd tbody').append(tr);
@@ -402,11 +408,11 @@ function addCmdToTable(_cmd) {
         tr += '</td>';
         
 		tr += '<td>';
-		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" ' + disabled + ' placeholder="{{Topic}}"><br/>';
+		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
         tr += '</td>';
 
 		tr += '<td>';
-		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" ' + disabled + ' placeholder="{{Payload}}">';
+		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
         tr += '</td>';
 
         tr += '<td>';   

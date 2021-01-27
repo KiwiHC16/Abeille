@@ -396,7 +396,7 @@ function addCmdToTable(_cmd) {
 		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name"  style="width : 140px;" placeholder="{{Nom de l\'info}}">';
         tr += '</td>';
         
-		tr += '<td>';//3
+		tr += '<td>';
 		tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="action" disabled style="margin-bottom : 5px;" />';
 		tr += '     <span class="subType" subType="' + init(_cmd.subType) + '" style=""></span>';
         tr += '</td>';
@@ -419,7 +419,12 @@ function addCmdToTable(_cmd) {
         tr += '         <option value="cron30">30 min</option>';
         tr += '         <option value="cronHourly">Heure</option>';
         tr += '         <option value="cronDaily">Jour</option>';
-		tr += '     </select>';     
+        tr += '     </select>';
+        tr += '     </br>';     
+        tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez lancer l execution de cette commande sur changement d un commande info. Indiquer la commande info ici. Faites tres attention de ne pas créer des boucles d execution entre info qui se rafraichissent et commandes action qui demande la rafrachissement.}}">';
+        tr += '     </br>'; 
+        tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" title="{{Delai avant execution cmd (s).}}">';
+        tr += '     </br>'; 
         tr += '</td>';
 
         tr += '<td>';

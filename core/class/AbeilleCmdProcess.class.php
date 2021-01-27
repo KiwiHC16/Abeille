@@ -2506,13 +2506,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 // 1 - On
                 // 2 - Toggle
 
-            $cmd = "0092";
-            $lenth = "0006";
-            $addressMode = $Command['addressMode'];
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['destinationEndpoint'];
-            $action = $Command['action'];
+            $cmd                    = "0092";
+            $lenth                  = "0006";
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['destinationEndpoint'];
+            $action                 = $Command['action'];
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action, $address);
 
@@ -2521,6 +2521,64 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
                 }
         }
+
+        // ON / OFF with no effects RAW with no APS ACK
+        if ( isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
+        {
+
+        $this->deamonlog('debug', "command setParam4");
+
+        $dest       = $Command['dest'];
+        $priority   = $Command['priority'];
+
+        $cmd = "0530";
+
+        // <address mode: uint8_t>              -> 1
+        // <target short address: uint16_t>     -> 2
+        // <source endpoint: uint8_t>           -> 1
+        // <destination endpoint: uint8_t>      -> 1
+
+        // <profile ID: uint16_t>               -> 2
+        // <cluster ID: uint16_t>               -> 2
+
+        // <security mode: uint8_t>             -> 1
+        // <radius: uint8_t>                    -> 1
+        // <data length: uint8_t>               -> 1  (22 -> 0x16)
+
+        // <data: auint8_t> APS Part <= data
+
+        $addressMode        = $Command['addressMode'];
+        $targetShortAddress = $Command['address'];
+        $sourceEndpoint     = "01";
+        if ( $Command['destinationEndpoint']>1 ) { $destinationEndpoint = $Command['destinationEndpoint']; } else { $destinationEndpoint = "01"; } // $destinationEndPoint; // "01";
+
+        $profileID          = "0104";
+        $clusterID          = "0006"; // $Command['clusterId'];
+
+        $securityMode       = "02"; // ???
+        $radius             = "30";
+        // $dataLength <- calculated later
+
+        $frameControl               = "11"; // Ici dans cette commande c est ZCL qu'on control
+        $transqactionSequenceNumber = "1A"; // to be reviewed
+        $commandWriteAttribute      = $Command['action'];
+
+        $data2 = $frameControl . $transqactionSequenceNumber . $commandWriteAttribute;
+        $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+        $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
+        $data = $data1 . $data2;
+
+        $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+        // $this->deamonlog('debug', "data: ".$data );
+        // $this->deamonlog('debug', "lenth data: ".$lenth );
+
+        $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+
+        if ( $addressMode != "01" ) {
+            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+        }
+    }
 
         // On / Off Timed Send
         if ( isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']) )

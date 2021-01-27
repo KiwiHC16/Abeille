@@ -157,13 +157,13 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                         $Command = array(
-                            "onoff" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "addressMode" => "02",
-                            "address" => $address,
-                            "destinationEndpoint" => $parameters['EP'],
-                            "action" => $convertOnOff[$parameters['Action']],
+                            "onoffraw"              => "1",
+                            "priority"              => $priority,
+                            "dest"                  => $dest,
+                            "addressMode"           => "02",
+                            "address"               => $address,
+                            "destinationEndpoint"   => $parameters['EP'],
+                            "action"                => $convertOnOff[$parameters['Action']],
                         );
                     }
                     else {

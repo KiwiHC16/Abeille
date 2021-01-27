@@ -14,13 +14,13 @@
     <thead>
     <tr>
         <th style="width:  80px;">{{#}}</th>
-        <th style="width: 150px;">{{Nom}}</th>
+        <th style="width: 150px;">{{Commande Jeedom}}</th>
         <th style="width: 120px;">{{Sous-Type}}</th>
-        <th style="width: 300px;">{{Topic}}</th>
-        <th style="width: 600px;">{{Payload}}</th>
+        <th style="width: 300px;">{{Commande Abeille}}</th>
+        <th style="width: 600px;">{{Paramètres commande Abeille}}</th>
         <th style="width: 150px;">{{Unité/Cron}}</th>
-        <th style="width: 150px;">{{Paramètres}}</th>
-        <th style="width: 80px;">{{Détails}}</th>
+        <th style="width: 150px;">{{Options}}</th>
+        <th style="width: 80px;"></th>
     </tr>
     </thead>
     <tbody>

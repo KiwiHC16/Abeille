@@ -23,7 +23,7 @@
     <hr>
 
     <?php
-        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+        // if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
     ?>
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Id}}</label>
@@ -52,7 +52,7 @@
         </div>
 
     <?php
-            }
+            // }
     ?>
     </br>
 

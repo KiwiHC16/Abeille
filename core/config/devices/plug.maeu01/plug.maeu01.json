@@ -1,0 +1,32 @@
+{
+  "plug.maeu01": {
+    "nameJeedom": "Aqara SmartPlug",
+    "timeout": "60",
+    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1578",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "20210127_2358",
+      "icone": "plug.maeu01",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etat",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier",
+      "include13": "puissanceEP15",
+      "include13 2": "conso",
+      "include13 2 2": "VoltagePrise",
+      "include13 2 2 2": "CurrentPrise_mA",
+      "include13 2 2 2 2": "temperaturePrise"
+    }
+  }
+}

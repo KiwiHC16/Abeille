@@ -254,7 +254,7 @@
             break;
         case "StartNetwork":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/startNetwork';
-            payload = 'StartNetwork'; // Really required ?
+            payload = 'StartNetwork'; // Really required ? Kiwi: Pour l utilisateur non mais pour le dev oui.
             break;
         case "SetMode":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setModeHybride';
@@ -267,7 +267,7 @@
             break;
         case "SetExtPANId":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setExtendedPANID';
-            payload = ""; // TODO
+            payload = ""; // TODO Kiwi: Oui mais jamis rencontré le besoin, pas critique.
             break;
         case "SetChannelMask":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setChannelMask';
@@ -377,7 +377,7 @@
 		console.log(_cmd);
 
         if (init(_cmd.type) == 'info') {
-            var disabled = (init(_cmd.configuration.virtualAction) == '1') ? 'disabled' : '';
+
             var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 
             tr += '<td>'; // Col 1 = Id
@@ -389,34 +389,40 @@
             tr += '</td>';
 
             tr += '<td>'; // Col 3 = Type & sub-type
-            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="margin-bottom : 5px;" />';
+            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom : 5px;" />';
             tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
             tr += '</td>';
 
             tr += '<td>'; // Col 4 = Abeille command name
-            tr += '     <span class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" ' + disabled + ' placeholder="{{Topic}}" readonly=true>';
-            //tr += '</td>';
-            tr += '<td>'; //5
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" >';
             tr += '</td>';
-            tr += '<td>'; //6
+
+            tr += '<td>'; // Col 5 = Paramètres commande Abeille
+            tr += '</td>';
+
+            tr += '<td>'; // Col 6 = Unité
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="unite" style="width : 90px;" placeholder="{{Unité}}">';
             tr += '</td>';
 
-            tr += '<td>';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary" checked/>{{Inverser}}</label></span> ';
-            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> ';
+            tr += '<td>'; // Col 7 = Hist / Affiche / Min/Max
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> </br>';
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> </br>';
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary" checked/>{{Inverser}}</label></span> </br>';
+            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> - ';
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 40%;display : inline-block;">';
             tr += '</td>';
 
-            tr += '<td>';//7
+            tr += '<td>'; // Col 8 = Conf Adv / Tester 
             if (is_numeric(_cmd.id)) {
                 tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
                 tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
             }
+            tr += '</td>';
+
+            tr += '<td>'; // Col 9 = Supprimer
             tr += '     <i class="fa fa-minus-circle cmdAction cursor" data-action="remove"></i>';
             tr += '</td>';
+
             tr += '</tr>';
 
             $('#table_cmd tbody').append(tr);
@@ -429,36 +435,29 @@
 
         if (init(_cmd.type) == 'action') {
             var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-            tr += '<td>';//1
+
+            tr += '<td>'; // Col 1 = Id
             tr += ' <span class="cmdAttr" data-l1key="id"></span>';
             tr += '</td>';
-            tr += '<td>';//2
-            // tr += '     <div class="row">';
-            // tr += '         <div class="col-lg-6">';
-            // tr += '             <a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fa fa-flag"></i> Icone</a>';
-            // tr += '             <span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
-            // tr += '         </div>';
-            //tr += '         <div class="col-lg-6">';
-            tr += '             <input class="cmdAttr form-control input-sm" data-l1key="name"  style="width : 140px;" placeholder="{{Nom de l\'info}}">';
-            //tr += '         </div>';
-            // tr += '     </div>';
-            // tr += '     <select class="cmdAttr form-control tooltips input-sm" data-l1key="value" style="display : none;margin-top : 5px;margin-right : 10px;" title="{{La valeur de la commande vaut par défaut la commande}}">';
-            // tr += '         <option value="">Aucune</option>';
-            // tr += '     </select>';
+            
+            tr += '<td>'; // Col 2 = Jeedom name
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name"  style="width : 140px;" placeholder="{{Nom de l\'info}}">';
             tr += '</td>';
-            tr += '<td>';//3
-            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="action" disabled style="margin-bottom : 5px;" />';
+
+            tr += '<td>'; // Col 3 = Type & sub-type
+            tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom : 5px;" />';
             tr += '     <span class="subType" subType="' + init(_cmd.subType) + '" style=""></span>';
-            //tr += '<input class="cmdAttr" data-l1key="configuration" data-l2key="virtualAction" value="1" style="display:none;" >';
             tr += '</td>';
-            tr += '<td>';//4
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" ' + disabled + ' placeholder="{{Topic}}"><br/>';
+
+            tr += '<td>'; // Col 4 = Abeille command name 
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
             tr += '</td>';
-            tr += '<td>';//5
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" ' + disabled + ' placeholder="{{Payload}}">';
+
+            tr += '<td>'; // Col 5 = Paramètres commande Abeille
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
             tr += '</td>';
-            tr += '<td>';
-            //
+
+            tr += '<td>'; // Col 6 = Polling(cron) / 
             tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
             tr += '         <option value="">Aucun</option>';
             tr += '         <option value="cron">1 min</option>';
@@ -468,22 +467,26 @@
             tr += '         <option value="cron30">30 min</option>';
             tr += '         <option value="cronHourly">Heure</option>';
             tr += '         <option value="cronDaily">Jour</option>';
-            tr += '     </select>';
-            // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="Polling"  style="width : 90px;" placeholder="{{Cron}}">';
+            tr += '     </select></br>';
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" style="height : 33px;" placeholder="{{Commande Abeille}}"><br/></br>';
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}"><br/>';
             tr += '</td>';
-            // tr += '</select></span>';
-            // tr += '</td>';
-            tr += '<td>';//6
+            
+            tr += '<td>'; // Col 7 = Affiche
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br> ';
-            // tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="retain" />{{Retain flag}}</label></span><br> ';
             tr += '</td>';
-            tr += '<td>';//7
+
+            tr += '<td>'; // Col 8 = Conf Adv / Tester / Supprimer
             if (is_numeric(_cmd.id)) {
                 tr += ' <a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> ';
                 tr += ' <a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
             }
-            tr += '     <i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i>';
             tr += '</td>';
+
+            tr += '<td>'; // Col 9 = Supprimer
+            tr += '     <i class="fa fa-minus-circle cmdAction cursor" data-action="remove"></i>';
+            tr += '</td>';
+
             tr += '</tr>';
 
             $('#table_cmd tbody').append(tr);

@@ -19,7 +19,8 @@
         <th style="width: 300px;">{{Commande Abeille}}</th>
         <th style="width: 600px;">{{Paramètres commande Abeille}}</th>
         <th style="width: 150px;">{{Unité/Cron}}</th>
-        <th style="width: 150px;">{{Options}}</th>
+        <th style="width: 130px;">{{Options}}</th>
+        <th style="width:  20px;">{{Supprimer}}</th>
         <th style="width: 80px;"></th>
     </tr>
     </thead>

@@ -13,14 +13,33 @@
 <table id="table_cmd" class="table table-bordered table-condensed">
     <thead>
     <tr>
-        <th style="width:  80px;">{{#}}</th>
-        <th style="width: 150px;">{{Nom}}</th>
-        <th style="width: 120px;">{{Sous-Type}}</th>
-        <th style="width: 300px;">{{Topic}}</th>
-        <th style="width: 600px;">{{Payload}}</th>
-        <th style="width: 150px;">{{Unité/Cron}}</th>
-        <th style="width: 150px;">{{Paramètres}}</th>
-        <th style="width: 80px;">{{Détails}}</th>
+        <?php
+            if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+        ?>
+                <th style="width:  80px;">{{#}}</th>
+                <th style="width: 150px;">{{Commande Jeedom}}</th>
+                <th style="width: 120px;">{{Sous-Type}}</th>
+                <th style="width: 300px;">{{Commande Abeille}}</th>
+                <th style="width: 600px;">{{Paramètres commande Abeille}}</th>
+                <th style="width: 150px;">{{Unité/Cron}}</th>
+                <th style="width: 130px;">{{Options}}</th>
+                <th style="width:  20px;">{{Supprimer}}</th>
+                <th style="width: 80px;"></th>
+        <?php
+            } 
+            else {
+        ?>
+                <th style="width:  80px;">{{#}}</th>
+                <th style="width: 150px;">{{Commande Jeedom}}</th>
+                <th style="width: 120px;">{{Sous-Type}}</th>
+                <th style="width: 150px;">{{Unité/Cron}}</th>
+                <th style="width: 130px;">{{Options}}</th>
+                <th style="width:  20px;">{{Supprimer}}</th>
+                <th style="width: 80px;"></th>
+        <?php
+             }
+        ?>
+
     </tr>
     </thead>
     <tbody>

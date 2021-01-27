@@ -18,12 +18,12 @@
 <form class="form-horizontal">
     <div class="form-group">
         <div class="col-sm-3"></div>
-        <h3 class="col-sm-3" style="text-align:center">{{Paramètres zigbee}}</h1>
+        <h3 class="col-sm-3" style="text-align:center">{{Paramètres généraux}}</h3>
     </div>
     <hr>
 
     <?php
-        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
     ?>
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Id}}</label>
@@ -52,7 +52,7 @@
         </div>
 
     <?php
-            }
+    }
     ?>
     </br>
 
@@ -66,25 +66,50 @@
         </div>
     </div>
 
-    </br>
-
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Time Out (min)}}</label>
+        <label class="col-sm-3 control-label">{{Id}}</label>
         <div class="col-sm-3">
-            <input class="eqLogicAttr form-control" data-l1key="timeout" placeholder="{{En minutes}}"/>
+            <span class="eqLogicAttr" data-l1key="id"></span>
         </div>
     </div>
 
-    </br>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Logical Id}}</label>
+        <div class="col-sm-3">
+            <span class="eqLogicAttr" data-l1key="logicalId"></span>
+        </div>
+    </div>
 
-    <hr>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
+        <div class="col-sm-3">
+            <span> <?php echo $eqAddr; ?> </span>
+            /
+            <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Documentation}}</label>
+        <div class="col-sm-3">
+            <?php
+                $model = $eqLogic->getConfiguration('modeleJson', '');
+                if ($model != '') {
+                    echo '<a href="'.urlProducts.'/'.$model.'" target="_blank">Voir ici si présente</a>';
+                }
+            ?>
+        </div>
+    </div>
 
     <?php
         // If eq is a zigate (short addr=0000 or Ruche), display special parameters
         if ($eqAddr == "0000") {
     ?>
+            <hr>
+
             <div class="form-group">
-            <label class="col-sm-3 control-label">Paramètres zigate</label>
+                <div class="col-sm-3"></div>
+                <h3 class="col-sm-3" style="text-align:center">{{Paramètres Zigate}}</h3>
             </div>
 
             <div class="form-group">
@@ -235,8 +260,11 @@
 
             /* If battery powered eq. 'battery_type' is defined in original JSON file */
             if ($eqLogic->getConfiguration('battery_type', '') != "") {
+                echo '<hr>';
+
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Equipement sur piles}}</label>';
+                echo '<div class="col-sm-3"></div>';
+                echo '<h3 class="col-sm-3" style="text-align:center">{{Equipement sur piles}}</h3>';
                 echo '</div>';
 
                 echo '<div class="form-group" >';
@@ -245,14 +273,15 @@
                 echo '<input id="CeciEstImportant" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type" placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>';
                 echo '</div>';
                 echo '</div>';
-
-                echo '<hr>';
             }
 
             /* If eq is a remote control. 'paramType' is defined in original JSON file */
             if ($eqLogic->getConfiguration('paramType', '') == "telecommande") {
+                echo '<hr>';
+
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Télécommande}}</label>';
+                echo '<div class="col-sm-3"></div>';
+                echo '<h3 class="col-sm-3" style="text-align:center">{{Télécommande}}</h3>';
                 echo '</div>';
 
                 echo '<div class="form-group">';
@@ -268,14 +297,15 @@
                 echo '<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>';
                 echo '</div>';
                 echo '</div>';
-
-                echo '<hr>';
             }
 
             /* If eq is ?. 'paramType' is defined in original JSON file */
             if ($eqLogic->getConfiguration('paramType', '') == "paramABC") {
+                echo '<hr>';
+
                 echo '<div class="form-group">';
-                echo '<label class="col-sm-3 control-label">{{Calibration (y=ax2+bx+c)}}</label>';
+                echo '<div class="col-sm-3"></div>';
+                echo '<h3 class="col-sm-3" style="text-align:center">{{Calibration (y=ax2+bx+c)}}</h3>';
                 echo '</div>';
 
                 echo '<div class="form-group">';

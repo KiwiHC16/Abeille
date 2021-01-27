@@ -55,14 +55,7 @@
                 <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Id}}</label>
-            <div class="col-sm-3">
-                <span class="eqLogicAttr" data-l1key="id"></span>
-            </div>
-        </div>
-
+ 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Note}}</label>
             <div class="col-sm-3">

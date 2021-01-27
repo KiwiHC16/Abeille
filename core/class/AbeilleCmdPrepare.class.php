@@ -158,8 +158,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                         $parameters = proper_parse_str( $msg );
                         $Command = array(
                             "onoffraw"              => "1",
-                            "priority"              => $priority,
                             "dest"                  => $dest,
+                            "priority"              => $priority,
                             "addressMode"           => "02",
                             "address"               => $address,
                             "destinationEndpoint"   => $parameters['EP'],
@@ -167,15 +167,14 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                         );
                     }
                     else {
-                        $actionId = $convertOnOff[$msg];
                         $Command = array(
-                            "onoff" => "1",
-                            "addressMode" => "02",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "destinationEndpoint" => "01",
-                            "action" => $actionId,
+                            "onoffraw"              => "1",
+                            "dest"                  => $dest,
+                            "priority"              => $priority,
+                            "addressMode"           => "02",
+                            "address"               => $address,
+                            "destinationEndpoint"   => "01",
+                            "action"                => $convertOnOff[$msg],
                         );
                     }
                     break;

@@ -15,14 +15,6 @@
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
 
-$("#table_cmd").delegate(".listEquipementInfo", 'click', function () {
-    var el = $(this);
-    jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function (result) {
-        var calcul = el.closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=' + el.data('input') + ']');
-        calcul.atCaret('insert', result.human);
-    });
-});
-
 $('#in_searchEqlogicB').off('keyup').keyup(function () {
                                           var search = $(this).value();
                                           if(search == ''){
@@ -41,18 +33,6 @@ $('#in_searchEqlogicB').off('keyup').keyup(function () {
                                           $('.eqLogicThumbnailContainer').packery();
                                           });
 
-
-$("#bt_addAbeilleAction").on('click', function(event) {
-                             var _cmd = {type: 'action'};
-                             addCmdToTable(_cmd);
-                             $('#div_alert').showAlert({message: 'Affichage des commandes additionnelles mis en place', level: 'success'});
-                             });
-
-$("#bt_addAbeilleInfo").on('click', function(event) {
-                           var _cmd = {type: 'info'};
-                           addCmdToTable(_cmd);
-                           $('#div_alert').showAlert({message: 'Affichage des commandes additionnelles mis en place', level: 'success'});
-                           });
 
 $('#bt_healthAbeille').on('click', function () {
                           $('#md_modal').dialog({title: "{{Santé Abeille}}"});
@@ -342,11 +322,11 @@ function addCmdToTable(_cmd) {
 
 	if (init(_cmd.type) == 'info') {
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-        
+
 		tr += '<td>'; //Id
 		tr += '     <span class="cmdAttr" data-l1key="id"></span>';
         tr += '</td>';
-        
+
 		tr += '<td>'; // Nom
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 140px;" placeholder="{{Nom de l\'info}}">';
         tr += '</td>';
@@ -372,7 +352,7 @@ function addCmdToTable(_cmd) {
 		tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 40%;display : inline-block;"> - ';
         tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 40%;display : inline-block;">';
         tr += '</td>';
-        
+
 		tr += '<td>';
 		if (is_numeric(_cmd.id)) {
 			tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
@@ -382,7 +362,7 @@ function addCmdToTable(_cmd) {
         tr += '</td>';
 
         tr += '</tr>';
-        
+
 		$('#table_cmd tbody').append(tr);
 		$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 		if (isset(_cmd.type)) {
@@ -393,20 +373,20 @@ function addCmdToTable(_cmd) {
 
 	if (init(_cmd.type) == 'action') {
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-        
+
 		tr += '<td>';
 		tr += '     <span class="cmdAttr" data-l1key="id"></span>';
         tr += '</td>';
-        
+
 		tr += '<td>';
 		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name"  style="width : 140px;" placeholder="{{Nom de l\'info}}">';
         tr += '</td>';
-        
+
 		tr += '<td>';
 		tr += '     <input class="cmdAttr form-control type input-sm" data-l1key="type" value="action" disabled style="margin-bottom : 5px;" />';
 		tr += '     <span class="subType" subType="' + init(_cmd.subType) + '" style=""></span>';
         tr += '</td>';
-        
+
 		tr += '<td>';
 		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{Topic}}"><br/>';
         tr += '</td>';
@@ -415,7 +395,7 @@ function addCmdToTable(_cmd) {
 		tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
         tr += '</td>';
 
-        tr += '<td>';   
+        tr += '<td>';
         tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
         tr += '         <option value="">Aucun</option>';
         tr += '         <option value="cron">1 min</option>';
@@ -426,17 +406,17 @@ function addCmdToTable(_cmd) {
         tr += '         <option value="cronHourly">Heure</option>';
         tr += '         <option value="cronDaily">Jour</option>';
         tr += '     </select>';
-        tr += '     </br>';     
+        tr += '     </br>';
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez lancer l execution de cette commande sur changement d un commande info. Indiquer la commande info ici. Faites tres attention de ne pas créer des boucles d execution entre info qui se rafraichissent et commandes action qui demande la rafrachissement.}}">';
-        tr += '     </br>'; 
+        tr += '     </br>';
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" title="{{Delai avant execution cmd (s).}}">';
-        tr += '     </br>'; 
+        tr += '     </br>';
         tr += '</td>';
 
         tr += '<td>';
 		tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br> ';
         tr += '</td>';
-        
+
 		tr += '<td>';
 		if (is_numeric(_cmd.id)) {
 			tr += ' <a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> ';

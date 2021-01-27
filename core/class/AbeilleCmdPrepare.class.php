@@ -1166,7 +1166,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     );
                     break;
                     //----------------------------------------------------------------------------
-                    case "writeAttributeRequestIAS_WD":
+                case "writeAttributeRequestIAS_WD":
                     $fields = preg_split("/[=&]+/", $msg);
                       if (count($fields) > 1) {
                           $parameters = proper_parse_str( $msg );
@@ -1183,6 +1183,25 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
 
                     //----------------------------------------------------------------------------
+                case "DiscoverAttributesCommand":
+                    $fields = preg_split("/[=&]+/", $msg);
+                        if (count($fields) > 1) {
+                            $parameters = proper_parse_str( $msg );
+                        }
+
+                    $Command = array(
+                                        "DiscoverAttributesCommand"     => "1",
+                                        "priority"                      => $priority,
+                                        "dest"                          => $dest,
+                                        "address"                       => $address,
+                                        "EP"                            => $parameters['EP'],
+                                        "clusterId"                     => $parameters['clusterId'],
+                                        "startAttributeId"              => $parameters['startAttributeId'],
+                                        "maxAttributeId"                => $parameters['maxAttributeId'],
+                    );
+                    break;
+    
+                        //----------------------------------------------------------------------------
 
                 default:
                     // $this->deamonlog('warning', '  AbeilleCommand unknown: '.$action );

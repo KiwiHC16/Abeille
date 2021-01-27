@@ -2785,6 +2785,52 @@ class AbeilleCmdProcess extends AbeilleDebug {
         {
             $this->commandLegrand($dest,$Command);
         }
+
+        // DiscoverAttributesCommand
+        if ( isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']) )
+        {
+            $this->deamonlog('debug','DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId']);
+            $cmd = "0140";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>	
+            // <destination endpoint: uint8_t>	
+            // <Cluster id: uint16_t>	
+            // <Attribute id : uint16_t>	
+            // <direction: uint8_t>	
+            // <manufacturer specific: uint8_t>	
+            // <manufacturer id: uint16_t>	
+            // <Max number of identifiers: uint8_t>	
+            // Direction:	
+            // 0 – from server to client	
+            // 1 – from client to server	
+            // Manufacturer specific :	
+            // 1 – Yes	
+            // 0 – No
+
+            $addressMode    = "02";
+            $address        = $Command['address'];
+            $srcEP          = "01";
+            $dstEP          = $Command['EP'];
+            $clusterId      = $Command['clusterId'];
+            $attributeId    = $Command['startAttributeId'];
+            $direction      = "00"; //	0 – from server to client	1 – from client to server
+            $manuSpec       = "00"; //  1 – Yes	 0 – No
+            $manuId         = "0000";
+            $maxAttributeId = $Command['maxAttributeId'];
+
+            $data = $addressMode . $address . $srcEP . $dstEP . $clusterId . $attributeId . $direction . $manuSpec . $manuId . $maxAttributeId ;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data);
+        }
+
+        if ( isset($Command['commandLegrand']) )
+        {
+            $this->commandLegrand($dest,$Command);
+        }
+
     }
 }
 

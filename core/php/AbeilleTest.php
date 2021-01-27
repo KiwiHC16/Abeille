@@ -231,6 +231,12 @@
             $msgAbeille->message['payload'] = 'targetEndpoint=01&ClusterId=0102&AttributeId=0008&AttributeType=20';
         }
 
+        if ($test==124) {
+            echo "Test envoie Cmd to DiscoverAttributesCommand\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/DiscoverAttributesCommand';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0008&startAttributeId=0000&maxAttributeId=FF';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

@@ -151,9 +151,9 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     }
                     break;
                     //----------------------------------------------------------------------------
-                case "OnOff":
+                case "OnOffRaw":
                     if ($this->debug['procmsg3']) {
-                        $this->deamonlog("debug", '  OnOff with dest: '.$dest);
+                        $this->deamonlog("debug", '  OnOffRaw with dest: '.$dest);
                     }
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
@@ -168,9 +168,28 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                             "action"                => $convertOnOff[$parameters['Action']],
                         );
                     }
+                    break;
+                    //----------------------------------------------------------------------------
+                case "OnOff":
+                    if ($this->debug['procmsg3']) {
+                        $this->deamonlog("debug", '  OnOff with dest: '.$dest);
+                    }
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                        $Command = array(
+                            "onoff"                 => "1",
+                            "dest"                  => $dest,
+                            "priority"              => $priority,
+                            "addressMode"           => "02",
+                            "address"               => $address,
+                            "destinationEndpoint"   => $parameters['EP'],
+                            "action"                => $convertOnOff[$parameters['Action']],
+                        );
+                    }
                     else {
                         $Command = array(
-                            "onoffraw"              => "1",
+                            "onoff"                 => "1",
                             "dest"                  => $dest,
                             "priority"              => $priority,
                             "addressMode"           => "02",
@@ -183,7 +202,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "OnOff2":
                     $Command = array(
-                        "onoffraw"                 => "1",
+                        "onoff"                 => "1",
                         "dest"                  => $dest,
                         "priority"              => $priority,
                         "addressMode"           => "02",
@@ -196,7 +215,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                 case "OnOff3":
                 case "OnOffOSRAM":
                     $Command = array(
-                        "onoffraw"                 => "1",
+                        "onoff"                 => "1",
                         "dest"                  => $dest,
                         "priority"              => $priority,
                         "addressMode"           => "02",
@@ -208,7 +227,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "OnOff4":
                     $Command = array(
-                        "onoffraw"              => "1",
+                        "onoff"                 => "1",
                         "dest"                  => $dest,
                         "priority"              => $priority,
                         "addressMode"           => "02",
@@ -220,7 +239,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "OnOffHue":
                     $Command = array(
-                        "onoffraw"                 => "1",
+                        "onoff"                 => "1",
                         "dest"                  => $dest,
                         "priority"              => $priority,
                         "addressMode"           => "02",

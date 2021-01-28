@@ -1,0 +1,22 @@
+{
+  "danfossUIDisplayModeSet": {
+    "isVisible": 0,
+    "name": "Set Deg Mode",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210128_1246",
+      "topic": "WriteAttributeRequestGeneric",
+      "request": "EP=01&Proprio=&clusterId=0204&attributeId=0000&attributeType=30&value=#slider#",
+      "minValue": "0",
+      "maxValue": "1",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

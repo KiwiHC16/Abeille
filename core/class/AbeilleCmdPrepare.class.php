@@ -478,6 +478,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                         $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1] ;
                     }
 
+                    if ( $parameters['attributeType'] = '30' )  {
+                        $valuePrepared = sprintf( "%02X", $parameters['value'] );
+                    }
+
                     $Command = array(
                                         "WriteAttributeRequestGeneric" => "1",
                                         "priority"         => $priority,

@@ -33,7 +33,13 @@
       "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
       "include8 1 - Ok": "danfossUIKeyLockValue",
       "include8 2 - Ok": "danfossUIKeyLockGet",
-      "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet"
+      "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet",
+      "include9 1 - Ok": "BindShortToZigateBatterie",
+      "include9 2 - Ok": "setReportBatterie",
+      "include9 3 - Ok": "setReportBatterieVolt",
+      "include10 1 - Ok": "BindToZigateRadiateur",
+      "include10 2 - Ok": "setReportRadiateurLocalTemperature",
+      "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
     }
   }
 }

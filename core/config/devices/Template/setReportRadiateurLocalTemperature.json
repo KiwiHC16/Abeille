@@ -1,17 +1,17 @@
 {
-  "setReportBatterie": {
+  "setReportRadiateurLocalTemperature": {
     "isVisible": 0,
-    "name": "setReportBatterie",
-    "order": 14,
+    "name": "setReportRadiateurLocalTemperature",
+    "order": 29,
     "isHistorized": "0",
     "Type": "action",
     "subType": "other",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c07c76624ea43",
+      "uniqId": "20210128_1338",
       "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500",
+      "request": "targetEndpoint=01&ClusterId=0201&AttributeId=0000&AttributeType=29&MaxInterval=3500",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "12",
       "visibilityCategory": "Network"

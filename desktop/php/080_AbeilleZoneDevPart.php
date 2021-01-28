@@ -1,3 +1,4 @@
+<?php if (isset($dbgConfig)) { ?>
 <br/>
 <legend><i class="fa fa-cog"></i> {{Zone developpeurs}}</legend>
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
@@ -47,5 +48,5 @@
 
 	</div> <!-- End of developer area -->
 	<br/><br/>
-
 </div>
+<?php } ?>

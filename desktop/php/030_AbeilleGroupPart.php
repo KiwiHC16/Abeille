@@ -24,18 +24,17 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 
 					// foreach ($eqLogics as $key => $eqLogic) {
 					for ($zgNb = 1; $zgNb <= $zigateNb; $zgNb++) {
-						if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+						if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
 							continue; // This Zigate is disabled
 
 						foreach ($eqPerZigate[$zgNb] as $eqId) {
 							$eqLogic = eqLogic::byId($eqId);
+
 							$name= "";
 							$groupMember = "";
 							$groupTele = "";
 							$print=0;
-
 							$abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-
 							$name = $eqLogic->getHumanName(true);
 
 							if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {

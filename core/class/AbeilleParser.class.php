@@ -2630,8 +2630,11 @@
 
                         // Needed for Aqara which don't send Annonce message
                         // CmdAbeille1\/Ruche\/IEEE_Address_request - shortAddress=AAAA
-                        $this->mqqtPublishCmdFct( "Cmd".$dest."/Ruche/IEEE_Address_request", "shortAddress=".$SrcAddr );
-                        parserLog('debug', $dest.  "         Request for IEEE as soon as possible", $type);
+                        $fct = 'Cmd'.$dest.'/'.$SrcAddr.'/IEEE_Address_request';
+                        $data = "shortAddress=".$SrcAddr;
+                        //$this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01" );
+                        $this->mqqtPublishFctToCmd( $fct, $data  );
+                        parserLog('debug', $dest.  "         Request for IEEE as soon as possible, fct:".$fct.' data: '.$data, $type);
                         
                         // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
                         // parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');

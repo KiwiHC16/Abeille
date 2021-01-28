@@ -237,6 +237,12 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId='.$argv[3].'&startAttributeId=0000&maxAttributeId=FF';
         }
 
+        if ($test==125) {
+            echo "Test envoie Cmd to Discover IEEE\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/IEEE_Address_request';
+            $msgAbeille->message['payload'] = 'shortAddress='.$argv[2];
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

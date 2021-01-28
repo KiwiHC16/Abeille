@@ -1924,18 +1924,17 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             // <target short address: uint16_t> -> 4
             // <short address: uint16_t>        -> 4
-            // <request type: uint8_t>          -> 2
+            // <request type: uint8_t>          -> 2    Request Type: 0 = Single 1 = Extended
             // <start index: uint8_t>           -> 2
-            // Request Type: 0 = Single 1 = Extended
 
-            $address = $Command['address'];
-            $shortAddress = $Command['shortAddress'];
-            $requestType = "01";
-            $startIndex = "00";
+            $address        = $Command['address'];
+            $shortAddress   = $Command['shortAddress'];
+            $requestType    = "01";
+            $startIndex     = "00";
 
             $data = $address . $shortAddress . $requestType . $startIndex ;
-            // $lenth = strlen($data)/2;
-            $lenth = "0006";
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->deamonlog('debug', '  IEEE_Address_request: '.$data . ' - ' . $lenth  );
 

@@ -29,6 +29,7 @@
         $uri = parse_url($_SERVER['REQUEST_URI']);
         // Replace "p=Abeille" by "p=AbeilleEq"
         $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);
+        $newuri = str_replace("&ajax=1", "", $newuri); // Required since core v4.1
         header("Location: index.php?".$newuri);
         exit();
     }

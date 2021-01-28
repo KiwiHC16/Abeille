@@ -1,6 +1,6 @@
 {
   "TS0011": {
-    "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch",
+    "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch 1 Bang",
     "timeout": "60",
     "Comment": "https://github.com/KiwiHC16/Abeille/issues/1092",
     "Categorie": {
@@ -18,7 +18,6 @@
       "include4": "etatCharge0",
       "include5": "On",
       "include6": "Off",
-      "include7": "Toggle",
       "include8": "getEtat",
       "include9": "getManufacturerName",
       "include10": "getModelIdentifier"

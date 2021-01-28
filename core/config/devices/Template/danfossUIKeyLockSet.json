@@ -1,0 +1,22 @@
+{
+  "danfossUIKeyLockSet": {
+    "isVisible": 0,
+    "name": "Set Key Lock",
+    "order": 14,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210128_1301",
+      "topic": "WriteAttributeRequestGeneric",
+      "request": "EP=01&Proprio=&clusterId=0204&attributeId=0001&attributeType=30&value=#slider#",
+      "minValue": "0",
+      "maxValue": "5",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

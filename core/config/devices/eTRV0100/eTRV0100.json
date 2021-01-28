@@ -22,8 +22,12 @@
       "include2 2 - Ok": "getBattery",
       "include3 1 - Ok": "Batterie-Volt-Konke",
       "include3 2 - Ok": "getBatteryVolt",
-      "include4 1 - Test": "spiritTemperature",
-      "include4 2 - Test": "spiritTemperatureGet"
+      "include4 1 - Ok": "spiritTemperature",
+      "include4 2 - Ok": "spiritTemperatureGet",
+      "include5 1 - Ok": "danfossSystemeModeValue",
+      "include5 2 - Ok": "danfossSystemeModeGet",
+      "include6 1 - Ok": "spiritPiHeatingDemand",
+      "include6 2 - Ok": "spiritPiHeatingDemandGet"
     }
   }
 }

@@ -2529,6 +2529,11 @@
                 $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
             }
 
+            if ($dataType == "30") {
+                // $data = hexdec(substr($payload, 24, 4));
+                $data = substr($payload, 24, 4);
+            }
+
             if ($dataType == "39") {
                 if ( ($ClusterId=="000C") && ($AttributId=="0055")  ) {
                     if ($EPoint=="01") {

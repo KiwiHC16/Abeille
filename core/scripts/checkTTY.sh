@@ -57,7 +57,7 @@ fi
 if [ "${TYPE}" == "PI" ]; then
     # 'gpio' commands are provided from "WiringPi" package (or equivalent)
     echo "Vérification de l'installation du package 'WiringPi'"
-    command -v gpio
+    command -v gpio >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "= ERREUR: Commande 'gpio' manquante !"
         echo "=         Le package 'WiringPi' est probablement mal installé."
@@ -65,18 +65,19 @@ if [ "${TYPE}" == "PI" ]; then
     fi
     echo "= Ok"
 
-    echo "Configuration du port série"
-    stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw
-    if [ $? -ne 0 ]; then
-        echo " = ERREUR: stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw";
-        exit 5
-    fi
-    echo "= Ok"
-
     # Note: Do not perform PiZigate reset unless you flush messages sent
     #       on startup.
     echo "Configuration des GPIOs"
     gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 1
+    echo "= Ok"
+
+    echo "Configuration du port série"
+    stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo " = ERREUR: Etes vous sur que l'UART associé est disponible ?";
+        sudo cat /proc/tty/driver/serial
+        exit 5
+    fi
     echo "= Ok"
 
 elif [ "${TYPE}" == "WIFI" ]; then

@@ -8,11 +8,11 @@
     "subType": "slider",
     "template": "",
     "configuration": {
-      "uniqId": "20210128_1301",
+      "uniqId": "20210128_1312",
       "topic": "WriteAttributeRequestGeneric",
       "request": "EP=01&Proprio=&clusterId=0204&attributeId=0001&attributeType=30&value=#slider#",
       "minValue": "0",
-      "maxValue": "5",
+      "maxValue": "1",
       "visibilityCategory": "All"
     },
     "display": {

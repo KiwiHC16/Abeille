@@ -31,9 +31,9 @@
       "include7 1 - Ok": "danfossUIDisplayModeValue",
       "include7 2 - Ok": "danfossUIDisplayModeGet",
       "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
-      "include8 1 - Test": "danfossUIKeyLockValue",
-      "include8 2 - Test": "danfossUIKeyLockGet",
-      "include8 3 - Test": "danfossUIKeyLockSet"
+      "include8 1 - Ok": "danfossUIKeyLockValue",
+      "include8 2 - Ok": "danfossUIKeyLockGet",
+      "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet"
     }
   }
 }

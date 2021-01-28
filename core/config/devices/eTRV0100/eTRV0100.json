@@ -27,7 +27,9 @@
       "include5 1 - Ok": "danfossSystemeModeValue",
       "include5 2 - Ok": "danfossSystemeModeGet",
       "include6 1 - Ok": "spiritPiHeatingDemand",
-      "include6 2 - Ok": "spiritPiHeatingDemandGet"
+      "include6 2 - Ok": "spiritPiHeatingDemandGet",
+      "include7 1 - Test": "danfossUIDisplayModeValue",
+      "include7 2 - Test": "danfossUIDisplayModeGet"
     }
   }
 }

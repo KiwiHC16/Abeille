@@ -22,30 +22,6 @@
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
         public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
 
-        // public $debug = array(
-        //                       "AbeilleParserClass"      => 0,  // Mise en place des class
-
-        //                       "8000"                    => 0, // Status
-        //                       "8002"                    => 1, // Unknown messages to Zigate. Mode Hybrid.
-        //                       "8009"                    => 0, // Get Network Status
-        //                       "8010"                    => 0, // Zigate Version
-        //                       "8011"                    => 0, // ACK DATA
-        //                       "8014"                    => 0, // Permit Join
-        //                       "8024"                    => 0, // Network joined-forme
-        //                       "8043"                    => 1, // Simple descriptor response
-        //                       "8045"                    => 1, //
-        //                       "8048"                    => 0, //
-        //                       "8701"                    => 0, //
-
-        //                       "cleanUpNE"               => 1,
-        //                       "configureNE"             => 0,
-        //                       "getNE"                   => 0,
-        //                       "processActionQueue"      => 1,
-        //                       "processAnnonce"          => 1,
-        //                       "processAnnonceStageChg"  => 1,
-
-        //                       );
-
         // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
         // Data Type -> Description, # octets
         public $zbDataTypes = array(
@@ -1001,6 +977,38 @@
                                     );
 
                     // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
+                    return;
+                }
+            }
+
+            if ( ($profile == "0104") && ($cluster == "0204") ) {
+                $frameCtrlField         = substr($payload,26, 2);
+                $SQN                    = substr($payload,28, 2);
+                $cmd                    = substr($payload,30, 2);
+
+                if ($cmd == '01') { // Read Response
+                    $attribute                 = substr($payload,34, 2) . substr($payload,32, 2);
+                    $status                    = substr($payload,36, 2);
+                    $attributeType              = substr($payload,38, 2);
+                    $value                     = substr($payload,40, 2);
+
+                    if ( !$status ) {
+                        $this->deamonlog('debug', $dest.', Type=8002/Data indication - Status not null - not processing. ');
+                        return;
+                    }
+
+                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
+                                    . $baseLog
+                                    . ', frameCtrlField='.$frameCtrlField
+                                    . ', SQN='.$SQN
+                                    . ', cmd='.$cmd
+                                    . ', attribute='.$attribute
+                                    . ', status='.$status
+                                    . ', attributeType='.$attributeType
+                                    . ', value='.$value
+                                    );
+
+                    $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, $value );
                     return;
                 }
             }

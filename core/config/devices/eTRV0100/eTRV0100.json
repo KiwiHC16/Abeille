@@ -19,7 +19,9 @@
       "include1 2 - Ok": "danfossTemperatureConsigneGet",
       "include1 3 - Ok": "danfossTemperatureConsigneSet",
       "include2 1 - Ok": "Batterie-Pourcent-Heiman",
-      "include2 2 - Ok": "getBattery"
+      "include2 2 - Ok": "getBattery",
+      "include3 1 - Test": "Batterie-Volt-Konke",
+      "include3 2 - Test": "getBatteryVolt"
     }
   }
 }

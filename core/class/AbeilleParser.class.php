@@ -2628,7 +2628,10 @@
 
                         $data = $trimmedValue;
 
-                        // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
+                        // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
+                        $this->mqqtPublishFctToCmd( 'CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr );
+                        
+                            // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
                         parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
                     }
                 }

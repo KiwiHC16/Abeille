@@ -1933,7 +1933,6 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $startIndex     = "00";
 
             $data = $address . $shortAddress . $requestType . $startIndex ;
-
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->deamonlog('debug', '  IEEE_Address_request: '.$data . ' - ' . $lenth  );

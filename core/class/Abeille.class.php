@@ -1458,7 +1458,7 @@ class Abeille extends eqLogic
             }
 
             foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
-                log::add('Abeille', 'info', 'Creation de la commande: ' . $cmd . ' suivant model de l objet pour l objet: ' . $name);
+                log::add('Abeille', 'info', 'Creation de la commande: ' . $cmdValueDefaut["name"].' ('.$cmd.')' . ' suivant le model de l objet pour l objet: ' . $name);
                 // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
 
                 $cmdlogic = new AbeilleCmd();

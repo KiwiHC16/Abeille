@@ -9,13 +9,13 @@
     "generic_type": "TEMPERATURE",
     "invertBinary": "0",
     "template": "tempIMG",
+    "unite": "°C",
     "configuration": {
-	"uniqId": "5c07c76625440",
+      "uniqId": "5c07c76625440",
       "calculValueOffset": "#value#/100",
       "historizeRound": "1",
       "visibilityCategory": "All",
       "topic": "0402-#EP#-0000"
-    },
-    "unite": "°C"
+    }
   }
 }

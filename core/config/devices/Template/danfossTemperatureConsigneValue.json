@@ -1,0 +1,18 @@
+{
+  "0201-01-0012": {
+    "isVisible": 1,
+    "name": "Consigne",
+    "unite": "°C",
+    "order": 3,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "invertBinary": "0",
+    "generic_type": "TEMPERATURE",
+    "configuration": {
+      "uniqId": "20210128_1105",
+      "calculValueOffset": "#value#/100",
+      "visibilityCategory": "All"
+    }
+  }
+}

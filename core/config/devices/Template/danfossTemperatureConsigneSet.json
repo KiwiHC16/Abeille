@@ -1,7 +1,7 @@
 {
   "danfossTemperatureConsigneSet": {
     "isVisible": 1,
-    "name": "Set Consigne",
+    "name": "Consigne Set",
     "order": 14,
     "isHistorized": "0",
     "Type": "action",
@@ -10,7 +10,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c07c7632543sfggjgqxe4",
+      "uniqId": "20210128_1100",
       "topic": "WriteAttributeRequestGeneric",
       "request": "EP=01&Proprio=&clusterId=0201&attributeId=0012&attributeType=29&value=#slider#",
       "minValue": "5",

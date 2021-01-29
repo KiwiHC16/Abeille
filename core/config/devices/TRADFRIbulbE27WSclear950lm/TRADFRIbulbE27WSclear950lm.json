@@ -1,0 +1,54 @@
+{
+  "TRADFRIbulbE27WSclear950lm": {
+    "nameJeedom": "TRADFRI bulb E27 WS clear 950lm",
+    "timeout": "60",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "uniqId": "20210129_0144",
+      "icone": "TRADFRIbulbE27WSclear950lm",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include4": "etatLight",
+      "include5": "levelLight",
+      "include6": "colorX",
+      "include7": "colorY",
+      "include8": "On",
+      "include9": "Off",
+      "include10": "Toggle",
+      "include11": "setLevel",
+      "include12": "Colour",
+      "include13": "Blanc",
+      "include14": "Bleu",
+      "include15": "Rouge",
+      "include16": "Vert",
+      "include17": "getColorX",
+      "include18": "getColorY",
+      "include19": "getEtat",
+      "include20": "getLevel",
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild",
+      "include24": "Identify",
+      "include25": "Group-Membership",
+      "include26": "BindToZigateEtat",
+      "include27": "BindToZigateLevel",
+      "include28": "setReportEtat",
+      "include29": "setReportLevel",
+      "include12 2": "ColourRGB",
+      "include30": "setColourRGB",
+      "include30 2": "setRGB",
+      "include31": "colorRouge",
+      "include32": "setRouge",
+      "include33": "colorVert",
+      "include34": "setVert",
+      "include35": "colorBleu",
+      "include36": "setBleu"
+    }
+  }
+}

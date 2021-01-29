@@ -1,0 +1,19 @@
+{
+  "OffEp08": {
+    "isVisible": 1,
+    "name": "Off",
+    "order": 7,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "generic_type": "LIGHT_OFF",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210129_1655",
+      "topic": "OnOff",
+      "request": "Action=Off&EP=08",
+      "visibilityCategory": "All"
+    }
+  }
+}

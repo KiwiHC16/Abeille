@@ -1,0 +1,17 @@
+{
+  "0006-08-0000": {
+    "isVisible": 1,
+    "name": "etat 8",
+    "order": 3,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "binary",
+    "generic_type": "LIGHT_STATE_BOOL",
+    "invertBinary": "0",
+    "template": "light",
+    "configuration": {
+      "uniqId": "20210129_1702",
+      "visibilityCategory": "All"
+    }
+  }
+}

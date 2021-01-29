@@ -12,6 +12,7 @@
       "uniqId": "5c07c76623cdpksn1",
       "topic": "ReadAttributeRequest",
       "request": "EP=#EP#&clusterId=0006&attributeId=0000",
+      "RefreshData": "1",
       "visibilityCategory": "additionalCommand"
     }
   }

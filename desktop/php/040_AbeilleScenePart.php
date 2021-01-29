@@ -80,8 +80,8 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Sce
 				<label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
 				<label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
 				<br/>
-				<input type="submit" name="submitButton" value="View Scene">
-				<input type="submit" name="submitButton" value="Add Scene">
+				<!--<input type="submit" name="submitButton" value="View Scene">-->
+				<!--<input type="submit" name="submitButton" value="Add Scene">-->
 				<input type="submit" name="submitButton" value="Remove Scene">
 				<input type="submit" name="submitButton" value="Store Scene">
 				<input type="submit" name="submitButton" value="Recall Scene">

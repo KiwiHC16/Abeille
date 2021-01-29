@@ -32,12 +32,19 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Sce
 
 						$name = $eqLogic->getHumanName(true);
 
-						if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership') ) {
-							if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd())>2 ) {
-								$sceneMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd());
-								$print = 1;
+						if (0) {
+							if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership') ) {
+								if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd())>2 ) {
+									$sceneMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Scene-Membership')->execCmd());
+									$print = 1;
+								}
 							}
 						}
+						else {
+							$sceneMember = $eqLogic->getConfiguration('sceneJson');
+							if ($sceneMember!='') $print = 1;
+						}
+
 
 						if ( strlen($eqLogic->getConfiguration('Scene'))>3 ) {
 							$sceneTele = $eqLogic->getConfiguration('Scene');

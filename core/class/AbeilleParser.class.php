@@ -886,9 +886,11 @@
                 return;
             }
 
-            // Boutons lateraux de la telecommande
+            // Boutons lateraux de la telecommande - 0005: Cluster Scene
             if ( ($profile == "0104") && ($cluster == "0005") ) {
+
                 $frameCtrlField = substr($payload,26, 2);
+
                 if ( $frameCtrlField=='05' ) {
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
                     if ( $Manufacturer=='117C' ) {
@@ -915,6 +917,28 @@
                         return;
                     }
                 }
+                if ( $frameCtrlField=='19' ) {
+                    $SQN                    = substr($payload,28, 2);
+                    $cmd                    = substr($payload,30, 2);
+                    if ( $cmd != "06" ) {
+                        parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Cmd unknown.');
+                        return;
+                    }
+                    $sceneStatus            = substr($payload,32, 2);
+                    if ( $sceneStatus != "00" ) {
+                        parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                        return;
+                    }
+                    $sceneCapacity          = substr($payload,34, 2);
+                    $groupID                = substr($payload,36, 4);
+                    $sceneCount             = substr($payload,40, 2);
+
+                    parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount );
+                    $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'"}}';
+                    $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
+                    return;
+                }
+                
             }
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs

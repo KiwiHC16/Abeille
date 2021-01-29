@@ -63,13 +63,10 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Sce
 	</div>
 	<div id="rightThing" style="float: left; width:40%;">
 		<table style="margin: 10px 10px;">
+
 			<tr>
 				<td align="center">
-				<label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
-				<input type="text" name="groupIdScene1" placeholder="XXXX">
-				<br/>
-				<input type="submit" name="submitButton" value="Get Scene Membership">
-				<input type="submit" name="submitButton" value="Remove All Scene">
+					<input type="submit" name="submitButton" value="Get Scene Info">
 				</td>
 			</tr>
 			<tr>
@@ -77,15 +74,27 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Sce
 			</tr>
 			<tr>
 				<td align="center">
-				<label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
-				<label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
-				<br/>
-				<!--<input type="submit" name="submitButton" value="View Scene">-->
-				<!--<input type="submit" name="submitButton" value="Add Scene">-->
-				<input type="submit" name="submitButton" value="Remove Scene">
-				<input type="submit" name="submitButton" value="Store Scene">
-				<input type="submit" name="submitButton" value="Recall Scene">
-				<input type="submit" name="submitButton" value="scene Group Recall">
+					<label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Group Id</label>
+					<input type="text" name="groupIdScene1" placeholder="XXXX">
+					<br/>
+					<input type="submit" name="submitButton" value="Get Scene Membership">
+					<input type="submit" name="submitButton" value="Remove All Scene">
+				</td>
+			</tr>
+			<tr>
+				<td><br/></td>
+			</tr>
+			<tr>
+				<td align="center">
+					<label>Group Id</label><input type="text" name="groupIdScene2" placeholder="XXXX">
+					<label>Scene Id</label><input type="text" name="sceneID" placeholder="YY">
+					<br/>
+					<!--<input type="submit" name="submitButton" value="View Scene">-->
+					<!--<input type="submit" name="submitButton" value="Add Scene">-->
+					<input type="submit" name="submitButton" value="Remove Scene">
+					<input type="submit" name="submitButton" value="Store Scene">
+					<input type="submit" name="submitButton" value="Recall Scene">
+					<input type="submit" name="submitButton" value="scene Group Recall">
 				</td>
 			</tr>
 		</table>

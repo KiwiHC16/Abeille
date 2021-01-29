@@ -121,6 +121,21 @@
                 break;
 
             // Scene
+            case 'Get Scene Info':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+                        $EP = $device->getConfiguration('mainEP');
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0000' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0001' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0002' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0003' );
+                    }
+                }
+                break;
+
             case 'View Scene':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {

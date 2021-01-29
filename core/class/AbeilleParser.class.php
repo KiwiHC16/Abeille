@@ -1006,8 +1006,14 @@
                             parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID );
                             
                             $sceneStored["SceneMembership"]["sceneCapacity"]        = $sceneCapacity;
-                            $sceneStored["SceneMembership"][$groupID]["sceneCount"] = "00";
-                            $sceneStored["SceneMembership"][$groupID]["sceneId"]    = "";
+                            if (0) {
+                                $sceneStored["SceneMembership"][$groupID]["sceneCount"] = "00";
+                                $sceneStored["SceneMembership"][$groupID]["sceneId"]    = "";
+                            }
+                            else {
+                                unset( $sceneStored["SceneMembership"][$groupID] );
+                            }
+                            
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 

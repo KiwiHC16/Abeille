@@ -886,7 +886,14 @@
                 return;
             }
 
-            // Boutons lateraux de la telecommande - 0005: Cluster Scene
+            // Cluster 0x0004 Groups
+            if ( ($profile == "0104") && ($cluster == "0004") ) {
+                // Managed/Processed by Ziagte which send a 8062 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
+                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                return;
+            }
+
+            //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if ( ($profile == "0104") && ($cluster == "0005") ) {
 
                 $frameCtrlField = substr($payload,26, 2);
@@ -917,30 +924,32 @@
                         return;
                     }
                 }
-                if ( $frameCtrlField=='19' ) {
+                
+                if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
 
-                    if ( $cmd == "06" ) { // Get Scene Membership Response
+                    $abeille = Abeille::byLogicalId($dest."/".$srcAddress,'Abeille');
+                    $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+
+                    // Add Scene Response
+                    if ( $cmd == "00" ) {
                         $sceneStatus            = substr($payload,32, 2);
+                        
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error dd Scene Response.');
                             return;
                         }
-                        $sceneCapacity          = substr($payload,34, 2);
-                        $groupID                = substr($payload,36, 4);
-                        $sceneCount             = substr($payload,40, 2);
-                        $sceneId = "";
-                        for ($i = 0; $i < hexdec($sceneCount); $i++) {
-                            $sceneId .= '-'.substr($payload,42+$i*2, 2);
-                        }
 
-                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
-                        $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'","sceneId":"'.$sceneId.'"}}';
-                        $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
+                        $groupID          = substr($payload,34, 4);
+                        $sceneId          = substr($payload,36, 2);
+
+                        parserLog("debug",$dest.', Type=8002 Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
                         return;
                     }
-                    elseif ( $cmd == "01" ) { // View Scene Response
+
+                    // View Scene Response
+                    elseif ( $cmd == "01" ) { 
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
@@ -956,7 +965,9 @@
                         parserLog("debug",$dest.', Type=8002 View Scene Response: '.$groupID.' - '.$sceneId.' ...');
                         return;
                     }
-                    elseif ( $cmd == "02" ) { // Remove scene response
+
+                    // Remove scene response
+                    elseif ( $cmd == "02" ) { 
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
@@ -968,6 +979,71 @@
                         parserLog("debug",$dest.', Type=8002 scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
                         return;
                     }
+
+                    // Store Scene Response
+                    elseif ( $cmd == "04" ) { 
+                        $sceneStatus            = substr($payload,32, 2);
+                        
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error Store Scene Response.');
+                            return;
+                        }
+
+                        $groupID          = substr($payload,34, 4);
+                        $sceneId          = substr($payload,36, 2);
+
+                        parserLog("debug",$dest.', Type=8002 store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
+                        return;
+                    }
+
+                    // Get Scene Membership Response
+                    elseif ( $cmd == "06" ) { 
+                        $sceneStatus            = substr($payload,32, 2);
+                        if ( $sceneStatus == "85" ) {  // Invalid Field
+                            $sceneCapacity          = substr($payload,34, 2);
+                            $groupID                = substr($payload,36, 4);
+
+                            parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID );
+                            
+                            $sceneStored["SceneMembership"]["sceneCapacity"]        = $sceneCapacity;
+                            $sceneStored["SceneMembership"][$groupID]["sceneCount"] = "00";
+                            $sceneStored["SceneMembership"][$groupID]["sceneId"]    = "";
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+
+                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+
+                            // $sceneStored = json_decode( Abeille::byLogicalId($dest."/".$srcAddress,'Abeille')->getConfiguration('sceneJson','{}') , True );
+                            // parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            return;
+                        }
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            return;
+                        }
+
+                        $sceneCapacity          = substr($payload,34, 2);
+                        $groupID                = substr($payload,36, 4);
+                        $sceneCount             = substr($payload,40, 2);
+                        $sceneId = "";
+                        for ($i = 0; $i < hexdec($sceneCount); $i++) {
+                            $sceneId .= '-'.substr($payload,42+$i*2, 2);
+                        }
+
+                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
+
+                        $sceneStored["SceneMembership"]["sceneCapacity"]        = $sceneCapacity;
+                        $sceneStored["SceneMembership"][$groupID]["sceneCount"] = $sceneCount;
+                        $sceneStored["SceneMembership"][$groupID]["sceneId"]    = $sceneId;
+                        $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        $abeille->save();
+
+                        parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                        // $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'","sceneId":"'.$sceneId.'"}}';
+                        // $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
+                        return;
+                    }
+
                     else {
                         parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Cmd unknown.');
                         return;

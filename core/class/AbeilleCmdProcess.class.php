@@ -1595,13 +1595,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // <group ID: uint16_t>
             // <scene ID: uint8_t>
 
-            $addressMode = "02";                                    // Short Address -> 2
-            $address = $Command['address'];                         // -> 4
-            $sourceEndpoint = "01";                                 // -> 2
-            $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
+            $addressMode                    = "02";                                    // Short Address -> 2
+            $address                        = $Command['address'];                         // -> 4
+            $sourceEndpoint                 = "01";                                 // -> 2
+            $destinationEndpoint            = $Command['DestinationEndPoint']; // -> 2
 
-            $groupID = $Command['groupID'];
-            $sceneID = $Command['sceneID'];
+            $groupID                        = $Command['groupID'];
+            $sceneID                        = $Command['sceneID'];
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupID . $sceneID;
 
@@ -1621,13 +1621,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // <group ID: uint16_t>
             // <scene ID: uint8_t>
 
-            $addressMode = "01";                                    // Group Address -> 1, Short Address -> 2
-            $address = $Command['groupID'];                         // -> 4
-            $sourceEndpoint = "01";                                 // -> 2
-            $destinationEndpoint = "02"; // -> 2
+            $addressMode                    = "01";                  // Group Address -> 1, Short Address -> 2
+            $address                        = $Command['groupID'];   // -> 4
+            $sourceEndpoint                 = "01";                  // -> 2
+            $destinationEndpoint            = "02";                  // -> 2
 
-            $groupID = $Command['groupID'];
-            $sceneID = $Command['sceneID'];
+            $groupID                        = $Command['groupID'];
+            $sceneID                        = $Command['sceneID'];
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupID . $sceneID;
 

@@ -1020,8 +1020,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
                     $Command = array(
                                      "sceneGroupRecall"         => "1",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
                                      // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
 
                                      // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],

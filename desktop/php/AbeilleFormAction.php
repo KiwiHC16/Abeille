@@ -161,18 +161,18 @@
 
             case 'scene Group Recall':
                 if (0) {
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/sceneGroupRecall',       'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                    foreach ( $_POST as $item=>$Value ) {
+                        if ( strpos("-".$item, "eqSelected") == 1 ) {
+                            echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                            $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                            list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+                            $EP = $device->getConfiguration('mainEP');
+                            sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/sceneGroupRecall',       'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                        }
                     }
                 }
-                }
                 else {
-                    sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/sceneGroupRecall',           'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
+                    sendMessageFromFormToCmd('CmdAbeille1/Ruche/sceneGroupRecall',           'groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
                 }
                 break;
 

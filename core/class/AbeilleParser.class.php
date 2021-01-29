@@ -920,23 +920,58 @@
                 if ( $frameCtrlField=='19' ) {
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
-                    if ( $cmd != "06" ) {
+
+                    if ( $cmd == "06" ) { // Get Scene Membership Response
+                        $sceneStatus            = substr($payload,32, 2);
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            return;
+                        }
+                        $sceneCapacity          = substr($payload,34, 2);
+                        $groupID                = substr($payload,36, 4);
+                        $sceneCount             = substr($payload,40, 2);
+                        $sceneId = "";
+                        for ($i = 0; $i < hexdec($sceneCount); $i++) {
+                            $sceneId .= '-'.substr($payload,42+$i*2, 2);
+                        }
+
+                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
+                        $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'","sceneId":"'.$sceneId.'"}}';
+                        $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
+                        return;
+                    }
+                    elseif ( $cmd == "01" ) { // View Scene Response
+                        $sceneStatus            = substr($payload,32, 2);
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            return;
+                        }
+                        $groupID            = substr($payload,34, 4);
+                        $sceneId            = substr($payload,38, 2);
+                        $transitionTime     = substr($payload,40, 4);
+                        $Length             = substr($payload,44, 2);
+                        $statusRouting      = "";
+                        $extensionSet       = ""; // 06:00:01:01:08:00:01:fe:00:03:04:13:ae:eb:51 <- to be investigated
+
+                        parserLog("debug",$dest.', Type=8002 View Scene Response: '.$groupID.' - '.$sceneId.' ...');
+                        return;
+                    }
+                    elseif ( $cmd == "02" ) { // Remove scene response
+                        $sceneStatus            = substr($payload,32, 2);
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            return;
+                        }
+                        $groupID            = substr($payload,34, 4);
+                        $sceneId            = substr($payload,38, 2);
+
+                        parserLog("debug",$dest.', Type=8002 scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
+                        return;
+                    }
+                    else {
                         parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Cmd unknown.');
                         return;
                     }
-                    $sceneStatus            = substr($payload,32, 2);
-                    if ( $sceneStatus != "00" ) {
-                        parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
-                        return;
-                    }
-                    $sceneCapacity          = substr($payload,34, 2);
-                    $groupID                = substr($payload,36, 4);
-                    $sceneCount             = substr($payload,40, 2);
-
-                    parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount );
-                    $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'"}}';
-                    $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
-                    return;
                 }
                 
             }

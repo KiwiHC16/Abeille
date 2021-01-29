@@ -69,14 +69,20 @@ if [ "${TYPE}" == "PI" ]; then
     #       on startup.
     echo "Configuration des GPIOs"
     gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 1
+    READ2=`gpio read 2`
+    READ0=`gpio read 0`
+    if [ ${READ2} -ne 1 ] || [ ${READ0} -ne 1 ]; then
+        echo " = ERREUR: Votre package WiringPi ne semble pas fonctionnel.";
+        exit 5
+    fi
     echo "= Ok"
 
     echo "Configuration du port série"
     stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        echo " = ERREUR: Etes vous sur que l'UART associé est disponible ?";
+        echo " = ERREUR: Etes vous sur que l'UART associé est active ?";
         sudo cat /proc/tty/driver/serial
-        exit 5
+        exit 6
     fi
     echo "= Ok"
 

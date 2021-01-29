@@ -244,9 +244,27 @@
         }
 
         if ($test==126) {
-            echo "Test recuperation parametre Scene\n";
+            echo "Test recuperation parametre Scene Count\n";
             $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0000';
+        }
+
+        if ($test==127) {
+            echo "Test recuperation parametre Scene Current\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0001';
+        }
+
+        if ($test==128) {
+            echo "Test recuperation parametre Group Current for scene\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0002';
+        }
+
+        if ($test==129) {
+            echo "Test recuperation parametre scene active\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0003';
         }
 
         // Send the command to the queue for processing

@@ -931,9 +931,10 @@
                 if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00 
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
+                    parserLog("debug", $dest.', Type=8002/Data indication ---------------------> cmd :'.$cmd );
 
                     if ($cmd=="01") { // Read Attribut
-                        $attribut           = substr($payload,32, 4);
+                        $attribut           = substr($payload,34, 2).substr($payload,32, 2);
                         $status             = substr($payload,36, 2);
                         if ( $status != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Attribut Read Status error.');
@@ -950,6 +951,44 @@
 
                             return;
                         }
+
+                        if ( $attribut == "0001" ) {
+                            $dataType   = substr($payload,38, 2);
+                            $sceneCurrent = substr($payload,40, 2);
+                            $sceneStored["SceneMembership"]["sceneCurrent"]           = $sceneCurrent;
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+    
+                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+
+                            return;
+                        }
+
+                        if ( $attribut == "0002" ) {
+                            $dataType       = substr($payload,38, 2);
+                            $groupCurrent   = substr($payload,40, 4);
+                            $sceneStored["SceneMembership"]["groupCurrent"]           = $groupCurrent;
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+    
+                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+
+                            return;
+                        }
+
+                        if ( $attribut == "0003" ) {
+                            $dataType   = substr($payload,38, 2);
+                            $sceneActive = substr($payload,40, 2);
+                            $sceneStored["SceneMembership"]["sceneActive"]           = $sceneActive;
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+    
+                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+
+                            return;
+                        }
+
+                        parserLog("debug", $dest.', Type=8002/Data indication ---------------------> Attribut inconnu :'.$attribut );
                     }
                 }
 

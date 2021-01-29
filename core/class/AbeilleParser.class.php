@@ -1044,6 +1044,22 @@
                         return;
                     }
 
+                    // Remove All Scene Response
+                    elseif ( $cmd == "03" ) {
+                        $sceneStatus            = substr($payload,32, 2);
+                        if ( $sceneStatus != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Status error Remove All Scene Response.');
+                            return;
+                        }
+                        $groupID                = substr($payload,36, 2).substr($payload,34, 2);
+
+                        unset($sceneStored["SceneMembership"]["sceneRemainingCapacity"]);
+                        unset($sceneStored["SceneMembership"]["sceneCount"]);
+                        unset($sceneStored["SceneMembership"][$groupID]);
+                        $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        $abeille->save();
+                    }
+
                     // Store Scene Response
                     elseif ( $cmd == "04" ) { 
                         $sceneStatus            = substr($payload,32, 2);
@@ -1093,7 +1109,7 @@
                         }
 
                         $sceneRemainingCapacity = substr($payload,34, 2);
-                        $groupID                = substr($payload,36, 4);
+                        $groupID                = substr($payload,38, 2).substr($payload,36, 2);
                         $sceneCount             = substr($payload,40, 2);
                         $sceneId = "";
                         for ($i = 0; $i < hexdec($sceneCount); $i++) {
@@ -1103,8 +1119,8 @@
                         parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
 
                         $sceneStored["SceneMembership"]["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
-                        $sceneStored["SceneMembership"]["sceneCount"]           = $sceneCount;
-                        $sceneStored["SceneMembership"][$groupID]["sceneId"]    = $sceneId;
+                        $sceneStored["SceneMembership"]["sceneCount"]                    = $sceneCount;
+                        $sceneStored["SceneMembership"][$groupID]["sceneId"]             = $sceneId;
                         $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                         $abeille->save();
 

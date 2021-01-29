@@ -249,6 +249,31 @@ class Abeille extends eqLogic
     }
 
     /**
+     * RefreshCmd
+     * Execute all cmd to update cmd info (e.g: after a long stop of Abeille to  get all data)
+     *
+     * @param   none
+     *
+     * @return  Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function refreshCmd()
+    {
+        log::add('Abeille', 'debug', 'refreshCmd: start');
+        $i=15;
+        foreach (AbeilleCmd::searchConfiguration('RefreshData', 'Abeille') as $key => $cmd) {
+            if ($cmd->getConfiguration('RefreshData',0)) {
+                log::add('Abeille', 'debug', 'refreshCmd: '.$cmd->getHumanName().' ('.$cmd->getEqlogic()->getLogicalId().')' );
+                // $cmd->execute(); le process ne sont pas tous demarrer donc on met une tempo.
+                $topic   = $cmd->getEqlogic()->getLogicalId() . '/' . $cmd->getConfiguration('topic');
+                $request = $cmd->getConfiguration('request');
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$topic."&time=".(time()+$i), $request );
+                $i++;
+            }
+        }
+        log::add('Abeille', 'debug', 'refreshCmd: end');
+    }
+
+    /**
      * getIEEE
      * get IEEE from the eqLogic
      *
@@ -790,6 +815,9 @@ class Abeille extends eqLogic
             }
 
         }
+
+        // Essaye de recuperer les etats des equipements
+        self::refreshCmd();
 
         log::add('Abeille', 'debug', 'deamon_start(): Terminé');
         return true;

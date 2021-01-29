@@ -93,6 +93,9 @@
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
             <!-- Gestion des groupes et des scenes  -->
+            <?php include '025_AbeilleNEPart.php'; ?>
+
+            <!-- Gestion des groupes et des scenes  -->
             <?php include '030_AbeilleGroupPart.php'; ?>
 
             <!-- Gestion des groupes et des scenes  -->

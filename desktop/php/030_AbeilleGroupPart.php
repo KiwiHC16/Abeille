@@ -63,8 +63,7 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 		<table style="margin: 10px 10px;">
 			<tr>
 				<td align="center">
-				<input type="submit" name="submitButton" value="Get Infos from NE">
-				<input type="submit" name="submitButton" value="Get Group">
+					<input type="submit" name="submitButton" value="Get Group">
 				</td>
 			</tr>
 			<tr>
@@ -72,14 +71,14 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 			</tr>
 			<tr>
 				<td align="center">
-				<label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-				<input type="text" name="group" placeholder="XXXX">
-				<br/>
-				<input type="submit" name="submitButton" value="Add Group">
-				<input type="submit" name="submitButton" value="Remove Group">
-				<br/>
-				<input type="submit" name="submitButton" value="Set Group Remote">
-				<input type="submit" name="submitButton" value="Set Group Remote Legrand">
+					<label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
+					<input type="text" name="group" placeholder="XXXX">
+					<br/>
+					<input type="submit" name="submitButton" value="Add Group">
+					<input type="submit" name="submitButton" value="Remove Group">
+					<br/>
+					<input type="submit" name="submitButton" value="Set Group Remote">
+					<input type="submit" name="submitButton" value="Set Group Remote Legrand">
 				</td>
 			</tr>
 		</table>

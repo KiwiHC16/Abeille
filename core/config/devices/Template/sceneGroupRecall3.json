@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "5c07c76624a3e3",
       "topic": "CmdAbeille/Ruche/sceneGroupRecall",
-      "request": "groupID=#addrGroup#&sceneID=02",
+      "request": "groupID=#addrGroup#&sceneID=03",
       "visibilityCategory": "All"
     },
     "display": {

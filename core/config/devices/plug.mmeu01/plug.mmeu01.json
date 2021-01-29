@@ -25,7 +25,8 @@
       "include13 2": "conso",
       "include13 2 2": "VoltagePrise",
       "include13 2 2 2": "CurrentPrise_mA",
-      "include13 2 2 2 2": "temperaturePrise"
+      "include13 2 2 2 2": "temperaturePrise",
+      "include25": "Group-Membership"
     }
   }
 }

@@ -37,7 +37,6 @@
       "include15": "getSWBuild",
       "include16": "Identify",
       "include25": "Group-Membership",
-      "include25 2": "Scene-Membership",
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",

@@ -243,6 +243,12 @@
             $msgAbeille->message['payload'] = 'shortAddress='.$argv[2];
         }
 
+        if ($test==126) {
+            echo "Test recuperation parametre Scene\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0000';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

@@ -896,6 +896,9 @@
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if ( ($profile == "0104") && ($cluster == "0005") ) {
 
+                $abeille = Abeille::byLogicalId($dest."/".$srcAddress,'Abeille');
+                $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+
                 $frameCtrlField = substr($payload,26, 2);
 
                 if ( $frameCtrlField=='05' ) {
@@ -925,12 +928,34 @@
                     }
                 }
                 
-                if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
+                if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00 
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
 
-                    $abeille = Abeille::byLogicalId($dest."/".$srcAddress,'Abeille');
-                    $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+                    if ($cmd=="01") { // Read Attribut
+                        $attribut           = substr($payload,32, 4);
+                        $status             = substr($payload,36, 2);
+                        if ( $status != "00" ) {
+                            parserLog("debug", $dest.', Type=8002/Data indication - Attribut Read Status error.');
+                            return;
+                        }
+                        if ( $attribut == "0000" ) {
+                            $dataType   = substr($payload,38, 2);
+                            $sceneCount = substr($payload,40, 2);
+                            $sceneStored["SceneMembership"]["sceneCount"]           = $sceneCount-1; // On ZigLight need to remove one
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+    
+                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+
+                            return;
+                        }
+                    }
+                }
+
+                if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
+                    $SQN                    = substr($payload,28, 2);
+                    $cmd                    = substr($payload,30, 2);
 
                     // Add Scene Response
                     if ( $cmd == "00" ) {
@@ -1000,12 +1025,12 @@
                     elseif ( $cmd == "06" ) { 
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus == "85" ) {  // Invalid Field
-                            $sceneCapacity          = substr($payload,34, 2);
+                            $sceneRemainingCapacity = substr($payload,34, 2);
                             $groupID                = substr($payload,36, 4);
 
-                            parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID );
+                            parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID );
                             
-                            $sceneStored["SceneMembership"]["sceneCapacity"]        = $sceneCapacity;
+                            $sceneStored["SceneMembership"]["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
                             if (0) {
                                 $sceneStored["SceneMembership"][$groupID]["sceneCount"] = "00";
                                 $sceneStored["SceneMembership"][$groupID]["sceneId"]    = "";
@@ -1028,7 +1053,7 @@
                             return;
                         }
 
-                        $sceneCapacity          = substr($payload,34, 2);
+                        $sceneRemainingCapacity = substr($payload,34, 2);
                         $groupID                = substr($payload,36, 4);
                         $sceneCount             = substr($payload,40, 2);
                         $sceneId = "";
@@ -1036,17 +1061,16 @@
                             $sceneId .= '-'.substr($payload,42+$i*2, 2);
                         }
 
-                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
+                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
 
-                        $sceneStored["SceneMembership"]["sceneCapacity"]        = $sceneCapacity;
-                        $sceneStored["SceneMembership"][$groupID]["sceneCount"] = $sceneCount;
+                        $sceneStored["SceneMembership"]["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
+                        $sceneStored["SceneMembership"]["sceneCount"]           = $sceneCount;
                         $sceneStored["SceneMembership"][$groupID]["sceneId"]    = $sceneId;
                         $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                         $abeille->save();
 
                         parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
-                        // $valueJson = '{"SceneMembership":{"sceneCapacity":"'.$sceneCapacity.'","groupID":"'.$groupID.'","sceneCount":"'.$sceneCount.'","sceneId":"'.$sceneId.'"}}';
-                        // $this->mqqtPublish($dest."/".$srcAddress, 'Scene', 'Membership', $valueJson );
+
                         return;
                     }
 
@@ -2596,6 +2620,11 @@
             $dataType           = substr($payload, 18, 2);
             $AttributSize       = substr($payload, 20, 4);
             $Attribut           = substr($payload, 24, hexdec($AttributSize) * 2);
+
+            if ($ClusterId=="0005") {
+                // No processed in 8100 but processed in 8002
+                return;
+            }
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 

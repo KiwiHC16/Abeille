@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "20210204_1330",
       "topic": "WindowsCoveringLevel",
-      "request": "clusterCommand=05&liftValue=#cursor#",
+      "request": "clusterCommand=05&liftValue=#slider#",
       "visibilityCategory": "All"
     }
   }

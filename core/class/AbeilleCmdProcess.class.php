@@ -1822,6 +1822,38 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
+        if ( isset($Command['WindowsCoveringLevel']) && isset($Command['address']) && isset($Command['clusterCommand']) )
+        {
+            // echo "Windows Covering test for Store Ikea: lift to %\n";
+
+            $cmd = '0530';
+
+            $addressMode            = "02";                // 01 pour groupe, 02 pour NE
+            $targetShortAddress     = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = "01";
+            $profile                = "0104";
+            $cluster                = "0102";
+            $securityMode           = "02";
+            $radius                 = "30";
+            // $dataLength = "16";
+
+            $FrameControlField      = "11";
+            $SQN                    = "00";
+            $cmd                    = "05"; // 00: Up, 01: Down, 02: Stop, 04: Go to lift value (not supported), 05: Got to lift pourcentage.
+            $liftValue              = $Command['liftValue'];
+
+            $data2 = $FrameControlField . $SQN . $cmd . $liftValue . $liftValue;
+            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;
+
+            $data = $data1 . $data2;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+        }
+
         // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
         if ( isset($Command['WindowsCoveringGroup']) && isset($Command['address']) && isset($Command['clusterCommand']) )
         {

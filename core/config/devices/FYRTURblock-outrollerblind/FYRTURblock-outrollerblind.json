@@ -24,7 +24,8 @@
       "include23": "getSWBuild",
       "include25": "Group-Membership",
       "include25 2": "WindowsCoveringLevel",
-      "include25 2 2": "WindowsCoveringGetLevel"
+      "include25 2 2": "WindowsCoveringGetLevel",
+      "include25 2 2 2": "WindowsCoveringGoToLevel"
     }
   }
 }

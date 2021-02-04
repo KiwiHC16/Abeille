@@ -1174,6 +1174,22 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     );
                     break;
                     //----------------------------------------------------------------------------
+                case "WindowsCoveringLevel":
+                    $fields = preg_split("/[=&]+/", $msg);
+                      if (count($fields) > 1) {
+                          $parameters = proper_parse_str( $msg );
+                      }
+
+                    $Command = array(
+                                     "WindowsCovering"          => "1",
+                                     "priority"                 => $priority,
+                                     "dest"                     => $dest,
+                                     "address"                  => $address,
+                                     "clusterCommand"           => $parameters['clusterCommand'],
+                                     "liftValue"                => $parameters['liftValue'],
+                    );
+                    break;
+                    //----------------------------------------------------------------------------
                 case "WindowsCoveringGroup":
                     $fields = preg_split("/[=&]+/", $msg);
                       if (count($fields) > 1) {

@@ -1840,10 +1840,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $FrameControlField      = "11";
             $SQN                    = "00";
-            $cmd                    = "05"; // 00: Up, 01: Down, 02: Stop, 04: Go to lift value (not supported), 05: Got to lift pourcentage.
+            $cmdLift                = "05"; // 00: Up, 01: Down, 02: Stop, 04: Go to lift value (not supported), 05: Got to lift pourcentage.
             $liftValue              = $Command['liftValue'];
 
-            $data2 = $FrameControlField . $SQN . $cmd . $liftValue . $liftValue;
+            $data2 = $FrameControlField . $SQN . $cmdLift . $liftValue . $liftValue;
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $cluster . $profile . $securityMode . $radius . $dataLength;

@@ -908,13 +908,13 @@
                         $SQN                    = substr($payload,32, 2);
                         $cmd                    = substr($payload,34, 2);
                         if ( $cmd != "07" ) {
-                            if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
+                            parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
                             return;
                         }
                         $remainingData          = substr($payload,36, 8);
                         $value                  = substr($payload,36, 2);
 
-                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Telecommande Ikea Ronde'
+                        parserLog("debug", $dest.', Type=8002/Data indication - Telecommande Ikea Ronde'
                                         . $baseLog
                                         . ', frameCtrlField='.$frameCtrlField
                                         . ', Manufacturer='.$Manufacturer
@@ -922,7 +922,7 @@
                                         . ', cmd='.$cmd
                                         . ', value='.$value
                                         );
-
+                        
                         $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
                         return;
                     }
@@ -1181,14 +1181,16 @@
                 if ($cmd == '00') {
                     $attributTime                  = substr($payload,34, 2) . substr($payload,32, 2);
                     $attributTimeZone              = substr($payload,38, 2) . substr($payload,36, 2);
-                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
-                                    . $baseLog
-                                    . ', frameCtrlField='.$frameCtrlField
-                                    . ', SQN='.$SQN
-                                    . ', cmd='.$cmd
-                                    . ', attributTime='.$attributTime
-                                    . ', attributTimeZone='.$attributTimeZone
-                                    );
+                    if ( isset($this->debug["8002"]) ) {
+                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
+                                        . $baseLog
+                                        . ', frameCtrlField='.$frameCtrlField
+                                        . ', SQN='.$SQN
+                                        . ', cmd='.$cmd
+                                        . ', attributTime='.$attributTime
+                                        . ', attributTimeZone='.$attributTimeZone
+                                        );
+                                    }
 
                     // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
                     return;

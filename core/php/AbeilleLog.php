@@ -96,6 +96,7 @@
     function logMessage($logLevel, $msg)
     {
         if ($logLevel != "") {
+            if ( !isset($GLOBALS["curLogLevelNb"]) ) $GLOBALS["curLogLevelNb"]=0;
             if (logGetLevelNumber($logLevel) > $GLOBALS["curLogLevelNb"])
                 return; // Nothing to do for current log level
 

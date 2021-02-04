@@ -1181,7 +1181,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                       }
 
                     $Command = array(
-                                     "WindowsCovering"          => "1",
+                                     "WindowsCoveringLevel"     => "1",
                                      "priority"                 => $priority,
                                      "dest"                     => $dest,
                                      "address"                  => $address,

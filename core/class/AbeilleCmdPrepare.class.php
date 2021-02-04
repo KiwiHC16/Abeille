@@ -1186,7 +1186,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "dest"                     => $dest,
                                      "address"                  => $address,
                                      "clusterCommand"           => $parameters['clusterCommand'],
-                                     "liftValue"                => $parameters['liftValue'],
+                                     "liftValue"                => sprintf("%02s",dechex($parameters['liftValue'])),
                     );
                     break;
                     //----------------------------------------------------------------------------

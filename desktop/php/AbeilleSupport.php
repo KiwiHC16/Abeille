@@ -143,7 +143,8 @@
         var location = $(this).attr('location'); // "JEEDOM-LOG" or "JEEDOM-TMP"
         var logFile = $(this).text();
         console.log("btnDisplayLog click => "+logFile+", type="+location);
-
+        $('.btnDisplayLog').parent().removeClass("active")
+        $(this).parent().addClass("active")
         displayLog(location, logFile)
     });
 

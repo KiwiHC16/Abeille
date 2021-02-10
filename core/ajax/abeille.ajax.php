@@ -45,6 +45,8 @@ try {
     require_once __DIR__.'/../class/Abeille.class.php';
     require_once __DIR__.'/../php/AbeilleZigate.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
+    require_once __DIR__.'/../php/AbeillePreInstall.php'; // checkIntegrity()
+    include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
 
     include_file('core', 'authentification', 'php');
     if (!isConnect('admin')) {
@@ -253,10 +255,10 @@ try {
         ajax::success(json_encode(array('status' => $status)));
     }
 
-    /* Developer featuer: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
+    /* Developer feature: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
        Zigate is untouched.
        Returns: status=0/-1, errors=<error message(s)> */
-       if (init('action') == 'removeEqJeedom') {
+    if (init('action') == 'removeEqJeedom') {
         $eqList = init('eqList');
 
         $status = 0;
@@ -332,9 +334,39 @@ try {
         ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
     }
 
-    throw new Exception('Aucune methode correspondante');
-    /********** Catch exeption ************/
-} catch (Exception $e) {
-    ajax::error(displayExeption($e), $e->getCode());
-}
+        /* Check plugin integrity. This assumes that "Abeille.md5" is present and up-to-date.
+           Returns: status; 0=OK, -1=no MD5, -2=checksum error */
+        if (init('action') == 'checkIntegrity') {
+            $status = checkIntegrity();
+            $error = "";
+            if ($status == -1)
+                $error = "No MD5 file";
+            else
+                $error = "Checksum error";
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        /* Cleanup plugin repository based on "Abeille.md5" listed files.
+           Returns: status; 0=OK, -1=ERROR */
+        if (init('action') == 'doPostUpdateCleanup') {
+            if (validMd5Exists() != 0) {
+                ajax::success(json_encode(array('status' => -1, 'error' => "No valid MD5 file")));
+            }
+            $status = doPostUpdateCleanup();
+            $error = "";
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+
+        /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
+            Instead 'success' callback is used. This means that
+            - take care of error code returned
+            - convert to JSON since dataType is set to 'json' */
+        $error = "La méthode '".init('action')."' n'existe pas dans 'abeille.ajax.php'";
+        throw new Exception($error, -1);
+    } catch (Exception $e) {
+        /* Catch exeption */
+        ajax::error(json_encode(array('status' => $e->getCode(), 'error' => $e->getMessage())));
+    }
 ?>

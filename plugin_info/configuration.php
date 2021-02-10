@@ -43,6 +43,12 @@
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
     echo '<script>var js_NbMaxOfZigates = '.$zigateNbMax.';</script>'; // PHP to JS
     echo '<script>var js_NbOfZigates = '.$zigateNb.';</script>'; // PHP to JS
+
+    /* Reading version */
+    $file = fopen(__DIR__."/Abeille.version", "r");
+    $line = fgets($file); // Should be a comment
+    $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
+    fclose($file);
 ?>
 
 <style>
@@ -67,7 +73,7 @@
         <div class="form-group">
             <label class="col-lg-4 control-label" data-toggle="tooltip">{{Version Abeille : }}</label>
             <div class="col-lg-4 confs1" title="{{Version du plugin Abeille.}}">
-                <?php include __DIR__."/AbeilleVersion.inc"; ?>
+                <?php echo $abeilleVersion; ?>
             </div>
             <div class="col-lg-4">
                 <?php
@@ -187,9 +193,9 @@
                         echo '<select id="idSelZgType'.$i.'" class="configKey form-control" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
                         ?>
                             <option value="USB" selected>{{USB}}</option>
-                            <option value="WIFI" >{{WIFI}}</option>
-                            <option value="PI" >{{PI}}</option>
-                            <option value="DIN" >{{DIN}}</option>
+                            <option value="WIFI">{{WIFI}}</option>
+                            <option value="PI">{{PI}}</option>
+                            <option value="DIN">{{DIN}}</option>
                         </select>
                     </div>
                 </div>
@@ -368,8 +374,8 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
                 <div class="col-lg-5">
                     <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Bloque le traitement des annonces. Peut être necessaire pour certains equipements. Ce rapporter à la documentation Abeille de l'équipement pour voir si cela est nécessaire.}}">
-                        <option value="Non" >{{Non}}</option>
-                        <option value="Oui"  >{{Oui}}</option>
+                        <option value="Non">{{Non}}</option>
+                        <option value="Oui">{{Oui}}</option>
                     </select>
                 </div>
             </div>
@@ -488,7 +494,6 @@
         var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
         var idFW = document.querySelector('#idFW' + zgNb);
         var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
-        // var idResetE2P = document.querySelector('#idResetE2P' + zgNb);
         var idWifiAddr = document.querySelector('#idWifiAddr' + zgNb);
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
         if (zgType == "WIFI") {
@@ -498,7 +503,6 @@
             idCheckSP.setAttribute('disabled', true);
             idFW.setAttribute('disabled', true);
             idUpdateFW.setAttribute('disabled', true);
-            // idResetE2P.setAttribute('disabled', true);
             idWifiAddr.removeAttribute('disabled');
             // idCheckWifi.removeAttribute('disabled');
         } else {
@@ -510,11 +514,9 @@
             if (zgType == "PI") { // FW update is supported for PI only
                 idFW.removeAttribute('disabled');
                 idUpdateFW.removeAttribute('disabled');
-                // idResetE2P.removeAttribute('disabled');
             } else {
                 idFW.setAttribute('disabled', true);
                 idUpdateFW.setAttribute('disabled', true);
-                // idResetE2P.setAttribute('disabled', true);
             }
         }
     }
@@ -759,30 +761,6 @@
         });
     }
 
-    /* Called when "reset E2P" button is pressed */
-    function resetE2P(zgNb) {
-        console.log("resetE2P(zgNb=" + zgNb + ")");
-        /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
-        if (idCheckSP.getAttribute('disabled') != null) {
-            console.log("=> DISABLED");
-            return;
-        }
-        var zgType = $("#idSelZgType" + zgNb).val();
-        if (zgType != "PI") {
-            console.log("=> Not PI type. UNEXPECTED !");
-            return;
-        }
-        var zgPort = $("#idSelSP" + zgNb).val();
-        var zgFW = $("#idFW" + zgNb).val();
-        bootbox.confirm("{{Attention !! Vous êtes sur le point d'effacer l'EEPROM de votre PiZigate.<br>Tous les équipements devront être réinclus.<br> - port    : "+zgPort+"<br>Etes vous sur de vouloir continuer ?}}", function (result) {
-            if (result) {
-                $('#md_modal2').dialog({title: "{{Effacement EEPROM}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=resetE2P&zgport=\"'+zgPort+'\"').dialog('open');
-            }
-        });
-    }
-
     $('#bt_installTTY').on('click',function(){
         bootbox.confirm('{{Vous êtes sur le point d\'activer le port ' + document.getElementById("ZiGatePort").value + '.<br>Cela pourrait supprimer la console sur ce port.<br> Voulez vous continuer ?}}', function (result) {
             if (result) {
@@ -801,7 +779,36 @@
        });
     })
 
-    /* Developers mode only */
+    /* Verify Abeille's integrity using 'Abeille.md5' file. */
+    function checkIntegrity() {
+        console.log("checkIntegrity()");
+
+        $.showLoading()
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'checkIntegrity'
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                $.hideLoading()
+                bootbox.alert("ERREUR 'checkIntegrity' !<br>Votre installation semble corrompue.<br>"+error);
+            },
+            success: function (json_res) {
+                $res = JSON.parse(json_res.result);
+                if ($res.status == 0) {
+                    $('.integrityStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                } else {
+                    $('.integrityStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                }
+                $.hideLoading()
+            }
+        });
+    }
+
+    /* Developpers mode only */
 
     /* Called when 'developer mode' must be enabled or disabled.
     This means creating or deleting "tmp/debug.json" file. */
@@ -1028,6 +1035,31 @@
                         }
                     }
                 });
+            }
+        });
+    }
+
+    /* Cleanup Abeille plugin removing files no longer required.
+       This is based on "Abeille.md5" reference file */
+    function cleanUp() {
+        console.log("cleanUp() button click")
+
+        $.showLoading()
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'doPostUpdateCleanup',
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                $.hideLoading()
+                bootbox.alert("ERREUR 'doPostUpdateCleanup' !<br>Votre installation semble corrompue.");
+            },
+            success: function (json_res) {
+                $.hideLoading()
+                console.log(json_res);
             }
         });
     }

@@ -229,7 +229,13 @@
     echoAndLog($logFile, 'Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
     echoAndLog($logFile, "Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
 
-    getFileAndPrint($logFile, __DIR__.'/../../plugin_info/AbeilleVersion.inc', "1/ Version (AbeilleVersion.inc)", 1, 1);
+    /* Reading version */
+    $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
+    $line = fgets($file); // Should be a comment
+    $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
+    fclose($file);
+    echoTitle($logFile, "1/ Version (Abeille.version)");
+    echoAndLog($logFile, $abeilleVersion."\n\n");
 
     linuxDetails($logFile);
 

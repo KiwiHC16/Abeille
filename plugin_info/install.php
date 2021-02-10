@@ -25,7 +25,8 @@
         ini_set('log_errors', 'On');
     }
 
-include_once __DIR__.'/../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../../core/php/core.inc.php';
+    require_once __DIR__.'/../core/php/AbeillePreInstall.php';
 
 /**
  * Fonction exécutée automatiquement après l'installation du plugin
@@ -235,40 +236,57 @@ function updateConfigDB() {
     }
 }
 
-/**
- * Fonction exécutée automatiquement après la mise à jour du plugin
- * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
- *
- * @param   none
- * @return none
- */
-function Abeille_update() {
+    /**
+     * Automatically called by Jeedom after plugin update.
+     * https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
+     *
+     * @param none
+     * @return none
+     */
+    function Abeille_update() {
 
-    message::add('Abeille', 'Mise à jour en cours...', null, null);
+        $error = FALSE;
 
-    /* Updating config DB if required */
-    updateConfigDB();
+        /* Collect Abeille's version */
+        $file = fopen(__DIR__."/Abeille.version", "r");
+        $line = fgets($file); // Should be a comment
+        $version = trim(fgets($file));
+        fclose($file);
 
-    // Clean Config
-    config::remove('affichageCmdAdd', 'Abeille');
-    config::remove('affichageNetwork', 'Abeille');
-    config::remove('affichageTime', 'Abeille');
+        if (validMd5Exists() == 0) {
+            if (checkIntegrity() != 0) {
+                message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
+                $error = TRUE;
+            } else
+                doPostUpdateCleanup();
+        }
 
-    config::remove('AbeilleSerialPort', 'Abeille');
-    config::remove('IpWifiZigate', 'Abeille');
+        /* Updating config DB if required */
+        updateConfigDB();
 
-    config::remove('AbeilleAddress', 'Abeille');
-    config::remove('AbeilleConId', 'Abeille');
-    config::remove('AbeillePort', 'Abeille');
+        // Clean Config
+        // TODO Tcharp38: Should be moved to updateConfigDB()
+        config::remove('affichageCmdAdd', 'Abeille');
+        config::remove('affichageNetwork', 'Abeille');
+        config::remove('affichageTime', 'Abeille');
 
-    config::remove('mqttPass', 'Abeille');
-    config::remove('mqttTopic', 'Abeille');
-    config::remove('mqttUser', 'Abeille');
-    config::remove('onlyTimer', 'Abeille');
+        config::remove('AbeilleSerialPort', 'Abeille');
+        config::remove('IpWifiZigate', 'Abeille');
 
-    message::removeAll('Abeille');
-    message::add('Abeille', 'Mise à jour terminée', null, null);
-}
+        config::remove('AbeilleAddress', 'Abeille');
+        config::remove('AbeilleConId', 'Abeille');
+        config::remove('AbeillePort', 'Abeille');
+
+        config::remove('mqttPass', 'Abeille');
+        config::remove('mqttTopic', 'Abeille');
+        config::remove('mqttUser', 'Abeille');
+        config::remove('onlyTimer', 'Abeille');
+
+        if ($error == FALSE) {
+            message::removeAll('Abeille');
+            message::add('Abeille', 'Mise à jour '.$version.' terminée avec succès.', null, null);
+        }
+    }
 
 /**
  * Fonction exécutée automatiquement après la suppression du plugin
@@ -289,5 +307,4 @@ function Abeille_remove() {
     message::removeAll("Abeille");
     // message::add("Abeille","plugin désinstallé");
 }
-
 ?>

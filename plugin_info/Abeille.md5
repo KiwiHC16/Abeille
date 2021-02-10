@@ -13,7 +13,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/gen_md5.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/git_push.sh
 8c7cb9e2f40a54759df2bcbd332b989f *DIY_Module/Firmware_ptvoinfo/cc2530_io_firmware.zip
 37ccf275a4feae83636efcbf4800478c *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/Setup_SmartRF_Flash_Programmer-1.12.8.exe
-68b077fffa7b05ff1feef4f49d177bf8 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
+ece0d177db42b90df3091f33e18af447 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
 4e4163047fd9cd95464fe125063b8d2d *LICENSE.md
 4ab85f363cd3a7261ffe01ec8250b0ef *Network/AbeilleLQI.php
 0e64aeaf27361deeeda734eec1acdcaf *Network/AbeilleLQI_List.php

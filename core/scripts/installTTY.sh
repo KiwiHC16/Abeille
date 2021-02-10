@@ -1,3 +1,5 @@
+#! /bin/bash
+
 echo "Execution de '$(basename $0)'"
 
 echo "Test préliminaire"

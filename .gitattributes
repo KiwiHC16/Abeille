@@ -1,4 +1,4 @@
-# Text files to keep 
+# Text files must always keep LF
 * text eol=lf
 
 # The following files are binaries and should not be touched
@@ -6,3 +6,9 @@
 *.png binary
 *.zip binary
 *.exe binary
+*.jpg binary
+
+# Automatically solve conflicts for the following files.
+# Note: They need to be updated anyway after a merge.
+plugin_info/Abeille.md5 merge=ours
+plugin_info/Abeille.version merge=ours

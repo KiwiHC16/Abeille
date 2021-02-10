@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210210-MASTER_TCHARP38-1"
+# VERSION="210210-MASTER_TCHARP38-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -13,9 +13,9 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/gen_md5.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/git_push.sh
 8c7cb9e2f40a54759df2bcbd332b989f *DIY_Module/Firmware_ptvoinfo/cc2530_io_firmware.zip
 37ccf275a4feae83636efcbf4800478c *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/Setup_SmartRF_Flash_Programmer-1.12.8.exe
-68b077fffa7b05ff1feef4f49d177bf8 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
+ece0d177db42b90df3091f33e18af447 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
 4e4163047fd9cd95464fe125063b8d2d *LICENSE.md
-4ab85f363cd3a7261ffe01ec8250b0ef *Network/AbeilleLQI.php
+082a1cc4e7b473f775043e1bdfdc66fc *Network/AbeilleLQI.php
 0e64aeaf27361deeeda734eec1acdcaf *Network/AbeilleLQI_List.php
 351f27fbeb161e7a4d7450c3b5c3548a *Network/AbeilleLQI_Map.php
 cab0b6dfc164ab83012179179f70f54f *Network/LqiStorage.db
@@ -593,14 +593,14 @@ b2d32f979a9f927a02c69343bfc16f2f *core/php/AbeilleTest.php
 7233064c3b965464607d48d7f3d1a8ed *core/php/AbeilleZigate.php
 75dd221d3a6c6958b5fc0c2ffc6b56a1 *core/php/AbeilleZigateConst.php
 f452636740f529d1b1ade0b4617c766e *core/scripts/checkSocat.sh
-3bc90e0a3e4eeefb2265de2d6f4e88bc *core/scripts/checkTTY.sh
+08873cf7a64c9be15aea31ca7dbbdb26 *core/scripts/checkTTY.sh
 0e976aa3c9dceb4638b16cd060c8e6f6 *core/scripts/checkWifi.sh
 deb4e5f532b0bf8a2929b9c99eb1f94d *core/scripts/checkWiringPi.sh
 873c38893f5d1f4b5bcac2a95236c7d8 *core/scripts/installSocat.sh
 1187d888cd11ea50c13647f49e860653 *core/scripts/installTTY.sh
 6249a4dbb0df08bb5b3b92545440a7eb *core/scripts/installWiringPi.sh
 71cf888ba38ca77dd0ab06d01e2ae6be *core/scripts/resetPiZigate.sh
-34934c6fbcdc57243dc02b7e5f013d8e *core/scripts/switchBranch.sh
+8ca98a4326738c053e1fb8068cc64075 *core/scripts/switchBranch.sh
 dabec9b0693784fe5c2f27d4134e80f5 *core/scripts/updateFirmware.sh
 dfb7a937d3b40f0ced31ba6d08f8a9c5 *desktop/js/Abeille.js
 c87b80d30cc21705b80afae6e209307d *desktop/js/AbeilleDev.js
@@ -615,7 +615,7 @@ e309af70b6029cb96a5d1954ebd6c418 *desktop/modal/installTTY.abeille.php
 29c8f977a3776c5b6c95ff5857a8d361 *desktop/modal/installWiringPi.abeille.php
 d346c1788cd6e144c744d768338e4148 *desktop/modal/listeCompatibilite.php
 c5749e819ed73e693428e9eb10d71f94 *desktop/modal/modelesPage.php
-0e79471f01dc945074d3128a6ba8b91a *desktop/modal/network.php
+1cd36fec76b36d42f6bb4e631db7aab1 *desktop/modal/network.php
 3ce79f285ae58bf73034bae288df3a75 *desktop/modal/resetPiZigate.abeille.php
 d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 9a8ccd4352ecd4bb8720d9bebf528f4f *desktop/modal/syncconf.abeille.php
@@ -638,7 +638,7 @@ ce59afd6581d2bf1744de1ea410ac6d3 *desktop/php/AbeilleEq-Params.php
 f3b01d4498fa43159288c8966448b9c8 *desktop/php/AbeilleFormAction.php
 a0af1a8988fc47e535a26c60c1573bb1 *desktop/php/AbeilleNetworkGraph.php
 012a0ac34ccfd4bd34868d78a57b916c *desktop/php/AbeilleSupport.php
-0d7c878c895c1ff78bc07f1363a655b2 *docs/.buildinfo
+6daae7fea8165e0ebd01d7f8b71cdc70 *docs/.buildinfo
 d41d8cd98f00b204e9800998ecf8427e *docs/.nojekyll
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
@@ -832,7 +832,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 b4dc34a3e49a9ec6dcebaa375565ca48 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-281ef425834a6a3cb5ab04fbb19847c4 *plugin_info/Abeille.version
+5c4f4efa32818255126e4f4b19ad9e0c *plugin_info/Abeille.version
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 0e9b40892f582dde7d0720d2a3505edc *plugin_info/configuration.php
 28dcc7e31b33f4a92bf7994079afc381 *plugin_info/info.json

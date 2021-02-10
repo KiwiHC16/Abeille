@@ -1,2 +1,8 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Text files to keep 
+* text eol=lf
+
+# The following files are binaries and should not be touched
+*.bin binary
+*.png binary
+*.zip binary
+*.exe binary

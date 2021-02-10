@@ -137,4 +137,26 @@
             }
         }
     }
+
+    /* Log function for development purposes.
+       Output message to "AbeilleDebug.log" */
+    function logDebug($msg = "")
+    {
+        $logDir = __DIR__.'/../../../../log/';
+        $logFile = "AbeilleDebug.log";
+        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
+    }
+
+    /* Return proper prefix to use with scripts outputs */
+    function logGetPrefix($logLevel) {
+        if ($logLevel != "") {
+            $logLevel = strtolower(trim($logLevel));
+            if ($logLevel == "warning")
+                $logLevel = "warn";
+            /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+            $pref = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';
+        } else
+            $pref = '['.date('Y-m-d H:i:s').'] ';
+        return $pref;
+    }
 ?>

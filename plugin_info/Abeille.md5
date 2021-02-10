@@ -13,7 +13,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/gen_md5.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/git_push.sh
 8c7cb9e2f40a54759df2bcbd332b989f *DIY_Module/Firmware_ptvoinfo/cc2530_io_firmware.zip
 37ccf275a4feae83636efcbf4800478c *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/Setup_SmartRF_Flash_Programmer-1.12.8.exe
-b867bcbb1914bec603c7f83906d71ed4 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
+68b077fffa7b05ff1feef4f49d177bf8 *DIY_Module/Firmware_ptvoinfo/flash-programmer-1.12.8/SmartRF_Flash_Programmer_1.12.8_manifest.html
 4e4163047fd9cd95464fe125063b8d2d *LICENSE.md
 4ab85f363cd3a7261ffe01ec8250b0ef *Network/AbeilleLQI.php
 0e64aeaf27361deeeda734eec1acdcaf *Network/AbeilleLQI_List.php
@@ -831,7 +831,8 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeOnOffLight.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 b4dc34a3e49a9ec6dcebaa375565ca48 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
-e1eb2e5e0c8a9cf17efede737497239e *plugin_info/AbeilleVersion.inc
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
+281ef425834a6a3cb5ab04fbb19847c4 *plugin_info/Abeille.version
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 0e9b40892f582dde7d0720d2a3505edc *plugin_info/configuration.php
 28dcc7e31b33f4a92bf7994079afc381 *plugin_info/info.json

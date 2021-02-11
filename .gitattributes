@@ -10,5 +10,8 @@
 
 # Automatically solve conflicts for the following files.
 # Note: They need to be updated anyway after a merge.
+# Note: Using ours for one & theirs for the other
+#       in order to have different branch name
+#       and prevent wrong integrity check.
 plugin_info/Abeille.md5 merge=ours
-plugin_info/Abeille.version merge=ours
+plugin_info/Abeille.version merge=theirs

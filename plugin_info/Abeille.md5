@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210210-MASTER_TCHARP38-2"
+# VERSION="210211-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -593,11 +593,11 @@ b2d32f979a9f927a02c69343bfc16f2f *core/php/AbeilleTest.php
 7233064c3b965464607d48d7f3d1a8ed *core/php/AbeilleZigate.php
 75dd221d3a6c6958b5fc0c2ffc6b56a1 *core/php/AbeilleZigateConst.php
 f452636740f529d1b1ade0b4617c766e *core/scripts/checkSocat.sh
-27b7f52304bec8fce421829e0ac629d4 *core/scripts/checkTTY.sh
+08873cf7a64c9be15aea31ca7dbbdb26 *core/scripts/checkTTY.sh
 0e976aa3c9dceb4638b16cd060c8e6f6 *core/scripts/checkWifi.sh
 deb4e5f532b0bf8a2929b9c99eb1f94d *core/scripts/checkWiringPi.sh
 873c38893f5d1f4b5bcac2a95236c7d8 *core/scripts/installSocat.sh
-1187d888cd11ea50c13647f49e860653 *core/scripts/installTTY.sh
+71a0dbaa426d3070aa0f843b1d526581 *core/scripts/installTTY.sh
 6249a4dbb0df08bb5b3b92545440a7eb *core/scripts/installWiringPi.sh
 71cf888ba38ca77dd0ab06d01e2ae6be *core/scripts/resetPiZigate.sh
 34934c6fbcdc57243dc02b7e5f013d8e *core/scripts/switchBranch.sh
@@ -830,7 +830,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 b4dc34a3e49a9ec6dcebaa375565ca48 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5c4f4efa32818255126e4f4b19ad9e0c *plugin_info/Abeille.version
+49e51190ab55e3e6ac6abecf4e1f5a93 *plugin_info/Abeille.version
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 0e9b40892f582dde7d0720d2a3505edc *plugin_info/configuration.php
 28dcc7e31b33f4a92bf7994079afc381 *plugin_info/info.json

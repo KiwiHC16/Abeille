@@ -77,7 +77,7 @@
 <div class="row row-overflow" id="abeilleModal">
 </div>
 
-<div>
+<div class="row row-overflow">
 	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
         <!-- Barre d outils horizontale  -->

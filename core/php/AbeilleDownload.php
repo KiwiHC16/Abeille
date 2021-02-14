@@ -13,8 +13,17 @@
 		}
 
 		$path_parts = pathinfo($pathfile);
+		$filename = $path_parts['basename'];
+		/* If 'addext' is defined, checking if file has the correct extension.
+		   If not, extension added */
+		if (isset($_GET['addext'])) {
+			$ext = ".".$_GET['addext'];
+			if (substr($filename, -strlen($ext)) != $ext)
+				$filename .= $ext;
+		}
+
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename=' . $path_parts['basename']);
+		header('Content-Disposition: attachment; filename='.$filename);
 		readfile($pathfile);
 		exit;
 	} catch (Exception $e) {

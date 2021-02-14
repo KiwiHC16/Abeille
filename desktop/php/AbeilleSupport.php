@@ -3,7 +3,8 @@
      * Abeille support page
      *
      * Allows to
-     * - display any log file, even internal (not visible thru Jeedom).
+     * - display any log file, even internal (not visible thru Jeedom)
+     * - download displayed log or a zip of all logs
      */
 
     if (!isConnect('admin')) {
@@ -53,6 +54,7 @@
                     echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-LOG">'.$fileName.'</a></li>';
                 }
                 echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-LOG">http.error</a></li>';
+                echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-LOG">update</a></li>';
                 /* Listing log files from Jeedom temp directory */
                 foreach (glob($tmpDir."/*.log") as $path) {
                     $fileName = basename($path);
@@ -222,7 +224,7 @@
                 path = js_tmpDir+"/"+curDisplay;
             else // "JEEDOM-LOG"
                 path = js_pluginDir+"/../../log/"+curDisplay;
-            window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path, "_blank", null);
+            window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path+'&addext=log', "_blank", null);
         }
     });
 

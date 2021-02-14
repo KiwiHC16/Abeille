@@ -19,6 +19,7 @@
     /* Developers debug features */
     $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
+        $dbgDeveloperMode = TRUE;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
@@ -253,12 +254,14 @@ function updateConfigDB() {
         $version = trim(fgets($file));
         fclose($file);
 
-        if (validMd5Exists() == 0) {
-            if (checkIntegrity() != 0) {
-                message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
-                $error = TRUE;
-            } else
-                doPostUpdateCleanup();
+        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+            if (validMd5Exists() == 0) {
+                if (checkIntegrity() != 0) {
+                    message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
+                    $error = TRUE;
+                } else
+                    doPostUpdateCleanup();
+            }
         }
 
         /* Updating config DB if required */

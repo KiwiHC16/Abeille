@@ -109,7 +109,6 @@
             return array('?'.$type.'?', 0);
         }
 
-
         function __construct() {
             global $argv;
 
@@ -922,13 +921,13 @@
                                         . ', cmd='.$cmd
                                         . ', value='.$value
                                         );
-                        
+
                         $this->mqqtPublish($dest."/".$srcAddress, $cluster.'-'.$srcEndPoint, '0000', $value );
                         return;
                     }
                 }
-                
-                if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00 
+
+                if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
                     parserLog("debug", $dest.', Type=8002/Data indication ---------------------> cmd :'.$cmd );
@@ -946,7 +945,7 @@
                             $sceneStored["sceneCount"]           = $sceneCount-1; // On ZigLight need to remove one
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
-    
+
                             parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
 
                             return;
@@ -958,7 +957,7 @@
                             $sceneStored["sceneCurrent"]           = $sceneCurrent;
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
-    
+
                             parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
 
                             return;
@@ -970,7 +969,7 @@
                             $sceneStored["groupCurrent"]           = $groupCurrent;
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
-    
+
                             parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
 
                             return;
@@ -982,7 +981,7 @@
                             $sceneStored["sceneActive"]           = $sceneActive;
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
-    
+
                             parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
 
                             return;
@@ -999,7 +998,7 @@
                     // Add Scene Response
                     if ( $cmd == "00" ) {
                         $sceneStatus            = substr($payload,32, 2);
-                        
+
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error dd Scene Response.');
                             return;
@@ -1013,7 +1012,7 @@
                     }
 
                     // View Scene Response
-                    elseif ( $cmd == "01" ) { 
+                    elseif ( $cmd == "01" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
@@ -1031,7 +1030,7 @@
                     }
 
                     // Remove scene response
-                    elseif ( $cmd == "02" ) { 
+                    elseif ( $cmd == "02" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
@@ -1061,9 +1060,9 @@
                     }
 
                     // Store Scene Response
-                    elseif ( $cmd == "04" ) { 
+                    elseif ( $cmd == "04" ) {
                         $sceneStatus            = substr($payload,32, 2);
-                        
+
                         if ( $sceneStatus != "00" ) {
                             parserLog("debug", $dest.', Type=8002/Data indication - Status error Store Scene Response.');
                             return;
@@ -1077,17 +1076,17 @@
                     }
 
                     // Get Scene Membership Response
-                    elseif ( $cmd == "06" ) { 
+                    elseif ( $cmd == "06" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus == "85" ) {  // Invalid Field
                             $sceneRemainingCapacity = substr($payload,34, 2);
                             $groupID                = substr($payload,36, 4);
 
                             parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID );
-                            
+
                             $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
                             unset( $sceneStored["GroupeScene"][$groupID] );
-                            
+
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
@@ -1128,7 +1127,7 @@
                         return;
                     }
                 }
-                
+
             }
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
@@ -2174,7 +2173,6 @@
             //          bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)
             //          bit 6-7 Rx On When Idle status (1-On 0-Off)
             // <Src Address : uint16_t> (only since v3.1a)
-            // Note: It looks like there is an LQI byte at end of frame
 
             $SQN = substr($payload, 0, 2);
             $Status = substr($payload, 2, 2);
@@ -2218,18 +2216,23 @@
                     .', NLQI='.$N['LQI']
                     .', NBitMap='.$N['BitMap'].' => '.zgGet804EBitMap($N['BitMap']));
 
-                // On regarde si on connait NWK Address dans Abeille, sinon on va l'interroger pour essayer de le récupérer dans Abeille.
-                // Ca ne va marcher que pour les équipements en eveil.
-                // Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B
+                /* If equipment is unknown, may try to interrogate it.
+                   Note: this is blocked by default. Unknown equipement should join only during inclusion phase.
+                   Note: this could not work for battery powered eq since they will not listen & reply.
+                   Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B */
                 if (($N['Addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['Addr'], 'Abeille')) {
-                    parserLog('debug', '  NeighbourAddr='.$N['Addr']." n'est pas dans Jeedom. Essayons de l'interroger. Si en sommeil une intervention utilisateur sera necessaire.");
+                    if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
+                        parserLog('debug', '  Eq addr '.$N['Addr']." is unknown.");
+                    } else {
+                        parserLog('debug', '  Eq addr '.$N['Addr']." is unknown. Trying to interrogate.");
 
-                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01" );
-                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03" );
-                    $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B" );
+                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01");
+                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03");
+                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
+                    }
                 }
 
-                $this->mqqtPublishCmdFct( $dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
+                $this->mqqtPublishCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
             }
 
             $this->msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList);
@@ -2851,7 +2854,7 @@
 
                         // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
                         $this->mqqtPublishFctToCmd( 'CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr );
-                        
+
                             // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
                         parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
                     }
@@ -3235,12 +3238,12 @@
         {
             // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
             // https://zigate.fr/documentation/commandes-zigate/
-            // Obj-> ZiGate	0x8140	Attribute Discovery response	
-            // <complete: uint8_t>	
-            // <attribute type: uint8_t>	
-            // <attribute id: uint16_t>	
-            // <Src Addr: uint16_t> (added only from 3.0f version)	
-            // <Src EndPoint: uint8_t> (added only from 3.0f version)	
+            // Obj-> ZiGate	0x8140	Attribute Discovery response
+            // <complete: uint8_t>
+            // <attribute type: uint8_t>
+            // <attribute id: uint16_t>
+            // <Src Addr: uint16_t> (added only from 3.0f version)
+            // <Src EndPoint: uint8_t> (added only from 3.0f version)
             // <Cluster id: uint16_t> (added only from 3.0f version)
 
             // Abeille Serial Example
@@ -3258,7 +3261,7 @@
             // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 21   FFFD   1B53 01 0000 A2"
 
             // Payload
-            // Co Type Attr Addr EP Clus 
+            // Co Type Attr Addr EP Clus
             // 01 20   0000 1B53 01 0000
             // Co = complete
 

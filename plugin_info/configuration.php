@@ -361,14 +361,27 @@
                 Abeille_pre_update_analysis(0, 1);
             ?>
         </div>
+        <br />
+        <br />
 
-        <br />
-        <br />
         <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
-        <div id="optionsAvancees">
+        <a id="idAdvOptionsShowHide" class="btn btn-success" >{{Afficher}}</a>
+        <div id="idAdvOptions">
             <div>
-                <p><i>{{Dans certains cas, le fonctionnement du plugin doit être adapté.}}</i></p>
+                <p><i>{{Attention ! Vous n'avez normalement rien à faire dans cette section.}}</i></p>
             </div>
+
+            <?php if (validMd5Exists() == 0) { ?>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité : }}</label>
+                <div class="col-lg-5">
+                    <input type="button" onclick="checkIntegrity()" value="Lancer" title="Lance le test d'intégrité">
+                    <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">
+                        <span class="label label-success" style="font-size:1em">-?-</span>
+                    </a>
+                </div>
+            </div>
+            <?php } ?>
 
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
@@ -415,28 +428,28 @@
             </div>
 
 		    <!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
-            <?php
-            if (isset($dbgConfig)) {
-                echo '<div class="form-group">';
-                echo '<label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>';
-                echo '<div class="col-lg-5">';
-                if (isset($dbgConfig['dbgParserLog'])) {
-                    $dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
-                    echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px" value="'.$dbgParserLog.'">';
-                } else
-                    echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
-                echo '<input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">';
-                echo '</div>';
-                echo '</div>';
-                echo '<br/>';
-            }
-            ?>
+            <?php if (isset($dbgConfig)) { ?>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>
+                    <div class="col-lg-5">
+                    <?php if (isset($dbgConfig['dbgParserLog'])) {
+                        $dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
+                        echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px" value="'.$dbgParserLog.'">';
+                    } else
+                        echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
+                    ?>
+                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux non listés dans 'Abeille.md5'}}">{{Nettoyage des fichiers non requis : }}</label>
+                    <div class="col-lg-5">
+                        <input type="button" onclick="cleanUp()" value="Lancer">
+                    </div>
+                </div>
+            <?php } ?>
         </div>
-        <br>
-        <br>
-
-        <hr>
     </fieldset>
 </form>
 
@@ -451,6 +464,7 @@
     $("#zigatewifi").hide();
     $("#PiZigate").hide();
     $("#UpdateCheck").hide();
+    $("#idAdvOptions").hide();
 
     $('#idZigatesShowHide').on('click', function () {
             var Label = document.getElementById("idZigatesShowHide").innerText;
@@ -507,6 +521,7 @@
             // idCheckWifi.removeAttribute('disabled');
         } else {
             console.log('Type changed to USB, PI or DIN');
+
             idWifiAddr.setAttribute('disabled', true);
             // idCheckWifi.setAttribute('disabled', true);
             idSelSP.removeAttribute('disabled');
@@ -636,6 +651,21 @@
                 document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
                 document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
                 $("#UpdateCheck").hide();
+            }
+        }
+    );
+
+    $('#idAdvOptionsShowHide').on('click', function () {
+            var Label = document.getElementById("idAdvOptionsShowHide").innerText;
+            console.log("idAdvOptionsShowHide click: Label=" + Label);
+            if (Label == "Afficher") {
+                document.getElementById("idAdvOptionsShowHide").innerText = "Cacher";
+                document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
+                $("#idAdvOptions").show();
+            } else {
+                document.getElementById("idAdvOptionsShowHide").innerText = "Afficher";
+                document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
+                $("#idAdvOptions").hide();
             }
         }
     );

@@ -13,11 +13,11 @@
             echo '<label style="margin: 10px 0px 0px 10px">Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName().'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include'.$i.'" class="fas fa-plus-circle" style="font-size:160%;color:green" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."></i>';
+        echo '<span class="cursor" id="bt_include'.$i.'" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."><i class="fas fa-plus-circle" style="font-size:160%;color:green !important;"></i></span>';
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_include_stop'.$i.'" class="fas fa-minus-circle" style="font-size:160%;color:red" title="Inclusion: clic sur le moins pour arreter le mode inclusion."></i>';
+        echo '<span class="cursor" id="bt_include_stop'.$i.'" title="Inclusion: clic sur le moins pour arreter le mode inclusion."><i class="fas fa-minus-circle" style="font-size:160%;color:red !important;"></i></span>';
         echo "&nbsp&nbsp&nbsp";
-        echo '<i id="bt_createRemote'.$i.'"class="fas fa-gamepad" style="font-size:160%;color:orange" title="Clic pour créer une télécommande virtuelle."></i>';
+        echo '<span class="cursor" id="bt_createRemote'.$i.'" title="Clic pour créer une télécommande virtuelle."><i class="fas fa-gamepad" style="font-size:160%;color:orange !important;"></i></span>';
 
         /* Remove equipments from Jeedom only */
         echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';

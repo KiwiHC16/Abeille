@@ -34,15 +34,17 @@
 ?>
 
 <div class="col-xs-12 eqLogic" style="padding-top: 5px">
-    <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a>
-    <a class="btn btn-danger  eqLogicAction pull-right" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
-    <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a>
+    <div class="input-group pull-right" style="display:inline-flex">
+		<span class="input-group-btn">
+			<a class="btn btn-success eqLogicAction btn-sm roundedLeft" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a><a class="btn btn-default eqLogicAction btn-sm roundedRight" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a>
+		</span>
+	</div>
 
     <ul class="nav nav-tabs" role="tablist">
         <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille"><i class="fas fa-arrow-circle-left"></i></a></li>
-        <li role="tab" class="active"><a href="#eqlogictab"><i class="fas fa-home"></i>{{Equipement}}</a></li>
-        <li role="tab"               ><a href="#paramtab"><i class="fas fa-list-alt"></i>{{Paramètres}}</a></li>
-        <li role="tab"               ><a href="#commandtab"><i class="fas fa-align-left"></i>{{Commandes}}</a></li>
+        <li role="tab" class="active"><a href="#eqlogictab"><i class="fas fa-home"></i> {{Equipement}}</a></li>
+        <li role="tab"               ><a href="#paramtab"><i class="fas fa-list-alt"></i> {{Paramètres}}</a></li>
+        <li role="tab"               ><a href="#commandtab"><i class="fas fa-align-left"></i> {{Commandes}}</a></li>
     </ul>
 
     <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">

@@ -393,7 +393,7 @@ function displayLinksGraph(zigateX) {
                 });
 
                 var idealLength = 100;
-                var layout = Viva.Graph.Layout.forceDirected(graph, { springLength: idealLength, springCoeff: 0.0008, stableThreshold: 0.9, dragCoeff: 0.009, gravity: -1.2, thetaCoeff: 0.8 });
+                var layout = Viva.Graph.Layout.forceDirected(graph, { springLength: idealLength, springCoeff: 0.0005, stableThreshold: 0.1, dragCoeff: 0.02, gravity: -0.5 });
 
                 //remove previous one
                 $('#idLinksGraphTab svg').remove();

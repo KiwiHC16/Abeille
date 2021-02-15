@@ -26,12 +26,12 @@
     $startTime = config::byKey('lastDeamonLaunchTime', 'Abeille', '{{Demon Jamais lancé}}');
 
     // Status demon
-    $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i>{{Plugin désactivé et démon non configuré}}";
+    $status = "<i class=\"fas fa-circle fa-lg rediconcolor\"></i>{{Plugin désactivé et démon non configuré}}";
     if (config::byKey('active', 'Abeille', '0') == 1) {
         if (Abeille::deamon_info()['state'] == 'ok') {
-            $status = "<i class=\"fa fa-circle fa-lg greeniconcolor\"></i>{{Plugin activé et démon configuré}}";
+            $status = "<i class=\"fas fa-circle fa-lg greeniconcolor\"></i>{{Plugin activé et démon configuré}}";
         } else {
-            $status = "<i class=\"fa fa-circle fa-lg rediconcolor\"></i>{{Plugin activé mais démon non configué}}";
+            $status = "<i class=\"fas fa-circle fa-lg rediconcolor\"></i>{{Plugin activé mais démon non configué}}";
         }
     }
 
@@ -58,7 +58,7 @@
     $processes = Abeille::deamon_info();
     $color = "greeniconcolor";
     $color = ($processes['nbProcess'] == $processes['nbProcessExpected']) ? "greeniconcolor" : "rediconcolor";
-    $nbDaemons = "<i class=\"fa fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
+    $nbDaemons = "<i class=\"fas fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
 
     sendVarToJS('nodesFromJeedom', $nodes);
 
@@ -144,11 +144,11 @@
         <div id="content">
 
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
-                <li class="active" id="tab_nodes"> <a href="#idLinksTableTab" data-toggle="tab"> <i class="fa fa-table">     </i> {{Table des liens}}    </a></li>
-                <li                id="tab_graph"> <a href="#idLinksGraphTab" data-toggle="tab"> <i class="fa fa-picture-o"> </i> {{Graphique des liens}}</a></li>
-                <!-- <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fa fa-tachometer">  </i> {{Résumé}}                </a></li> -->
-                <li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fa fa-tachometer"></i> {{Bruit}}              </a></li>
-                <li                id="tab_routes"><a href="#idRoutesTab"     data-toggle="tab"> <i class="fa fa-tachometer"></i> {{Routes}}             </a></li>
+                <li class="active" id="tab_nodes"> <a href="#idLinksTableTab" data-toggle="tab"> <i class="fas fa-table">     </i> {{Table des liens}}    </a></li>
+                <li                id="tab_graph"> <a href="#idLinksGraphTab" data-toggle="tab"> <i class="far fa-image"> </i> {{Graphique des liens}}</a></li>
+                <!-- <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fas fa-tachometer-alt">  </i> {{Résumé}}                </a></li> -->
+                <li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Bruit}}              </a></li>
+                <li                id="tab_routes"><a href="#idRoutesTab"     data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Routes}}             </a></li>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
@@ -229,19 +229,19 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td class="typeCoordinator-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
+                            <td class="typeCoordinator-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Coordinateur}}</td>
                         </tr>
                         <tr>
-                            <td class="typeEndDevice-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
+                            <td class="typeEndDevice-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Bout de chaine}}</td>
                         </tr>
                         <tr>
-                            <td class="typeRouter-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
+                            <td class="typeRouter-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Routeur}}</td>
                         </tr>
                         <tr>
-                            <td class="typeUndefined-color" style="width: 35px"><i class="fa fa-square fa-2x"></i></td>
+                            <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Inconnu}}</td>
                         </tr>
 

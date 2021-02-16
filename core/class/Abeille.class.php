@@ -38,39 +38,105 @@ include_once __DIR__ . '/../../plugin_info/install.php'; // updateConfigDB()
 class Abeille extends eqLogic
 {
 
-    // https://github.com/KiwiHC16/Abeille/issues/1055
+    /**
+     * migrateBetweenZigates()
+     * 
+     * @param beeId: bee Id to be moved
+     * @param zigateY: zigate de destination
+     * 
+     * @return none
+     * 
+     * https://github.com/KiwiHC16/Abeille/issues/1771
+     * 
+     * 1/ Changement logical Id
+     * 2/ Remove zigbee reseau 1 zigbee
+     * 3/ inclusion normale sur le reseau 2 zigbee
+     * 
+     * Faire un bouton qui fait les etapes 1/ et 2 puis demander à l'utilisateur de faire l'étape 3
+     * 
+     */
+    public static function migrateBetweenZigates($beeId, $zigateY) 
+    {
+        $bee = Abeille::byId($beeId);
+        if (!is_object($bee)) {
+            log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille, je ne peux faire l operation.');
+            return;
+        }
+
+        $IEEE = $bee->getConfiguration('IEEE', 'none');
+        if ( $IEEE=='none' ) {
+            log::add('Abeille', 'debug', 'L Abeille na pas d adresse IEEE connue, je ne peux faire l operation.');
+        }
+
+        if ($zigateY > config::byKey('zigateNb', 'Abeille', '0', 1)) {
+            log::add('Abeille', 'debug', 'Cette Zigate n existe pas: '.$zigateY.', je ne peux faire l operation.');
+            return;
+        }
+
+        list($destBee, $shortBee) = explode('/', $bee->getLogicalId());
+
+        // 1/ Changement logical Id
+        $bee->setLogicalId('Abeille'.$zigateY.'/'.$shortBee);
+
+        // 2/ Remove zigbee reseau 1 zigbee
+        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destBee . "/Ruche/Remove", "IEEE=" . $IEEE);
+
+        // 3/ inclusion normale sur le reseau 2 zigbee
+        message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
+
+    }
+
+    /**
+     * replaceGhost()
+     * 
+     * @param ghostId: Id of the bee to be removed
+     * @param realId: Id of the bee which will replace the ghost and receive all informations
+     *
+     * https://github.com/KiwiHC16/Abeille/issues/1055
+     */ 
     public static function replaceGhost($ghostId, $realId)
     {
-        //lors de l association sur la zigate Y, une nouvelle Abeille va etre créée en AbeilleY/YYYY a reception de son nom alors que AbeilleX/XXXX existe toujours.
-        // On va avoir ce doublon jusqu'à reception de IEEE ou action utilisateur. Ce qui veut dire que sur reception de IEEE pour AbeilleY/YYYY, il faut gérer le doublon. Il faut:
-        // -- supprimer de la Zigate X, l'appairage avec l IEEEE
-        // -- migrer l historique des commandes AbeilleX/XXXX vers AbeilleY/YYYY,
-        // -- migrer les instances des commandes dans scenario et autres
-        // -- supprimer l Abeille: AbeilleX/XXXX
-
-        // Collect all needed infos
         $ghost = Abeille::byId($ghostId);
-        if (!is_object($ghost)) return;
+        if (!is_object($ghost)) {
+            log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille ghost.');
+            return;
+        }
         $real = Abeille::byId($realId);
-        if (!is_object($real)) return;
+        if (!is_object($real)) {
+            log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille réelle.');
+            return;
+        }
 
         list($destGhost, $shortGhost) = explode('/', $ghost->getLogicalId());
         list($destReal, $shortReal) = explode('/', $real->getLogicalId());
-        $IEEE = $ghost->getConfiguration('IEEE', 'none');
-        if ($IEEE == 'none') {
-            $IEEE = $real->getConfiguration('IEEE', 'none');
-        }
 
-        // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X
-        if ($destGhost != $destReal) {
-            if ($IEEE == 'none') {
-                log::add('Abeille', 'debug', 'Erreur je n ai pas l IEEE je ne sais comment gerer.');
-                return;
-            }
+        // Remove NE from ZigateX
+        if ( $ghost->getConfiguration('IEEE', 'none')=='none' ) {
+            log::add('Abeille', 'debug', 'Le ghost n avait pas d adresse IEEE connue, je ne peux le retirer de la zigate.');
+        }
+        else {
+            log::add('Abeille', 'debug', 'Je retire '.$ghost->getName().' de la zigate.');
             self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "IEEE=" . $IEEE);
         }
+        
+        // Eq level
+        $real->setName($ghost->getName().'_real');
+        $real->setObject($ghost->getObject());
+        $real->setCategory($ghost->getCategory());
+        $real->setConfiguration( 'note', $real->getConfiguration('note', '').$ghost->getConfiguration('note', '') );
+        $real->setConfiguration( 'positionX', $ghost->getConfiguration('positionX', '') );
+        $real->setConfiguration( 'positionY', $ghost->getConfiguration('positionY', '') );
+        $real->setConfiguration( 'positionZ', $ghost->getConfiguration('positionZ', '') );
+        $real->setIsVisible($ghostgetIsVisible());
+        $real->setIsEnable($ghostgetIsEnable());
 
-        // Parcours toutes les commandes
+        // Eq Level if type of NE diff
+        if ( $ghost->getConfiguration('uniqId', '') == $real->getConfiguration('uniqId', '') ) {
+            $real->setTimeout($ghost->getTimeout());
+        }
+        
+
+        // Parcours toutes les commandes pour recuperer les historiques, remplacer dans jeedom les instances de #ghost-cmd# par #real-cmd# 
         foreach ($ghost->getCmd() as $numGhost => $ghostCmd) {
             foreach ($real->getCmd() as $numReal => $realCmd) {
                 if ($ghostCmd->getLogicalId() == $realCmd->getLogicalId()) {
@@ -90,8 +156,11 @@ class Abeille extends eqLogic
             }
         }
 
-        // -- supprimer l Abeille: AbeilleY/YYYY
+        // -- supprimer l Abeille ghost
         $ghost->remove();
+
+        // Sauvegarde
+        $real->save();
 
         return;
     }

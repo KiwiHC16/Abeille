@@ -1915,10 +1915,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $address = $Command['address']; // -> 4
             $endpoint = $Command['endPoint']; // -> 2
 
-            //  4 + 2 = 6/2 => 3
-            $lenth = "0003";
-
             $data = $address . $endpoint ;
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }

@@ -41,7 +41,7 @@ class Abeille extends eqLogic
     // https://github.com/KiwiHC16/Abeille/issues/1055
     public static function replaceGhost($ghostId, $realId)
     {
-        //lors de l association sur la zigate Y, une nouvel Abeille va etre créée en AbeilleY/YYYY a reception de son nom alors que AbeilleX/XXXX existe toujours.
+        //lors de l association sur la zigate Y, une nouvelle Abeille va etre créée en AbeilleY/YYYY a reception de son nom alors que AbeilleX/XXXX existe toujours.
         // On va avoir ce doublon jusqu'à reception de IEEE ou action utilisateur. Ce qui veut dire que sur reception de IEEE pour AbeilleY/YYYY, il faut gérer le doublon. Il faut:
         // -- supprimer de la Zigate X, l'appairage avec l IEEEE
         // -- migrer l historique des commandes AbeilleX/XXXX vers AbeilleY/YYYY,
@@ -59,15 +59,6 @@ class Abeille extends eqLogic
         $IEEE = $ghost->getConfiguration('IEEE', 'none');
         if ($IEEE == 'none') {
             $IEEE = $real->getConfiguration('IEEE', 'none');
-        }
-
-        // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X
-        if ($destGhost != $destReal) {
-            if ($IEEE == 'none') {
-                log::add('Abeille', 'debug', 'Erreur je n ai pas l IEEE je ne sais comment gerer.');
-                return;
-            }
-            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "IEEE=" . $IEEE);
         }
 
         // -- si sur deux zigate differentes: supprimer l'appairage avec l IEEE de la Zigate X

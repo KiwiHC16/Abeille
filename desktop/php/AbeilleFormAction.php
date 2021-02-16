@@ -2,7 +2,7 @@
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/../../core/class/Abeille.class.php';
         
-    $zigateIds = array( '1', '2', '3', '4', '5' );
+    $zigateIds = array( '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' );
     
     function sendMessageFromFormToCmd( $topic, $payload ) {
         
@@ -279,6 +279,12 @@
             case "ReHome":
                 log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);
                 Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
+                break;
+
+            case "ReplaceZigate":
+                log::add('Abeille', 'debug', 'Removing all data of previous zigate: '.$_POST['zigateZ']);
+                config::remove( "AbeilleIEEE_Ok".$_POST['zigateZ'], 'Abeille');
+                config::remove( "AbeilleIEEE".$_POST['zigateZ'], 'Abeille');
                 break;
         }
         

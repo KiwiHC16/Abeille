@@ -109,6 +109,8 @@
         <!-- Gestion des ReHome / migration d equipements  -->
         <?php include '060_AbeilleReHomePart.php'; ?>
 
+        <?php include '070_AbeilleReplaceZigatePart.php'; ?>
+
         <!-- Affichage de la zone developpeur  -->
         <?php include '080_AbeilleZoneDevPart.php'; ?>
 

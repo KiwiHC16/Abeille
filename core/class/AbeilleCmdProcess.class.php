@@ -2633,7 +2633,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $destinationEndpoint    = $Command['destinationEndPoint'];
             $colourX                = $Command['X'];
             $colourY                = $Command['Y'];
-            $duration               = "0001";
+            if (isset($Command['duration']) && $Command['duration']>0) 
+                $duration = sprintf("%04s",dechex($Command['duration']));
+            else
+                $duration               = "0001";
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
 

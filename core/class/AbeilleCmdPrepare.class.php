@@ -765,6 +765,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                          "X"                    => $parameters['X'],
                                          "Y"                    => $parameters['Y'],
                                          "destinationEndPoint"  => $parameters['EP'],
+                                         "duration"             => $parameters['duration'],
                                          );
                     }
                     break;

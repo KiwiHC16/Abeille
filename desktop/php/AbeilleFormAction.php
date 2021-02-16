@@ -272,8 +272,13 @@
                 break;
                 
             case "Remplace":
-                log::add('Abeille', 'debug', $_POST['ghost'] . ' - ' . $_POST['real']);
+                log::add('Abeille', 'debug', 'Replace: '.$_POST['ghost'] . ' - ' . $_POST['real']);
                 Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
+                break;
+
+            case "ReHome":
+                log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);
+                Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
                 break;
         }
         

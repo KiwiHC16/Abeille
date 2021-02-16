@@ -106,6 +106,9 @@
         <!-- Gestion des ghosts / remplacement d equipements  -->
         <?php include '050_AbeilleRemplacementPart.php'; ?>
 
+        <!-- Gestion des ReHome / migration d equipements  -->
+        <?php include '060_AbeilleReHomePart.php'; ?>
+
         <!-- Affichage de la zone developpeur  -->
         <?php include '080_AbeilleZoneDevPart.php'; ?>
 

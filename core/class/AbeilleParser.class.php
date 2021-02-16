@@ -2004,25 +2004,32 @@
          */
         function decode8045($dest, $payload, $ln, $qos, $dummy)
         {
-            $SrcAddr = substr($payload, 4, 4);
-            $EP = substr($payload, 10, 2);
-
+            $SQN            = substr($payload, 0, 2);
+            $status         = substr($payload, 2, 2);
+            $SrcAddr        = substr($payload, 4, 4);
+            $EndPointCount  = substr($payload, 8, 2);
+            
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $endPointList = "";
-            for ($i = 0; $i < (intval(substr($payload, 8, 2)) * 2); $i += 2) {
-                // parserLog('debug','Endpoint : '    .substr($payload, (10 + $i), 2));
-                $endPointList = $endPointList . '; '.substr($payload, (10 + $i), 2) ;
+            for ($i = 0; $i < (intval($EndPointCount) * 2); $i += 2) {
+                $endPointList .= '; '.substr($payload, (10 + $i), 2) ;
+                if ($i==0) $EP = substr($payload, (10 + $i), 2);
             }
 
             parserLog('debug', $dest.', Type=8045/Active endpoints response'
-                             . ', SQN='             .substr($payload, 0, 2)
-                             . ', Status='          .substr($payload, 2, 2)
-                             . ', ShortAddr='       .substr($payload, 4, 4)
-                             . ', EndPointCount='   .substr($payload, 8, 2)
+                             . ', SQN='             .$SQN
+                             . ', Status='          .$status
+                             . ', ShortAddr='       .$SrcAddr
+                             . ', EndPointCount='   .$EndPointCount
                              . ', EndPointList='    .$endPointList
                              . ', [Modelisation]'
                             , "8045");
+
+            if ($status!="00") {
+                parserLog('debug', $dest.', Type=8045/Active endpoints response - status diff de 0, je ne process pas la reponse');
+                return;
+            }
 
             $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );

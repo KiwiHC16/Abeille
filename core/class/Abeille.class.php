@@ -1344,7 +1344,7 @@ class Abeille extends eqLogic
                     $nodeid = $Filter.'/'.$addr;
                     $bee->setLogicalId($nodeid);
                     log::add('Abeille', 'debug', 'message(): Mise-à-jour '.$oldLogicId.' => '.$nodeid);
-                    message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
+                    // message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
                 } else {
                     $bee->setIsEnable(0);
                     message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');

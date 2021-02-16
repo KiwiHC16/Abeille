@@ -75,11 +75,14 @@ class Abeille extends eqLogic
 
         list($destBee, $shortBee) = explode('/', $bee->getLogicalId());
 
+        $newDestBee = "Abeille".$zigateY;
+
         // 1/ Changement logical Id
-        $bee->setLogicalId('Abeille'.$zigateY.'/'.$shortBee);
+        $bee->setLogicalId($newDestBee.'/'.$shortBee);
+        $bee->save();
 
         // 2/ Remove zigbee reseau 1 zigbee
-        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destBee . "/Ruche/Remove", "IEEE=" . $IEEE);
+        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $newDestBee . "/Ruche/Remove", "IEEE=" . $IEEE);
 
         // 3/ inclusion normale sur le reseau 2 zigbee
         message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);

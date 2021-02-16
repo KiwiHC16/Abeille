@@ -35,7 +35,7 @@
 		?>
 		</select>
 		</br><br/>
-		<input type="submit" name="submitButton" value="Remplace">
+		<input type="submit" name="submitButton" value="ReHome">
 		</br><br/>
 	</form>
 

@@ -141,8 +141,8 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip">{{Nombre de zigates : }}</label>
-                <div class="col-lg-4 confs1">
+                <label class="col-lg-3 control-label" data-toggle="tooltip">{{Nombre de zigates : }}</label>
+                <div class="col-lg-2">
                     <select id="nbOfZigates" class="configKey form-control" data-l1key="zigateNb" title="{{Nombre de zigates.}}">
                         <option value="1" selected>1</option>
                         <?php
@@ -156,39 +156,37 @@
 
             <?php
             for ( $i=1; $i<=$zigateNbMax; $i++ ) {
-                echo '<div id="grp_Zigate'.$i.'">';
+                echo '<div id="idZigateGroup'.$i.'" style="display:none">';
             ?>
                 <div class="form-group">
-                    <label class="col-lg-4 control-label">-----</label>
-                    <div class="col-lg-4 confs1">
-                    <?php
-                    echo '<label style="padding-top: 7px">------------ Zigate'.$i.' ------------</label>';
-                    ?>
+                    <div class="col-lg-3">
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>
+                        <?php
+                        echo 'Zigate '.$i;
+                        ?>
+                        </h3>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip">{{Nom : }}</label>
-                    <div class="col-lg-4 confs1">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>
+                    <div class="col-lg-2">
                         <?php
                         if (Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')) {
                             $zgName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getName();
-                            $networkName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getHumanName();
                         } else {
                             $zgName = "";
-                            $networkName = "";
                         }
                         echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
-                    echo '</div>';
-                    echo '<div>';
-                        echo '<label class="control-label ml4px" data-toggle="tooltip" title="{{Chemin hiérarchique Jeedom}}">'.$networkName.'</label>';
                     echo '</div>';
                     ?>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip">{{Type : }}</label>
-                    <div class="col-lg-4 confs1">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>
+                    <div class="col-lg-2">
                         <?php
                         echo '<select id="idSelZgType'.$i.'" class="configKey form-control" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
                         ?>
@@ -198,13 +196,29 @@
                             <option value="DIN">{{DIN}}</option>
                         </select>
                     </div>
+                    <div class="col-lg-1">
+                    </div>
+                    <?php echo '<div id="idWiringPi'.$i.'" class="col-lg-3">'; ?>
+                        Wiring Pi :
+                        <a class="WiringPiStatus" title="Status du package">
+                            <span class="label label-success" style="font-size:1em;">-?-</span>
+                        </a>
+                        <a class="btn btn-warning" onclick="installWiringPi()" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    </div>
+                    <?php echo '<div id="idSocat'.$i.'" class="col-lg-3">'; ?>
+                        Socat :
+                        <a class="socatStatus" title="Status d'installation du package">
+                            <span class="label label-success" style="font-size:1em;">-?-</span>
+                        </a>
+                        <a class="btn btn-warning" onclick="installSocat()" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip">{{Port série : }}</label>
-                    <div class="col-lg-4 confs1">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série : }}</label>
+                    <div class="col-lg-2">
                         <?php
-                            echo '<select id="idSelSP'.$i.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$i.'" title="{{Port série si zigate USB ou Pi.}}" disabled>';
+                            echo '<select id="idSelSP'.$i.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$i.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
                             echo '<option value="none" selected>{{Aucun}}</option>';
                             echo '<option value="/dev/zigate'.$i.'" >{{WIFI'.$i.'}}</option>';
                             echo '<option value="/dev/monitZigate'.$i.'" >{{Monit'.$i.'}}</option>';
@@ -219,14 +233,36 @@
                         ?>
                         </select>
                     </div>
-                    <div>
-                        <?php
-                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                    <div class="col-lg-1">
+                    </div>
+                    <?php
+                        echo '<div id="idCommTest'.$i.'" class="col-lg-3">';
+                            echo 'Test de comm. :';
                             echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
+                            echo '<span class="label label-success" style="font-size:1em">-?-</span>';
+                            echo '</a>';
+                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
                         ?>
-                        <span class="label label-success" style="font-size:1em">-?-</span>
-                        </a>
+                        <a class="btn btn-danger" onclick="installTTY()" title="{{Tentative d'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>
+                    <div class="col-lg-2">
                         <?php
+                        echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                        // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                        // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
+                        ?>
+                            <!-- <span class="label label-success" style="font-size:1em;">-?-</span> -->
+                        <!-- </a> -->
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                    <?php
+                        echo '<div id="idUpdFw'.$i.'" class="col-lg-3">';
+                            echo 'Mise-à-jour FW :';
                             echo '<select id="idFW'.$i.'" style="width:55px" title="{{Firmwares disponibles}}">';
                             foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                                 $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
@@ -251,25 +287,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>
-                    <div class="col-lg-4 confs1">
-                        <?php
-                        echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
-                        // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
-                        // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
-                        ?>
-                            <!-- <span class="label label-success" style="font-size:1em;">-?-</span> -->
-                        <!-- </a> -->
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip">{{Status : }}</label>
-                    <div class="col-lg-4 confs1">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>
+                    <div class="col-lg-2">
                         <?php echo '<select id="idSelZgStatus'.$i.'" class="configKey form-control" data-l1key="AbeilleActiver'.$i.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">'; ?>
                             <option value="N" selected>{{Désactivée}}</option>
                             <option value="Y">{{Activée}}</option>
                         </select>
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                    <?php echo '<div id="idResetHW'.$i.'" class="col-lg-3">';
+                        echo 'Reset HW :';
+                        echo '<a class="btn btn-warning" onclick="resetPiZigate('.$i.')" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>';
+                    ?>
                     </div>
                 </div>
                 </div>
@@ -277,47 +307,16 @@
             }
             ?>
         </div>
-        <br>
-        <br>
 
-        <legend><i class="fa fa-list-alt"></i> {{Zigate Wifi}}</legend>
-        <a id="idWifiShowHide" class="btn btn-success" >{{Afficher}}</a>
-        <div id="zigatewifi">
-            <div>
-                <p><i>{{La zigate wifi néccéssite l'installation de l'utilitaire socat pour lier un fichier fifo a une ip:port.}}</i></p>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Installation de socat qui permet les échanges avec la zigate wifi.}}">{{Installation de socat : }}</label>
-                <div class="col-lg-5">
-                    <a class="socatStatus" title="Status d'installation du package">
-                        <span class="label label-success" style="font-size:1em;">-?-</span>
-                    </a>
-                    <a class="btn btn-warning" id="bt_installSocat" title="Installation automatique du package"><i class="fas fa-sync"></i>{{Installer}}</a>
-                </div>
-            </div>
-        </div>
-        <br>
-        <br>
-
-        <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
+        <!-- <br>
+        <br> -->
+        <!-- <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
         <a id="idPiShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="PiZigate">
             <div>
                 <p><i>{{La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.}}</i></p>
                 <p><i>{{Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.}}</i></p>
                 <p><i>{{L'accès aux GPIOs peut se faire depuis un container sous Docker, il faut ajouter --device /dev/mem et --cap_add SYS_RAWIO). Dans ce cas, faites les manipulations au lancement du conteneur.}}</i></p>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{WiringPI est nécéssaire pour controller les GPIO.}}">{{Installation de WiringPi : }}</label>
-                <div class="col-lg-5">
-                    <a class="WiringPiStatus" title="Status du package">
-                        <span class="label label-success" style="font-size:1em;">-?-</span>
-                    </a>
-                    <a class="btn btn-warning" id="bt_checkWiringPi" title="{{Vérification de l'installation}}"><i class="fas fa-sync"></i> {{Retester}}</a>
-                    <a class="btn btn-warning" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
-                </div>
             </div>
 
             <div class="form-group">
@@ -350,7 +349,7 @@
                     <a class="btn btn-warning" id="bt_resetPiZigate" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <br />
         <br />
@@ -361,9 +360,9 @@
                 Abeille_pre_update_analysis(0, 1);
             ?>
         </div>
-        <br />
-        <br />
 
+        <br />
+        <br />
         <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
         <a id="idAdvOptionsShowHide" class="btn btn-success" >{{Afficher}}</a>
         <div id="idAdvOptions">
@@ -376,7 +375,7 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité : }}</label>
                 <div class="col-lg-5">
                     <input type="button" onclick="checkIntegrity()" value="Lancer" title="Lance le test d'intégrité">
-                    <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">
+                    <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir 'AbeilleConfig.log' si 'NOK'.}}">
                         <span class="label label-success" style="font-size:1em">-?-</span>
                     </a>
                 </div>
@@ -454,15 +453,15 @@
 </form>
 
 <script>
-    /* Hiding unused zigate groups */
-    for (z = js_NbOfZigates + 1; z <= js_NbMaxOfZigates; z++) {
-        console.log("Hiding grp_Zigate" + z);
-        $("#grp_Zigate" + z).hide();
+    /* Show only groups in line with number of zigates (1 most of the time) */
+    for (z = 1; z <= js_NbOfZigates; z++) {
+        console.log("Showing idZigateGroup"+z);
+        $("#idZigateGroup"+z).show();
     }
 
     $("#Connection").hide();
-    $("#zigatewifi").hide();
-    $("#PiZigate").hide();
+    // $("#zigatewifi").hide();
+    // $("#PiZigate").hide();
     $("#UpdateCheck").hide();
     $("#idAdvOptions").hide();
 
@@ -481,20 +480,21 @@
         }
     );
 
-    /* Number of zigates changed. Display more or less 'grp_Zigate'
+    /* Number of zigates changed. Display more or less 'idZigateGroup'
        and be sure any new zigate is disabled by default */
     $("#nbOfZigates").change(function() {
         var nbOfZigates = Number($("#nbOfZigates").val());
         console.log("Nb Zigates: now=" + nbOfZigates + ", prev=" + js_NbOfZigates);
         if (nbOfZigates > js_NbOfZigates) {
             for (z = js_NbOfZigates + 1; z <= nbOfZigates; z++) {
-                $("#idSelZgStatus" + z).val('N');
+                $("#idSelZgStatus" + z).val('N'); // Disabled
                 $("#idSelZgStatus" + z).change();
-                $("#grp_Zigate" + z).show();
+                $("#idZigateGroup" + z).show();
             }
         } else if (nbOfZigates < js_NbOfZigates) {
             for (z = nbOfZigates + 1; z <= js_NbOfZigates; z++) {
-                $("#grp_Zigate" + z).hide();
+                $("#idSelZgStatus" + z).val('N'); // To be saved as disabled
+                $("#idZigateGroup" + z).hide();
             }
         }
         js_NbOfZigates = nbOfZigates;
@@ -505,33 +505,49 @@
         console.log("checkZigateType(zgNb=" + zgNb + ")");
         var zgType = $("#idSelZgType" + zgNb).val();
         var idSelSP = document.querySelector('#idSelSP' + zgNb);
-        var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
+        // var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
         var idFW = document.querySelector('#idFW' + zgNb);
-        var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
+        // var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
         var idWifiAddr = document.querySelector('#idWifiAddr' + zgNb);
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
+            $("#idSocat"+zgNb).show();
+            checkSocatInstallation();
+            $("#idWiringPi"+zgNb).hide();
+            $("#idCommTest"+zgNb).hide();
+            $("#idUpdFw"+zgNb).hide();
+            $("#idResetHW"+zgNb).hide();
+
             $("#idSelSP" + zgNb).val('/dev/zigate' + zgNb);
             idSelSP.setAttribute('disabled', true);
-            idCheckSP.setAttribute('disabled', true);
-            idFW.setAttribute('disabled', true);
-            idUpdateFW.setAttribute('disabled', true);
+            // idCheckSP.setAttribute('disabled', true);
+            // idFW.setAttribute('disabled', true);
+            // idUpdateFW.setAttribute('disabled', true);
             idWifiAddr.removeAttribute('disabled');
             // idCheckWifi.removeAttribute('disabled');
         } else {
             console.log('Type changed to USB, PI or DIN');
+            $("#idSocat"+zgNb).hide();
+            $("#idCommTest"+zgNb).show();
 
             idWifiAddr.setAttribute('disabled', true);
             // idCheckWifi.setAttribute('disabled', true);
             idSelSP.removeAttribute('disabled');
-            idCheckSP.removeAttribute('disabled');
+            // idCheckSP.removeAttribute('disabled');
             if (zgType == "PI") { // FW update is supported for PI only
-                idFW.removeAttribute('disabled');
-                idUpdateFW.removeAttribute('disabled');
+                $("#idWiringPi"+zgNb).show();
+                checkWiringPi(); // Force WiringPi check
+                // idFW.removeAttribute('disabled');
+                // idUpdateFW.removeAttribute('disabled');
+                $("#idUpdFw"+zgNb).show();
+                $("#idResetHW"+zgNb).show();
             } else {
-                idFW.setAttribute('disabled', true);
-                idUpdateFW.setAttribute('disabled', true);
+                // idFW.setAttribute('disabled', true);
+                // idUpdateFW.setAttribute('disabled', true);
+                $("#idWiringPi"+zgNb).hide();
+                $("#idUpdFw"+zgNb).hide();
+                $("#idResetHW"+zgNb).hide();
             }
         }
     }
@@ -578,21 +594,21 @@
         // });
     // }
 
-    $('#idWifiShowHide').on('click', function () {
-            var Label = document.getElementById("idWifiShowHide").innerText;
-            console.log("WifiShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                checkSocatInstallation();
-                document.getElementById("idWifiShowHide").innerText = "Cacher";
-                document.getElementById("idWifiShowHide").className = "btn btn-danger";
-                $("#zigatewifi").show();
-            } else {
-                document.getElementById("idWifiShowHide").innerText = "Afficher";
-                document.getElementById("idWifiShowHide").className = "btn btn-success";
-                $("#zigatewifi").hide();
-            }
-        }
-    );
+    // $('#idWifiShowHide').on('click', function () {
+    //         var Label = document.getElementById("idWifiShowHide").innerText;
+    //         console.log("WifiShowHide click: Label=" + Label);
+    //         if (Label == "Afficher") {
+    //             checkSocatInstallation();
+    //             document.getElementById("idWifiShowHide").innerText = "Cacher";
+    //             document.getElementById("idWifiShowHide").className = "btn btn-danger";
+    //             $("#zigatewifi").show();
+    //         } else {
+    //             document.getElementById("idWifiShowHide").innerText = "Afficher";
+    //             document.getElementById("idWifiShowHide").className = "btn btn-success";
+    //             $("#zigatewifi").hide();
+    //         }
+    //     }
+    // );
 
     function checkSocatInstallation() {
         $.ajax({
@@ -624,21 +640,21 @@
         });
     })
 
-    $('#idPiShowHide').on('click', function () {
-            var Label = document.getElementById("idPiShowHide").innerText;
-            console.log("PiShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                $("#bt_checkWiringPi").click(); // Force WiringPi check
-                document.getElementById("idPiShowHide").innerText = "Cacher";
-                document.getElementById("idPiShowHide").className = "btn btn-danger";
-                $("#PiZigate").show();
-            } else {
-                document.getElementById("idPiShowHide").innerText = "Afficher";
-                document.getElementById("idPiShowHide").className = "btn btn-success";
-                $("#PiZigate").hide();
-            }
-        }
-    );
+    // $('#idPiShowHide').on('click', function () {
+    //         var Label = document.getElementById("idPiShowHide").innerText;
+    //         console.log("PiShowHide click: Label=" + Label);
+    //         if (Label == "Afficher") {
+    //             // $("#bt_checkWiringPi").click(); // Force WiringPi check
+    //             document.getElementById("idPiShowHide").innerText = "Cacher";
+    //             document.getElementById("idPiShowHide").className = "btn btn-danger";
+    //             $("#PiZigate").show();
+    //         } else {
+    //             document.getElementById("idPiShowHide").innerText = "Afficher";
+    //             document.getElementById("idPiShowHide").className = "btn btn-success";
+    //             $("#PiZigate").hide();
+    //         }
+    //     }
+    // );
 
     $('#idUpdateCheckShowHide').on('click', function () {
             var Label = document.getElementById("idUpdateCheckShowHide").innerText;
@@ -670,7 +686,10 @@
         }
     );
 
-    $('#bt_checkWiringPi').on('click', function() {
+    function checkWiringPi() {
+        if (window.checkWiringPiOngoing)
+            return;
+        window.checkWiringPiOngoing = true;
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
@@ -681,15 +700,17 @@
             global: false,
             error: function (request, status, error) {
                 bootbox.alert("ERREUR 'checkWiringPi' !<br>Votre installation semble corrompue.");
+                window.checkWiringPiOngoing = false;
             },
             success: function (res) {
                 if (res.result == 0)
                     $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
                 else
                     $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                window.checkWiringPiOngoing = false;
             }
         });
-    })
+    }
 
     $('#bt_installWiringPi').on('click', function() {
         bootbox.confirm('{{Vous êtes sur le point d installer WiringPi (http://wiringpi.com) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
@@ -737,11 +758,11 @@
     function checkSerialPort(zgNb) {
         console.log("checkSerialPort(zgNb=" + zgNb + ")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
-        if (idCheckSP.getAttribute('disabled') != null) {
-            console.log("=> DISABLED");
-            return;
-        }
+        // var idCheckSP = document.querySelector('#idCheckSP'+zgNb);
+        // if (idCheckSP.getAttribute('disabled') != null) {
+        //     console.log("=> DISABLED");
+        //     return;
+        // }
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
@@ -771,11 +792,11 @@
     function updateFW(zgNb) {
         console.log("updateFW(zgNb=" + zgNb + ")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
-        if (idCheckSP.getAttribute('disabled') != null) {
-            console.log("=> DISABLED");
-            return;
-        }
+        // var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
+        // if (idCheckSP.getAttribute('disabled') != null) {
+        //     console.log("=> DISABLED");
+        //     return;
+        // }
         var zgType = $("#idSelZgType" + zgNb).val();
         if (zgType != "PI") {
             console.log("=> Not PI type. UNEXPECTED !");
@@ -783,7 +804,7 @@
         }
         var zgPort = $("#idSelSP" + zgNb).val();
         var zgFW = $("#idFW" + zgNb).val();
-        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br> Voulez vous continuer ?}}', function (result) {
+        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br><br>Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=updateFW&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
@@ -791,23 +812,26 @@
         });
     }
 
-    $('#bt_installTTY').on('click',function(){
-        bootbox.confirm('{{Vous êtes sur le point d\'activer le port ' + document.getElementById("ZiGatePort").value + '.<br>Cela pourrait supprimer la console sur ce port.<br> Voulez vous continuer ?}}', function (result) {
+    function installTTY() {
+        var msg = '{{Vous êtes sur le point de tenter de libérer et d\'activer le port TTY.';
+        msg += '<br>Cette procédure pourrait supprimer la console si attachée à ce port.'
+        msg += '<br><br>Voulez vous continuer ?}}'
+        bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Activation TTY}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installTTY.abeille').dialog('open');
             }
         });
-    })
+    }
 
-    $('#bt_resetPiZigate').on('click',function(){
+    function resetPiZigate(zgNb) {
         bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
             }
        });
-    })
+    }
 
     /* Verify Abeille's integrity using 'Abeille.md5' file. */
     function checkIntegrity() {

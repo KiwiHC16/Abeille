@@ -1,0 +1,22 @@
+{
+  "onGroupBroadcast": {
+    "name": "On_All",
+    "order": 2,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210217_1134",
+      "topic": "CmdAbeille/#addrGroup#/onGroupBroadcast",
+      "request": "On",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

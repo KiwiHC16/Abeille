@@ -2501,16 +2501,19 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 // 2 - Toggle
 
             $cmd                    = "0092";
-            $lenth                  = "0006";
+
             $addressMode            = $Command['addressMode'];
             $address                = $Command['address'];
             $sourceEndpoint         = "01";
             $destinationEndpoint    = $Command['destinationEndpoint'];
             $action                 = $Command['action'];
 
-            $this->sendCmd($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action, $address);
+            $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            if ( $addressMode != "01" ) {
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
+
+            if ( $addressMode == "02" ) {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
                 }

@@ -6,7 +6,7 @@
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07c766212dfdfgd72",
+      "uniqId": "20210217_1128",
       "icone": "remotecontrol",
       "battery_type": "",
       "lastCommunicationTimeOut": "-1",
@@ -16,6 +16,8 @@
     "Commandes": {
       "include1": "offGroup",
       "include1 2": "onGroup",
+      "include1 2 2": "onGroupBroadcast",
+      "include1 2 2 2": "offGroupBroadcast",
       "include2": "toggleGroup",
       "include3": "onGroupTimed",
       "include3 2": "offGroupTimed",
@@ -26,14 +28,6 @@
       "include7": "sceneGroupRecall1",
       "include7 2": "sceneGroupRecall2",
       "include7 2 2": "sceneGroupRecall3",
-      "include8": "Batterie-Pourcent-Ikea",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include11 2": "Up-Down",
-      "include11 2 2": "Click-Middle",
-      "include11 2 2 2": "Left-Right-Cmd",
-      "include11 2 2 2 2": "Left-Right-Direction",
       "include11 2 2 2 2 2": "BlancGroup",
       "include11 2 2 2 2 2 2": "BleuGroup",
       "include11 2 2 2 2 2 2 2": "RougeGroup",

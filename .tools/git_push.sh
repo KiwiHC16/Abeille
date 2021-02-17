@@ -1,12 +1,21 @@
 #!/bin/bash
+# Git push script
+# Do the following steps
+# - Update version into 'Abeille.version'
+# - Compute MD5 checksums into 'Abeille.md5'
+# - Add+commit+push
 
 OUT=plugin_info/Abeille.md5
+FORCE=""
 
 # Checks
 # Ensure script is launched from Abeille's root
 if [ ! -e ".git" ]; then
     echo "ERROR: This script must be launched from Abeille's root directory."
     exit 1
+fi
+if [ "$1" == "--force" ]; then
+    FORCE="--force"
 fi
 
 # Remote branch identification
@@ -61,9 +70,11 @@ if [ $? -ne 0 ]; then
     echo "= ERROR: git commit failed."
     exit 11
 fi
-git push
+git push ${FORCE}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed."
+    echo "= You may need to do the push with"
+    echo "= git push --force"
     exit 12
 fi
 echo "= Ok"

@@ -2785,8 +2785,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $address        = $Command['address'];
             $IEEE           = $Command['IEEE'];
-            $Rejoin         = "00";
-            $RemoveChildren = "01";
+            if (isset($Command['Rejoin'])) $Rejoin = $Command['Rejoin']; else $Rejoin = "00";
+            if (isset($Command['RemoveChildren']))  $RemoveChildren = $Command['RemoveChildren']; else $RemoveChildren = "01";
 
             $data = $address . $IEEE . $Rejoin . $RemoveChildren;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
@@ -2809,8 +2809,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
             //      1 = Leave, do not remove children
 
             $IEEE           = $Command['IEEE'];
-            $Rejoin         = "00";
-            $RemoveChildren = "01";
+            if (isset($Command['Rejoin'])) $Rejoin = $Command['Rejoin']; else $Rejoin = "00";
+            if (isset($Command['RemoveChildren']))  $RemoveChildren = $Command['RemoveChildren']; else $RemoveChildren = "01";
 
             $data = $IEEE . $Rejoin . $RemoveChildren;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));

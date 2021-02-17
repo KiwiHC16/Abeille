@@ -90,7 +90,24 @@
     "subType": "message",
     "configuration": {
       "topic": "MgtLeave",
-      "request": "address=#title#&IEEE=#message#"
+      "request": "address=#title#&IEEE=#message#&Rejoin=00&RemoveChildren=01"
+    },
+    "display": {
+      "forceReturnLineAfter": "0",
+      "title_placeholder": "Adresse courte de l equipement",
+      "message_placeholder": "Adresse IEEE de l equipement"
+    }
+  },
+  "Leave Request": {
+    "name": "Leave Request",
+    "order": 6,
+    "isHistorized": "0",
+    "isVisible": "0",
+    "Type": "action",
+    "subType": "message",
+    "configuration": {
+      "topic": "LeaveRequest",
+      "request": "address=#title#&IEEE=#message#&Rejoin=00&RemoveChildren=01"
     },
     "display": {
       "forceReturnLineAfter": "0",

@@ -105,7 +105,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
     /**
      * setParam2: send the commande to zigate to send a write attribute on zigbee network
-     * 
+     *
      * @param dest
      * @param address
      * @param clusterId
@@ -183,10 +183,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
     /**
      * setParam3: send the commande to zigate to send a write attribute on zigbee network with a proprio field
-     * 
+     *
      * @param dest
      * @param Command with following info: Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
-     * 
+     *
      * @return none
      */
     function setParam3($dest,$Command) {
@@ -282,10 +282,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
     /**
      * setParam4: send the commande to zigate to send a write attribute on zigbee network without a proprio field
-     * 
+     *
      * @param dest
      * @param Command with following info: clusterId=fc01&attributeId=0000&attributeType=09&value=0101
-     * 
+     *
      * @return none
      */
     function setParam4($dest,$Command) {
@@ -364,13 +364,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
     }
 
     /**
-     * setParamGeneric: send the commande to zigate to send a write attribute on zigbee network 
+     * setParamGeneric: send the commande to zigate to send a write attribute on zigbee network
      * This setParam try to be generic because there are too many setParam function above
      * Target: On long term would replace all of them.
-     * 
+     *
      * @param dest
      * @param Command with following info: clusterId=fc01&attributeId=0000&attributeType=09&value=0101
-     * 
+     *
      * @return none
      */
     function setParamGeneric($dest,$Command) {
@@ -425,7 +425,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $frameControlZCL    = "14";   // ZCL Control Field - Disable Default Response + Manufacturer Specific
         }
         $Proprio = $Command['Proprio'];
-        
+
         $frameControl       = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
         $transqactionSequenceNumber = "1A"; // to be reviewed
@@ -568,15 +568,15 @@ class AbeilleCmdProcess extends AbeilleDebug {
     }
     /**
      * getParamMulti
-     * 
+     *
      * Read Attribut from a specific cluster. Can read multiple attribut in one message.
      * Doesn't ask for APS ACk, for default Response ZCL to reduce traffic on net
-     * 
+     *
      * @param Command including priority, dest, address, EP, clusterId, Proprio, attributId
      * proprio not implemented yet
-     * 
-     * 
-     * @return none, 
+     *
+     *
+     * @return none,
      */
     function getParamMulti($Command) {
         $this->deamonlog('debug', " command getParamMulti");
@@ -826,28 +826,34 @@ class AbeilleCmdProcess extends AbeilleDebug {
             //echo "Get Abeilles List\n";
             $this->sendCmd($priority,$dest,"0015","0000","");
         }
+
         //----------------------------------------------------------------------
         // Set Time server (v3.0f)
         if (isset($Command['setTimeServer'])) {
             if (!isset($Command['time']) ) {
-                $Command['time'] = time();
+                $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
+                $Command['time'] = time() - $zgRef;
             }
-            $this->deamonlog('debug', "  setTimeServer");
-            $cmd = "0016";
-            $data = sprintf("%08s",dechex($Command['time']));
+            $this->deamonlog('debug', "  setTimeServer, time=".$Command['time']);
 
-            $lenth = sprintf("%04s", dechex(strlen( $data )/2));
-            $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
+            /* Cmd 0016 reminder
+               payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
+               WARNING: PHP time() is based on 1st of jan 1970 and NOT 2000 !! */
+            $cmd = "0016";
+            $data = sprintf("%08s", dechex($Command['time']));
+            $lenth = sprintf("%04s", dechex(strlen($data) / 2));
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data);
         }
 
         if (isset($Command['getTimeServer'])) {
             $this->deamonlog('debug', "  getTimeServer");
+
             $cmd = "0017";
             $data = "";
-
-            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
-            $this->sendCmd($priority,$dest,$cmd,$lenth,$data);
+            $lenth = sprintf("%04s", dechex(strlen($data) / 2));
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data);
         }
+
         //----------------------------------------------------------------------
         if (isset($Command['setOnZigateLed'])) {
             $this->deamonlog('debug', "  setOnZigateLed");
@@ -1272,27 +1278,27 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ( isset( $Command['sourceEndpoint'] ) ) { $sourceEndpoint = $Command['sourceEndpoint']; } else { $sourceEndpoint = "01"; }
             if ( isset( $Command['targetEndpoint'] ) ) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
             $ClusterId              = $Command['ClusterId'];
-            $direction              = "00";                     // 
-            $manufacturerSpecific   = "00";                     // 
-            $manufacturerId         = "0000";                   // 
+            $direction              = "00";                     //
+            $manufacturerSpecific   = "00";                     //
+            $manufacturerId         = "0000";                   //
             $numberOfAttributes     = "01";                     // One element at a time
 
-            if ( isset( $Command['AttributeDirection'] ) ) { $AttributeDirection = $Command['AttributeDirection']; } else { $AttributeDirection = "00"; } // See if below                    
-            
+            if ( isset( $Command['AttributeDirection'] ) ) { $AttributeDirection = $Command['AttributeDirection']; } else { $AttributeDirection = "00"; } // See if below
+
             $AttributeId            = $Command['AttributeId'];    // "0000"
 
-            if ( $AttributeDirection == "00" ) { 
-                if ( isset($Command['AttributeType']) ) {$AttributeType = $Command['AttributeType']; } 
-                else { 
+            if ( $AttributeDirection == "00" ) {
+                if ( isset($Command['AttributeType']) ) {$AttributeType = $Command['AttributeType']; }
+                else {
                     $this->deamonlog('error', "set Report with an AttributeType not defines for equipment: ". $targetShortAddress . " attribut: " . $AttributeId . " can t process" );
                     return;
                 }
                 if ( isset($Command['MinInterval']) )   { $MinInterval  = $Command['MinInterval']; } else { $MinInterval    = "0000"; }
                 if ( isset($Command['MaxInterval']) )   { $MaxInterval  = $Command['MaxInterval']; } else { $MaxInterval    = "0000"; }
                 if ( isset($Command['Change']) )        { $Change       = $Command['Change']; }      else { $Change         = "00"; }
-                $Timeout = "ABCD"; 
+                $Timeout = "ABCD";
             }
-            else if ( $AttributeDirection == "01" ) { 
+            else if ( $AttributeDirection == "01" ) {
                 $AttributeType          = "12";     // Put crappy info to see if they are passed to zigbee by zigate but it's not.
                 $MinInterval            = "3456";   // Need it to respect cmd 0120 format.
                 $MaxInterval            = "7890";
@@ -1303,7 +1309,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->deamonlog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $targetShortAddress . " attribut: " . $AttributeId . " can t process");
                 return;
             }
-            
+
             $data =  $addressMode . $targetShortAddress . $sourceEndpoint . $targetEndpoint . $ClusterId . $direction . $manufacturerSpecific . $manufacturerId . $numberOfAttributes . $AttributeDirection . $AttributeType . $AttributeId . $MinInterval . $MaxInterval . $Timeout . $Change ;
 
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
@@ -2635,7 +2641,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $destinationEndpoint    = $Command['destinationEndPoint'];
             $colourX                = $Command['X'];
             $colourY                = $Command['Y'];
-            if (isset($Command['duration']) && $Command['duration']>0) 
+            if (isset($Command['duration']) && $Command['duration']>0)
                 $duration = sprintf("%04s",dechex($Command['duration']));
             else
                 $duration               = "0001";
@@ -2738,7 +2744,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ( $Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             $this->getParam( $priority, $dest, $Command['address'], "0000", "0004", $Command['destinationEndPoint'], "0000" );
         }
-        
+
         if ( isset($Command['getName']) && isset($Command['address']) )
         {
             // $this->deamonlog('debug','  Get Name from: '.$Command['address']);
@@ -2769,10 +2775,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // Zigbee specification
             // 2.4.3.3.5   Mgmt_Leave_req
             // (ClusterID=0x0034)
-            //2.4.3.3.5.1     When Generated The Mgmt_Leave_req is generated from a Local Device requesting that a Remote Device leave the network 
-            // or to request that another device leave the network. The Mgmt_Leave_req is generated by a management application which directs 
+            //2.4.3.3.5.1     When Generated The Mgmt_Leave_req is generated from a Local Device requesting that a Remote Device leave the network
+            // or to request that another device leave the network. The Mgmt_Leave_req is generated by a management application which directs
             // the request to a Remote Device where the NLME-LEAVE.request is to be executed using the parameter supplied by Mgmt_Leave_req.
-            
+
             $cmd = "0047";
 
             // <target short address: uint16_t>
@@ -2866,19 +2872,19 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             // <address mode: uint8_t>
             // <target short address: uint16_t>
-            // <source endpoint: uint8_t>	
-            // <destination endpoint: uint8_t>	
-            // <Cluster id: uint16_t>	
-            // <Attribute id : uint16_t>	
-            // <direction: uint8_t>	
-            // <manufacturer specific: uint8_t>	
-            // <manufacturer id: uint16_t>	
-            // <Max number of identifiers: uint8_t>	
-            // Direction:	
-            // 0 – from server to client	
-            // 1 – from client to server	
-            // Manufacturer specific :	
-            // 1 – Yes	
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <Cluster id: uint16_t>
+            // <Attribute id : uint16_t>
+            // <direction: uint8_t>
+            // <manufacturer specific: uint8_t>
+            // <manufacturer id: uint16_t>
+            // <Max number of identifiers: uint8_t>
+            // Direction:
+            // 0 – from server to client
+            // 1 – from client to server
+            // Manufacturer specific :
+            // 1 – Yes
             // 0 – No
 
             $addressMode    = "02";

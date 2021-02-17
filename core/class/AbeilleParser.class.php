@@ -1737,17 +1737,18 @@
             }
         }
 
+        /* 8017/Get Time Server Response (FW >= 3.0f) */
         function decode8017($dest, $payload, $ln, $qos, $dummy)
         {
-            // Get Time server Response (v3.0f)
             // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
             $Timestamp = substr($payload, 0, 8);
-            parserLog('debug', $dest.', Type=8017/Get Time server Response, Timestamp='.hexdec($Timestamp), "8017");
+            parserLog('debug', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($Timestamp), "8017");
 
             $SrcAddr = "Ruche";
             $ClusterId = "ZiGate";
             $AttributId = "Time";
-            $data = date(DATE_RFC2822, hexdec($Timestamp));
+            // Note: updating timestamp ref from 2000 to 1970
+            $data = date(DATE_RFC2822, hexdec($Timestamp) + mktime(0, 0, 0, 1, 1, 2000));
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -2008,7 +2009,7 @@
             $status         = substr($payload, 2, 2);
             $SrcAddr        = substr($payload, 4, 4);
             $EndPointCount  = substr($payload, 8, 2);
-            
+
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $endPointList = "";

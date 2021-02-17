@@ -298,11 +298,11 @@
             break;
         case "GetTime":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/getTimeServer';
-            payload = ""; // TODO
+            payload = "";
             break;
         case "SetTime":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setTimeServer';
-            payload = ""; // TODO
+            payload = ""; // Using current time from host.
             break;
         case "ErasePersistantDatas": // Erase PDM
             msg = '{{Vous êtes sur le point de d\'effacer la PDM de la zigate}} <b>'+js_zgNb+'</b>';

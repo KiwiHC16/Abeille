@@ -82,7 +82,7 @@ class Abeille extends eqLogic
         $bee->save();
 
         // 2/ Remove zigbee reseau 1 zigbee
-        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $newDestBee . "/Ruche/Remove", "IEEE=" . $IEEE);
+        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $newDestBee . "/Ruche/Remove", "ParentAddressIEEE=" . $IEEE . "&ChildAddressIEEE=" . $IEEE );
 
         // 3/ inclusion normale sur le reseau 2 zigbee
         message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
@@ -119,7 +119,7 @@ class Abeille extends eqLogic
         }
         else {
             log::add('Abeille', 'debug', 'Je retire '.$ghost->getName().' de la zigate.');
-            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "IEEE=" . $IEEE);
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "ParentAddressIEEE=" . $IEEE . "&ChildAddressIEEE=" . $IEEE );
         }
         
         // Eq level
@@ -1448,6 +1448,9 @@ class Abeille extends eqLogic
 
             // On enleve le / comme par exemple le nom des equipements Legrand
             $trimmedValue = str_replace('/', '', $trimmedValue);
+
+            // On enleve le * Ampoules GU10 Philips #1778
+            $trimmedValue = str_replace('*', '', $trimmedValue);
 
             // On enleve les 0x00 comme par exemple le nom des equipements Legrand
             $trimmedValue = str_replace("\0", '', $trimmedValue);

@@ -128,8 +128,8 @@
     },
     "display": {
       "forceReturnLineAfter": "1",
-      "title_placeholder": "Adresse IEEE de l equipement",
-      "message_placeholder": "na"
+      "title_placeholder": "Adresse IEEE du routeur",
+      "message_placeholder": "Adresse IEEE de l equipement"
     }
   },
   "addGroup": {

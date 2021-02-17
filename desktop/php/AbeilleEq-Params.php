@@ -168,7 +168,7 @@
                         echo '<span>'.$res.'</span>';
                     ?>
                     <button type="button" onclick="sendZigate('GetTime', '')">Lire</button>
-                    <button type="button" onclick="sendZigate('SetTime', '')">Modifier</button>
+                    <button type="button" onclick="sendZigate('SetTime', '')">Mettre à l'heure</button>
                 </div>
             </div>
 

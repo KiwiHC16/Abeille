@@ -124,7 +124,7 @@
     "subType": "message",
     "configuration": {
       "topic": "Remove",
-      "request": "IEEE=#title#"
+      "request": "ParentAddressIEEE=#title#&ChildAddressIEEE=#message#"
     },
     "display": {
       "forceReturnLineAfter": "1",

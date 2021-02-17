@@ -2823,8 +2823,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         // if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
         // https://github.com/KiwiHC16/Abeille/issues/332
-        if ( isset($Command['Remove']) && isset($Command['IEEE']) )
+        if ( isset($Command['Remove']) && isset($Command['ParentAddressIEEE']) && isset($Command['ChildAddressIEEE']) )
         {
+            // <target short address: uint64_t>
+            // <extended address: uint64_t>
             $cmd = "0026";
 
             // Doc is probably not up to date, need to provide IEEE twice
@@ -2842,8 +2844,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // APSME-REMOVE-DEVICE.request { ParentAddress IEEE, ChildAddress IEEE}
 
             // $address        = $Command['address'];
-            $address        = $Command['IEEE'];
-            $IEEE           = $Command['IEEE'];
+            $address        = $Command['ParentAddressIEEE'];
+            $IEEE           = $Command['ChildAddressIEEE'];
 
             $data = $address . $IEEE ;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));

@@ -6,16 +6,13 @@ Plugin qui permet de piloter un réseau ZigBee depuis Jeedom par l'intermédiair
 
 ## Documentations
 
-http://kiwihc16.free.fr
+https://kiwihc16.github.io/AbeilleDoc
 
 ## Équipements supportés
 
-http://kiwihc16.free.fr/listeCompatibilite.html
+https://kiwihc16.github.io/AbeilleDoc/listeCompatibilite.html
 
-## Change log
+## Cagnotte pour supporter de nouveaux équipements
 
-http://kiwihc16.free.fr/Changelog.html
+https://kiwihc16.github.io/AbeilleDoc/Presentation.html#cagnotte
 
-## Cagnote
-
-http://kiwihc16.free.fr/index.html#cagnotte

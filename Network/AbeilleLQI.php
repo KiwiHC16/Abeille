@@ -178,6 +178,11 @@
                 newEqToInterrogate($parameters['Voisine']);
             } else if ($AttrType== 2) {
                 $parameters['Type'] = "End Device";
+                // Ajout bouton remove from zigbee #1770
+                list( $dest, $Addr ) = explode('/', $NE);
+                $kid = Abeille::byLogicalId($dest.'/'.$N->Addr, 'Abeille');
+                $kid->setConfiguration('ParentIEEE', $N->ExtAddr);
+                $kid->save();
             } else { // $AttrType== 3
                 $parameters['Type'] = "Unknown";
             }

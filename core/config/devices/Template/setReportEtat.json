@@ -9,10 +9,12 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-	"uniqId": "5c07c76624f46",
+      "uniqId": "5c07c76624f46",
       "topic": "setReport",
       "request": "targetEndpoint=#EP#&ClusterId=0006&AttributeId=0000&AttributeType=10",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "11"
     }
   }
 }

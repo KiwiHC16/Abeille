@@ -13,7 +13,9 @@
       "uniqId": "5c07cqd7662269dgd6",
       "topic": "OnOff",
       "request": "Action=Toggle&EP=#EP#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "All",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "9"
     },
     "display": {
       "forceReturnLineAfter": "0"

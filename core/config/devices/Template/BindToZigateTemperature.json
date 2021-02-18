@@ -15,7 +15,9 @@
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0402&reportToAddress=#ZiGateIEEE#",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "10",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "9"
     }
   }
 }

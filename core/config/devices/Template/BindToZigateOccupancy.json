@@ -13,7 +13,9 @@
       "uniqId": "5c07c7662188qsqf",
       "topic": "bindShort",
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0406&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "9"
     }
   }
 }

@@ -13,7 +13,9 @@
       "uniqId": "dsdfsgsg45GZdsqs",
       "topic": "OnOff",
       "request": "Action=On&EP=#EP#",
-      "visibilityCategory": "All"
+      "visibilityCategory": "All",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "10"
     }
   }
 }

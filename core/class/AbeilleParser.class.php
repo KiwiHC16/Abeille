@@ -3515,46 +3515,8 @@
          * @return          Doesn't return anything as all action are triggered by sending messages in queues
          */
         function configureNE( $short ) {
-            parserLog('debug', 'Type=fct; ===> Configure NE Start', 'configureNE');
-
-            $commandeConfiguration = array( 'BindShortToZigateBatterie',            'setReportBatterie', 'spiritSetReportBatterie',
-                                           'BindToZigateEtat',                      'setReportEtat',
-                                           'BindToZigateLevel',                     'setReportLevel',
-                                           'BindToZigateButton',
-                                           'spiritTemperatureBindShortToZigate',    'spiritTemperatureSetReport',
-                                           'BindToZigateIlluminance',               'setReportIlluminance', 'setReportIlluminanceXiaomi',
-                                           'BindToZigateOccupancy',                 'setReportOccupancy',
-                                           'BindToZigateTemperature',               'setReportTemperature',
-                                           'BindToZigatePuissanceLegrand',          'setReportPuissanceLegrand',
-                                           'BindShortToSmokeHeiman',                'setReportSmokeHeiman',
-                                           'LivoloSwitchTrick1',                    'LivoloSwitchTrick2', 'LivoloSwitchTrick3', 'LivoloSwitchTrick4',
-                                           );
-
-            $abeille = Abeille::byLogicalId( $short,'Abeille');
-
-            if ( $abeille) {
-
-                ///@TODO: retirer ce bout de code et garder uniquement: execAtCreationCmdForOneNE
-                // Initial mode of configuration, l ideal serait de retirer ce bout de code et garder uniquement: execAtCreationCmdForOneNE
-                $arr = array(1, 2);
-                foreach ($arr as &$value) {
-                    foreach ( $commandeConfiguration as $config ) {
-                        $cmd = $abeille->getCmd('action', $config);
-                        if ( $cmd ) {
-                             parserLog('debug', 'Type=fct; ===> Configure NE cmd: '.$config, 'configureNE');
-                            $cmd->execCmd();
-                        }
-                        else {
-                            parserLog('debug', 'Type=fct; ===> Configure NE '.$config.': Cmd not found, probably not an issue, probably should not do it', 'configureNE');
-                        }
-                    }
-                }
-
-                // New mode of configuration based on definition in the template
-                self::execAtCreationCmdForOneNE($short);
-            }
-
-            parserLog('debug', 'Type=fct; ===> Configure NE End', 'configureNE');
+            parserLog('debug', 'configureNE()');
+            self::execAtCreationCmdForOneNE($short);
         }
 
         /**

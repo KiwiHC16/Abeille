@@ -12,7 +12,9 @@
       "uniqId": "5c07c76621802",
       "topic": "bindShort",
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0001&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "9"
     },
     "display": {
       "forceReturnLineAfter": "1"

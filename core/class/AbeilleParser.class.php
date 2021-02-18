@@ -3492,24 +3492,24 @@
                 }
             }
         }
-
+        /**
+         * execAtCreationCmdForOneNE
+         * Will execute all commande with execAtCreation flag set
+         * 
+         * @param logicalId of the device 
+         * 
+         * @return none
+         * 
+         */
         public static function execAtCreationCmdForOneNE($logicalId) {
-            echo "Coucou\n";
             list($dest,$addr) = explode("/", $logicalId);
             echo $dest . ' - ' . $addr . "\n";
             $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
-            // var_dump($cmds);
             foreach ( $cmds as $key => $cmd ) {
-                echo "cmd: ".$cmd->getName()."\n";
-                // parserLog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
-
                 $request = $cmd->getConfiguration('request');
                 $request = AbeilleCmd::updateRequest($dest,$cmd,$request);
-                echo "request: ".$request."\n";
-                
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
             }
-            echo "bybeye\n";
         }
 
         /**

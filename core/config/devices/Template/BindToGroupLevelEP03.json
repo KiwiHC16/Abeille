@@ -1,0 +1,19 @@
+{
+  "BindToGroupLevelEP03": {
+    "Comment": "Used to bind the device to a group",
+    "isVisible": 1,
+    "name": "BindToGroupButtonEP3",
+    "order": 28,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210218_0129",
+      "topic": "BindToGroup",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&clusterID=0008&reportToGroup=3003",
+      "visibilityCategory": "Network"
+    }
+  }
+}

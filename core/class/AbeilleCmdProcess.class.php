@@ -1151,6 +1151,68 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data );
         }
 
+        // BindToGroup
+        // Pour Telecommande RC110
+        if ( isset($Command['BindToGroup']) )
+        {
+            $this->deamonlog('debug', "  command BindToGroup");
+
+            $cmd = "0530";
+
+            // <address mode: uint8_t>              -> 1
+            // <target short address: uint16_t>     -> 2
+            // <source endpoint: uint8_t>           -> 1
+            // <destination endpoint: uint8_t>      -> 1
+
+            // <profile ID: uint16_t>               -> 2
+            // <cluster ID: uint16_t>               -> 2
+
+            // <security mode: uint8_t>             -> 1
+            // <radius: uint8_t>                    -> 1
+            // <data length: uint8_t>               -> 1  (22 -> 0x16)
+            // <data: auint8_t>
+            // APS Part <= data
+            // dummy 00 to align mesages                                            -> 1
+            // <target extended address: uint64_t>                                  -> 8
+            // <target endpoint: uint8_t>                                           -> 1
+            // <cluster ID: uint16_t>                                               -> 2
+            // <destination address mode: uint8_t>                                  -> 1
+            // <destination address:uint16_t or uint64_t>                           -> 8
+            // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+            // => 34 -> 0x22
+
+            $addressMode                = "02";
+            $targetShortAddress         = $Command['address'];
+            $sourceEndpointBind         = "00";
+            $destinationEndpointBind    = "00";
+            $profileIDBind              = "0000";
+            $clusterIDBind              = "0021";
+            $securityMode               = "02";
+            $radius                     = "30";
+            $dataLength                 = "16";
+
+            $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
+
+            $targetExtendedAddress      = reverse_hex($Command['targetExtendedAddress']);
+            $targetEndpoint             = $Command['targetEndpoint'];
+            $clusterID                  = reverse_hex($Command['clusterID']);
+            $destinationAddressMode     = "01";
+            $reportToGroup              = reverse_hex($Command['reportToGroup']);
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
+            $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $reportToGroup;
+
+            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
+            $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2) );
+
+            $data = $data1 . $data2;
+
+            //$lenth = "0022";
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
+
+            $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+        }
+
         // Bind Short
         // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
         // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
@@ -2304,18 +2366,18 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // Add Group
             // Message Description
             // Msg Type = 0x0060 Command ID = 0x00
-            $cmd = "0060";
-            $lenth = "0007";
+            $cmd    = "0060";
+            $lenth  = "0007";
             // <address mode: uint8_t>
             //<target short address: uint16_t>
             //<source endpoint: uint8_t>
             //<destination endpoint: uint8_t>
             //<group address: uint16_t>
-            $addressMode = "02";
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['DestinationEndPoint'];
-            $groupAddress = $Command['groupAddress'];
+            $addressMode            = "02";
+            $address                = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['DestinationEndPoint'];
+            $groupAddress           = $Command['groupAddress'];
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $groupAddress ;
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);

@@ -16,19 +16,24 @@
       "include1": "offGroup",
       "include2": "toggleGroup",
       "include3": "onGroup",
-      "include4": "downGroup",
-      "include5": "upGroup",
-      "include6": "setLevelGroup",
-      "include6 2": "setTemperatureLightGroup",
-      "include7": "sceneGroupRecall",
+      "include3 2": "setLevelGroup",
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",
       "include11": "setReportBatterie",
-      "include11 2": "Up-Down",
-      "include11 2 2": "Click-Middle",
-      "include11 2 2 2": "Left-Right-Cmd",
-      "include11 2 2 2 2": "Left-Right-Direction"
+      "include11 2 2 2 2 2": "BindToGroupLevelEP03",
+      "include11 2 2 2 2 2 2": "BindToGroupLevelEP04",
+      "include11 2 2 2 2 2 2 2": "BindToGroupLevelEP05",
+      "include11 2 2 2 2 2 2 2 3": "BindToGroupLevelEP06",
+      "include11 2 2 2 2 2 2 2 3 2": "BindToGroupLevelEP07",
+      "include11 2 2 2 2 2 2 2 3 2 2": "BindToGroupLevelEP08",
+      "include11 2 2 2 2 2 2 2 2 2 2 2 2 2 2": "addGroupEP1",
+      "include11 2 2 2 2 2 2 2 2": "addGroupEP3",
+      "include11 2 2 2 2 2 2 2 2 2": "addGroupEP4",
+      "include11 2 2 2 2 2 2 2 2 2 2": "addGroupEP5",
+      "include11 2 2 2 2 2 2 2 2 2 2 2": "addGroupEP6",
+      "include11 2 2 2 2 2 2 2 2 2 2 2 2": "addGroupEP7",
+      "include11 2 2 2 2 2 2 2 2 2 2 2 2 2": "addGroupEP8"
     }
   }
 }

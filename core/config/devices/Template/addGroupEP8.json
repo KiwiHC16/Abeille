@@ -1,0 +1,21 @@
+{
+  "addGroupEP8": {
+    "isVisible": 1,
+    "name": "Add Group EP8",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "201210218_0251",
+      "topic": "addGroup",
+      "request": "DestinationEndPoint=08&groupAddress=8008",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

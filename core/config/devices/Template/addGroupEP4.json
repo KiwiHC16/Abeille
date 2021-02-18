@@ -1,0 +1,21 @@
+{
+  "addGroupEP4": {
+    "isVisible": 1,
+    "name": "Add Group EP4",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "201210218_0224",
+      "topic": "addGroup",
+      "request": "DestinationEndPoint=04&groupAddress=4004",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

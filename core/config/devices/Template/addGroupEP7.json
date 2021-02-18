@@ -1,0 +1,21 @@
+{
+  "addGroupEP7": {
+    "isVisible": 1,
+    "name": "Add Group EP7",
+    "order": 13,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "201210218_0250",
+      "topic": "addGroup",
+      "request": "DestinationEndPoint=07&groupAddress=7007",
+      "visibilityCategory": "Network"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

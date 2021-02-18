@@ -1101,6 +1101,23 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                     break;
                     //----------------------------------------------------------------------------
+                case "addGroup":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                    $Command = array(
+                                        "addGroup"                 => "1",
+                                        "priority"                 => $priority,
+                                        "dest"                     => $dest,
+                                        "address"                  => $address,
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupAddress"             => $parameters['groupAddress'],
+                                        );
+                    $done = 1;
+                    break;
+                    //----------------------------------------------------------------------------
                 case "getGroupMembership":
                     $Command = array(
                                      "getGroupMembership" => "1",
@@ -1126,6 +1143,25 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "destinationAddress"       => $parameters['reportToAddress'],
                                      "destinationEndpoint"      => "01",
                                      );
+                    break;
+                    //----------------------------------------------------------------------------
+                case "BindToGroup":
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
+                    $Command = array(
+                                        "BindToGroup"              => "1",
+                                        "priority"                 => $priority,
+                                        "dest"                     => $dest,
+                                        "address"                  => $address,
+                                        "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+                                        "targetEndpoint"           => $parameters['targetEndpoint'],
+                                        "clusterID"                => $parameters['clusterID'],
+                                        "reportToGroup"            => $parameters['reportToGroup'],
+                                        "destinationEndpoint"      => "01",
+                                        );
+                    $done = 1;
                     break;
                     //----------------------------------------------------------------------------
                 case "setReportSpirit":

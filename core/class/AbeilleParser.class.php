@@ -627,10 +627,10 @@
             $msgDecoded .= ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
-            // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
-            // $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
+            // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja dans Abeille, sinon sera drop
+            $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
 
-            // Tcharp38: Why ? $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE);
+            // Tcharp38: Why ? $this->mqqtPublishFct($dest."/"."Ruche", "enable", $IEEE); <- KiwiHC16: un equipement peut exister dans Abeille eet etre disabled donc on le reactive ici.
             $this->mqqtPublishFct($dest."/".$Addr, "enable", $IEEE);
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
@@ -3493,11 +3493,16 @@
             }
         }
 
-        public static function execAtCreationCmdForOneNE($address) {
-            $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId( $address,'Abeille')->getId(), 'execAtCreation', 'action' );
+        public static function execAtCreationCmdForOneNE($logicalId) {
+            list($dest,$addr) = explode("/", $logicalId);
+            $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
             foreach ( $cmds as $key => $cmd ) {
                 parserLog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
+
+                $request = $cmd->getConfiguration('request');
+                $request = AbeilleCmd::updateRequest($dest,$cmd,$request);
+                
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
             }
         }
 

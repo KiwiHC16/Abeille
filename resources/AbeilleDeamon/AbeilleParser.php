@@ -33,9 +33,11 @@
     include_once __DIR__.'/includes/function.php';
     include_once __DIR__.'/includes/fifo.php';
     include_once __DIR__.'/lib/AbeilleTools.php';
-    include_once __DIR__.'/../../core/php/AbeilleLog.php'; // Abeille log features
-    include_once __DIR__.'/../../core/php/AbeilleZigateConst.php'; // Zigate constants
-    include_once __DIR__.'/../../core/class/AbeilleParser.class.php'; // AbeilleParserClass
+    include_once __DIR__.'/../../core/php/AbeilleLog.php';              // Abeille log features
+    include_once __DIR__.'/../../core/php/AbeilleZigateConst.php';      // Zigate constants
+    include_once __DIR__.'/../../core/class/AbeilleCmd.class.php';      // AbeilleCmdClass
+    include_once __DIR__.'/../../core/class/AbeilleParser.class.php';   // AbeilleParserClass
+    include_once __DIR__.'/../../core/class/Abeille.class.php';         // AbeilleClass
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161

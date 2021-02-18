@@ -12,7 +12,9 @@
       "uniqId": "201210218_0224",
       "topic": "addGroup",
       "request": "DestinationEndPoint=04&groupAddress=4004",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "4"
     },
     "display": {
       "forceReturnLineAfter": "1"

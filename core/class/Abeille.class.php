@@ -1713,6 +1713,12 @@ class Abeille extends eqLogic
                 return;
             }
 
+            // Je ne sais pas pourquoi des fois on recoit des IEEE null
+            if ($value == "0000000000000000") {
+                log::add('Abeille', 'debug', 'IEEE-Addr;' . $value . ';IEEE recue est null, je ne fais rien.');
+                return;
+            }
+
             // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
             if ($value == "FFFFFFFFFFFFFFFF") {
                 log::add('Abeille', 'debug', 'IEEE-Addr; =>' . $value . '<= ; IEEE non valable pour un equipement, valeur rejetée: ' . $addr . ": IEEE =>" . $value . "<=");
@@ -1725,24 +1731,9 @@ class Abeille extends eqLogic
                 return;
             }
 
-            $IEEE = $cmdlogic->execCmd();
-            if ($IEEE == $value) {
-                // log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Ok pas de changement de l adresse IEEE, je ne fais rien.' );
-                $elogic->checkAndUpdateCmd($cmdlogic, $value); // -> Je fais quand meme la mise a jour pour avoir tous les IEEE en mininuscule qui soit mis a jour en majuscule.
-                $elogic->setConfiguration('IEEE', $value);
-                $elogic->save();
-                $elogic->refresh();
-                return;
-            }
-
-            // Je ne sais pas pourquoi des fois on recoit des IEEE null
-            if ($value == "0000000000000000") {
-                log::add('Abeille', 'debug', 'IEEE-Addr;' . $value . ';IEEE recue est null, je ne fais rien.');
-                return;
-            }
-
-            // Je ne fais pas d alerte dans le cas ou IEEE est null car pas encore recupere du réseau.
-            if (strlen($IEEE) > 2) {
+            // $IEEE = $cmdlogic->execCmd();
+            $IEEE = $elogic->getConfiguration('IEEE','None');
+            if ( ($IEEE!=$value) && (strlen($IEEE)==16) ) {
                 log::add('Abeille', 'debug', 'IEEE-Addr;' . $value . ';Alerte changement de l adresse IEEE pour un equipement !!! ' . $addr . ": " . $IEEE . " =>" . $value . "<=");
                 message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )", '');
             }
@@ -1752,6 +1743,8 @@ class Abeille extends eqLogic
             $elogic->save();
             $elogic->refresh();
 
+            log::add('Abeille', 'debug', 'IEEE-Addr cmd and eq updated: '.$elogic->getName().' - '.$elogic->getConfiguration('IEEE', 'Unknown') );
+            
             return;
         }
 

@@ -13,7 +13,9 @@
       "uniqId": "20210218_0129",
       "topic": "BindToGroup",
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&clusterID=0008&reportToGroup=3003",
-      "visibilityCategory": "Network"
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "9"
     }
   }
 }

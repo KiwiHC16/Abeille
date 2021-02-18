@@ -15,7 +15,7 @@
       "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=05&clusterID=0008&reportToGroup=5005",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
+      "execAtCreationDelay": "19"
     }
   }
 }

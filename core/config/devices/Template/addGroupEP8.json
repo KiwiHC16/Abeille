@@ -14,7 +14,7 @@
       "request": "DestinationEndPoint=08&groupAddress=8008",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
-      "execAtCreationDelay": "8"
+      "execAtCreationDelay": "13"
     },
     "display": {
       "forceReturnLineAfter": "1"

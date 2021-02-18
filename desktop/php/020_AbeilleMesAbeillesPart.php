@@ -28,6 +28,9 @@
 
             /* Set timeout on selected equipements */
             echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
+
+            /* Exclude feature */
+            echo '<a onclick="removeBees('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Supprime les équipement(s) sélectionné(s) si fonctionnent SUR SECTEUR.">{{Exclure}}</a>';
         }
 
 		echo '<div class="eqLogicThumbnailContainer">';

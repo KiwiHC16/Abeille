@@ -308,3 +308,60 @@ function removeBeesJeedom(zgNb) {
         });
     });
 }
+
+/* Called when 'exclude' button is pressed
+   Removes & exclude the selected equipements (Only those which are NOT battery powered). */
+function removeBees(zgNb) {
+    console.log("removeBees(zgNb="+zgNb+")");
+
+    eval('var eqZigate = JSON.parse(js_eqZigate'+zgNb+');'); // List of eq IDs for current zigate
+
+    /* Any selected ? */
+    var sel = getSelectedEqs(zgNb);
+    console.log(sel);
+    if (sel["nb"] == 0) {
+        alert("Aucun équipement sélectionné !")
+        return;
+    }
+    var eqIdList = sel["ids"];
+    console.log("eqIdList="+eqIdList);
+
+    var msg = "{{Vous êtes sur le point de demander l\'exclusion des équipements selectionnés.";
+    msg += "<br>- Si alimenté par secteur, cela devrait être immédiat.";
+    msg += "<br>- Si alimenté par pile, l'équipement ne sortira du réseau qu'a son réveil (que vous pouvez aussi provoquer).";
+    msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false)
+            return
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            data: {
+                action: 'removeEqZigbee',
+                eqIdList: eqIdList
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'removeEqZigbee' !");
+            },
+            success: function (json_res) {
+                window.location.reload();
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.errors;
+                    alert(msg);
+                }
+            }
+        });
+    });
+}
+
+/* Called when clean button is pressed */
+function cleanBees(zgNb, zgPort) {
+    console.log("cleanBees(zgNb="+zgNb+", zpPort="+zgPort+")");
+
+    $('#md_modal').dialog({title: "{{Nettoyage du réseau}} 'Abeille"+zgNb+"'"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=cleanBees&zgPort='+zgPort+'&zgNb='+zgNb).dialog('open');
+}

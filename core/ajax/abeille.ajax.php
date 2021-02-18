@@ -290,49 +290,53 @@ try {
         ajax::success(json_encode(array('status' => $status)));
     }
 
-    /* Remove equipment(s) listed by id in 'eqList'.
-       Returns: status=0/-1, errors=<error message(s)> */
-    if (init('action') == 'removeEq') {
-        $eqList = init('eqList');
+        /* Remove equipment(s) from zigbee listed by id in 'eqIdList'.
+           Returns: status=0/-1, errors=<error message(s)> */
+        if (init('action') == 'removeEqZigbee') {
+            $eqIdList = init('eqIdList');
 
-        logToFile('Abeille', 'info', 'Arret des démons');
-        abeille::deamon_stop(); // Stopping daemon
-        zgSetConf('Abeille');
+            $status = 0;
+            $errors = ""; // Error messages
+            $missingParentIEEE = FALSE;
+            foreach ($eqIdList as $eqId) {
+                /* Collecting required infos (zgId, parentIEEE & deviceIEEE) */
+                $eqLogic = eqLogic::byId($eqId);
+                if (!is_object($eqLogic)) {
+                    throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+                }
+                $eqLogicId = $eqLogic->getLogicalid();
+                $eqName = $eqLogic->getName();
+                list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
+                $zgId = substr($eqNet, 7); // Extracting zigate id from network name (AbeilleX)
+                $eqIEEE = $eqLogic->getConfiguration('IEEE', '');
+                $parentIEEE = $eqLogic->getConfiguration('parentIEEE', '');
+                if (($eqIEEE == "") || ($parentIEEE == "")) {
+                    /* Can't do it. Missing info */
+                    $status = -1;
+                    if ($eqIEEE == "")
+                        $errors .= "L'équipement '".$eqName."' n'a pas d'adresse IEEE\n";
+                    else {
+                        $errors .= "L'équipement '".$eqName."' n'a pas l'adresse IEEE de son parent\n";
+                        $missingParentIEEE = TRUE;
+                    }
+                    continue;
+                }
 
-        $status = 0;
-        $errors = ""; // Error messages
-        foreach ($eqList as $eqId) {
-            /* Collecting required infos */
-            $eqLogic = eqLogic::byId($eqId);
-            if (!is_object($eqLogic)) {
-                throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
-            }
-            $logicalId = $eqLogic->getLogicalId();
-            list($eqNet, $eqAddr) = explode("/", $logicalId); // Split 'AbeilleX/short'
-            $zgNb = substr($eqNet, 7); // Extracting zigate number from network
-            $zgPort = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '');
-            $eqIEEE = $eqLogic->getConfiguration('IEEE', 'none');
-            if ($eqIEEE == 'none') {
-                $errmsg = 'L\'équipement \''.$logicalId.'\' ne peut être détruit. Adresse IEEE manquante !';
-                logToFile('Abeille', 'info', $errmsg);
-                $errors .= $errmsg."\n";
-                $status = -1;
-                continue;
+                /* Sending msg to 'AbeilleCmd' */
+                $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
+                $msgAbeille = new MsgAbeille;
+                $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/Remove';
+                $msgAbeille->message['payload'] = "ParentAddressIEEE=".$parentIEEE."&ChildAddressIEEE=".$eqIEEE;
+                if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false) == FALSE) {
+                    $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msgAbeille);
+                    $status = -1;
+                }
             }
 
-            /* Removing device from zigate */
-            $status = zgRemoveDevice($zgPort, $eqAddr, $eqIEEE);
-            if ($status == 0) {
-                /* Removing device from Jeedom DB */
-                $eqLogic->remove();
-            }
+            if ($missingParentIEEE)
+                $errors .= "Forcer l'interrogation du réseau pour fixer le problème.";
+            ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
         }
-
-        logToFile('Abeille', 'info', 'Redémarrage des démons');
-        abeille::deamon_start(); // Restarting daemon
-
-        ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
-    }
 
         /* Check plugin integrity. This assumes that "Abeille.md5" is present and up-to-date.
            Returns: status; 0=OK, -1=no MD5, -2=checksum error */

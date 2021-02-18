@@ -131,15 +131,18 @@
         $eqToInterrogate[$eqIndex]['TableEntries'] = hexdec($tableEntries);
         $eqToInterrogate[$eqIndex]['TableIndex'] = hexdec($startIndex) + hexdec($tableListCount);
 
-        $NE = $eqToInterrogate[$eqIndex]["LogicId"];
+        $NE = $eqToInterrogate[$eqIndex]["LogicId"]; // Ex: 'Abeille1/Ruche', 'Abeille1/A3B4'
 
         $parameters = array();
         $parameters['NE'] = $NE;
         $parameters['NE_Name'] = $eqKnownFromAbeille[$NE];
         $parameters['NE_Objet'] = $objKnownFromAbeille[$NE];
+        $parent = Abeille::byLogicalId($NE, 'Abeille');
+        $parentIEEE = $parent->getConfiguration('IEEE', '');
+        $parameters['IEEE_Address'] = $parentIEEE;
         list($netName, $addr) = explode( '/', $NE );
         if (strlen($parameters['NE_Name']) == 0) {
-            $parameters['NE_Name'] = "Inconnu-" . $parameters['IEEE_Address'];
+            $parameters['NE_Name'] = "Inconnu-".$parameters['IEEE_Address'];
             $parameters['NE_Objet'] = "Inconnu";
         }
 
@@ -178,11 +181,13 @@
                 newEqToInterrogate($parameters['Voisine']);
             } else if ($AttrType== 2) {
                 $parameters['Type'] = "End Device";
-                // Ajout bouton remove from zigbee #1770
-                list( $dest, $Addr ) = explode('/', $NE);
-                $kid = Abeille::byLogicalId($dest.'/'.$N->Addr, 'Abeille');
-                $kid->setConfiguration('ParentIEEE', $N->ExtAddr);
-                $kid->save();
+                // For remove from zigbee feature (#1770)
+                $kid = Abeille::byLogicalId($netName.'/'.$N->Addr, 'Abeille');
+                if ($kid) { // Saving parent IEEE address
+                    $kid->setConfiguration('parentIEEE', $parentIEEE);
+                    $kid->save();
+                } else
+                    logMessage("", "  WARNING: Eq '".$netName."/".$N->Addr."' inconnu de Jeedom");
             } else { // $AttrType== 3
                 $parameters['Type'] = "Unknown";
             }
@@ -265,7 +270,7 @@
     // To test in shell mode: php AbeilleLQI.php <zgNb>
 
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log");
-    logMessage("", "Démarrage d'AbeilleLQI.");
+    logMessage("", "=== Démarrage d'AbeilleLQI.");
 
     /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
        collected in the same way.
@@ -283,16 +288,17 @@
     }
 
     if ($zgNb == -1) {
-        logMessage("", "Interrogation de toutes les zigates actives");
+        logMessage("", "Demande d'interrogation de toutes les zigates actives");
         $zgStart = 1;
         $zgEnd = config::byKey('zigateNb', 'Abeille', '1', 1);
     } else {
-        logMessage("", "Interrogation de la zigate ".$zgNb);
+        logMessage("", "Demande d'interrogation de la zigate ".$zgNb." seulement");
         $zgStart = $zgNb;
         $zgEnd = $zgNb;
     }
 
     // Collecting known equipments list
+    logMessage("", "Equipements connus de Jeedom:");
     $eqLogics = eqLogic::byType('Abeille');
     $eqKnownFromAbeille = array();
     $objKnownFromAbeille = array();
@@ -307,8 +313,7 @@
         $objKnownFromAbeille[$eqLogicId] = $objName;
         logMessage("", "  Eq='".$eqLogicId."', objname='".$objKnownFromAbeille[$eqLogicId]."'");
     }
-    logMessage("", "Equipements connus de Jeedom: ".json_encode($eqKnownFromAbeille));
-    logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
+    // logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
     $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
@@ -350,7 +355,6 @@
         $eqIndex = 0; // Index of eq to interrogate
         $collectStatus = 0;
         while (TRUE) {
-            logMessage("", "==========");
             $total = count($eqToInterrogate);
             logMessage("", "Zigate ".$zgNb.": progression ".$done."/".$total);
 

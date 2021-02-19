@@ -1189,7 +1189,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $clusterIDBind              = "0021";
             $securityMode               = "02";
             $radius                     = "30";
-            $dataLength                 = "16";
+            // $dataLength                 = "16";
 
             $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
@@ -1199,18 +1199,21 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $destinationAddressMode     = "01";
             $reportToGroup              = reverse_hex($Command['reportToGroup']);
 
-            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
+            
             $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $reportToGroup;
+            $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
+
+            $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
 
             $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) );
             $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2) );
 
             $data = $data1 . $data2;
 
-            //$lenth = "0022";
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+
         }
 
         // Bind Short

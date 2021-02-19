@@ -54,11 +54,12 @@
     }
 
     /* Remove any pending messages from parser */
-    // function msgFromParserFlush() {
-    //     global $queueKeyParserToLQI;
-    //     $max_msg_size = 512;
-    //     while (msg_receive($queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT));
-    // }
+    function msgFromParserFlush() {
+        global $queueKeyParserToLQI;
+
+        $max_msg_size = 512;
+        while (msg_receive($queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT));
+    }
 
     /* Treat request responses (804E) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
@@ -71,15 +72,28 @@
         global $eqKnownFromAbeille;
         global $objKnownFromAbeille;
 
-        usleep(200000); // A first delay of 200ms to let response to come back
         $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
-        for ($t = 0; $t < $timeout; $t += 1) {
+        for ($t = 0; $t < $timeout; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueKeyParserToLQI)));
-            if (msg_receive($queueKeyParserToLQI, 0, $msg_type, 1024, $msg_json, FALSE, MSG_IPC_NOWAIT, $error_code) == TRUE)
-                break; // Message received
+            if (msg_receive($queueKeyParserToLQI, 0, $msg_type, 1024, $msg_json, FALSE, MSG_IPC_NOWAIT, $error_code) == TRUE) {
+                /* Message received. Let's check it is the expected one */
+                $msg = json_decode($msg_json);
+                if ($msg->Type != "804E") {
+                    logMessage("", "  Unsupported message type (".$msg->Type.") => Ignored.");
+                    continue;
+                }
+                if ($msg->StartIndex != $eqToInterrogate[$eqIndex]['TableIndex']) {
+                    /* Note: this cas is due to too many identical messages sent to eq
+                       leading to several identical 804E answers */
+                    logMessage("", "  Unexpected start index (".$msg->StartIndex.") => Ignored.");
+                    continue;
+                }
+                break; // Valid message
+            }
 
             if ($error_code == 42) { // No message
                 sleep(1); // Sleep 1s
+                $t += 1;
                 continue;
             }
 
@@ -96,11 +110,11 @@
         //       so no risk to get an answer from an unexpected source.
 
         // logMessage("", "  Recu ".$msg_json);
-        $msg = json_decode($msg_json);
-        if ($msg->Type != "804E") {
-            logMessage("", "  Message non LQI => Inattendu.");
-            return -1;
-        }
+        // $msg = json_decode($msg_json);
+        // if ($msg->Type != "804E") {
+        //     logMessage("", "  Message non LQI => Inattendu.");
+        //     return -1;
+        // }
 
         /* Message format reminder
             $msg = array(
@@ -242,6 +256,7 @@
         while (TRUE) {
             $eq = $eqToInterrogate[$eqIndex]; // Read eq status
             msgToCmd($netName, $addr, sprintf("%'.02X", $eq['TableIndex']));
+            usleep(200000); // Delay of 200ms to let response to come back
             $ret = msgFromParser($eqIndex);
             if ($ret == 1) {
                 /* If time-out, cancel interrogation for current eq only */
@@ -259,8 +274,6 @@
                 break; // Exiting interrogation loop
         }
 
-        /* Removing any pending message from parser */
-        // msgFromParserFlush(); // What for ?
         return 0;
     }
 
@@ -270,7 +283,7 @@
     // To test in shell mode: php AbeilleLQI.php <zgNb>
 
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log");
-    logMessage("", "=== Démarrage d'AbeilleLQI.");
+    logMessage("", ">>> Démarrage d'AbeilleLQI.");
 
     /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
        collected in the same way.
@@ -317,6 +330,7 @@
 
     $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
     $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
+    msgFromParserFlush(); // Flush the queue if not empty
 
     for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
         if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y') {
@@ -418,5 +432,5 @@
         file_put_contents($lockFile, "done/".time()."/".$status);
     }
 
-    logMessage("", "AbeilleLQI terminé.");
+    logMessage("", "<<< AbeilleLQI terminé.");
 ?>

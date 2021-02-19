@@ -98,7 +98,7 @@
 
         $.ajax({
             type: 'POST',
-            url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: action,
                 file : logPath,
@@ -156,7 +156,7 @@
 
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+            url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
             data: {
                 action: 'createLogsZipFile'
             },

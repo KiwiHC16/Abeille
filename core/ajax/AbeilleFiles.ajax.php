@@ -17,7 +17,7 @@
      */
 
     /*
-     * Targets for AJAX's requests
+     * AJAX targets to manipulate files
      */
 
     /* Developers debug features */
@@ -248,11 +248,24 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Check if a file exists.
+           'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'fileExists') {
+            $path = init('path');
+            $path = __DIR__.'/../../'.$path;
+            if (file_exists($path))
+                $status = 0;
+            else
+                $status = -1; // Not found
+            ajax::success(json_encode(array('status' => $status)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
            Instead 'success' callback is used. This means that
            - take care of error code returned
            - convert to JSON since dataType is set to 'json' */
-        $error = "La méthode '".init('action')."' n'existe pas dans 'AbeilleTools.ajax.php'";
+        $error = "La méthode '".init('action')."' n'existe pas dans 'AbeilleFiles.ajax.php'";
         throw new Exception($error, -1);
     } catch (Exception $e) {
         /* Catch exeption */

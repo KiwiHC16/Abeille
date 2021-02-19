@@ -3,23 +3,7 @@
     class AbeilleCmd extends cmd
     {
         /**
-         * updateTopic
-         * 
-         * used to replace #xxx# fields with real value
-         * 
-         * @param topic to be modified
-         * 
-         * @return topic modified
-         */
-        public function updateTopic($cmd, $topic) {
-            if (strpos($topic, "#addrGroup#") > 0) {
-                $topic = str_replace("#addrGroup#", $cmd->getEqLogic()->getConfiguration("Groupe"), $topic);
-            }
-            return $topic;
-        }
-
-        /**
-         * updateRequest
+         * updateField
          * 
          * used to replace #xxx# fields with real value
          * 
@@ -27,18 +11,21 @@
          * 
          * @return request modified
          */
-        public function updateRequest($dest,$cmd,$request,$_options=NULL) {
-
+        public function updateField($dest,$cmd,$request,$_options=NULL) {
+            $request .+ "updateRequest";
                 /* ------------------------------ */
                 // // Je fais les remplacement dans les parametres (ex: addGroup pour telecommande Ikea 5 btn)
                 if (strpos($request, "#addrGroup#") > 0) {
                     $request = str_replace("#addrGroup#", $cmd->getEqLogic()->getConfiguration("Groupe"), $request);
+                    logMessage('debug', 'request - addGroup : ' . $request);
                 }
-                // logMessage('debug', 'request - addGroup : ' . $request);
+                
 
                 if (strpos($request, "#GroupeEP") > 0) {
                     $id = substr($request,strpos($request, "#GroupeEP")+strlen("#GroupeEP"),1);
                     $request = str_replace("#GroupeEP".$id."#", $cmd->getEqLogic()->getConfiguration("GroupeEP".$id), $request);
+                    logMessage('debug', 'request - GroupEP : ' . $id . ' - ' . $request);
+                    $request .+ "TEST";
                 }
 
                 if (strpos($request, '#onTime#') > 0) {
@@ -97,6 +84,7 @@
         public function execute($_options = null)
         {
             logMessage('debug', 'execute(type='.$this->getType().', options='.json_encode($_options).')');
+            log::add( 'Abeille', 'debug', 'execute(type='.$this->getType().', options='.json_encode($_options).')');
 
             // cmdId : 12676 est le level d une ampoule
             // la cmdId 12680 a pour value 12676
@@ -124,15 +112,17 @@
 
                 /* ------------------------------ */
                 // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
-                $topic = $this->updateTopic($this,$topic);
+                $topic = $this->updateField($dest,$this,$topic,$_options);
                 logMessage('debug', 'topic updated: ' . $topic);
+                log::add( 'Abeille', 'debug', 'topic updated: ' . $topic);
 
                 // -------------------------------------------------------------------------
                 // Process Request
                 $request = $this->getConfiguration('request', '1');
-                // logMessage('debug', 'request: ' . $request);
-                $request = $this->updateRequest($dest,$this,$request,$_options);
+                logMessage('debug', 'request: ' . $request);
+                $request = $this->updateField($dest,$this,$request,$_options);
                 logMessage('debug', 'request updated: ' . $request);
+                log::add( 'Abeille', 'debug', 'request updated: ' . $request);
 
                 // -------------------------------------------------------------------------
                 $msgAbeille = new MsgAbeille;

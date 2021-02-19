@@ -190,7 +190,7 @@
                 $this->deamonlog("debug", "      Je ne traite pas cette commande car la zigate est desactivee." );
                 return;
             }
-            $this->deamonlog("debug", "  i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1), $this->debug['sendCmd']);
+            // $this->deamonlog("debug", "  i: ".$i." key: ".config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1), $this->debug['sendCmd']);
             if (config::byKey('AbeilleIEEE_Ok'.$i, 'Abeille', '-1', 1) == '-1') {
                 $this->deamonlog("debug", "      Je ne traite pas cette commande car la zigate ne semble pas etre sur le bon port tty." );
                 return;
@@ -218,20 +218,20 @@
             }
 
             // received = time when the commande was added to the queue
-            // time = when the commande was ssend to the zigate last time
+            // time = when the commande was send to the zigate last time
             // retry = nombre de tentative restante
             // priority = priority du message
 
             if (($i > 0) && ($i <= maxNbOfZigate)) {
                 $this->cmdQueue[$i][] = array(
-                    'received' => microtime(true),
-                    'time' => 0,
-                    'retry' => $this->maxRetry,
-                    'priority' => $priority,
-                    'dest' => $dest,
-                    'cmd' => $cmd,
-                    'len' => $len,
-                    'datas' => $datas,
+                    'received'  => microtime(true),
+                    'time'      => 0,
+                    'retry'     => $this->maxRetry,
+                    'priority'  => $priority,
+                    'dest'      => $dest,
+                    'cmd'       => $cmd,
+                    'len'       => $len,
+                    'datas'     => $datas,
                     'shortAddr' => $shortAddr
                 );
 
@@ -409,7 +409,7 @@
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
                 // ou si conf alors que stack demarrée
-                /* TODO: How can we be sure ACK is for last cmd ? */
+                /* TODO: How can we be sure ACK is for last cmd ? <- KiwiHC16: Aucune à ma connaissance, faille depuis le debut de mon point de vue.*/
                 array_shift( $this->cmdQueue[$i] ); // Je vire la commande
                 $this->zigateAvailable[$i] = 1;      // Je dis que la Zigate est dispo
                 $this->timeLastAck[$i] = 0;

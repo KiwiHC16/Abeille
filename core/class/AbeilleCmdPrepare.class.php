@@ -12,7 +12,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
         $msg        = $message->payload;
         $priority   = $message->priority;
 
-        $this->deamonlog("debug", "  L2 - procmsg(".json_encode($topic)." , ".json_encode($msg)." , ".json_encode($priority).")");
+        // $this->deamonlog("debug", "  L2 - procmsg(".json_encode($topic)." , ".json_encode($msg)." , ".json_encode($priority).")");
 
         if (sizeof(explode('/', $topic)) != 3) {
             $this->deamonlog("error", "procmsg(). Mauvais format de message reçu.");
@@ -303,7 +303,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                         "addressMode"           => "01",
                         "priority"              => $priority,
                         "dest"                  => $dest,
-                        "address"               => $address,
                         "destinationEndpoint"   => "01", // Set but not send on radio
                         "action"                => $actionId,
                     );

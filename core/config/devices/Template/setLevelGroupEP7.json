@@ -1,0 +1,21 @@
+{
+  "setLevelGroupEP7": {
+    "name": "setLevel Gp7",
+    "order": 5,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "slider",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210219_1238",
+      "topic": "CmdAbeille/#GroupeEP7#/setLevelGroup",
+      "request": "Level=#slider#&duration=01",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

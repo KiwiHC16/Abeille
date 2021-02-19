@@ -1634,10 +1634,10 @@
             <Dest Endpoint : uint8_t>
             <Cluster ID : uint16_t>
             */
-            $Status = substr($payload, 0, 2);
-            $DestAddr = substr($payload, 2, 4);
-            $DestEndPoint = substr($payload, 6, 2);
-            $ClustID = substr($payload, 8, 4);
+            $Status         = substr($payload, 0, 2);
+            $DestAddr       = substr($payload, 2, 4);
+            $DestEndPoint   = substr($payload, 6, 2);
+            $ClustID        = substr($payload, 8, 4);
 
             parserLog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID, "8011");
         }
@@ -3506,9 +3506,11 @@
             echo $dest . ' - ' . $addr . "\n";
             $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
             foreach ( $cmds as $key => $cmd ) {
+                $topic = $cmd->getConfiguration('topic');
+                $topic = AbeilleCmd::updateField($dest,$cmd,$topic);
                 $request = $cmd->getConfiguration('request');
-                $request = AbeilleCmd::updateRequest($dest,$cmd,$request);
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
+                $request = AbeilleCmd::updateField($dest,$cmd,$request);
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
             }
         }
 

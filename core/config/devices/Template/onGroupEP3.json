@@ -1,0 +1,22 @@
+{
+  "onGroupEp3": {
+    "name": "On Gp3",
+    "order": 2,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210219_1010",
+      "topic": "CmdAbeille/#GroupeEP3#/OnOffGroup",
+      "request": "On",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

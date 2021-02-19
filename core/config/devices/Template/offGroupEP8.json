@@ -1,0 +1,21 @@
+{
+  "offGroupEP8": {
+    "name": "Off Gp8",
+    "order": 0,
+    "isVisible": 1,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210219_1028",
+      "topic": "CmdAbeille/#GroupeEP8#/OnOffGroup",
+      "request": "Off",
+      "visibilityCategory": "All"
+    },
+    "display": {
+      "icon": "<i class=\"icon jeedom-lumiere-off\"></i>"
+    }
+  }
+}

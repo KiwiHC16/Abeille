@@ -190,35 +190,6 @@ try {
         ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
     }
 
-    /* Reset EEPROM but check parameters first, prior to shutdown daemon */
-    /* Tcharp38: No longer required. Never terminated and not sure it is still required with reset PDM */
-    if (init('action') == 'resetE2P') {
-        $zgPort = init('zgport');
-
-        logToFile('Abeille', 'debug', 'Démarrage resetE2P('.$zgPort.')');
-
-        logToFile('AbeilleConfig.log', 'debug', 'Vérification des paramètres');
-        $cmdToExec = "updateFirmware.sh check ".$zgPort;
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-
-        if ($status == 0) {
-            logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
-            abeille::deamon_stop(); // Stopping daemon
-
-            /* Reset EEPROM */
-            logToFile('AbeilleConfig.log', 'info', 'Reset EEPROM');
-            $cmdToExec = "updateFirmware.sh eraseeeprom ".$zgPort;
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-            exec($cmd, $out, $status);
-
-            logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
-            abeille::deamon_start(); // Restarting daemon
-        }
-
-        ajax::success(json_encode(array('status' => $status)));
-    }
-
     if (init('action') == 'resetPiZiGate') {
         $cmd = '/bin/bash '.__DIR__.'/../scripts/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
@@ -247,7 +218,7 @@ try {
         logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
         abeille::deamon_stop(); // Stopping daemon
         $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
-        $cmd = 'nohup '.__DIR__.'/../../tmp/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+        $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
         exec($cmd);
         //logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
         //abeille::deamon_start(); // Restarting daemon

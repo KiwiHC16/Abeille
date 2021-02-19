@@ -277,19 +277,6 @@ try {
         ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
     }
 
-    /* Check if a file exists.
-       'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
-       Returns: status=0 if found, -1 else */
-    if (init('action') == 'fileExists') {
-        $path = init('path');
-        $path = __DIR__.'/../../'.$path;
-        if (file_exists($path))
-            $status = 0;
-        else
-            $status = -1; // Not found
-        ajax::success(json_encode(array('status' => $status)));
-    }
-
         /* Remove equipment(s) from zigbee listed by id in 'eqIdList'.
            Returns: status=0/-1, errors=<error message(s)> */
         if (init('action') == 'removeEqZigbee') {

@@ -142,7 +142,7 @@ function trackLQICollectStatus(_autoUpdate, zigateX) {
 
     $.ajax({
         type: 'POST',
-        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: 'getTmpFile',
             file : "AbeilleLQI_MapDataAbeille"+zigateX+".json.lock",
@@ -210,7 +210,7 @@ function displayLinksGraph(zigateX) {
     // Load JSON-encoded data from the server.
     var request = $.ajax({
         type: 'POST',
-        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: 'getTmpFile',
             file : "AbeilleLQI_MapDataAbeille"+zigateX+".json",
@@ -409,7 +409,7 @@ function displayLinksGraph(zigateX) {
                 /* Get network collect time */
                 $.ajax({
                     type: 'POST',
-                    url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+                    url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
                     data: {
                         action: 'getTmpFileModificationTime',
                         file: "AbeilleLQI_MapDataAbeille"+zigateX+".json"
@@ -460,7 +460,7 @@ function displayLinksTable(zigateX) {
 
     var jqXHR = $.ajax({
         type: 'POST',
-        url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: 'getTmpFile',
             file : "AbeilleLQI_MapDataAbeille"+zigateX+".json",
@@ -634,7 +634,7 @@ function displayLinksTable(zigateX) {
             /* Get network collect time */
             $.ajax({
                 type: 'POST',
-                url: 'plugins/Abeille/core/ajax/AbeilleTools.ajax.php',
+                url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
                 data: {
                     action: 'getTmpFileModificationTime',
                     file: "AbeilleLQI_MapDataAbeille"+zigateX+".json"

@@ -65,7 +65,7 @@
 
         $.ajax({
             type: 'POST',
-            url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
                 file : "AbeilleLQI_MapData"+Ruche+".json",
@@ -170,7 +170,7 @@
 
         $.ajax({
             type: 'GET',
-            url: "/plugins/Abeille/core/ajax/AbeilleTools.ajax.php",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
                 file : "AbeilleLQI_MapData"+Ruche+".json.lock",

@@ -149,8 +149,11 @@ Démons:
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             else if ($eqLogic->getStatus('APS_ACK') == '0') 
                 $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
-            else
+            else if ($eqLogic->getStatus('APS_ACK') == '1') 
                 $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
+            else
+                $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
+                
             echo '<td>'.$APS_ACK.'</td>';
 
             // Derniere Comm

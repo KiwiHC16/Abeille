@@ -1515,6 +1515,30 @@ class Abeille extends eqLogic
             if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
                 $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
             }
+            if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
+            }
+            if (isset($objetConfiguration['GroupeEP1'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP1', $objetConfiguration['GroupeEP1']);
+            }
+            if (isset($objetConfiguration['GroupeEP3'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP3', $objetConfiguration['GroupeEP3']);
+            }
+            if (isset($objetConfiguration['GroupeEP4'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP4', $objetConfiguration['GroupeEP4']);
+            }
+            if (isset($objetConfiguration['GroupeEP5'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP5', $objetConfiguration['GroupeEP5']);
+            }
+            if (isset($objetConfiguration['GroupeEP6'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP6', $objetConfiguration['GroupeEP6']);
+            }
+            if (isset($objetConfiguration['GroupeEP7'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP7', $objetConfiguration['GroupeEP7']);
+            }
+            if (isset($objetConfiguration['GroupeEP8'])) { // Tcharp38: What for ?
+                $elogic->setConfiguration('GroupeEP8', $objetConfiguration['GroupeEP8']);
+            }
             if (isset($objetConfiguration['onTime'])) { // Tcharp38: What for ?
                 $elogic->setConfiguration('onTime', $objetConfiguration['onTime']);
             }

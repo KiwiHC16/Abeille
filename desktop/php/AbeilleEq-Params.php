@@ -266,6 +266,68 @@
                 echo '</div>';
             }
 
+            /* If eq is a Innr Tele. 'paramType' is defined in original JSON file */
+            if ($eqLogic->getConfiguration('paramType', '') == "telecommande7groups") {
+?>
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                    </div>
+                    <h3 class="col-sm-3" style="text-align:center">{{Télécommande}}</h3>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe Tous}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP1" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                        <label class="col-sm-3 control-label">{{Adresse groupe 1}}</label>
+                        <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP3" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe 2}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP4" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe 3}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP5" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe 4}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP6" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe 5}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP7" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{Adresse groupe 6}}</label>
+                    <div class="col-sm-3">
+                        <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP8" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
+                    </div>
+                </div>
+<?php
+            }
+
             /* If eq is ?. 'paramType' is defined in original JSON file */
             if ($eqLogic->getConfiguration('paramType', '') == "paramABC") {
                 echo '<hr>';

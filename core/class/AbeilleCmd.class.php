@@ -36,6 +36,11 @@
                 }
                 // logMessage('debug', 'request - addGroup : ' . $request);
 
+                if (strpos($request, "#GroupeEP") > 0) {
+                    $id = substr($request,strpos($request, "#GroupeEP")+strlen("#GroupeEP"),1);
+                    $request = str_replace("#GroupeEP".$id."#", $cmd->getEqLogic()->getConfiguration("GroupeEP".$id), $request);
+                }
+
                 if (strpos($request, '#onTime#') > 0) {
                     $onTimeHex = sprintf("%04s", dechex($cmd->getEqLogic()->getConfiguration("onTime") * 10));
                     $request = str_replace("#onTime#", $onTimeHex, $request);

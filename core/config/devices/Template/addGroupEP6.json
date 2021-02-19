@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "201210218_0248",
       "topic": "addGroup",
-      "request": "DestinationEndPoint=06&groupAddress=6006",
+      "request": "DestinationEndPoint=06&groupAddress=#GroupeEP6#",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "9"

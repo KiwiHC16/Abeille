@@ -10,7 +10,15 @@
       "icone": "RC110",
       "battery_type": "2x1.5V",
       "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
+      "mainEP": "#EP#",
+      "paramType": "telecommande7groups",
+      "GroupeEP1": "1001",
+      "GroupeEP3": "3003",
+      "GroupeEP4": "4004",
+      "GroupeEP5": "5005",
+      "GroupeEP6": "6006",
+      "GroupeEP7": "7007",
+      "GroupeEP8": "8008"
     },
     "Commandes": {
       "include1": "offGroup",

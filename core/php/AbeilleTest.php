@@ -267,6 +267,12 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0003';
         }
 
+        if ($test==130) {
+            echo "Remove Group Tele Innr EP 1, 3-8\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille1/Ruche/removeGroup';
+            $msgAbeille->message['payload'] = 'address='.$argv[2].'&DestinationEndPoint='.$argv[3].'&groupAddress='.$argv[4];
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

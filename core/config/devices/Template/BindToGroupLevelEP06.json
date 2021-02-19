@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "20210218_0253",
       "topic": "BindToGroup",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=06&clusterID=0008&reportToGroup=6006",
+      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=06&clusterID=0008&reportToGroup=#GroupeEP6#",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "21"

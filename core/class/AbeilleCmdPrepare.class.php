@@ -4,6 +4,17 @@ include_once __DIR__.'/AbeilleCmdProcess.class.php';
 
 class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
+    /**
+     * procmsg()
+     * 
+     * process commands received in the queue to be send to zigate
+     * Do the mapping (L2: Level 1) with basic command and send it to processCmd() for processing at cmd level (L1: Level 1)
+     * 
+     * @param message   message in the queue which include the cmd and data to be sent
+     * 
+     * @return none
+     * 
+     */
     function procmsg( $message ) {
 
         $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")");

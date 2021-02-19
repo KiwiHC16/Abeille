@@ -1640,6 +1640,22 @@
             $ClustID        = substr($payload, 8, 4);
 
             parserLog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID, "8011");
+            if ($Status=="00") {
+                if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
+                    $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
+                    parserLog('debug', $dest.', Type=8011/APS data ACK, found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
+                    $eq->setStatus( 'APS_ACK', '1');
+                    parserLog('debug', $dest.', Type=8011/APS data ACK, APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                }
+            }
+            else {
+                if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
+                    $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
+                    parserLog('debug', $dest.', Type=8011/APS data ACK, with status error: '.$eq->getHumanName()." set APS_ACK to 0", "8011");
+                    $eq->setStatus( 'APS_ACK', '0');
+                    parserLog('debug', $dest.', Type=8011/APS data ACK, APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                }
+            }            
         }
 
         /**
@@ -3384,28 +3400,44 @@
             // <dst address mode: uint8_t>
             // <destination address: uint64_t>
             // <seq number: uint8_t>
-            $status = substr($payload, 0, 2);
+            $status     = substr($payload, 0, 2);
+            $SrcEP      = substr($payload, 2, 2);
+            $DestEP     = substr($payload, 4, 2);
+            $DestMode   = substr($payload, 6, 2);
+            $DestAddr   = substr($payload, 8, 4);
+            $SQN        = substr($payload,12, 2);
 
             parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail'
-                             . ', Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
-                             . ', SrcEP='.substr($payload, 2, 2)
-                             . ', DestEP='.substr($payload, 4, 2)
-                             . ', DestMode='.substr($payload, 6, 2)
-                             . ', DestAddr='.substr($payload, 8, 4)
-                             . ', SQN='.substr($payload, 12, 2), "8702");
+                                . ', Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
+                                . ', SrcEP='.$SrcEP
+                                . ', DestEP='.$DestEP
+                                . ', DestMode='.$DestMode
+                                . ', DestAddr='.$DestAddr
+                                . ', SQN='.$SQN
+                             , "8702");
+
+                             
 
             // type; 8702; (APS Data Confirm Fail)(decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
 
-            // On envoie un message MQTT vers la ruche pour le processer dans Abeille
-            $SrcAddr    = "Ruche";
-            $ClusterId  = "Zigate";
-            $AttributId = "8702";
-            $data       = substr($payload, 8, 4);
+            // // On envoie un message MQTT vers la ruche pour le processer dans Abeille
+            // $SrcAddr    = "Ruche";
+            // $ClusterId  = "Zigate";
+            // $AttributId = "8702";
+            // $data       = substr($payload, 8, 4);
 
-            // if ( Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' )->getHumanName(true);
-            // message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être joint." );
+            // // if ( Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' ) ) $name = Abeille::byLogicalId( $dest.'/'.$data, 'Abeille' )->getHumanName(true);
+            // // message::add("Abeille","L'équipement ".$name." (".$data.") ne peut être joint." );
 
-            $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            // $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+
+            if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
+                $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
+                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
+                $eq->setStatus( 'APS_ACK', '0');
+                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
+            }
+            
         }
 
         function decode8806($dest, $payload, $ln, $qos, $dummy)

@@ -180,6 +180,21 @@
             return $mess;
         }
 
+        /**
+         * sendCmd()
+         * 
+         * put in the queue the cmd to be put on the serial link to the zigate
+         * 
+         * @param priority  priority of the command in the queue
+         * @param dest      zigate to address the command
+         * @param cmd       cmd in hex format as per zigate API
+         * @param len       len of the cmd
+         * @param data      data of the cmd
+         * @param shortAddr ???
+         * 
+         * @return  none
+         * 
+         */
         function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
             $this->deamonlog("debug", "      sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", shortAddr=".$shortAddr.", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
 

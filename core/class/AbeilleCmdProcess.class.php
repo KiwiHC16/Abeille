@@ -713,24 +713,23 @@ class AbeilleCmdProcess extends AbeilleDebug {
      * 
      */
     function reviewPriority($Command) {
-        $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
-
-        if (!isset($Command)) {
-            $this->deamonlog('debug', "  Command not set return", $this->debug['processCmd']);
-            return -1;
-        }
-
         if (isset($Command['priority'])) {
             // TODO: Eq Address and Group Address can't be distingueshed here. Probability to have a group address = eq address is low but exist.
             if ( isset($Command['address']) ) {
                 if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['address'], 'Abeille')) {
                     if ($NE->getIsEnable()) {
-                        if (( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
-                            $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
-                            return priorityLostNE;
+                        if (( time() - strtotime($NE->getStatus('lastCommunication')) ) < (60*$NE->getTimeout() ) ) {
+                            if ($NE->getStatus('APS_ACK', '1') == '1') {
+                                return $Command['priority'];
+                            }
+                            else {
+                                $this->deamonlog('debug', "  NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
+                                return priorityLostNE;
+                            }
                         }
                         else {
-                            return $Command['priority'];
+                            $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
+                            return priorityLostNE;
                         }
                     }
                     else {
@@ -2574,7 +2573,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // ON / OFF with no effects
         if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
-            $this->deamonlog('debug','  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+            $this->deamonlog('debug','      OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
             // <address mode: uint8_t>
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>

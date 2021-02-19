@@ -758,16 +758,20 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "setLevelGroup":
-                    $keywords = preg_split("/[=&]+/", $msg);
+                    // CmdAbeille1/1001/setLevelGroup -> Level=46&duration=01
+                    $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = proper_parse_str( $msg );
+                    }
                     $Command = array(
-                                     "setLevel" => "1",
-                                     "addressMode" => "01",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
-                                     "address" => $address,
-                                     "destinationEndpoint" => "01",
-                                     "Level" => intval($keywords[1] * 255 / 100),
-                                     "duration" => $keywords[3],
+                                     "setLevel"             => "1",
+                                     "addressMode"          => "01",
+                                     "priority"             => $priority,
+                                     "dest"                 => $dest,
+                                     "address"              => $address,
+                                     "destinationEndpoint"  => "01",
+                                     "Level"                => intval($parameters['Level'] * 255 / 100),
+                                     "duration"             => $parameters['duration'],
                                      );
                     break;
                     //----------------------------------------------------------------------------

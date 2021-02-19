@@ -266,6 +266,19 @@
             }
         }
 
+        /**
+         * sendCmdToZigate()
+         * 
+         * connect to zigate and pass the commande on serial link
+         * 
+         * @param dest  zigate toargetted e.g.Abeille1
+         * @param cmd   zigate commande as per zigate API
+         * @param len   length of the cmd
+         * @param data  data for the cmd
+         * 
+         * @return none
+         * 
+         */
         function sendCmdToZigate($dest, $cmd, $len, $datas) {
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
             // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.

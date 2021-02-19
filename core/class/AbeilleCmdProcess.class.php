@@ -2143,59 +2143,37 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // setLevel on one object
         if (isset($Command['setLevel']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['Level']) && isset($Command['duration'])) {
             $cmd = "0081";
-            // 11:53:06.479 -> 01 02 10 81 02 10 02 19 C6 02 12 83 DF 02 11 02 11 02 11 AA 02 10 BB 03
-            //                 01 02 10 81 02 10 02 19 d7 02 12 83 df 02 11 02 11 02 11 02 11 02 11 03
-            //
-            // 02 83 DF 01 01 01 ff 00 BB
-            //
-            // 01: Start
-            // 02 10 81: Msg Type: 00 81 -> Move To Level
-            // 02 10 02 19: Lenght
-            // C6: CRC
-            // 02 12: <address mode: uint8_t> : 02
-            // 83 DF: <target short address: uint16_t> 83 DF (Lampe Z Ikea)
-            // 02 11: <source endpoint: uint8_t>: 01
-            // 02 11: <destination endpoint: uint8_t>: 01
-            // 02 11: <onoff : uint8_t>: 01
-            // AA: <Level: uint8_t > AA Value I put to identify easely: Level to reach
-            // 02 10 BB: <Transition Time: uint16_t>: 00BB Value I put to identify easely: Transition duration
-            $addressMode = $Command['addressMode'];
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['destinationEndpoint'];
+    
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <onoff : uint8_t>
+            // <Level: uint8_t >
+            // <Transition Time: uint16_t>
+
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['destinationEndpoint'];
             $onoff = "01";
-            if ($Command['Level'] < 16) {
-                $level = "0".dechex($Command['Level']);
-                // $this->deamonlog('debug',"setLevel: ".$Command['Level']."-".$level);
-            } else {
-                $level = dechex($Command['Level']);
-                // $this->deamonlog('debug', "setLevel: ".$Command['Level']."-".$level);
-            }
-
-            // $duration = "00" . $Command['duration'];
-            if ( $Command['duration'] < 16) {
-                $duration = "0".dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
-            } else {
-                $duration = dechex($Command['duration']); // echo "duration: ".$Command['duration']."-".$duration."-\n";
-            }
-            $duration = "00" . $duration;
-
-            // 11:53:06.543 <- 01 80 00 00 04 53 00 56 00 81 03
-            // 11:53:06.645 <- 01 81 01 00 06 DD 56 01 00 08 04 00 03
-            // 8 16 8 8 8 8 16
-            // 2  4 2 2 2 2  4 = 18/2d => 9d => 0x09
-            $lenth = "0009";
+            $level = sprintf("%02s",dechex($Command['Level']));
+            $duration = sprintf("%04s",dechex($Command['duration']));
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $onoff . $level . $duration ;
-            // echo "data: " . $data . "\n";
+
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
-
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+            if ($addressMode=="02") {
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+    
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+            }
+            
         }
 
         if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )
@@ -2680,7 +2658,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
 
-        if ( $addressMode != "01" ) {
+        if ( $addressMode == "02" ) {
             $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
         }
     }
@@ -2703,23 +2681,25 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $cmd = "0093";
             // $lenth = "0006";
-            $addressMode = $Command['addressMode'];
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['destinationEndpoint'];
-            $action = $Command['action'];
-            $onTime = $Command['onTime'];
-            $offWaitTime = $Command['offWaitTime'];
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['destinationEndpoint'];
+            $action                 = $Command['action'];
+            $onTime                 = $Command['onTime'];
+            $offWaitTime            = $Command['offWaitTime'];
 
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$action.$onTime.$offWaitTime;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+            if ( $addressMode == "02" ) {
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
 
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-            $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+            }
         }
 
         // Move to Colour
@@ -2834,7 +2814,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 
-            if ( $addressMode != "01" ) {
+            if ( $addressMode == "02" ) {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0300&attributeId=0007" );
             }
         }

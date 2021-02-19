@@ -40,22 +40,22 @@ class Abeille extends eqLogic
 
     /**
      * migrateBetweenZigates()
-     * 
+     *
      * @param beeId: bee Id to be moved
      * @param zigateY: zigate de destination
-     * 
+     *
      * @return none
-     * 
+     *
      * https://github.com/KiwiHC16/Abeille/issues/1771
-     * 
+     *
      * 1/ Changement logical Id
      * 2/ Remove zigbee reseau 1 zigbee
      * 3/ inclusion normale sur le reseau 2 zigbee
-     * 
+     *
      * Faire un bouton qui fait les etapes 1/ et 2 puis demander à l'utilisateur de faire l'étape 3
-     * 
+     *
      */
-    public static function migrateBetweenZigates($beeId, $zigateY) 
+    public static function migrateBetweenZigates($beeId, $zigateY)
     {
         $bee = Abeille::byId($beeId);
         if (!is_object($bee)) {
@@ -91,12 +91,12 @@ class Abeille extends eqLogic
 
     /**
      * replaceGhost()
-     * 
+     *
      * @param ghostId: Id of the bee to be removed
      * @param realId: Id of the bee which will replace the ghost and receive all informations
      *
      * https://github.com/KiwiHC16/Abeille/issues/1055
-     */ 
+     */
     public static function replaceGhost($ghostId, $realId)
     {
         $ghost = Abeille::byId($ghostId);
@@ -121,7 +121,7 @@ class Abeille extends eqLogic
             log::add('Abeille', 'debug', 'Je retire '.$ghost->getName().' de la zigate.');
             self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "ParentAddressIEEE=" . $IEEE . "&ChildAddressIEEE=" . $IEEE );
         }
-        
+
         // Eq level
         $real->setName($ghost->getName().'_real');
         $real->setObject($ghost->getObject());
@@ -137,9 +137,9 @@ class Abeille extends eqLogic
         if ( $ghost->getConfiguration('uniqId', '') == $real->getConfiguration('uniqId', '') ) {
             $real->setTimeout($ghost->getTimeout());
         }
-        
 
-        // Parcours toutes les commandes pour recuperer les historiques, remplacer dans jeedom les instances de #ghost-cmd# par #real-cmd# 
+
+        // Parcours toutes les commandes pour recuperer les historiques, remplacer dans jeedom les instances de #ghost-cmd# par #real-cmd#
         foreach ($ghost->getCmd() as $numGhost => $ghostCmd) {
             foreach ($real->getCmd() as $numReal => $realCmd) {
                 if ($ghostCmd->getLogicalId() == $realCmd->getLogicalId()) {
@@ -385,9 +385,9 @@ class Abeille extends eqLogic
 
         // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
         log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
-        $ROOT = __DIR__ . "/../../Network";
-        $cmd = "cd " . $ROOT . "; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
-        log::add('Abeille', 'debug', 'cronD: cmd=\'' . $cmd . '\'');
+        $ROOT = __DIR__."/../php";
+        $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
+        log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
         exec($cmd);
 
         // Poll Cmd
@@ -1768,7 +1768,7 @@ class Abeille extends eqLogic
             $elogic->refresh();
 
             log::add('Abeille', 'debug', 'IEEE-Addr cmd and eq updated: '.$elogic->getName().' - '.$elogic->getConfiguration('IEEE', 'Unknown') );
-            
+
             return;
         }
 

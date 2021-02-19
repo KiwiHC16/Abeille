@@ -147,7 +147,7 @@
                 console.log("refreshNetworkInformation(): " + networkInformation);
             }
         };
-        xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+ZigateX, true);
+        xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+ZigateX, true);
         xmlhttpRefreshNetworkInformation.send();
 
         /* Start refresh status every 1sec */

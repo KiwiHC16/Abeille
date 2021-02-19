@@ -303,6 +303,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                         "addressMode"           => "01",
                         "priority"              => $priority,
                         "dest"                  => $dest,
+                        "address"               => $address,
                         "destinationEndpoint"   => "01", // Set but not send on radio
                         "action"                => $actionId,
                     );

@@ -703,6 +703,64 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
     }
 
+    /**
+     * reviewPriority()
+     * 
+     * See if we need to change the priority reaquested for a message
+     * 
+     * @param Command
+     * @return priority re-evaluated
+     * 
+     */
+    function reviewPriority($Command) {
+        $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
+
+        if (!isset($Command)) {
+            $this->deamonlog('debug', "  Command not set return", $this->debug['processCmd']);
+            return -1;
+        }
+
+        if (isset($Command['priority'])) {
+            // TODO: Eq Address and Group Address can't be distingueshed here. Probability to have a group address = eq address is low but exist.
+            if ( isset($Command['address']) ) {
+                if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['address'], 'Abeille')) {
+                    if ($NE->getIsEnable()) {
+                        if (( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
+                            $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
+                            return priorityLostNE;
+                        }
+                        else {
+                            return $Command['priority'];
+                        }
+                    }
+                    else {
+                        $this->deamonlog('debug', "  NE desactive, je n envoie pas de commande.");
+                        return -1;
+                    }
+                }
+                else {
+                    $this->deamonlog('debug', "  NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
+                    return $Command['priority'];
+                }
+            }
+            else {
+                return $Command['priority'];
+            }
+        }
+        else {
+            $this->deamonlog('debug', "  priority not defined !!!");
+            return priorityInterrogation;
+        }
+    }
+
+    /**
+     * processCmd()
+     * 
+     * Convert a command into tis binary format to be read by zigate
+     * 
+     * @param Command
+     * @return None
+     */
     function processCmd($Command) {
 
         $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
@@ -712,40 +770,18 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['priority'])) {
-            if ( isset($Command['address']) ) {
-                if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['address'], 'Abeille')) {
-                    if ($NE->getIsEnable()) {
-                        if (( time() - strtotime($NE->getStatus('lastCommunication')) ) > (60*$NE->getTimeout() ) ) {
-                            $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
-                            $priority = priorityLostNE;
-                        }
-                        else {
-                            $priority = $Command['priority'];
-                        }
-                    }
-                    else {
-                        $this->deamonlog('debug', "  NE desactive, je ne fais rien.");
-                        return;
-                    }
-                }
-                else {
-                    $this->deamonlog('debug', "  NE introuvable, probablement une annonce, j envoie la commande.");
-                    $priority = $Command['priority'];
-                }
-            }
-            else {
-                $priority = $Command['priority'];
-            }
+        $priority   = $this->reviewPriority($Command);
+        if ($priority==-1) {
+            $this->deamonlog("debug", "    L1 - processCmd - can t define priority, stop here");
+            return;
         }
+        if (isset($Command['dest'])) 
+            $dest       = $Command['dest']; 
         else {
-            $this->deamonlog('debug', "  priority not defined !!!");
-            $priority = priorityInterrogation;
+            $this->deamonlog("debug", "No dest defined, stop here");
+            return;
         }
-
-        $dest = $Command['dest'];
-
-
+        
 
         //---- PDM ------------------------------------------------------------------
 
@@ -2573,7 +2609,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $cmd                    = "0092";
 
-            $addressMode            = $Command['addressMode'];
+            $addressMode            = $Command['addressMode']; // 01: Group, 02: device
             $address                = $Command['address'];
             $sourceEndpoint         = "01";
             $destinationEndpoint    = $Command['destinationEndpoint'];
@@ -2591,6 +2627,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         // ON / OFF with no effects RAW with no APS ACK
+        // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
         if ( isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
 

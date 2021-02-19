@@ -52,7 +52,7 @@
 
     if ( $Cache == "Refresh Cache" ) {
         // Ici on n'utilise pas le cache donc on lance la collecte
-        include_once("AbeilleLQI.php");
+        require_once(__DIR__."/../core/php/AbeilleLQI.php");
     }
 
     // Maintenant on doit avoir le chier disponible avec les infos

@@ -251,7 +251,7 @@ $DataFile = "AbeilleLQI_MapData.json";
 
 if ($Cache == "Refresh Cache") {
     // Ici on n'utilise pas le cache donc on lance la collecte
-    require_once("AbeilleLQI.php");
+    require_once(__DIR__."/../core/php/AbeilleLQI.php");
 }
 
 if (file_exists($DataFile)) {

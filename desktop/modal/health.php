@@ -67,6 +67,7 @@ Démons:
             <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Repond}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière communication}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Date création}}</th>
@@ -140,6 +141,17 @@ Démons:
             else
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
             echo '<td>'.$status.'</td>';
+
+            // Status APS_ACK
+            if ($eqLogic->getIsEnable() == 0) // Disabled ?
+                $APS_ACK = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
+            else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
+                $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
+            else if ($eqLogic->getStatus('APS_ACK') == '0') 
+                $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
+            else
+                $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
+            echo '<td>'.$APS_ACK.'</td>';
 
             // Derniere Comm
             $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';

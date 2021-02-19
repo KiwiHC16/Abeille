@@ -17,13 +17,67 @@
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/AbeilleTools.php');
+    include_once(dirname(__FILE__).'/../../desktop/php/200_AbeilleScript.php');
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
     }
      */
     $eqLogics = Abeille::byType('Abeille');
+
+    function displayDaemonStatus($diff, $name, &$oneMissing) {
+        $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
+        if ($diff[$nameLow] == 1)
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">'.$name.'</span>';
+        else {
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">'.$name.'</span>';
+            $oneMissing = TRUE;
+        }
+    }
+
+    $parameters = AbeilleTools::getParameters();
+// logToFile("parameters=".json_encode($parameters));
+    $running = AbeilleTools::getRunningDaemons();
+    $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
+// logToFile("diff=".json_encode($diff));
+    $oneMissing = FALSE;
+    displayDaemonStatus($diff, "Cmd", $oneMissing);
+    displayDaemonStatus($diff, "Parser", $oneMissing);
+    $nbOfZigates = $parameters['zigateNb'];
+    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+        if ($parameters['AbeilleActiver'.$zgNb] != "Y")
+            continue; // Zigate disabled
+        displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
+        if ($parameters['AbeilleType'.$zgNb] == "WIFI")
+            displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
+    }
+
+    echo "<hr>";
+
+    $zigateNb = config::byKey('zigateNb', 'Abeille', '1', 1);
+    for ($i = 1; $i <= $zigateNb; $i++) {
+        if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
+        <div class="ui-block-a">
+		    
+			    <a id="bt_include<?php echo $i;?>" href="#" class="ui-btn ui-btn-raised clr-primary waves-effect waves-button changeIncludeState" data-mode="1" data-state="1" style="margin: 5px;">
+				    <i class="fa fa-link" style="font-size: 6em;"></i>{{Inclusion Z<?php echo $i;?>}}
+			    </a>
+		    
+			    <a id="bt_include_stop<?php echo $i;?>" href="#" class="ui-btn ui-btn-raised clr-primary waves-effect waves-button changeIncludeState" data-mode="1" data-state="1" style="margin: 5px;">
+				    <i class="fa fa-unlink" style="font-size: 6em;"></i>{{Stop Z<?php echo $i;?>}}
+			    </a>
+		    
+        </div>
+
+<?php        
+        }
+    }
+
+?>
+
+
+<hr>
 
 <table border="1">
     <thead>

@@ -82,8 +82,8 @@
                     logMessage("", "  Unsupported message type (".$msg->Type.") => Ignored.");
                     continue;
                 }
-                if ($msg->StartIndex != $eqToInterrogate[$eqIndex]['TableIndex']) {
-                    /* Note: this cas is due to too many identical messages sent to eq
+                if (hexdec($msg->StartIndex) != $eqToInterrogate[$eqIndex]['TableIndex']) {
+                    /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
                     logMessage("", "  Unexpected start index (".$msg->StartIndex.") => Ignored.");
                     continue;

@@ -395,5 +395,21 @@
             }
     }
 
+    // Test core function of Jeedom
+    if ( (400<=$test) && ($test<500) ) {
+        switch ($test) {
+            case 400:
+                echo "Cmd ByValue: retourne les commandes qui ont value ou #value# dans le champ value.\n";
+                $newVal = 53;
+                $cmdAction = cmd::byId(23897);
+                echo "Cmd Action : ".$cmdAction->getName()."\n";
+                $cmdInfo = $cmdAction->getCmdValue();
+                echo "Cmd Info associée : ".$cmdInfo->getName()." - ".$cmdInfo->execCmd()."\n";
+                $cmdInfo->event($newVal);
+                echo "Cmd Info associée : ".$cmdInfo->getName()." - ".$cmdInfo->execCmd()."\n";
+            break;
+        }
+    }
+
     echo "End of the test.\n";
 ?>

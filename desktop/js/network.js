@@ -48,7 +48,7 @@ function refreshLQICache(zigateX) {
     setTimeout(function () { trackLQICollectStatus(true, zigateX); }, 1000);
 
     $.ajax({
-            url: "/plugins/Abeille/Network/AbeilleLQI.php?zigate="+zigateX,
+            url: "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+zigateX,
             async: true,
             error: function (jqXHR, status, error) {
                 //console.log("refreshLQICache error status: " + status);

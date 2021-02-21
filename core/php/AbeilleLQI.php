@@ -12,18 +12,18 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.json";
+    $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
         // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
-    include_once __DIR__."/../../../core/php/core.inc.php";
-    include_once("../resources/AbeilleDeamon/includes/config.php");
-    include_once __DIR__."/../core/php/AbeilleLog.php"; // Log library
+    include_once __DIR__."/../../../../core/php/core.inc.php";
+    include_once("../../resources/AbeilleDeamon/includes/config.php");
+    include_once "AbeilleLog.php"; // Log library
 
     /* Add to list a new eq (router or coordinator) to interrogate.
        Check first is not aleady in the list. */
@@ -82,8 +82,8 @@
                     logMessage("", "  Unsupported message type (".$msg->Type.") => Ignored.");
                     continue;
                 }
-                if ($msg->StartIndex != $eqToInterrogate[$eqIndex]['TableIndex']) {
-                    /* Note: this cas is due to too many identical messages sent to eq
+                if (hexdec($msg->StartIndex) != $eqToInterrogate[$eqIndex]['TableIndex']) {
+                    /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
                     logMessage("", "  Unexpected start index (".$msg->StartIndex.") => Ignored.");
                     continue;

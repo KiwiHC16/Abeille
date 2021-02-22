@@ -44,32 +44,23 @@ $commands[$i++]['cmd'] = "git branch -d stable";
 $commands[$i  ]['txt'] = "Suppression de la branche stable sur le serveur.";
 $commands[$i++]['cmd'] = "git push origin --delete stable";
 
-$commands[$i  ]['txt'] = "Recuperation derniere infos du serveur.";
-$commands[$i++]['cmd'] = "git fetch";
-
-$commands[$i  ]['txt'] = "Recuperation des derniers fichiers master.";
-$commands[$i++]['cmd'] = "git pull";
-
 $commands[$i  ]['txt'] = "Retour sur beta.";
 $commands[$i++]['cmd'] = "git checkout beta";
 
 $commands[$i  ]['txt'] = "Creation d une copie de la branche beta en stable.";
 $commands[$i++]['cmd'] = "git checkout -b stable";
 
-$commands[$i  ]['txt'] = "Fetch.";
-$commands[$i++]['cmd'] = "git fetch";
-
-$commands[$i  ]['txt'] = "Pull.";
-$commands[$i++]['cmd'] = "git pull";
-
 $commands[$i  ]['txt'] = "Set version in the file.";
-$commands[$i++]['cmd'] = "echo ".date('Ymd-')."stable > Abeille.version";
+$commands[$i++]['cmd'] = "echo '".date('Ymd-')."stable' > Abeille.version";
 
 $commands[$i  ]['txt'] = "Add version file.";
 $commands[$i++]['cmd'] = "git add Abeille.version";
 
 $commands[$i  ]['txt'] = "Add version file.";
 $commands[$i++]['cmd'] = "git commit -m 'Mondays version' ";
+
+$commands[$i  ]['txt'] = "Envoi au serveur.";
+$commands[$i++]['cmd'] = "git push --set-upstream origin stable";
 
 $commands[$i  ]['txt'] = "Recuperation de la branche master.";
 $commands[$i++]['cmd'] = "git checkout master";

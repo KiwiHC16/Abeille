@@ -8,7 +8,7 @@ $today = date("Ymd");
 // -----------------------------------------------------------------------------------
 // Preparation des operations
 //
-$commands[$i  ]['txt'] = "------------------------------\n Preparation ------------------\n";
+$commands[$i  ]['txt'] = "\n------------------------------\n           Preparation \n------------------------------\n";
 $commands[$i++]['cmd'] = "";
 
 $commands[$i  ]['txt'] = "Recuperation de la branche master.";
@@ -26,7 +26,7 @@ $commands[$i++]['cmd'] = "git pull";
 // -----------------------------------------------------------------------------------
 // Gestion de la version stable
 //
-$commands[$i  ]['txt'] = "------------------------------\n Creation version stable ------------------\n";
+$commands[$i  ]['txt'] = "\n------------------------------\n           Creation version stable \n------------------------------\n";
 $commands[$i++]['cmd'] = "";
 
 $commands[$i  ]['txt'] = "Recuperation de la branche stable.";
@@ -80,7 +80,7 @@ $commands[$i++]['cmd'] = "git checkout master";
 // -----------------------------------------------------------------------------------
 // Gestion de la version beta
 //
-$commands[$i  ]['txt'] = "------------------------------\n Creation version beta ------------------\n";
+$commands[$i  ]['txt'] = "\n------------------------------\n           Creation version beta \n------------------------------\n";
 $commands[$i++]['cmd'] = "";
 
 $commands[$i  ]['txt'] = "Recuperation de la branche beta.";
@@ -135,9 +135,14 @@ $commands[$i++]['cmd'] = "git checkout master";
 // Gestion de la version master 
 //
 
-
+$cmdNb = 0;
 foreach ( $commands as $key=>$cmd ) {
-    echo $key . " -> " . $cmd['txt'] . " -> " . $cmd['cmd'] . "\n";
+    if ( $cmd['cmd']=="" ) {
+        echo $cmd['txt'] . "\n";
+    }
+    else {
+        echo $cmdNb++ . " -> " . $cmd['txt'] . " -> " . $cmd['cmd'] . "\n";
+    }
 }
 
 

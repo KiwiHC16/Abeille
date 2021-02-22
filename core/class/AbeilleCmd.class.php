@@ -4,11 +4,11 @@
     {
         /**
          * updateField
-         * 
+         *
          * used to replace #xxx# fields with real value
-         * 
+         *
          * @param request to be modified
-         * 
+         *
          * @return request modified
          */
         public function updateField($dest,$cmd,$request,$_options=NULL) {
@@ -18,7 +18,7 @@
                 $request = str_replace("#addrGroup#", $cmd->getEqLogic()->getConfiguration("Groupe"), $request);
                 logMessage('debug', 'request - addGroup : ' . $request);
             }
-            
+
 
             if (strpos($request, "#GroupeEP") > 0) {
                 $id = substr($request,strpos($request, "#GroupeEP")+strlen("#GroupeEP"),1);
@@ -56,7 +56,7 @@
             // logMessage('debug', 'request - ZigateIEEE: ' . $request);
 
             // Request with multi inputs, input from a Info command.
-            // Todo: At this stage process only one cmd info, could need multi info command in the futur 
+            // Todo: At this stage process only one cmd info, could need multi info command in the futur
             // log::add( 'Abeille', 'debug', 'CmdInfo: Start analysis: '.$request );
             // #cmdInfo_xxxxxxx_#
             if (preg_match('`#cmdInfo_(.*)_#`m', $request, $m)) {
@@ -165,8 +165,8 @@
                 }
 
                 // Mise a jour de la commande info associée
-                log::add( 'Abeille', 'debug', 'execute() - will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
                 if ($this->getCmdValue()) {
+                    log::add( 'Abeille', 'debug', 'execute() - will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
                     // TODO: je suppose qu il n'y a qu une commande info associée
                     $cmdInfo = $this->getCmdValue();
                     if ($cmdInfo) {

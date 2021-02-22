@@ -130,8 +130,10 @@
             </div>
         </div>
 
-        <legend><i class="fa fa-list-alt"></i> {{Zigates}}</legend>
-        <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
+        <legend>
+            <i class="fa fa-list-alt"></i> {{Zigates}}
+            <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
+        </legend>
         <div id="Connection">
             <div>
                 <p><i>{{Ce plugin supporte 4 types de Zigates: USB, Wifi, "PI" ou DIN}}</i></p>
@@ -351,20 +353,20 @@
             </div>
         </div> -->
 
-        <br />
-        <br />
-        <legend><i class="fa fa-list-alt"></i> {{Mise à jour (Vérification)}}</legend>
-        <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
+        <legend>
+            <i class="fa fa-list-alt"></i> {{Mise à jour (Vérification)}}
+            <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
+        </legend>
         <div id="UpdateCheck">
             <?php
                 Abeille_pre_update_analysis(0, 1);
             ?>
         </div>
 
-        <br />
-        <br />
-        <legend><i class="fa fa-list-alt"></i> {{Options avancées}}</legend>
-        <a id="idAdvOptionsShowHide" class="btn btn-success" >{{Afficher}}</a>
+        <legend>
+            <i class="fa fa-list-alt"></i> {{Options avancées}}
+            <a id="idAdvOptionsShowHide" class="btn btn-success" >{{Afficher}}</a>
+        </legend>
         <div id="idAdvOptions">
             <div>
                 <p><i>{{Attention ! Vous n'avez normalement rien à faire dans cette section.}}</i></p>

@@ -3,6 +3,7 @@
 $commands = array();
 
 $i=0;
+$today = date("Ymd");
 
 // -----------------------------------------------------------------------------------
 // Preparation des operations
@@ -29,16 +30,16 @@ $commands[$i  ]['txt'] = "Recuperation derniers fichiers du serveur.";
 $commands[$i++]['cmd'] = "git pull";
 
 $commands[$i  ]['txt'] = "Creation d une copie de la branche stable.";
-$commands[$i++]['cmd'] = "git checkout -b stable-".date("Ymd");
+$commands[$i++]['cmd'] = "git checkout -b stable-".$today;
 
 $commands[$i  ]['txt'] = "Envoi au serveur.";
-$commands[$i++]['cmd'] = "git push --set-upstream origin stable-20210222"; // < user/pass
+$commands[$i++]['cmd'] = "git push --set-upstream origin stable-".$today; // < user/pass
 
 $commands[$i  ]['txt'] = "Retour sur master.";
 $commands[$i++]['cmd'] = "git checkout master";
 
 $commands[$i  ]['txt'] = "Suppression de la branche stable localement.";
-$commands[$i++]['cmd'] = "git -d stable";
+$commands[$i++]['cmd'] = "git branch -d stable";
 
 $commands[$i  ]['txt'] = "Suppression de la branche stable sur le serveur.";
 $commands[$i++]['cmd'] = "git push origin --delete stable";
@@ -78,16 +79,16 @@ $commands[$i  ]['txt'] = "Recuperation de la branche beta.";
 $commands[$i++]['cmd'] = "git checkout beta";
 
 $commands[$i  ]['txt'] = "Creation d une copie de la branche beta.";
-$commands[$i++]['cmd'] = "git checkout -b beta-".date("Ymd");
+$commands[$i++]['cmd'] = "git checkout -b beta-".$today;
 
 $commands[$i  ]['txt'] = "Envoi au serveur.";
-$commands[$i++]['cmd'] = "git push";
+$commands[$i++]['cmd'] = "git push --set-upstream origin beta-".$today;
 
 $commands[$i  ]['txt'] = "Retour sur master.";
 $commands[$i++]['cmd'] = "git checkout master";
 
 $commands[$i  ]['txt'] = "Suppression de la branche beta localement.";
-$commands[$i++]['cmd'] = "git -d beta";
+$commands[$i++]['cmd'] = "git branch -d beta";
 
 $commands[$i  ]['txt'] = "Suppression de la branche beta sur le serveur.";
 $commands[$i++]['cmd'] = "git push origin --delete beta";

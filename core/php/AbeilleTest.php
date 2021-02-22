@@ -321,6 +321,10 @@
                 sleep( 5);
                 AbeilleTools::clearSystemMessage($parameters,'1');
                 break;
+            case 205:
+                echo "Send a Systeme Message to the Ruche to create an eq based on a template\n";
+                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/FFFF/0000-01-0005", "BSO");
+                break;
         }
     }
 

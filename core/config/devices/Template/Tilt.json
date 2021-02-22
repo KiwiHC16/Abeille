@@ -1,0 +1,21 @@
+{
+  "Tilt": {
+    "isVisible": 1,
+    "name": "Tilt",
+    "order": 4,
+    "isHistorized": "1",
+    "Type": "info",
+    "subType": "numeric",
+    "invertBinary": "0",
+    "template": "",
+    "unite": "deg",
+    "configuration": {
+      "uniqId": "20210222_1158",
+      "minValue": "0",
+      "maxValue": "100",
+      "historizeRound": "0",
+      "calculValueOffset": "",
+      "visibilityCategory": "All"
+    }
+  }
+}

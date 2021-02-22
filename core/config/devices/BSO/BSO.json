@@ -12,6 +12,8 @@
       "mainEP": "#EP#"
     },
     "Commandes": {
+      "include0 2 2": "Lift",
+      "include0 2 2 2": "Tilt",
       "include1": "nom",
       "include2": "societe",
       "include3": "SW",
@@ -35,7 +37,9 @@
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
-      "include29": "setReportLevel"
+      "include29": "setReportLevel",
+      "include30": "moveToLiftAndTiltBSO_Lift",
+      "include30 2": "moveToLiftAndTiltBSO_Tilt"
     }
   }
 }

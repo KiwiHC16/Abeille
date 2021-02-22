@@ -1,18 +1,18 @@
 {
-  "Level": {
+  "moveToLiftAndTiltBSO_Lift": {
     "isVisible": 1,
-    "name": "Inclinaison",
+    "name": "Set Lift",
     "order": 14,
     "isHistorized": "0",
     "Type": "action",
     "subType": "slider",
-    "value": "Inclinaison",
+    "value": "Lift",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c07c7qqjkf6624df9",
+      "uniqId": "20210222_1153",
       "topic": "moveToLiftAndTiltBSO",
-      "request": "EP=01&Inclinaison=#slider#&duration=10",
+      "request": "EP=01&lift=#slider#&inclinaison=#cmdInfo_Tilt_#&duration=10",
       "visibilityCategory": "All"
     }
   }

@@ -1,5 +1,17 @@
 <?php
 
+// Permet d automatiser le post des versions beta et stable sur le market jeedom
+// Etapes principales:
+// 1- cleanu folders
+// 2- Gestion stable
+//      a- stable -> stable-$today
+//      b- delete stable
+//      c- beta -> stable
+// 3- Gestion Beta
+//      a- beta -> beta-$today
+//      b- delete beta
+//      c- master -> beta
+
 $commands = array();
 
 $i=0;

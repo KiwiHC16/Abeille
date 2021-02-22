@@ -99,6 +99,7 @@ class Abeille extends eqLogic
      */
     public static function replaceGhost($ghostId, $realId)
     {
+        log::add('Abeille', 'debug', 'Lancement de la procedure de remplacement de '.$ghostId.' par '.$realId );
         $ghost = Abeille::byId($ghostId);
         if (!is_object($ghost)) {
             log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille ghost.');
@@ -114,32 +115,56 @@ class Abeille extends eqLogic
         list($destReal, $shortReal) = explode('/', $real->getLogicalId());
 
         // Remove NE from ZigateX
-        if ( $ghost->getConfiguration('IEEE', 'none')=='none' ) {
-            log::add('Abeille', 'debug', 'Le ghost n avait pas d adresse IEEE connue, je ne peux le retirer de la zigate.');
+        $IEEE = $ghost->getConfiguration('IEEE', 'none');
+        if ( $IEEE=='none' ) {
+            log::add('Abeille', 'debug', 'Le ghost n a pas d adresse IEEE connue, je ne peux le retirer de la zigate.');
         }
         else {
             log::add('Abeille', 'debug', 'Je retire '.$ghost->getName().' de la zigate.');
             self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $destGhost . "/Ruche/Remove", "ParentAddressIEEE=" . $IEEE . "&ChildAddressIEEE=" . $IEEE );
         }
 
-        // Eq level
-        $real->setName($ghost->getName().'_real');
-        $real->setObject($ghost->getObject());
-        $real->setCategory($ghost->getCategory());
-        $real->setConfiguration( 'note', $real->getConfiguration('note', '').$ghost->getConfiguration('note', '') );
-        $real->setConfiguration( 'positionX', $ghost->getConfiguration('positionX', '') );
-        $real->setConfiguration( 'positionY', $ghost->getConfiguration('positionY', '') );
-        $real->setConfiguration( 'positionZ', $ghost->getConfiguration('positionZ', '') );
-        $real->setIsVisible($ghostgetIsVisible());
-        $real->setIsEnable($ghostgetIsEnable());
+        log::add('Abeille', 'debug', 'Transfer des informations de l equipment.' );
 
-        // Eq Level if type of NE diff
+        log::add('Abeille', 'debug', 'Nom.' );
+        $real->setName($ghost->getName().'_real');
+
+        log::add('Abeille', 'debug', 'Parent.' );
+        $real->setObject($ghost->getObject());
+
+        // log::add('Abeille', 'debug', 'Categories.' );
+        // $real->setCategory($ghost->getCategory());
+
+        log::add('Abeille', 'debug', 'Notes.' );
+        $real->setConfiguration( 'note', $real->getConfiguration('note', '').$ghost->getConfiguration('note', '') );
+
+        log::add('Abeille', 'debug', 'positionX.' );
+        $real->setConfiguration( 'positionX', $ghost->getConfiguration('positionX', '') );
+
+        log::add('Abeille', 'debug', 'positionY.' );
+        $real->setConfiguration( 'positionY', $ghost->getConfiguration('positionY', '') );
+
+        log::add('Abeille', 'debug', 'positionZ.' );
+        $real->setConfiguration( 'positionZ', $ghost->getConfiguration('positionZ', '') );
+
+        log::add('Abeille', 'debug', 'Visibilité.' );
+        $real->setIsVisible($ghost->getIsVisible());
+
+        log::add('Abeille', 'debug', 'Enalbed/No.' );
+        $real->setIsEnable($ghost->getIsEnable());
+
+        
         if ( $ghost->getConfiguration('uniqId', '') == $real->getConfiguration('uniqId', '') ) {
+            log::add('Abeille', 'debug', 'Transfer du TimeOut car les equipements partagent le meme modele.' );
             $real->setTimeout($ghost->getTimeout());
+        }
+        else {
+            log::add('Abeille', 'debug', 'Pas de transfer du TimeOut car les equipements ne partagent pas le meme modele.' );
         }
 
 
         // Parcours toutes les commandes pour recuperer les historiques, remplacer dans jeedom les instances de #ghost-cmd# par #real-cmd#
+        log::add('Abeille', 'debug', 'Transfer des commandes une a une.' );
         foreach ($ghost->getCmd() as $numGhost => $ghostCmd) {
             foreach ($real->getCmd() as $numReal => $realCmd) {
                 if ($ghostCmd->getLogicalId() == $realCmd->getLogicalId()) {
@@ -149,10 +174,12 @@ class Abeille extends eqLogic
                                 // -- migrer l historique des commandes AbeilleY/YYYY vers AbeilleX/XXXX, les instances des commandes dans scenario et autres
                                 // history::copyHistoryToCmd('#17009#', '#17251#');
                                 // echo 'Copy history from ' . $ghostCmd->getName() . ' to ' . $realCmd->getName() . "\n";
+                                log::add('Abeille', 'debug', 'Transfer de l historique pour la commande: '.$ghostCmd->getName() );
                                 history::copyHistoryToCmd($ghostCmd->getId(), $realCmd->getId());
                             }
                         }
                         // -- migrer les instances des commandes dans scenario et autres
+                        log::add('Abeille', 'debug', 'Transfer des instance de la commande: '.$ghostCmd->getName().' dans jeedom.' );
                         jeedom::replaceTag(array('#' . $ghostCmd->getId() . '#' => '#' . $realCmd->getId() . '#'));
                     }
                 }
@@ -160,9 +187,11 @@ class Abeille extends eqLogic
         }
 
         // -- supprimer l Abeille ghost
+        log::add('Abeille', 'debug', 'Suppression de l eq ghost.' );
         $ghost->remove();
 
         // Sauvegarde
+        log::add('Abeille', 'debug', 'Sauvegarde du nouvel eq.' );
         $real->save();
 
         return;

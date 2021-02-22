@@ -8,6 +8,9 @@ $today = date("Ymd");
 // -----------------------------------------------------------------------------------
 // Preparation des operations
 //
+$commands[$i  ]['txt'] = "------------------------------\n Preparation ------------------\n";
+$commands[$i++]['cmd'] = "";
+
 $commands[$i  ]['txt'] = "Recuperation de la branche master.";
 $commands[$i++]['cmd'] = "git checkout master";
 
@@ -23,6 +26,9 @@ $commands[$i++]['cmd'] = "git pull";
 // -----------------------------------------------------------------------------------
 // Gestion de la version stable
 //
+$commands[$i  ]['txt'] = "------------------------------\n Creation version stable ------------------\n";
+$commands[$i++]['cmd'] = "";
+
 $commands[$i  ]['txt'] = "Recuperation de la branche stable.";
 $commands[$i++]['cmd'] = "git checkout stable";
 
@@ -56,9 +62,6 @@ $commands[$i++]['cmd'] = "git checkout beta";
 $commands[$i  ]['txt'] = "Creation d une copie de la branche beta en stable.";
 $commands[$i++]['cmd'] = "git checkout -b stable";
 
-$commands[$i  ]['txt'] = "Envoi au serveur.";
-$commands[$i++]['cmd'] = "git push";
-
 $commands[$i  ]['txt'] = "Set version in the file.";
 $commands[$i++]['cmd'] = "echo ".date('Ymd-')."stable > Abeille.version";
 
@@ -68,15 +71,23 @@ $commands[$i++]['cmd'] = "git add Abeille.version";
 $commands[$i  ]['txt'] = "Add version file.";
 $commands[$i++]['cmd'] = "git commit -m 'Mondays version' ";
 
+$commands[$i  ]['txt'] = "Envoi au serveur.";
+$commands[$i++]['cmd'] = "git push";
+
 $commands[$i  ]['txt'] = "Recuperation de la branche master.";
 $commands[$i++]['cmd'] = "git checkout master";
 
 // -----------------------------------------------------------------------------------
 // Gestion de la version beta
 //
+$commands[$i  ]['txt'] = "------------------------------\n Creation version beta ------------------\n";
+$commands[$i++]['cmd'] = "";
 
 $commands[$i  ]['txt'] = "Recuperation de la branche beta.";
 $commands[$i++]['cmd'] = "git checkout beta";
+
+$commands[$i  ]['txt'] = "Recuperation derniers fichiers du serveur.";
+$commands[$i++]['cmd'] = "git pull";
 
 $commands[$i  ]['txt'] = "Creation d une copie de la branche beta.";
 $commands[$i++]['cmd'] = "git checkout -b beta-".$today;
@@ -117,8 +128,11 @@ $commands[$i++]['cmd'] = "git commit -m 'Mondays version' ";
 $commands[$i  ]['txt'] = "Envoi au serveur.";
 $commands[$i++]['cmd'] = "git push";
 
+$commands[$i  ]['txt'] = "Recuperation de la branche master.";
+$commands[$i++]['cmd'] = "git checkout master";
+
 // -----------------------------------------------------------------------------------
-// Gestion de la version beta
+// Gestion de la version master 
 //
 
 

@@ -34,18 +34,6 @@
     if ( isset( $_GET['Data']) )        { $Data         = $_GET['Data']; }            else { $Data      = "None"; }
     if ( isset( $_GET['Hierarchy']) )   { $Hierarchy    = $_GET['Hierarchy']; }       else { $Hierarchy = "All"; }
 
-    // $Data = "Relationship";
-    // $Hierarchy = "All";
-    // $Hierarchy = "Child";
-
-    /*
-    echo "\n\n";
-    echo $Data;
-    echo "\n";
-    echo $Hierarchy;
-    echo "\n\n";
-    */
-
     // -----------------------------------------------------------------------------------------------------------
     $tmpDir = jeedom::getTmpFolder("Abeille");
     $DataFile = $tmpDir."/AbeilleLQI_MapDataAbeille".$zigateId.".json";
@@ -55,7 +43,7 @@
         require_once(__DIR__."/../core/php/AbeilleLQI.php");
     }
 
-    // Maintenant on doit avoir le chier disponible avec les infos
+    // Maintenant on doit avoir le fichier disponible avec les infos
     if ( file_exists($DataFile) ){
         $json = json_decode(file_get_contents($DataFile), true);
         $LQI = $json['data'];
@@ -65,7 +53,7 @@
 
     // On pre-rempli table avec les NE trouvés dans les voisines
     foreach ( $LQI as $row => $voisineList ) {
-        $table[$voisineList['NE']]['name']=$voisineList['NE_Name'];
+        $table[$voisineList[     'NE']]['name']=$voisineList['NE_Name'];
         $table[$voisineList['Voisine']]['name']=$voisineList['Voisine_Name'];
     }
 
@@ -76,14 +64,7 @@
 
     // On complete table avec le NE dans Jeedom
     foreach ( $abeilles as $abeilleIndex=>$abeille ) {
-        // Il faut exclure les Timers
-        if ( strpos($abeille->getLogicalId(), "Timer") > 0 ) {
-            // C est un Timer, je ne fais rien
-        } else {
-            $shortAddress=substr($abeille->getLogicalId(),-4);
-            if ( $shortAddress=="Ruche" ) { $shortAddress = "0000"; }
-            $table[$shortAddress]['name'] = $abeille->getName();
-        }
+            $table[$abeille->getLogicalId()]['name'] = $abeille->getName();
     }
 
     // Parametre pour positionner les points
@@ -96,40 +77,33 @@
     // On va positionner les points sur la base des infos qu'on a dans Jeedom
     foreach ( $abeilles as $abeilleIndex=>$abeille ) {
 
-        if ( strpos($abeille->getLogicalId(), "Timer") > 0 ) {
-            // C est un Timer, je ne fais rien
+        $shortAddress = $abeille->getLogicalId();
+
+        if ( ($abeille->getConfiguration()["positionX"] == "") || ($abeille->getConfiguration()["positionY"] == "") ) {
+            $X = $centerX + $rayon * cos($angle/180*3.14);
+            $Y = $centerY + $rayon * sin($angle/180*3.14);
+            $angle = $angle + $angleIncrement;
+            $Z = 0;
         } else {
-
-            if ( ($abeille->getConfiguration()["positionX"] == "") || ($abeille->getConfiguration()["positionY"] == "") ) {
-
-                $X = $centerX + $rayon * cos($angle/180*3.14);
-                $Y = $centerY + $rayon * sin($angle/180*3.14);
-                $angle = $angle + $angleIncrement;
-
-                $Z = 0;
+            $X = $abeille->getConfiguration()["positionX"];
+            $Y = $abeille->getConfiguration()["positionY"];
+            if ($abeille->getConfiguration()["positionZ"] == "") {
+                $Z = "0";
             } else {
-                $X = $abeille->getConfiguration()["positionX"];
-                $Y = $abeille->getConfiguration()["positionY"];
-                if ($abeille->getConfiguration()["positionZ"] == "") {
-                    $Z = "0";
-                } else {
-                    $Z = $abeille->getConfiguration()["positionZ"];
-                }
-            }
-
-            $shortAddress = substr($abeille->getLogicalId(),-4);
-            if ( $shortAddress=="Ruche" ) { $shortAddress = "0000"; }
-
-            $table[$shortAddress]['x'] = $X;
-            $table[$shortAddress]['y'] = $Y;
-            $table[$shortAddress]['z'] = $Z;
-
-            if ( $abeille->getConfiguration()["battery_type"]== "" ) {
-                $table[$shortAddress]['color'] = "Orange";
-            } else {
-                $table[$shortAddress]['color'] = "Green";
+                $Z = $abeille->getConfiguration()["positionZ"];
             }
         }
+        
+        $table[$shortAddress]['x'] = $X;
+        $table[$shortAddress]['y'] = $Y;
+        $table[$shortAddress]['z'] = $Z;
+
+        if ( $abeille->getConfiguration()["battery_type"]== "" ) {
+            $table[$shortAddress]['color'] = "Orange";
+        } else {
+            $table[$shortAddress]['color'] = "Green";
+        }
+        
     }
 
     $liste = "";

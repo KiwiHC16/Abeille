@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+    include_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
@@ -12,14 +13,6 @@
 
 Démons:
 <?php
-    /* Log function for debug purposes */
-    function logToFile($msg = "")
-    {
-        $logFile = 'AbeilleDebug.log';
-        $logDir = __DIR__.'/../../../../log/';
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
-    }
-
     function displayDaemonStatus($diff, $name, &$oneMissing) {
         $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
         if ($diff[$nameLow] == 1)
@@ -31,10 +24,10 @@ Démons:
     }
 
     $parameters = AbeilleTools::getParameters();
-// logToFile("parameters=".json_encode($parameters));
+// logDebug("parameters=".json_encode($parameters));
     $running = AbeilleTools::getRunningDaemons();
     $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
-// logToFile("diff=".json_encode($diff));
+// logDebug("diff=".json_encode($diff));
     $oneMissing = FALSE;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
@@ -147,23 +140,22 @@ Démons:
                 $APS_ACK = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
             else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ($eqLogic->getStatus('APS_ACK') == '0') 
+            else if ($eqLogic->getStatus('APS_ACK') == '0')
                 $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
-            else if ($eqLogic->getStatus('APS_ACK') == '1') 
+            else if ($eqLogic->getStatus('APS_ACK') == '1')
                 $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
             else
                 $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-                
+
             echo '<td>'.$APS_ACK.'</td>';
 
-            // Derniere Comm
-            $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';
-            if ( strlen($eqLogic->getStatus('lastCommunication'))>2 ) {
-                $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
-            }
+            // Last comm.
             if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
-            }
+            } else if ( strlen($eqLogic->getStatus('lastCommunication'))>2 ) {
+                $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
+            } else
+                $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';
             echo '<td>'.$lastComm.'</td>';
 
             // Depuis

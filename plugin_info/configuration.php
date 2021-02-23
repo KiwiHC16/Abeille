@@ -827,10 +827,11 @@
     }
 
     function resetPiZigate(zgNb) {
+        console.log("resetPiZigate("+zgNb+")");
         bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=resetPiZigate.abeille').dialog('open');
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=resetPiZigate').dialog('open');
             }
        });
     }

@@ -55,6 +55,8 @@ try {
 
     ajax::init();
 
+    // logDebug('abeille.ajax.php: action='.init('action'));
+
     /* For Wifi Zigate
        - check 'Addr:Port' via ping
        - check socat installation
@@ -112,7 +114,8 @@ try {
     }
 
     if (init('action') == 'checkWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/checkWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $prefix = logGetPrefix(""); // Get log prefix
+        $cmd = '/bin/bash '.__DIR__."/../scripts/checkWiringPi.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
@@ -132,8 +135,9 @@ try {
         abeille::deamon_stop(); // Stopping daemon
 
         /* Checks port exists and is not already used */
+        $prefix = logGetPrefix(""); // Get log prefix
         $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType;
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         /* Read Zigate FW version */
@@ -190,8 +194,9 @@ try {
         ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
     }
 
-    if (init('action') == 'resetPiZiGate') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/resetPiZigate.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+    if (init('action') == 'resetPiZigate') {
+        $prefix = logGetPrefix(""); // Get log prefix
+        $cmd = "/bin/bash ".__DIR__."/../scripts/resetPiZigate.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
         exec($cmd, $out, $status);
         ajax::success();
     }

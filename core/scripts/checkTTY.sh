@@ -10,8 +10,9 @@
 # checkTTY.sh <portname> <zigatetype>
 # ex: checkTTY.sh /dev/ttyS1 PI
 
-NOW=`date +"%Y-%m-%d %H:%M:%S"`
-echo "[${NOW}] Démarrage de '$(basename $0)'"
+# NOW=`date +"%Y-%m-%d %H:%M:%S"`
+# echo "[${NOW}] Démarrage de '$(basename $0)'"
+echo "Démarrage de '$(basename $0)'"
 
 if [ $# -lt 2 ]; then
     echo "= ERREUR: Port et/ou type manquant !"

@@ -94,10 +94,8 @@
 
         public function execute($_options = null)
         {
-            log::add( 'Abeille', 'debug', '------------');
-
-            logMessage('debug',           'execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
-            log::add( 'Abeille', 'debug', 'execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
+            logSetConf("AbeilleCmd.log"); // Mandatory since called from 'Abeille.class.php'
+            logMessage('debug', 'execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
 
             // cmdId : 12676 est le level d une ampoule
             // la cmdId 12680 a pour value 12676
@@ -105,7 +103,7 @@
             // On le voit dans le log avec:
             // [2020-01-30 03:39:22][debug] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
             if (isset($_options['cmdIdUpdated'])) {
-                log::add( 'Abeille', 'debug', '_options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
+                logMessage('debug', '_options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
                 return;
             }
 
@@ -130,7 +128,6 @@
                 // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 $topic = $this->updateField($dest,$this,$topic,$_options);
                 logMessage('debug', 'topic updated: ' . $topic);
-                log::add( 'Abeille', 'debug', 'topic: ' . $topic);
 
                 // -------------------------------------------------------------------------
                 // Process Request
@@ -138,7 +135,6 @@
                 logMessage('debug', 'request: ' . $request);
                 $request = $this->updateField($dest,$this,$request,$_options);
                 logMessage('debug', 'request updated: ' . $request);
-                log::add( 'Abeille', 'debug', 'request: ' . $request);
 
                 // -------------------------------------------------------------------------
                 $msgAbeille = new MsgAbeille;
@@ -166,19 +162,16 @@
 
                 // Mise a jour de la commande info associée
                 if ($this->getCmdValue()) {
-                    log::add( 'Abeille', 'debug', 'execute() - will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
+                    logMessage('debug', 'execute(): will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
                     // TODO: je suppose qu il n'y a qu une commande info associée
                     $cmdInfo = $this->getCmdValue();
                     if ($cmdInfo) {
                         if (isset($_options['slider'])) {
-                            log::add( 'Abeille', 'debug', 'execute() - cmdAction with cmd Info Ref: '.$this->getCmdValue()->getName() . ' with value slider: '.$_options['slider']);
+                            logMessage('debug', 'execute(): cmdAction with cmd Info Ref: '.$this->getCmdValue()->getName() . ' with value slider: '.$_options['slider']);
                             $cmdInfo->event($_options['slider']);
                         }
                     }
                 }
-
-
-
             } // End type==action
 
             return true;

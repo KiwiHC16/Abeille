@@ -1655,7 +1655,7 @@
                     $eq->setStatus( 'APS_ACK', '0');
                     parserLog('debug', $dest.', Type=8011/APS data ACK, APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
                 }
-            }            
+            }
         }
 
         /**
@@ -2259,10 +2259,14 @@
                     }
                 }
 
-                $this->mqqtPublishCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
+                /* Tcharp38: Commented for 2 reasons
+                   1/ this leads to 'lastCommunication' updated for $N['Addr'] while NO message received from him, so just wrong.
+                   2/ such code is just there to work-around a missed short addr change. */
+                // $this->mqqtPublishCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
             }
 
             $this->msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList);
+            // Tcharp38 TODO: lastComm can be updated for $SrcAddr only
         }
 
         //----------------------------------------------------------------------------------------------------------------
@@ -3416,7 +3420,7 @@
                                 . ', SQN='.$SQN
                              , "8702");
 
-                             
+
 
             // type; 8702; (APS Data Confirm Fail)(decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
 
@@ -3437,7 +3441,7 @@
                 $eq->setStatus( 'APS_ACK', '0');
                 parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
             }
-            
+
         }
 
         function decode8806($dest, $payload, $ln, $qos, $dummy)
@@ -3527,11 +3531,11 @@
         /**
          * execAtCreationCmdForOneNE
          * Will execute all commande with execAtCreation flag set
-         * 
-         * @param logicalId of the device 
-         * 
+         *
+         * @param logicalId of the device
+         *
          * @return none
-         * 
+         *
          */
         public static function execAtCreationCmdForOneNE($logicalId) {
             list($dest,$addr) = explode("/", $logicalId);

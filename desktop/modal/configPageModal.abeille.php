@@ -17,13 +17,18 @@ Lancement des operations.
 <script>
     var cmd = "<?php echo $_GET['cmd']; ?>";
     var action = "";
-    var zgport = <?php echo $_GET['zgport']; ?>;
+    <?php
+        if (isset($_GET['zgport']))
+            echo 'var zgport = "'.$_GET['zgport'].'";';
+        else
+            echo 'var zgport = "";';
+    ?>
     var fwfile = "";
     if (cmd == "updateFW") {
         action = 'updateFirmwarePiZiGate';
         fwfile = <?php if (isset($_GET['fwfile'])) echo $_GET['fwfile']; else echo "none"; ?>;
-    } else if (cmd == "resetE2P") {
-        action = 'resetE2P';
+    } else if (cmd == "resetPiZigate") {
+        action = 'resetPiZigate';
     }
 
     $.ajax({

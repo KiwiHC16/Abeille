@@ -424,16 +424,6 @@
                 }
             }
 
-            // [2019-10-31 13:17:37][AbeilleCmd][debug]Message 8000 status recu, cmdAck: {"type":"8000","status":"00","SQN":"b2","PacketType":"00fa"}
-            // type: 8000 : message status en retour d'une commande envoyée à la zigate
-            // status: 00 : Ok commande bien recue par la zigate / 15: ???
-            // SQN semble s'incrementer à chaque commande
-            // PacketType semble est la commande envoyée ici 00fa est une commande store (windows...)
-
-            // $cmd = array_slice( $this->cmdQueue, 0, 1 ); // je recupere une copie du premier élément de la queue
-
-            // if ( ($msg['status'] == "00") || ($msg['status'] == "01") || ($msg['status'] == "05") || ($cmd[0]['retry'] <= 0 ) ) {
-            // ou si retry tombe à 0
             if (in_array($msg['status'], ['00', '01', '05'])) {
                 // Je vire la commande si elle est bonne
                 // ou si elle est incorrecte
@@ -462,7 +452,6 @@
             }
 
             $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres reception de ce Ack", $this->debug['traiteLesAckRecus']);
-            // $this->deamonlog("debug", "traiteLesAckRecus fct - *************", $this->debug['traiteLesAckRecus']);
         }
 
         function timeOutSurLesAck() {

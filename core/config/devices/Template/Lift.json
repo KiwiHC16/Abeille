@@ -11,8 +11,8 @@
     "unite": "%",
     "configuration": {
       "uniqId": "20210222_1159",
-      "minValue": "0",
-      "maxValue": "100",
+      "minValue": "1",
+      "maxValue": "254",
       "historizeRound": "0",
       "calculValueOffset": "",
       "visibilityCategory": "All"

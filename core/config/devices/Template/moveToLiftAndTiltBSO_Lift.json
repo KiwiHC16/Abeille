@@ -11,6 +11,8 @@
     "template": "",
     "configuration": {
       "uniqId": "20210222_1153",
+      "minValue": "1",
+      "maxValue": "254",
       "topic": "moveToLiftAndTiltBSO",
       "request": "EP=01&lift=#slider#&inclinaison=#cmdInfo_Tilt_#&duration=10",
       "visibilityCategory": "All"

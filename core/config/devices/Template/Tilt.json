@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "20210222_1158",
       "minValue": "0",
-      "maxValue": "100",
+      "maxValue": "90",
       "historizeRound": "0",
       "calculValueOffset": "",
       "visibilityCategory": "All"

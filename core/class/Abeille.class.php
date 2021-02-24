@@ -436,7 +436,7 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'Check Zigate Presence');
 
         $param = AbeilleTools::getParameters();
-
+if (0) {
         //--------------------------------------------------------
         // Refresh Ampoule Ikea Bind et set Report
         log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
@@ -465,7 +465,7 @@ class Abeille extends eqLogic
         if (($i * 33) > (3600)) {
             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
         }
-
+    }
         //--------------------------------------------------------
         // Poll Cmd
         self::pollingCmd("cronHourly");

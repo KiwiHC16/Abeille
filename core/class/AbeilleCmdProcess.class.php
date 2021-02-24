@@ -1282,56 +1282,39 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // <destination endpoint (value ignored for group address): uint8_t>    -> 1
             // => 34 -> 0x22
 
-            $addressMode = "02";
-            $targetShortAddress = $Command['address'];
-            $sourceEndpointBind = "00";
-            $destinationEndpointBind = "00";
-            $profileIDBind = "0000";
-            $clusterIDBind = "0021";
-            $securityMode = "02";
-            $radius = "30";
-            $dataLength = "16";
+            $addressMode                = "02";
+            $targetShortAddress         = $Command['address'];
+            $sourceEndpointBind         = "00";
+            $destinationEndpointBind    = "00";
+            $profileIDBind              = "0000";
+            $clusterIDBind              = "0021";
+            $securityMode               = "02";
+            $radius                     = "30";
+            $dataLength                 = "16";
 
             $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
-            // $targetExtendedAddress = "1d1369feff9ffd90";
+            if ( strlen($Command['targetExtendedAddress']) < 2 ) {
+                $this->deamonlog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return");
+                return;
+            }
             $targetExtendedAddress = reverse_hex($Command['targetExtendedAddress']);
-            // $targetEndpoint = "01";
+            
             $targetEndpoint = $Command['targetEndpoint'];
-            // $clusterID = "0600";  // 0006 but need to be inverted
+            
             $clusterID = reverse_hex($Command['clusterID']);
+
             $destinationAddressMode = "03";
-            // $destinationAddressMode = $Command['destinationAddressMode'];
-            // $destinationAddress = "221b9a01008d1500";
+            if ( strlen($Command['destinationAddress']) < 2 ) {
+                $this->deamonlog('debug', "  command bind short: param destinationAddress is empty. Can t do. So return");
+                return;
+            }
             $destinationAddress = reverse_hex($Command['destinationAddress']);
-            // $destinationEndpoint = "01";
+            
             $destinationEndpoint = $Command['destinationEndpoint'];
-
-            // $targetExtendedAddress  = "000B57fffe3025ad";
-            // $targetExtendedAddress  = $Command['address'];
-            //
-            //// if ( isset($Command['targetEndpoint']) ) {
-            ////    $targetEndpoint         = $Command['targetEndpoint'];
-            ////}
-            ////else {
-            ////    $targetEndpoint         = "01";
-            ////}
-
-            // $clusterID              = "0006";
-            // // $clusterIDBind             = $Command['ClusterId'];
-            // $destinationAddressMode = "02";
-            // // $destinationAddressMode = "03";
-
-            // $destinationAddress     = "0000";
-            // $destinationAddress     = "00158D0001B22E24";
-            // // $destinationAddress     = $Command['reportToAddress'];
-
-            ////$destinationEndpoint    = "01";
 
             $lenth = "0022";
 
-            // $data =  $targetExtendedAddress . $targetEndpoint . $clusterID . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
-            // $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $profileIDBind . $clusterIDBind . $securityMode . $radius . $dataLength;
             $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
             $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $destinationAddress . $destinationEndpoint;
 
@@ -1339,7 +1322,6 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2) );
 
             $data = $data1 . $data2;
-            // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2) );
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }

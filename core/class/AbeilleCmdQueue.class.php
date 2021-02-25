@@ -227,7 +227,7 @@
             }
 
             // A chaque retry la priority increase d'un.
-            if ($priority > (priorityMax+priorityMax)) {
+            if ($priority > priorityMax+$this->maxRetry) {
                 $this->deamonlog("debug", "      priority out of range (rejecting the command): ".$priority, $this->debug['sendCmd']);
                 return;
             }
@@ -303,19 +303,19 @@
                 fclose($f);
             }
 
-            $this->deamonlog('debug','                     sendCmdToZigate(Dest='.$dest.', cmd='.$cmd.', len='.$len.', datas='.$datas.")", $this->debug['sendCmd']);
+            $this->deamonlog('debug','                     sendCmdToZigate(Dest='.$dest.', cmd='.$cmd.', len='.$len.', datas='.$datas.")", $this->debug['sendCmdToZigate']);
 
             $i = str_replace( 'Abeille', '', $dest );
             $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
 
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
-                $this->deamonlog("debug", "                     Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
+                $this->deamonlog("debug", "                     Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
                 $f = fopen( $destSerial,"w");
                 $this->writeToDest($f, $destSerial, $cmd, $len, $datas);
                 fclose($f);
             }
             else {
-                $this->deamonlog("debug", "                     Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
+                $this->deamonlog("debug", "                     Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
             }
         }
 
@@ -339,10 +339,9 @@
                 if (count($this->cmdQueue[$i]) < 1) continue;                                  // si la queue est vide je passe mon chemin
                 if ($this->zigateAvailable[$i] == 0) continue;                                 // Si la zigate n est pas considéré dispo je passe mon chemin
 
-                $this->deamonlog("debug", "                     processCmdQueueToZigate()", $this->debug['sendCmdAck2']);
-                $this->deamonlog("debug", "                     ", $this->debug['sendCmdAck']);
-                $this->deamonlog("debug", "                     J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer.", $this->debug['sendCmdAck']);
-                $this->deamonlog("debug", "                     J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
+                $this->deamonlog("debug", "                     ", $this->debug['processCmdQueueToZigate']);
+                $this->deamonlog("debug", "                     processCmdQueueToZigate(): J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer.", $this->debug['processCmdQueueToZigate']);
+                $this->deamonlog("debug", "                     processCmdQueueToZigate(): J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer: ".json_encode($this->cmdQueue[$i]), $this->debug['processCmdQueueToZigate2']);
 
                 $this->zigateAvailable[$i] = 0;    // Je considere la zigate pas dispo car je lui envoie une commande
                 $this->timeLastAck[$i] = time();
@@ -357,10 +356,10 @@
                 if ($cmd['retry'] > 0) {
                     array_unshift($this->cmdQueue[$i], $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
                 } else {
-                    $this->deamonlog("debug", "                     La commande n a plus de retry, on la drop: ".json_encode($cmd), $this->debug['sendCmdAck2']);
+                    $this->deamonlog("debug", "                     La commande n a plus de retry, on la drop: ".json_encode($cmd), 1);
                 }
 
-                $this->deamonlog("debug", "                     J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['sendCmdAck2']);
+                $this->deamonlog("debug", "                     J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['processCmdQueueToZigate2']);
                 // $this->deamonlog("debug", "--------------------", $this->debug['sendCmdAck2']);
             }
         }

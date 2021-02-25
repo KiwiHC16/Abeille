@@ -17,13 +17,11 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
      */
     function procmsg( $message ) {
 
-        $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")");
+        $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")", $this->debug['procmsg']);
 
         $topic      = $message->topic;
         $msg        = $message->payload;
         $priority   = $message->priority;
-
-        // $this->deamonlog("debug", "  L2 - procmsg(".json_encode($topic)." , ".json_encode($msg)." , ".json_encode($priority).")");
 
         if (sizeof(explode('/', $topic)) != 3) {
             $this->deamonlog("error", "procmsg(). Mauvais format de message reçu.");
@@ -81,7 +79,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "AnnonceManufacturer":
                         if (strlen($msg) == 2) {
-                            // $this->deamonlog('info', 'Preparation de la commande annonce pour EP');
                             $Command = array(
                                 "ReadAttributeRequest" => "1",
                                 "priority" => $priority,
@@ -96,7 +93,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "Annonce":
                     if (strlen($msg) == 2) {
-                        // $this->deamonlog('info', 'Preparation de la commande annonce pour EP');
                         $Command = array(
                             "ReadAttributeRequest" => "1",
                             "priority" => $priority,
@@ -109,7 +105,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     }
                     else {
                         if ($msg == "Default") {
-                            // $this->deamonlog('info', 'Preparation de la commande annonce pour default');
                             $Command = array(
                                 "ReadAttributeRequest" => "1",
                                 "priority" => $priority,
@@ -121,7 +116,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                             );
                         }
                         if ($msg == "Hue") {
-                            // $this->deamonlog('info', 'Preparation de la commande annonce pour Hue');
                             $Command = array(
                                 "ReadAttributeRequestHue" => "1",
                                 "priority" => $priority,
@@ -133,7 +127,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                             );
                         }
                         if ($msg == "OSRAM") {
-                            // $this->deamonlog('info', 'Preparation de la commande annonce pour OSRAM');
                             $Command = array(
                                 "ReadAttributeRequestOSRAM" => "1",
                                 "priority" => $priority,
@@ -149,7 +142,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     //----------------------------------------------------------------------------
                 case "AnnonceProfalux":
                     if ($msg == "Default") {
-                        $this->deamonlog('info', 'Preparation de la commande annonce pour Profalux');
                         $Command = array(
                             "ReadAttributeRequest" => "1",
                             "priority" => $priority,
@@ -163,9 +155,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOffRaw":
-                    if ($this->debug['procmsg3']) {
-                        $this->deamonlog("debug", '  OnOffRaw with dest: '.$dest);
-                    }
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -182,9 +171,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "OnOff":
-                    if ($this->debug['procmsg3']) {
-                        $this->deamonlog("debug", '  OnOff with dest: '.$dest);
-                    }
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -369,10 +355,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', '  Msg Received: '.$msg);
-
-                    // Proprio=115f&clusterId=0000&attributeId=ff0d&attributeType=20&value=15
                     $Command = array(
                                     "WriteAttributeRequest" => "1",
                                     "priority"          => $priority,
@@ -385,7 +367,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                     "attributeType"     => $parameters['attributeType'],
                                     "value"             => $parameters['value'],
                                 );
-                    $this->deamonlog('debug', 'Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestVibration":
@@ -393,9 +374,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', '  Msg Received: '.$msg);
-
                     $Command = array(
                                      "WriteAttributeRequestVibration" => "1",
                                      "priority"         => $priority,
@@ -410,7 +388,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "repeat"           => $parameters['repeat'],
 
                                      );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestHostFlag":
@@ -418,12 +395,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', '  Msg Received: '.$msg);
-
                     $consigne = $parameters['value'];
                     $consigneHex = $consigne[4].$consigne[5].$consigne[2].$consigne[3].$consigne[0].$consigne[1];
-
                     $Command = array(
                                      "WriteAttributeRequest" => "1",
                                      "priority"         => $priority,
@@ -436,7 +409,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "attributeType"    => $parameters['attributeType'],
                                      "value"            => $consigneHex,
                                      );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestTemperatureSpiritConsigne":
@@ -444,12 +416,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', '  Msg Received: '.$msg);
-
                     $consigne = sprintf( "%04X", $parameters['value']*100 );
                     $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
-
                     $Command = array(
                                      "WriteAttributeRequest"    => "1",
                                      "priority"                 => $priority,
@@ -462,7 +430,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "value"                    => $consigneHex,
 
                                      );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestValveSpiritConsigne":
@@ -471,12 +438,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', '  Msg Received: '.$msg);
-
                     $consigne = sprintf( "%02X", $parameters['value'] );
                     $consigneHex = $consigne;
-
                     $Command = array(
                                      "WriteAttributeRequest" => "1",
                                      "priority"         => $priority,
@@ -488,7 +451,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "attributeType"    => $parameters['attributeType'],
                                      "value"            => $consigneHex,
                                      );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestGeneric":
@@ -496,22 +458,15 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', ' Msg Received: '.$msg);
-
-                    // Par defaut
                     $valuePrepared = $parameters['value'];
-
                     // Example: set Temperature Danfoss Radiator Head
                     if ( $parameters['attributeType'] = '29' )  {
                         $valuePrepared = sprintf( "%04X", $parameters['value']*100 );
                         $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1] ;
                     }
-
                     if ( $parameters['attributeType'] = '30' )  {
                         $valuePrepared = sprintf( "%02X", $parameters['value'] );
                     }
-
                     $Command = array(
                                         "WriteAttributeRequestGeneric" => "1",
                                         "priority"         => $priority,
@@ -524,7 +479,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                         "attributeType"    => $parameters['attributeType'],
                                         "value"            => $valuePrepared,
                                         );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "WriteAttributeRequestActivateDimmer":
@@ -532,9 +486,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $this->deamonlog('debug', ' Msg Received: '.$msg);
-
                     $Command = array(
                                      "WriteAttributeRequestActivateDimmer" => "1",
                                      "priority"         => $priority,
@@ -545,7 +496,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "attributeType"    => $parameters['attributeType'],
                                      "value"            => $parameters['value'],
                                      );
-                    $this->deamonlog('debug', '  Msg Received: '.$msg.' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "ReadAttributeRequest":
@@ -553,7 +503,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($keywords) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    $this->deamonlog('debug', '  Msg received: '.json_encode($msg).' from NE');
                     if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                     $Command = array(
                                      "ReadAttributeRequest"     => "1",
@@ -565,7 +514,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "EP"                       => $parameters['EP'],
                                      "Proprio"                  => $parameters['Proprio'],
                                      );
-                    $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "ReadAttributeRequestHue":
@@ -597,7 +545,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($keywords) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-                    $this->deamonlog('debug', '  Msg received: '.json_encode($msg).' from NE');
                     if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                     $Command = array(
                                      "ReadAttributeRequestMulti"     => "1",
@@ -609,7 +556,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "Proprio"                  => $parameters['Proprio'],
                                      "attributeId"              => $parameters['attributeId'],
                                      );
-                    $this->deamonlog('debug', '  Msg analysed: '.json_encode($Command).' from NE');
                     break;
                     //----------------------------------------------------------------------------
                 case "setLevel":
@@ -661,16 +607,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "setLevelVolet":
-                    // Pour un get level (level de 0 à 255):
-                    // a=0.00081872
-                    // b=0.2171167
-                    // c=-8.60201639
-                    // level = level * level * a + level * b + c
-
-                    // $a = -0.8571429;
-                    // $b = 1.8571429;
-                    // $c = 0;
-
                     $eqLogic = eqLogic::byLogicalId( $dest."/".$address, "Abeille" );
                     $a = $eqLogic->getConfiguration( 'paramA', 0);
                     $b = $eqLogic->getConfiguration( 'paramB', 1);
@@ -680,22 +616,11 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    // $level255 = intval($keywords[1] * 255 / 100);
-                    // $this->deamonlog('debug', 'level255: '.$level255);
-
                     $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
-                    // $this->deamonlog('debug', 'level Slider: '.$levelSlider);
-
-                    $levelSliderPourcent = $levelSlider/100;    // Valeur entre 0 et 1
-
-                    // $level = min( max( round( $level255 * $level255 * a + $level255 * $b + $c ), 0), 255);
+                    $levelSliderPourcent = $levelSlider/100;            // Valeur entre 0 et 1
                     $levelPourcent = $a * $levelSliderPourcent * $levelSliderPourcent + $b * $levelSliderPourcent + $c;
                     $level = $levelPourcent * 255;
                     $level = min(max(round($level), 0), 255);
-
-                    $this->deamonlog('debug', '  level Slider: '.$levelSlider.' level calcule: '.$levelPourcent.' level envoye: '.$level);
-
                     $Command = array(
                         "setLevel" => "1",
                         "addressMode" => "02",
@@ -709,12 +634,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "moveToLiftAndTiltBSO":
-
                      $fields = preg_split("/[=&]+/", $msg);
                      if (count($fields) > 1) {
                          $parameters = proper_parse_str( $msg );
                      }
-
                      $Command = array(
                                       "moveToLiftAndTiltBSO" => "1",
                                       "addressMode" => "02",
@@ -769,7 +692,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "setLevelGroup":
-                    // CmdAbeille1/1001/setLevelGroup -> Level=46&duration=01
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -832,13 +754,9 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
                     // Si message vient de Abeille alors le parametre est: RRVVBB
                     // Si le message vient de Homebridge: {"color":"#00FF11"}, j'extrais la partie interessante.
-
-
                     $rouge = hexdec(substr($parameters['color'],0,2));
                     $vert  = hexdec(substr($parameters['color'],2,2));
                     $bleu  = hexdec(substr($parameters['color'],4,2));
-
-                    $this->deamonlog( 'debug', "  msg: ".$msg." rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
                     $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
@@ -863,12 +781,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                     $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                     $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                    $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     if ( $rouge=="" ) { $rouge = 1;   }
                     if ( $vert=="" )  { $vert = 1;    }
                     if ( $bleu=="" )  { $bleu = 1;    }
-                    $this->deamonlog('debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu);
 
                     $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
 
@@ -895,12 +811,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                     $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                     $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                    $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     if ( $rouge=="" ) { $rouge = 1;   }
                     if ( $vert=="" )  { $vert = 1;    }
                     if ( $bleu=="" )  { $bleu = 1;    }
-                    $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
 
@@ -927,12 +841,10 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                     $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                     $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
-                    $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     if ( $rouge=="" ) { $rouge = 1;   }
                     if ( $vert=="" )  { $vert = 1;    }
                     if ( $bleu=="" )  { $bleu = 1;    }
-                    $this->deamonlog( 'debug', "  rouge: ".$rouge." vert: ".$vert." bleu: ".$bleu );
 
                     $this->publishMosquittoAbeile( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
 
@@ -985,7 +897,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     // 2700	 0172	   370
                     // 4000	 00FA	   250
                     // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                    $this->deamonlog( 'debug', '  msg: ' . $msg );
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -1018,7 +929,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     // 2700     0172       370
                     // 4000     00FA       250
                     // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                    $this->deamonlog( 'debug', '  msg: ' . $msg );
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -1046,7 +956,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
                     //----------------------------------------------------------------------------
                 case "sceneGroupRecall":
-                    // a revoir completement
                     $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
@@ -1057,11 +966,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "sceneGroupRecall"         => "1",
                                      "priority"                 => $priority,
                                      "dest"                     => $dest,
-                                     // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
-
-                                     // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                     // "DestinationEndPoint"      => "ff",
-                                     // "groupID"                  => $parameters['groupID'],
                                      "groupID"                  => $parameters['groupID'],
                                      "sceneID"                  =>  $parameters['sceneID'],
                                      );
@@ -1089,7 +993,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     );
                     break;
                     //----------------------------------------------------------------------------
-                case "identifySend": // identifySend KIWI1
+                case "identifySend":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
@@ -1104,14 +1008,14 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                     break;
                     //----------------------------------------------------------------------------
-                case "identifySendHue": // identifySendHue KIWI2
+                case "identifySendHue": 
                     $keywords = preg_split("/[=&]+/", $msg);
                     $Command = array(
                                      "identifySend" => "1",
                                      "priority" => $priority,
                                      "dest" => $dest,
                                      "address" => $address,
-                                     "duration" => "0010", // $keywords[1]
+                                     "duration" => "0010", 
                                      "DestinationEndPoint" => "0B",
                                      );
                     break;
@@ -1130,7 +1034,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                         "groupAddress"             => $parameters['groupAddress'],
                                         );
-                    $done = 1;
                     break;
                     //----------------------------------------------------------------------------
                 case "getGroupMembership":
@@ -1176,7 +1079,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                         "reportToGroup"            => $parameters['reportToGroup'],
                                         "destinationEndpoint"      => "01",
                                         );
-                    $done = 1;
                     break;
                     //----------------------------------------------------------------------------
                 case "setReportSpirit":
@@ -1472,11 +1374,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      "sceneGroupRecall"         => "1",
                                      "priority"                 => $priority,
                                      "dest"                     => $dest,
-                                     // "address"                  => $parameters['groupID'],   // Ici c est l adresse du group.
-
-                                     // "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                     // "DestinationEndPoint"      => "ff",
-                                     // "groupID"                  => $parameters['groupID'],
                                      "groupID"                  => $parameters['groupID'],
                                      "sceneID"                  =>  $parameters['sceneID'],
                                      );
@@ -1531,7 +1428,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
                 // Si une string simple
                 if (count($keywords) == 1) {
-                    $this->deamonlog('debug', '  L2 - 1 argument command');
                     $Command = array(
                                      $action => $msg,
                                      "priority" => $priority,
@@ -1539,7 +1435,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 } // Si une command type get http param1=value1&param2=value2
                 if (count($keywords) == 2) {
-                    $this->deamonlog('debug', '  L2 - 2 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1548,7 +1443,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 4) {
-                    $this->deamonlog('debug', '  L2 - 4 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1558,7 +1452,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 6) {
-                    $this->deamonlog('debug', '  L2 - 6 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1569,7 +1462,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 8) {
-                    // $this->deamonlog('debug', '  L2 - 8 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1581,7 +1473,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 10) {
-                    // $this->deamonlog('debug', '  L2 - 10 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1594,7 +1485,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                 }
                 if (count($keywords) == 12) {
-                    // $this->deamonlog('debug', '  L2 - 12 arguments command');
                     $Command = array(
                                      $action => $action,
                                      "priority" => $priority,
@@ -1616,7 +1506,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
         if (!isset($Command)) {
             $this->deamonlog('debug', '  WARNING: Unknown command ! (topic='.$topic.')', 1);
         } else {
-            $this->deamonlog('debug', '  calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
+            // $this->deamonlog('debug', '  L2 - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
             $this->processCmd( $Command );
         }
 

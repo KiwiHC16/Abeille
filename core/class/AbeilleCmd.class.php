@@ -95,15 +95,17 @@
         public function execute($_options = null)
         {
             logSetConf("AbeilleCmd.log"); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', 'execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
+            logMessage('debug', '');
+            logMessage('debug', '------ execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
 
+            // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule
             // la cmdId 12680 a pour value 12676
             // Donc apres avoir fait un setLevel (12680) qui change le Level (12676), la cmdId setLvele est appelée avec le parametre: "cmdIdUpdated":"12676"
             // On le voit dans le log avec:
             // [2020-01-30 03:39:22][debug] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
             if (isset($_options['cmdIdUpdated'])) {
-                logMessage('debug', '_options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
+                logMessage('debug', '------ _options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
                 return;
             }
 
@@ -111,63 +113,50 @@
 
                 list($dest,$addr) = explode("/", $this->getEqLogic()->getLogicalId());
 
-                // Needed for Telecommande
-                // "topic":"CmdAbeille\/Ruche\/sceneGroupRecall"
-                // "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
-                // il faut recuperer la zigate controlant ce groupe pour cette telecommande et l addGroup du groupe vient des param
+                // -------------------------------------------------------------------------
+                // Process topic
+                // Needed for Telecommande: "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
                 if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
-                    $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
+                    $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic')); 
                 }
                 else {
                     $topic = "Cmd" . $this->getEqLogic()->getLogicalId() . "/" . $this->getConfiguration('topic');
                 }
-
-                logMessage('debug', 'topic: ' . $topic);
-
-                /* ------------------------------ */
-                // Je fais les remplacement dans la commande (ex: addGroup pour telecommande Ikea 5 btn)
                 $topic = $this->updateField($dest,$this,$topic,$_options);
-                logMessage('debug', 'topic updated: ' . $topic);
 
                 // -------------------------------------------------------------------------
                 // Process Request
-                $request = $this->getConfiguration('request', '1');
-                logMessage('debug', 'request: ' . $request);
-                $request = $this->updateField($dest,$this,$request,$_options);
-                logMessage('debug', 'request updated: ' . $request);
+                $request = $this->updateField($dest,$this,$this->getConfiguration('request', '1'),$_options);
 
                 // -------------------------------------------------------------------------
                 $msgAbeille = new MsgAbeille;
-
                 $msgAbeille->message['topic'] = $topic;
                 $msgAbeille->message['payload'] = $request;
-
-                logMessage('debug', 'topic: ' . $topic . ' request: ' . $request);
 
                 if (strpos($topic, "CmdCreate") === 0) {
                     $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
                     if (msg_send($queueKeyAbeilleToAbeille, 1, $msgAbeille, true, false)) {
-                        logMessage('debug', '(CmdCreate) Msg sent: ' . json_encode($msgAbeille));
+                        logMessage('debug', '------ (CmdCreate) Msg sent: ' . json_encode($msgAbeille));
                     } else {
-                        logMessage('debug', '(CmdCreate) Could not send Msg');
+                        logMessage('debug', '------ (CmdCreate) Could not send Msg');
                     }
                 } else {
                     $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msgAbeille, true, false)) {
-                        logMessage('debug', '(All) Msg sent: ' . json_encode($msgAbeille));
+                        logMessage('debug', '------ execute(): Msg sent: ' . json_encode($msgAbeille));
                     } else {
-                        logMessage('debug', '(All) Could not send Msg');
+                        logMessage('debug', '------ execute(): Could not send Msg');
                     }
                 }
 
-                // Mise a jour de la commande info associée
+                // Mise a jour de la commande info associée, necessaire pour les commande actions qui recupere des parametres des commandes infos.
                 if ($this->getCmdValue()) {
-                    logMessage('debug', 'execute(): will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
+                    logMessage('debug', '------ execute(): will process cmdAction with cmd Info Ref if exist: '.$this->getCmdValue()->getName());
                     // TODO: je suppose qu il n'y a qu une commande info associée
                     $cmdInfo = $this->getCmdValue();
                     if ($cmdInfo) {
                         if (isset($_options['slider'])) {
-                            logMessage('debug', 'execute(): cmdAction with cmd Info Ref: '.$this->getCmdValue()->getName() . ' with value slider: '.$_options['slider']);
+                            logMessage('debug', '------ execute(): cmdAction with cmd Info Ref: '.$this->getCmdValue()->getName() . ' with value slider: '.$_options['slider']);
                             $cmdInfo->event($_options['slider']);
                         }
                     }

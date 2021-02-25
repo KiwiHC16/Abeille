@@ -7,11 +7,12 @@ class AbeilleDebug extends AbeilleTools {
             "cli"                    => 0, // commande line mode or jeedom
             "Checksum"                => 0, // Debug checksum calculation
             "tempo"                   => 0, // Debug tempo queue
-            "procmsg"                 => 0, // Debug fct procmsg
-            "procmsg1"                => 1, // Debug fct procmsg avec un seul msg
-            "procmsg2"                => 1, // Debug fct procmsg avec un seul msg
+            "procmsg"                 => 1, // Debug fct procmsg
+            "procmsg1"                => 0, // Debug fct procmsg avec un seul msg
+            "procmsg2"                => 0, // Debug fct procmsg avec un seul msg
             "procmsg3"                => 0, // Debug fct procmsg avec un seul msg
             "processCmd"              => 1, // Debug fct processCmd
+            "processCmd2"             => 0, // Debug fct processCmd2
             "sendCmd"                 => 1, // Debug fct sendCmd
             "sendCmd2"                => 0, // Debug fct sendCmd
             "cmdQueue"                => 0, // Debug cmdQueue
@@ -20,8 +21,10 @@ class AbeilleDebug extends AbeilleTools {
             "transcode"               => 0, // Debug transcode fct
             "AbeilleCmdClass"         => 1, // Mise en place des class
             "sendCmdToZigate"         => 1, // Mise en place des class
+            "sendCmdToZigate2"        => 0,
             "traiteLesAckRecus"       => 0, // Nouvelle Gestion des Ack
             "processCmdQueueToZigate" => 1,
+            "processCmdQueueToZigate2"=> 0,
         );
 
         function deamonlog($loglevel = 'NONE', $message = "", $isEnable = 1)

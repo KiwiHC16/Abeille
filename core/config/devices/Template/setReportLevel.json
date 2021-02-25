@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "5c07c76624fbb",
       "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0008&AttributeId=0000&AttributeType=10",
+      "request": "targetEndpoint=#EP#&ClusterId=0008&AttributeId=0000&AttributeType=20",
       "visibilityCategory": "Network",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "11"

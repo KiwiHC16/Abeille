@@ -1,0 +1,23 @@
+{
+  "setReportLightColorSpectre": {
+    "isVisible": 0,
+    "name": "setReportLightColorSpectre",
+    "order": 30,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210226_1411",
+      "topic": "setReport",
+      "request": "targetEndpoint=01&ClusterId=0300&AttributeId=0007&AttributeType=21",
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "11"
+    },
+    "display": {
+      "forceReturnLineAfter": "1"
+    }
+  }
+}

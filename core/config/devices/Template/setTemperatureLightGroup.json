@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "5c07c466a54a4",
       "topic": "CmdAbeille/#addrGroup#/setTemperatureGroup",
-      "request": "EP=#EP#&slider=#slider#",
+      "request": "EP=01&slider=#slider#",
       "minValue": "2200",
       "maxValue": "4000",
       "visibilityCategory": "All"

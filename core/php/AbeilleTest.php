@@ -279,6 +279,18 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0300&attributeId=0007';
         }
 
+        if ($test==132) {
+            echo "Set Time to Zigate\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/Ruche/setTimeServer';
+            $msgAbeille->message['payload'] = '';
+        }
+
+        if ($test==133) {
+            echo "Get Time to Zigate\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/Ruche/getTimeServer';
+            $msgAbeille->message['payload'] = '';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

@@ -1543,7 +1543,7 @@ if (0) {
             }
             if (isset($objetConfiguration['paramType']))
                 $elogic->setConfiguration('paramType', $objetConfiguration['paramType']);
-            if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
+            if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
                 $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
             }
             if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
@@ -1853,7 +1853,8 @@ if (0) {
 
             /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
-            if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
+            // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
+            if ($cmdId == "Time-TimeStamp") {
                 log::add('Abeille', 'debug', 'Update ONLINE Status');
                 $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online');
                 $elogic->checkAndUpdateCmd($cmdlogicOnline, 1);

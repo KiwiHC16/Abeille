@@ -34,8 +34,10 @@
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
+      "include27 2": "BindToZigateLightColor",
       "include28": "setReportEtat",
-      "include29": "setReportLevel"
+      "include29": "setReportLevel",
+      "include29 2": "setReportLightColorSpectre"
     }
   }
 }

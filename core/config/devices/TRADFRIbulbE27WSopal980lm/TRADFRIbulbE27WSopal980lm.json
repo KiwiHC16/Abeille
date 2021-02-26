@@ -6,7 +6,7 @@
       "light": "1"
     },
     "configuration": {
-	"uniqId": "5c07c76620d9a",
+      "uniqId": "5c07c76620d9a",
       "icone": "IkeaTRADFRIbulbE27WSopal980lm",
       "mainEP": "#EP#"
     },
@@ -33,8 +33,10 @@
       "include25": "Group-Membership",
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
+      "include27 2": "BindToZigateLightColor",
       "include28": "setReportEtat",
-      "include29": "setReportLevel"
+      "include29": "setReportLevel",
+      "include29 2": "setReportLightColorSpectre"
     }
   }
 }

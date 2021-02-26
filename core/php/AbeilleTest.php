@@ -273,6 +273,12 @@
             $msgAbeille->message['payload'] = 'address='.$argv[2].'&DestinationEndPoint='.$argv[3].'&groupAddress='.$argv[4];
         }
 
+        if ($test==131) {
+            echo "Read white spectre color of an Ikea bulb\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille2/'.$argv[2].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=01&clusterId=0300&attributeId=0007';
+        }
+
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {

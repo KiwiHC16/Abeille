@@ -901,26 +901,15 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $temperatureK = $parameters['slider'];
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureK );
-                    $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
-                    $temperatureConsigne = dechex( $temperatureConsigne );
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
-                    $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                     $Command = array(
                                      "setTemperature"       => "1",
                                      "addressMode"          => "02",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
+                                     "priority"             => $priority,
+                                     "dest"                 => $dest,
                                      "address"              => $address,
-                                     "temperature"          => $temperatureConsigne,
+                                     "temperature"          => sprintf( "%04s", dechex(intval(1000000/$parameters['slider'])) ),
                                      "destinationEndPoint"  => $parameters['EP'],
                                      );
-
-                    $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/Temperature-Light', $temperatureK );
                     break;
                     //----------------------------------------------------------------------------
                 case "setTemperatureGroup":
@@ -933,26 +922,15 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     if (count($fields) > 1) {
                         $parameters = proper_parse_str( $msg );
                     }
-
-                    $temperatureK = $parameters['slider'];
-                    $this->deamonlog( 'debug', ' temperatureConsigne: ' . $temperatureK );
-                    $temperatureConsigne = intval(-0.113333333 * $temperatureK + 703.3333333);
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
-                    $temperatureConsigne = dechex( $temperatureConsigne );
-                    $this->deamonlog( 'debug', ' temperatureConsigne: ' . $temperatureConsigne );
-                    $temperatureConsigne = str_pad( $temperatureConsigne, 4, "0", STR_PAD_LEFT) ;
-                    $this->deamonlog( 'debug', '  temperatureConsigne: ' . $temperatureConsigne );
                     $Command = array(
                                      "setTemperature"       => "1",
                                      "addressMode"          => "01",
-                                     "priority" => $priority,
-                                     "dest" => $dest,
+                                     "priority"             => $priority,
+                                     "dest"                 => $dest,
                                      "address"              => $address,
-                                     "temperature"          => $temperatureConsigne,
+                                     "temperature"          => sprintf( "%04s", dechex(intval(1000000/$parameters['slider'])) ),
                                      "destinationEndPoint"  => $parameters['EP'],
                                      );
-
-                    $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/Temperature-Light', $temperatureK );
                     break;
                     //----------------------------------------------------------------------------
                 case "sceneGroupRecall":

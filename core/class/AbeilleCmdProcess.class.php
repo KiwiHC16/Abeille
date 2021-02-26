@@ -2720,17 +2720,16 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // <transition time: uint16_t>          4
 
             $cmd = "00C0";
-            // 2+4+2+2+4+4 = 18 /2 = 9 => 0x09
-            $lenth = "0009";
 
-            $addressMode = $Command['addressMode'];
-            $address = $Command['address'];
-            $sourceEndpoint = "01";
-            $destinationEndpoint = $Command['destinationEndPoint'];
-            $temperature = $Command['temperature'];
-            $duration = "0001";
+            $addressMode            = $Command['addressMode'];
+            $address                = $Command['address'];
+            $sourceEndpoint         = "01";
+            $destinationEndpoint    = $Command['destinationEndPoint'];
+            $temperature            = $Command['temperature'];
+            $duration               = "0001";
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $temperature . $duration ;
+            $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
 

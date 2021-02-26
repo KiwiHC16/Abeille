@@ -1,7 +1,7 @@
 {
   "remotecontrol": {
     "nameJeedom": "Remote Control Virtuel pour piloter des groupes",
-    "timeout": "60",
+    "timeout": "",
     "Categorie": {
       "light": "1"
     },

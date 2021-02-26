@@ -19,6 +19,24 @@
         }
     }
     
+    function ApplySettingsToNE( $item, $value, $client ) {
+        $deviceId = substr( $item, strpos($item,"-")+1 );
+        log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
+        $device = Abeille::byId(substr( $item, strpos($item,"-")+1 ));
+        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+        log::add('Abeille', 'debug', "address: ".$address );
+        $EP = $device->getConfiguration('mainEP');
+        log::add('Abeille', 'debug', 'EP: '.$EP );
+
+        foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
+            log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
+            if ($cmd->getConfiguration('execAtCreation','')=='Yes') {
+                log::add('Abeille', 'debug', '     execute Cmd: '.$cmd->getName() );
+                $cmd->execute();
+            }
+        }
+    }
+
     function getInfosFromNe( $item, $value, $client ) {
       $deviceId = substr( $item, strpos($item,"-")+1 );
       echo "deviceId: ".substr( $item, strpos($item,"-")+1 )."<br>";
@@ -266,6 +284,21 @@
                         // $EP = $device->getConfiguration('mainEP');
                         // sendMessageFromFormToCmd('CmdAbeille/Ruche/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
                         getInfosFromNe( $item, $Value, $client );
+                        // abeille::updateConfigAbeille( );
+                    }
+                }
+                break;
+
+            case 'Apply Settings to NE':
+                foreach ( $_POST as $item=>$Value ) {
+                    if ( strpos("-".$item, "eqSelected") == 1 ) {
+                        // $deviceId = substr( $item, strpos($item,"-")+1 );
+                        // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+                        // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+                        // $address = substr($device->getLogicalId(),8);
+                        // $EP = $device->getConfiguration('mainEP');
+                        // sendMessageFromFormToCmd('CmdAbeille/Ruche/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+                        ApplySettingsToNE( $item, $Value, $client );
                         // abeille::updateConfigAbeille( );
                     }
                 }

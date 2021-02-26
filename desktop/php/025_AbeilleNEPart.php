@@ -17,6 +17,9 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 				<td align="center">
 					<input type="submit" name="submitButton" value="Get Infos from NE">
 				</td>
+				<td align="center">
+					<input type="submit" name="submitButton" value="Apply Settings to NE">
+				</td>
 			</tr>
 			
 		</table>

@@ -468,19 +468,18 @@
     $("#idAdvOptions").hide();
 
     $('#idZigatesShowHide').on('click', function () {
-            var Label = document.getElementById("idZigatesShowHide").innerText;
-            console.log("ZigatesShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                document.getElementById("idZigatesShowHide").innerText = "Cacher";
-                document.getElementById("idZigatesShowHide").className = "btn btn-danger";
-                $("#Connection").show();
-            } else {
-                document.getElementById("idZigatesShowHide").innerText = "Afficher";
-                document.getElementById("idZigatesShowHide").className = "btn btn-success";
-                $("#Connection").hide();
-            }
+        var Label = document.getElementById("idZigatesShowHide").innerText;
+        console.log("ZigatesShowHide click: Label=" + Label);
+        if (Label == "Afficher") {
+            document.getElementById("idZigatesShowHide").innerText = "Cacher";
+            document.getElementById("idZigatesShowHide").className = "btn btn-danger";
+            $("#Connection").show();
+        } else {
+            document.getElementById("idZigatesShowHide").innerText = "Afficher";
+            document.getElementById("idZigatesShowHide").className = "btn btn-success";
+            $("#Connection").hide();
         }
-    );
+    });
 
     /* Number of zigates changed. Display more or less 'idZigateGroup'
        and be sure any new zigate is disabled by default */
@@ -505,6 +504,10 @@
     /* Called when Zigate type (USB, WIFI, PI, DIN) is changed */
     function checkZigateType(zgNb) {
         console.log("checkZigateType(zgNb=" + zgNb + ")");
+        if (zgNb > js_NbOfZigates) {
+            console.log("zgNb > js_NbOfZigates => ignored");
+            return;
+        }
         var zgType = $("#idSelZgType" + zgNb).val();
         var idSelSP = document.querySelector('#idSelSP' + zgNb);
         // var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
@@ -529,7 +532,7 @@
             idWifiAddr.removeAttribute('disabled');
             // idCheckWifi.removeAttribute('disabled');
         } else {
-            console.log('Type changed to USB, PI or DIN');
+            console.log('Type changed to "'+zgType+'"');
             $("#idSocat"+zgNb).hide();
             $("#idCommTest"+zgNb).show();
 

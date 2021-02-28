@@ -794,8 +794,8 @@
          * @return          Nothing as actions are requested in the execution
          */
         function decode8002($dest, $payload, $ln, $qos, $dummy) {
-            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
 
+            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
             // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
             // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
             $statusDecode = array(
@@ -1443,10 +1443,10 @@
                                 if ( $dataType == "41" ) { // 0x41 Octet stream
                                     $dataLength = hexdec(substr($payload,42, 2));
                                     // Je suppose que je suis avec un message Xiaomi Prise que je decode comme les champs FF01
-                                    parserLog('debug', "  Champ proprietaire FCCO Xiaomi (Prise)");
-                                    parserLog('debug', "        dataLength: ".$dataLength);
+                                    // parserLog('debug', "  Champ proprietaire FCCO Xiaomi (Prise)");
+                                    // parserLog('debug', "        dataLength: ".$dataLength);
                                     $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength*2));
-                                    parserLog('debug', "  ".json_encode($FCC0));
+                                    // parserLog('debug', "  ".json_encode($FCC0));
 
                                     $this->mqqtPublish($dest."/".$srcAddress, '0006', '01-0000',     $FCC0["Etat SW 1 Binaire"]["valueConverted"],  $qos);    // On Off Etat
                                     $this->mqqtPublish($dest."/".$srcAddress, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"], $qos);    // Device Temperature
@@ -1461,7 +1461,7 @@
                 }
             }
 
-            parserLog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog);
+            parserLog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog.' -> '.$payload);
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -3437,9 +3437,9 @@
 
             if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                 $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
-                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
+                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
                 $eq->setStatus( 'APS_ACK', '0');
-                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
+                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
             }
 
         }

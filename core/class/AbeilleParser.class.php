@@ -3437,9 +3437,9 @@
 
             if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                 $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
-                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
+                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
                 $eq->setStatus( 'APS_ACK', '0');
-                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
+                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
             }
 
         }

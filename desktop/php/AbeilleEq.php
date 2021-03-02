@@ -262,9 +262,9 @@
             else
                 payload = 'hybride';
             break;
-        case "SetExtPANId":
+        case "SetExtPANId": // Not critical. No need so far.
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setExtendedPANID';
-            payload = ""; // TODO Kiwi: Oui mais jamis rencontré le besoin, pas critique.
+            payload = "";
             break;
         case "SetChannelMask":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setChannelMask';
@@ -383,10 +383,10 @@
 
         <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) { ?>
             tr += '<td>'; // Col 4 = Abeille command name
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" >';
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId">';
             tr += '</td>';
 
-            tr += '<td>'; // Col 5 = Parameters Abeille cmd
+            tr += '<td>'; // Col 5 = Abeille cmd params
             if ((init(_cmd.type) == 'info') || (init(_cmd.type) == '')) { // Info or new cmd
             } else if (init(_cmd.type) == 'action') {
                 tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
@@ -408,9 +408,9 @@
             tr += '         <option value="cronHourly">Heure</option>';
             tr += '         <option value="cronDaily">Jour</option>';
             tr += '     </select></br>';
-            tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer l execution de cette commande suite a une mise a jour d une commande info, choisissez la commande info.}}" >';
+            tr += '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer l\'execution de cette commande suite a une mise-à-jour d\'une commande info, choisissez cette dernière.}}" >';
             tr += '         <option value="">Aucun</option>';
-            tr += '         <?php foreach ( $eqLogic->getCmd('info') as $cmd ) { echo "<option value=\"".$cmd->getConfiguration("topic")."\">".$cmd->getName()."</option>"; } ?>';
+            tr += '         <?php foreach ( $eqLogic->getCmd('info') as $cmd ) { echo "<option value=\"".$cmd->getLogicalId()."\">".$cmd->getName()."</option>"; } ?>';
             tr += '     </select></br>';
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}" title="{{Temps souhaité entre Cmd Info Change et Execution de cette commande.}}" ><br/>';
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="RefreshData" title="{{Si vous souhaitez l execution de cette commande pour rafraichir l info par exemple au demarrage d abeille.}}" />{{Rafraichir}}</label></span><br> ';

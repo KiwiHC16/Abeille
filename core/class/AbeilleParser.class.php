@@ -3542,7 +3542,7 @@
             echo $dest . ' - ' . $addr . "\n";
             $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
             foreach ( $cmds as $key => $cmd ) {
-                $topic = $cmd->getConfiguration('topic');
+                $topic = $cmd->getLogicalId();
                 $topic = AbeilleCmd::updateField($dest,$cmd,$topic);
                 $request = $cmd->getConfiguration('request');
                 $request = AbeilleCmd::updateField($dest,$cmd,$request);

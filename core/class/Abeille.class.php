@@ -153,7 +153,7 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'Enalbed/No.' );
         $real->setIsEnable($ghost->getIsEnable());
 
-        
+
         if ( $ghost->getConfiguration('uniqId', '') == $real->getConfiguration('uniqId', '') ) {
             log::add('Abeille', 'debug', 'Transfer du TimeOut car les equipements partagent le meme modele.' );
             $real->setTimeout($ghost->getTimeout());
@@ -356,7 +356,7 @@ class Abeille extends eqLogic
             if ($cmd->getConfiguration('RefreshData',0)) {
                 log::add('Abeille', 'debug', 'refreshCmd: '.$cmd->getHumanName().' ('.$cmd->getEqlogic()->getLogicalId().')' );
                 // $cmd->execute(); le process ne sont pas tous demarrer donc on met une tempo.
-                $topic   = $cmd->getEqlogic()->getLogicalId() . '/' . $cmd->getConfiguration('topic');
+                $topic   = $cmd->getEqlogic()->getLogicalId() . '/' . $cmd->getLogicalId();
                 $request = $cmd->getConfiguration('request');
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$topic."&time=".(time()+$i), $request );
                 $i++;
@@ -1299,7 +1299,7 @@ if (0) {
             log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, je ne cherche pas a le recupérer, param: blocage recuperation equipment.");
             return;
         }
-        
+
         if ($addr == "Ruche") return;
 
         log::add('Abeille', 'debug', "L equipement " . $dest . "/" . $addr . " n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
@@ -1318,7 +1318,7 @@ if (0) {
         self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd" . $dest . "/" . $addr . "/Annonce", "OSRAM");
 
         return;
-        
+
     }
 
     public static function message($message)
@@ -1880,7 +1880,7 @@ if (0) {
                     // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
                     // Je vais attendre qq secondes aveant de faire la demande
                     // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $cmd->getEqLogic()->getLogicalId() . "/" . $cmd->getConfiguration('topic') . "&time=" . (time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd" . $cmd->getEqLogic()->getLogicalId() . "/" . $cmd->getLogicalId() . "&time=" . (time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
                 }
             }
 

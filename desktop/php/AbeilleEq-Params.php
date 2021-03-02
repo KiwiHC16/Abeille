@@ -33,7 +33,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Id}}</label>
+        <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
         <div class="col-sm-3">
             <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
             <?php echo '<span>'.$eqId.'</span>'; ?>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Logical Id}}</label>
+        <label class="col-sm-3 control-label">{{Id logique}}</label>
         <div class="col-sm-3">
             <span class="eqLogicAttr" data-l1key="logicalId"></span>
         </div>

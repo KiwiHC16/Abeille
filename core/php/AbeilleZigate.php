@@ -20,7 +20,7 @@
 
     /* Log function.
        '\n' is automatically added at end of line.
-       WARNING: A call to 'zg_SetConf()' is expected once to allow logs. */
+       WARNING: A call to 'zgSetConf()' is expected once to allow logs. */
     function zgLog($logLevel, $msg)
     {
         global $logFile, $curLogLevel;
@@ -107,7 +107,9 @@
         return "01".$msgout."03";
     }
 
-    /* Compose message frame following zigate protocol. */
+    /* Compose message frame following zigate protocol.
+       Minimum 1 arg = 'msgType'
+       Any payload to be added as next args. */
     function zgComposeFrame($msgType)
     {
         /* TODO: Ensure msgType = 4 char string */
@@ -142,7 +144,7 @@
     }
 
     /*
-     * Zigate commands
+     * Zigate commands (exclusive access required)
      */
 
     /* Send "Get Version" to zgPort to get FW version.
@@ -193,6 +195,7 @@
        Each device is himself an array with the following keys, with addr & ieee UPPER case
            ['id', 'addr', 'ieee', 'power, 'link']
        Returns: 0=OK, -1=ERROR */
+    /* TODO: Remove this function. 0015 command seems to not be the one described */
     function zgGetDevicesList($zgPort, &$zgDevices)
     {
         zgLog('debug', "zgGetDevicesList(zgPort=".$zgPort.")");
@@ -258,6 +261,7 @@
     /* Send "Remove Device" (cmd 0x0026) to 'zgPort'.
        WARNING: Zigate must be available for exclusive access !
        Returns: 0=OK, -1=ERROR */
+    /* TODO: Remove this function. Not functional */
     function zgRemoveDevice($zgPort, $devAddr, $devIEEE)
     {
         zgLog('debug', "zgRemoveDevice(zgPort=".$zgPort.")");

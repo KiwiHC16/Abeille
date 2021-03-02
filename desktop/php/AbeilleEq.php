@@ -28,6 +28,7 @@
         $eqAddr = "0000";
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
+    echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
 
     require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
@@ -204,7 +205,7 @@
     });
 
 	/*
-	 * Equipement tab
+	 * Zigbee tab
 	 */
 
     /* Send a command to zigate thru 'AbeilleCmd' */
@@ -491,5 +492,4 @@
     }
 
 	$("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-
 </script>

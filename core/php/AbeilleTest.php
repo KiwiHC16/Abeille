@@ -165,6 +165,7 @@
             $msgAbeille->message['payload'] = 'EP=01&clusterId=0B04&attributeId=050B';
         }
 
+        // All Cluster 0000 - attribut 0 to 7
         if ($test==113) {
             echo "Test envoie Cmd to get ZCL version\n";
             $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';

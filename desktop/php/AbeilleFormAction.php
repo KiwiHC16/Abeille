@@ -24,9 +24,9 @@
         log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
         $device = Abeille::byId(substr( $item, strpos($item,"-")+1 ));
         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-        log::add('Abeille', 'debug', "address: ".$address );
-        $EP = $device->getConfiguration('mainEP');
-        log::add('Abeille', 'debug', 'EP: '.$EP );
+        log::add('Abeille', 'debug', "NE: ".$device->getName()." - dest: ".$dest." - address: ".$address );
+        // $EP = $device->getConfiguration('mainEP');
+        // log::add('Abeille', 'debug', 'EP: '.$EP );
 
         foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
             log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
@@ -39,12 +39,12 @@
 
     function getInfosFromNe( $item, $value, $client ) {
       $deviceId = substr( $item, strpos($item,"-")+1 );
-      echo "deviceId: ".substr( $item, strpos($item,"-")+1 )."<br>";
+      log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
       $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
       list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-      echo "address: ".$address."<br>\n";
+      log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
       $EP = $device->getConfiguration('mainEP');
-      echo "EP: ".$EP."<br>\n";
+      log::add('Abeille', 'debug', "EP: ".$EP);
 
       // Get Name
       sendMessageFromFormToCmd('Cmd'.$dest.'/Ruche/ActiveEndPoint',           'address='.$address                             );

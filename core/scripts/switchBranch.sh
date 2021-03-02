@@ -5,9 +5,10 @@
 # Args = branchname [update]
 #   If 'update' is 2nd arg, then current branch is updated only
 
-NOW=`date +"%Y-%m-%d %H:%M:%S"`
+# NOW=`date +"%Y-%m-%d %H:%M:%S"`
 SCRIPT=$(basename $0)
-echo "[${NOW}] Démarrage de '${SCRIPT}'"
+# echo "[${NOW}] Démarrage de '${SCRIPT}'"
+echo "Démarrage de '${SCRIPT}'"
 
 # Arguments check
 if [ $# -lt 1 ]; then
@@ -44,7 +45,7 @@ fi
 # fi
 # echo "= OK"
 
-ERROR=0 
+ERROR=0
 
 # This script is started from core/ajax. Moving to repo root.
 cd ../../

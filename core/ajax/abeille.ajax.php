@@ -29,14 +29,19 @@
         ini_set('log_errors', 'On');
     }
 
-    function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
+    function logToFile($logFile = '', $logLevel = '', $msg = "")
     {
-        if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
-            return; // Nothing to do
+        if ($logLevel != '') {
+            if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
+                return; // Nothing to do
+            /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+            $pref = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';
+        } else
+            $pref = '['.date('Y-m-d H:i:s').'] ';
 
         $logDir = __DIR__.'/../../../../log/';
         /* TODO: How to align logLevel width for better visual aspect ? */
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').']['.$logLevel.'] '.$msg."\n", FILE_APPEND);
+        file_put_contents($logDir.$logFile, $pref.$msg."\n", FILE_APPEND);
     }
 
 try {
@@ -207,6 +212,7 @@ try {
         $updateOnly = init('updateOnly');
 
         $status = 0;
+        $prefix = logGetPrefix(""); // Get log prefix
 
         /* Creating temp dir */
         $tmp = __DIR__.'/../../tmp';
@@ -220,14 +226,15 @@ try {
         $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
-        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+        logToFile('AbeilleConfig.log', '', 'Arret des démons');
         abeille::deamon_stop(); // Stopping daemon
         $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
-        $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+        // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." 2>&1 | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' &';
+        $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
         exec($cmd);
-        //logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
-        //abeille::deamon_start(); // Restarting daemon
 
+        /* Note: Returning immediately but switch not completed yet. Anyway server side code
+           might be completely different after switch */
         ajax::success(json_encode(array('status' => $status)));
     }
 

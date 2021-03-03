@@ -34,8 +34,10 @@
                 if ($cmd->getConfiguration('execAtCreationDelay','0')>0) {
                     log::add('Abeille', 'debug', '     Send Cmd: '.$cmd->getName() . ' - ' . $cmd->getConfiguration('topic','') . ' - ' . $cmd->getConfiguration('request','') );
                     $topic = 'Tempo'.'Cmd'.$device->getLogicalId().'/'.$cmd->getConfiguration('topic','').'&time='.(time()+$cmd->getConfiguration('execAtCreationDelay','0'));
+                    $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
                     log::add('Abeille', 'debug', '     Send Cmd: topic: '.$topic );
                     $request = $cmd->getConfiguration('request','');
+                    $request = AbeilleCmd::updateField($dest, $cmd, $request);
                     log::add('Abeille', 'debug', '     Send Cmd: request: '.$request );
                     sendMessageFromFormToCmd( $topic, $request );
                     // $cmd->execute();

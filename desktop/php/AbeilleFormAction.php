@@ -31,8 +31,15 @@
         foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
             log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
             if ($cmd->getConfiguration('execAtCreation','')=='Yes') {
-                log::add('Abeille', 'debug', '     execute Cmd: '.$cmd->getName() );
-                $cmd->execute();
+                if ($cmd->getConfiguration('execAtCreationDelay','0')>0) {
+                    log::add('Abeille', 'debug', '     Send Cmd: '.$cmd->getName() . ' - ' . $cmd->getConfiguration('topic','') . ' - ' . $cmd->getConfiguration('request','') );
+                    $topic = 'Tempo'.'Cmd'.$device->getLogicalId().'/'.$cmd->getConfiguration('topic','').'&time='.(time()+$cmd->getConfiguration('execAtCreationDelay','0'));
+                    log::add('Abeille', 'debug', '     Send Cmd: topic: '.$topic );
+                    $request = $cmd->getConfiguration('request','');
+                    log::add('Abeille', 'debug', '     Send Cmd: request: '.$request );
+                    sendMessageFromFormToCmd( $topic, $request );
+                    // $cmd->execute();
+                }
             }
         }
     }

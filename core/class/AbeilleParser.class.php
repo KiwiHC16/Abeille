@@ -787,9 +787,9 @@
          *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ?
-         * @param $qos      ?
-         * @param $dummy    ?
+         * @param $ln       NO LONGER USED
+         * @param $qos      NO LONGER USED
+         * @param $dummy    NO LONGER USED
          *
          * @return          Nothing as actions are requested in the execution
          */
@@ -824,7 +824,7 @@
 
             $this->whoTalked[] = $dest.'/'.$srcAddress;
 
-            $baseLog = "status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress;
+            $baseLog = "Status=".$status.", ProfId=".$profile.", ClustId=".$cluster.", SrcEP=".$srcEndPoint.", DestEP=".$destEndPoint.", SrcAddrMode=".$sourceAddressMode.", SrcAddr=".$srcAddress.", DestAddrMode=".$destinationAddressMode.", DestAddr=".$dstAddress;
 
             // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
@@ -838,7 +838,7 @@
                 parserLog('debug', $dest.', Type=8002/Data indication - Routing Table Response'
                             . $baseLog
                             . ', SQN='.$SQN
-                            . ', status='.$status
+                            . ', Status='.$status
                             . ', tableSize='.$tableSize
                             . ', index='.$index
                             . ', tableCount='.$tableCount,
@@ -1461,7 +1461,8 @@
                 }
             }
 
-            parserLog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog.' -> '.$payload);
+            parserLog("debug", $dest.", Type=8002/Data indication, ".$baseLog, "8002");
+            parserLog("debug", "  Ignored payload=".$payload, "8002");
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {

@@ -1,0 +1,35 @@
+{
+    "TS011F": {
+        "nameJeedom": "SILVERCREST Bloc multiprise USB SPSZ 3 A1",
+        "timeout": "60",
+        "Comment": "",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "uniqId": "rtlk3k7y3hl0ramoc3fqyaczrf8yn2uv",
+            "icone": "TS011_TZ3000_vzopcetz",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etatCharge0",
+            "include4 2": "etatCharge1",
+            "include4 2 2": "etatCharge2",
+            "include5": "On",
+            "include5 2": "On1",
+            "include5 2 2": "On2",
+            "include6": "Off",
+            "include6 2": "Off1",
+            "include6 2 2": "Off2",
+            "include7": "Toggle",
+            "include7 2": "Toggle1",
+            "include7 2 2": "Toggle2",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
+    }
+}

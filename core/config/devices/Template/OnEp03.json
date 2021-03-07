@@ -1,22 +1,19 @@
 {
-  "ToggleEp08": {
+  "OnEp03": {
     "isVisible": 1,
-    "name": "Toggle 8",
+    "name": "On 3",
     "order": 7,
     "isHistorized": "0",
     "Type": "action",
     "subType": "other",
-    "generic_type": "LIGHT_TOGGLE",
+    "generic_type": "LIGHT_ON",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "20210218_1608",
+      "uniqId": "20210218_1708",
       "topic": "OnOff",
-      "request": "Action=Toggle&EP=08",
+      "request": "Action=On&EP=03",
       "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
     }
   }
 }

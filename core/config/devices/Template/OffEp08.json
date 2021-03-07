@@ -1,7 +1,7 @@
 {
   "OffEp08": {
     "isVisible": 1,
-    "name": "Off",
+    "name": "Off 8",
     "order": 7,
     "isHistorized": "0",
     "Type": "action",
@@ -10,7 +10,7 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "20210129_1655",
+      "uniqId": "20210218_1723",
       "topic": "OnOff",
       "request": "Action=Off&EP=08",
       "visibilityCategory": "All"

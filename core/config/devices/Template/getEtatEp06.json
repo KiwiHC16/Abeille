@@ -1,7 +1,7 @@
 {
-  "getEtatEp08": {
+  "getEtatEp06": {
     "isVisible": 0,
-    "name": "getEtatEp08",
+    "name": "getEtatEp06",
     "order": 12,
     "isHistorized": "0",
     "Type": "action",
@@ -9,9 +9,9 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "20210307_1949",
+      "uniqId": "20210307_1947",
       "topic": "ReadAttributeRequest",
-      "request": "EP=09&clusterId=0006&attributeId=0000",
+      "request": "EP=06&clusterId=0006&attributeId=0000",
       "RefreshData": "1",
       "visibilityCategory": "additionalCommand"
     }

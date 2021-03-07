@@ -12,13 +12,13 @@
     },
     "Commandes": {
       "include100": "nom",
-      "include2": "etatEp02",
+      "include2": "etatEp02in",
       "include2 1": "getatEp02",
-      "include3": "etatEp03",
+      "include3": "etatEp03in",
       "include3 1": "getatEp03",
-      "include4": "etatEp04",
+      "include4": "etatEp04in",
       "include4 1": "getEtatEp04",
-      "include5": "etatEp05",
+      "include5": "etatEp05in",
       "include5 1": "getEtatEp05"
     }
   }

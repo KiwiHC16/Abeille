@@ -1,0 +1,31 @@
+{
+  "7-digital-input": {
+    "nameJeedom": "7-digital-input",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "20210216_1938",
+      "icone": "7-digital-input",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include100": "nom",
+      "include2": "etatEp02in",
+      "include2 1": "getEtatEp02",
+      "include3": "etatEp03in",
+      "include3 1": "getEtatEp03",
+      "include4": "etatEp04in",
+      "include4 1": "getEtatEp04",
+      "include5": "etatEp05in",
+      "include5 1": "getEtatEp05",
+      "include6": "etatEp06in",
+      "include6 1": "getEtatEp06",
+      "include7": "etatEp07in",
+      "include7 1": "getEtatEp07",
+      "include8": "etatEp08in",
+      "include8 1": "getEtatEp08"
+    }
+  }
+}

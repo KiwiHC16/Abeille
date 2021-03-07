@@ -1,0 +1,24 @@
+{
+  "diy-routeur": {
+    "nameJeedom": "diy-routeur",
+    "timeout": "60",
+    "Categorie": {
+      "security": "1"
+    },
+    "configuration": {
+      "uniqId": "5cfdgh0asfHebd6rt78620b6b",
+      "icone": "diy-routeur",
+      "mainEP": "#EP#",
+      "poll": "0"
+    },
+    "Commandes": {
+      "include1": "nom",
+      "include2": "societe",
+      "include3": "SW",
+      "include21": "getManufacturerName",
+      "include22": "getModelIdentifier",
+      "include23": "getSWBuild",
+      "include24": "Identify"
+    }
+  }
+}

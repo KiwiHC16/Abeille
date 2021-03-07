@@ -1,7 +1,7 @@
 {
-  "ToggleEp08": {
+  "ToggleEp02": {
     "isVisible": 1,
-    "name": "Toggle 8",
+    "name": "Toggle 2",
     "order": 7,
     "isHistorized": "0",
     "Type": "action",
@@ -10,9 +10,9 @@
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "20210218_1608",
+      "uniqId": "20210129_1602",
       "topic": "OnOff",
-      "request": "Action=Toggle&EP=08",
+      "request": "Action=Toggle&EP=02",
       "visibilityCategory": "All"
     },
     "display": {

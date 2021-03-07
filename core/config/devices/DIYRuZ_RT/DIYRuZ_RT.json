@@ -1,0 +1,28 @@
+{
+  "DIYRuZ_RT": {
+    "nameJeedom": "DIYRuZ_RT",
+    "timeout": "3",
+    "Comment": "TimeOut a 3 minutes car il remonte sa temperature toutes les minutes.",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "20210207_1457",
+      "icone": "DIYRuZ_RT",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include1": "SW",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etat",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat",
+      "include9": "getManufacturerName",
+      "include10": "getModelIdentifier",
+      "include10 2": "temperature"
+    }
+  }
+}

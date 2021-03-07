@@ -11,7 +11,7 @@
     "configuration": {
       "uniqId": "20210307_1949",
       "topic": "ReadAttributeRequest",
-      "request": "EP=09&clusterId=0006&attributeId=0000",
+      "request": "EP=08&clusterId=0006&attributeId=0000",
       "RefreshData": "1",
       "visibilityCategory": "additionalCommand"
     }

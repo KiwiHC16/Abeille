@@ -787,9 +787,9 @@
          *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
-         * @param $ln       ?
-         * @param $qos      ?
-         * @param $dummy    ?
+         * @param $ln       NO LONGER USED
+         * @param $qos      NO LONGER USED
+         * @param $dummy    NO LONGER USED
          *
          * @return          Nothing as actions are requested in the execution
          */
@@ -824,7 +824,7 @@
 
             $this->whoTalked[] = $dest.'/'.$srcAddress;
 
-            $baseLog = "status: ".$status." profile:".$profile." cluster:".$cluster." srcEndPoint:".$srcEndPoint." destEndPoint:".$destEndPoint." sourceAddressMode:".$sourceAddressMode." srcAddress:".$srcAddress." destinationAddressMode:".$destinationAddressMode." dstAddress:".$dstAddress;
+            $baseLog = "Status=".$status.", ProfId=".$profile.", ClustId=".$cluster.", SrcEP=".$srcEndPoint.", DestEP=".$destEndPoint.", SrcAddrMode=".$sourceAddressMode.", SrcAddr=".$srcAddress.", DestAddrMode=".$destinationAddressMode.", DestAddr=".$dstAddress;
 
             // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
@@ -838,7 +838,7 @@
                 parserLog('debug', $dest.', Type=8002/Data indication - Routing Table Response'
                             . $baseLog
                             . ', SQN='.$SQN
-                            . ', status='.$status
+                            . ', Status='.$status
                             . ', tableSize='.$tableSize
                             . ', index='.$index
                             . ', tableCount='.$tableCount,
@@ -1461,7 +1461,8 @@
                 }
             }
 
-            parserLog("debug",$dest.", Type=8002 (decoded but not processed - message unknown): ".$baseLog.' -> '.$payload);
+            parserLog("debug", $dest.", Type=8002/Data indication, ".$baseLog, "8002");
+            parserLog("debug", "  Ignored payload=".$payload, "8002");
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -2864,7 +2865,7 @@
                         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
                         ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                        $needManufacturer = array('TS0043','TS0115','TS0121');
+                        $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
                         if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
                                 if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {

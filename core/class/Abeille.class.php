@@ -681,8 +681,8 @@ if (0) {
         // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
         $count = array();
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            if (self::checkInclusionStatus("Abeille" . $i) == "01") {
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/permitJoin", "Status");
+            if (self::checkInclusionStatus("Abeille".$i) == 1) {
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/permitJoin", "Status");
                 $count[] = $i;
             }
         }
@@ -1212,6 +1212,7 @@ if (0) {
         return -1;
     }
 
+    /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($dest)
     {
         // Return: Inclusion status or -1 if error
@@ -1441,7 +1442,9 @@ if (0) {
                     // message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
                 } else {
                     $bee->setIsEnable(0);
-                    message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');
+                    /* Display message only if NOT in include mode */
+                    if (self::checkInclusionStatus($dest) != 1)
+                        message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');
                 }
                 $bee->save();
                 $bee->refresh();

@@ -21,6 +21,12 @@ $printOnlyCmd = 1;
 // -----------------------------------------------------------------------------------
 // Preparation des operations
 //
+$commands[$i  ]['txt'] = "\n------------------------------\n           Setup \n------------------------------\n";
+$commands[$i++]['cmd'] = "";
+
+$commands[$i  ]['txt'] = "git config --global credential.helper store (pour ne pas avoir a saisir le user et pass) suivi d un git clone https:user:pass@github/...";
+$commands[$i++]['cmd'] = "";
+
 $commands[$i  ]['txt'] = "\n------------------------------\n           Preparation \n------------------------------\n";
 $commands[$i++]['cmd'] = "";
 

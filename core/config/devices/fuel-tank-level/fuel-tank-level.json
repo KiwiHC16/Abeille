@@ -13,9 +13,9 @@
     "Commandes": {
       "include100": "nom",
       "include2": "etatEp02in",
-      "include2 1": "getatEp02",
+      "include2 1": "getEtatEp02",
       "include3": "etatEp03in",
-      "include3 1": "getatEp03",
+      "include3 1": "getEtatEp03",
       "include4": "etatEp04in",
       "include4 1": "getEtatEp04",
       "include5": "etatEp05in",

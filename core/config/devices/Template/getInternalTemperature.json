@@ -1,0 +1,18 @@
+{
+  "getInternalTemperature": {
+    "isVisible": 0,
+    "name": "getInternalTemperature",
+    "order": 16,
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "uniqId": "20210310_2339",
+      "topic": "ReadAttributeRequest",
+      "request": "EP=01&clusterId=0002&attributeId=0000",
+      "visibilityCategory": "additionalCommand"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "siren-pni-s002": {
+    "nameJeedom": "siren-pni-s002",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "20210313_1000",
+      "icone": "siren-pni-s002",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include100": "nom",
+      "include1": "OnEp01",
+      "include1 1": "OffEp01",
+      "include1 1 1 1": "getEtatEp01",
+      "include1 1 1 1 1": "etatEp01out",
+      "include2": "OnEp02",
+      "include2 1": "OffEp02",
+      "include2 1 1 1": "getEtatEp02",
+      "include2 1 1 1 1": "etatEp02out"
+   }
+  }
+}

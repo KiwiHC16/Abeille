@@ -2830,7 +2830,6 @@
                     // Example Cube Xiaomi
                     // Sniffer dit Single Precision Floating Point
                     // b9 1e 38 c2 -> -46,03
-
                     // $data = hexdec(substr($payload, 24, 4));
                     // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
                     $hexNumber = substr($payload, 24, 8);

@@ -298,11 +298,6 @@
                     </div>
                     <div class="col-lg-1">
                     </div>
-                    <?php echo '<div id="idResetHW'.$i.'" class="col-lg-3">';
-                        echo 'Reset HW :';
-                        echo '<a class="btn btn-warning" onclick="resetPiZigate('.$i.')" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>';
-                    ?>
-                    </div>
                 </div>
                 </div>
             <?php
@@ -522,7 +517,6 @@
             $("#idWiringPi"+zgNb).hide();
             $("#idCommTest"+zgNb).hide();
             $("#idUpdFw"+zgNb).hide();
-            $("#idResetHW"+zgNb).hide();
 
             $("#idSelSP" + zgNb).val('/dev/zigate' + zgNb);
             idSelSP.setAttribute('disabled', true);
@@ -546,13 +540,11 @@
                 // idFW.removeAttribute('disabled');
                 // idUpdateFW.removeAttribute('disabled');
                 $("#idUpdFw"+zgNb).show();
-                $("#idResetHW"+zgNb).show();
             } else {
                 // idFW.setAttribute('disabled', true);
                 // idUpdateFW.setAttribute('disabled', true);
                 $("#idWiringPi"+zgNb).hide();
                 $("#idUpdFw"+zgNb).hide();
-                $("#idResetHW"+zgNb).hide();
             }
         }
     }
@@ -827,16 +819,6 @@
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installTTY.abeille').dialog('open');
             }
         });
-    }
-
-    function resetPiZigate(zgNb) {
-        console.log("resetPiZigate("+zgNb+")");
-        bootbox.confirm('{{Vous êtes sur le point de faire un reset HW de la PiZigate.<br>Voulez vous continuer ?}}', function (result) {
-            if (result) {
-                $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=resetPiZigate').dialog('open');
-            }
-       });
     }
 
     /* Verify Abeille's integrity using 'Abeille.md5' file. */

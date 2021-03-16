@@ -2826,7 +2826,7 @@
                         // Relay Double - Prise Xiaomi
                         $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId,     $EPoint.'-'.$AttributId,    $puissanceValue,    $qos);
                     }
-                } else {
+		    if ($EPoint=="03") {
                     // Example Cube Xiaomi
                     // Sniffer dit Single Precision Floating Point
                     // b9 1e 38 c2 -> -46,03
@@ -2837,6 +2837,7 @@
                     $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
                     $bin = pack('H*', $hexNumberOrder );
                     $data = unpack("f", $bin )[1];
+		    }
                 }
             }
 

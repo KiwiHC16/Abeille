@@ -9,7 +9,7 @@
       "uniqId": "5c07c766261ad",
       "icone": "sensor_cube",
       "mainEP": "01",
-      "battery_type": "1x3V CR2032 (?)"
+      "battery_type": "1x3V CR2450"
     },
     "Commandes": {
       "include1": "SW",

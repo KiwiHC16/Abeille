@@ -8,9 +8,10 @@
 
     $curLogLevelNb = 0; // Abeille log level number: 0=none, 1=error/default, 2=warning, 3=info, 4=debug
     $logDir = ''; // Log directory
-    $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1')
+    $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1', configured thru logSetConf())
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
+    $hideLevel = FALSE; // Display log level if FALSE (configured thru logSetConf())
 
     /* Get Abeille current log level as a number:
        0=none, 1=error/default, 2=warning, 3=info, 4=debug */
@@ -47,20 +48,22 @@
        if (array_search($upperString, $levels, false))
            return $levels[$upperString];
 
-       /* If logLevel is unknown then no log is allowed */
-       return "0";
+       /* If logLevel is unknown then default = error level */
+       return 1;
     }
 
     /* Library config for logs.
        'lFile' = log file name or absolut path.
          If not absolut path, log dir = Jeedom default (/var/www/html/log)
-         If absolut path, this is the taken destination. */
-    function logSetConf($lFile = '')
+         If absolut path, this is the taken destination.
+       'hideLevel' = Allows to disable display of log level if TRUE. */
+    function logSetConf($lFile = '', $hideLevel = FALSE)
     {
         $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
         $GLOBALS["logDir"] = "";
         $GLOBALS["logFile"] = "";
         $GLOBALS["logNbOfLines"] = 0;
+        $GLOBALS["hideLevel"] = $hideLevel;
 
         /* Taking Jeedom config with a margin to avoid Jeedom truncates
            the log itself before it is saved */
@@ -96,7 +99,8 @@
     function logMessage($logLevel, $msg)
     {
         if ($logLevel != "") {
-            if ( !isset($GLOBALS["curLogLevelNb"]) ) $GLOBALS["curLogLevelNb"]=0;
+            if (!isset($GLOBALS["curLogLevelNb"]))
+                $GLOBALS["curLogLevelNb"] = 0;
             if (logGetLevelNumber($logLevel) > $GLOBALS["curLogLevelNb"])
                 return; // Nothing to do for current log level
 
@@ -106,18 +110,18 @@
             /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
         }
 
+        /* Computing line prefix */
+        if (($logLevel == "") || ($GLOBALS["hideLevel"] == TRUE))
+            $prefix = '['.date('Y-m-d H:i:s').'] ';
+        else
+            $prefix = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';
+
         if ($GLOBALS["logFile"] == '') {
-            if ($logLevel == "")
-                echo ('['.date('Y-m-d H:i:s').'] '.$msg."\n");
-            else
-            echo ('['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n");
+            echo ($prefix.$msg."\n");
             fflush(STDOUT);
         } else {
             $lFile = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
-            if ($logLevel == "")
-                file_put_contents($lFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
-            else
-            file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n", FILE_APPEND);
+            file_put_contents($lFile, $prefix.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {
@@ -129,10 +133,7 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
-                if ($logLevel == "")
-                    file_put_contents($lFile, '['.date('Y-m-d H:i:s')."] Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
-                else
-                file_put_contents($lFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel)."] Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
+                file_put_contents($lFile, $prefix." Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }
@@ -149,14 +150,15 @@
 
     /* Return proper prefix to use with scripts outputs */
     function logGetPrefix($logLevel) {
-        if ($logLevel != "") {
-            $logLevel = strtolower(trim($logLevel));
-            if ($logLevel == "warning")
-                $logLevel = "warn";
-            /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
-            $pref = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';
-        } else
-            $pref = '['.date('Y-m-d H:i:s').'] ';
+        if (($logLevel == "") || ($GLOBALS["hideLevel"] == TRUE)) {
+            return '['.date('Y-m-d H:i:s').'] ';
+        }
+
+        $logLevel = strtolower(trim($logLevel));
+        if ($logLevel == "warning")
+            $logLevel = "warn";
+        /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+        $pref = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';
         return $pref;
     }
 ?>

@@ -33,16 +33,10 @@
 				</td>
 			</tr><tr>
 				</td>
-				<!-- <td>
-					<a class="btn btn-danger  eqLogicAction pull-right" data-action="removeSelect"><i class="fa fa-minus-circle"></i>  {{Supprime les objets sélectionnés}}</a>
-				</td> -->
 				<td>
 					<a class="btn btn-danger  eqLogicAction pull-right" data-action="removeAll"><i class="fas fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
 				</td>
 			</tr><tr>
-				<td>
-					<a class="btn btn-danger  eqLogicAction pull-right" data-action="exclusion"><i class="fas fa-sign-out"></i>  {{Exclusion}}</a>
-				</td>
 			</tr>
 		</table>
 

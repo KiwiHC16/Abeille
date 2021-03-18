@@ -134,15 +134,17 @@ try {
     if (init('action') == 'checkTTY') {
         $zgPort = init('zgport');
         $zgType = init('zgtype');
-        logToFile('AbeilleConfig.log', 'info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
 
-        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+        logSetConf('AbeilleConfig.log', TRUE);
+        logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
+
+        logMessage('debug', 'Arret des démons');
         abeille::deamon_stop(); // Stopping daemon
 
         /* Checks port exists and is not already used */
         $prefix = logGetPrefix(""); // Get log prefix
-        $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType;
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType.' "'.$prefix.'"';
+        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         /* Read Zigate FW version */
@@ -152,7 +154,7 @@ try {
             $status = zgGetVersion($zgPort, $version);
         }
 
-        logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
+        logMessage('debug', 'Redémarrage des démons');
         abeille::deamon_start(); // Restarting daemon
 
         ajax::success(json_encode(array('status' => $status, 'fw' => $version)));

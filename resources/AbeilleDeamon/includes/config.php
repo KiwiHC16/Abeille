@@ -18,8 +18,15 @@
     define('queueKeyAbeilleToAbeille',      121);
     define('queueKeyAbeilleToCmd',          123);
 
-    define('queueKeyMonToZigate',           124); // For monitoring: messages to zigate
-    define('queueKeyMonFromZigate',         125); // For monitoring: messages from zigate
+    /* Monitoring queues */
+    define('queueKeyCmdToMon',              130); // Messages to zigate (cmd to monitor)
+    define('queueKeyParserToMon',           131); // Messages from zigate (parser to monitor)
+    define('queueKeyMonToCmd',              132); // Messages to cmd (addr update)
+
+    /* EQ assistant queues */
+    define('queueKeyAssistToParser',        140); // Assistant to parser
+    define('queueKeyParserToAssist',        141); // Parser to EQ assistant
+    define('queueKeyAssistToCmd',           142); // Assistant to cmd
 
     define('queueKeyParserToAbeille',       221);
     define('queueKeyParserToCmd',           223);
@@ -32,7 +39,8 @@
     define('queueKeyXmlToAbeille',          621);
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
-    define('queueKeySerieToParser',         822);  // 0x336
+    define('queueKeySerieToParser',         822);  // 0x336 TO BE REMOVED when queueKeySerialToParser is the only used
+    define('queueKeySerialToParser',        822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
 
     define('priorityMin',           1);

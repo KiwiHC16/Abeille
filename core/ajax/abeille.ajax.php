@@ -211,7 +211,9 @@ try {
    /* Devloper mode: Switch GIT branch */
     if (init('action') == 'switchBranch') {
         $branch = init('branch');
-        $updateOnly = init('updateOnly');
+        $updateOnly = init('updateOnly'); // TODO: No longer required
+
+        logSetConf('AbeilleConfig.log', TRUE);
 
         $status = 0;
         $prefix = logGetPrefix(""); // Get log prefix
@@ -228,10 +230,10 @@ try {
         $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd);
 
-        logToFile('AbeilleConfig.log', '', 'Arret des démons');
+        logMessage('debug', 'Arret des démons');
         abeille::deamon_stop(); // Stopping daemon
-        $cmdToExec = "switchBranch.sh ".$branch." ".$updateOnly;
-        // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." 2>&1 | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' &';
+
+        $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
         $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
         exec($cmd);
 

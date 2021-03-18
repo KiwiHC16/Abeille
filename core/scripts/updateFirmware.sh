@@ -3,11 +3,14 @@
 # updateFirmware.sh <action> <zigateport> [fwfile]
 #   where action = flash, check, eraseeeprom
 
-NOW=`date +"%Y-%m-%d %H:%M:%S"`
-echo "[${NOW}] Démarrage de '$(basename $0)' $@"
+# NOW=`date +"%Y-%m-%d %H:%M:%S"`
+# echo "[${NOW}] Démarrage de '$(basename $0)' $@"
+echo "Démarrage de '$(basename $0)' $@"
 
-PROG=/var/www/html/plugins/Abeille/Zigate_Module/JennicModuleProgrammerRPI3
-FW_DIR=/var/www/html/plugins/Abeille/resources/fw_zigate
+# Note: Startup directory is the one from the caller (ajax)
+#       It is then '/var/www/html/plugins/Abeille/core/ajax'
+PROG=${PWD}/../../resources/prog_jennic/JennicModuleProgrammerRPI3
+FW_DIR=${PWD}/../../resources/fw_zigate
 
 # Qq tests preliminaires
 echo "Vérifications préliminaires"
@@ -38,9 +41,9 @@ else
         echo "=         Port: ${ZGPORT}"
         error=1
     fi
-    command -v gpio
+    command -v gpio >/dev/null
     if [ $? -ne 0 ]; then
-        echo "= ERREUR: Commande 'gpio' manquante !"
+        echo "= ERREUR: Commande 'gpio' manquante ou non exécutable !"
         echo "=         Le package WiringPi est probablement mal installé."
         error=1
     fi
@@ -95,7 +98,7 @@ sleep 1
 if [ ${ACTION} == "eraseeeprom" ]; then
     sudo ${PROG} -V 6 -P 115200 -v --eraseeeprom -s ${ZGPORT} 2>&1
     if [ $? != 0 ]; then
-        echo "- ERREUR: Effacement impossible"
+        echo "= ERREUR: Effacement impossible"
         status=2
     else
         echo "- Ok. Effacement terminé"
@@ -105,7 +108,7 @@ if [ ${ACTION} == "eraseeeprom" ]; then
 else
     sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/${FW} -s ${ZGPORT} 2>&1
     if [ $? != 0 ]; then
-        echo "- ERREUR: Programmation impossible"
+        echo "= ERREUR: Programmation impossible"
         status=2
     else
         echo "- Ok. Programmation faite"

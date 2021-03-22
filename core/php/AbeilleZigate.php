@@ -6,63 +6,87 @@
 
     $curLogLevel = 0;
     $logFile = ''; // Absolut path
+    require_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    require_once 'AbeilleLog.php'; // logMessage()
 
     /* Library setup.
        If 'lFile' is not absolut, default Jeedom path is added. */
+    /* TODO: To be revisited. No longer required to configure log */
     function zgSetConf($lFile = '') {
-        global $curLogLevel, $logFile;
-        $curLogLevel = AbeilleTools::getPluginLogLevel('Abeille');
-        if (substr($lFile, 0, 1) != "/") // Not absolut path ?
-            $logFile = __DIR__.'/../../../../log/'.$lFile;
-        else
-            $logFile = $lFile;
+        // global $curLogLevel, $logFile;
+        // $curLogLevel = AbeilleTools::getPluginLogLevel('Abeille');
+        // if (substr($lFile, 0, 1) != "/") // Not absolut path ?
+        //     $logFile = __DIR__.'/../../../../log/'.$lFile;
+        // else
+        //     $logFile = $lFile;
     }
 
     /* Log function.
        '\n' is automatically added at end of line.
        WARNING: A call to 'zgSetConf()' is expected once to allow logs. */
-    function zgLog($logLevel, $msg)
-    {
-        global $logFile, $curLogLevel;
+    // function zgLog($logLevel, $msg)
+    // {
+    //     global $logFile, $curLogLevel;
 
-        if ($logFile == '')
-            return; // Can't log. Config not done
-        if (AbeilleTools::getNumberFromLevel($logLevel) > $curLogLevel)
-            return; // Nothing to do
+    //     if ($logFile == '')
+    //         return; // Can't log. Config not done
+    //     if (AbeilleTools::getNumberFromLevel($logLevel) > $curLogLevel)
+    //         return; // Nothing to do
 
-        $logLevel = strtolower(trim($logLevel));
-        if ($logLevel == "warning")
-            $logLevel = "warn";
-        /* Note: sprintf("%-5.5s", $logLevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
-        file_put_contents($logFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n", FILE_APPEND);
-    }
+    //     $logLevel = strtolower(trim($logLevel));
+    //     if ($logLevel == "warning")
+    //         $logLevel = "warn";
+    //     /* Note: sprintf("%-5.5s", $logLevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
+    //     file_put_contents($logFile, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] '.$msg."\n", FILE_APPEND);
+    // }
 
-    /* Write message frame 'zgMsg' (string) to 'zgF' file desc.
+    /* Write message 'zgMsg' (string) to 'zgF' file desc.
        Returns: 0=OK, -1=ERROR */
     function zgWrite($zgF, $zgMsg)
     {
-        zgLog('debug', "zgWrite(".$zgMsg.")");
+        logMessage('debug', "zgWrite(".$zgMsg.")");
         if ($zgF == FALSE) {
-            zgLog('error', "zgWrite() END: fopen ERROR");
+            logMessage('error', "zgWrite() END: fopen ERROR");
             return -1;
         }
-        $status = fwrite($zgF, pack("H*", $zgMsg));
+        $frame = zgMsgToFrame($zgMsg);
+        $status = fwrite($zgF, pack("H*", $frame));
         fflush($zgF);
         if ($status == FALSE) {
-            zgLog('error', "zgWrite() END: fwrite ERROR");
+            logMessage('error', "zgWrite() END: fwrite ERROR");
             return -1;
         }
-        // zgLog("zgWrite() END");
+        // logMessage("zgWrite() END");
+        return 0;
+    }
+
+    /* Write message 'zgMsg' (string) to 'zgF' file desc.
+       Returns: 0=OK, -1=ERROR */
+    function zgWrite2($zgMsg) {
+        logMessage('debug', "zgWrite2(".$zgMsg.")");
+
+        $frame = zgMsgToFrame($zgMsg);
+        $msg = Array(
+            "type" => "msg",
+            "msg" => $frame
+        );
+
+        $queue = msg_get_queue(queueKeyAssistToCmd);
+        if (msg_send($queue, 1, $msg, TRUE, false) == FALSE) {
+            logMessage("error", "Could not send msg to 'queueKeyAssistToCmd': msg=".json_encode($msg));
+            return -1;
+        }
+
         return 0;
     }
 
     /* Read frame, extract & transcode message.
        Returns: 0=OK, -1=ERROR */
-    function zgRead($zgF, &$zgMsg)
-    {
-        zgLog('debug', "zgRead()");
+    function zgRead($zgF, &$zgMsg) {
+        logMessage('debug', "zgRead()");
         if ($zgF == FALSE) {
-            zgLog('error', "zgRead() ERROR: bad desc for reading");
+            logMessage('error', "zgRead() ERROR: bad desc for reading");
             return -1;
         }
         $decode = false;
@@ -85,14 +109,31 @@
                     $zgMsg .= $c;
                 }
             }
-            // zgLog('debug', "  zgMsg=" . $zgMsg . "");
         }
-        zgLog('debug', '  Read='.$zgMsg);
+        logMessage('debug', '  Read='.$zgMsg);
         return 0;
     }
 
-    /* Encode given 'msg' and return zigate frame.
-       Returns: proplery encoded zigate frame. */
+    /* Read frame, extract & transcode message.
+       Returns: 0=OK, -1=ERROR */
+    function zgRead2(&$zgMsg) {
+        logMessage('debug', "zgRead2()");
+
+        $queue = msg_get_queue(queueKeyParserToAssist);
+        $max_msg_size = 2048;
+        $msg_type = NULL;
+        $zgMsg = "";
+        while (1) {
+            if (msg_receive($queue, 0, $msg_type, $max_msg_size, $zgMsg, TRUE, MSG_IPC_NOWAIT) == TRUE)
+                break;
+            usleep(100000); // Sleep 100ms
+        }
+
+        logMessage('debug', '  Read='.$zgMsg);
+        return 0;
+    }
+
+    /* Encode given 'msg' and returns zigate frame */
     function zgMsgToFrame($msg)
     {
         $msgout = "";
@@ -107,10 +148,10 @@
         return "01".$msgout."03";
     }
 
-    /* Compose message frame following zigate protocol.
+    /* Compose message following zigate protocol.
        Minimum 1 arg = 'msgType'
        Any payload to be added as next args. */
-    function zgComposeFrame($msgType)
+    function zgComposeMsg($msgType)
     {
         /* TODO: Ensure msgType = 4 char string */
 
@@ -137,10 +178,9 @@
         $msg .= sprintf("%04X", $payloadLen); // Payload length, 2 bytes
         $msg .= sprintf("%02X", $crc); // Checksum, 1 byte
         $msg .= $payload; // Payload
-        zgLog('debug', 'msg='.$msg);
-        $frame = zgMsgToFrame($msg);
+        // logMessage('debug', 'msg='.$msg);
 
-        return $frame;
+        return $msg;
     }
 
     /*
@@ -151,17 +191,18 @@
        Returns: 0=OK, -1=ERROR */
     function zgGetVersion($zgPort, &$version)
     {
-        zgLog('debug', "zgGetVersion()");
+        logMessage('debug', "zgGetVersion()");
+
         $version = 0;
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
         if ($zgF == FALSE) {
-            zgLog("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port ".$zgPort);
+            logMessage("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port ".$zgPort);
             return -1;
         }
 
-        zgLog('debug', 'Interrogation de la Zigate sur port '.$zgPort);
-        $fr = zgComposeFrame("0010");
-        $status = zgWrite($zgF, $fr); // Sending "Get Version" command
+        logMessage('debug', 'Interrogation de la Zigate sur port '.$zgPort);
+        $zgMsg = zgComposeMsg("0010");
+        $status = zgWrite($zgF, $zgMsg); // Sending "Get Version" command
         $zgMsg = "";
         if ($status == 0) {
             $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
@@ -169,7 +210,7 @@
         if ($status == 0) {
             $zgMsgType = substr($zgMsg, 0, 4);
             if ($zgMsgType != "8000") {
-                zgLog('debug', 'Mauvaise réponse. 8000 attendu.');
+                logMessage('debug', 'Mauvaise réponse. 8000 attendu.');
                 $status = -1;
             }
         }
@@ -178,11 +219,11 @@
         if ($status == 0) {
             $zgMsgType = substr($zgMsg, 0, 4);
             if ($zgMsgType != "8010") {
-                zgLog('debug', 'Mauvaise réponse. 8010 attendu.');
+                logMessage('debug', 'Mauvaise réponse. 8010 attendu.');
                 $status = -1;
             } else {
                 $version = substr($zgMsg, 14, 4);
-                zgLog('info', 'FW version '.$version);
+                logMessage('info', 'FW version '.$version);
             }
         }
 
@@ -198,26 +239,25 @@
     /* TODO: Remove this function. 0015 command seems to not be the one described */
     function zgGetDevicesList($zgPort, &$zgDevices)
     {
-        zgLog('debug', "zgGetDevicesList(zgPort=".$zgPort.")");
+        logMessage('debug', "zgGetDevicesList(zgPort=".$zgPort.")");
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
         if ($zgF == FALSE) {
-            zgLog("error", "zgGetDevicesList(): ERREUR d'accès à la Zigate sur port " . $zgPort);
+            logMessage("error", "zgGetDevicesList(): ERREUR d'accès à la Zigate sur port " . $zgPort);
             return -1;
         }
 
         $zgDevices = array();
         $status = 0;
 
-        $fr = zgComposeFrame("0015");
-        zgLog('debug', 'Frame='.$fr);
-        $status = zgWrite($zgF, $fr); // Sending "Get Devices List" command
+        $zgMsg = zgComposeMsg("0015");
+        $status = zgWrite($zgF, $zgMsg); // Sending "Get Devices List" command
         if ($status == 0) {
             $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
         }
         if ($status == 0) {
             $zgMsgType = substr($zgMsg, 0, 4);
             if ($zgMsgType != "8000") {
-                zgLog('error', 'Mauvaise réponse. 8000 attendu.');
+                logMessage('error', 'Mauvaise réponse. 8000 attendu.');
                 $status = -1;
             }
         }
@@ -234,7 +274,7 @@
             if ($status == 0) {
                 $zgMsgType = substr($zgMsg, 0, 4);
                 if ($zgMsgType != "8015") {
-                    zgLog('error', 'Mauvaise réponse. 8015 attendu.');
+                    logMessage('error', 'Mauvaise réponse. 8015 attendu.');
                     $status = -1;
                 } else {
                     $plSize = (strlen($zgMsg) / 2) - 10; // Payload size (nBytes - 10)
@@ -246,7 +286,7 @@
                         $dev['ieee'] = strtoupper(substr($zgMsg, $i, 16)); $i += 16;
                         $dev['power'] = substr($zgMsg, $i, 2); $i += 2;
                         $dev['link'] = substr($zgMsg, $i, 2); $i += 2;
-                        // zgLog('debug', 'id='.$dev['id'].', addr='.$dev['addr'].', ieee='.$dev['ieee']);
+                        // logMessage('debug', 'id='.$dev['id'].', addr='.$dev['addr'].', ieee='.$dev['ieee']);
                         $zgDevices[] = $dev;
                     }
                     /* Note: There should be 1 more byte for RSSI */
@@ -264,17 +304,17 @@
     /* TODO: Remove this function. Not functional */
     function zgRemoveDevice($zgPort, $devAddr, $devIEEE)
     {
-        zgLog('debug', "zgRemoveDevice(zgPort=".$zgPort.")");
+        logMessage('debug', "zgRemoveDevice(zgPort=".$zgPort.")");
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
         if ($zgF == FALSE) {
-            zgLog("error", "zgRemoveDevice(): ERREUR d'accès à la Zigate sur port ".$zgPort);
+            logMessage("error", "zgRemoveDevice(): ERREUR d'accès à la Zigate sur port ".$zgPort);
             return -1;
         }
 
         $zgDevices = array();
         $status = 0;
 
-        // $fr = zgComposeFrame("0026", $devAddr, $devIEEE);
+        // $zgMsg = zgComposeMsg("0026", $devAddr, $devIEEE);
         /* 0x004C	Leave Request
             <extended address: uint64_t>
             <Rejoin: uint8_t>
@@ -287,19 +327,19 @@
                 1 = Leave, removing children
            Return: Expecting status, then "leave indication/0x8048"
          */
-        $fr = zgComposeFrame("004C", $devIEEE, "00", "00");
-        $status = zgWrite($zgF, $fr);
+        $zgMsg = zgComposeMsg("004C", $devIEEE, "00", "00");
+        $status = zgWrite($zgF, $zgMsg);
         if ($status == 0)
             $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
         if ($status == 0) {
             $zgMsgType = substr($zgMsg, 0, 4);
             if ($zgMsgType != "8000") {
-                zgLog('error', 'Mauvaise réponse de la cmde 004C. 8000 attendu.');
+                logMessage('error', 'Mauvaise réponse de la cmde 004C. 8000 attendu.');
                 $status = -1;
             } else {
                 $zgStatus = substr($zgMsg, 10, 2);
                 if ($zgStatus != "00") {
-                    zgLog('error', 'Cmde 004C en erreur: status='.$zgStatus);
+                    logMessage('error', 'Cmde 004C en erreur: status='.$zgStatus);
                     $status = -1;
                 }
             }
@@ -314,7 +354,7 @@
             if ($status == 0) {
                 $zgMsgType = substr($zgMsg, 0, 4);
                 if ($zgMsgType != "8048") {
-                    zgLog('error', 'Mauvaise réponse. 8048 attendu.');
+                    logMessage('error', 'Mauvaise réponse. 8048 attendu.');
                     $status = -1;
                 } else {
                 }

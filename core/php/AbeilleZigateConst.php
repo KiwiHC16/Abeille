@@ -183,6 +183,7 @@
                 '0200'=>'Color light',
                 '0210'=>'Extended color light',
                 '0220'=>'Color temperature light',
+
                 // Conroller devices
                 '0800'=>'Color controller',
                 '0810'=>'Color scene controller',

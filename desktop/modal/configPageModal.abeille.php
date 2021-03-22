@@ -19,7 +19,7 @@ Lancement des operations.
     var action = "";
     <?php
         if (isset($_GET['zgport']))
-            echo 'var zgport = "'.$_GET['zgport'].'";';
+            echo 'var zgport = '.$_GET['zgport'].';';
         else
             echo 'var zgport = "";';
     ?>

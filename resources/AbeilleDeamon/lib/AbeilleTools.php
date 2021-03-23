@@ -483,13 +483,110 @@ class AbeilleTools
     }
 
     /**
+     * Stop given daemons list.
+     * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+     * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
+     */
+    public static function stopDaemons($daemons = "") {
+        log::add('Abeille', 'debug', "stopDaemons($daemons)");
+        if ($daemons != "") {
+            $daemonsArr = explode(" ", $daemons);
+            $grep = "";
+            foreach ($daemonsArr as $daemon) {
+                if ($grep != "")
+                    $grep .= "\|";
+                $grep .= $daemon;
+            }
+            $cmd = "pgrep -a php | grep '".$grep."'";
+        } else {
+            $cmd = "pgrep -a php | grep Abeille";
+        }
+        // log::add('Abeille', 'debug', "stopDaemons() => cmd=".$cmd);
+        exec($cmd, $running);
+
+        $nbOfDaemons = sizeof($running);
+        if ($nbOfDaemons != 0) {
+            log::add('Abeille', 'debug', 'stopDaemons(): Arret de '.$nbOfDaemons.' démons');
+            for ($i = 0; $i < $nbOfDaemons; $i++) {
+// log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
+                $arr = explode(" ", $running[$i]);
+                $pid = $arr[0];
+                exec("kill -s TERM ".$pid);
+// log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM '.$pid);
+            }
+            /* Waiting until timeout that all daemons be ended */
+            define ("timeout", 2000); // 2sec
+            $running = array(); // Clear previous result.
+            for ($t = 0; ($nbOfDaemons != 0) && ($t < timeout); $t+=500) {
+                usleep(500000); // Sleep 500ms
+                exec($cmd, $running);
+                $nbOfDaemons = sizeof($running);
+// log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
+            }
+            if ($nbOfDaemons != 0) {
+                log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' démons toujours actifs apres '.timeout.' ms');
+                log::add('Abeille', 'debug', 'stopDaemons(): '.json_encode($running));
+                for ($i = 0; $i < $nbOfDaemons; $i++) {
+                    $arr = explode(" ", $running[$i]);
+                    $pid = $arr[0];
+                    exec("kill -s KILL ".$pid);
+                }
+            }
+        } else
+            log::add('Abeille', 'debug', 'stopDaemons(): Aucun démon actif');
+
+        return TRUE;
+    }
+
+    /**
+     * Start given daemons list.
+     * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+     * @param string $daemons Deamons list to start, space separated. Empty string = ALL
+     */
+    public static function startDaemons($parameters, $daemons = "") {
+        if ($daemons == "") {
+            $daemons = "AbeilleCmd AbeilleParser";
+            for ($zgNb = 1; $zgNb <= $parameters['zigateNb']; $zgNb++) {
+                if ($parameters['AbeilleActiver'.$zgNb] != "Y")
+                    continue; // Zigate disabled
+
+                if ($parameters['AbeilleType'.$zgNb] == "WIFI")
+                    $daemons .= " AbeilleSocat".$zgNb;
+                $daemons .= " AbeilleSerialRead".$zgNb;
+            }
+        }
+        log::add('Abeille', 'debug', "startDaemons() => daemons=".$daemons);
+        $daemonsArr = explode(" ", $daemons);
+        foreach ($daemonsArr as $daemon) {
+            $cmd = self::getStartCommand($parameters, $daemon);
+            if ($cmd == "")
+                log::add('Abeille', 'debug', "startDaemons(): ERREUR, cmd vide for '".$daemon."'");
+            else
+                exec($cmd.' &');
+        }
+    }
+
+    /**
+     * (Re)start given daemons list.
+     * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+     * @param string $daemons Deamons list to restart, space separated
+     */
+    public static function restartDaemons($parameters, $daemons = "") {
+        if (AbeilleTools::stopDaemons($daemons) == FALSE)
+            return FALSE; // Error
+
+        AbeilleTools::startDaemons($parameters, $daemons);
+
+        return TRUE; // ok
+    }
+
+    /**
      * Get Command to start zigate daemon(s)
      * @param $param
      * @param $daemonFile
      * @return String
      */
-    public
-    static function getStartCommand($param, $daemonFile): string
+    public static function getStartCommand($param, $daemonFile): string
     {
         $nohup = "/usr/bin/nohup";
         $php = "/usr/bin/php";

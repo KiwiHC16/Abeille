@@ -78,6 +78,6 @@ function monitorIt(zgNb, zgPort) {
                 alert(msg);
             } else
                 window.location.reload();
-    }
+        }
     });
 }

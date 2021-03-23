@@ -351,8 +351,7 @@ class AbeilleTools
      *
      * @return array
      */
-    public
-    static function getRunningDaemons(): array
+    public static function getRunningDaemons(): array
     {
         exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
         return $running;
@@ -426,11 +425,11 @@ class AbeilleTools
     }
 
     /**
-     * return true if all expected daemons are running
      * @param $isCron   is cron daemon for this plugin started
      * @param $parameters (parametersCheck, parametersCheck_message, AbeilleParentId, zigateNb,
      * AbeilleType,AbeilleSerialPortX, IpWifiZigateX, AbeilleActiverX
      * @param $running
+     * return true if any missing daemons
      */
     public
     static function isMissingDaemons($parameters, $running): bool
@@ -504,31 +503,42 @@ class AbeilleTools
         $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
 
         switch ($daemonFile) {
-            case 'cmd':
-                $daemonPhp = "AbeilleCmd.php";
-                $logCmd = " >>" . $logDir . "AbeilleCmd.log 2>&1";
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $logCmd;
-                break;
-            case 'parser':
-                $daemonPhp = "AbeilleParser.php";
-                $daemonLog = " >>" . $logDir . "AbeilleParser.log 2>&1";
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $daemonLog;
-                break;
-            case 'serialread':
-                $daemonPhp = "AbeilleSerialRead.php";
-                $daemonParams = 'Abeille' . $nb . ' ' . $param['AbeilleSerialPort' . $nb] . ' ';
-                $daemonLog = $logLevel . " >>" . $logDir . "AbeilleSerialRead" . $nb . ".log 2>&1";
-                exec(system::getCmdSudo() . 'chmod 777 ' . $param['AbeilleSerialPort' . $nb] . ' > /dev/null 2>&1');
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
-                break;
-            case 'socat':
-                $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
-                $daemonLog = " >>" . $logDir . "AbeilleSocat" . $nb . '.log 2>&1';
-                $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
-                break;
-            default:
-                $cmd = "No daemon conf for " . $daemonFile;
+        case 'cmd':
+        case 'abeillecmd':
+            $daemonPhp = "AbeilleCmd.php";
+            $logCmd = " >>" . $logDir . "AbeilleCmd.log 2>&1";
+            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $logCmd;
+            break;
+        case 'parser':
+        case 'abeilleparser':
+            $daemonPhp = "AbeilleParser.php";
+            $daemonLog = " >>" . $logDir . "AbeilleParser.log 2>&1";
+            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $daemonLog;
+            break;
+        case 'serialread':
+        case 'abeilleserialread':
+            $daemonPhp = "AbeilleSerialRead.php";
+            $daemonParams = 'Abeille' . $nb . ' ' . $param['AbeilleSerialPort' . $nb] . ' ';
+            $daemonLog = $logLevel . " >>" . $logDir . "AbeilleSerialRead" . $nb . ".log 2>&1";
+            exec(system::getCmdSudo() . 'chmod 777 ' . $param['AbeilleSerialPort' . $nb] . ' > /dev/null 2>&1');
+            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
+            break;
+        case 'socat':
+        case 'abeillesocat':
+            $daemonPhp = "AbeilleSocat.php";
+            $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
+            $daemonLog = " >>" . $logDir . "AbeilleSocat" . $nb . '.log 2>&1';
+            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
+            break;
+        case 'monitor':
+        case 'abeillemonitor':
+            $php = "/usr/bin/php";
+            $dir = __DIR__."/../../../core/php/"; // Dir from "resources/AbeilleDeamon/lib"
+            $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";
+            $cmd = $php." -r \"require '".$dir."AbeilleMonitor.php'; monRun();\"".$log;
+            break;
+        default:
+            $cmd = "";
         }
         return $cmd;
     }

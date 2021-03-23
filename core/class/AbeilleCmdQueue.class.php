@@ -9,6 +9,8 @@
     // Tools: Caisse a outils de fonctions.
 
     include_once __DIR__.'/AbeilleCmdPrepare.class.php';
+    if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
+        include_once __DIR__.'/../php/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     class AbeilleCmdQueue extends AbeilleCmdPrepare {
 
@@ -182,18 +184,18 @@
 
         /**
          * sendCmd()
-         * 
+         *
          * put in the queue the cmd to be put on the serial link to the zigate
-         * 
+         *
          * @param priority  priority of the command in the queue
          * @param dest      zigate to address the command
          * @param cmd       cmd in hex format as per zigate API
          * @param len       len of the cmd
          * @param data      data of the cmd
          * @param shortAddr ???
-         * 
+         *
          * @return  none
-         * 
+         *
          */
         function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
             $this->deamonlog("debug", "      sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", shortAddr=".$shortAddr.", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
@@ -283,16 +285,16 @@
 
         /**
          * sendCmdToZigate()
-         * 
+         *
          * connect to zigate and pass the commande on serial link
-         * 
+         *
          * @param dest  zigate toargetted e.g.Abeille1
          * @param cmd   zigate commande as per zigate API
          * @param len   length of the cmd
          * @param data  data for the cmd
-         * 
+         *
          * @return none
-         * 
+         *
          */
         function sendCmdToZigate($dest, $cmd, $len, $datas) {
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
@@ -335,9 +337,9 @@
         function processCmdQueueToZigate() {
 
             for ($i = 1; $i <= $this->zigateNb; $i++) {
-                if (!isset($this->cmdQueue[$i])) continue;                                     // si la queue n existe pas je passe mon chemin
-                if (count($this->cmdQueue[$i]) < 1) continue;                                  // si la queue est vide je passe mon chemin
-                if ($this->zigateAvailable[$i] == 0) continue;                                 // Si la zigate n est pas considéré dispo je passe mon chemin
+                if (!isset($this->cmdQueue[$i])) continue;      // si la queue n existe pas je passe mon chemin
+                if (count($this->cmdQueue[$i]) < 1) continue;   // si la queue est vide je passe mon chemin
+                if ($this->zigateAvailable[$i] == 0) continue;  // Si la zigate n est pas considéré dispo je passe mon chemin
 
                 $this->deamonlog("debug", "                     ", $this->debug['processCmdQueueToZigate']);
                 $this->deamonlog("debug", "                     processCmdQueueToZigate(): J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate a envoyer.", $this->debug['processCmdQueueToZigate']);
@@ -351,6 +353,8 @@
                 $cmd['retry']--;                        // Je reduis le nombre de retry restant
                 $cmd['priority']++;                     // Je reduis la priorité
                 $cmd['time'] = time();                    // Je mets l'heure a jour
+                if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['shortAddr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['shortAddr'], $GLOBALS["dbgMonitorAddr"], 4))
+                    monMsgToZigate($cmd['shortAddr'], $cmd['cmd'].'-'.$cmd['len'].'-'.$cmd['datas']); // Monitor this addr ?
 
                 // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
                 if ($cmd['retry'] > 0) {

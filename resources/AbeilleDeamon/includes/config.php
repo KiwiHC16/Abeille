@@ -28,14 +28,16 @@
     define('queueKeyParserToAssist',        141); // Parser to EQ assistant
     define('queueKeyAssistToCmd',           142); // Assistant to cmd
 
+    /* LQI collect queues */
+    define('queueKeyParserToLQI',           225);
+    define('queueKeyLQIToAbeille',          521);
+    define('queueKeyLQIToCmd',              523);
+
     define('queueKeyParserToAbeille',       221);
     define('queueKeyParserToCmd',           223);
-    define('queueKeyParserToLQI',           225);
     define('queueKeyCmdToAbeille',          321);
     define('queueKeyCmdToCmd',              323);
 
-    define('queueKeyLQIToAbeille',          521);
-    define('queueKeyLQIToCmd',              523);
     define('queueKeyXmlToAbeille',          621);
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
@@ -58,4 +60,7 @@
     /* URL to access documentations */
     define('urlProducts', "https://github.com/KiwiHC16/AbeilleDoc/blob/master/docs/products");
     define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
+
+    /* Developper config file */
+    define('dbgFile', __DIR__.'/../../../tmp/debug.json');
 ?>

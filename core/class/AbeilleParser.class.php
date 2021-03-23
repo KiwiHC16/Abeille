@@ -113,7 +113,7 @@
             global $argv;
 
             /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser.log");
+            logSetConf("AbeilleParser.log", TRUE);
 
             parserLog("debug", "AbeilleParser constructor", "AbeilleParserClass");
             $this->parameters_info = AbeilleTools::getParameters();
@@ -126,6 +126,12 @@
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
+
+            /* Monitor updates */
+            if (isset($GLOBALS["dbgMonitorAddr"])) {
+                /* Extracting IEEE address from '<short>-<ieee>' format. */
+                $GLOBALS["dbgMonitorAddrExt"] = substr($GLOBALS["dbgMonitorAddr"], 5);
+            }
         }
 
         // $SrcAddr = dest / shortaddr
@@ -626,6 +632,11 @@
             if ($Rejoin != "") $msgDecoded .= ', Rejoin='.$Rejoin;
             $msgDecoded .= ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded);
+            if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE)) {
+                monMsgFromZigate('xxxx-'.$IEEE, $msgDecoded); // Send message to monitor
+                monAddrHasChanged($Addr, $IEEE); // Short address has changed
+                $GLOBALS["dbgMonitorAddr"] = $Addr;
+            }
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja dans Abeille, sinon sera drop
             $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
@@ -697,6 +708,8 @@
 
             $msgDecoded = "0100/?";
             parserLog('debug', $dest.', Type='.$msgDecoded);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
 
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
@@ -821,6 +834,7 @@
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             // $payload              // Will decode later depending on the message
+            $pl = substr($payload, 26); // Keeping payload only
 
             $this->whoTalked[] = $dest.'/'.$srcAddress;
 
@@ -1462,7 +1476,7 @@
             }
 
             parserLog("debug", $dest.", Type=8002/Data indication, ".$baseLog, "8002");
-            parserLog("debug", "  Ignored payload=".$payload, "8002");
+            parserLog("debug", "  Ignored payload=".$pl, "8002");
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -1533,6 +1547,8 @@
 
             $msgDecoded = '8009/Network state response, ShortAddr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Channel='.$Channel;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $ShortAddress, 4))
+                monMsgFromZigate($ShortAddress.'-'.$ExtendedAddress, $msgDecoded); // Send message to monitor
 
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
@@ -2084,6 +2100,8 @@
 
             $msgDecoded = '8048/Leave indication, ExtAddr='.$IEEE.', RejoinStatus='.$RejoinStatus;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8048");
+            if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE))
+                monMsgFromZigate('xxxx-'.$IEEE, $msgDecoded); // Send message to monitor
 
             /*
             $cmds = Cmd::byLogicalId('IEEE-Addr');
@@ -3379,6 +3397,8 @@
                    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
                    .', Addr='.$Addr;
             parserLog('debug', $dest.', Type='.$msg, "8701");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
+                monMsgFromZigate($Addr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
         }
 
         /**

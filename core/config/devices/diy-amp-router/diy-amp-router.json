@@ -6,20 +6,12 @@
       "automatism": "1"
     },
     "configuration": {
-      "uniqId": "20210318_1705",
+      "uniqId": "20210323_1705",
       "icone": "Diy-amp-router",
       "mainEP": "01"
     },
     "Commandes": {
-      "include100": "nom",
-      "include2": "etatEp02in",
-      "include2 1": "getatEp02",
-      "include3": "etatEp03in",
-      "include3 1": "getatEp03",
-      "include4": "etatEp04in",
-      "include4 1": "getEtatEp04",
-      "include5": "etatEp05in",
-      "include5 1": "getEtatEp05"
+      "include100": "nom"
     }
   }
 }

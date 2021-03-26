@@ -1,0 +1,19 @@
+{
+  "1-digital-input": {
+    "nameJeedom": "1-digital-input",
+    "timeout": "60",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqId": "20210326_0900",
+      "icone": "1-digital-input",
+      "mainEP": "01"
+    },
+    "Commandes": {
+      "include100": "nom",
+      "include2": "etatEp02in",
+      "include2 1": "getEtatEp02"
+    }
+  }
+}

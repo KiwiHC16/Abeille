@@ -1983,7 +1983,7 @@
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
-            $mdgDecoded = '8043/Simple descriptor response'
+            $msgDecoded = '8043/Simple descriptor response'
                              . ', SQN='         .$SQN
                              . ', Status='      .$Status
                              . ', Addr='        .$SrcAddr

@@ -20,6 +20,10 @@
                 $dbgParserLog[$value] = 1;
             }
         }
+        if (isset($dbgConfig["dbgMonitorAddr"])) { // Monitor params
+            $dbgMonitorAddr = $dbgConfig["dbgMonitorAddr"];
+            $dbgMonitorAddrExt = substr($dbgMonitorAddr, 5); // Extracting extended addr
+        }
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -38,6 +42,8 @@
     include_once __DIR__.'/../../core/class/AbeilleCmd.class.php';      // AbeilleCmdClass
     include_once __DIR__.'/../../core/class/AbeilleParser.class.php';   // AbeilleParserClass
     include_once __DIR__.'/../../core/class/Abeille.class.php';         // AbeilleClass
+    if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
+        include_once __DIR__.'/../../core/php/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -186,15 +192,14 @@
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
     //check already running
-    logSetConf("AbeilleParser.log");
-    logMessage("info", "Démarrage d'AbeilleParser");
+    logSetConf("AbeilleParser.log", TRUE);
+    logMessage("info", ">>> Démarrage d'AbeilleParser");
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
-    logMessage('debug', 'Daemons status: '.json_encode($daemons));
-    #Two at least expected,the original and this one
-    if ($daemons["parser"] > 1){
-        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
+    logMessage('debug', 'Daemons: '.json_encode($daemons));
+    if ($daemons["parser"] > 1) {
+        logMessage('error', 'Le démon est déja lancé! '.json_encode($daemons));
         exit(3);
     }
 
@@ -206,16 +211,41 @@
         $LQI = array();
         $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
 
-        $queueKeySerieToParser   = msg_get_queue(queueKeySerieToParser);
+        $queueKeySerialToParser   = msg_get_queue(queueKeySerialToParser);
         $max_msg_size = 2048;
         $msg_type = NULL;
 
+        $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
+        $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
+        $rerouteNet = "";
         while (true) {
 
             // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
-            if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
+            if (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
                 $data = json_decode( $dataJson );
+
+                /* Checking if incoming message rerouting required */
+                if ($rerouteNet == $data->dest) {
+                    if (msg_send($toAssistQueue, 1, $data->trame, TRUE, FALSE, $error_code) == TRUE) {
+                        logMessage('debug', $data->dest.", rerouted: ".$data->trame);
+                        continue;
+                    }
+                    $rerouteNet = ""; // Error => closing rerouting
+                    logMessage('debug', "Terminating rerouting");
+                }
                 $AbeilleParser->protocolDatas( $data->dest, $data->trame, $clusterTab, $LQI);
+            }
+
+            /* Checking if message from EQ assistant */
+            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT) == TRUE) {
+logMessage('debug', "Received=".json_encode($msg));
+                if ($msg['type'] == 'reroute') {
+                    $rerouteNet = $msg['network'];
+                    logMessage('debug', "'".$rerouteNet."' messages must be rerouted");
+                } else if ($msg['type'] == 'reroutestop') {
+                    logMessage('debug', "Stopping '".$rerouteNet."' msg rerouting.");
+                    $rerouteNet = "";
+                }
             }
 
             // Check if we have any action scheduled and waiting to be processed
@@ -234,5 +264,5 @@
         logMessage('debug', 'error: '.json_encode($e->getMessage()));
     }
 
-    logMessage('info', 'AbeilleParser: arret du démon');
+    logMessage('info', '<<< AbeilleParser: arret du démon');
 ?>

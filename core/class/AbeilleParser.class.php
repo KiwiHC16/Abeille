@@ -774,18 +774,16 @@
             // Envoie du message 8000 (Status) pour AbeilleMQTTCmd pour la gestion du flux de commandes vers la zigate
             if (msg_send( $this->queueKeyParserToCmdSemaphore, 1, $msgAbeille, true, false)) {
                 // parserLog("debug","(fct mqqtPublish) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille), "8000");
-            }
-            else {
+            } else {
                 parserLog("debug", "  Could not add message to 'queueKeyParserToCmd' queue: ".json_encode($msgAbeille), "8000");
             }
 
             if ($PacketType == "0002") {
                 if ( $status == "00" ) {
-                    parserLog("debug","Le mode de fonctionnement de la zigate a bien été modifié.");
+                    parserLog("debug","  Le mode de fonctionnement de la zigate a bien été modifié.");
                     // message::add("Abeille", "Le mode de fonctionnement de la zigate a bien été modifié.","" );
-                }
-                else {
-                    parserLog("debug","Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.");
+                } else {
+                    parserLog("debug", "  Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.");
                     message::add("Abeille", "Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
                 }
             }
@@ -838,7 +836,19 @@
 
             $this->whoTalked[] = $dest.'/'.$srcAddress;
 
-            $baseLog = "Status=".$status.", ProfId=".$profile.", ClustId=".$cluster.", SrcEP=".$srcEndPoint.", DestEP=".$destEndPoint.", SrcAddrMode=".$sourceAddressMode.", SrcAddr=".$srcAddress.", DestAddrMode=".$destinationAddressMode.", DestAddr=".$dstAddress;
+            $msgDecoded = '8002/Data indication'
+                            .', Status='.$status
+                            .', ProfId='.$profile
+                            .', ClustId='.$cluster
+                            .", SrcEP=".$srcEndPoint
+                            .", DestEP=".$destEndPoint
+                            .", SrcAddrMode=".$sourceAddressMode
+                            .", SrcAddr=".$srcAddress
+                            .", DestAddrMode=".$destinationAddressMode
+                            .", DestAddr=".$dstAddress;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8002");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddress, 4))
+                monMsgFromZigate($srcAddress.'-xxxxxxxxxxxxxxxx', $msgDecoded); // Send message to monitor
 
             // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
@@ -849,8 +859,7 @@
                 $index                  = hexdec(substr($payload,32, 2));
                 $tableCount             = hexdec(substr($payload,34, 2));
 
-                parserLog('debug', $dest.', Type=8002/Data indication - Routing Table Response'
-                            . $baseLog
+                parserLog('debug', '  Routing table response'
                             . ', SQN='.$SQN
                             . ', Status='.$status
                             . ', tableSize='.$tableSize
@@ -895,14 +904,14 @@
             // Cluster 0x0001 Power
             if ( ($profile == "0104") && ($cluster == "0001") ) {
                 // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
                 return;
             }
 
             // Cluster 0x0004 Groups
             if ( ($profile == "0104") && ($cluster == "0004") ) {
                 // Managed/Processed by Ziagte which send a 8062 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
                 return;
             }
 
@@ -921,14 +930,13 @@
                         $SQN                    = substr($payload,32, 2);
                         $cmd                    = substr($payload,34, 2);
                         if ( $cmd != "07" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
+                            parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
                             return;
                         }
                         $remainingData          = substr($payload,36, 8);
                         $value                  = substr($payload,36, 2);
 
-                        parserLog("debug", $dest.', Type=8002/Data indication - Telecommande Ikea Ronde'
-                                        . $baseLog
+                        parserLog("debug", '  Telecommande Ikea Ronde'
                                         . ', frameCtrlField='.$frameCtrlField
                                         . ', Manufacturer='.$Manufacturer
                                         . ', SQN='.$SQN
@@ -944,13 +952,13 @@
                 if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
                     $SQN                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
-                    parserLog("debug", $dest.', Type=8002/Data indication ---------------------> cmd :'.$cmd );
+                    parserLog("debug", '  cmd :'.$cmd );
 
                     if ($cmd=="01") { // Read Attribut
                         $attribut           = substr($payload,34, 2).substr($payload,32, 2);
                         $status             = substr($payload,36, 2);
                         if ( $status != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Attribut Read Status error.');
+                            parserLog("debug", '  Attribut Read Status error.');
                             return;
                         }
                         if ( $attribut == "0000" ) {
@@ -960,7 +968,7 @@
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
-                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            parserLog("debug", '  '.json_encode($sceneStored) );
 
                             return;
                         }
@@ -972,7 +980,7 @@
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
-                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            parserLog("debug", '  '.json_encode($sceneStored) );
 
                             return;
                         }
@@ -984,7 +992,7 @@
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
-                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            parserLog("debug", '  '.json_encode($sceneStored) );
 
                             return;
                         }
@@ -996,12 +1004,12 @@
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
-                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            parserLog("debug", '  '.json_encode($sceneStored) );
 
                             return;
                         }
 
-                        parserLog("debug", $dest.', Type=8002/Data indication ---------------------> Attribut inconnu :'.$attribut );
+                        parserLog("debug", '  Attribut inconnu :'.$attribut );
                     }
                 }
 
@@ -1014,14 +1022,14 @@
                         $sceneStatus            = substr($payload,32, 2);
 
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error dd Scene Response.');
+                            parserLog("debug", '  Status error dd Scene Response.');
                             return;
                         }
 
                         $groupID          = substr($payload,34, 4);
                         $sceneId          = substr($payload,36, 2);
 
-                        parserLog("debug",$dest.', Type=8002 Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
+                        parserLog("debug", '  Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
                         return;
                     }
 
@@ -1029,7 +1037,7 @@
                     elseif ( $cmd == "01" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            parserLog("debug", '  Status error on scene info.');
                             return;
                         }
                         $groupID            = substr($payload,34, 4);
@@ -1039,7 +1047,7 @@
                         $statusRouting      = "";
                         $extensionSet       = ""; // 06:00:01:01:08:00:01:fe:00:03:04:13:ae:eb:51 <- to be investigated
 
-                        parserLog("debug",$dest.', Type=8002 View Scene Response: '.$groupID.' - '.$sceneId.' ...');
+                        parserLog("debug", '  View Scene Response: '.$groupID.' - '.$sceneId.' ...');
                         return;
                     }
 
@@ -1047,13 +1055,13 @@
                     elseif ( $cmd == "02" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            parserLog("debug", '  Status error on scene info.');
                             return;
                         }
                         $groupID            = substr($payload,34, 4);
                         $sceneId            = substr($payload,38, 2);
 
-                        parserLog("debug",$dest.', Type=8002 scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
+                        parserLog("debug", '  Scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
                         return;
                     }
 
@@ -1061,7 +1069,7 @@
                     elseif ( $cmd == "03" ) {
                         $sceneStatus            = substr($payload,32, 2);
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error Remove All Scene Response.');
+                            parserLog("debug", '  Status error Remove All Scene Response.');
                             return;
                         }
                         $groupID                = substr($payload,36, 2).substr($payload,34, 2);
@@ -1078,14 +1086,14 @@
                         $sceneStatus            = substr($payload,32, 2);
 
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error Store Scene Response.');
+                            parserLog("debug", '  Status error Store Scene Response.');
                             return;
                         }
 
                         $groupID          = substr($payload,34, 4);
                         $sceneId          = substr($payload,36, 2);
 
-                        parserLog("debug",$dest.', Type=8002 store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
+                        parserLog("debug", '  store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: ' . $groupID . ' - scene id:' . $sceneId );
                         return;
                     }
 
@@ -1096,7 +1104,7 @@
                             $sceneRemainingCapacity = substr($payload,34, 2);
                             $groupID                = substr($payload,36, 4);
 
-                            parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID );
+                            parserLog("debug", "  scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID );
 
                             $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
                             unset( $sceneStored["GroupeScene"][$groupID] );
@@ -1104,14 +1112,14 @@
                             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                             $abeille->save();
 
-                            parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                            parserLog("debug", '  '.json_encode($sceneStored) );
 
                             // $sceneStored = json_decode( Abeille::byLogicalId($dest."/".$srcAddress,'Abeille')->getConfiguration('sceneJson','{}') , True );
                             // parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
                             return;
                         }
                         if ( $sceneStatus != "00" ) {
-                            parserLog("debug", $dest.', Type=8002/Data indication - Status error on scene info.');
+                            parserLog("debug", '  Status error on scene info.');
                             return;
                         }
 
@@ -1123,7 +1131,7 @@
                             $sceneId .= '-'.substr($payload,42+$i*2, 2);
                         }
 
-                        parserLog("debug",$dest.", Type=8002 scene: scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
+                        parserLog("debug", "  scene capa:".$sceneRemainingCapacity . ' - group: ' . $groupID . ' - scene count:' . $sceneCount . ' - scene id:' . $sceneId );
 
                         $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
                         $sceneStored["sceneCount"]                    = $sceneCount;
@@ -1131,13 +1139,13 @@
                         $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
                         $abeille->save();
 
-                        parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                        parserLog("debug",  '  '.json_encode($sceneStored) );
 
                         return;
                     }
 
                     else {
-                        parserLog("debug", $dest.', Type=8002/Data indication - Message can t be decoded. Cmd unknown.');
+                        parserLog("debug",  '  Message can t be decoded. Cmd unknown.');
                         return;
                     }
                 }
@@ -1152,8 +1160,7 @@
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
-                parserLog('debug', $dest.', Type=8002/Data indication - Interrupteur sur pile TS0043 bouton'
-                                 . $baseLog
+                parserLog('debug',  '  Interrupteur sur pile TS0043 bouton'
                                  . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -1173,8 +1180,7 @@
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
-                parserLog('debug', $dest.', Type=8002/Data indication - (decoded but not processed)'
-                                . $baseLog
+                parserLog('debug', '  '
                                 . ', frameCtrlField='.$frameCtrlField
                                  . ', SQN='.$SQN
                                  . ', cmd='.$cmd
@@ -1195,8 +1201,7 @@
                     $attributTime                  = substr($payload,34, 2) . substr($payload,32, 2);
                     $attributTimeZone              = substr($payload,38, 2) . substr($payload,36, 2);
                     if ( isset($this->debug["8002"]) ) {
-                        if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
-                                        . $baseLog
+                        parserLog('debug', '  Time Request - (decoded but not processed) '
                                         . ', frameCtrlField='.$frameCtrlField
                                         . ', SQN='.$SQN
                                         . ', cmd='.$cmd
@@ -1222,12 +1227,11 @@
                     $value                     = substr($payload,40, 2);
 
                     if ( !$status ) {
-                        $this->deamonlog('debug', $dest.', Type=8002/Data indication - Status not null - not processing. ');
+                        parserLog('debug', '  Status not null - not processing. ');
                         return;
                     }
 
-                    if ($this->debug["8002"]) $this->deamonlog('debug', $dest.', Type=8002/Data indication - Time Request - (decoded but not processed) '
-                                    . $baseLog
+                    parserLog('debug', '  Time Request - (decoded but not processed) '
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN
                                     . ', cmd='.$cmd
@@ -1245,7 +1249,7 @@
             // Cluster 0x0402 Temperature
             if ( ($profile == "0104") && ($cluster == "0402") ) {
                 // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug",$dest.", Type=8002 (Not processed - message duplication so dropped - 8102 and 8000): ".$baseLog);
+                parserLog("debug",  "  Message duplication => dropped");
                 return;
             }
 
@@ -1261,8 +1265,7 @@
                 if ( ($attribute == '0000') && ($dataType==25) ) {
                     // '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
                     $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
-                    parserLog('debug', $dest.', Type=8002/Data indication - Remontée puissance prise TS0121 '
-                                    . $baseLog
+                    parserLog('debug', '  Remontée puissance prise TS0121 '
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN
                                     . ', cmd='.$cmd
@@ -1290,7 +1293,7 @@
                 if ( $cmd == '01') {
 
                     $attributs = substr($payload,32);
-                    parserLog('debug', $dest.', Type=8002/Data indication - Attributs received: '.$attributs, "8002");
+                    parserLog('debug', '  Attributs received: '.$attributs, "8002");
 
                     while ( strlen($attributs) > 0 ) {
 
@@ -1304,10 +1307,10 @@
                             $value = $valueRevHex[2].$valueRevHex[3].$valueRevHex[0].$valueRevHex[1];
                             $attributs = substr($attributs,12);
                         }
-                        parserLog('debug', $dest.', Type=8002/Data indication - Attributs analysis: ' . $attribute . '-' . $status . '-' . $dataType . '-' . $value . '->' . $attributs, "8002");
+                        parserLog('debug', '  Attributs analysis: ' . $attribute . '-' . $status . '-' . $dataType . '-' . $value . '->' . $attributs, "8002");
 
                         if ($status!='00') {
-                            parserLog('debug', $dest.', Type=8002/Data indication - le status est erroné ne process pas la commande', "8002");
+                            parserLog('debug', '  le status est erroné ne process pas la commande', "8002");
                             continue;
                         }
 
@@ -1315,8 +1318,7 @@
                         if (($attribute == '0505') && ($dataType == '21') ) {
                             // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
 
-                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée V Blitzwolf '
-                                . $baseLog
+                            parserLog('debug', '  Remontée V Blitzwolf '
                                 . ', frameCtrlField='.$frameCtrlField
                                 . ', SQN='.$SQN
                                 . ', cmd='.$cmdTxt
@@ -1333,8 +1335,7 @@
                         if (($attribute == '0508') && ($dataType == '21') ) {
                             // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
 
-                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée A Blitzwolf '
-                                . $baseLog
+                            parserLog('debug', '  Remontée A Blitzwolf '
                                 . ', frameCtrlField='.$frameCtrlField
                                 . ', SQN='.$SQN
                                 . ', cmd='.$cmdTxt
@@ -1351,8 +1352,7 @@
                         if (($attribute == '050B') && ($dataType == '29') ) {
                             // '29' => array( 'Int16', 2 ), // Signed 16-bit int
 
-                            parserLog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf '
-                                . $baseLog
+                            parserLog('debug', '  Remontée puissance Legrand/Blitzwolf '
                                 . ', frameCtrlField='.$frameCtrlField
                                 . ', SQN='.$SQN
                                 . ', cmd='.$cmdTxt
@@ -1376,8 +1376,7 @@
                         // '29' => array( 'Int16', 2 ), // Signed 16-bit int
                         $value = substr($payload,40, 2).substr($payload,38, 2);
 
-                        parserLog('debug', $dest.', Type=8002/Data indication - Remontée puissance Legrand/Blitzwolf(?) '
-                            . $baseLog
+                        parserLog('debug', '  Remontée puissance Legrand/Blitzwolf(?) '
                             . ', frameCtrlField='.$frameCtrlField
                             . ', SQN='.$SQN
                             . ', cmd='.$cmd
@@ -1406,8 +1405,7 @@
                 $dataType               = substr($payload,36, 2);
                 $value                  = substr($payload,38, 2);
 
-                parserLog('debug', $dest.', Type=8002/Data indication - Remontée etat relai module Legrand 20AX '
-                                    . $baseLog
+                parserLog('debug', '  Remontée etat relai module Legrand 20AX '
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN
                                     . ', cmd='.$cmd
@@ -1425,8 +1423,7 @@
                     $dataType               = substr($payload,44, 2);
                     $value                  = substr($payload,46, 2);
 
-                    parserLog('debug', $dest.', Type=8002/Data indication - Remontée etat relai module Legrand 20AX '
-                                    . $baseLog
+                    parserLog('debug', '  Remontée etat relai module Legrand 20AX '
                                     . ', frameCtrlField='.$frameCtrlField
                                     . ', SQN='.$SQN
                                     . ', cmd='.$cmd
@@ -1475,8 +1472,7 @@
                 }
             }
 
-            parserLog("debug", $dest.", Type=8002/Data indication, ".$baseLog, "8002");
-            parserLog("debug", "  Ignored payload=".$pl, "8002");
+            parserLog("debug", "  Ignored payload: ".$pl, "8002");
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -1545,7 +1541,7 @@
 
             $this->whoTalked[] = $dest.'/'.$ShortAddress;
 
-            $msgDecoded = '8009/Network state response, ShortAddr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Channel='.$Channel;
+            $msgDecoded = '8009/Network state response, Addr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Chan='.$Channel;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $ShortAddress, 4))
                 monMsgFromZigate($ShortAddress.'-'.$ExtendedAddress, $msgDecoded); // Send message to monitor
@@ -1656,21 +1652,24 @@
             $DestEndPoint   = substr($payload, 6, 2);
             $ClustID        = substr($payload, 8, 4);
 
-            parserLog('debug', $dest.', Type=8011/APS data ACK, Status='.$Status.', DestAddr='.$DestAddr.', DestEP='.$DestEndPoint.', ClustId='.$ClustID, "8011");
+            $msgDecoded = '8011/APS data ACK, Status='.$Status.', Addr='.$DestAddr.', EP='.$DestEndPoint.', ClustId='.$ClustID;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
+                monMsgFromZigate($DestAddr, $msgDecoded); // Send message to monitor
+
             if ($Status=="00") {
                 if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                     $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
-                    parserLog('debug', $dest.', Type=8011/APS data ACK, found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
-                    $eq->setStatus( 'APS_ACK', '1');
-                    parserLog('debug', $dest.', Type=8011/APS data ACK, APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                    parserLog('debug', '  Found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
+                    $eq->setStatus('APS_ACK', '1');
+                    parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
                 }
-            }
-            else {
+            } else {
                 if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                     $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
-                    parserLog('debug', $dest.', Type=8011/APS data ACK, with status error: '.$eq->getHumanName()." set APS_ACK to 0", "8011");
-                    $eq->setStatus( 'APS_ACK', '0');
-                    parserLog('debug', $dest.', Type=8011/APS data ACK, APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                    parserLog('debug', '  ACK failed: '.$eq->getHumanName().". APS_ACK set to 0", "8011");
+                    $eq->setStatus('APS_ACK', '0');
+                    parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
                 }
             }
         }
@@ -1698,18 +1697,18 @@
             //<Status: bool_t>
             // Envoi Status
 
-            $data = substr($payload, 0, 2);
+            $Status = substr($payload, 0, 2);
 
-            parserLog('debug', $dest.', Type=8014/Permit join status response: PermitJoinStatus='.$data);
-            if ($data == "01")
-                parserLog('info', 'Zigate'.substr($dest, 7, 1).' en mode INCLUSION', "8014");
+            parserLog('debug', $dest.', Type=8014/Permit join status response, PermitJoinStatus='.$Status);
+            if ($Status == "01")
+                parserLog('info', '  Zigate'.substr($dest, 7, 1).' en mode INCLUSION', "8014");
             else
-                parserLog('info', 'Zigate'.substr($dest, 7, 1).': FIN du mode inclusion', "8014");
+                parserLog('info', '  Zigate'.substr($dest, 7, 1).': FIN du mode inclusion', "8014");
 
             $SrcAddr = "Ruche";
             $ClusterId = "permitJoin";
             $AttributId = "Status";
-            $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $Status);
         }
 
         function decode8015($dest, $payload, $ln, $qos, $dummy)
@@ -1834,7 +1833,7 @@
             $dataNetwork = hexdec( substr($payload,22, 2) );
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataNetwork);
 
-            parserLog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', ShortAddr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
+            parserLog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', Addr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
         }
 
         function decode8030($dest, $payload, $ln, $qos, $dummy)
@@ -1864,7 +1863,7 @@
             parserLog('debug', $dest.', Type=8035/PDM event code'
                              .', PDMEvtCode=x'.$PDMEvtCode
                              .', RecId='.$RecId
-                             .' => '.zgGetPDMEvent($PDMEvtCode));
+                             .' => '.zgGetPDMEvent($PDMEvtCode), "8035");
         }
 
         function decode8040($dest, $payload, $ln, $qos, $dummy)
@@ -1880,21 +1879,24 @@
             // <number of associated devices: uint8_t>
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
+            $Addr = substr($payload,20, 4);
+            $msgDecoded='8040/Network address response'
+                . ', SQN='                                     .substr($payload, 0, 2)
+                . ', Status='                                  .substr($payload, 2, 2)
+                . ', ExtAddr='                                 .substr($payload, 4,16)
+                . ', Addr='                               .$Addr
+                . ', NumberOfAssociatedDevices='               .substr($payload,24, 2)
+                . ', StartIndex='                              .substr($payload,26, 2);
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8040");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
+                monMsgFromZigate($Addr, $msgDecoded); // Send message to monitor
 
-            parserLog('debug', $dest.', Type=8040/Network address response'
-                             . ', SQN='                                     .substr($payload, 0, 2)
-                             . ', Status='                                  .substr($payload, 2, 2)
-                             . ', ExtAddr='                                 .substr($payload, 4,16)
-                             . ', ShortAddr='                               .substr($payload,20, 4)
-                             . ', NumberOfAssociatedDevices='               .substr($payload,24, 2)
-                             . ', StartIndex='                              .substr($payload,26, 2) );
-
-            if ( substr($payload, 2, 2)!= "00" ) {
-                parserLog('debug', '  Type=8040: Don t use this data there is an error, comme info not known');
-            }
-
-            for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
-                parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4) );
+            if ( substr($payload, 2, 2) != "00" ) {
+                parserLog('debug', '  Don\'t use this data there is an error');
+            } else {
+                for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
+                    parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
+                }
             }
         }
 
@@ -1909,14 +1911,18 @@
             // <number of associated devices: uint8_t>
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
+            $SrcAddr = substr($payload,20, 4);
 
-            parserLog('debug', $dest.', Type=8041/IEEE Address response'
+            $msgDecoded = '8041/IEEE address response'
                              . ', SQN='                                     .substr($payload, 0, 2)
                              . ', Status='                                  .substr($payload, 2, 2)
                              . ', ExtAddr='                                 .substr($payload, 4,16)
-                             . ', ShortAddr='                               .substr($payload,20, 4)
-                             . ', NumberOfAssociatedDevices='               .substr($payload,24, 2)
-                             . ', StartIndex='                              .substr($payload,26, 2) );
+                             . ', Addr='                               .substr($payload,20, 4)
+                             . ', NbOfAssociatedDevices='               .substr($payload,24, 2)
+                             . ', StartIndex='                              .substr($payload,26, 2);
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8041");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
 
             if ( substr($payload, 2, 2)!= "00" ) {
                 parserLog('debug', '  Don t use this data there is an error, comme info not known');
@@ -1926,7 +1932,6 @@
                 parserLog('debug', '  AssociatedDev='    .substr($payload, (28 + $i), 4) );
             }
 
-            $SrcAddr = substr($payload,20, 4);
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $data = substr($payload, 4,16);
@@ -1978,17 +1983,19 @@
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
-            parserLog('debug', $dest.', Type=8043/Simple descriptor response'
+            $mdgDecoded = '8043/Simple descriptor response'
                              . ', SQN='         .$SQN
                              . ', Status='      .$Status
                              . ', Addr='        .$SrcAddr
                              . ', Length='      .$Len
                              . ', EP='          .$EPoint
-                             . ', Profile='     .$profile.'/'.zgGetProfile($profile)
+                             . ', ProfId='     .$profile.'/'.zgGetProfile($profile)
                              . ', DevId='       .$deviceId.'/'.zgGetDevice($profile, $deviceId)
                              . ', BitField='    .substr($payload,20, 2)
-                             . ', [Modelisation]'
-                             , "8043");
+                             . ', [Modelisation]';
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8043");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
 
             if ($Status=="00") {
                 // Envoie l info a Abeille
@@ -2053,25 +2060,28 @@
                 }
             }
 
-            parserLog('debug', $dest.', Type=8045/Active endpoints response'
-                             . ', SQN='             .$SQN
-                             . ', Status='          .$status
-                             . ', ShortAddr='       .$SrcAddr
-                             . ', EndPointCount='   .$EndPointCount
-                             . ', EndPointList='    .$endPointList
-                             . ', [Modelisation]'
-                            , "8045");
+            $msgDecoded = '8045/Active endpoints response'
+                . ', SQN='             .$SQN
+                . ', Status='          .$status
+                . ', Addr='       .$SrcAddr
+                . ', EPCount='   .$EndPointCount
+                . ', EPList='    .$endPointList
+                . ', [Modelisation]';
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
 
             if ($status!="00") {
-                parserLog('debug', $dest.', Type=8045/Active endpoints response - status diff de 0, je ne process pas la reponse');
+                parserLog('debug', '  Status != 0 => ignoring');
                 return;
             }
 
-            parserLog('debug', $dest.', Type=8045/Active endpoints response - will ask details on EP: '.$EP. ' [Modelisation]' );
-            $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd(                     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd(      "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd(                "TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            // Tcharp38: Which EP ? Shouldn't be in a loop ?
+            parserLog('debug', '  Asking details for EP '.$EP. ' [Modelisation]' );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
@@ -2122,7 +2132,7 @@
             $SrcAddr = "Ruche";
             $fct = "disable";
             $extendedAddr = $IEEE;
-            $this->mqqtPublishFct( $dest."/".$SrcAddr, $fct, $extendedAddr);
+            $this->mqqtPublishFct($dest."/".$SrcAddr, $fct, $extendedAddr);
         }
 
         /* 804A = Management Network Update Response */
@@ -2141,19 +2151,26 @@
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
 
-            $SQN=substr($payload, 0, 2);
-            $Status=substr($payload, 2, 2);
-
-            if ($Status!="00") {
-                parserLog('debug', $dest.', Type=804A/Management network update response, Status Error ('.$Status.') can not process the message.');
-                return;
-            }
-
+            $SQN = substr($payload, 0, 2);
+            $Status = substr($payload, 2, 2);
             $TotalTransmission = substr($payload, 4, 4);
             $TransmFailures = substr($payload, 8, 4);
-
             $ScannedChannels = substr($payload, 12, 8);
             $ScannedChannelsCount = substr($payload, 20, 2);
+
+            $msgDecoded = '804A/Management network update response'
+                . ', SQN='.$SQN
+                . ', Status='.$Status
+                . ', TotTx='.$TotalTransmission
+                . ', TxFailures='.$TransmFailures
+                . ', ScannedChan='.$ScannedChannels
+                . ', ScannedChanCount='.$ScannedChannelsCount;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "804A");
+
+            if ($Status!="00") {
+                parserLog('debug', '  Status Error ('.$Status.') can not process the message.', "804A");
+                return;
+            }
 
             /*
             $Channels = "";
@@ -2188,15 +2205,7 @@
                 }
             }
 
-            parserLog('debug', $dest.', Type=804A/Management Network Update Response (Processed): addr='.$addr
-                             . ', SQN=0x'.$SQN
-                             . ', Status='.$Status
-                             . ', TotalTransmission='.$TotalTransmission
-                             . ', TransmFailures='.$TransmFailures
-                             . ', ScannedChannels=0x'.$ScannedChannels
-                             . ', ScannedChannelsCount=0x'.$ScannedChannelsCount
-                             . ', Channels='.json_encode($results)
-                             );
+            parserLog('debug', '  Channels='.json_encode($results), "804A");
         }
 
         /* 804E/Management LQI response */
@@ -2237,6 +2246,8 @@
                 .', StartIndex='                .$StartIndex
                 .', SrcAddr='                   .$SrcAddr;
             parserLog('debug', $dest.', Type='.$decoded);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $decoded); // Send message to monitor
 
             if ($Status != "00") {
                 parserLog('debug', "  Status != 00 => abandon du decode");
@@ -2698,10 +2709,6 @@
             $data = $direction;
             $this->mqqtPublish($dest."/".$source, $clusterId, $AttributId, $data);
         }
-        //----------------------------------------------------------------------------------------------------------------
-
-        #Reponse Attributs
-        #8100-8140
 
         /* Common function for 8100 & 8102 messages */
         function decode8100_8102($type, $dest, $payload, $ln, $qos, $quality)
@@ -2749,13 +2756,14 @@
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$AttributSize;
 
+            parserLog('debug', $dest.', Type='.$msg, $type);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
+
             if ($AttributStatus!='00') {
-                $msg .= '  Status!=0 => Probably read attempt on non existent param';
-                parserLog('debug', $dest.', Type='.$msg, $type);
+                parserLog('debug', '  Status!=0 => Probably read attempt on non existent param', $type);
                 return;
             }
-
-            parserLog('debug', $dest.', Type='.$msg, $type);
 
             // valeur hexadécimale  - type -> function
             // 0x00 Null
@@ -3267,20 +3275,26 @@
             // <Cluster id: uint16_t>
             // <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
-            $msg = '8120/Configure Reporting response'
+            $addr = substr($payload, 2, 4);
+            $attr = substr($payload,12, 4);
+            $status = substr($payload,16, 2);
+
+            $msg = '8120/Configure reporting response'
                 . ', SQN='     .substr($payload, 0, 2)
-                . ', Addr='    .substr($payload, 2, 4)
+                . ', Addr='    .$addr
                 . ', EP='      .substr($payload, 6, 2)
                 . ', ClustId=' .substr($payload, 8, 4)
-                . ', Attr='    .substr($payload,12, 4)
-                . ', Status='  .substr($payload,16, 2);
+                . ', Attr='    .$attr
+                . ', Status='  .$status;
             parserLog('debug', $dest.', Type='.$msg);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
+                monMsgFromZigate($addr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
 
             // Envoie channel
             $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Report";
-            $data = date("Y-m-d H:i:s")." Attribut: ".substr($payload,12, 4)." Status (00: Ok, <>0: Error): ".substr($payload,16, 2);
+            $data = date("Y-m-d H:i:s")." Attribut: ".$attr." Status (00: Ok, <>0: Error): ".$status;
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -3322,14 +3336,13 @@
             $EP         = substr( $payload,12, 2);
             $Cluster    = substr( $payload,14, 4);
 
-            parserLog('debug', $dest.', Type=8140/Configure Reporting response (Decoded but not processed yet)'
-                            . ': Dest='         .$dest
-                            . ', completed: '   .$completed
-                            . ', type: '        .$type
-                            . ', Attr: '        .$Attr
-                            . ', EP: '          .$EP
-                            . ', Cluster: '     .$Cluster
-                             );
+            $msgDecoded = '8140/Attribute discovery response'
+                . ', Completed='   .$completed
+                . ', AttrType='        .$type
+                . ', AttrId='        .$Attr
+                . ', EP='          .$EP
+                . ', ClustId='     .$Cluster;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8140");
         }
 
         // Codé sur la base des messages Xiaomi Inondation
@@ -3345,29 +3358,31 @@
             // <zone id : uint8_t>
             // <delay: data each element uint16_t>
 
-            parserLog('debug', $dest.', Type=8401/IAS Zone status change notification'
-                             . ', SQN='               .substr($payload, 0, 2)
-                             . ', EndPoint='          .substr($payload, 2, 2)
-                             . ', ClusterId='        .substr($payload, 4, 4)
-                             . ', SrcAddrMode='  .substr($payload, 8, 2)
-                             . ', SrcAddr='       .substr($payload,10, 4)
-                             . ', ZoneStatus='       .substr($payload,14, 4)
-                             . ', ExtStatus='   .substr($payload,18, 2)
-                             . ', ZoneId='           .substr($payload,20, 2)
-                             . ', Delay='             .substr($payload,22, 4)  );
-
-            $SrcAddr    = substr($payload,10, 4);
-            $ClusterId  = substr($payload, 4, 4);
             $EP         = substr($payload, 2, 2);
-            $AttributId = "0000";
-            $data       = substr($payload,14, 4);
+            $ClusterId  = substr($payload, 4, 4);
+            $SrcAddr    = substr($payload,10, 4); // Assuming short mode
+
+            $msgDecoded = '8401/IAS zone status change notification'
+                . ', SQN='               .substr($payload, 0, 2)
+                . ', EP='          .$EP
+                . ', ClustId='        .$ClusterId
+                . ', SrcAddrMode='  .substr($payload, 8, 2)
+                . ', SrcAddr='       .$SrcAddr
+                . ', ZoneStatus='       .substr($payload,14, 4)
+                . ', ExtStatus='   .substr($payload,18, 2)
+                . ', ZoneId='           .substr($payload,20, 2)
+                . ', Delay='             .substr($payload,22, 4);
+            parserLog('debug', $dest.', Type='.$msgDecoded);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($SrcAddr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
+            $AttributId = "0000";
+            $data       = substr($payload,14, 4);
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $EP.'-'.$AttributId, $data);
         }
-
 
         /**
          * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.
@@ -3432,18 +3447,17 @@
             $DestAddr   = substr($payload, 8, 4);
             $SQN        = substr($payload,12, 2);
 
-            parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail'
-                                . ', Status='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
-                                . ', SrcEP='.$SrcEP
-                                . ', DestEP='.$DestEP
-                                . ', DestMode='.$DestMode
-                                . ', DestAddr='.$DestAddr
-                                . ', SQN='.$SQN
-                             , "8702");
-
-
-
-            // type; 8702; (APS Data Confirm Fail)(decoded but Not Processed); Status : d4; Source Endpoint : 01; Destination Endpoint : 03; Destination Mode : 02; Destination Address : c3cd; SQN: : 00
+            $msgDecoded = '8702/APS data confirm fail'
+                // . ', Status='.$status.'/'.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
+                . ', Status='.$status.'/'.$allErrorCode[$status][0]
+                . ', SrcEP='.$SrcEP
+                . ', DestEP='.$DestEP
+                . ', AddrMode='.$DestMode
+                . ', Addr='.$DestAddr
+                . ', SQN='.$SQN;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
+                monMsgFromZigate($DestAddr.'-xxxxxxxxxxxxxxxx', $msgDecoded); // Send message to monitor
 
             // // On envoie un message MQTT vers la ruche pour le processer dans Abeille
             // $SrcAddr    = "Ruche";
@@ -3458,11 +3472,10 @@
 
             if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                 $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
-                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail: '.$eq->getHumanName(true)." set APS_ACK to 0", "8702");
-                $eq->setStatus( 'APS_ACK', '0');
-                parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
+                parserLog('debug', '  NO ACK for '.$eq->getHumanName(true).". APS_ACK set to 0", "8702");
+                $eq->setStatus('APS_ACK', '0');
+                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
             }
-
         }
 
         function decode8806($dest, $payload, $ln, $qos, $dummy)
@@ -3653,7 +3666,6 @@
             }
 
             parserLog('debug', 'processWakeUpQueue(): <------------------------------');
-
         }
 
     } // class AbeilleParser

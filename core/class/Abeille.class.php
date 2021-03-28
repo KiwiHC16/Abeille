@@ -1811,14 +1811,21 @@ if (0) {
         // e.g. Un NE renvoie son annonce
         if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
 
-            $AC = 0b00000100;
-            $Rx = 0b00001000;
+            log::add('Abeille', 'debug', 'MACCapa-MACCapa: '.$value.' saving into eqlogic');
 
-            log::add('Abeille', 'debug', 'MACCapa-MACCapa;' . $value . '; saved into eqlogic');
+            $mc = hexdec($value);
+            $rxOnWhenIdle = ($mc >> 3) & 0b1;
+            $powerSource = ($mc >> 2) & 0b1;
 
             $elogic->setConfiguration('MACCapa', $value);
-            if ((base_convert($value, 16, 2) & base_convert($AC, 16, 2)) > 0) $elogic->setConfiguration('AC_Power', 1); else $elogic->setConfiguration('AC_Power', 0);
-            if ((base_convert($value, 16, 2) & base_convert($Rx, 16, 2)) > 0) $elogic->setConfiguration('RxOnWhenIdle', 1); else $elogic->setConfiguration('RxOnWhenIdle', 0);
+            if ($powerSource) // 1=mains-powererd
+                $elogic->setConfiguration('AC_Power', 1);
+            else
+                $elogic->setConfiguration('AC_Power', 0);
+            if ($rxOnWhenIdle) // 1=Receiver enabled when idle
+                $elogic->setConfiguration('RxOnWhenIdle', 1);
+            else
+                $elogic->setConfiguration('RxOnWhenIdle', 0);
             $elogic->save();
             $elogic->refresh();
 

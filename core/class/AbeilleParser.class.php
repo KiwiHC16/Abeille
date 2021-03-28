@@ -620,9 +620,6 @@
             $Addr       = substr($payload, 0, 4);
             $IEEE       = substr($payload, 4, 16);
             $MACCapa    = substr($payload, 20, 2);
-
-            $this->whoTalked[] = $dest.'/'.$Addr;
-
             if (strlen($payload) > 22)
                 $Rejoin = substr($payload, 22, 2);
             else
@@ -633,10 +630,12 @@
             $msgDecoded .= ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE)) {
-                monMsgFromZigate('xxxx-'.$IEEE, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
                 monAddrHasChanged($Addr, $IEEE); // Short address has changed
                 $GLOBALS["dbgMonitorAddr"] = $Addr;
             }
+
+            $this->whoTalked[] = $dest.'/'.$Addr;
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja dans Abeille, sinon sera drop
             $this->mqqtPublish($dest."/".$Addr, "IEEE", "Addr", $IEEE);
@@ -646,6 +645,8 @@
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
             $this->mqqtPublish($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
+
+            $this->mqqtPublish($dest."/"."$Addr", "MACCapa", "MACCapa", $MACCapa);
 
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             if ($Rejoin == "02") return;

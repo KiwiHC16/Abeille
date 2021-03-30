@@ -31,17 +31,8 @@
         ini_set('log_errors', 'On');
     }
 
-    function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
-    {
-        if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
-            return; // Nothing to do
-
-        $logDir = __DIR__.'/../../../../log/';
-        /* TODO: How to align logLevel width for better visual aspect ? */
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').']['.$logLevel.'] '.$msg."\n", FILE_APPEND);
-    }
-
     /* Write/create developer config.
+       '$devConfig' = associative array
        Returns: 0=OK, -1=ERROR */
     function writeDevConfig($devConfig)
     {
@@ -51,7 +42,7 @@
         if (!file_exists($tmp))
             mkdir($tmp);
         if (file_exists($dbgFile) && !is_writable($dbgFile)) {
-            logToFile('Abeille', 'error', "'tmp/debug.json' n'est pas accessible en écriture.");
+            logMessage('error', "'tmp/debug.json' n'est pas accessible en écriture.");
             return -1;
         }
 
@@ -63,6 +54,7 @@
     try {
         require_once __DIR__.'/../../../../core/php/core.inc.php';
         include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
+        include_once __DIR__.'/../php/AbeilleLog.php'; // logMessage(), logDebug()
 
         include_file('core', 'authentification', 'php');
         if (!isConnect('admin')) {
@@ -76,29 +68,38 @@
         if (init('action') == 'monitor') {
             $eqId = init('eqId');
 
-logToFile("AbeilleDebug.log", "debug", "Ici action==monitor, eqId=".$eqId);
+            logSetConf("AbeilleMonitor.log", TRUE);
+            // logMessage("debug", "AbeilleDev.ajax: action==monitor, eqId=".$eqId);
+
             $eqLogic = eqLogic::byId($eqId);
             $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/8362'
-            list($net, $eqAddr) = explode( "/", $eqLogicId);
+            list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
 
             /* Collecting IEEE address */
-            $eqAddrExt = $eqLogic->getConfiguration('IEEE', 'none');
-            if ($eqAddrExt == "none")
+            $eqAddrExt = $eqLogic->getConfiguration('IEEE', '');
+            if ($eqAddrExt == "")
                 $eqAddrExt = "xxxxxxxxxxxxxxxx";
 
             $status = 0;
             $error = "";
 
-            global $dbgConfig;
-            $dbgConfig["dbgMonitorAddr"] = $eqAddr."-".$eqAddrExt;
-            if (writeDevConfig($dbgConfig) != 0) {
+            if (file_exists($dbgFile))
+                $devConfig = json_decode(file_get_contents($dbgFile), TRUE);
+            else
+                $devConfig = array();
+// logDebug("BEFORE devConfig=".json_encode($devConfig));
+            $devConfig["dbgMonitorAddr"] = $eqAddr."-".$eqAddrExt;
+// logDebug("AFTER devConfig=".json_encode($devConfig));
+            if (writeDevConfig($devConfig) != 0) {
+                logMessage("error", "Erreur writeDevConfig()");
                 ajax::success(json_encode(array('status' => -1, 'error' => "Erreur writeDevConfig()")));
             }
 
-            if ($status == 0) {
-                logToFile('Abeille', 'info', 'Nouvelle adresse à surveiller = '.$eqAddr.'. Redémarrage des démons.');
-                abeille::deamon_start(); // Restarting daemons (start is performing stop anyway)
-            }
+            /* Need to start AbeilleMonitor if not already running
+               and restart cmd & parser.
+               WARNING: If cron is not running, any (re)start should be avoided. */
+            $conf = AbeilleTools::getParameters();
+            AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

@@ -42,7 +42,7 @@
             $eqName = $eqKnownFromAbeille[$logicId];
         else
             $eqName = "Inconnu";
-        list($netName, $addr) = explode( '/', $logicId);
+        list($netName, $addr) = explode('/', $logicId);
         $eqToInterrogate[] = array(
             "LogicId" => $logicId,
             "Name" => $eqName,
@@ -148,17 +148,20 @@
         $NE = $eqToInterrogate[$eqIndex]["LogicId"]; // Ex: 'Abeille1/Ruche', 'Abeille1/A3B4'
 
         $parameters = array();
-        $parameters['NE'] = $NE;
-        $parameters['NE_Name'] = $eqKnownFromAbeille[$NE];
-        $parameters['NE_Objet'] = $objKnownFromAbeille[$NE];
-        $parent = Abeille::byLogicalId($NE, 'Abeille');
-        $parentIEEE = $parent->getConfiguration('IEEE', '');
-        $parameters['IEEE_Address'] = $parentIEEE;
-        list($netName, $addr) = explode( '/', $NE );
-        if (strlen($parameters['NE_Name']) == 0) {
-            $parameters['NE_Name'] = "Inconnu-".$parameters['IEEE_Address'];
-            $parameters['NE_Objet'] = "Inconnu";
+        $parameters['NE'] = $NE; // Logical ID
+        if (isset($eqKnownFromAbeille[$NE])) {
+            $parameters['NE_Name'] = $eqKnownFromAbeille[$NE]; // Name
+            $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
+            $parent = Abeille::byLogicalId($NE, 'Abeille');
+            $parentIEEE = $parent->getConfiguration('IEEE', '');
+            $parameters['IEEE_Address'] = $parentIEEE;
+        } else {
+            /* EQ is still in Zigbee network but is unknown to Jeedom/Abeille */
+            $parameters['NE_Name'] = "Inconnu";
+            $parameters['NE_Objet'] = "";
+            $parentIEEE = "";
         }
+        list($netName, $addr) = explode('/', $NE);
 
         /* Going thru neighbours list */
         for ($nIndex = 0; $nIndex < hexdec($tableListCount); $nIndex++ ) {
@@ -166,10 +169,10 @@
             logMessage("", "  N=".json_encode($N));
 
             // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
-            if ( $N->Addr == "0000" ) $N->Addr = "Ruche";
+            if ($N->Addr == "0000") $N->Addr = "Ruche";
 
             $parameters['Voisine'] = $netName."/".$N->Addr;
-            if ( isset($eqKnownFromAbeille[$parameters['Voisine']]) ) {
+            if (isset($eqKnownFromAbeille[$parameters['Voisine']])) {
                 $parameters['Voisine_Name'] = $eqKnownFromAbeille[$parameters['Voisine']];
                 $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
             } else {
@@ -328,8 +331,8 @@
     }
     // logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
-    $queueKeyLQIToCmd    = msg_get_queue( queueKeyLQIToCmd );
-    $queueKeyParserToLQI = msg_get_queue( queueKeyParserToLQI );
+    $queueKeyLQIToCmd    = msg_get_queue(queueKeyLQIToCmd);
+    $queueKeyParserToLQI = msg_get_queue(queueKeyParserToLQI);
     msgFromParserFlush(); // Flush the queue if not empty
 
     for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
@@ -342,15 +345,19 @@
         $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
         $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
         $lockFile = $dataFile.".lock";
-        $nbwritten = 0;
         if (file_exists($lockFile)) {
             $content = file_get_contents($lockFile);
-            logMessage("", "Contenu ".$netName." lock='".$content."'");
-            if (strpos("_".$content, "done") != 1) {
-                echo 'ERROR: Collect already ongoing';
-                logMessage("", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
-                // TODO: Check if process is still really there
-                exit;
+            logMessage("", "Contenu ".$netName." lock: '".$content."'");
+            if (substr($content, 0, 4) != "done") {
+                exec("pgrep -a php | grep AbeilleLQI", $running);
+                if (sizeof($running) != 0) {
+                    echo 'ERROR: Collect already ongoing';
+                    logMessage("", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
+                    exit;
+                } else {
+                    logMessage("", "Previous LQI collect crashed. Removing lock file.");
+                    unlink($lockFile);
+                }
             }
         }
         $nbwritten = file_put_contents($lockFile, "init");

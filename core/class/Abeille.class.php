@@ -16,10 +16,12 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once __DIR__ . '/../../resources/AbeilleDeamon/includes/config.php';
+
 /* Developers debug features */
-$dbgFile = __DIR__."/../../tmp/debug.json";
-if (file_exists($dbgFile)) {
-    // include_once $dbgFile;
+// define('dbgFile',  __DIR__."/../../tmp/debug.json");
+if (file_exists(dbgFile)) {
+    // include_once dbgFile;
     /* Dev mode: enabling PHP errors logging */
     error_reporting(E_ALL);
     ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -27,7 +29,6 @@ if (file_exists($dbgFile)) {
 }
 
 include_once __DIR__ . '/../../../../core/php/core.inc.php';
-include_once __DIR__ . '/../../resources/AbeilleDeamon/includes/config.php';
 include_once __DIR__ . '/../../resources/AbeilleDeamon/includes/function.php';
 include_once __DIR__ . '/../../resources/AbeilleDeamon/includes/fifo.php';
 include_once __DIR__ . '/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
@@ -750,20 +751,19 @@ if (0) {
     }
 
     /* This function is used before starting daemons to
-           - run some cleanup
-           - update the config database if changes needed
-           Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
-    public static function deamon_start_cleanup($message = null)
+        - run some cleanup
+        - update the config database if changes needed
+        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
+    public static function deamon_start_cleanup()
     {
         log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
-        // ******************************************************************************************************************
         // Remove temporary files
         for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
             $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI_MapDataAbeille'.$i.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
-                log::add('Abeille', 'debug', 'deamon_start_cleanup(): Suppression de ' . $lockFile);
+                log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);
             }
         }
 

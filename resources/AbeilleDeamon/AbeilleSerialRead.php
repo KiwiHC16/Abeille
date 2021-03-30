@@ -29,8 +29,8 @@
     // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
     include_once __DIR__.'/../../core/php/AbeilleLog.php';
 
-    logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)
-    logMessage('info', 'Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
+    logSetConf('', TRUE); // Log to STDOUT until log name fully known (need Zigate number)
+    logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
 
     /* Checking parameters */
     if ($argc < 3) { // Currently expecting <cmdname> <AbeilleX> <ZigatePort>
@@ -46,7 +46,7 @@
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$abeilleNb.".log"); // Log to file with line nb check
+    logSetConf("AbeilleSerialRead".$abeilleNb.".log", TRUE); // Log to file with line nb check
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
@@ -58,11 +58,22 @@
         exit(3);
     }
 
+    // function shutdown($sig, $sigInfos) {
+    //     pcntl_signal($sig, SIG_IGN);
+
+    //     logMessage("info", "<<< Arret d'AbeilleSerialRead".$abeilleNb);
+    //     exit(0);
+    // }
+
+    // declare(ticks = 1);
+    // if (pcntl_signal(SIGTERM, "shutdown", FALSE) != TRUE)
+    //     logMessage("error", "Erreur pcntl_signal()");
+
     //check already running
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
-    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    logMessage('debug', 'Daemons='.json_encode($daemons));
     #Two at least expected,the original and this one
     if ($daemons["serialRead".$abeilleNb] > 1){
         logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));

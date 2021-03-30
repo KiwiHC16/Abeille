@@ -56,6 +56,31 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Send a message to parser, from EQ assistant.
+           TODO: There is probably a way to create a generic function.
+           Returns: 0=OK, -1=ERROR */
+        if (init('action') == 'sendMsgToParser') {
+            $type = init('type');
+            $network = init('network');
+            logToFile("action=sendMsgToParser: type='".$type."', network='".$network."'");
+
+            $status = 0;
+            $error = "";
+
+            $queue = msg_get_queue(queueKeyAssistToParser);
+            $msg = Array(
+                "type" => $type,
+                "network" => $network
+            );
+
+            if (msg_send($queue, 1, $msg, TRUE, false) == FALSE) {
+                $error = "Could not send msg to 'queueKeyAssistToParser': msg=".json_encode($msg);
+                $status = -1;
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
            Instead 'success' callback is used. This means that
            - take care of error code returned

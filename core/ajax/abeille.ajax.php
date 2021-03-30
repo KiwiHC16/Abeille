@@ -150,7 +150,6 @@ try {
         /* Read Zigate FW version */
         $version = 0; // FW version
         if ($status == 0) {
-            zgSetConf('AbeilleConfig.log');
             $status = zgGetVersion($zgPort, $version);
         }
 
@@ -171,20 +170,20 @@ try {
         $zgFwFile = init('fwfile');
         $zgPort = init('zgport');
 
-        logToFile('Abeille', 'debug', 'Démarrage updateFirmware(' . $zgFwFile . ', ' . $zgPort . ')');
+        logSetConf('AbeilleConfig.log', TRUE);
+        logMessage('debug', 'Démarrage updateFirmware(' . $zgFwFile . ', ' . $zgPort . ')');
 
-        logToFile('AbeilleConfig.log', 'info', 'Vérification des paramètres');
+        logMessage('debug', 'Vérification des paramètres');
         $cmdToExec = "updateFirmware.sh check ".$zgPort;
         $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
         $version = 0; // FW version
         if ($status == 0) {
-            logToFile('AbeilleConfig.log', 'info', 'Arret des démons');
+            logMessage('info', 'Arret des démons');
             abeille::deamon_stop(); // Stopping daemon
 
             /* Updating FW and reset Zigate */
-            logToFile('AbeilleConfig.log', 'info', 'Programming');
             $cmdToExec = "updateFirmware.sh flash ".$zgPort." ".$zgFwFile;
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
@@ -194,7 +193,7 @@ try {
                 $status = zgGetVersion($zgPort, $version);
             }
 
-            logToFile('AbeilleConfig.log', 'info', 'Redémarrage des démons');
+            logMessage('info', 'Redémarrage des démons');
             abeille::deamon_start(); // Restarting daemon
         }
 

@@ -710,7 +710,7 @@
             $msgDecoded = "0100/?";
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
@@ -849,7 +849,7 @@
                             .", DestAddr=".$dstAddress;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8002");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddress, 4))
-                monMsgFromZigate($srcAddress.'-xxxxxxxxxxxxxxxx', $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // Routing Table Response
             if (($profile == "0000") && ($cluster == "8032")) {
@@ -1545,7 +1545,7 @@
             $msgDecoded = '8009/Network state response, Addr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Chan='.$Channel;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $ShortAddress, 4))
-                monMsgFromZigate($ShortAddress.'-'.$ExtendedAddress, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
@@ -1656,7 +1656,7 @@
             $msgDecoded = '8011/APS data ACK, Status='.$Status.', Addr='.$DestAddr.', EP='.$DestEndPoint.', ClustId='.$ClustID;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
-                monMsgFromZigate($DestAddr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ($Status=="00") {
                 if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
@@ -1890,7 +1890,7 @@
                 . ', StartIndex='                              .substr($payload,26, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8040");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
-                monMsgFromZigate($Addr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ( substr($payload, 2, 2) != "00" ) {
                 parserLog('debug', '  Don\'t use this data there is an error');
@@ -1923,7 +1923,7 @@
                              . ', StartIndex='                              .substr($payload,26, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8041");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ( substr($payload, 2, 2)!= "00" ) {
                 parserLog('debug', '  Don t use this data there is an error, comme info not known');
@@ -1996,7 +1996,7 @@
                              . ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded, "8043");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ($Status=="00") {
                 // Envoie l info a Abeille
@@ -2070,7 +2070,7 @@
                 . ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ($status!="00") {
                 parserLog('debug', '  Status != 0 => ignoring');
@@ -2112,7 +2112,7 @@
             $msgDecoded = '8048/Leave indication, ExtAddr='.$IEEE.', RejoinStatus='.$RejoinStatus;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8048");
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE))
-                monMsgFromZigate('xxxx-'.$IEEE, $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             /*
             $cmds = Cmd::byLogicalId('IEEE-Addr');
@@ -2240,15 +2240,15 @@
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             $decoded = '804E/Management LQI response'
-                .', SQN='                       .$SQN
-                .', Status='                    .$Status
-                .', NeighbourTableEntries='     .$NTableEntries
-                .', NeighbourTableListCount='   .$NTableListCount
-                .', StartIndex='                .$StartIndex
-                .', SrcAddr='                   .$SrcAddr;
+                .', SQN='               .$SQN
+                .', Status='            .$Status
+                .', NTableEntries='     .$NTableEntries
+                .', NTableListCount='   .$NTableListCount
+                .', StartIndex='        .$StartIndex
+                .', SrcAddr='           .$SrcAddr;
             parserLog('debug', $dest.', Type='.$decoded);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $decoded); // Send message to monitor
+                monMsgFromZigate($decoded); // Send message to monitor
 
             if ($Status != "00") {
                 parserLog('debug', "  Status != 00 => abandon du decode");
@@ -2733,21 +2733,10 @@
             $AttributSize       = substr($payload, 20, 4);
             $Attribut           = substr($payload, 24, hexdec($AttributSize) * 2);
 
-            if ($ClusterId=="0005") {
-                // No processed in 8100 but processed in 8002
-                return;
-            }
-
-            $this->whoTalked[] = $dest.'/'.$SrcAddr;
-
-            /* Params: SrcAddr, ClustId, AttrId, Data */
-            $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
-
             if ($type == "8100")
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
-
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$SrcAddr
                     .', EP='            .$EPoint
@@ -2759,10 +2748,20 @@
 
             parserLog('debug', $dest.', Type='.$msg, $type);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr, $msg); // Send message to monitor
+                monMsgFromZigate($msg); // Send message to monitor
 
-            if ($AttributStatus!='00') {
-                parserLog('debug', '  Status!=0 => Probably read attempt on non existent param', $type);
+            if ($ClusterId == "0005") {
+                parserLog('debug', '  Processed in 8002 => dropped');
+                return;
+            }
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
+
+            /* Params: SrcAddr, ClustId, AttrId, Data */
+            $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
+
+            if ($AttributStatus != '00') {
+                parserLog('debug', '  Status != 0 => Probably read attempt on non existent param', $type);
                 return;
             }
 
@@ -2949,15 +2948,15 @@
 
                 // Xiaomi Door Sensor V2
                 elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
-                    parserLog("debug","  Champ proprietaire Xiaomi (Door Sensor)" );
+                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    // $etat           = substr($payload, 80, 2);
+                    $etat           = substr($Attribut, 80 - 24, 2);
 
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $etat           = substr($payload, 80, 2);
-
-                    parserLog('debug', '  DoorV2Voltage='   .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', DoorV2Etat='      .$etat);
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
 
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ));
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
                 }
 
@@ -3044,21 +3043,25 @@
 
                 // Xiaomi capteur temperature carré V2
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Capteur de température carré)');
+                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
 
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                    $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
-                    $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
+                    $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
+                    $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
 
-                    parserLog('debug', '  Voltage='.$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity.', Pression='.$pression);
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
                     // parserLog('debug', 'ff01/25: Temperature: '  .$temperature);
                     // parserLog('debug', 'ff01/25: Humidity: '     .$humidity);
                     // parserLog('debug', 'ff01/25: Pression: '     .$pression);
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
                     // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
@@ -3289,7 +3292,7 @@
                 . ', Status='  .$status;
             parserLog('debug', $dest.', Type='.$msg);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
-                monMsgFromZigate($addr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
+                monMsgFromZigate($msg); // Send message to monitor
 
             // Envoie channel
             $SrcAddr = "Ruche";
@@ -3375,7 +3378,7 @@
                 . ', Delay='             .substr($payload,22, 4);
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($SrcAddr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
+                monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
@@ -3414,7 +3417,7 @@
                    .', Addr='.$Addr;
             parserLog('debug', $dest.', Type='.$msg, "8701");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
-                monMsgFromZigate($Addr.'-xxxxxxxxxxxxxxxx', $msg); // Send message to monitor
+                monMsgFromZigate($msg); // Send message to monitor
         }
 
         /**
@@ -3458,7 +3461,7 @@
                 . ', SQN='.$SQN;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
-                monMsgFromZigate($DestAddr.'-xxxxxxxxxxxxxxxx', $msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // // On envoie un message MQTT vers la ruche pour le processer dans Abeille
             // $SrcAddr    = "Ruche";
@@ -3473,7 +3476,7 @@
 
             if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ) {
                 $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
-                parserLog('debug', '  NO ACK for '.$eq->getHumanName(true).". APS_ACK set to 0", "8702");
+                parserLog('debug', '  NO ACK for '.$eq->getHumanName().". APS_ACK set to 0", "8702");
                 $eq->setStatus('APS_ACK', '0');
                 // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
             }

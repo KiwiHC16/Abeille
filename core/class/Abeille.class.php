@@ -1365,6 +1365,7 @@ if (0) {
         // $nodeId = [CmdAbeille:Abeille] / $addr
 
         list($Filter, $addr, $cmdId) = explode("/", $message->topic);
+        // log::add('Abeille', 'debug', "message(): Filter=".$Filter.", addr=".$addr.", cmdId=".$cmdId);
         if (preg_match("(^CmdCreate)", $message->topic)) {
             $Filter = str_replace("CmdCreate", "", $Filter);
         }

@@ -664,12 +664,12 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
     /**
      * reviewPriority()
-     * 
+     *
      * See if we need to change the priority reaquested for a message
-     * 
+     *
      * @param Command
      * @return priority re-evaluated
-     * 
+     *
      */
     function reviewPriority($Command) {
         if (isset($Command['priority'])) {
@@ -713,9 +713,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
     /**
      * processCmd()
-     * 
+     *
      * Convert a command into tis binary format to be read by zigate
-     * 
+     *
      * @param Command
      * @return None
      */
@@ -733,16 +733,15 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->deamonlog("debug", "    L1 - processCmd - can t define priority, stop here");
             return;
         }
-        if (isset($Command['dest'])) 
-            $dest       = $Command['dest']; 
+        if (isset($Command['dest']))
+            $dest       = $Command['dest'];
         else {
             $this->deamonlog("debug", "    L1 - No dest defined, stop here");
             return;
         }
-        
+
 
         //---- PDM ------------------------------------------------------------------
-
         if (isset($Command['PDM']) && $Command['PDM'] == "PDM") {
 
             if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE") {
@@ -997,13 +996,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         if (isset($Command['permitJoin']) && $Command['permitJoin']=="Status") {
+            $this->deamonlog("debug", "  permitJoin-Status");
             // “Permit join” status on the target
             // Msg Type =  0x0014
 
             $cmd = "0014";
             $lenth = "0000";
             $data = "";
-
             $this->sendCmd($priority,$dest,$cmd,$lenth,$data); //1E = 30 secondes
         }
 
@@ -1186,7 +1185,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $destinationAddressMode     = "01";
             $reportToGroup              = reverse_hex($Command['reportToGroup']);
 
-            
+
             $data2 = $dummy . $targetExtendedAddress . $targetEndpoint . $clusterID  . $destinationAddressMode . $reportToGroup;
             $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2) );
 
@@ -1251,9 +1250,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 return;
             }
             $targetExtendedAddress = reverse_hex($Command['targetExtendedAddress']);
-            
+
             $targetEndpoint = $Command['targetEndpoint'];
-            
+
             $clusterID = reverse_hex($Command['clusterID']);
 
             $destinationAddressMode = "03";
@@ -1262,7 +1261,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 return;
             }
             $destinationAddress = reverse_hex($Command['destinationAddress']);
-            
+
             $destinationEndpoint = $Command['destinationEndpoint'];
 
             $lenth = "0022";
@@ -2067,7 +2066,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // setLevel on one object
         if (isset($Command['setLevel']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['Level']) && isset($Command['duration'])) {
             $cmd = "0081";
-    
+
             // <address mode: uint8_t>
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>
@@ -2093,11 +2092,11 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ($addressMode=="02") {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
-    
+
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
-            
+
         }
 
         if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )

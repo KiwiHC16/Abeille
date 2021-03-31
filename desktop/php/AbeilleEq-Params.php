@@ -7,11 +7,21 @@
         echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/'.$chapter.'"><i class="fas fa-book"></i> ?</a>';
     }
 
-    function getCmdResult($eqId, $cmdName) {
-        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $cmdName);
+    /* Returns current cmd value identified by its Jeedom name */
+    function getCmdValueByName($eqId, $cmdName) {
+        $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdName);
         if (!is_object($cmd))
             return "";
         return $cmd->execCmd();
+    }
+
+    /* Returns cmd ID identified by its Jeedom name */
+    function getCmdIdByName($eqId, $cmdName) {
+        // global $eqId;
+        $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdName);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->getId();
     }
 ?>
 
@@ -24,16 +34,25 @@
 
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-        <div class="col-sm-5">
-            <?php
-                $res = getCmdResult($eqId, 'Time-Time');
-                echo '<span>'.$res.'</span>';
-            ?>
+        <?php
+        echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        ?>
+            <span id="idLastComm"></span>
+            <script>
+                <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Last")."'] = function(_options){"; ?>
+                    console.log("jeedom.cmd.update[Last]");
+                    // console.log(_options);
+                    var element = document.getElementById('idLastComm');
+                    // console.log("_options.display_value="+_options.display_value);
+                    element.textContent = _options.display_value;
+                }
+                // jeedom.cmd.update['233']({display_value:'#state#'});
+            </script>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
+        <label class="col-sm-3 control-label">{{Id}}</label>
         <div class="col-sm-5">
             <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
             <?php echo '<span>'.$eqId.'</span>'; ?>
@@ -41,7 +60,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Id logique}}</label>
+        <label class="col-sm-3 control-label">{{Nom logique}}</label>
         <div class="col-sm-5">
             <span class="eqLogicAttr" data-l1key="logicalId"></span>
         </div>
@@ -50,7 +69,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
         <div class="col-sm-5">
-            <span> <?php echo $eqAddr; ?> </span>
+            <span><?php echo $eqAddr; ?></span>
             /
             <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
         </div>
@@ -92,10 +111,11 @@
                 <label class="col-sm-3 control-label">Status réseau</label>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'Network-Status');
+                        $res = getCmdValueByName($eqId, 'Network Status');
                         echo '<span>'.$res.'</span>';
+                        if (isset($dbgDeveloperMode))
+                            echo '<a class="btn btn-warning" onclick="sendZigate(\'startNetwork\', \'\')">Démarrer</a>';
                     ?>
-                    <a class="btn btn-warning" onclick="sendZigate('StartNetwork', '')">Démarrer</a>
                 </div>
             </div>
 
@@ -103,7 +123,7 @@
                 <label class="col-sm-3 control-label">Firmware</label>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'SW-SDK');
+                        $res = getCmdValueByName($eqId, 'SDK');
                         echo '<span>'.$res.'</span>';
                     ?>
                 </div>
@@ -113,7 +133,7 @@
                 <label class="col-sm-3 control-label">PAN ID</label>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'PAN-ID');
+                        $res = getCmdValueByName($eqId, 'PAN ID');
                         echo '<span>'.$res.'</span>';
                     ?>
                 </div>
@@ -126,11 +146,11 @@
                 </div>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'Ext_PAN-ID');
+                        $res = getCmdValueByName($eqId, 'Ext PAN ID');
                         echo '<span>'.$res.'</span>';
                     ?>
                     <!-- TODO <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
-                    <button type="button" onclick="sendZigate('SetExtPANId', '')">Modifier</button> -->
+                    <button type="button" onclick="sendZigate('setExtPANId', '')">Modifier</button> -->
                 </div>
             </div>
 
@@ -143,26 +163,33 @@
                 </div>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'Network-Channel');
+                        $res = getCmdValueByName($eqId, 'Network Channel');
                         echo '<span title="{{Canal actuel}}">'.$res.'</span>';
                     ?>
                     <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
-                    <a class="btn btn-warning" onclick="sendZigate('SetChannelMask', '')">Modifier</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-sm-3 control-label">
                     <label class="">Mode inclusion</label>
-                    <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i> ?</a> -->
                 </div>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdResult($eqId, 'permitJoin-Status');
-                        echo '<span>'.$res.'</span>';
-                    ?>
-                    <!-- <input type="text" name="channelMask" placeholder="XXXXXXXX">
-                    <button type="button" onclick="sendZigate('SetChannelMask', '')">Modifier</button> -->
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Inclusion Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idInclusionMode">'.getCmdValueByName($eqId, 'Inclusion Status').'</span>';
+                        ?>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Inclusion Status")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[Inclusion Status]");
+                                // console.log(_options);
+                                var element = document.getElementById('idInclusionMode');
+                                element.textContent = _options.display_value;
+                            }
+                            // jeedom.cmd.update['233']({display_value:'#state#'});
+                        </script>
+                    </div>
                 </div>
             </div>
 
@@ -171,13 +198,23 @@
                     <label class="">Heure zigate</label>
                     <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i> ?</a> -->
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-7">
                     <?php
-                        $res = getCmdResult($eqId, 'ZiGate-Time');
-                        echo '<span>'.$res.'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "ZiGate-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
                     ?>
-                    <a class="btn btn-warning" onclick="sendZigate('GetTime', '')">Lire</a>
-                    <a class="btn btn-warning" onclick="sendZigate('SetTime', '')">Mettre à l'heure</a>
+                        <span id="idZgTime">- ? -</span>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "ZiGate-Time")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[Zigate-Time]");
+                                // console.log(_options);
+                                var element = document.getElementById('idZgTime');
+                                element.textContent = _options.display_value;
+                            }
+                            // jeedom.cmd.update['233']({display_value:'#state#'});
+                        </script>
+                        <a class="btn btn-warning" onclick="sendZigate('getTime', '')">Lire</a>
+                        <a class="btn btn-warning" onclick="sendZigate('setTime', '')">Mettre à l'heure</a>
+                    </div>
                 </div>
             </div>
 
@@ -188,43 +225,41 @@
                 </div>
                 <div class="col-sm-5">
                     <input type="text" name="TxPowerValue" placeholder="XX">
-                    <a class="btn btn-warning" onclick="sendZigate('SetTXPower', '')">Modifier</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setTXPower', '')">Modifier</a>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">LED</label>
                 <div class="col-sm-5">
-                    <a class="btn btn-warning" onclick="sendZigate('SetLED', 'ON')">ON</a>
-                    <a class="btn btn-warning" onclick="sendZigate('SetLED', 'OFF')">OFF</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setLED', 'ON')">ON</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setLED', 'OFF')">OFF</a>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">Certification</label>
                 <div class="col-sm-5">
-                    <a class="btn btn-warning" onclick="sendZigate('SetCertif', 'CE')">CE</a>
-                    <a class="btn btn-warning" onclick="sendZigate('SetCertif', 'FCC')">FCC</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setCertif', 'CE')">CE</a>
+                    <a class="btn btn-warning" onclick="sendZigate('setCertif', 'FCC')">FCC</a>
                 </div>
             </div>
 
-            <?php
-                if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-                    echo '<div class="form-group">';
-                    echo '<label class="col-sm-3 control-label">Mode</label>';
-                    echo '<div class="col-sm-5">';
-                    echo '<a class="btn btn-warning" onclick="sendZigate(\'SetMode\', \'Normal\')">Normal</a>';
-                    echo '<a class="btn btn-warning" onclick="sendZigate(\'SetMode\', \'Raw\')">Raw</a>';
-                    echo '<a class="btn btn-warning" onclick="sendZigate(\'SetMode\', \'Hybride\')">Hybride</a>';
-                    echo '</div>';
-                    echo '</div>';
-                }
-            ?>
+            <?php if (isset($dbgDeveloperMode)) { ?>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Mode</label>
+                    <div class="col-sm-5">
+                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Normal\')">Normal</a>
+                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Raw\')">Raw</a>
+                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Hybride\')">Hybride</a>
+                    </div>
+                </div>
+            <?php } ?>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">PDM</label>
                 <div class="col-sm-5">
-                    <a class="btn btn-warning" onclick="sendZigate('ErasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">Effacer</a>
+                    <a class="btn btn-warning" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">Effacer</a>
                 </div>
             </div>
 

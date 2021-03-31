@@ -75,13 +75,14 @@
 <script>
     /* AbeilleEq page opened. Let's update display content.
        From 'core/js/plugin.template.js' */
+    $.showLoading();
     jeedom.eqLogic.print({
         type: "Abeille",
         id: js_eqId,
         status : 1,
         error: function (error) {
             console.log("jeedom.eqLogic.print() error");
-            // $.hideLoading();
+            $.hideLoading();
             // $('#div_alert').showAlert({message: error.message, level: 'danger'});
         },
         success: function (data) {
@@ -100,7 +101,10 @@
 
             /* Commandes update */
             if ('function' == typeof (addCmdToTable)) {
-                $('.cmd').remove();
+                // Commented to not remove '.cmd' from Abeille/Zigbee tab
+                // $('.cmd').remove();
+                // $('#table_cmd tbody .cmd').remove();
+                $('#table_cmd tbody').empty();
                 for (var i in data.cmd) {
                     addCmdToTable(data.cmd[i]);
                 }
@@ -113,7 +117,7 @@
             });
 
             // changeLeftMenuObjectOrEqLogicName = false;
-            // $.hideLoading();
+            $.hideLoading();
             modifyWithoutSave = false;
         }
     });
@@ -207,7 +211,7 @@
     });
 
 	/*
-	 * Zigbee tab
+	 * Abeille/Zigbee tab
 	 */
 
     /* Send a command to zigate thru 'AbeilleCmd' */
@@ -240,23 +244,23 @@
         var topic = "";
         var payload = "";
         switch(action) {
-        case "SetLED":
+        case "setLED":
             if (param == "ON")
                 topic = 'CmdAbeille'+js_zgNb+'/Ruche/setOnZigateLed';
             else
                 topic = 'CmdAbeille'+js_zgNb+'/Ruche/setOffZigateLed';
             break;
-        case "SetCertif":
+        case "setCertif":
             if (param == "CE")
                 topic = 'CmdAbeille'+js_zgNb+'/Ruche/setCertificationCE';
             else
                 topic = 'CmdAbeille'+js_zgNb+'/Ruche/setCertificationFCC';
             break;
-        case "StartNetwork": // Not required for end user but for developper.
+        case "startNetwork": // Not required for end user but for developper.
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/startNetwork';
             payload = 'StartNetwork';
             break;
-        case "SetMode":
+        case "setMode":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setModeHybride';
             if (param == "Normal")
                 payload = 'normal';
@@ -265,11 +269,11 @@
             else
                 payload = 'hybride';
             break;
-        case "SetExtPANId": // Not critical. No need so far.
+        case "setExtPANId": // Not critical. No need so far.
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setExtendedPANID';
             payload = "";
             break;
-        case "SetChannelMask":
+        case "setChannelMask":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setChannelMask';
             mask = document.getElementById("idChannelMask").value;
             console.log("mask="+mask);
@@ -295,19 +299,19 @@
             }
             payload = mask;
             break;
-        case "SetTXPower":
+        case "setTXPower":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/TxPower';
             payload = "ff"; // TODO
             break;
-        case "GetTime":
+        case "getTime":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/getTimeServer';
             payload = "";
             break;
-        case "SetTime":
+        case "setTime":
             topic = 'CmdAbeille'+js_zgNb+'/Ruche/setTimeServer';
             payload = ""; // Using current time from host.
             break;
-        case "ErasePersistantDatas": // Erase PDM
+        case "erasePersistantDatas": // Erase PDM
             msg = '{{Vous êtes sur le point de d\'effacer la PDM de la zigate}} <b>'+js_zgNb+'</b>';
             msg += '{{<br>Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}'
             msg += '{{<br>Si ils existent encore côté Jeedom ils passeront vite en time-out.}}'
@@ -318,6 +322,10 @@
                 return;
             });
             break;
+        case "getInclusionStatus":
+            topic = 'CmdAbeille'+js_zgNb+'/Ruche/permitJoin';
+            payload = "Status";
+            break;
         default:
             console.log("ERROR: Unsupported action '"+action+"'");
             return; // Nothing to do
@@ -326,6 +334,10 @@
         if (topic != '')
             sendToZigate(topic, payload);
     }
+
+    /* Force update of some dynamic fields */
+    sendZigate('getTime', ''); // Will update last comm too
+    sendZigate('getInclusionStatus', ''); // Will update last comm too
 
     /* Display equipment icone (AbeilleEq-Main) */
     $("#sel_icon").change(function () {
@@ -361,7 +373,7 @@
     });
 
     function addCmdToTable(_cmd) {
-        console.log("addCmdToTable()");
+        // console.log("addCmdToTable()");
 
         if (!isset(_cmd)) {
             var _cmd = {configuration: {}};
@@ -369,7 +381,7 @@
         if (!isset(_cmd.configuration)) {
             _cmd.configuration = {};
         }
-		console.log(_cmd);
+		console.log("addCmdToTable(typ="+_cmd.type+", jName="+_cmd.name+")");
 
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 

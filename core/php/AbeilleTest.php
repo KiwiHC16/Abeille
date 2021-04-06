@@ -434,5 +434,59 @@
         }
     }
 
+    // Test DIY
+    if ( (500<=$test) && ($test<600) ) {
+
+        if ($test==500) {
+            echo "Test envoie Cmd to get ZCL version\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP=08&clusterId=0000&attributeId=0000';
+        }
+
+        if ($test==504) {
+            echo "Test envoie Cmd to get ManufacturerName\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP='.$argv[4].'&clusterId=0000&attributeId=0004';
+        }
+
+        if ($test==505) {
+            echo "Test envoie Cmd to get ModelIdentifier\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
+            $msgAbeille->message['payload'] = 'EP='.$argv[4].'&clusterId=0000&attributeId=0005';
+        }
+
+        // php AbeilleTest.php 510 2 F0C0 08
+        // Led Red DIO6: toglle et visiblement un PWM to control level.
+        if ($test==510) {
+            echo "On Off Test\n";
+            $msgAbeille->message['topic'] = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/OnOff';
+            $msgAbeille->message['payload'] = 'Action=Toggle&EP='.$argv[4];
+        }
+
+        // Control level Led Rouge
+        // Minimum puissance
+        // php AbeilleTest.php 511 2 F0C0 08 02
+        // Toute puissance
+        // php AbeilleTest.php 511 2 F0C0 08 99
+        if ($test==511) {
+            echo "Level Test\n";
+            $msgAbeille->message['topic'] = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/setLevel';
+            $msgAbeille->message['payload'] = 'EP='.$argv[4].'&Level='.$argv[5].'&duration=10';
+        }
+
+        // Send the command to the queue for processing
+        $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
+        if ( $queueKeyAbeilleToCmd ) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msgAbeille, true, false)) {
+                echo "Msg sent: " . json_encode($msgAbeille) . "\n";
+            } else {
+                echo "Could not send Msg\n";
+            }
+        }
+        else {
+            echo "Can t connect to the queue !\n";
+        }
+    }
+
     echo "End of the test.\n";
 ?>

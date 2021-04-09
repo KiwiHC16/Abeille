@@ -778,19 +778,19 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // En gros 0 normal, 1 RAW mode, 2 Mode hybride
         if (isset($Command['setModeHybride'])) {
             if ($Command['setModeHybride'] == "normal") {
-                $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
+                $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
                 $this->sendCmd($priority, $dest,"0002","0001","00");
             } elseif ($Command['setModeHybride'] == "RAW") {
-                $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
+                $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
                 $this->sendCmd($priority, $dest,"0002","0001","01");
             } elseif ($Command['setModeHybride'] == "hybride") {
-                $this->deamonlog('debug',"  Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
+                $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
                 $this->sendCmd($priority, $dest,"0002","0001","02");
             }
         }
 
         if (isset($Command['getVersion']) && $Command['getVersion'] == "Version") {
-            $this->deamonlog('debug', "  Get Version", $this->debug['processCmd'], $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Get Version", $this->debug['processCmd'], $this->debug['processCmd2']);
             $this->sendCmd($priority, $dest,"0010","0000","");
         }
 
@@ -809,7 +809,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         // abeilleList abeilleListAll
         if (isset($Command['abeilleList']) && $Command['abeilleList'] == "abeilleListAll") {
-            $this->deamonlog('debug', "  Get Abeilles List", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Get Abeilles List", $this->debug['processCmd2']);
             $this->sendCmd($priority,$dest,"0015","0000","");
         }
 
@@ -820,7 +820,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
                 $Command['time'] = time() - $zgRef;
             }
-            $this->deamonlog('debug', "  setTimeServer, time=".$Command['time'], $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setTimeServer, time=".$Command['time'], $this->debug['processCmd2']);
 
             /* Cmd 0016 reminder
                payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
@@ -832,7 +832,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         if (isset($Command['getTimeServer'])) {
-            $this->deamonlog('debug', "  getTimeServer", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    getTimeServer", $this->debug['processCmd2']);
 
             $cmd = "0017";
             $data = "";
@@ -842,7 +842,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         //----------------------------------------------------------------------
         if (isset($Command['setOnZigateLed'])) {
-            $this->deamonlog('debug', "  setOnZigateLed", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setOnZigateLed", $this->debug['processCmd2']);
             $cmd = "0018";
             $data = "01";
 
@@ -851,7 +851,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         if (isset($Command['setOffZigateLed'])) {
-            $this->deamonlog('debug', "  setOffZigateLed", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setOffZigateLed", $this->debug['processCmd2']);
             $cmd = "0018";
             $data = "00";
 
@@ -860,7 +860,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
         //----------------------------------------------------------------------
         if (isset($Command['setCertificationCE'])) {
-            $this->deamonlog('debug', "  setCertificationCE", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setCertificationCE", $this->debug['processCmd2']);
             $cmd = "0019";
             $data = "01";
 
@@ -869,7 +869,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         if (isset($Command['setCertificationFCC'])) {
-            $this->deamonlog('debug', "  setCertificationFCC", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setCertificationFCC", $this->debug['processCmd2']);
             $cmd = "0019";
             $data = "02";
 
@@ -882,7 +882,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // PHY_PIB_TX_POWER_MIN (minimum - 0)
         // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
         if (isset($Command['TxPower'])  ) {
-            $this->deamonlog('debug', "  TxPower", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    TxPower", $this->debug['processCmd2']);
             $cmd = "0806";
             $data = $Command['TxPower'];
             if ( $data < 10 ) $data = '0'.$data;
@@ -897,7 +897,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // PHY_PIB_TX_POWER_MIN (minimum - 0)
             // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
             if (isset($Command['GetTxPower'])) {
-                $this->deamonlog('debug', "  GetTxPower", $this->debug['processCmd2']);
+                $this->deamonlog('debug', "    GetTxPower", $this->debug['processCmd2']);
                 $cmd = "0807";
                 $data = "";
 
@@ -906,7 +906,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             }
         //----------------------------------------------------------------------
         if (isset($Command['setChannelMask'])) {
-            $this->deamonlog('debug', "  setChannelMask", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setChannelMask", $this->debug['processCmd2']);
             $cmd = "0021";
             $data = $Command['setChannelMask'];
 
@@ -915,7 +915,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
         //----------------------------------------------------------------------
         if (isset($Command['setExtendedPANID'])) {
-            $this->deamonlog('debug', "  setExtendedPANID", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    setExtendedPANID", $this->debug['processCmd2']);
             $cmd = "0020";
             $data = $Command['setExtendedPANID'];
 
@@ -996,7 +996,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         }
 
         if (isset($Command['permitJoin']) && $Command['permitJoin']=="Status") {
-            $this->deamonlog("debug", "  permitJoin-Status");
+            $this->deamonlog("debug", "    permitJoin-Status");
             // “Permit join” status on the target
             // Msg Type =  0x0014
 
@@ -1044,7 +1044,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // 2.4.3.3.3   Mgmt_Rtg_req
         //
         if (isset($Command['Mgmt_Rtg_req']) && isset($Command['address'])) {
-            $this->deamonlog('debug', "  command Mgmt_Rtg_req", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command Mgmt_Rtg_req", $this->debug['processCmd2']);
             // Msg Type = 0x0530
             $cmd = "0530";
 
@@ -1096,7 +1096,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // message => reportToAddress=00158D0001B22E24&ClusterId=0006
         if ( isset($Command['bind']) )
         {
-            $this->deamonlog('debug', "  command bind", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command bind", $this->debug['processCmd2']);
             // Msg Type = 0x0030
             $cmd = "0030";
 
@@ -1141,7 +1141,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Pour Telecommande RC110
         if ( isset($Command['BindToGroup']) )
         {
-            $this->deamonlog('debug', "  command BindToGroup", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command BindToGroup", $this->debug['processCmd2']);
 
             $cmd = "0530";
 
@@ -1207,7 +1207,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
         if ( isset($Command['bindShort']) )
         {
-            $this->deamonlog('debug', "  command bind short", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command bind short", $this->debug['processCmd2']);
             // Msg Type = 0x0530
             $cmd = "0530";
 
@@ -1282,7 +1282,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
         if ( isset($Command['setReport']) )
         {
-            $this->deamonlog('debug', "  command setReport", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command setReport", $this->debug['processCmd2']);
             // Configure Reporting request
             // Msg Type = 0x0120
 
@@ -1357,7 +1357,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
         // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
         if ( isset($Command['setReportRaw']) ) {
-            $this->deamonlog('debug', " command setReportRaw", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "   command setReportRaw", $this->debug['processCmd2']);
 
             $cmd = "0530";
 
@@ -1422,7 +1422,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Commission group for Ikea Telecommande On/Off still interrupteur
         if ( isset($Command['commissioningGroupAPS']) )
         {
-            $this->deamonlog('debug', " commissioningGroupAPS", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "   commissioningGroupAPS", $this->debug['processCmd2']);
 
             $cmd = "0530";
 
@@ -1486,7 +1486,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
         if ( isset($Command['commissioningGroupAPSLegrand']) )
         {
-            $this->deamonlog('debug', "  commissioningGroupAPSLegrand", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    commissioningGroupAPSLegrand", $this->debug['processCmd2']);
 
             $cmd = "0530";
 
@@ -1973,7 +1973,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $address . $IeeeAddress . $requestType . $startIndex ;
             $lenth = "000C"; // A verifier
 
-            $this->deamonlog('debug', '  Network_Address_request: '.$data . ' - ' . $lenth, $this->debug['processCmd2']  );
+            $this->deamonlog('debug', '    Network_Address_request: '.$data . ' - ' . $lenth, $this->debug['processCmd2']  );
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
@@ -1996,7 +1996,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $address . $shortAddress . $requestType . $startIndex ;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            $this->deamonlog('debug', '  IEEE_Address_request: '.$data . ' - ' . $lenth, $this->debug['processCmd2']  );
+            $this->deamonlog('debug', '    IEEE_Address_request: '.$data . ' - ' . $lenth, $this->debug['processCmd2']  );
 
             $this->sendCmd($priority, $dest, $cmd, $lenth, $data, $address);
         }
@@ -2101,7 +2101,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']) )
         {
-            $this->deamonlog('debug', "  command moveToLiftAndTiltBSO", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command moveToLiftAndTiltBSO", $this->debug['processCmd2']);
 
             $cmd = "0530";
 
@@ -2150,8 +2150,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $data1 = $addressMode . $targetShortAddress . $sourceEndpoint . $destinationEndpoint . $clusterID . $profileID . $securityMode . $radius . $dataLength;
 
-            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd2']);
-            $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd2']);
 
             $data = $data1 . $data2;
 
@@ -2253,7 +2253,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if ( isset($Command['writeAttributeRequestIAS_WD']) ) {
             // Parameters: EP=#EP&mode=Flash&duration=#slider#
 
-                $this->deamonlog('debug', "  command writeAttributeRequestIAS_WD", $this->debug['processCmd2']);
+                $this->deamonlog('debug', "    command writeAttributeRequestIAS_WD", $this->debug['processCmd2']);
                 // Msg Type = 0x0111
 
                 $priority = $Command['priority'];
@@ -2296,7 +2296,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
-            $this->deamonlog('debug', "  Add a group to a device", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Add a group to a device", $this->debug['processCmd2']);
             //echo "Add a group to an IKEA bulb\n";
 
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2328,7 +2328,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['addGroupAPS'])  )
         {
-            $this->deamonlog('debug', "  command add group with APS", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command add group with APS", $this->debug['processCmd2']);
             // Msg Type = 0x0530
             $cmd = "0530";
 
@@ -2376,8 +2376,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data1 = $addressMode . $targetShortAddress . $sourceEndpointBind . $destinationEndpointBind . $clusterIDBind . $profileIDBind . $securityMode . $radius . $dataLength;
             $data2 = $dummy . $dummy1 . $cmdAddGroup . $groupId . $length;
 
-            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd2']);
-            $this->deamonlog('debug', "  Data2: ".$dummy . $dummy1 . $cmdAddGroup . $groupId . $length." len: ".(strlen($data2)/2) , $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Data2: ".$dummy . $dummy1 . $cmdAddGroup . $groupId . $length." len: ".(strlen($data2)/2) , $this->debug['processCmd2']);
 
             $data = $data1 . $data2;
             // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2) );
@@ -2387,7 +2387,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']) )
         {
-            $this->deamonlog('debug', "  Remove a group to a device", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Remove a group to a device", $this->debug['processCmd2']);
             //echo "Remove a group to an IKEA bulb\n";
 
             // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2416,30 +2416,30 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Replace Equipement
         if ( isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']) )
         {
-            $this->deamonlog('debug', "  Replace an Equipment", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    Replace an Equipment", $this->debug['processCmd2']);
 
             $old = $Command['old'];
             $new = $Command['new'];
 
-            $this->deamonlog('debug',"  Update eqLogic table for new object", $this->debug['processCmd2']);
+            $this->deamonlog('debug',"    Update eqLogic table for new object", $this->debug['processCmd2']);
             $sql =          "UPDATE `eqLogic` SET ";
             $sql = $sql .   "name = 'Abeille-".$new."-New' , logicalId = '".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
             $sql = $sql .   "WHERE  eqType_name = 'Abeille' AND logicalId = '".$old."' AND configuration LIKE '%".$old."%'";
             $this->deamonlog('debug',"sql: ".$sql, $this->debug['processCmd2']);
             DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 
-            $this->deamonlog('debug',"  Update cmd table for new object", $this->debug['processCmd2']);
+            $this->deamonlog('debug',"    Update cmd table for new object", $this->debug['processCmd2']);
             $sql =          "UPDATE `cmd` SET ";
             $sql = $sql .   "configuration = replace(configuration, '".$old."', '".$new."' ) ";
             $sql = $sql .   "WHERE  eqType = 'Abeille' AND configuration LIKE '%".$old."%' ";
-            $this->deamonlog('debug',"  sql: ".$sql, $this->debug['processCmd2']);
+            $this->deamonlog('debug',"    sql: ".$sql, $this->debug['processCmd2']);
             DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
         }
 
         //
         if ( isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']) )
         {
-            $this->deamonlog('debug','  UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
             // <address mode: uint8_t>          -> 2
             // <target short address: uint16_t> -> 4
             // <source endpoint: uint8_t>       -> 2
@@ -2467,7 +2467,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if ( isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']) )
         {
-            $this->deamonlog('debug','  UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
             // <address mode: uint8_t>          -> 2
             // <target short address: uint16_t> -> 4
             // <source endpoint: uint8_t>       -> 2
@@ -2496,7 +2496,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // ON / OFF with no effects
         if ( isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
-            $this->deamonlog('debug','      OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd2']);
             // <address mode: uint8_t>
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>
@@ -2531,7 +2531,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if ( isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) )
         {
 
-        $this->deamonlog('debug', "command setParam4", $this->debug['processCmd2']);
+        $this->deamonlog('debug', "    command setParam4", $this->debug['processCmd2']);
 
         $dest       = $Command['dest'];
         $priority   = $Command['priority'];
@@ -2585,7 +2585,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // On / Off Timed Send
         if ( isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']) )
         {
-            $this->deamonlog('debug','  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd2']);
             // <address mode: uint8_t>    Status
             // <target short address: uint16_t>
             // <source endpoint: uint8_t>
@@ -2701,7 +2701,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
             $duration = "0001";
 
-            $this->deamonlog( 'debug', "  colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd2'] );
+            $this->deamonlog( 'debug', "    colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd2'] );
 
             $data = $addressMode . $address . $sourceEndpoint . $destinationEndpoint . $colourX . $colourY . $duration ;
 
@@ -2860,7 +2860,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // DiscoverAttributesCommand
         if ( isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']) )
         {
-            $this->deamonlog('debug','DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId'], $this->debug['processCmd2']);
             $cmd = "0140";
 
             // <address mode: uint8_t>
@@ -2901,9 +2901,6 @@ class AbeilleCmdProcess extends AbeilleDebug {
         {
             $this->commandLegrand($dest,$Command);
         }
-
     }
 }
-
-
 ?>

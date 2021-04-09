@@ -177,13 +177,12 @@
 
             $tmpDir = jeedom::getTmpFolder("Abeille");
             $logsDir = $tmpDir."/AbeilleLogs";
+            // Note: always rm to avoid conflict with AbeilleLogs file instead of dir.
             if (file_exists($logsDir)) {
-                $cmd = "sudo rm -f ".$logsDir."/*";
+                $cmd = "sudo rm -rf ".$logsDir;
                 exec($cmd, $out, $status);
-            } else {
-                if (!file_exists($logsDir))
-                    mkdir($logsDir);
             }
+            mkdir($logsDir);
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
             $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir

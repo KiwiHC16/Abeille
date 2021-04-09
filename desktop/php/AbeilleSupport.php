@@ -154,6 +154,7 @@
     $('#idDownloadAllLogs').click(function() {
         console.log("idDownloadAllLogs click");
 
+        $.showLoading();
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
@@ -163,9 +164,11 @@
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
+                $.hideLoading();
                 bootbox.alert("ERREUR 'createLogsZipFile' !");
             },
             success: function (json_res) {
+                $.hideLoading();
                 res = JSON.parse(json_res.result);
                 if (res.status != 0) {
                     var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.error;

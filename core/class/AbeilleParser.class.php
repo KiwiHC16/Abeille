@@ -2050,27 +2050,28 @@
             $status         = substr($payload, 2, 2);
             $SrcAddr        = substr($payload, 4, 4);
             $EndPointCount  = substr($payload, 8, 2);
-
-            $this->whoTalked[] = $dest.'/'.$SrcAddr;
-
             $endPointList = "";
             for ($i = 0; $i < (intval($EndPointCount) * 2); $i += 2) {
-                $endPointList .= '; '.substr($payload, (10 + $i), 2) ;
-                if ($i==0) {
+                if ($i != 0)
+                    $endPointList .= "/";
+                $endPointList .= substr($payload, (10 + $i), 2);
+                if ($i == 0) {
                     $EP = substr($payload, (10 + $i), 2);
                 }
             }
 
             $msgDecoded = '8045/Active endpoints response'
-                . ', SQN='             .$SQN
-                . ', Status='          .$status
-                . ', Addr='       .$SrcAddr
-                . ', EPCount='   .$EndPointCount
-                . ', EPList='    .$endPointList
+                . ', SQN='.$SQN
+                . ', Status='.$status
+                . ', Addr='.$SrcAddr
+                . ', EPCount='.$EndPointCount
+                . ', EPList='.$endPointList
                 . ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             if ($status!="00") {
                 parserLog('debug', '  Status != 0 => ignoring');
@@ -2078,11 +2079,11 @@
             }
 
             // Tcharp38: Which EP ? Shouldn't be in a loop ?
-            parserLog('debug', '  Asking details for EP '.$EP. ' [Modelisation]' );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getManufacturerName",                         "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4),    "address=".$SrcAddr.'&endPoint='.           $EP );
+            parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$SrcAddr.'&endPoint='.           $EP );
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
@@ -2750,18 +2751,22 @@
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
                 monMsgFromZigate($msg); // Send message to monitor
 
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
+
             if ($ClusterId == "0005") {
                 parserLog('debug', '  Processed in 8002 => dropped');
                 return;
             }
 
-            $this->whoTalked[] = $dest.'/'.$SrcAddr;
-
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
+            if ($AttributStatus == '86') {
+                parserLog('debug', '  Status = 86 => Unsupported attribute type ', $type);
+                return;
+            }
             if ($AttributStatus != '00') {
-                parserLog('debug', '  Status != 0 => Probably read attempt on non existent param', $type);
+                parserLog('debug', '  Status != 0 => Ignored', $type);
                 return;
             }
 
@@ -2911,10 +2916,13 @@
                         $data = $trimmedValue;
 
                         // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
-                        $this->mqqtPublishFctToCmd( 'CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr );
+                        $this->mqqtPublishFctToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
 
                             // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        if ($AttributId == "0005")
+                            parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        else // 0010
+                            parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
                     }
                 }
 

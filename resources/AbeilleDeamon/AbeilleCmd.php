@@ -33,7 +33,7 @@
     // exemple d appel
     // php AbeilleCmd.php debug
     //check already running
-    logSetConf("AbeilleCmd.log");
+    logSetConf("AbeilleCmd.log", TRUE);
     logMessage('info', 'AbeilleCmd starting');
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();

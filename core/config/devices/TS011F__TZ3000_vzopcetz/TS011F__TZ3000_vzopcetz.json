@@ -28,8 +28,10 @@
             "include7 2": "Toggle1",
             "include7 2 2": "Toggle2",
             "include8": "getEtat",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier"
+            "include9": "BindToZigateEtat",
+            "include10":"setReportEtat",
+            "include11": "getManufacturerName",
+            "include12": "getModelIdentifier"
         }
     }
 }

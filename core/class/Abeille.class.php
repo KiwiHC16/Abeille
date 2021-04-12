@@ -756,7 +756,9 @@ if (0) {
         Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
     public static function deamon_start_cleanup()
     {
-        log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
+        // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
+
+        message::removeAll('Abeille');
 
         // Remove temporary files
         for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
@@ -785,7 +787,7 @@ if (0) {
             updateConfigDB();
         }
 
-        log::add('Abeille', 'debug', 'deamon_start_cleanup(): Terminé');
+        // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Terminé');
         return;
     }
 
@@ -818,8 +820,6 @@ if (0) {
         }
 
         self::deamon_stop();
-
-        message::removeAll('Abeille');
 
         self::deamon_start_cleanup();
 
@@ -1912,11 +1912,11 @@ if (0) {
         static $queueStatus = []; // "ok" or "error"
 
         $queue = msg_get_queue($queueId);
-        if ($queue == FALSE) {
+        if ($queue == false) {
             // log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
             return;
         }
-        if (($stat = msg_stat_queue($queue)) == FALSE) {
+        if (($stat = msg_stat_queue($queue)) == false) {
             return; // Something wrong
         }
 

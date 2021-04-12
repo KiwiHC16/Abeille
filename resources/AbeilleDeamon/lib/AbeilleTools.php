@@ -1,16 +1,17 @@
 <?php
 
-// require_once __DIR__ . '/../../../../../core/php/core.inc.php';
-require_once __DIR__ . '/../../../core/php/AbeilleLog.php';
+// require_once __DIR__.'/../../../../../core/php/core.inc.php';
+require_once __DIR__.'/../../../core/php/AbeilleLog.php';
+
+define('corePhpDir', __DIR__.'/../../../core/php/');
 
 class AbeilleTools
 {
-
-    const templateDir = __DIR__ . '/../../../core/config/devices/Template/';
-    const devicesDir = __DIR__ . '/../../../core/config/devices/';
-    const configDir = __DIR__ . '/../../../core/config/';
-    const daemonDir = __DIR__ . '/../';
-    const logDir = __DIR__ . "/../../../../../log/";
+    const templateDir = __DIR__.'/../../../core/config/devices/Template/';
+    const devicesDir = __DIR__.'/../../../core/config/devices/';
+    const configDir = __DIR__.'/../../../core/config/';
+    const daemonDir = __DIR__.'/../';
+    const logDir = __DIR__."/../../../../../log/";
 
     /**
      * Get Plugin Log Level.
@@ -90,8 +91,7 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyCmd($cmd)
     {
-
-        $cmdFilename = self::templateDir . $cmd . '.json';
+        $cmdFilename = self::templateDir.$cmd.'.json';
 
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename);
@@ -186,7 +186,7 @@ class AbeilleTools
 
         $json = json_decode($content, true);
 
-        // self::deamonlogFilter( "DEBUG", 'Abeille', 'Tools', "AbeilleTools: nb line " . strlen($content) );
+        // self::deamonlogFilter( "DEBUG", 'Abeille', 'Tools', "AbeilleTools: nb line ".strlen($content) );
 
         return $json;
     }
@@ -201,10 +201,10 @@ class AbeilleTools
     public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
     {
 
-        $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename' . $deviceFilename);
+        $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$deviceFilename);
         if (!is_file($deviceFilename)) {
-            // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename' . $deviceFilename);
+            // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename'.$deviceFilename);
             return;
         }
 
@@ -212,11 +212,11 @@ class AbeilleTools
 
         $deviceJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: '.$content);
             return;
         }
 
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: ' . $device . ' json found Tools: nb line ' . strlen($content));
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: '.$device.' json found Tools: nb line '.strlen($content));
         return $deviceJson;
     }
 
@@ -250,7 +250,7 @@ class AbeilleTools
         $fileCount = 0;
 
         $devicesDir = self::devicesDir;
-        if (file_exists($devicesDir) == FALSE) {
+        if (file_exists($devicesDir) == false) {
             log::add('Abeille', 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
             return $return;
         }
@@ -264,9 +264,9 @@ class AbeilleTools
                 continue;
             }
 
-            $fullPath = $devicesDir . $dirEntry . DIRECTORY_SEPARATOR . $dirEntry . ".json";
+            $fullPath = $devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$dirEntry.".json";
             if (!file_exists($fullPath)) {
-                log::add($logger, 'warning', "Fichier introuvable: " . $fullPath);
+                log::add($logger, 'warning', "Fichier introuvable: ".$fullPath);
                 $fileMissing++;
                 continue;
             }
@@ -274,7 +274,7 @@ class AbeilleTools
             try {
                 $returnOneMore = array_keys(json_decode(file_get_contents($fullPath),1))[0];
             } catch (Exception $e) {
-                log::add($logger, 'error', 'Impossible de lire le contenu du fichier ' . $fullPath);
+                log::add($logger, 'error', 'Impossible de lire le contenu du fichier '.$fullPath);
                 $fileIllisible++;
                 continue;
             }
@@ -283,7 +283,7 @@ class AbeilleTools
             $fileCount++;
         }
 
-        log::add($logger, 'debug', "Nb repertoire template parcourus: " . $dirCount . " dont " .  $dirExcluded . " exclus soit " . ($dirCount-$dirExcluded) . ". " . $fileCount . " fichiers template ajoutés à la liste, " . $fileMissing++ . " introuvables et " . $fileIllisible . " templates illisibles." );
+        log::add($logger, 'debug', "Nb repertoire template parcourus: ".$dirCount." dont ". $dirExcluded." exclus soit ".($dirCount-$dirExcluded).". ".$fileCount." fichiers template ajoutés à la liste, ".$fileMissing++." introuvables et ".$fileIllisible." templates illisibles." );
         return $return;
     }
 
@@ -303,10 +303,10 @@ class AbeilleTools
         $return['zigateNb'] = config::byKey('zigateNb', 'Abeille', '1', 1);
 
         for ($i = 1; $i <= $return['zigateNb']; $i++) {
-            $return['AbeilleType' . $i] = config::byKey('AbeilleType' . $i, 'Abeille', 'none', 1);
-            $return['AbeilleSerialPort' . $i] = config::byKey('AbeilleSerialPort' . $i, 'Abeille', 'none', 1);
-            $return['IpWifiZigate' . $i] = config::byKey('IpWifiZigate' . $i, 'Abeille', '', 1);
-            $return['AbeilleActiver' . $i] = config::byKey('AbeilleActiver' . $i, 'Abeille', 'N', 1);
+            $return['AbeilleType'.$i] = config::byKey('AbeilleType'.$i, 'Abeille', 'none', 1);
+            $return['AbeilleSerialPort'.$i] = config::byKey('AbeilleSerialPort'.$i, 'Abeille', 'none', 1);
+            $return['IpWifiZigate'.$i] = config::byKey('IpWifiZigate'.$i, 'Abeille', '', 1);
+            $return['AbeilleActiver'.$i] = config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1);
         }
 
         return $return;
@@ -419,7 +419,7 @@ class AbeilleTools
             }
         }
 
-        //log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': nbExpected: '.$nbProcessExpected . ', found: ' . json_encode($found));
+        //log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': nbExpected: '.$nbProcessExpected.', found: '.json_encode($found));
 
         return $found;
     }
@@ -479,7 +479,7 @@ class AbeilleTools
             }
 
         }
-        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons:' . $missing);
+        // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:'.$missing);
     }
 
     /**
@@ -535,7 +535,7 @@ class AbeilleTools
         } else
             log::add('Abeille', 'debug', 'stopDaemons(): Aucun démon actif');
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -543,14 +543,14 @@ class AbeilleTools
      * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
      * @param string $daemons Deamons list to start, space separated. Empty string = ALL
      */
-    public static function startDaemons($parameters, $daemons = "") {
+    public static function startDaemons($config, $daemons = "") {
         if ($daemons == "") {
             $daemons = "AbeilleCmd AbeilleParser";
-            for ($zgNb = 1; $zgNb <= $parameters['zigateNb']; $zgNb++) {
-                if ($parameters['AbeilleActiver'.$zgNb] != "Y")
+            for ($zgNb = 1; $zgNb <= $config['zigateNb']; $zgNb++) {
+                if ($config['AbeilleActiver'.$zgNb] != "Y")
                     continue; // Zigate disabled
 
-                if ($parameters['AbeilleType'.$zgNb] == "WIFI")
+                if ($config['AbeilleType'.$zgNb] == "WIFI")
                     $daemons .= " AbeilleSocat".$zgNb;
                 $daemons .= " AbeilleSerialRead".$zgNb;
             }
@@ -558,7 +558,7 @@ class AbeilleTools
         log::add('Abeille', 'debug', "startDaemons() => daemons=".$daemons);
         $daemonsArr = explode(" ", $daemons);
         foreach ($daemonsArr as $daemon) {
-            $cmd = self::getStartCommand($parameters, $daemon);
+            $cmd = self::getStartCommand($config, $daemon);
             if ($cmd == "")
                 log::add('Abeille', 'debug', "startDaemons(): ERREUR, cmd vide for '".$daemon."'");
             else
@@ -572,12 +572,12 @@ class AbeilleTools
      * @param string $daemons Deamons list to restart, space separated
      */
     public static function restartDaemons($parameters, $daemons = "") {
-        if (AbeilleTools::stopDaemons($daemons) == FALSE)
-            return FALSE; // Error
+        if (AbeilleTools::stopDaemons($daemons) == false)
+            return false; // Error
 
         AbeilleTools::startDaemons($parameters, $daemons);
 
-        return TRUE; // ok
+        return true; // ok
     }
 
     /**
@@ -603,8 +603,8 @@ class AbeilleTools
         case 'cmd':
         case 'abeillecmd':
             $daemonPhp = "AbeilleCmd.php";
-            $logCmd = " >>" . $logDir . "AbeilleCmd.log 2>&1";
-            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $logCmd;
+            $logCmd = " >>".$logDir."AbeilleCmd.log 2>&1";
+            $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
             break;
         case 'parser':
         case 'abeilleparser':
@@ -630,9 +630,8 @@ class AbeilleTools
         case 'monitor':
         case 'abeillemonitor':
             $php = "/usr/bin/php";
-            $dir = __DIR__."/../../../core/php/"; // Dir from "resources/AbeilleDeamon/lib"
             $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";
-            $cmd = $php." -r \"require '".$dir."AbeilleMonitor.php'; monRun();\"".$log;
+            $cmd = $php." -r \"require '".corePhpDir."AbeilleMonitor.php'; monRun();\"".$log;
             break;
         default:
             $cmd = "";
@@ -757,13 +756,11 @@ class AbeilleTools
     }
 
     /**
-     * Le daemon cron d'Abeille tourne après un appui sur start.
-     * un appui sur stop arrete le cron d'Abeille
+     * Returns true is Abeille's cron is running.
      *
-     * @return false
+     * @return true if running, else false
      */
-    public
-    static function isAbeilleCronRunning()
+    public static function isAbeilleCronRunning()
     {
         if (is_object(cron::byClassAndFunction('Abeille', 'deamon')) &
             (cron::byClassAndFunction('Abeille', 'deamon')->running())) {
@@ -771,7 +768,6 @@ class AbeilleTools
             return true;
         }
         return false;
-
     }
 
     /**

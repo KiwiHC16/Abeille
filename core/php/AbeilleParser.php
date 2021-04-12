@@ -33,17 +33,17 @@
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/includes/config.php';
-    include_once __DIR__.'/includes/function.php';
-    include_once __DIR__.'/includes/fifo.php';
-    include_once __DIR__.'/lib/AbeilleTools.php';
-    include_once __DIR__.'/../../core/php/AbeilleLog.php';              // Abeille log features
-    include_once __DIR__.'/../../core/php/AbeilleZigateConst.php';      // Zigate constants
-    include_once __DIR__.'/../../core/class/AbeilleCmd.class.php';      // AbeilleCmdClass
-    include_once __DIR__.'/../../core/class/AbeilleParser.class.php';   // AbeilleParserClass
-    include_once __DIR__.'/../../core/class/Abeille.class.php';         // AbeilleClass
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+    include_once __DIR__.'/AbeilleLog.php';              // Abeille log features
+    include_once __DIR__.'/AbeilleZigateConst.php';      // Zigate constants
+    include_once __DIR__.'/../class/AbeilleCmd.class.php';      // AbeilleCmdClass
+    include_once __DIR__.'/../class/AbeilleParser.class.php';   // AbeilleParserClass
+    include_once __DIR__.'/../class/Abeille.class.php';         // AbeilleClass
     if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
-        include_once __DIR__.'/../../core/php/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+        include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161

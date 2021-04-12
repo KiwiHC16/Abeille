@@ -66,6 +66,18 @@
             <a id="idDownloadAllLogs" class="btn btn-success" style="margin-top:8px"><i class="fas fa-cloud-download-alt"></i> Télécharger tout</a>
         </ul>
 
+        <!-- Data (JSON) -->
+        <ul class="nav nav-list bs-sidenav list-group">
+            JSON
+            <?php
+                /* Listing log files from Jeedom tmp */
+                foreach (glob($tmpDir."/AbeilleLQI_MapData*.json") as $path) {
+                    $fileName = basename($path);
+                    echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-TMP">'.$fileName.'</a></li>';
+                }
+            ?>
+        </ul>
+
         <!-- Commands -->
         <ul class="nav nav-list bs-sidenav list-group">
             Commandes

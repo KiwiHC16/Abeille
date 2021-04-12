@@ -9,7 +9,7 @@
     /* Developers debug features */
     $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
+        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
         if (isset($dbgConfig["dbgMonitorAddr"])) { // Monitor params
             $dbgMonitorAddr = $dbgConfig["dbgMonitorAddr"];
         }
@@ -20,12 +20,12 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/includes/config.php';
-    include_once __DIR__.'/includes/function.php';
-    include_once __DIR__.'/includes/fifo.php';
-    include_once __DIR__.'/../../core/class/AbeilleMsg.php';
-    include_once __DIR__.'/../../core/php/AbeilleLog.php';
-    include_once __DIR__.'/../../core/class/AbeilleCmdQueue.class.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/../class/AbeilleMsg.php';
+    include_once __DIR__.'/AbeilleLog.php';
+    include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
     // ***********************************************************************************************
     // MAIN
@@ -33,7 +33,7 @@
     // exemple d appel
     // php AbeilleCmd.php debug
     //check already running
-    logSetConf("AbeilleCmd.log", TRUE);
+    logSetConf("AbeilleCmd.log", true);
     logMessage('info', 'AbeilleCmd starting');
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
@@ -62,7 +62,7 @@
             /* Performing msg rerouting from 'EQ assistant' */
             $max_msg_size = 2048;
             $msg_type = NULL;
-            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT) == TRUE) {
+            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
                 logMessage('debug', "Received=".json_encode($msg));
                 if ($msg['type'] == 'reroute') {
                     $rerouteNet = $msg['network'];
@@ -105,10 +105,10 @@
         }
     }
     catch (Exception $e) {
-        $AbeilleCmdQueue->deamonlog( 'debug', 'error: '. json_encode($e->getMessage()));
-        $AbeilleCmdQueue->deamonlog( 'info', 'Fin du script');
+        logMessage('debug', 'error: '. json_encode($e->getMessage()));
+        logMessage('info', '<<< Fin du démon \'AbeilleCmd\'');
     }
 
-    $AbeilleCmdQueue->deamonlog( 'info', 'Fin du démon \'AbeilleCmd\'');
     unset($AbeilleCmdQueue);
+    logMessage('info', '<<< Fin du démon \'AbeilleCmd\'');
 ?>

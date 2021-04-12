@@ -79,7 +79,7 @@ class AbeilleTools
             if ($loglevel == "warning")
                 $loglevel = "warn";
             /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
-            fwrite(STDOUT, '[' . date('Y-m-d H:i:s') . '][' . sprintf("%-5.5s", $loglevel) . '] ' . $message . PHP_EOL);
+            fwrite(STDOUT, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $loglevel).'] '.$message.PHP_EOL);
         }
     }
 
@@ -94,7 +94,7 @@ class AbeilleTools
         $cmdFilename = self::templateDir.$cmd.'.json';
 
         if (!is_file($cmdFilename)) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: ' . $cmdFilename);
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: '.$cmdFilename);
             return array();
         }
 
@@ -102,7 +102,7 @@ class AbeilleTools
 
         $cmdJson = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: ' . $content);
+            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: '.$content);
             return array();
         }
 
@@ -116,12 +116,12 @@ class AbeilleTools
     {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
 
-        $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
+        $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
 
         if (!is_file($deviceFilename)) {
-            log::add('Abeille', 'error', 'Nouvel équipement \'' . $device . '\' inconnu. Utilisation de la config par défaut. [Modelisation]');
+            log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
             $device = 'defaultUnknown';
-            $deviceFilename = self::devicesDir . $device . '/' . $device . '.json';
+            $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
         }
 
         $content = file_get_contents($deviceFilename);
@@ -129,8 +129,8 @@ class AbeilleTools
         // Recupere le template master
         $deviceTemplate = json_decode($content, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'L\'équipement \'' . $device . '\' a un mauvais fichier JSON.');
-            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content=' . $content);
+            log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
+            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content='.$content);
             return;
         }
 
@@ -403,12 +403,12 @@ class AbeilleTools
             if (preg_match('/AbeilleSerialRead.php Abeille([0-9]) /', $line, $match)) {
                 $abeille = $match[1];
                 if (stristr($line, "abeilleserialread.php"))
-                    $found['serialRead' . $abeille]++;
+                    $found['serialRead'.$abeille]++;
             }
             elseif (preg_match('/AbeilleSocat.php \/dev\/zigate([0-9]) /', $line, $match)) {
                 $abeille = $match[1];
                 if (stristr($line, 'abeillesocat.php')) {
-                    $found['socat' . $abeille]++;
+                    $found['socat'.$abeille]++;
                 }
             }
             else {
@@ -442,8 +442,8 @@ class AbeilleTools
         $nbProcessExpected = $found['expected'];
         array_pop($found);
         $result = $nbProcessExpected - array_sum($found);
-        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . '::' . __FUNCTION__ . ':' . __LINE__ . ': ' . ($result == 0 ? 'False' : 'True') . ',   found: ' . json_encode($found));
-        //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:' . ($result==1?"Yes":"No"));
+        // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '.($result == 0 ? 'false' : 'true').',   found: '.json_encode($found));
+        //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:'.($result==1?"Yes":"No"));
         if ($result > 1) {
             log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
             // message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
@@ -465,7 +465,7 @@ class AbeilleTools
         //get socat first
         arsort($found);
         $found = array_reverse($found);
-        // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' : lastLaunch: ' . $lastLaunch . ', found:' . json_encode($found));
+        // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' : lastLaunch: '.$lastLaunch.', found:'.json_encode($found));
 
         $missing = "";
         foreach ($found as $daemon => $value) {
@@ -473,9 +473,9 @@ class AbeilleTools
                 AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
                 $missing .= ", $daemon";
                 $cmd = self::getStartCommand($parameters, $daemon);
-                // log::add('Abeille', 'info', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': restarting Abeille' . $daemon. '/'. $value);
-                // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ .': restarting  XXXXX  Abeille XXXXX' . $daemon . ': ' . $cmd);
-                exec($cmd . ' &');
+                // log::add('Abeille', 'info', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille'.$daemon. '/'. $value);
+                // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__ .': restarting  XXXXX  Abeille XXXXX'.$daemon.': '.$cmd);
+                exec($cmd.' &');
             }
 
         }
@@ -609,8 +609,8 @@ class AbeilleTools
         case 'parser':
         case 'abeilleparser':
             $daemonPhp = "AbeilleParser.php";
-            $daemonLog = " >>" . $logDir . "AbeilleParser.log 2>&1";
-            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $logLevel . $daemonLog;
+            $daemonLog = " >>".$logDir."AbeilleParser.log 2>&1";
+            $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$daemonLog;
             break;
         case 'serialread':
         case 'abeilleserialread':
@@ -652,7 +652,7 @@ class AbeilleTools
         unset($matches);
         $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
         $messageToSend = ($message == "") ? "" : "$daemonName: $message";
-        // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' sending ' . $messageToSend . ' to zigate ' . $zigateNbr);
+        // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
         if ( strlen($messageToSend) > 2 ) {
         Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
             "Abeille$zigateNbr/Ruche/SystemMessage", $messageToSend);
@@ -748,7 +748,7 @@ class AbeilleTools
         exec("command -v gpio && gpio -v", $out, $ret);
         if ($ret != 0) {
             log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
-            log::add('Abeille', 'debug', 'gpio -v => ' . implode(', ', $out));
+            log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
         } else {
             log::add('Abeille', 'debug', 'AbeilleTools:checkGpio(): Une PiZigate active trouvée => configuration des GPIOs');
             exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");

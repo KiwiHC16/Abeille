@@ -682,22 +682,22 @@ class AbeilleCmdProcess extends AbeilleDebug {
                                 return $Command['priority'];
                             }
                             else {
-                                $this->deamonlog('debug', "  NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
+                                $this->deamonlog('debug', "    NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
                                 return priorityLostNE;
                             }
                         }
                         else {
-                            $this->deamonlog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
+                            $this->deamonlog('debug', "    NE en Time Out alors je mets la priorite au minimum.");
                             return priorityLostNE;
                         }
                     }
                     else {
-                        $this->deamonlog('debug', "  NE desactive, je n envoie pas de commande.");
+                        $this->deamonlog('debug', "    NE desactive, je n envoie pas de commande.");
                         return -1;
                     }
                 }
                 else {
-                    $this->deamonlog('debug', "  NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
+                    $this->deamonlog('debug', "    NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
                     return $Command['priority'];
                 }
             }
@@ -706,7 +706,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             }
         }
         else {
-            $this->deamonlog('debug', "  priority not defined !!!");
+            $this->deamonlog('debug', "    priority not defined !!!");
             return priorityInterrogation;
         }
     }
@@ -724,7 +724,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
 
         if (!isset($Command)) {
-            $this->deamonlog('debug', "  L1 - Command not set return", $this->debug['processCmd']);
+            $this->deamonlog('debug', "    L1 - Command not set return", $this->debug['processCmd']);
             return;
         }
 

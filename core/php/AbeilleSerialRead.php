@@ -23,11 +23,10 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/includes/config.php';
-    include_once __DIR__.'/includes/function.php';
-    include_once __DIR__.'/includes/fifo.php';
-    // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
-    include_once __DIR__.'/../../core/php/AbeilleLog.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/AbeilleLog.php';
 
     logSetConf('', TRUE); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
@@ -182,5 +181,5 @@
     }
 
     fclose($f);
-    logMessage('info', 'Fin du démon AbeilleSerialRead'.$abeilleNb);
+    logMessage('info', '<<< Fin du démon AbeilleSerialRead'.$abeilleNb);
 ?>

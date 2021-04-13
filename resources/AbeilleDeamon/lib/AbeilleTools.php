@@ -169,18 +169,18 @@ class AbeilleTools
 
         $configDir = self::configDir;
 
-        // self::deamonlog("debug", "Tools: loading file " . $jsonFile . " in " . $configDir);
-        $confFile = $configDir . $jsonFile;
+        // self::deamonlog("debug", "Tools: loading file ".$jsonFile." in ".$configDir);
+        $confFile = $configDir.$jsonFile;
 
         //file exists ?
         if (!is_file($confFile)) {
-            log::add('Abeille', 'error', $confFile . ' not found.');
+            log::add('Abeille', 'error', $confFile.' not found.');
             return;
         }
         // is valid json
         $content = file_get_contents($confFile);
         if (!is_json($content)) {
-            log::add('Abeille', 'error', $confFile . ' is not a valid json.');
+            log::add('Abeille', 'error', $confFile.' is not a valid json.');
             return;
         }
 
@@ -313,7 +313,7 @@ class AbeilleTools
     }
 
     /**
-     * CheckAlldeamones and send systemMessage to zigateX if needed
+     * Check if any missing daemon and restart missing ones.
      *
      * @param $parameters
      * @param $running
@@ -347,7 +347,8 @@ class AbeilleTools
     }
 
     /**
-     * get running processes for Abeille plugin
+     * Get running processes for Abeille plugin
+     * WARNING: if process launched with "nohup" it will currently not be detected.
      *
      * @return array
      */
@@ -615,10 +616,10 @@ class AbeilleTools
         case 'serialread':
         case 'abeilleserialread':
             $daemonPhp = "AbeilleSerialRead.php";
-            $daemonParams = 'Abeille' . $nb . ' ' . $param['AbeilleSerialPort' . $nb] . ' ';
-            $daemonLog = $logLevel . " >>" . $logDir . "AbeilleSerialRead" . $nb . ".log 2>&1";
-            exec(system::getCmdSudo() . 'chmod 777 ' . $param['AbeilleSerialPort' . $nb] . ' > /dev/null 2>&1');
-            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
+            $daemonParams = 'Abeille'.$nb.' '.$param['AbeilleSerialPort'.$nb].' ';
+            $daemonLog = $logLevel." >>".$logDir."AbeilleSerialRead".$nb.".log 2>&1";
+            exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$nb].' > /dev/null 2>&1');
+            $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
             break;
         case 'socat':
         case 'abeillesocat':
@@ -670,13 +671,13 @@ class AbeilleTools
     {
         if ($which == 'all') {
             for ($n = 1; $n <= $parameters['zigateNb']; $n++) {
-                if ($parameters['AbeilleActiver' . $n] == "Y") {
-                    // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $n);
+                if ($parameters['AbeilleActiver'.$n] == "Y") {
+                    // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
                     AbeilleTools::sendMessageToRuche("daemon$n", "");
                 }
             }
         } else {
-            // log::add('Abeille', 'debug', "Process Monitoring: " . __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ' clearing zigate ' . $which);
+            // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$which);
             AbeilleTools::sendMessageToRuche("daemon$which", "");
         }
     }
@@ -699,11 +700,11 @@ class AbeilleTools
         exec("command -v socat", $out, $ret);
         if ($ret != 0) {
             log::add('Abeille', 'error', 'socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration');
-            log::add('Abeille', 'debug', 'socat => ' . implode(', ', $out));
+            log::add('Abeille', 'debug', 'socat => '.implode(', ', $out));
             message::add("Abeille", "Erreur, socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration");
 
         } else {
-            log::add('Abeille', 'debug', __CLASS__ . '::' . __FUNCTION__ . ' L:' . __LINE__ . 'Zigate Wifi active trouvée, socat trouvé');
+            log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.' L:'.__LINE__.'Zigate Wifi active trouvée, socat trouvé');
         }
 
     }

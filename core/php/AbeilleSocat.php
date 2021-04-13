@@ -4,7 +4,7 @@
      * AbeilleSocat (daemon)
      *
      * - Using 'socat'
-     * - Convert TCP connection to 'tty' like port for later use by 'AbeileSerialRead'
+     * - Convert TCP connection to 'tty' like port for later use by 'AbeilleSerialRead'
      */
 
     /* Developers debug features */
@@ -18,14 +18,13 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/includes/config.php';
-    include_once __DIR__.'/includes/function.php';
-    include_once __DIR__.'/includes/fifo.php';
-    // include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
-    include_once __DIR__.'/../../core/php/AbeilleLog.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/AbeilleLog.php';
 
     logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)
-    logMessage('info', 'Démarrage d\'AbeilleSocat');
+    logMessage('info', '>>> Démarrage d\'AbeilleSocat');
     if ($argc < 1) { // Currently expecting <ZigatePort> <LogLevel> <ip:port>
         logMessage('error', 'Port série manquant pour lancement AbeilleSocat => Arret du démon.');
         exit(1);
@@ -35,7 +34,6 @@
     $requestedlevel=$argv[2];
     $requestedlevel=''?'none':$argv[2];
     $ip=''?'192.168.4.1':$argv[3];
-    // $clusterTab= AbeilleTools::getJSonConfigFiles('zigateClusters.json'); // Unused
 
      /* Checking parameters */
      if (!preg_match("(^/dev/zigate)", $serial)) {
@@ -45,16 +43,16 @@
 
      /* Now we can extract network number to properly identify log file. */
     $abeilleNb = (int)substr($serial, 11); // '/dev/zigateX' => Zigate number X (ex: 1)
-    logSetConf("AbeilleSocat".$abeilleNb.".log"); // Log to file with line nb check
+    logSetConf("AbeilleSocat".$abeilleNb.".log", true); // Log to file with line nb check
 
     //check already running
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
-    logMessage('info', 'status des daemons: '.json_encode($daemons));
+    logMessage('debug', 'Daemons: '.json_encode($daemons));
     #Two at least expected,the original and this one
     if ($daemons["socat".$abeilleNb] > 1){
-        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
+        logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
         exit(3);
     }
 
@@ -113,5 +111,5 @@
        // sleep(60);
     //}
 
-    logMessage('info', 'Arret du démon \'AbeilleSocat\'');
+    logMessage('info', '<<< Arret du démon \'AbeilleSocat\'');
 ?>

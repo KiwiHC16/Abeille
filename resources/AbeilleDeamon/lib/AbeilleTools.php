@@ -10,7 +10,7 @@ class AbeilleTools
     const templateDir = __DIR__.'/../../../core/config/devices/Template/';
     const devicesDir = __DIR__.'/../../../core/config/devices/';
     const configDir = __DIR__.'/../../../core/config/';
-    const daemonDir = __DIR__.'/../';
+    // const daemonDir = __DIR__.'/../';
     const logDir = __DIR__."/../../../../../log/";
 
     /**
@@ -45,7 +45,6 @@ class AbeilleTools
      */
     public static function getNumberFromLevel($loglevel)
     {
-
         $niveau = array(
             "NONE" => 0,
             "ERROR" => 1,
@@ -166,7 +165,6 @@ class AbeilleTools
      */
     public static function getJSonConfigFiles($jsonFile = null)
     {
-
         $configDir = self::configDir;
 
         // self::deamonlog("debug", "Tools: loading file ".$jsonFile." in ".$configDir);
@@ -200,7 +198,6 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
     {
-
         $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$deviceFilename);
         if (!is_file($deviceFilename)) {
@@ -377,22 +374,22 @@ class AbeilleTools
 
         // Count number of processes we should have based on configuration, init $found['process x'] to 0.
         for ($n = 1; $n <= $nbZigate; $n++) {
-            if ($parameters['AbeilleActiver' . $n] == "Y") {
+            if ($parameters['AbeilleActiver'.$n] == "Y") {
                 $activedZigate++;
 
                 // e.g. "AbeilleType2":"WIFI", "AbeilleSerialPort2":"/dev/zigate2"
                 // SerialRead + Socat
-                if (stristr($parameters['AbeilleSerialPort' . $n], '/dev/zigate')) {
+                if (stristr($parameters['AbeilleSerialPort'.$n], '/dev/zigate')) {
                     $nbProcessExpected += 2;
-                    $found['serialRead' . $n] = 0;
-                    $found['socat' . $n] = 0;
+                    $found['serialRead'.$n] = 0;
+                    $found['socat'.$n] = 0;
                 }
 
                 // e.g. "AbeilleType1":"USB", "AbeilleSerialPort1":"/dev/ttyUSB3"
                 // SerialRead
-                if (preg_match("(tty|monit)", $parameters['AbeilleSerialPort' . $n])) {
+                if (preg_match("(tty|monit)", $parameters['AbeilleSerialPort'.$n])) {
                     $nbProcessExpected++;
-                    $found['serialRead' . $n] = 0;
+                    $found['serialRead'.$n] = 0;
                 }
             }
         }
@@ -592,7 +589,7 @@ class AbeilleTools
         $nohup = "/usr/bin/nohup";
         $php = "/usr/bin/php";
         //Path not instantiated classes.
-        $daemonDir = self::daemonDir;
+        // $daemonDir = self::daemonDir;
         $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
         $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
         $logDir = self::logDir;
@@ -624,9 +621,9 @@ class AbeilleTools
         case 'socat':
         case 'abeillesocat':
             $daemonPhp = "AbeilleSocat.php";
-            $daemonParams = $param['AbeilleSerialPort' . $nb] . ' ' . $logLevel . ' ' . $param['IpWifiZigate' . $nb];
-            $daemonLog = " >>" . $logDir . "AbeilleSocat" . $nb . '.log 2>&1';
-            $cmd = $nohup . " " . $php . " " . $daemonDir . $daemonPhp . " " . $daemonParams . $daemonLog;
+            $daemonParams = $param['AbeilleSerialPort'.$nb].' '.$logLevel.' '.$param['IpWifiZigate'.$nb];
+            $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
+            $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
             break;
         case 'monitor':
         case 'abeillemonitor':
@@ -706,7 +703,6 @@ class AbeilleTools
         } else {
             log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.' L:'.__LINE__.'Zigate Wifi active trouvée, socat trouvé');
         }
-
     }
 
     /**
@@ -727,7 +723,6 @@ class AbeilleTools
                 $missing .= ", $daemon";
                 AbeilleTools::sendMessageToRuche($daemon, "processus manquant: $daemon");
                 log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': messageToRuche: '.$daemon.' manquant');
-
             }
         }
         if (strlen($missing) > 1) {

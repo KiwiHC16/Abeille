@@ -3,92 +3,95 @@
     class AbeilleCmd extends cmd
     {
         /**
-         * updateField
-         *
-         * used to replace #xxx# fields with real value
+         * updateField()
+         * Used to replace #xxx# fields with real value
          *
          * @param request to be modified
-         *
          * @return request modified
          */
-        public function updateField($dest,$cmd,$request,$_options=NULL) {
-            /* ------------------------------ */
-            // // Je fais les remplacement dans les parametres (ex: addGroup pour telecommande Ikea 5 btn)
-            if (strpos($request, "#addrGroup#") > 0) {
-                $request = str_replace("#addrGroup#", $cmd->getEqLogic()->getConfiguration("Groupe"), $request);
-                logMessage('debug', 'request - addGroup : ' . $request);
+        public static function updateField($dest, $cmd, $request, $_options=NULL) {
+            $request2 = $request;
+
+            if (strpos($request2, "#addrGroup#") > 0) {
+                $request2 = str_replace("#addrGroup#", $cmd->getEqLogic()->getConfiguration("Groupe"), $request2);
+                // logMessage('debug', 'request - addGroup : ' . $request2);
             }
 
-
-            if (strpos($request, "#GroupeEP") > 0) {
-                $id = substr($request,strpos($request, "#GroupeEP")+strlen("#GroupeEP"),1);
-                $request = str_replace("#GroupeEP".$id."#", $cmd->getEqLogic()->getConfiguration("GroupeEP".$id), $request);
-                logMessage('debug', 'request - GroupEP : ' . $id . ' - ' . $request);
-                $request .+ "TEST";
+            if (strpos($request2, "#GroupeEP") > 0) {
+                $id = substr($request2, strpos($request2, "#GroupeEP") + strlen("#GroupeEP"), 1);
+                $request2 = str_replace("#GroupeEP".$id."#", $cmd->getEqLogic()->getConfiguration("GroupeEP".$id), $request2);
+                // logMessage('debug', 'request - GroupEP : ' . $id . ' - ' . $request2);
+                // $request .+ "TEST";
             }
 
-            if (strpos($request, '#onTime#') > 0) {
+            if (strpos($request2, '#onTime#') > 0) {
                 $onTimeHex = sprintf("%04s", dechex($cmd->getEqLogic()->getConfiguration("onTime") * 10));
-                $request = str_replace("#onTime#", $onTimeHex, $request);
+                $request2 = str_replace("#onTime#", $onTimeHex, $request2);
             }
-            // logMessage('debug', 'request - onTime: ' . $request);
+            // logMessage('debug', 'request - onTime: ' . $request2);
 
-            if (strpos($request, '#addrIEEE#') > 0) {
+            if (strpos($request2, '#addrIEEE#') > 0) {
                 $commandIEEE = $cmd->getEqLogic()->getConfiguration("IEEE",'none');
                 if (strlen($commandIEEE)!=16) {
-                    logMessage('debug', 'Adresse IEEE de l equipement ' . $cmd->getEqLogic()->getHumanName() . ' inconnue');
+                    // logMessage('debug', 'Adresse IEEE de l equipement ' . $cmd->getEqLogic()->getHumanName() . ' inconnue');
                     return true;
                 }
-                $request = str_replace('#addrIEEE#', $commandIEEE, $request);
+                $request2 = str_replace('#addrIEEE#', $commandIEEE, $request2);
             }
             // logMessage('debug', 'request - addrIEEE: ' . $request);
 
-            if (strpos($request, '#ZiGateIEEE#') > 0) {
+            if (strpos($request2, '#ZiGateIEEE#') > 0) {
                 // Logical Id ruche de la forme: Abeille1/Ruche
                 $rucheIEEE = Abeille::byLogicalId($dest . '/Ruche', 'Abeille')->getConfiguration("IEEE",'none');
-                logMessage('debug', 'Adresse IEEE de la ruche ' . $rucheIEEE);
-                if (strlen($rucheIEEE)!=16) {
-                    logMessage('debug', 'Adresse IEEE de la ruche ' . $cmd->getEqLogic()->getHumanName() . ' inconnue');
-                    return true;
-                }
-                $request = str_replace('#ZiGateIEEE#', $rucheIEEE, $request);
+                // logMessage('debug', 'Adresse IEEE de la ruche ' . $rucheIEEE);
+                if (strlen($rucheIEEE) != 16) {
+                    // logMessage('debug', 'Adresse IEEE de la ruche ' . $cmd->getEqLogic()->getHumanName() . ' inconnue');
+                    // return true;
+                } else
+                    $request2 = str_replace('#ZiGateIEEE#', $rucheIEEE, $request2);
             }
-            // logMessage('debug', 'request - ZigateIEEE: ' . $request);
+            // logMessage('debug', 'request - ZigateIEEE: ' . $request2);
 
             // Request with multi inputs, input from a Info command.
             // Todo: At this stage process only one cmd info, could need multi info command in the futur
             // log::add( 'Abeille', 'debug', 'CmdInfo: Start analysis: '.$request );
             // #cmdInfo_xxxxxxx_#
-            if (preg_match('`#cmdInfo_(.*)_#`m', $request, $m)) {
+            if (preg_match('`#cmdInfo_(.*)_#`m', $request2, $m)) {
                 // log::add( 'Abeille', 'debug', 'CmdInfo: found it: '.json_encode($m) );
-                $cmdInfo = $this->getEqLogic()->getCmd('info',$m[1]);
+                $cmdInfo = $this->getEqLogic()->getCmd('info', $m[1]);
                 // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
-                $request= str_replace("#cmdInfo_".$m[1]."_#",$cmdInfo->execCmd(),$request);
+                $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);
             }
             // log::add( 'Abeille', 'debug', 'CmdInfo: End analysis' );
 
             if (isset($_options)) {
                 switch ($cmd->getSubType()) {
                     case 'slider':
-                        $request = str_replace('#slider#', $_options['slider'], $request);
+                        $request2 = str_replace('#slider#', $_options['slider'], $request2);
                         break;
                     case 'color':
-                        $request = str_replace('#color#', $_options['color'], $request);
+                        $request2 = str_replace('#color#', $_options['color'], $request2);
                         break;
                     case 'message':
-                        $request = str_replace('#title#', $_options['title'], $request);
-                        $request = str_replace('#message#', $_options['message'], $request);
+                        $request2 = str_replace('#title#', $_options['title'], $request2);
+                        $request2 = str_replace('#message#', $_options['message'], $request2);
                         break;
                 }
             }
-            // logMessage('debug', 'request - options: ' . $request);
+            // logMessage('debug', 'request - options: ' . $request2);
 
-            $request = str_replace('\\', '', jeedom::evaluateExpression($request));
-            // logMessage('debug', 'request - eval: ' . $request);
+            $request2 = str_replace('\\', '', jeedom::evaluateExpression($request2));
+            // logMessage('debug', 'request - eval: ' . $request2);
 
-            $request = cmd::cmdToValue($request);
-            // logMessage('debug', 'request - cmdToVal: ' . $request);
+            $request2 = cmd::cmdToValue($request2);
+            // logMessage('debug', 'request - cmdToVal: ' . $request2);
 
+            if ($request2 != $request) {
+                logMessage('debug', 'updateField()');
+                logMessage('debug', "  Updated '".$request."'");
+                logMessage('debug', "  To '".$request2."'");
+                $request = $request2;
+            }
             return $request;
         }
 
@@ -117,7 +120,7 @@
                 // Process topic
                 // Needed for Telecommande: "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
                 if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
-                    $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic')); 
+                    $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
                 }
                 else {
                     $topic = "Cmd" . $this->getEqLogic()->getLogicalId() . "/" . $this->getConfiguration('topic');

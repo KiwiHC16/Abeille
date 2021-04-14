@@ -1,6 +1,8 @@
 {
   "DS01": {
-    "nameJeedom": "SONOFF Wireless Door/Window Sensor",
+    "nameJeedom": "Sonoff SNZB-04 Wireless Door/Window Sensor",
+    "manufacturer": "Sonoff",
+    "model": "SNZB-04",
     "timeout": "140",
     "Comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4",
     "Categorie": {

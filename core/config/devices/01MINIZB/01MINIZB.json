@@ -1,6 +1,8 @@
 {
   "01MINIZB": {
-    "nameJeedom": "SONOFF Module ZB Mini",
+    "nameJeedom": "Sonoff ZBMINI smart switch",
+    "manufacturer": "Sonoff",
+    "model": "SBMINI",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"

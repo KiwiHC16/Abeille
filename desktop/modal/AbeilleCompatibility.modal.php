@@ -2,15 +2,24 @@
     // Pour mettre a jour la doc github:
     // php listeCompatibilite.php rst
 
-    function equipementHtml( $resultIcone, $resultRaw, $result) {
+    function equipementHtml($resultIcone, $resultRaw, $result) {
 
         sort( $resultIcone );
-        
-        echo "<h1>{{Equipments}}</h1>";
-        echo "Un clic sur le -Nom Zigbee- vous amenera dans le répertoire ou de la doc est conservée. Si pas de doc, message -erreur 404-<br><br>";
+
+        echo "<h1>{{Equipements supportés}}</h1>";
+        echo "Les docs stockées de chaque équipement sont accessibles via un clic sur le champ 'ID Zigbee'. Si pas de doc, vous tomberez sur une page du type 'erreur 404'<br><br>";
         echo "<table>";
-        echo "<th>Nom Zigbee</th><th>Nom Generique</th><th>Icone</th>";
-        foreach ( $resultIcone as $values ) echo '<tr><td>'.$values['nameZigbee'].'</td><td>'.$values['nameDescription'].'</td><td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td></tr>'."\n";
+        // echo "<caption>Equipements supportés</caption>";
+        echo '<tr><th width="100px">Fabricant</th><th width="100px">Modèle</th><th>Nom</th><th>ID Zigbee</th><th>Icone</th></tr>';
+        foreach ( $resultIcone as $values ) {
+            echo '<tr>';
+            echo '<td>'.$values['manufacturer'].'</td>';
+            echo '<td>'.$values['model'].'</td>';
+            echo '<td>'.$values['nameDescription'].'</td>';
+            echo '<td>'.$values['zigbeeModelId'].'</td>';
+            echo '<td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td>';
+            echo '</tr>'."\n";
+        }
         echo "</table>";
 
         //---------------------------------------------------------------------
@@ -66,12 +75,12 @@
     //----------------------------------------------------------------------------------------------------
     // Main
     //----------------------------------------------------------------------------------------------------
-    
+
     require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
 
     // Recupere les info.
-    foreach ( glob( '/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file ) {
-        
+    foreach (glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file) {
+
         if ( basename(dirname($file)) == "Template" ) {
             continue;
         }
@@ -81,11 +90,17 @@
         $contentJSON = file_get_contents( $file );
         $content = JSON_decode( $contentJSON, true );
 
-        $resultIcone[] = array( 'nameZigbee'=>'<a href="'.urlProducts.'/'.$name.'">'.$name.'</a>', 'nameDescription'=>$content[$name]["nameJeedom"], 'icone'=>$content[$name]["configuration"]["icone"] );
+        $resultIcone[] = array(
+            'manufacturer' => $content[$name]["manufacturer"],
+            'model' => $content[$name]["model"],
+            'zigbeeModelId' => '<a href="'.urlProducts.'/'.$name.'">'.$name.'</a>',
+            'nameDescription' => $content[$name]["nameJeedom"],
+            'icone'=>$content[$name]["configuration"]["icone"]
+        );
 
-        // Collect all information related to Command used by the products 
+        // Collect all information related to Command used by the products
         foreach ( $content[$name]['Commandes'] as $include ) {
-            $resultRaw[] = array( 'nameZigbee'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'fonction'=>$include );
+            $resultRaw[] = array( 'zigbeeModelId'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'fonction'=>$include );
             $result[] = "<tr><td>".$content[$name]["nameJeedom"]."</td><td>".$name."</td><td>".$include."</td></tr>";
         }
     }
@@ -93,13 +108,12 @@
     // Met en forme.
     if (isset($argv[1])) {
         if ( $argv[1] == "adoc" ) {
-            equipementAdoc( $resultIcone, $resultRaw, $result);
+            equipementAdoc($resultIcone, $resultRaw, $result);
         }
         if ( $argv[1] == "rst" ) {
-            equipementRst( $resultIcone, $resultRaw, $result);
+            equipementRst($resultIcone, $resultRaw, $result);
         }
     } else {
-        equipementHtml( $resultIcone, $resultRaw, $result);
+        equipementHtml($resultIcone, $resultRaw, $result);
     }
-
-    ?>
+?>

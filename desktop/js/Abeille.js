@@ -65,10 +65,10 @@ $('#bt_graph').on('click', function () {
     window.open("plugins/Abeille/Network/AbeilleLQI_Map.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All");
 });
 
-$('#bt_listeCompatibilite').on('click', function () {
-                               $('#md_modal').dialog({title: "{{Liste Compatibilite}}"});
-                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=listeCompatibilite').dialog('open');
-                           });
+$('#bt_supportedEqList').on('click', function () {
+    $('#md_modal').dialog({title: "{{Liste de compatibilité}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=AbeilleCompatibility.modal').dialog('open');
+});
 
 $('#bt_Inconnu').on('click', function () {
                         $('#md_modal').dialog({title: "{{Inconnu}}"});

@@ -1,6 +1,8 @@
 {
   "MS01": {
-    "nameJeedom": "SONOFF Wireless IR Sensor",
+    "nameJeedom": "Sonoff SNZB-03 motion sensor",
+    "manufacturer": "Sonoff",
+    "model": "SNZB-03",
     "timeout": "140",
     "Comment": "https://github.com/KiwiHC16/Abeille/issues/1324",
     "Categorie": {

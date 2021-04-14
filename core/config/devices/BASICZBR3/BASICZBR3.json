@@ -1,6 +1,8 @@
 {
   "BASICZBR3": {
-    "nameJeedom": "SONOFF Module",
+    "nameJeedom": "Sonoff BASICZBR3 DIY smart switch",
+    "manufacturer": "Sonoff",
+    "model": "BASICZBR3",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"

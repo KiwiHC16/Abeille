@@ -1,6 +1,8 @@
 {
   "WB01": {
-    "nameJeedom": "SonOff SNZB-01",
+    "nameJeedom": "Sonoff SNZB-01 wireless button",
+    "manufacturer": "Sonoff",
+    "model": "SNZB-01",
     "timeout": "60",
     "battery_type": "1xCR2032",
     "Categorie": {

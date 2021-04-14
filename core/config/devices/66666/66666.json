@@ -1,5 +1,5 @@
 {
-  "TH01": {
+  "66666": {
     "nameJeedom": "Sonoff SNZB-02 temp & humidity",
     "manufacturer": "Sonoff",
     "model": "SNZB-02",
@@ -10,7 +10,7 @@
       "automatism": "1"
     },
     "configuration": {
-      "uniqId": "dsdsdvdsjliudddsfr",
+      "uniqId": "dsdsdvdsjliudddsfr2",
       "icone": "SNZB-02",
       "battery_type": "1x3V CR2450",
       "mainEP": "#EP#"

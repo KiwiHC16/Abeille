@@ -1,23 +1,28 @@
 <?php
-    // Pour mettre a jour la doc github:
-    // php listeCompatibilite.php rst
+    /* To update AbeilleDoc's compatibility list:
+       - php desktop/modal/AbeilleCompatibility.modal.php rst
+       - then copy 'CompatibilityList.rst' to AbeilleDoc GIT repo
+       - copy/update images/node_xx to AbeilleDoc source/devices/images
+       - renegerate doc with './gen_docs.sh'
+       - and finally create your Pull Request on GitHub
+     */
 
-    function equipementHtml($resultIcone, $resultRaw, $result) {
+    function genHtml($eqList, $resultRaw, $result) {
 
-        sort( $resultIcone );
+        sort( $eqList );
 
         echo "<h1>{{Equipements supportés}}</h1>";
         echo "Les docs stockées de chaque équipement sont accessibles via un clic sur le champ 'ID Zigbee'. Si pas de doc, vous tomberez sur une page du type 'erreur 404'<br><br>";
         echo "<table>";
         // echo "<caption>Equipements supportés</caption>";
         echo '<tr><th width="100px">Fabricant</th><th width="100px">Modèle</th><th>Nom</th><th>ID Zigbee</th><th>Icone</th></tr>';
-        foreach ( $resultIcone as $values ) {
+        foreach ( $eqList as $eq ) {
             echo '<tr>';
-            echo '<td>'.$values['manufacturer'].'</td>';
-            echo '<td>'.$values['model'].'</td>';
-            echo '<td>'.$values['nameDescription'].'</td>';
-            echo '<td>'.$values['zigbeeModelId'].'</td>';
-            echo '<td><img src="/plugins/Abeille/images/node_'.$values['icone'].'.png" width="100" height="100"></td>';
+            echo '<td>'.$eq['manufacturer'].'</td>';
+            echo '<td>'.$eq['model'].'</td>';
+            echo '<td>'.$eq['name'].'</td>';
+            echo '<td><a href="'.urlProducts.'/'.$eq['zbModelId'].'">'.$eq['zbModelId'].'</a></td>';
+            echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icone'].'.png" width="100" height="100"></td>';
             echo '</tr>'."\n";
         }
         echo "</table>";
@@ -39,7 +44,7 @@
         foreach ( $includeList as $value ) echo $value."<br>\n";
     }
 
-    function equipementAdoc( $resultIcone, $resultRaw, $result) {
+    function equipementAdoc( $eqList, $resultRaw, $result) {
         echo '= Compatibility'."\n";
         echo 'KiwiHC16'."\n";
         echo ':toc2:'."\n";
@@ -57,19 +62,43 @@
 
         echo '[cols="<,^"]'."\n";
         echo "|======="."\n";;
-        foreach ( $resultIcone as $values ) echo '| '.$values['name'].'| image:node_'.$values['icone'].'.png[height=200,width=200]'."\n";
+        foreach ( $eqList as $values ) echo '| '.$values['name'].'| image:node_'.$values['icone'].'.png[height=200,width=200]'."\n";
         echo "|======="."\n";;
     }
 
-    function equipementRst( $resultIcone, $resultRaw, $result) {
+    function addToFile($fileName, $text, $append = true) {
+        if ($append)
+            file_put_contents($fileName, $text, FILE_APPEND);
+        else
+            file_put_contents($fileName, $text);
+    }
 
-        echo "*********************************\n";
-        echo "Liste des équipements compatibles\n";
-        echo "*********************************\n";
-        echo "\n\n\n";
+    /* Generate list in "Restructured" format for AbeilleDoc update */
+    function genRst($eqList) {
 
-        foreach ( $resultIcone as $values ) echo "\n\n.. image:: imagesDevices/node_".$values['icone'].".png\n   :width: 200px\n\n".$values['name']."\n";
+        define('rstFile', 'CompatibilityList.rst');
 
+        echo "***\n";
+        echo "*** Generating equipments list to '".rstFile."'\n";
+        echo "***\n\n";
+
+        addToFile(rstFile, "Liste des équipements compatibles\n", false);
+        addToFile(rstFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        addToFile(rstFile, "\n");
+        addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
+
+        foreach ( $eqList as $eq ) {
+            echo "- ".$eq['zbModelId']."\n";
+            if (isset($eq['manufacturer']))
+                echo "  manuf : ".$eq['manufacturer']."\n";
+            if (isset($eq['model']))
+                echo "  model : ".$eq['model']."\n";
+            echo "  name  : ".$eq['name']."\n";
+
+            addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['name']."\n\n");
+            addToFile(rstFile, ".. image:: images/node_".$eq['icone'].".png\n");
+            addToFile(rstFile, "   :width: 200px\n\n");
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -78,42 +107,45 @@
 
     require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
 
-    // Recupere les info.
-    foreach (glob('/var/www/html/plugins/Abeille/core/config/devices/*/*.json') as $file) {
+    // Collecting list of supported devices (by their JSON)
+    foreach (glob(__DIR__.'/../../core/config/devices/*/*.json') as $file) {
 
         if ( basename(dirname($file)) == "Template" ) {
             continue;
         }
-
-        // Collect all core info of the product
-        $name = basename($file, ".json");
+        // Extracting zigbee model identifier from file name
+        $zbModelId = basename($file, ".json");
         $contentJSON = file_get_contents( $file );
+// echo "La=".$contentJSON."\n";
         $content = JSON_decode( $contentJSON, true );
-
-        $resultIcone[] = array(
-            'manufacturer' => $content[$name]["manufacturer"],
-            'model' => $content[$name]["model"],
-            'zigbeeModelId' => '<a href="'.urlProducts.'/'.$name.'">'.$name.'</a>',
-            'nameDescription' => $content[$name]["nameJeedom"],
-            'icone'=>$content[$name]["configuration"]["icone"]
+        $eqList[] = array(
+            'manufacturer' => $content[$zbModelId]["manufacturer"],
+            'model' => $content[$zbModelId]["model"],
+            'zbModelId' => $zbModelId,
+            'name' => $content[$zbModelId]["nameJeedom"],
+            'icone' => $content[$zbModelId]["configuration"]["icone"]
         );
 
         // Collect all information related to Command used by the products
-        foreach ( $content[$name]['Commandes'] as $include ) {
-            $resultRaw[] = array( 'zigbeeModelId'=>$name, 'nameDescription'=>$content[$name]["nameJeedom"], 'fonction'=>$include );
-            $result[] = "<tr><td>".$content[$name]["nameJeedom"]."</td><td>".$name."</td><td>".$include."</td></tr>";
+        foreach ( $content[$zbModelId]['Commandes'] as $include ) {
+            $resultRaw[] = array(
+                'zbModelId' => $zbModelId,
+                'name' => $content[$zbModelId]["nameJeedom"],
+                'fonction' => $include
+            );
+            $result[] = "<tr><td>".$content[$zbModelId]["nameJeedom"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
         }
     }
 
     // Met en forme.
     if (isset($argv[1])) {
         if ( $argv[1] == "adoc" ) {
-            equipementAdoc($resultIcone, $resultRaw, $result);
+            equipementAdoc($eqList, $resultRaw, $result);
         }
         if ( $argv[1] == "rst" ) {
-            equipementRst($resultIcone, $resultRaw, $result);
+            genRst($eqList);
         }
     } else {
-        equipementHtml($resultIcone, $resultRaw, $result);
+        genHtml($eqList, $resultRaw, $result);
     }
 ?>

@@ -1,6 +1,7 @@
 {
   "switch.b2nacn02": {
     "nameJeedom": "Xiaomi Wall Switch D1 w Neutral 2 Button",
+    "manufacturer": "Xiaomi",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"

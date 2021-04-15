@@ -1,6 +1,8 @@
 {
   "sensor_magnet.aq2": {
-    "nameJeedom": "Xiaomi Door Sensor Aqara 2",
+    "nameJeedom": "Xiaomi Aquara door sensor",
+    "manufacturer": "Xiaomi",
+    "model": "MCCGQ11LM",
     "timeout": "60",
     "Categorie": {
       "security": "1"

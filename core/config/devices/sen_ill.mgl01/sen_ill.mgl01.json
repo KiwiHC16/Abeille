@@ -1,8 +1,9 @@
 {
   "sen_ill.mgl01": {
-    "nameJeedom": "Xiaomi Smart Ligth Sensor",
+    "nameJeedom": "Xiaomi GZCGQ01LM smart ligth sensor",
+    "manufacturer": "Xiaomi",
+    "model": "GZCGQ01LM",
     "timeout": "60",
-    "Comment": "Xiaomi Mijia Smart Light Sensor Detection Sensor GZCGQ01LM blanc",
     "Categorie": {
       "security": "1"
     },

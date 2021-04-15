@@ -1,6 +1,8 @@
 {
   "weather": {
-    "nameJeedom": "Xiaomi Temperature Carre",
+    "nameJeedom": "Xiaomi temp/humdity/pressure square sensor",
+    "manufacturer": "Xiaomi",
+    "model": "WSDCGQ11LM",
     "timeout": "60",
     "Categorie": {
       "heating": "1"

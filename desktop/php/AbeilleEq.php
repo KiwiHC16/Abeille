@@ -99,11 +99,12 @@
             //     printEqLogic(data);
             // }
 
-            /* Commandes update */
+            /* Commands update */
             if ('function' == typeof (addCmdToTable)) {
                 // Commented to not remove '.cmd' from Abeille/Zigbee tab
                 // $('.cmd').remove();
                 // $('#table_cmd tbody .cmd').remove();
+                /* Reminder: Remove '.cmd' from command tab */
                 $('#table_cmd tbody').empty();
                 for (var i in data.cmd) {
                     addCmdToTable(data.cmd[i]);
@@ -133,8 +134,8 @@
             if ($(this).is(':visible')) {
                 var eqLogic = $(this).getValues('.eqLogicAttr');
                 eqLogic = eqLogic[0];
-                eqLogic.cmd = $(this).find('.cmd').getValues('.cmdAttr');
-                // console.log(eqLogic);
+                /* Reminder: Take only '.cmdAttr' from command tab */
+                eqLogic.cmd = $(this).find('#table_cmd .cmd').getValues('.cmdAttr');
                 if ('function' == typeof (saveEqLogic)) {
                     eqLogic = saveEqLogic(eqLogic);
                 }

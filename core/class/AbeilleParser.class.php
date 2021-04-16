@@ -184,21 +184,20 @@
             }
         }
 
-        function mqqtPublishFctToCmd( $fct, $data)
+        /* Send message to 'AbeilleCmd' thru 'queueKeyParserToCmd' */
+        function msgToCmd($topic, $payload)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
 
             $msgAbeille = new MsgAbeille;
+            $msgAbeille->message = array( 'topic' => $topic, 'payload' => $payload );
+
             $errorcode = 0;
-            $blocking = false;
-
-            $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
-
-            if (msg_send( $this->queueKeyParserToCmd, 1, $msgAbeille, true, $blocking, $errorcode)) {
-                // parserLog("debug","(fct mqqtPublishFctToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
+            if (msg_send($this->queueKeyParserToCmd, 1, $msgAbeille, true, false, $errorcode)) {
+                // parserLog("debug","(fct msgToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
             }
             else {
-                parserLog("debug","(fct mqqtPublishFctToCmd) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
+                parserLog("debug","(fct msgToCmd) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
             }
         }
 
@@ -664,7 +663,7 @@
             $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
 
             for ($i = 0; $i < $agressif; $i++) {
-                $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+                $this->msgToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'mqqtPublish', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
             }
@@ -730,7 +729,7 @@
             // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
             parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
 
-            $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
+            $this->msgToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
         }
 
         function decode0208($dest, $payload, $ln, $qos, $dummy)
@@ -742,7 +741,7 @@
 
             parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
 
-            $this->mqqtPublishFctToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
+            $this->msgToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         }
 
         // Zigate Status
@@ -2078,12 +2077,11 @@
                 return;
             }
 
-            // Tcharp38: Which EP ? Shouldn't be in a loop ?
             parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$SrcAddr.'&endPoint='.           $EP );
+            $this->msgToCmd("Cmd".$dest."/Ruche/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("Cmd".$dest."/Ruche/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$SrcAddr.'&endPoint='.           $EP );
 
             $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
@@ -2285,9 +2283,9 @@
                     } else {
                         parserLog('debug', '  Eq addr '.$N['Addr']." is unknown. Trying to interrogate.");
 
-                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01");
-                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03");
-                        $this->mqqtPublishFctToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
+                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01");
+                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03");
+                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
                     }
                 }
 
@@ -2916,7 +2914,7 @@
                         $data = $trimmedValue;
 
                         // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
-                        $this->mqqtPublishFctToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
+                        $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
 
                             // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
                         if ($AttributId == "0005")
@@ -3574,25 +3572,30 @@
                 }
             }
         }
+
         /**
-         * execAtCreationCmdForOneNE
-         * Will execute all commande with execAtCreation flag set
+         * execAtCreationCmdForOneNE()
+         * - Execute all commande with 'execAtCreation' flag set
          *
          * @param logicalId of the device
-         *
          * @return none
-         *
          */
-        public static function execAtCreationCmdForOneNE($logicalId) {
-            list($dest,$addr) = explode("/", $logicalId);
-            echo $dest . ' - ' . $addr . "\n";
+        function execAtCreationCmdForOneNE($logicalId) {
+            parserLog('debug', 'execAtCreationCmdForOneNE('.$logicalId.')');
+            list($dest, $addr) = explode("/", $logicalId);
+            logMessage('debug', "  dest=".$dest.", addr=".$addr);
+            // echo $dest . ' - ' . $addr . "\n";
             $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
             foreach ( $cmds as $key => $cmd ) {
-                $topic = $cmd->getLogicalId();
-                $topic = AbeilleCmd::updateField($dest,$cmd,$topic);
+                // $topic = $cmd->getLogicalId();
+                logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
+                $topic = $cmd->getConfiguration('topic');
+                $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
                 $request = $cmd->getConfiguration('request');
-                $request = AbeilleCmd::updateField($dest,$cmd,$request);
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
+                $request = AbeilleCmd::updateField($dest, $cmd, $request);
+                // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
+                logMessage('debug', "  topic=".$topic.", request=".$request);
+                $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
             }
         }
 
@@ -3604,9 +3607,9 @@
          *
          * @return          Doesn't return anything as all action are triggered by sending messages in queues
          */
-        function configureNE( $short ) {
-            parserLog('debug', 'configureNE()');
-            self::execAtCreationCmdForOneNE($short);
+        function configureNE($eqLogicId) {
+            // parserLog('debug', 'configureNE('.$eqLogicId.')');
+            self::execAtCreationCmdForOneNE($eqLogicId);
         }
 
         /**

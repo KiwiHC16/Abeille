@@ -8,7 +8,7 @@
 OUT=plugin_info/Abeille.md5
 
 # Commit ready. Generating md5 for versionned files
-echo "Generating MD5 checksum for key files..."
+echo "Updating MD5 checksum for key files..."
 echo "# Auto-generated Abeille's MD5 file. DO NOT MODIFY !" >${OUT}
 VERSION=`cat plugin_info/Abeille.version | tail -1`
 echo "- Version: ${VERSION}"

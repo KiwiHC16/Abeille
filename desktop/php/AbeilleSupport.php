@@ -81,7 +81,7 @@
         <!-- Commands -->
         <ul class="nav nav-list bs-sidenav list-group">
             Commandes
-            <li class="cursor list-group-item list-group-item-success"><a class="btnCommand" data-command="ps -xa | grep Abeille">Processus</a></li>
+            <li class="cursor list-group-item list-group-item-success"><a class="btnCommand" data-command="pgrep -a php | grep Abeille">Processus</a></li>
             <li class="cursor list-group-item list-group-item-success"><a class="btnCommand" data-command="ipcs -q">Queues</a></li>
         </ul>
         </div>

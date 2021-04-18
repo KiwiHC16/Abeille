@@ -1472,7 +1472,7 @@
                 }
             }
 
-            parserLog("debug", "  Ignored payload: ".$pl, "8002");
+            parserLog("debug", "  Ignored, payload=".$pl, "8002");
         }
 
         function decode8003($dest, $payload, $ln, $qos, $clusterTab) {
@@ -2827,8 +2827,59 @@
                 $data = substr($payload, 24, 4);
             }
 
-            if ($dataType == "39") {
-                if ( ($ClusterId=="000C") && ($AttributId=="0055")  ) {
+            // Tcharp38: Started organization by clustId then attribId. Easier to follow than dataType
+            if ($ClusterId == "0000") { // Basic cluster
+                // 0004: ManufacturerName
+                // 0005: ModelIdentifier
+                // 0010: Location => Used for Profalux
+                $msg .= ', DataByteList='.pack('H*', $Attribut);
+                $msg .= ', [Modelisation]';
+
+                $trimmedValue = pack('H*', $Attribut);
+                $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+
+                if ($AttributId=="0004") { // 0x0004 ManufacturerName string
+                    if (strlen($trimmedValue )>2)
+                        $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
+
+                    parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+
+                    // Tcharp38: ManufacturerName not pushed to Abeille ?!
+                    return;
+                }
+                if (($AttributId=="0005") || ($AttributId=="0010")) { // 0x0005 ModelIdentifier string
+                    ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
+                    $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
+                    if (in_array($trimmedValue,$needManufacturer)) {
+                        if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
+                            if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
+                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                            } else {
+                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                return;
+                            }
+                        } else {
+                            return;
+                        }
+                    }
+
+                    $data = $trimmedValue;
+
+                    // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
+                    $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
+
+                        // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
+                    if ($AttributId == "0005")
+                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                    else // 0010
+                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                }
+            }
+
+            if ($ClusterId == "000C") { // Analog input cluster
+                if ($AttributId == "0055") {
                     if ($EPoint=="01") {
                         // Remontée puissance (instantannée) relay double switch 1
                         // On va envoyer ca sur la meme variable que le champ ff01
@@ -2843,7 +2894,7 @@
                         // Relay Double
                         $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
                     }
-                    if ( ($EPoint=="02") || ($EPoint=="15")) {
+                    if (($EPoint=="02") || ($EPoint=="15")) {
                         // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
                         // On va envoyer ca sur la meme variable que le champ ff01
                         $hexNumber = substr($payload, 24, 8);
@@ -2855,78 +2906,122 @@
                         // Relay Double - Prise Xiaomi
                         $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId,     $EPoint.'-'.$AttributId,    $puissanceValue,    $qos);
                     }
-		    if ($EPoint=="03") {
-                    // Example Cube Xiaomi
-                    // Sniffer dit Single Precision Floating Point
-                    // b9 1e 38 c2 -> -46,03
-                    // $data = hexdec(substr($payload, 24, 4));
-                    // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
-                    $hexNumber = substr($payload, 24, 8);
-                    $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-                    $bin = pack('H*', $hexNumberOrder );
-                    $data = unpack("f", $bin )[1];
-		    }
+                    if ($EPoint=="03") {
+                        // Example Cube Xiaomi
+                        // Sniffer dit Single Precision Floating Point
+                        // b9 1e 38 c2 -> -46,03
+                        // $data = hexdec(substr($payload, 24, 4));
+                        // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+                        $hexNumber = substr($payload, 24, 8);
+                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+                        $bin = pack('H*', $hexNumberOrder );
+                        $data = unpack("f", $bin )[1];
+                    }
                 }
             }
 
+            // Tcharp38: Code hereafter to be migrated to sort by clustId/attribId
+            // if ($dataType == "39") {
+            //     if ( ($ClusterId=="000C") && ($AttributId=="0055")  ) {
+            //         if ($EPoint=="01") {
+            //             // Remontée puissance (instantannée) relay double switch 1
+            //             // On va envoyer ca sur la meme variable que le champ ff01
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder );
+            //             $data = unpack("f", $bin )[1];
+
+            //             $puissanceValue = $data;
+            //             // $this->mqqtPublish( $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $qos);
+
+            //             // Relay Double
+            //             $this->mqqtPublish($dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $qos);
+            //         }
+            //         if ( ($EPoint=="02") || ($EPoint=="15")) {
+            //             // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
+            //             // On va envoyer ca sur la meme variable que le champ ff01
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder );
+            //             $data = unpack("f", $bin )[1];
+
+            //             $puissanceValue = $data;
+            //             // Relay Double - Prise Xiaomi
+            //             $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId,     $EPoint.'-'.$AttributId,    $puissanceValue,    $qos);
+            //         }
+            //         if ($EPoint=="03") {
+            //             // Example Cube Xiaomi
+            //             // Sniffer dit Single Precision Floating Point
+            //             // b9 1e 38 c2 -> -46,03
+            //             // $data = hexdec(substr($payload, 24, 4));
+            //             // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder );
+            //             $data = unpack("f", $bin )[1];
+            //         }
+            //     }
+            // }
+
             if ($dataType == "42") {
-                // 0005: ModelIdentifier
-                // 0010: Piece (nom utilisé pour Profalux)
-                if (($ClusterId=="0000") && (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010"))) {
-                    $msg .= ', DataByteList='.pack('H*', $Attribut);
-                    $msg .= ', [Modelisation]';
+                // // 0005: ModelIdentifier
+                // // 0010: Piece (nom utilisé pour Profalux)
+                // if (($ClusterId=="0000") && (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010"))) {
+                //     $msg .= ', DataByteList='.pack('H*', $Attribut);
+                //     $msg .= ', [Modelisation]';
 
-                    if ($AttributId=="0004") { // 0x0004 ManufacturerName string
-                        $trimmedValue = pack('H*', $Attribut);
-                        $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
-                        $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+                //     if ($AttributId=="0004") { // 0x0004 ManufacturerName string
+                //         $trimmedValue = pack('H*', $Attribut);
+                //         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                //         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
-                        if (strlen($trimmedValue )>2)
-                            $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
+                //         if (strlen($trimmedValue )>2)
+                //             $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
 
-                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                //         parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
 
-                        return;
-                    }
-                    if ( ($AttributId=="0005") || ($AttributId=="0010") ) { // 0x0005 ModelIdentifier string
-                        $trimmedValue = pack('H*', $Attribut);
-                        $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
-                        $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+                //         return;
+                //     }
+                //     if ( ($AttributId=="0005") || ($AttributId=="0010") ) { // 0x0005 ModelIdentifier string
+                //         $trimmedValue = pack('H*', $Attribut);
+                //         $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                //         $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
-                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                        $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
-                        if (in_array($trimmedValue,$needManufacturer)) {
-                            if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
-                                    $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
-                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                                }
-                                else {
-                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                                    return;
-                                }
-                            }
-                            else {
-                                return;
-                            }
-                        }
+                //         ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
+                //         $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
+                //         if (in_array($trimmedValue,$needManufacturer)) {
+                //             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
+                //                 if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
+                //                     $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                //                     unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                //                 }
+                //                 else {
+                //                     unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                //                     return;
+                //                 }
+                //             }
+                //             else {
+                //                 return;
+                //             }
+                //         }
 
-                        $data = $trimmedValue;
+                //         $data = $trimmedValue;
 
-                        // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
-                        $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
+                //         // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
+                //         $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
 
-                            // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
-                        if ($AttributId == "0005")
-                            parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
-                        else // 0010
-                            parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
-                    }
-                }
+                //             // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
+                //         if ($AttributId == "0005")
+                //             parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                //         else // 0010
+                //             parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                //     }
+                // }
 
                 // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
                 // Xiaomi Bouton V2 Carré
-                elseif (($AttributId == "FF01") && ($AttributSize == "001A")) {
+                // elseif (($AttributId == "FF01") && ($AttributSize == "001A")) {
+                if (($AttributId == "FF01") && ($AttributSize == "001A")) {
                     parserLog("debug", "  Champ proprietaire Xiaomi (Bouton carré)" );
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -3240,6 +3335,7 @@
             }
 
             if (isset($data)) {
+                // Tcharp38: Why this work-around ? Need comment.
                 if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; } // Verrue: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }

@@ -16,7 +16,6 @@
 
     $eqLogics = Abeille::byType('Abeille');
 ?>
-
 Démons:
 <?php
     function displayDaemonStatus($diff, $name, &$oneMissing) {
@@ -29,24 +28,43 @@ Démons:
         }
     }
 
-    $parameters = AbeilleTools::getParameters();
-// logDebug("parameters=".json_encode($parameters));
+    $config = AbeilleTools::getParameters();
+// logDebug("parameters=".json_encode($config));
     $running = AbeilleTools::getRunningDaemons();
-    $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
+    $diff = AbeilleTools::diffExpectedRunningDaemons($config, $running);
 // logDebug("diff=".json_encode($diff));
     $oneMissing = FALSE;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    $nbOfZigates = $parameters['zigateNb'];
+    $nbOfZigates = $config['zigateNb'];
     for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
-        if ($parameters['AbeilleActiver'.$zgNb] != "Y")
+        if ($config['AbeilleActiver'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
-        if ($parameters['AbeilleType'.$zgNb] == "WIFI")
+        if ($config['AbeilleType'.$zgNb] == "WIFI")
             displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
     }
     if ($oneMissing)
-        echo " Attention ! Un ou plusieurs démons ne tournent pas.";
+        echo " Attention: Un ou plusieurs démons ne tournent pas !";
+
+    /* Checking if active Zigates are not in timeout */
+    echo "  Zigates: ";
+    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+        if ($config['AbeilleActiver'.$zgNb] != "Y")
+            continue; // Zigate disabled
+
+        $eqLogic = Abeille::byLogicalId('Abeille'.$zgNb.'/Ruche', 'Abeille');
+        if (!is_object($eqLogic))
+            continue; // Abnormal
+        if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgNb.'</span>';
+        } else {
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgNb.'</span>';
+        }
+    }
+
+    // TODO Tcharp38: Display a popup for few sec as soon as ther is
+    // an issue with daemons or zigate
 
     // if (Abeille::deamon_info()['state'] == 'ok') {
     //     echo "<span class=\"label label-success\" style=\"font-size:1em;\">OK</span>";

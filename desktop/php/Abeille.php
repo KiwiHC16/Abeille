@@ -57,8 +57,8 @@
         } else
             $eqPerZigate[$zgNb][] = $eqId;
     }
-    if (isset($dbgConfig))
-        logToFile("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
+    // if (isset($dbgConfig))
+    //     logToFile("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
     $parametersAbeille = AbeilleTools::getParameters();
 

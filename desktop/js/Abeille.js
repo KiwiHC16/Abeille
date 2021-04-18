@@ -35,9 +35,9 @@ $('#in_searchEqlogicB').off('keyup').keyup(function () {
 
 
 $('#bt_healthAbeille').on('click', function () {
-                          $('#md_modal').dialog({title: "{{Santé Abeille}}"});
-                          $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=health').dialog('open');
-                          });
+    $('#md_modal').dialog({title: "{{Santé Abeille}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=AbeilleHealth.modal').dialog('open');
+});
 
 $('#bt_supportPage').on('click', function () {
     // $('#md_modal').dialog({title: "{{Support}}"});

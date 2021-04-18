@@ -205,7 +205,7 @@
                 -r => Travel the directory structure recursively
                 */
                 $zipFile .= ".tar.gz";
-                $cmd = "cd ".$logsDir."; sudo tar cvf - * | gzip -c >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
+                $cmd = "cd ".$logsDir."; sudo tar cf - * | gzip -c >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
             }
             if ($tool == "bzip2") {
                 /* bzip2

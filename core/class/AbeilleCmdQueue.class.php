@@ -261,9 +261,8 @@
             }
         }
 
-        function writeToDest($f, $dest, $cmd, $len, $datas)
+        function writeToDest($f, $port, $cmd, $len, $datas)
         {
-            //
             if (get_resource_type($f)) {
                 fwrite($f, pack("H*", "01"));
                 fwrite($f, pack("H*", $this->transcode($cmd))); //MSG TYPE
@@ -278,8 +277,7 @@
             }
             else
             {
-                $this->deamonlog("debug", "      $dest resource non accessible: $cmd non écrit");
-                $this->deamonlog("error", "      $dest resource non accessible: $cmd non écrit");
+                $this->deamonlog("error", "    Port '$port' non accessible. Commande '$cmd' non écrite.");
             }
         }
 
@@ -294,14 +292,13 @@
          * @param data  data for the cmd
          *
          * @return none
-         *
          */
         function sendCmdToZigate($dest, $cmd, $len, $datas) {
             // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
             // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
             if (0) {
                 $f = fopen("/var/www/html/log/toto","w");
-                $this->writeToDest( $f, $dest, $cmd, $len, $datas);
+                $this->writeToDest($f, $dest, $cmd, $len, $datas);
                 fclose($f);
             }
 
@@ -310,15 +307,20 @@
             $i = str_replace( 'Abeille', '', $dest );
             $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
 
-            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') == 'Y' ) {
-                $this->deamonlog("debug", "    Envoi de la commande a la zigate: ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
-                $f = fopen( $destSerial,"w");
-                $this->writeToDest($f, $destSerial, $cmd, $len, $datas);
-                fclose($f);
+            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y') {
+                $this->deamonlog("debug", "    Zigate ".$i." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
+                return;
             }
-            else {
-                $this->deamonlog("debug", "    Pas d envoi de la commande a la zigate (zigate inactive): ".$destSerial.'-'.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
+
+            // Note: Using file_exists() to avoid PHP warning when port issue.
+            if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
+                $this->deamonlog("error", "    Port '$destSerial' non accessible. Commande '$cmd' non écrite.");
+                return;
             }
+
+            $this->deamonlog("debug", "    Writing to port ".$destSerial.': '.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
+            $this->writeToDest($f, $destSerial, $cmd, $len, $datas);
+            fclose($f);
         }
 
         function afficheStatQueue() {

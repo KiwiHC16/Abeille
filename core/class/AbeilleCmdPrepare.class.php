@@ -6,14 +6,14 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
 
     /**
      * procmsg()
-     * 
+     *
      * process commands received in the queue to be send to zigate
      * Do the mapping (L2: Level 1) with basic command and send it to processCmd() for processing at cmd level (L1: Level 1)
-     * 
+     *
      * @param message   message in the queue which include the cmd and data to be sent
-     * 
+     *
      * @return none
-     * 
+     *
      */
     function procmsg( $message ) {
 
@@ -47,7 +47,6 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
         $this->deamonlog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
 
         // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
-
         if ($address != "Ruche") {
             $this->deamonlog("debug", '  Address != Ruche', $this->debug['procmsg3']);
 
@@ -986,14 +985,14 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                      );
                     break;
                     //----------------------------------------------------------------------------
-                case "identifySendHue": 
+                case "identifySendHue":
                     $keywords = preg_split("/[=&]+/", $msg);
                     $Command = array(
                                      "identifySend" => "1",
                                      "priority" => $priority,
                                      "dest" => $dest,
                                      "address" => $address,
-                                     "duration" => "0010", 
+                                     "duration" => "0010",
                                      "DestinationEndPoint" => "0B",
                                      );
                     break;
@@ -1190,7 +1189,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                                         "maxAttributeId"                => $parameters['maxAttributeId'],
                     );
                     break;
-    
+
                         //----------------------------------------------------------------------------
 
                 default:

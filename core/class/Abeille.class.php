@@ -526,12 +526,20 @@ if (0) {
 
             /* Checking if received some news in the last 15mins */
             $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
-            if (is_object($cmd)) { // Cmd found
-                $lastComm = $cmd->execCmd();
-                if ((time() - $lastComm) <= (15 * 60))
-                    continue; // Alive within last 15mins. No need to interrogate.
-            } else
+            if (!is_object($cmd)) { // Cmd not found
                 log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
+                continue; // No sense to interrogate EQ if Time-TimeStamp does not exists
+            }
+            $lastComm = $cmd->execCmd();
+            if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
+                // No comm from EQ yet.
+                $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
+                if ($daemonsStart == '')
+                    continue; // Deamons not started yet
+                $lastComm = strtotime($daemonsStart);
+            }
+            if ((time() - $lastComm) <= (15 * 60))
+                continue; // Alive within last 15mins. No need to interrogate.
 
             /* No news in the last 15mins. Need to interrogate this eq */
             $mainEP = $eqLogic->getConfiguration("mainEP");

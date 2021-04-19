@@ -13,9 +13,15 @@
 
         echo "<h1>{{Equipements supportés}}</h1>";
         echo "Les docs stockées de chaque équipement sont accessibles via un clic sur le champ 'ID Zigbee'. Si pas de doc, vous tomberez sur une page du type 'erreur 404'<br><br>";
-        echo "<table>";
+        echo '<table class="tablesorter" id="idEqTable">';
         // echo "<caption>Equipements supportés</caption>";
-        echo '<tr><th width="100px">Fabricant</th><th width="100px">Modèle</th><th>Nom</th><th>ID Zigbee</th><th>Icone</th></tr>';
+        echo '<thead><tr>';
+        echo '<th class="header" width="100px" title="Trier par fabricant">Fabricant</th>';
+        echo '<th class="header" width="120px" title="Trier par modèle">Modèle</th>';
+        echo '<th class="header" title="Trier par nom">Nom</th>';
+        echo '<th class="header" title="Trier par ID Zigbee">ID Zigbee</th>';
+        echo '<th class="header">Icone</th>';
+        echo '</tr></thead>';
         foreach ( $eqList as $eq ) {
             echo '<tr>';
             echo '<td>'.$eq['manufacturer'].'</td>';
@@ -149,3 +155,7 @@
         genHtml($eqList, $resultRaw, $result);
     }
 ?>
+
+<script>
+    $("#idEqTable").tablesorter();
+</script>

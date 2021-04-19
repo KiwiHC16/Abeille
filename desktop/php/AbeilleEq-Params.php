@@ -17,8 +17,15 @@
 
     /* Returns cmd ID identified by its Jeedom name */
     function getCmdIdByName($eqId, $cmdName) {
-        // global $eqId;
         $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdName);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->getId();
+    }
+
+    /* Returns cmd ID identified by its Jeedom logical ID name */
+    function getCmdIdByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
         if (!is_object($cmd))
             return "";
         return $cmd->getId();
@@ -39,7 +46,7 @@
         ?>
             <span id="idLastComm"></span>
             <script>
-                <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Last")."'] = function(_options){"; ?>
+                <?php echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, "Time-Time")."'] = function(_options){"; ?>
                     console.log("jeedom.cmd.update[Last]");
                     // console.log(_options);
                     var element = document.getElementById('idLastComm');

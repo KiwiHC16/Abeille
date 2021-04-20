@@ -615,6 +615,15 @@ if (0) {
         // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
         $param = AbeilleTools::getParameters();
 
+        /* For post crash analysis purposes, display 'PID/daemonShortName' */
+        $running = AbeilleTools::getRunningDaemons2();
+        $daemons = "";
+        foreach ($running as $daemon) {
+            if ($daemons != "")
+                $daemons .= ", ";
+            $daemons .= $daemon['pid'].'/'.$daemon['shortName'];
+        }
+        log::add('Abeille', 'debug', 'cron1: '.$daemons);
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
@@ -702,7 +711,7 @@ if (0) {
     }
 
     /**
-     * daemon info monitor the daemons and report information to update configuration page in jeedom
+     * Jeedom required function: report plugin & config status
      * @param none
      * @return array with state, launchable, launchable_message
      */
@@ -1016,6 +1025,7 @@ if (0) {
         $return['progress_file'] = jeedom::getTmpFolder('Abeille') . '/dependance';
 
         // Check package socat
+        // Tcharp38: Wrong. This dependancy is required only if wifi zigate. Should not impact those using USB or PI
         $cmd = "command -v socat";
         exec($cmd, $output_dpkg, $return_var);
         if ($return_var == 1) {
@@ -1041,8 +1051,10 @@ if (0) {
         return $result;
     }
 
+    /* This is Abeille's main daemon, directly controlled by Jeedom itself. */
     public static function deamon()
     {
+        log::add('Abeille', 'debug', 'Main daemon starting');
         try {
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
             $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
@@ -1067,7 +1079,7 @@ if (0) {
                     $msg = NULL;
                 }
                 if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'error', 'Erreur inattendue, lecture queue \'AbeilleToAbeille\': ' . $errorcodeMsg);
+                    log::add('Abeille', 'error', 'deamon(): msg_receive queueKeyAbeilleToAbeille error '.$errorcodeMsg);
                 }
 
                 if (msg_receive($queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
@@ -1078,7 +1090,7 @@ if (0) {
                     $msg = NULL;
                 }
                 if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyParserToAbeille issue: ' . $errorcodeMsg);
+                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille error '.$errorcodeMsg);
                 }
 
                 if (msg_receive($queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
@@ -1089,7 +1101,7 @@ if (0) {
                     $msg = NULL;
                 }
                 if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyCmdToAbeille issue: ' . $errorcodeMsg);
+                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille error '.$errorcodeMsg);
                 }
 
                 if (msg_receive($queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
@@ -1100,15 +1112,16 @@ if (0) {
                     $msg = NULL;
                 }
                 if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon fct: msg_receive queueKeyXmlToAbeille issue: ' . $errorcodeMsg);
+                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille error '.$errorcodeMsg);
                 }
 
                 time_nanosleep(0, 10000000); // 1/100s
             }
 
         } catch (Exception $e) {
-            log::add('Abeille', 'error', 'Gestion erreur dans boucle try: ' . $e->getMessage());
+            log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());
         }
+        log::add('Abeille', 'debug', 'Main daemon stoppped');
     }
 
     // public static function checkParameters() {

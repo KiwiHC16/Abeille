@@ -345,7 +345,6 @@ class AbeilleTools
 
     /**
      * Get running processes for Abeille plugin
-     * WARNING: if process launched with "nohup" it will currently not be detected.
      *
      * @return array
      */
@@ -353,6 +352,39 @@ class AbeilleTools
     {
         exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
         return $running;
+    }
+
+    /**
+     * Get running processes for Abeille plugin
+     *
+     * @return array of array
+     */
+    public static function getRunningDaemons2(): array
+    {
+        exec("pgrep -a php | grep Abeille", $running);
+        $daemons = [];
+        foreach ($running as $line) {
+            if (($pos = strpos($line, "AbeilleCmd")) != false)
+                $shortName = "Cmd";
+            else if (($pos = strpos($line, "AbeilleParser")) != false)
+                $shortName = "Parser";
+            else if (($pos = strpos($line, "AbeilleMonitor")) != false)
+                $shortName = "Monitor";
+            else if (($pos = strpos($line, "AbeilleSerialRead")) != false)
+                $shortName = "SerialReadX";
+            else if (($pos = strpos($line, "AbeilleSocat")) != false)
+                $shortName = "SocatX";
+            else
+                $shortName = "Unknown";
+            $lineArr = explode(" ", $line);
+            $d = array(
+                'pid' => $lineArr[0],
+                'cmd' => substr($line, strpos($line, " ")),
+                'shortName' => $shortName
+            );
+            $daemons[] = $d;
+        }
+        return $daemons;
     }
 
     /**
@@ -537,7 +569,7 @@ class AbeilleTools
     }
 
     /**
-     * Start given daemons list.
+     * Start daemons.
      * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
      * @param string $daemons Deamons list to start, space separated. Empty string = ALL
      */
@@ -553,12 +585,12 @@ class AbeilleTools
                 $daemons .= " AbeilleSerialRead".$zgNb;
             }
         }
-        log::add('Abeille', 'debug', "startDaemons() => daemons=".$daemons);
+        log::add('Abeille', 'debug', "startDaemons(): daemons=".$daemons);
         $daemonsArr = explode(" ", $daemons);
         foreach ($daemonsArr as $daemon) {
             $cmd = self::getStartCommand($config, $daemon);
             if ($cmd == "")
-                log::add('Abeille', 'debug', "startDaemons(): ERREUR, cmd vide for '".$daemon."'");
+                log::add('Abeille', 'debug', "startDaemons(): ERROR, empty cmd for '".$daemon."'");
             else
                 exec($cmd.' &');
         }
@@ -579,17 +611,15 @@ class AbeilleTools
     }
 
     /**
-     * Get Command to start zigate daemon(s)
-     * @param $param
-     * @param $daemonFile
+     * Returns cmd to start given daemon
+     * @param $config
+     * @param $daemonFile (ex: 'cmd', 'parser', serialread1'...)
      * @return String
      */
     public static function getStartCommand($param, $daemonFile): string
     {
         $nohup = "/usr/bin/nohup";
         $php = "/usr/bin/php";
-        //Path not instantiated classes.
-        // $daemonDir = self::daemonDir;
         $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
         $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
         $logDir = self::logDir;
@@ -627,7 +657,6 @@ class AbeilleTools
             break;
         case 'monitor':
         case 'abeillemonitor':
-            $php = "/usr/bin/php";
             $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";
             $cmd = $php." -r \"require '".corePhpDir."AbeilleMonitor.php'; monRun();\"".$log;
             break;

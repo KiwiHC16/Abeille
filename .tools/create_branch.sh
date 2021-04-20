@@ -56,7 +56,7 @@ fi
 # Check repo status
 # - Ensure that local branch is master (to beta) or beta (to stable)
 # TODO: How to check that current branch is in line with master ?
-# TODO: Stop if any uncommited local modifs
+# - Stops if any uncommitted local modifs
 echo "Checking current branch & status"
 CUR_BRANCH=`git rev-parse --abbrev-ref HEAD`
 if [ ${FORCE} -eq 0 ] && [ "${CUR_BRANCH}" != "master" ] && [ "${CUR_BRANCH}" != "beta" ]; then
@@ -84,11 +84,20 @@ fi
 # Final check with user before starting if unusual config
 if [ "${CUR_BRANCH}" != "master" ] && [ "${CUR_BRANCH}" != "beta" ]; then
     echo
-    echo "!! WARNING !!"
-    echo "This is an unexpecting config."
-    echo "You are going to create a '${TARG_BRANCH}' version from '${CUR_BRANCH}'."
-    echo "Are you sure you want to do that ?"
-    read -p "Enter y/n: " ANSWER
+    echo "   *** !! WARNING !!"
+    echo "   *** This is an unexpecting config."
+    echo "   *** You are going to create a '${TARG_BRANCH}' version from '${CUR_BRANCH}'."
+    echo "   *** Are you sure you want to do that ?"
+    read -p "   *** Enter y/n: " ANSWER
+    if [ "${ANSWER}" != "y" ]; then
+        echo "= Canceling branch creation"
+        exit 0
+    fi
+    echo
+else
+    echo "   *** You are going to create a '${TARG_BRANCH}' version from '${CUR_BRANCH}'."
+    echo "   *** Are you sure you want to do that ?"
+    read -p "   *** Enter y/n: " ANSWER
     if [ "${ANSWER}" != "y" ]; then
         echo "= Canceling branch creation"
         exit 0
@@ -96,7 +105,7 @@ if [ "${CUR_BRANCH}" != "master" ] && [ "${CUR_BRANCH}" != "beta" ]; then
     echo
 fi
 
-echo "Generating '${TARG_BRANCH}' branch from current '${CUR_BRANCH}'"
+# echo "Generating '${TARG_BRANCH}' branch from current '${CUR_BRANCH}'"
 
 # Create local temporary branch & switch to it
 # Note: Local branch deleted if already exists
@@ -113,7 +122,7 @@ if [ $? -eq 0 ]; then
     fi
 fi
 echo "Switching to ${LOCAL_BRANCH}"
-git checkout -b ${LOCAL_BRANCH} >/dev/null
+git checkout -q -b ${LOCAL_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 21
@@ -134,16 +143,18 @@ if [ $? -ne 0 ]; then
 fi
 
 # Add+commit
+echo "Adding 'Abeille.version' & 'Abeille.md5'"
 git add plugin_info/Abeille.version plugin_info/Abeille.md5
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 24
 fi
 VERSION=`cat plugin_info/Abeille.version | tail -1`
+echo "Committing"
 if [ "${TARG_BRANCH}" == "beta" ]; then
-    git commit -m "Beta ${VERSION}"
+    git commit -q -m "Beta ${VERSION}"
 else
-    git commit -m "Stable ${VERSION}"
+    git commit -q -m "Stable ${VERSION}"
 fi
 if [ $? -ne 0 ]; then
     echo "= ERROR"
@@ -154,7 +165,7 @@ fi
 REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
 if [ $? -eq 0 ]; then
     echo "Deleting ${TARG_REPO}/${TARG_BRANCH} branch"
-    git push ${TARG_REPO} --delete ${TARG_BRANCH}
+    git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
         echo "= ERROR"
         exit 26
@@ -163,14 +174,14 @@ fi
 
 # Pushing branch
 echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
-git push --force ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH} >/dev/null
+git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 27
 fi
 
 echo "Switching back to '${CUR_BRANCH}' branch"
-git checkout ${CUR_BRANCH} >/dev/null
+git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 28

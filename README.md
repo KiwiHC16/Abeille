@@ -10,7 +10,7 @@ https://kiwihc16.github.io/AbeilleDoc
 
 ## Équipements supportés
 
-https://kiwihc16.github.io/AbeilleDoc/listeCompatibilite.html
+https://kiwihc16.github.io/AbeilleDoc/devices/CompatibilityList.html
 
 ## Cagnotte pour supporter de nouveaux équipements
 

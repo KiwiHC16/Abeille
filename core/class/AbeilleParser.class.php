@@ -193,11 +193,8 @@
             $msgAbeille->message = array( 'topic' => $topic, 'payload' => $payload );
 
             $errorcode = 0;
-            if (msg_send($this->queueKeyParserToCmd, 1, $msgAbeille, true, false, $errorcode)) {
-                // parserLog("debug","(fct msgToCmd) added to queue (queueKeyParserToCmd): ".json_encode($msgAbeille));
-            }
-            else {
-                parserLog("debug","(fct msgToCmd) could not add message to queue (queueKeyParserToCmd) with error code : ".$errorcode);
+            if (msg_send($this->queueKeyParserToCmd, 1, $msgAbeille, true, false, $errorcode) == false) {
+                parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueKeyParserToCmd', error=".$errorcode);
             }
         }
 
@@ -2768,118 +2765,118 @@
                 return;
             }
 
-            // valeur hexadécimale  - type -> function
-            // 0x00 Null
-            // 0x10 boolean                 -> hexdec
-            // 0x18 8-bit bitmap
-            // 0x20 uint8   unsigned char   -> hexdec
-            // 0x21 uint16                  -> hexdec
-            // 0x22 uint32
-            // 0x24 ???
-            // 0x25 uint48
-            // 0x28 int8                    -> hexdec(2)
-            // 0x29 int16                   -> unpack("s", pack("s", hexdec(
-            // 0x2a int32                   -> unpack("l", pack("l", hexdec(
-            // 0x2b ????32
-            // 0x30 Enumeration : 8bit
-            // 0x42 string                  -> hex2bin
-
-            if ($dataType == "10") {
-                $data = hexdec(substr($payload, 24, 2));
-            }
-
-            if ($dataType == "18") {
-                $data = substr($payload, 24, 2);
-            }
-
-            // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
-            if ($dataType == "19") {
-                $data = substr($payload, 24, 4);
-            }
-
-            if ($dataType == "20") {
-                $data = hexdec(substr($payload, 24, 2));
-            }
-
-            if ($dataType == "21") {
-                $data = hexdec(substr($payload, 24, 4));
-            }
-            // Utilisé pour remonter la pression par capteur Xiaomi Carré.
-            // Octet 8 bits man pack ne prend pas le 8 bits, il prend à partir de 16 bits.
-
-            if ($dataType == "28") {
-                // $data = hexdec(substr($payload, 24, 2));
-                $in = substr($payload, 24, 2);
-                if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
-
-                $data = unpack("s", pack("s", hexdec($raw)))[1];
-            }
-
-            // Example Temperature d un Xiaomi Carre
-            // Sniffer dit Signed 16bit integer
-            if ($dataType == "29") {
-                // $data = hexdec(substr($payload, 24, 4));
-                $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
-            }
-
-            if ($dataType == "30") {
-                // $data = hexdec(substr($payload, 24, 4));
-                $data = substr($payload, 24, 4);
-            }
-
             // Tcharp38: Started organization by clustId then attribId. Easier to follow than dataType
             if ($ClusterId == "0000") { // Basic cluster
-                // 0004: ManufacturerName
-                // 0005: ModelIdentifier
-                // 0010: Location => Used for Profalux
-                $msg .= ', DataByteList='.pack('H*', $Attribut);
-                $msg .= ', [Modelisation]';
+                if (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010")) {
+                    // Assuming $dataType == "42"
 
-                $trimmedValue = pack('H*', $Attribut);
-                $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
-                $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+                    // 0004: ManufacturerName
+                    // 0005: ModelIdentifier
+                    // 0010: Location => Used for Profalux
+                    $msg .= ', DataByteList='.pack('H*', $Attribut);
+                    $msg .= ', [Modelisation]';
 
-                if ($AttributId=="0004") { // 0x0004 ManufacturerName string
-                    if (strlen($trimmedValue )>2)
-                        $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
+                    $trimmedValue = pack('H*', $Attribut);
+                    $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
+                    $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
-                    parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+                    if ($AttributId=="0004") { // 0x0004 ManufacturerName string
+                        if (strlen($trimmedValue )>2)
+                            $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
 
-                    // Tcharp38: ManufacturerName not pushed to Abeille ?!
-                    return;
-                }
-                if (($AttributId=="0005") || ($AttributId=="0010")) { // 0x0005 ModelIdentifier string
-                    ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                    $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
-                    if (in_array($trimmedValue,$needManufacturer)) {
-                        if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                            if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
-                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
-                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
+
+                        // Tcharp38: ManufacturerName not pushed to Abeille ?!
+                        return;
+                    }
+                    if (($AttributId=="0005") || ($AttributId=="0010")) { // 0x0005 ModelIdentifier string
+                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
+                        $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
+                        if (in_array($trimmedValue,$needManufacturer)) {
+                            if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
+                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
+                                    $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                } else {
+                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
+                                    return;
+                                }
                             } else {
-                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
                                 return;
                             }
-                        } else {
-                            return;
                         }
-                    }
 
-                    $data = $trimmedValue;
+                        $data = $trimmedValue;
 
-                    // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
-                    $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
+                        // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
+                        $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
 
                         // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
-                    if ($AttributId == "0005")
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
-                    else // 0010
-                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        if ($AttributId == "0005")
+                            parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        else // 0010
+                            parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                    }
+                }
+
+                // Xiaomi temp/humidity/pressure square sensor
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
+                    // Assuming $dataType == "42"
+
+                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
+
+                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
+                    $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
+                    $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
+
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
+                    // parserLog('debug', 'ff01/25: Temperature: '  .$temperature);
+                    // parserLog('debug', 'ff01/25: Humidity: '     .$humidity);
+                    // parserLog('debug', 'ff01/25: Pression: '     .$pression);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                    return;
+                }
+
+                // Xiaomi door sensor V2
+                elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
+                    // Assuming $dataType == "42"
+
+                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    // $etat           = substr($payload, 80, 2);
+                    $etat           = substr($Attribut, 80 - 24, 2);
+
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
+                    return;
+                }
+            } // End cluster 0000
+
+            else if ($ClusterId == "0001") { // Power configuration cluster
+                if ($AttributId == "0020") { // BatteryVoltage
+                    parserLog('debug', '  BatteryVoltage='.substr($Attribut, 0, 2));
                 }
             }
 
-            if ($ClusterId == "000C") { // Analog input cluster
+            else if ($ClusterId == "000C") { // Analog input cluster
                 if ($AttributId == "0055") {
+                    // assuming $dataType == "39"
+
                     if ($EPoint=="01") {
                         // Remontée puissance (instantannée) relay double switch 1
                         // On va envoyer ca sur la meme variable que le champ ff01
@@ -2918,10 +2915,73 @@
                         $data = unpack("f", $bin )[1];
                     }
                 }
+            } // End cluster 000C
+
+            /* Tcharp38
+               Code hereafter to be migrated above to be sorted by clustId/attribId.
+               Need to be sure of clustId first.
+             */
+
+            // valeur hexadécimale  - type -> function
+            // 0x00 Null
+            // 0x10 boolean                 -> hexdec
+            // 0x18 8-bit bitmap
+            // 0x20 uint8   unsigned char   -> hexdec
+            // 0x21 uint16                  -> hexdec
+            // 0x22 uint32
+            // 0x24 ???
+            // 0x25 uint48
+            // 0x28 int8                    -> hexdec(2)
+            // 0x29 int16                   -> unpack("s", pack("s", hexdec(
+            // 0x2a int32                   -> unpack("l", pack("l", hexdec(
+            // 0x2b ????32
+            // 0x30 Enumeration : 8bit
+            // 0x42 string                  -> hex2bin
+
+            if ($dataType == "10") {
+                $data = hexdec(substr($payload, 24, 2));
             }
 
-            // Tcharp38: Code hereafter to be migrated to sort by clustId/attribId
-            // if ($dataType == "39") {
+            else if ($dataType == "18") {
+                $data = substr($payload, 24, 2);
+            }
+
+            // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
+            else if ($dataType == "19") {
+                $data = substr($payload, 24, 4);
+            }
+
+            else if ($dataType == "20") {
+                $data = hexdec(substr($payload, 24, 2));
+            }
+
+            else if ($dataType == "21") {
+                $data = hexdec(substr($payload, 24, 4));
+            }
+            // Utilisé pour remonter la pression par capteur Xiaomi Carré.
+            // Octet 8 bits man pack ne prend pas le 8 bits, il prend à partir de 16 bits.
+
+            else if ($dataType == "28") {
+                // $data = hexdec(substr($payload, 24, 2));
+                $in = substr($payload, 24, 2);
+                if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
+
+                $data = unpack("s", pack("s", hexdec($raw)))[1];
+            }
+
+            // Example Temperature d un Xiaomi Carre
+            // Sniffer dit Signed 16bit integer
+            else if ($dataType == "29") {
+                // $data = hexdec(substr($payload, 24, 4));
+                $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+            }
+
+            else if ($dataType == "30") {
+                // $data = hexdec(substr($payload, 24, 4));
+                $data = substr($payload, 24, 4);
+            }
+
+            // else if ($dataType == "39") {
             //     if ( ($ClusterId=="000C") && ($AttributId=="0055")  ) {
             //         if ($EPoint=="01") {
             //             // Remontée puissance (instantannée) relay double switch 1
@@ -3047,19 +3107,19 @@
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
                 }
 
-                // Xiaomi Door Sensor V2
-                elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
-                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    // $etat           = substr($payload, 80, 2);
-                    $etat           = substr($Attribut, 80 - 24, 2);
+                // // Xiaomi Door Sensor V2
+                // elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
+                //     // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                //     // $etat           = substr($payload, 80, 2);
+                //     $etat           = substr($Attribut, 80 - 24, 2);
 
-                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
+                //     parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
-                }
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
+                // }
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
                 elseif (($AttributId == "FF01") && ($AttributSize == "001F")) {
@@ -3142,32 +3202,32 @@
                     // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
                 }
 
-                // Xiaomi capteur temperature carré V2
-                elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
-                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
+                // // Xiaomi capteur temperature carré V2
+                // elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
+                //     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
 
-                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
-                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
-                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
-                    $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
-                    $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
+                //     // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                //     // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
+                //     // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
+                //     $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                //     $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
+                //     $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
+                //     $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
 
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
-                    // parserLog('debug', 'ff01/25: Temperature: '  .$temperature);
-                    // parserLog('debug', 'ff01/25: Humidity: '     .$humidity);
-                    // parserLog('debug', 'ff01/25: Pression: '     .$pression);
+                //     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
+                //     // parserLog('debug', 'ff01/25: Temperature: '  .$temperature);
+                //     // parserLog('debug', 'ff01/25: Humidity: '     .$humidity);
+                //     // parserLog('debug', 'ff01/25: Pression: '     .$pression);
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
-                }
+                //     $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
+                //     // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
+                //     // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
+                // }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0026")) {
@@ -3330,13 +3390,13 @@
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
                 else {
-                    $data = pack('H*', $Attribut );
+                    $data = pack('H*', $Attribut);
                 }
             }
 
             if (isset($data)) {
-                // Tcharp38: Why this work-around ? Need comment.
-                if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; } // Verrue: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
+                // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
+                if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; }
                 $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }
         }

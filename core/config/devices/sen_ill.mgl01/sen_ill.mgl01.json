@@ -1,11 +1,11 @@
 {
   "sen_ill.mgl01": {
-    "nameJeedom": "Xiaomi GZCGQ01LM smart ligth sensor",
+    "nameJeedom": "Xiaomi GZCGQ01LM smart light sensor",
     "manufacturer": "Xiaomi",
     "model": "GZCGQ01LM",
     "timeout": "60",
     "Categorie": {
-      "security": "1"
+      "light": "1"
     },
     "configuration": {
       "uniqId": "5c07c766264bfaz",
@@ -17,11 +17,12 @@
       "include1": "SW",
       "include2": "nom",
       "include4": "luminositeXiaomi",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent",
+      "include5": "Battery-Volt-3",
       "include7": "Xiaomi-ff01",
       "include7 2": "BindToZigateIlluminance",
-      "include7 2 2": "setReportIlluminanceXiaomi"
+      "include7 2 2": "setReportIlluminanceXiaomi",
+      "include22": "BindToPowerConfig",
+      "include23": "setReportBatterie"
     }
   }
 }

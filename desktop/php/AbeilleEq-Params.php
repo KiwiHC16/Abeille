@@ -15,6 +15,14 @@
         return $cmd->execCmd();
     }
 
+    /* Returns current cmd value identified by its Jeedom logical ID name */
+    function getCmdValueByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->execCmd();
+    }
+
     /* Returns cmd ID identified by its Jeedom name */
     function getCmdIdByName($eqId, $cmdName) {
         $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdName);
@@ -43,17 +51,17 @@
         <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
         <?php
         echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+            echo '<span id="idLastComm">'.getCmdValueByLogicId($eqId, "Time-Time").'</span>';
         ?>
-            <span id="idLastComm"></span>
             <script>
-                <?php echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, "Time-Time")."'] = function(_options){"; ?>
-                    console.log("jeedom.cmd.update[Last]");
-                    // console.log(_options);
+                <?php
+                    $cmdId = getCmdIdByLogicId($eqId, "Time-Time");
+                    echo "jeedom.cmd.update['".$cmdId."'] = function(_options){";
+                    echo 'console.log("jeedom.cmd.update['.$cmdId.']");';
+                ?>
                     var element = document.getElementById('idLastComm');
-                    // console.log("_options.display_value="+_options.display_value);
                     element.textContent = _options.display_value;
                 }
-                // jeedom.cmd.update['233']({display_value:'#state#'});
             </script>
         </div>
     </div>

@@ -1640,7 +1640,8 @@ if (0) {
                 $cmdlogic->setEqLogic_id($elogic->getId());
                 $cmdlogic->setEqType('Abeille');
                 $cmdlogic->setLogicalId($cmd);
-                $cmdlogic->setOrder($cmdValueDefaut["order"]);
+                if (isset($cmdValueDefaut["order"]))
+                    $cmdlogic->setOrder($cmdValueDefaut["order"]);
                 $cmdlogic->setName($cmdValueDefaut["name"]);
                 // value
 

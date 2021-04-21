@@ -1,0 +1,20 @@
+{
+  "0001-#EP#-0020": {
+    "isVisible": 0,
+    "name": "Battery-Volt",
+    "comment": "Cluster 0001 attrib 0x0020 'BatteryVoltage' value for 3V max",
+    "isHistorized": "0",
+    "Type": "info",
+    "subType": "numeric",
+    "generic_type": "BATTERY",
+    "invertBinary": "0",
+    "template": "vuMeter",
+    "unite": "V",
+    "configuration": {
+      "calculValueOffset": "#value#/10",
+      "minValue": "0",
+      "maxValue": "3",
+      "visibilityCategory": "All"
+    }
+  }
+}

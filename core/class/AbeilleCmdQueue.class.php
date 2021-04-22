@@ -303,12 +303,24 @@
             }
 
             $this->deamonlog('debug','  sendCmdToZigate(Dest='.$dest.', cmd='.$cmd.', len='.$len.', datas='.$datas.")", $this->debug['sendCmdToZigate']);
+            if (!ctype_xdigit($cmd)) {
+                $this->deamonlog('error', '    ERROR: Invalid cmd. Not hexa ! ('.$cmd.')');
+                return;
+            }
+            if (!ctype_xdigit($len)) {
+                $this->deamonlog('error', '    ERROR: Invalid len. Not hexa ! (len='.$len.')');
+                return;
+            }
+            if ((hexdec($len) > 0) && !ctype_xdigit($datas)) {
+                $this->deamonlog('error', '    ERROR: Invalid datas. Not hexa ! ('.$datas.')');
+                return;
+            }
 
             $i = str_replace( 'Abeille', '', $dest );
             $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
 
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y') {
-                $this->deamonlog("debug", "    Zigate ".$i." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate2']);
+                $this->deamonlog("debug", "    Zigate ".$i." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$len.'-'.$datas);
                 return;
             }
 

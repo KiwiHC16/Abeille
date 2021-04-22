@@ -34,7 +34,7 @@
     // php AbeilleCmd.php debug
     //check already running
     logSetConf("AbeilleCmd.log", true);
-    logMessage('info', 'AbeilleCmd starting');
+    logMessage('info', '>>> AbeilleCmd starting');
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);

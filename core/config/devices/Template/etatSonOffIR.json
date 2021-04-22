@@ -6,7 +6,7 @@
     "isHistorized": "1",
     "Type": "info",
     "subType": "binary",
-    "generic_type": "OPENING",
+    "generic_type": "PRESENCE",
     "invertBinary": "1",
     "template": "alert",
     "configuration": {

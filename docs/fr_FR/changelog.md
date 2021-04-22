@@ -9,6 +9,7 @@
 - Correction "#1951", pb affichage heure "Derniere comm."
 - Correction blocage du parser dans certains cas de démarrage.
 - Diverses modifications pour améliorer la robustesse et les messages d'erreurs.
+- Monitor (pour developpeur seulement pour l'instant)
 
 # 11/12/2020
 

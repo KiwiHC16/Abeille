@@ -495,7 +495,10 @@
             $crctmp = 0;
 
             $length = strlen($datas);
-            if ($length < 10) { return -1; } // Too short. Min=MsgType+Len+Crc
+            if ($length < 10) {
+                ParserLog('error', $dest.", Message TOO SHORT (len=".$length.")");
+                return -1; // Too short. Min=MsgType+Len+Crc
+            }
 
             //type de message
             $type = $datas[0].$datas[1].$datas[2].$datas[3];
@@ -506,7 +509,7 @@
             $ln = $datas[4].$datas[5].$datas[6].$datas[7];
             $ln = hexdec($ln);
             if ( $ln > 150 ) {
-                parserLog('error', 'Le message recu est beaucoup trop long. On ne le process pas.');
+                parserLog('error', $dest.", Message TOO LONG (len=".$length.") => ignored");
                 return 0;
             }
             $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
@@ -552,9 +555,11 @@
 
             $commandAcceptedUntilZigateIdentified = array( "decode0300", "decode0208", "decode8009", "decode8024", "decode8000" );
 
-            // On vérifie que l on est sur la bonne zigate.
+            /* To be sure there is no port changes, 'AbeilleIEEE_Ok' is set to 0 on daemon start.
+               Should be updated by 8009 response */
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
                 if ( !in_array($fct, $commandAcceptedUntilZigateIdentified) ) {
+                    parserLog('debug', $dest.', AbeilleIEEE_Ok==0 => msg '.$type." ignored");
                     return 0;
                 }
             }
@@ -2078,10 +2083,10 @@
             $this->msgToCmd("Cmd".$dest."/Ruche/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->msgToCmd("Cmd".$dest."/Ruche/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time()+4), "address=".$SrcAddr.'&endPoint='.           $EP );
+            $this->msgToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time() + 4), "address=".$SrcAddr.'&endPoint='.           $EP );
 
-            $this->actionQueue[] = array( 'when'=>time()+ 8, 'what'=>'configureNE', 'addr'=>$dest.'/'.$SrcAddr );
-            $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
+            $this->actionQueue[] = array('when' => time() + 8, 'what' => 'configureNE', 'addr'=>$dest.'/'.$SrcAddr);
+            $this->actionQueue[] = array('when' => time() + 11, 'what' => 'getNE', 'addr'=>$dest.'/'.$SrcAddr);
         }
 
         /**
@@ -2869,7 +2874,9 @@
 
             else if ($ClusterId == "0001") { // Power configuration cluster
                 if ($AttributId == "0020") { // BatteryVoltage
-                    parserLog('debug', '  BatteryVoltage='.substr($Attribut, 0, 2));
+                    $batteryVoltage = substr($Attribut, 0, 2);
+                    $volt = hexdec($batteryVoltage) / 10;
+                    parserLog('debug', '  BatteryVoltage='.$batteryVoltage.' => '.$volt.'V');
                 }
             }
 
@@ -3702,27 +3709,33 @@
         // ***********************************************************************************************
 
         /**
-         * getNE
+         * getNE()
          * This method send all command needed to the NE to get its state.
          *
          * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-         *
-         * @return          Doesn't return anything as all action are triggered by sending messages in queues
+         * @return Doesn't return anything as all action are triggered by sending messages in queues
          */
-        function getNE( $short )
+        function getNE($logicId)
         {
-            $getStates = array( 'getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery'  );
+            list($dest, $addr) = explode("/", $logicId);
+            $getStates = array('getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery');
 
-            $abeille = Abeille::byLogicalId( $short,'Abeille');
-
-            if ( $abeille ) {
+            $eqLogic = Abeille::byLogicalId($logicId, 'Abeille');
+            if ( $eqLogic ) {
                 $arr = array(1, 2);
                 foreach ($arr as &$value) {
-                    foreach ( $getStates as $getState ) {
-                        $cmd = $abeille->getCmd('action', $getState);
+                    foreach ($getStates as $getState) {
+                        $cmd = $eqLogic->getCmd('action', $getState);
                         if ( $cmd ) {
-                            parserLog('debug', 'Type=fct; getNE cmd: '.$getState, "getNE");
-                            $cmd->execCmd();
+                            parserLog('debug', 'getNE('.$logicId.'): '.$getState, "getNE");
+                            // $cmd->execCmd();
+                            logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
+                            $topic = $cmd->getConfiguration('topic');
+                            $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
+                            $request = $cmd->getConfiguration('request');
+                            $request = AbeilleCmd::updateField($dest, $cmd, $request);
+                            logMessage('debug', "  topic=".$topic.", request=".$request);
+                            $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
                         }
                     }
                 }
@@ -3731,17 +3744,22 @@
 
         /**
          * execAtCreationCmdForOneNE()
-         * - Execute all commande with 'execAtCreation' flag set
+         * - Execute all commands with 'execAtCreation' flag set
          *
          * @param logicalId of the device
          * @return none
          */
         function execAtCreationCmdForOneNE($logicalId) {
             parserLog('debug', 'execAtCreationCmdForOneNE('.$logicalId.')');
+            $eqLogic = Abeille::byLogicalId($logicalId,'Abeille');
+            if (!is_object($eqLogic)) {
+                logMessage('debug', "  Unkown EQ '".$logicalId."'");
+                return;
+            }
             list($dest, $addr) = explode("/", $logicalId);
             logMessage('debug', "  dest=".$dest.", addr=".$addr);
             // echo $dest . ' - ' . $addr . "\n";
-            $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId($logicalId,'Abeille')->getId(), 'execAtCreation', 'action' );
+            $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'execAtCreation', 'action');
             foreach ( $cmds as $key => $cmd ) {
                 // $topic = $cmd->getLogicalId();
                 logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
@@ -3781,16 +3799,18 @@
 
             foreach ( $this->actionQueue as $key=>$action ) {
                 if ( $action['when'] < time() ) {
-                    if ( method_exists($this, $action['what']) ) {
-                        parserLog('debug', 'processActionQueue(): action: '.json_encode($action), 'processActionQueue');
-                        $fct = $action['what'];
-                        if ( isset($action['parm0']) ) {
-                            $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
-                        } else {
-                            $this->$fct($action['addr']);
-                        }
-                        unset($this->actionQueue[$key]);
+                    if (!method_exists($this, $action['what'])) {
+                        parserLog('debug', "processActionQueue(): Unknown action '".json_encode($action)."'", 'processActionQueue');
+                        continue;
                     }
+                    parserLog('debug', "processActionQueue(): action '".json_encode($action)."'", 'processActionQueue');
+                    $fct = $action['what'];
+                    if ( isset($action['parm0']) ) {
+                        $this->$fct($action['parm0'], $action['parm1'], $action['parm2'], $action['parm3']);
+                    } else {
+                        $this->$fct($action['addr']);
+                    }
+                    unset($this->actionQueue[$key]);
                 }
             }
         }

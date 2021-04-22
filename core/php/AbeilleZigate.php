@@ -605,8 +605,14 @@ logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
             $i += 6;
 
             /* Note: Status=0x86 means unsupported attribute */
-            if ($attrStatus != "00")
+            if ($attrStatus != "00") {
+                $attr = array(
+                    'Id' => $attrId,
+                    'Status' => $attrStatus
+                );
+                $attributes[] = $attr;
                 continue;
+            }
 
             $attr = array(
                 'Id' => $attrId,
@@ -713,6 +719,17 @@ logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
             $attrList[] = "0007"; // LocalTime
             $attrList[] = "0008"; // LastSetTime
             $attrList[] = "0009"; // ValidUntilTime
+        } else if ($clustId == "0014") { // Multistate Value
+            $attrList[] = "000E"; // StateText
+            $attrList[] = "001C"; // Description
+            $attrList[] = "004A"; // NumberOfStates
+            $attrList[] = "0051"; // OutOfService
+            $attrList[] = "0055"; // PresentValue
+            $attrList[] = "0057"; // PriorityArray
+            $attrList[] = "0067"; // Reliability
+            $attrList[] = "0068"; // RelinquishDefault
+            $attrList[] = "006F"; // StatusFlags
+            $attrList[] = "0100"; // ApplicationType
         } else if ($clustId == "0015") { // Commissioning
         } else if ($clustId == "0020") { // Poll control
             $attrList[] = "0000"; // Check-inInterval
@@ -723,6 +740,11 @@ logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
             $attrList[] = "0005"; // LongPollIntervalMin
             $attrList[] = "0006"; // FastPollTimeoutMax
         } else if ($clustId == "0100") { // Shade Configuration
+            $attrList[] = "0000"; // PhysicalClosedLimit
+            $attrList[] = "0001"; // MotorStepSize
+            $attrList[] = "0002"; // Status
+            $attrList[] = "0010"; // ClosedLimit
+            $attrList[] = "0011"; // Mode
         } else if ($clustId == "0102") { // Window covering
             /* Set 0x00 => Window Covering Information */
             $attrList[] = "0000"; // WindowCoveringType

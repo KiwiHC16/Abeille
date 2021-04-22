@@ -888,6 +888,17 @@ if (0) {
         $running = AbeilleTools::getRunningDaemons();
         AbeilleTools::restartMissingDaemons($parameters, $running);
         
+        /* Starting 'AbeilleMonitor' daemon too if required */
+        /* Reread 'debug.json' to avoid PHP cache issues */
+        if (file_exists(dbgFile)) {
+            $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+        }
+        if (isset($dbgConfig["dbgMonitorAddr"])) {
+            log::add('Abeille', 'debug', 'deamon_start(): Démarrage AbeilleMonitor');
+            $cmd = AbeilleTools::getStartCommand($param, "AbeilleMonitor");
+            exec($cmd.' &');
+        }
+
         // Starting main daemon
         cron::byClassAndFunction('Abeille', 'deamon')->run();
 
@@ -973,30 +984,22 @@ if (0) {
     {
         log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
 
-        // Stop socat if exist
-        // exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | tr  '\n' ' '", $output);
-        exec("ps -e -o '%p %a' --cols=10000 | awk '/socat /' | awk '/\/dev\/zigate/' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'", $output);
-        log::add('Abeille', 'debug', 'deamon_stop(): Killing deamons socat: ' . implode($output, '!'));
-        system::kill(implode($output, ' '), true);
-        exec(system::getCmdSudo() . "kill -15 " . implode($output, ' ') . " 2>&1");
-        exec(system::getCmdSudo() . "kill -9 " . implode($output, ' ') . " 2>&1");
-
-        /* Stop other deamons */
-        exec("ps -e -o '%p %a' --cols=10000 | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate|LQI).php /' | awk '{print $1}' | awk '{printf \"%s \",$0} END {print \"\"}'", $output);
-        log::add('Abeille', 'debug', 'deamon stop: Killing deamons: ' . implode($output, '!'));
-        system::kill(implode($output, ' '), true);
-        exec(system::getCmdSudo() . "kill -15 " . implode($output, ' ') . " 2>&1");
-        exec(system::getCmdSudo() . "kill -9 " . implode($output, ' ') . " 2>&1");
-
-        // Stop main deamon
-        log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
+        /* Stopping cron */
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
-        if (is_object($cron)) {
-            $cron->halt();
-            // log::add('Abeille', 'error', 'deamon_stop(): demande d arret du cron faite');
-        } else {
+        if (!is_object($cron))
             log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
-        }
+        else if ($cron->running()) {
+            log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
+            $cron->halt();
+while ($cron->running()) {
+    usleep(500000);
+    log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
+}
+        } else
+            log::add('Abeille', 'debug', 'deamon_stop(): cron déja arrété');
+
+        /* Stopping all 'Abeille' daemons */
+        AbeilleTools::stopDaemons();
 
         /* Removing all queues */
         $all = array(
@@ -1177,11 +1180,13 @@ if (0) {
 
     public static function postSave()
     {
-        // log::add('Abeille', 'debug', 'deamon_postSave: IN');
-        $cron = cron::byClassAndFunction('Abeille', 'deamon');
-        if (is_object($cron) && !$cron->running()) {
-            $cron->run();
-        }
+        /* Tcharp38: Strange. postSave() called when starting daemons.
+           No sense to re-start main daemon from their then */
+        // log::add('Abeille', 'debug', 'postSave()');
+        // $cron = cron::byClassAndFunction('Abeille', 'deamon');
+        // if (is_object($cron) && !$cron->running()) {
+        //     $cron->run();
+        // }
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
     }
 

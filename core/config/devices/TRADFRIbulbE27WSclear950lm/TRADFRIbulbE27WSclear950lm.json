@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbE27WSclear950lm": {
     "nameJeedom": "TRADFRI bulb E27 WS clear 950lm",
+    "manufacturer": "Ikea",
     "timeout": "60",
     "Categorie": {
       "light": "1"

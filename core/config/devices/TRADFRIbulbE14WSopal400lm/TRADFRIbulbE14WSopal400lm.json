@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbE14WSopal400lm": {
     "nameJeedom": "TRADFRI bulb E14 White Spectre opal 400lm",
+    "manufacturer": "Ikea",
     "timeout": "60",
     "Categorie": {
       "light": "1"

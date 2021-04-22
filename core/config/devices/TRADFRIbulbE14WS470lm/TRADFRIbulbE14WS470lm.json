@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbE14WS470lm": {
     "nameJeedom": "TRADFRI bulb E14 White Spectre 470lm",
+    "manufacturer": "Ikea",
     "timeout": "60",
     "Categorie": {
       "light": "1"

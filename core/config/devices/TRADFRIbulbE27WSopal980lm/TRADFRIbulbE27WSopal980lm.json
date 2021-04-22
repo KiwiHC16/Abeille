@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbE27WSopal980lm": {
     "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 White Spectre opal 980 lm",
+    "manufacturer": "Ikea",
     "timeout": "60",
     "Categorie": {
       "light": "1"

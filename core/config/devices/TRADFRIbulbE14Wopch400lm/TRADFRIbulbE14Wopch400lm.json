@@ -1,6 +1,7 @@
 {
   "TRADFRIbulbE14Wopch400lm": {
     "nameJeedom": "TRADFRI bulb E14 W op ch 400lm",
+    "manufacturer": "Ikea",
     "timeout": "60",
     "Categorie": {
       "light": "1"

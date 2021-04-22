@@ -233,7 +233,7 @@
                     $rerouteNet = ""; // Error => closing rerouting
                     logMessage('debug', "Terminating rerouting");
                 }
-                $AbeilleParser->protocolDatas( $data->dest, $data->trame, $clusterTab, $LQI);
+                $AbeilleParser->protocolDatas($data->dest, $data->trame, $clusterTab, $LQI);
             }
 
             /* Checking if message from EQ assistant */

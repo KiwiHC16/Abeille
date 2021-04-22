@@ -624,6 +624,24 @@ if (0) {
             $daemons .= $daemon['pid'].'/'.$daemon['shortName'];
         }
         log::add('Abeille', 'debug', 'cron1: '.$daemons);
+
+        // Check ipcs situation pour detecter des soucis eventuels
+        // Moved from deamon_info()
+        if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille');
+        if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeyParserToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille');
+        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeyParserToLQI))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
+        if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
+        if (msg_stat_queue(msg_get_queue(queueKeyCmdToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeyLQIToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToAbeille');
+        if (msg_stat_queue(msg_get_queue(queueKeyLQIToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeyXmlToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille');
+        if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
+        if (msg_stat_queue(msg_get_queue(queueKeySerieToParser))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser');
+        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore');
+
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
@@ -747,22 +765,6 @@ if (0) {
         // Comptons les process prevus.
         AbeilleTools::checkAllDaemons($parameters, AbeilleTools::getRunningDaemons());
 
-        // Check ipcs situation pour detecter des soucis eventuels
-        if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToLQI))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
-        if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyCmdToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyLQIToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyLQIToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyXmlToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeySerieToParser))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerieToParser');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore');
-
         if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info(): Terminé, return=' . json_encode($return));
         return $return;
     }
@@ -882,12 +884,17 @@ if (0) {
             }
         }
 
-        //demarrage d'un cron pour le plugin.
-        cron::byClassAndFunction('Abeille', 'deamon')->run();
-
         $parameters = AbeilleTools::getParameters();
         $running = AbeilleTools::getRunningDaemons();
         AbeilleTools::restartMissingDaemons($parameters, $running);
+        
+        // Starting main daemon
+        cron::byClassAndFunction('Abeille', 'deamon')->run();
+
+        /* TODO: Need to wait for daemons to be properly started.
+           If not the first commands hereafter might be lost, or their returned value.
+           This might be the case for 0009 cmd which is key to 'enable' msg receive. */
+        sleep(2);
 
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
@@ -896,16 +903,17 @@ if (0) {
 
             log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche ' . $i . ' (Abeille): ' . basename($param['AbeilleSerialPort' . $i]));
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille" . $i);
+
             log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee ' . $i . ' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/startNetwork", "StartNetwork");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
             log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee ' . $i . ' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setTimeServer", "");
-            log::add('Abeille', 'debug', 'deamon_start(): ***** getNetworkStatus ' . $i . ' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/getNetworkStatus", "getNetworkStatus");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
+            /* Get network state to get Zigate IEEE asap and confirm no port change */
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
 
             // Set the mode of the zigate, important from 3.1D.
             $version = "";
-            $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille');
+            $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
             if ($ruche) {
                 $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
                 if ($cmdlogic) {
@@ -916,13 +924,11 @@ if (0) {
                 log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in hybrid mode ********');
                 // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "hybride");
-            }
-            else {
+            } else {
                 log::add('Abeille', 'debug', 'deamon_start(): ***** set zigate ' . $i . ' in normal mode ********');
                 // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille" . $i . "/Ruche/setModeHybride", "normal");
             }
-
         }
 
         // Essaye de recuperer les etats des equipements
@@ -992,20 +998,20 @@ if (0) {
             log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
         }
 
-        msg_remove_queue(msg_get_queue(queueKeyAbeilleToAbeille));
-        msg_remove_queue(msg_get_queue(queueKeyAbeilleToCmd));
-        msg_remove_queue(msg_get_queue(queueKeyParserToAbeille));
-        msg_remove_queue(msg_get_queue(queueKeyParserToCmd));
-        msg_remove_queue(msg_get_queue(queueKeyParserToLQI));
-        msg_remove_queue(msg_get_queue(queueKeyCmdToAbeille));
-        msg_remove_queue(msg_get_queue(queueKeyCmdToCmd));
-        msg_remove_queue(msg_get_queue(queueKeyLQIToAbeille));
-        msg_remove_queue(msg_get_queue(queueKeyLQIToCmd));
-        msg_remove_queue(msg_get_queue(queueKeyXmlToAbeille));
-        msg_remove_queue(msg_get_queue(queueKeyXmlToCmd));
-        msg_remove_queue(msg_get_queue(queueKeyFormToCmd));
-        msg_remove_queue(msg_get_queue(queueKeySerieToParser));
-        msg_remove_queue(msg_get_queue(queueKeyParserToCmdSemaphore));
+        /* Removing all queues */
+        $all = array(
+            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd,
+            queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
+            queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
+            queueKeyParserToLQI, queueKeyLQIToAbeille, queueKeyLQIToCmd,
+            queueKeyParserToAbeille, queueKeyParserToCmd, queueKeyCmdToAbeille, queueKeyCmdToCmd,
+            queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeySerieToParser, queueKeySerialToParser, queueKeyParserToCmdSemaphore
+        );
+        foreach ($all as $queueId) {
+            $queue = msg_get_queue($queueId);
+            if ($queue != false)
+                msg_remove_queue($queue);
+        }
 
         log::add('Abeille', 'debug', 'deamon_stop(): Terminé');
     }
@@ -1417,7 +1423,7 @@ if (0) {
 
         /* Treat "enable" (device announce) or "disable" (leave indication) cmds. */
         if (($cmdId == "enable") || ($cmdId == "disable")) {
-            log::add('Abeille', 'debug', 'message(): cmd='.$cmdId.', net='.$Filter.', IEEE='.$value);
+            log::add('Abeille', 'debug', 'message(): '.$cmdId.': net='.$Filter.', IEEE='.$value);
 
             /* Look for corresponding equipment (identified via its IEEE addr) */
             $allBees = self::byType('Abeille');
@@ -1442,7 +1448,7 @@ if (0) {
 
             /* If eq not found, might be due to missing IEEE. Let's check */
             if (!isset($matchingBee) && (sizeof($missingIEEE) != 0)) {
-                log::add('Abeille', 'debug', 'message(): cmd='.$cmdId.' => vérification des adresses IEEE manquantes');
+                log::add('Abeille', 'debug', 'message(): '.$cmdId.': Vérification des adresses IEEE manquantes');
                 foreach ($missingIEEE as $bee) {
                     $cmd = $bee->getCmd('info', 'IEEE-Addr');
                     if ($cmd->execCmd() != $value)
@@ -1460,7 +1466,7 @@ if (0) {
                     $oldLogicId = $bee->getLogicalId();
                     $nodeid = $Filter.'/'.$addr;
                     $bee->setLogicalId($nodeid);
-                    log::add('Abeille', 'debug', 'message(): Mise-à-jour '.$oldLogicId.' => '.$nodeid);
+                    log::add('Abeille', 'debug', 'message(): disable: Mise-à-jour '.$oldLogicId.' => '.$nodeid);
                     // message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
                 } else {
                     $bee->setIsEnable(0);
@@ -1471,7 +1477,7 @@ if (0) {
                 $bee->save();
                 $bee->refresh();
             } else
-                log::add('Abeille', 'debug', 'message(): Eq '.$Filter.'-'.$value.' pas trouvé dans Jeedom.');
+                log::add('Abeille', 'debug', 'message(): '.$cmdId.': Eq '.$Filter.'-'.$value.' pas trouvé dans Jeedom.');
 
             return;
         }
@@ -1632,7 +1638,7 @@ if (0) {
             }
 
             foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
-                log::add('Abeille', 'info', 'Creation de la commande: ' . $cmdValueDefaut["name"].' ('.$cmd.')' . ' suivant le model de l objet pour l objet: ' . $name);
+                log::add('Abeille', 'info', "Eq ".$name.": Ajout de la commande '".$cmdValueDefaut["name"]."' => '".$cmd."'");
                 // 'Creation de la commande: ' . $nodeid . '/' . $cmd . ' suivant model de l objet pour l objet: ' . $name
 
                 $cmdlogic = new AbeilleCmd();

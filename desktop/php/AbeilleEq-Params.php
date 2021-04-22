@@ -91,6 +91,13 @@
     </div>
 
     <div class="form-group">
+        <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
+        <div class="col-sm-5">
+            <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-3 control-label">{{Documentation}}</label>
         <div class="col-sm-5">
             <?php

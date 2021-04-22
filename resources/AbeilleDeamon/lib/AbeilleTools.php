@@ -575,7 +575,8 @@ class AbeilleTools
      */
     public static function startDaemons($config, $daemons = "") {
         if ($daemons == "") {
-            $daemons = "AbeilleCmd AbeilleParser";
+            /* Note: starting input daemons first to not loose any returned
+               value/status as opposed to cmd being started first */
             for ($zgNb = 1; $zgNb <= $config['zigateNb']; $zgNb++) {
                 if ($config['AbeilleActiver'.$zgNb] != "Y")
                     continue; // Zigate disabled
@@ -584,6 +585,7 @@ class AbeilleTools
                     $daemons .= " AbeilleSocat".$zgNb;
                 $daemons .= " AbeilleSerialRead".$zgNb;
             }
+            $daemons .= "AbeilleParser AbeilleCmd";
         }
         log::add('Abeille', 'debug', "startDaemons(): daemons=".$daemons);
         $daemonsArr = explode(" ", $daemons);

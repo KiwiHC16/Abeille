@@ -28,7 +28,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/AbeilleLog.php';
 
-    logSetConf('', TRUE); // Log to STDOUT until log name fully known (need Zigate number)
+    logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
 
     /* Checking parameters */
@@ -45,7 +45,7 @@
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$abeilleNb.".log", TRUE); // Log to file with line nb check
+    logSetConf("AbeilleSerialRead".$abeilleNb.".log", true); // Log to file with line nb check
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
@@ -65,7 +65,7 @@
     // }
 
     // declare(ticks = 1);
-    // if (pcntl_signal(SIGTERM, "shutdown", FALSE) != TRUE)
+    // if (pcntl_signal(SIGTERM, "shutdown", false) != true)
     //     logMessage("error", "Erreur pcntl_signal()");
 
     //check already running
@@ -73,10 +73,9 @@
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
     logMessage('debug', 'Daemons='.json_encode($daemons));
-    #Two at least expected,the original and this one
-    if ($daemons["serialRead".$abeilleNb] > 1){
-        logMessage('error', 'Le daemon est déja lancé! '.json_encode($daemons));
-        exit(3);
+    if ($daemons["serialRead".$abeilleNb] > 1) {
+        logMessage('error', 'Un démon AbeilleSerialRead'.$abeilleNb.' est déja lancé.');
+        exit(4);
     }
 
     $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
@@ -94,13 +93,13 @@
     // Si le lien tombe a l ouverture de $serial c est peut etre par ce que le serveur n'est pas dispo.
     // Il semblerai que le lien pts soit créé même si la liaison n'est pas établie.
     $f = fopen($serial, "r");
-    if ($f == FALSE) {
+    if ($f == false) {
         logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
         exec('sudo lsof -Fcn '.$serial, $out);
-        logMessage('debug', 'sudo lsof -Fcn => \''.implode(",", $out).'\'');
+        logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
         exit(4);
     }
-    stream_set_blocking($f, TRUE); // Should be blocking read but is it default ?
+    stream_set_blocking($f, true); // Should be blocking read but is it default ?
 
     $transcode = false;
     $frame = ""; // Transcoded message from Zigate
@@ -154,7 +153,7 @@
                     logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
 
                 $msgToSend = array( 'dest'=>$abeille, 'trame'=>$frame );
-                if (msg_send( $queueKeySerieToParser, 1, json_encode($msgToSend), false, false) == FALSE) {
+                if (msg_send( $queueKeySerieToParser, 1, json_encode($msgToSend), false, false) == false) {
                     logMessage('error', 'ERREUR de transmission: '.json_encode($frame));
                 } else {
                     logMessage('debug', 'Reçu: '.json_encode($frame));

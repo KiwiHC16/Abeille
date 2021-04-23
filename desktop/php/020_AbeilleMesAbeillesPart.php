@@ -31,6 +31,9 @@
 
             /* Exclude feature */
             echo '<a onclick="removeBees('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Supprime les équipement(s) sélectionné(s) si fonctionnent SUR SECTEUR.">{{Exclure}}</a>';
+
+            /* Monitoring feature */
+            echo '<a onclick="monitorIt('.$i.', \''.$port.'\')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Surveillance des messages vers/de l\'équipement sélectionné. Sortie dans \'AbeilleMonitor\'.">{{Surveiller}}</a>';
         }
 
 		echo '<div class="eqLogicThumbnailContainer">';
@@ -44,7 +47,6 @@
             // $eqIdList[] = $eq;
         }
         echo '<script>var js_eqZigate'.$i.' = \''.json_encode($eqPerZigate[$i]).'\';</script>';
-echo '<script>console.log("js_eqZigate'.$i.'="+'.json_encode($eqPerZigate[$i]).');</script>';
 
         // $eqPerZigate = array(); // All equipements linked to current zigate
         // /* Display beehive card then bee cards */

@@ -320,27 +320,31 @@ class AbeilleTools
     {
         //remove all message before each check
         AbeilleTools::clearSystemMessage($parameters,'all');
-        //get last start to limit restart requests
+
+        $status['state'] = "ok";
         if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
-            $return['state'] = "nok";
+            $status['state'] = "nok";
             AbeilleTools::restartMissingDaemons($parameters, $running);
-        }
-        //After restart daemons, if still are missing, then no hope.
-        if (AbeilleTools::isMissingDaemons($parameters, $running)) {
-            return $return;
+
+            //After restart daemons, if still are missing, then no hope.
+            if (AbeilleTools::isMissingDaemons($parameters, $running) == false) {
+                $status['state'] = "ok"; // Finally missing ones restarted properly
+            } else {
+                /* There are still some missing daemons */
+                $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
+                if (strlen($daemons) == 0) {
+                    /* Ouahhh.. not normal */
+                    AbeilleTools::clearSystemMessage($parameters, 'all');
+                    $status['state'] = "ok";
+                } else {
+                    log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons '.$daemons);
+                    AbeilleTools::sendMessageToRuche($daemons, 'Démons manquants: '.$daemons);
+                }
+            }
         }
 
-        $return['state'] = "ok";
-        //clear systemMessage
-        //$daemons=implode(" ", AbeilleTools::getMissingDaemons($parameters,$running));
-        $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
-        if (strlen($daemons) == 0) {
-            AbeilleTools::clearSystemMessage($parameters, 'all');
-        } else {
-            log::add('Abeille', 'debug', __CLASS__ . ':' . __FUNCTION__ . ':' . __LINE__ . ': missing daemons ' . $daemons);
-            AbeilleTools::sendMessageToRuche($daemons, 'daemons manquants ' . $daemons);
-        }
-
+        log::add('Abeille', 'debug', "checkAllDaemons() => ".$status['state']);
+        return $status;
     }
 
     /**
@@ -465,9 +469,10 @@ class AbeilleTools
     static function isMissingDaemons($parameters, $running): bool
     {
         //no cron, no start requested
-        if (AbeilleTools::isAbeilleCronRunning() == false) {
-            return false;
-        }
+        // if (AbeilleTools::isAbeilleCronRunning() == false) {
+        //     return false;
+        // }
+
         $found = self::diffExpectedRunningDaemons($parameters, $running);
         $nbProcessExpected = $found['expected'];
         array_pop($found);

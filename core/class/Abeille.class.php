@@ -496,6 +496,12 @@ if (0) {
      */
     public static function cron15()
     {
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
+            log::add('Abeille', 'debug', 'cron15: Main daemon stopped => cron15 canceled');
+            return;
+        }
+
         log::add('Abeille', 'debug', 'cron15: Démarrage --------------------------------');
 
         /* Look every 15 minutes if the kernel driver is not in error */
@@ -582,6 +588,12 @@ if (0) {
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cron10() {
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
+            log::add('Abeille', 'debug', 'cron10: Main daemon stopped => cron10 canceled');
+            return;
+        }
+
         // Poll Cmd
         self::pollingCmd("cron10");
     }
@@ -594,6 +606,12 @@ if (0) {
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cron5() {
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
+            log::add('Abeille', 'debug', 'cron5: Main daemon stopped => cron5 canceled');
+            return;
+        }
+
         // Poll Cmd
         self::pollingCmd("cron5");
     }
@@ -612,8 +630,25 @@ if (0) {
      */
     public static function cron()
     {
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleCronRunning() == false) {
+            log::add('Abeille', 'debug', 'cron1: Main daemon stopped => cron1 canceled');
+            return;
+        }
+
         // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
         $param = AbeilleTools::getParameters();
+
+        $running = AbeilleTools::getRunningDaemons();
+        $status = AbeilleTools::checkAllDaemons($param, $running);
+        // $shm = shm_attach(12, 16384, 0600);
+        // if ($shm == false) {
+        //     log::add('Abeille', 'debug', "cron1: ERROR shm_attach()");
+        // } else {
+        //     log::add('Abeille', 'debug', "cron1: status['state']=".$status['state']);
+        //     shm_put_var($shm, 13, $status['state']);
+        //     shm_detach($shm);
+        // }
 
         /* For post crash analysis purposes, display 'PID/daemonShortName' */
         $running = AbeilleTools::getRunningDaemons2();
@@ -725,7 +760,6 @@ if (0) {
         if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: " . json_encode($count) . ". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
 
         // log::add( 'Abeille', 'debug', 'cron1: Fin ------------------------------------------------------------------------------------------------------------------------' );
-        AbeilleTools::checkAllDaemons($param, AbeilleTools::getRunningDaemons());
     }
 
     /**
@@ -735,38 +769,37 @@ if (0) {
      */
     public static function deamon_info()
     {
-        $debug_deamon_info = 0;
-        // log::add('Abeille', 'debug', 'deamon_info(): Démarrage'); // Useless
+        /* Notes:
+           Since Abeille has its own way to restart missing daemons, reporting only
+           cron status as global Abeille status to avoid conflict between
+           - Jeedom asking daemons restart (automatic management)
+           - Abeille internal daemons restart mecanism */
 
-        // On suppose que tout est bon et on cherche les problemes.
-        $return = array('state' => 'ok',  // On couvre le fait que le process tourne en tache de fond
-            'launchable' => 'ok',  // On couvre la configuration de plugin
-            'launchable_message' => "",);
+        /* Init with valid status */
+        $status = array(
+            'state' => 'ok',  // Assuming cron is running
+            'launchable' => 'ok',  // Assuming config ok
+            'launchable_message' => ""
+        );
 
-        // On vérifie que le demon est demarrable
-        // On verifie qu'on n'a pas d erreur dans la recuperation des parametres
-        $parameters = AbeilleTools::getParameters();
-        if ($parameters['parametersCheck'] != "ok") {
-            log::add('Abeille', 'warning', 'deamon_info(): parametersCheck NOT ok');
-            $return['launchable'] = $parameters['parametersCheck'];
-            $return['launchable_message'] = $parameters['parametersCheck_message'];
+        /* Checking there is no error getting parameters and daemon can be started. */
+        // TODO: Tcharp38. Can it be optimized ?. Each deamon_info() call leads to mysql DB interrogation.
+        $config = AbeilleTools::getParameters();
+        if ($config['parametersCheck'] != "ok") {
+            $status['launchable'] = $config['parametersCheck'];
+            // Tcharp38: Where is reported 'launchable_message' ?
+            $status['launchable_message'] = $config['parametersCheck_message'];
+            log::add('Abeille', 'warning', 'deamon_info(): Config zigate invalide');
         }
 
-        // si la cron tourne alors le plugin a été démarré.
+        /* Checking main cron = main Abeille's daemon */
         if (AbeilleTools::isAbeilleCronRunning() == false) {
-            $return['state'] = "nok";
-            // log::add('Abeille', 'warning', 'deamon_info(): Le plugin n\'est pas démarré. la cron ne tourne pas');
-            return $return;
+            $status['state'] = "nok";
+            log::add('Abeille', 'warning', 'deamon_info(): Main daemon is not runnning.');
         }
-        // log::add('Abeille', 'info', 'deamon_info(): Le plugin est démarré. la cron tourne');
 
-        // Nb de demon devant tourner: Parser + cmd + n x ( Zigate serial ) + socat si wifi
-
-        // Comptons les process prevus.
-        AbeilleTools::checkAllDaemons($parameters, AbeilleTools::getRunningDaemons());
-
-        if ($debug_deamon_info) log::add('Abeille', 'debug', 'deamon_info(): Terminé, return=' . json_encode($return));
-        return $return;
+        log::add('Abeille', 'debug', 'deamon_info(): '.json_encode($status));
+        return $status;
     }
 
     /* This function is used before starting daemons to
@@ -815,14 +848,6 @@ if (0) {
     public static function deamon_start($_debug = false)
     {
         log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
-
-        /* Developers debug features.
-               Since deamon_start() is static, could not find a way to reuse global variables.
-               WARNING: Since php file is cached, it sometimes requires delay or restart to
-                 get last content of 'debug.json' */
-        $dbgFile = __DIR__ . "/../../tmp/debug.json";
-        // if (file_exists($dbgFile))
-        //     include $dbgFile; // TODO: To be revisited with debug.json
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
@@ -884,10 +909,13 @@ if (0) {
             }
         }
 
-        $parameters = AbeilleTools::getParameters();
-        $running = AbeilleTools::getRunningDaemons();
-        AbeilleTools::restartMissingDaemons($parameters, $running);
-        
+        // $parameters = AbeilleTools::getParameters();
+        // $running = AbeilleTools::getRunningDaemons();
+        // AbeilleTools::restartMissingDaemons($parameters, $running);
+
+        /* Starting all required daemons */
+        AbeilleTools::startDaemons($param);
+
         /* Starting 'AbeilleMonitor' daemon too if required */
         /* Reread 'debug.json' to avoid PHP cache issues */
         if (file_exists(dbgFile)) {

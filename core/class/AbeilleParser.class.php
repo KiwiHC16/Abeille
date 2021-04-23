@@ -558,7 +558,7 @@
             /* To be sure there is no port changes, 'AbeilleIEEE_Ok' is set to 0 on daemon start.
                Should be updated by 8009 response */
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
-                if ( !in_array($fct, $commandAcceptedUntilZigateIdentified) ) {
+                if (!in_array($fct, $commandAcceptedUntilZigateIdentified)) {
                     parserLog('debug', $dest.', AbeilleIEEE_Ok==0 => msg '.$type." ignored");
                     return 0;
                 }

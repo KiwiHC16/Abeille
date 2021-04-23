@@ -142,12 +142,21 @@ if [ $? -ne 0 ]; then
     exit 23
 fi
 
+# Update changelog if required & target is 'stable'
+if [ "${TARG_BRANCH}" == "stable" ]; then
+    .tools/update_changelog.sh
+    if [ $? -ne 0 ]; then
+        echo "= ERROR"
+        exit 24
+    fi
+fi
+
 # Add+commit
 echo "Adding 'Abeille.version' & 'Abeille.md5'"
-git add plugin_info/Abeille.version plugin_info/Abeille.md5
+git add plugin_info/Abeille.version plugin_info/Abeille.md5 docs/fr_FR/changelog.md
 if [ $? -ne 0 ]; then
     echo "= ERROR"
-    exit 24
+    exit 30
 fi
 VERSION=`cat plugin_info/Abeille.version | tail -1`
 echo "Committing"
@@ -158,7 +167,7 @@ else
 fi
 if [ $? -ne 0 ]; then
     echo "= ERROR"
-    exit 25
+    exit 31
 fi
 
 # Delete target branch & push new one
@@ -168,7 +177,7 @@ if [ $? -eq 0 ]; then
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
         echo "= ERROR"
-        exit 26
+        exit 32
     fi
 fi
 
@@ -177,14 +186,14 @@ echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
 git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR"
-    exit 27
+    exit 33
 fi
 
 echo "Switching back to '${CUR_BRANCH}' branch"
 git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR"
-    exit 28
+    exit 34
 else
     echo "= Ok"
 fi

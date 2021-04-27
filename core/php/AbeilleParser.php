@@ -33,7 +33,7 @@
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';

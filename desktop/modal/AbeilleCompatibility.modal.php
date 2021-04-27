@@ -111,7 +111,7 @@
     // Main
     //----------------------------------------------------------------------------------------------------
 
-    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
 
     // Collecting list of supported devices (by their JSON)
     foreach (glob(__DIR__.'/../../core/config/devices/*/*.json') as $file) {

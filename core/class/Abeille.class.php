@@ -16,7 +16,7 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once __DIR__ . '/../../resources/AbeilleDeamon/includes/config.php';
+include_once __DIR__.'/../config/Abeille.config.php';
 
 /* Developers debug features */
 // define('dbgFile',  __DIR__."/../../tmp/debug.json");

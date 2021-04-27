@@ -22,7 +22,7 @@
     }
 
     include_once __DIR__."/../../../../core/php/core.inc.php";
-    include_once("../../resources/AbeilleDeamon/includes/config.php");
+    include_once("../../core/config/Abeille.config.php");
     include_once "AbeilleLog.php"; // Log library
 
     /* Add to list a new eq (router or coordinator) to interrogate.

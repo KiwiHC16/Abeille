@@ -1,5 +1,4 @@
 <?php
-
     /* This file is part of Jeedom.
      *
      * Jeedom is free software: you can redistribute it and/or modify
@@ -17,12 +16,10 @@
      */
 
     include_once __DIR__.'/../../../core/php/core.inc.php';
-    include_once dirname(__FILE__).'/includes/config.php';
-    include_once dirname(__FILE__).'/includes/function.php';
-    include_once dirname(__FILE__).'/includes/fifo.php';
-
-    include_once dirname(__FILE__).'/lib/AbeilleTools.php';
-
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
+    include_once __DIR__.'/includes/function.php';
+    include_once __DIR__.'/includes/fifo.php';
+    include_once __DIR__.'/lib/AbeilleTools.php';
 
     /*
      [2020-03-17 16:13:31][DEBUG] : execute ->action<- function with options ->{"title":"aaaa","message":"","utid":"1584457453959"}<-
@@ -56,12 +53,9 @@
     $dest = $argv[1];
     $addressShort = $argv[2];
 
-
-
     while ( time() < $timeEnd ) {
         Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/IEEE_Address_request", "address=".$addressShort."&shortAddress=".$addressShort );
         echo ".";
         sleep( 12 );
     }
-
 ?>

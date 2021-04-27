@@ -5,14 +5,6 @@
         }
     }
 
-    /* Log function for debug purposes */
-    function logToFile($msg = "")
-    {
-        $logFile = 'AbeilleDebug.log';
-        $logDir = __DIR__.'/../../../../log/';
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
-    }
-
     /* Developers debug features & PHP errors */
     $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
@@ -58,7 +50,7 @@
             $eqPerZigate[$zgNb][] = $eqId;
     }
     // if (isset($dbgConfig))
-    //     logToFile("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
+    //     logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
     $parametersAbeille = AbeilleTools::getParameters();
 

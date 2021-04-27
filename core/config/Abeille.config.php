@@ -1,6 +1,10 @@
 <?php
+    /*
+     * Abeille's static config file
+     */
+
     $in = "/tmp/AbeilleDeamonInput";
-    $resourcePath = realpath(dirname(__FILE__).'/../../');
+    $resourcePath = realpath(__DIR__.'/../../resources');
     $WifiLink = "/dev/zigate";
 
     // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
@@ -62,5 +66,5 @@
     define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
 
     /* Developper config file */
-    define('dbgFile', __DIR__.'/../../../tmp/debug.json');
+    define('dbgFile', __DIR__.'/../../tmp/debug.json');
 ?>

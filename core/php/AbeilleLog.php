@@ -133,7 +133,7 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
-                file_put_contents($lFile, $prefix." Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
+                file_put_contents($lFile, $prefix."Max atteint (".$GLOBALS["logMaxLines"]." lignes) Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }

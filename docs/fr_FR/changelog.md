@@ -12,6 +12,7 @@
 - Monitor (pour developpeur seulement pour l'instant)
 - Gestion des démons: revisitée pour éviter redémarrages concurrents.
 - Correction "#1948: BSO, lift & tilt"
+- JSON: Emplacement des commandes changé de "core/config/devices/Template" vers "core/config/commands"
 
 # 11/12/2020
 

@@ -1,6 +1,8 @@
 {
   "SmokeSensor-N-3.0": {
-    "nameJeedom": "Humein Smoke Sensor",
+    "nameJeedom": "Heiman HS1SA smoke sensor",
+    "manufacturer": "Heiman",
+    "model": "HS1SA",
     "timeout": "60",
     "Comment": "Copy of Heiman Smoke Sensor (SmokeSensor-EM) ",
     "Categorie": {

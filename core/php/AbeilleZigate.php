@@ -690,6 +690,12 @@ logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
         } else if ($clustId == "0004") { // Groups
             $attrList[] = "0000"; // NameSupport
         } else if ($clustId == "0005") { // Scenes
+            $attrList[] = "0000"; // SceneCount
+            $attrList[] = "0001"; // CurrentScene
+            $attrList[] = "0002"; // CurrentGroup
+            $attrList[] = "0003"; // SceneValid
+            $attrList[] = "0004"; // NameSupport
+            $attrList[] = "0005"; // LastConfiguredBy
         } else if ($clustId == "0006") { // On/off
             $attrList[] = "0000"; // OnOff
             $attrList[] = "4000"; // GlobalSceneControl

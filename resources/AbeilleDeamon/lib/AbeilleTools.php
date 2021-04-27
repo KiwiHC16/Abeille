@@ -7,7 +7,7 @@ define('corePhpDir', __DIR__.'/../../../core/php/');
 
 class AbeilleTools
 {
-    const templateDir = __DIR__.'/../../../core/config/devices/Template/';
+    const cmdsDir = __DIR__.'/../../../core/config/commands/';
     const devicesDir = __DIR__.'/../../../core/config/devices/';
     const configDir = __DIR__.'/../../../core/config/';
     // const daemonDir = __DIR__.'/../';
@@ -90,7 +90,7 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyCmd($cmd)
     {
-        $cmdFilename = self::templateDir.$cmd.'.json';
+        $cmdFilename = self::cmdsDir.$cmd.'.json';
 
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: '.$cmdFilename);

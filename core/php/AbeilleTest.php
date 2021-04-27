@@ -130,7 +130,7 @@
             echo "lift: 2 digit\n";
             echo "inclinaison: 2 digit\n";
             echo "duree: 4 digit, FFFF pour vitesse max\n";
-            
+
             $msgAbeille->message['topic'] = 'CmdAbeille1/'.$argv[2].'/moveToLiftAndTiltBSO';
             $msgAbeille->message['payload'] = 'EP=01&lift='.$argv[3].'&inclinaison='.$argv[4].'&duration='.$argv[5];
         }
@@ -383,11 +383,11 @@
                 $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
                 $trame = "8002005495000104FCC00101024AAE0200001C5F11E40AF700413D64100103281A9839FE542C429539F187773E963900200F459739A8223C43052101009A20100821160107270000000000000000092100040B20009B100199";
                 $abeilleParser = new AbeilleParser;
-                $abeilleParser->protocolDatas("Abeille1", $trame, 0, $clusterTab, $LQI);  
+                $abeilleParser->protocolDatas("Abeille1", $trame, 0, $clusterTab, $LQI);
             break;
             case 331:
                 echo "Test daemon monitoring\n";
-                
+
                 echo "Parameters:\n";
                 // $parameters = Abeille::getParameters();
                 $json = '{"parametersCheck":"ok","parametersCheck_message":"","AbeilleParentId":"125","zigateNb":"4","AbeilleType1":"USB","AbeilleSerialPort1":"\/dev\/ttyUSB3","IpWifiZigate1":"192.168.4.1:23","AbeilleActiver1":"Y","AbeilleType2":"WIFI","AbeilleSerialPort2":"\/dev\/zigate2","IpWifiZigate2":"192.168.4.106:23","AbeilleActiver2":"Y","AbeilleType3":"USB","AbeilleSerialPort3":"\/dev\/ttyUSB2","IpWifiZigate3":"192.168.4.119:23","AbeilleActiver3":"Y","AbeilleType4":"WIFI","AbeilleSerialPort4":"\/dev\/zigate4","IpWifiZigate4":"192.168.4.107:23","AbeilleActiver4":"Y"}';

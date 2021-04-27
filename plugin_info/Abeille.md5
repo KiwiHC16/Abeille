@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210423-MASTER_TCHARP38-2"
+# VERSION="210427-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,7 +48,7 @@ c54618b1c51e8cf591215e1770b89556 *core/ajax/AbeilleFiles.ajax.php
 41b85f50a88843ae3f63740d543c72db *core/ajax/AbeilleZigate.ajax.php
 81da95bff54ea060afdced03b303dc1a *core/ajax/abeille.ajax.php
 3047f706549f6efb96cd61e0cf5edba8 *core/class/Abeille.class.php
-03354f07bda0daf6fb0acf4c15ca144e *core/class/AbeilleCmd.class.php
+d54378d4e3b94ba6354d9c9f97cd526d *core/class/AbeilleCmd.class.php
 6f2a2d7eb4a4a154bc619f0cba54ca67 *core/class/AbeilleCmdPrepare.class.php
 e0d6c1788ee110ae444c7863432d40ec *core/class/AbeilleCmdProcess.class.php
 e3216a0e89db5b59e085c29d8a47d5ae *core/class/AbeilleCmdQueue.class.php
@@ -78,7 +78,7 @@ e65e5b926925f011e45ffb583e7f4abf *core/config/devices/7-digital-input/7-digital-
 1826edbdc255a02becc4b310e6b0c3a5 *core/config/devices/8-digital-output/8-digital-output.json
 1cd2dcb857758c16bdbb15204a9ca44e *core/config/devices/A60TWZ3/A60TWZ3.json
 0ac90ae4e667419bd9e80d4d0f0bbf78 *core/config/devices/BASICZBR3/BASICZBR3.json
-ba54e07e5f638eddbef3c91cd91c8b73 *core/config/devices/BSO/BSO.json
+2c716a06f41b08588ab4b30e76d7043c *core/config/devices/BSO/BSO.json
 825394f7c7d09e2b1ee5dbbf8b348155 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 0a4aeef58fc27c59396491d74b9d11a4 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 5f04ea96a807665f021ff15ad81b3973 *core/config/devices/COSensor-EM/COSensor-EM.json
@@ -747,7 +747,7 @@ aa79f3a18c329713d8cc5dd03d647a0a *desktop/php/AbeilleEq-Params.php
 71ee063bcd9eb1904c18b436961d1f5b *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-f36e46fb89e12fb7993fb687e4792732 *docs/fr_FR/changelog.md
+3dc91f11e7f053a64d0a136eee0dfd87 *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -959,7 +959,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6736826fd65d4245ae53e030de8b90eb *plugin_info/Abeille.version
+43b7162a4c4972866f3e802449213b55 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 b6b54358db467bb95ee0ba676e0f8fab *plugin_info/configuration.php

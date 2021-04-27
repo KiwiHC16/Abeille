@@ -2824,16 +2824,63 @@
                     }
                 }
 
+                // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
+                elseif (($AttributId == "FF01") && ($AttributSize == "001B")) {
+                    parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
+                    // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $etat = substr($payload, 80, 2);
+
+                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Etat=' .$etat);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',     '01-0000', $etat,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    return; // Nothing more to publish
+                }
+
+                // Xiaomi door sensor V2
+                elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
+                    // Assuming $dataType == "42"
+
+                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    // $etat           = substr($payload, 80, 2);
+                    $etat = substr($Attribut, 80 - 24, 2);
+
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
+                    return; // Nothing more to publish
+                }
+
+                // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
+                elseif (($AttributId == "FF01") && ($AttributSize == "001F")) {
+                    parserLog("debug","  Xiaomi proprietary (Capteur Temperature Rond/Wall 2 Switch)");
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
+
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Temp='.$temperature.', Humidity='.$humidity );
+
+                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,$qos);
+                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,$qos);
+                    return; // Nothing more to publish
+                }
+
                 // Xiaomi temp/humidity/pressure square sensor
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
                     // Assuming $dataType == "42"
 
                     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
 
-                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    // $temperature    = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                    // $humidity       = hexdec(substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2));
-                    // $pression       = hexdec(substr($payload, 24 + 29 * 2 + 6, 2).substr($payload, 24 + 29 * 2 + 4, 2).substr($payload,24 + 29 * 2 + 2,2).substr($payload, 24 + 29 * 2, 2));
                     $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
                     $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
                     $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
@@ -2849,25 +2896,6 @@
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,      $qos);
                     $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,         $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0010', $pression / 10,    $qos);
-                    // $this->mqqtPublish( $SrcAddr, '0403', '0000', $pression / 100,   $qos);
-                    return;
-                }
-
-                // Xiaomi door sensor V2
-                elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
-                    // Assuming $dataType == "42"
-
-                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    // $etat           = substr($payload, 80, 2);
-                    $etat           = substr($Attribut, 80 - 24, 2);
-
-                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
-
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,  $qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
                     return;
                 }
             } // End cluster 0000
@@ -2878,7 +2906,20 @@
                     $volt = hexdec($batteryVoltage) / 10;
                     parserLog('debug', '  BatteryVoltage='.$batteryVoltage.' => '.$volt.'V');
                 }
-            }
+
+                else if ($AttributId == "0021") { // BatteryPercentageRemaining
+                    $BatteryPercent = substr($Attribut, 0, 2);
+                    $percent = hexdec($BatteryPercent) / 2;
+                    parserLog('debug', '  Battery%='.$BatteryPercent.' => '.$percent.'%');
+                }
+            } // End cluster 0001/power configuration
+
+            else if ($ClusterId == "0006") { // On/Off cluster
+                if ($AttributId == "0000") { // OnOff
+                    $OnOff = substr($Attribut, 0, 2);
+                    parserLog('debug', '  OnOff='.$OnOff);
+                }
+            } // End cluster 0006/onoff
 
             else if ($ClusterId == "000C") { // Analog input cluster
                 if ($AttributId == "0055") {
@@ -2923,6 +2964,37 @@
                     }
                 }
             } // End cluster 000C
+
+            else if ($ClusterId == "0400") { // Illuminance Measurement cluster
+                if ($AttributId == "0000") { // MeasuredValue
+                    $MeasuredValue = substr($Attribut, 0, 4);
+                    // Tcharp38: Is it really direct lux value ?
+                    parserLog('debug', '  MeasuredValue='.$MeasuredValue.' Lx');
+                }
+            } // End cluster 0400
+
+            else if ($ClusterId == "0402") { // Temperature Measurement cluster
+                if ($AttributId == "0000") { // MeasuredValue
+                    $MeasuredValue = substr($Attribut, 0, 4);
+                    parserLog('debug', '  Temp MeasuredValue='.$MeasuredValue);
+                }
+            } // End cluster 0402
+
+            else if ($ClusterId == "0405") { // Relative Humidity cluster
+                if ($AttributId == "0000") { // MeasuredValue
+                    $MeasuredValue = substr($Attribut, 0, 4);
+                    $humidity = hexdec($MeasuredValue) / 100;
+                    parserLog('debug', '  Humidity MeasuredValue='.$MeasuredValue.' => '.$humidity.' %');
+                }
+            } // End cluster 0405
+
+            else if ($ClusterId == "0406") { // Occupancy Sensing cluster
+                if ($AttributId == "0000") { // Occupancy
+                    $Occupancy = substr($Attribut, 0, 2);
+                    // Bit 0 specifies the sensed occupancy as follows: 1 = occupied, 0 = unoccupied.
+                    parserLog('debug', '  Occupancy='.$Occupancy);
+                }
+            } // End cluster 0406
 
             /* Tcharp38
                Code hereafter to be migrated above to be sorted by clustId/attribId.
@@ -3091,7 +3163,7 @@
                 if (($AttributId == "FF01") && ($AttributSize == "001A")) {
                     parserLog("debug", "  Champ proprietaire Xiaomi (Bouton carré)" );
 
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
                     parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent( $voltage ));
 
@@ -3099,20 +3171,20 @@
                     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $qos);
                 }
 
-                // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
-                elseif (($AttributId == "FF01") && ($AttributSize == "001B")) {
-                    parserLog("debug","  Champ proprietaire Xiaomi (Wall 1 Switch, Gaz Sensor)" );
-                    // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
+                // // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
+                // elseif (($AttributId == "FF01") && ($AttributSize == "001B")) {
+                //     parserLog("debug","  Champ proprietaire Xiaomi (Wall 1 Switch, Gaz Sensor)" );
+                //     // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
 
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $etat           = substr($payload, 80, 2);
+                //     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     $etat           = substr($payload, 80, 2);
 
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Etat=' .$etat);
+                //     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Etat=' .$etat);
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0006',     '01-0000', $etat,$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
-                }
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0006',     '01-0000', $etat,$qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                // }
 
                 // // Xiaomi Door Sensor V2
                 // elseif (($AttributId == "FF01") && ($AttributSize == "001D")) {
@@ -3128,24 +3200,24 @@
                 //     $this->mqqtPublish($dest."/".$SrcAddr, '0006', '01-0000', $etat,  $qos);
                 // }
 
-                // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
-                elseif (($AttributId == "FF01") && ($AttributSize == "001F")) {
-                    parserLog("debug","  Champ proprietaire Xiaomi (Capteur Temperature Rond/Wall 2 Switch): ");
+                // // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
+                // elseif (($AttributId == "FF01") && ($AttributSize == "001F")) {
+                //     parserLog("debug","  Champ proprietaire Xiaomi (Capteur Temperature Rond/Wall 2 Switch): ");
 
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                    $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
+                //     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                //     $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
 
-                    parserLog('debug', '  SrcAddr='.$SrcAddr.', Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity );
-                    // parserLog('debug', 'Temperature: '  .$temperature);
-                    // parserLog('debug', 'Humidity: '     .$humidity);
+                //     parserLog('debug', '  SrcAddr='.$SrcAddr.', Voltage='.$voltage.', Pourcent='.$this->volt2pourcent( $voltage ).', Temperature='.$temperature.', Humidity='.$humidity );
+                //     // parserLog('debug', 'Temperature: '  .$temperature);
+                //     // parserLog('debug', 'Humidity: '     .$humidity);
 
-                    $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,$qos);
-                    $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,$qos);
-                }
+                //     $this->mqqtPublish($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity',$qos );
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage,$qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ),$qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0402', '01-0000', $temperature,$qos);
+                //     $this->mqqtPublish($dest."/".$SrcAddr, '0405', '01-0000', $humidity,$qos);
+                // }
 
                 // Xiaomi capteur Presence V2
                 // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900

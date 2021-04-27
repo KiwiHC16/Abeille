@@ -1,6 +1,8 @@
 {
   "BSO": {
-    "nameJeedom": "BSO ProFalux (brise-soleil orientables)",
+    "nameJeedom": "Profalux BSO (brise-soleil orientable)",
+    "manufacturer": "Profalux",
+    "model": "BSO",
     "timeout": "60",
     "Comment": "Copy of Profalux Volet for BSO Profalux",
     "Categorie": {

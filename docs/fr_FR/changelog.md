@@ -5,12 +5,13 @@
 - Sonoff SNZB-02: support corrigé + support 66666 (ModelIdentifier) (#1911)
 - Xiaomi GZCGQ01LM: ajout support tension batterie + online (#1166)
 - Page EQ/params: ajout de l'identifiant zigbee
-- Correction "#1908, AbeilleCmd: Unknown command"
-- Correction "#1951", pb affichage heure "Derniere comm."
+- Correction "#1908: AbeilleCmd: Unknown command"
+- Correction "#1951: pb affichage heure "Derniere comm."
 - Correction blocage du parser dans certains cas de démarrage.
 - Diverses modifications pour améliorer la robustesse et les messages d'erreurs.
 - Monitor (pour developpeur seulement pour l'instant)
 - Gestion des démons: revisitée pour éviter redémarrages concurrents.
+- Correction "#1948: BSO, lift & tilt"
 
 # 11/12/2020
 

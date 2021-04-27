@@ -9,7 +9,7 @@
     $curLogLevel = 0;
     $logFile = ''; // Absolut path
     require_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
-    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
     require_once 'AbeilleLog.php'; // logMessage()
 
     /* Library setup.

@@ -12,7 +12,7 @@
      * - if matches, store messages in log file, in timestamp order
      */
 
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
 
     /* Developers debug features */
     // define("dbgFile", __DIR__."/../../tmp/debug.json");

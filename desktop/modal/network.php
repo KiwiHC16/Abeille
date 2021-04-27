@@ -4,7 +4,7 @@
         throw new Exception('{{401 - Accès non autorisé}}');
     }
 
-    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php'; // URL for docs
+    require_once __DIR__.'/../../core/config/Abeille.config.php'; // URL for docs
 
     /* Add network display & refresh buttons for all active zigates */
     function displayButtons($nbOfZigates, $what="linksTable") {

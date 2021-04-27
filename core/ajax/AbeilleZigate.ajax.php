@@ -31,7 +31,7 @@
         ajax::init();
 
         require_once __DIR__.'/../class/AbeilleMsg.php';
-        require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+        require_once __DIR__.'/../config/Abeille.config.php';
 
         /* Send a order to zigate thru 'AbeilleCmd'.
            Returns: 0=OK, -1=ERROR */

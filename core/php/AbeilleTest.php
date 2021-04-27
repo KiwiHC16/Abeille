@@ -5,7 +5,7 @@
 */
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
 

@@ -33,7 +33,7 @@
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
 
-    require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
 ?>
 
 <div class="col-xs-12 eqLogic" style="padding-top: 5px">

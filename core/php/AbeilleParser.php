@@ -8,10 +8,12 @@
      * - then publish them to mosquitto
      */
 
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
+
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
+    // $dbgFile = __DIR__."/../../tmp/debug.json";
+    if (file_exists(dbgFile)) {
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         if (isset($dbgConfig["dbgParserLog"])) {
             /* Convert array to associative one */
             $arr = $dbgConfig["dbgParserLog"];
@@ -33,7 +35,6 @@
     // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
@@ -192,7 +193,7 @@
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
     //check already running
-    logSetConf("AbeilleParser.log", TRUE);
+    logSetConf("AbeilleParser.log", true);
     logMessage("info", ">>> Démarrage d'AbeilleParser");
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
@@ -211,34 +212,45 @@
         $LQI = array();
         $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
 
-        $queueKeySerialToParser   = msg_get_queue(queueKeySerialToParser);
+        $queueKeySerialToParser = msg_get_queue(queueKeySerialToParser);
         $max_msg_size = 2048;
         $msg_type = NULL;
 
         $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
         $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
         $rerouteNet = "";
+
+        $queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
+
         while (true) {
 
             // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
-            if (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
+            while (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
                 $data = json_decode( $dataJson );
 
-                /* Checking if incoming message rerouting required */
-                if ($rerouteNet == $data->dest) {
-                    if (msg_send($toAssistQueue, 1, $data->trame, TRUE, FALSE, $error_code) == TRUE) {
-                        logMessage('debug', $data->dest.", rerouted: ".$data->trame);
-                        continue;
+                if ($data->type != 'zigatemessage') {
+                    /* Forward status message as it is. */
+                    // TODO: AbeilleCmd to be revisited for new msg format
+                    // if (msg_send($queueKeyParserToCmd, 1, $dataJson, false, false) == false) {
+                    //     logMessage('error', 'ERREUR de transmission: '.json_encode($msgToSend));
+                    // }
+                } else {
+                    /* Checking if incoming message rerouting required */
+                    if ($rerouteNet == $data->net) {
+                        if (msg_send($toAssistQueue, 1, $data->msg, true, false, $error_code) == true) {
+                            logMessage('debug', $data->net.", rerouted: ".$data->msg);
+                            continue;
+                        }
+                        $rerouteNet = ""; // Error => closing rerouting
+                        logMessage('debug', "Terminating rerouting");
                     }
-                    $rerouteNet = ""; // Error => closing rerouting
-                    logMessage('debug', "Terminating rerouting");
+                    $AbeilleParser->protocolDatas($data->net, $data->msg, $clusterTab, $LQI);
                 }
-                $AbeilleParser->protocolDatas($data->dest, $data->trame, $clusterTab, $LQI);
             }
 
             /* Checking if message from EQ assistant */
-            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT) == TRUE) {
-logMessage('debug', "Received=".json_encode($msg));
+            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
+// logMessage('debug', "Received=".json_encode($msg));
                 if ($msg['type'] == 'reroute') {
                     $rerouteNet = $msg['network'];
                     logMessage('debug', "'".$rerouteNet."' messages must be rerouted");

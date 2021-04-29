@@ -2762,7 +2762,7 @@
             $this->mqqtPublish($dest."/".$SrcAddr, 'Link', 'Quality', $quality);
 
             if ($AttributStatus == '86') {
-                parserLog('debug', '  Status = 86 => Unsupported attribute type ', $type);
+                parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
                 return;
             }
             if ($AttributStatus != '00') {
@@ -2969,7 +2969,7 @@
                 if ($AttributId == "0000") { // MeasuredValue
                     $MeasuredValue = substr($Attribut, 0, 4);
                     // Tcharp38: Is it really direct lux value ?
-                    parserLog('debug', '  MeasuredValue='.$MeasuredValue.' Lx');
+                    parserLog('debug', ' Illuminance MeasuredValue='.$MeasuredValue);
                 }
             } // End cluster 0400
 

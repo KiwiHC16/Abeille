@@ -365,22 +365,32 @@ class AbeilleTools
      */
     public static function getRunningDaemons2(): array
     {
-        exec("pgrep -a php | grep Abeille", $running);
+        exec("pgrep -a php | grep Abeille", $processes);
         $daemons = [];
-        foreach ($running as $line) {
-            if (($pos = strpos($line, "AbeilleCmd")) != false)
-                $shortName = "Cmd";
-            else if (($pos = strpos($line, "AbeilleParser")) != false)
-                $shortName = "Parser";
-            else if (($pos = strpos($line, "AbeilleMonitor")) != false)
-                $shortName = "Monitor";
-            else if (($pos = strpos($line, "AbeilleSerialRead")) != false)
-                $shortName = "SerialReadX";
-            else if (($pos = strpos($line, "AbeilleSocat")) != false)
-                $shortName = "SocatX";
-            else
-                $shortName = "Unknown";
+        $running = 0;
+        foreach ($processes as $line) {
             $lineArr = explode(" ", $line);
+            if (strstr($line, "AbeilleCmd") != false) {
+                $shortName = "Cmd";
+                $running |= daemonCmd;
+            } else if (strstr($line, "AbeilleParser") != false) {
+                $shortName = "Parser";
+                $running |= daemonParser;
+            } else if (strstr($line, "AbeilleMonitor") != false) {
+                $shortName = "Monitor";
+                $running |= daemonMonitor;
+            } else if (strstr($line, "AbeilleSerialRead") != false) {
+                $net = $lineArr[3]; // Ex 'Abeille1'
+                $zgNb = substr($net, 7);
+                $shortName = "SerialRead".$zgNb;
+                $running |= constant("daemonSerialRead".$zgNb);
+            } else if (strstr($line, "AbeilleSocat") != false) {
+                $net = $lineArr[3]; // Ex 'Abeille1'
+                $zgNb = substr($net, 7);
+                $shortName = "Socat".$zgNb;
+                $running |= constant("daemonSocat".$zgNb);
+            } else
+                $shortName = "Unknown";
             $d = array(
                 'pid' => $lineArr[0],
                 'cmd' => substr($line, strpos($line, " ")),
@@ -388,7 +398,11 @@ class AbeilleTools
             );
             $daemons[] = $d;
         }
-        return $daemons;
+        $return = array(
+            'running' => $running, // 1 bit per running daemon
+            'daemons' => $daemons, // Detail on each daemon
+        );
+        return $return;
     }
 
     /**
@@ -587,12 +601,23 @@ class AbeilleTools
                     continue; // Zigate disabled
 
                 if ($config['AbeilleType'.$zgNb] == "WIFI")
-                    $daemons .= " AbeilleSocat".$zgNb;
-                $daemons .= " AbeilleSerialRead".$zgNb;
+                    $daemons .= "AbeilleSocat".$zgNb;
+                if ($daemons != "")
+                    $daemons .= " ";
+                $daemons .= "AbeilleSerialRead".$zgNb;
             }
-            $daemons .= "AbeilleParser AbeilleCmd";
+            $daemons .= " AbeilleParser AbeilleCmd";
+
+            /* Starting 'AbeilleMonitor' daemon too if required */
+            /* Reread 'debug.json' to avoid PHP cache issues */
+            if (file_exists(dbgFile)) {
+                $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+                if (isset($dbgConfig["dbgMonitorAddr"])) {
+                    $daemons .= " AbeilleMonitor";
+                }
+            }
         }
-        log::add('Abeille', 'debug', "startDaemons(): daemons=".$daemons);
+        log::add('Abeille', 'debug', "startDaemons(): ".$daemons);
         $daemonsArr = explode(" ", $daemons);
         foreach ($daemonsArr as $daemon) {
             $cmd = self::getStartCommand($config, $daemon);

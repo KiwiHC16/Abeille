@@ -45,7 +45,6 @@
     define('queueKeyXmlToAbeille',          621);
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
-    define('queueKeySerieToParser',         822);  // 0x336 TO BE REMOVED when queueKeySerialToParser is the only used
     define('queueKeySerialToParser',        822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
 
@@ -67,4 +66,29 @@
 
     /* Developper config file */
     define('dbgFile', __DIR__.'/../../tmp/debug.json');
+
+    /* A bit per daemon */
+    define('daemonCmd', 1 << 0);
+    define('daemonParser', 1 << 1);
+    define('daemonSerialRead1', 1 << 2);
+    define('daemonSerialRead2', 1 << 3);
+    define('daemonSerialRead3', 1 << 4);
+    define('daemonSerialRead4', 1 << 5);
+    define('daemonSerialRead5', 1 << 6);
+    define('daemonSerialRead6', 1 << 7);
+    define('daemonSerialRead7', 1 << 8);
+    define('daemonSerialRead8', 1 << 9);
+    define('daemonSerialRead9', 1 << 10);
+    define('daemonSerialRead10', 1 << 11);
+    define('daemonSocat1', 1 << 12);
+    define('daemonSocat2', 1 << 13);
+    define('daemonSocat3', 1 << 14);
+    define('daemonSocat4', 1 << 15);
+    define('daemonSocat5', 1 << 16);
+    define('daemonSocat6', 1 << 17);
+    define('daemonSocat7', 1 << 18);
+    define('daemonSocat8', 1 << 19);
+    define('daemonSocat9', 1 << 20);
+    define('daemonSocat10', 1 << 21);
+    define('daemonMonitor', 1 << 22);
 ?>

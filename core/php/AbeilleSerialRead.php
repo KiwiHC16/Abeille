@@ -12,10 +12,11 @@
      *
      */
 
-    /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        // include_once $dbgFile;
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
+
+    /* Developpers debug features */
+    if (file_exists(dbgFile)) {
+        // include_once dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -23,7 +24,6 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/AbeilleLog.php';
@@ -41,17 +41,30 @@
         exit(2);
     }
 
-    $abeille        = $argv[1]; // Zigate name (ex: 'Abeille1')
+    $abeille        = $argv[1]; // Network name (ex: 'Abeille1')
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
     logSetConf("AbeilleSerialRead".$abeilleNb.".log", true); // Log to file with line nb check
+
+    // Check if already running
+    $config = AbeilleTools::getParameters();
+    $running = AbeilleTools::getRunningDaemons();
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
+    logMessage('debug', 'Daemons='.json_encode($daemons));
+    if ($daemons["serialRead".$abeilleNb] > 1) {
+        logMessage('error', 'Un démon AbeilleSerialRead'.$abeilleNb.' est déja lancé.');
+        exit(4);
+    }
 
     if ($serial == 'none') {
         $serial = $resourcePath.'/COM';
         logMessage('info', 'Main: com file (experiment): '.$serial);
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
+
+    // TODO Tcharp38: May make sense to wait for port to be ready
+    // to cover socat > serialread case if socat starts later.
     if (!file_exists($serial)) {
         logMessage('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
         exit(3);
@@ -68,17 +81,7 @@
     // if (pcntl_signal(SIGTERM, "shutdown", false) != true)
     //     logMessage("error", "Erreur pcntl_signal()");
 
-    //check already running
-    $parameters = AbeilleTools::getParameters();
-    $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
-    logMessage('debug', 'Daemons='.json_encode($daemons));
-    if ($daemons["serialRead".$abeilleNb] > 1) {
-        logMessage('error', 'Un démon AbeilleSerialRead'.$abeilleNb.' est déja lancé.');
-        exit(4);
-    }
-
-    $queueKeySerieToParser = msg_get_queue(queueKeySerieToParser);
+    $queueKeySerialToParser = msg_get_queue(queueKeySerialToParser);
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
     exec("stty -F ".$serial." sane", $out, $status);
@@ -100,6 +103,19 @@
         exit(4);
     }
     stream_set_blocking($f, true); // Should be blocking read but is it default ?
+
+    /* Inform others that i'm ready to process zigate messages */
+    $msgToSend = array(
+        'src' => 'serialread',
+        'net' => $abeille,
+        'type' => 'status',
+        'status' => 'ready',
+    );
+    /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
+       dealing with concurrent msg_send() on the same queue ? */
+    if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false) == false) {
+        logMessage('error', 'ERREUR de transmission: '.json_encode($msgToSend));
+    }
 
     $transcode = false;
     $frame = ""; // Transcoded message from Zigate
@@ -152,8 +168,15 @@
                 if ($ccrc != $ecrc)
                     logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
 
-                $msgToSend = array( 'dest'=>$abeille, 'trame'=>$frame );
-                if (msg_send( $queueKeySerieToParser, 1, json_encode($msgToSend), false, false) == false) {
+                $msgToSend = array(
+                    'src' => 'serialread',
+                    'net' => $abeille,
+                    'type' => 'zigatemessage',
+                    'msg' => $frame
+                );
+                /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
+                   dealing with concurrent msg_send() on the same queue ? */
+                if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false) == false) {
                     logMessage('error', 'ERREUR de transmission: '.json_encode($frame));
                 } else {
                     logMessage('debug', 'Reçu: '.json_encode($frame));

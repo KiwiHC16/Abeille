@@ -1,6 +1,8 @@
 {
   "PlugZ3": {
-    "nameJeedom": "Plug Z3 Ledvance",
+    "nameJeedom": "Ledvance Plug Z3 on/off plug unit",
+    "manufacturer": "Ledvance",
+    "model": "Plug Z3",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"

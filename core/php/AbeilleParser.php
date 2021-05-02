@@ -234,6 +234,9 @@
                     // if (msg_send($queueKeyParserToCmd, 1, $dataJson, false, false) == false) {
                     //     logMessage('error', 'ERREUR de transmission: '.json_encode($msgToSend));
                     // }
+                    // Finally not used so far
+                    // parserLog('debug', 'Forwarding SerialRead status message to Abeille');
+                    // $AbeilleParser->mqqtPublishCmdFct("SerialReadStatus", "ready");
                 } else {
                     /* Checking if incoming message rerouting required */
                     if ($rerouteNet == $data->net) {
@@ -241,8 +244,8 @@
                             logMessage('debug', $data->net.", rerouted: ".$data->msg);
                             continue;
                         }
+                        logMessage('debug', $data->net.", can't reroute => Terminating rerouting");
                         $rerouteNet = ""; // Error => closing rerouting
-                        logMessage('debug', "Terminating rerouting");
                     }
                     $AbeilleParser->protocolDatas($data->net, $data->msg, $clusterTab, $LQI);
                 }
@@ -253,9 +256,9 @@
 // logMessage('debug', "Received=".json_encode($msg));
                 if ($msg['type'] == 'reroute') {
                     $rerouteNet = $msg['network'];
-                    logMessage('debug', "'".$rerouteNet."' messages must be rerouted");
+                    logMessage('debug', $rerouteNet.", messages must be rerouted");
                 } else if ($msg['type'] == 'reroutestop') {
-                    logMessage('debug', "Stopping '".$rerouteNet."' msg rerouting.");
+                    logMessage('debug', $rerouteNet.", stopping msg rerouting.");
                     $rerouteNet = "";
                 }
             }

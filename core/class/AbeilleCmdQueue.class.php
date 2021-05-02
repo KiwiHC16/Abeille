@@ -183,7 +183,7 @@
         }
 
         /**
-         * sendCmd()
+         * addCmdToQueue()
          *
          * put in the queue the cmd to be put on the serial link to the zigate
          *
@@ -195,10 +195,9 @@
          * @param shortAddr ???
          *
          * @return  none
-         *
          */
-        function sendCmd($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
-            $this->deamonlog("debug", "      sendCmd(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", shortAddr=".$shortAddr.", len=".json_encode($len).", priority=".json_encode($priority).")", $this->debug['sendCmd']);
+        function addCmdToQueue($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
+            $this->deamonlog("debug", "      addCmdToQueue(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", addr=".$shortAddr.", priority=".json_encode($priority).")");
 
             $this->incStatCmd($cmd);
 
@@ -345,7 +344,7 @@
                     $texteLog .= ", cmdQueue[".$i."]=".count( $this->cmdQueue[$i] );
                 }
             }
-            $this->deamonlog("debug", $texteLog);
+            $this->deamonlog("debug", "Queues status: ".$texteLog);
         }
 
         function processCmdQueueToZigate() {
@@ -487,11 +486,8 @@
             }
         }
 
-        /* Collect & treat messages for cmd */
-        function recupereTousLesMessagesVenantDesAutresThreads() {
-            $msg_type = NULL; // Unused ?
-            $msg = NULL;
-            $max_msg_size = 512;
+        /* Collect & treat other messages for AbeilleCmd */
+        function collectAllOtherMessages() {
             $message = new MsgAbeille();
 
             $listQueue = array(
@@ -505,14 +501,14 @@
 
             // Recupere tous les messages venant des autres threads, les analyse et converti et met dans la queue cmdQueue
             foreach ($listQueue as $queue) {
+                $msg = NULL;
+                $max_msg_size = 512;
                 if (msg_receive($queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
                     $this->deamonlog("debug", "Message from ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     $message->priority = $msg_priority;
                     $this->procmsg($message);
-                    $msg_type = NULL;
-                    $msg = NULL;
                 } else {
                     // $this->deamonlog("debug", "Queue: ".$this->getQueueName($queue)." Pas de message");
                 }

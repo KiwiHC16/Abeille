@@ -1460,7 +1460,7 @@ while ($cron->running()) {
 
         $topicArray = explode("/", $message->topic);
         if (sizeof($topicArray) != 3) {
-            log::add('Abeille', 'error', "Le topic n'a pas 3 éléments: ".$message->topic);
+            log::add('Abeille', 'debug', "ERROR: Invalid message: topic=".$message->topic);
             return;
         }
 
@@ -2065,7 +2065,7 @@ while ($cron->running()) {
             }
         }
 
-        $parameters_info = AbeilleTools::getParameters();
+        // $parameters_info = AbeilleTools::getParameters();
 
         $msgAbeille = new MsgAbeille;
         $msgAbeille->message['topic'] = $topic;

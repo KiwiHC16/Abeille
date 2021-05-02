@@ -768,18 +768,6 @@
       "request": ""
     }
   },
-  "Get Time": {
-    "name": "Get Time",
-    "order": 52,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-      "topic": "getTimeServer",
-      "request": ""
-    }
-  },
   "ZiGate-Time": {
     "name": "ZiGate-Time",
     "order": 53,
@@ -791,6 +779,19 @@
     "template": "",
     "display": {
       "forceReturnLineAfter": "1"
+    }
+  },
+  "Get Time": {
+    "name": "Get Time",
+    "order": 52,
+    "isHistorized": "0",
+    "isVisible": "0",
+    "Type": "action",
+    "subType": "other",
+    "value": "ZiGate-Time",
+    "configuration": {
+      "topic": "getTimeServer",
+      "request": ""
     }
   },
   "Group-Membership": {

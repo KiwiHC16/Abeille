@@ -13,6 +13,7 @@
 - Gestion des démons: revisitée pour éviter redémarrages concurrents.
 - Correction "#1948: BSO, lift & tilt"
 - JSON: Emplacement des commandes changé de "core/config/devices/Template" vers "core/config/commands"
+- Innr RB285C support preliminaire
 
 # 11/12/2020
 

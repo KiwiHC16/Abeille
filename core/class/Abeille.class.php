@@ -654,15 +654,15 @@ if (0) {
         }
         log::add('Abeille', 'debug', 'cron1: '.$daemons);
 
-        /* Store infos in "shared mem" to share with other functions */
-        $shm = shm_attach(12, 200, 0600);
-        if ($shm === false) {
-            log::add('Abeille', 'debug', "cron1: ERROR shm_attach()");
-        } else {
-            // Note: 13 = '$status['running']' ID, 1 bit per running daemon
-            shm_put_var($shm, 13, $status['running']);
-            shm_detach($shm);
-        }
+        // /* Store infos in "shared mem" to share with other functions */
+        // $shm = shm_attach(12, 200, 0600);
+        // if ($shm === false) {
+        //     log::add('Abeille', 'debug', "cron1: ERROR shm_attach()");
+        // } else {
+        //     // Note: 13 = '$status['running']' ID, 1 bit per running daemon
+        //     shm_put_var($shm, 13, $status['running']);
+        //     shm_detach($shm);
+        // }
 
         // Check ipcs situation pour detecter des soucis eventuels
         // Moved from deamon_info()
@@ -850,7 +850,8 @@ if (0) {
         return;
     }
 
-    /* Starting all daemons.
+    /* Jeedom required function.
+       Starts all daemons.
        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
     public static function deamon_start($_debug = false)
     {
@@ -870,13 +871,16 @@ if (0) {
             throw new Exception(__('Tache cron introuvable', __FILE__));
         }
 
+        /* Stop all, in case not already the case */
         self::deamon_stop();
 
+        /* Cleanup */
         self::deamon_start_cleanup();
 
         $param = AbeilleTools::getParameters();
 
         /* Checking config */
+        // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
         for ($zgNb = 1; $zgNb <= $param['zigateNb']; $zgNb++) {
             if ($param['AbeilleActiver'.$zgNb] != 'Y')
                 continue; // Disabled
@@ -903,10 +907,10 @@ if (0) {
         }
 
         /* Configuring GPIO for PiZigate if one active found.
-               PiZigate reminder (using 'WiringPi'):
-               - port 0 = RESET
-               - port 2 = FLASH
-               - Production mode: FLASH=1, RESET=0 then 1 */
+            PiZigate reminder (using 'WiringPi'):
+            - port 0 = RESET
+            - port 2 = FLASH
+            - Production mode: FLASH=1, RESET=0 then 1 */
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                 continue; // Undefined or disabled
@@ -916,15 +920,15 @@ if (0) {
             }
         }
 
-        /* Shared mem access */
-        $shm = shm_attach(12, 200, 0600);
-        if ($shm === false) {
-            log::add('Abeille', 'debug', "deamon_start(): ERROR shm_attach()");
-        } else {
-            // Note: 13 = '$status['running']' ID, 1 bit per running daemon
-            shm_put_var($shm, 13, 0); // Clear 'running' status
-            // shm_detach($shm);
-        }
+        // /* Shared mem access */
+        // $shm = shm_attach(12, 200, 0600);
+        // if ($shm === false) {
+        //     log::add('Abeille', 'debug', "deamon_start(): ERROR shm_attach()");
+        // } else {
+        //     // Note: 13 = '$status['running']' ID, 1 bit per running daemon
+        //     shm_put_var($shm, 13, 0); // Clear 'running' status
+        //     // shm_detach($shm);
+        // }
 
         /* Starting all required daemons */
         AbeilleTools::startDaemons($param);
@@ -932,82 +936,100 @@ if (0) {
         // Starting main daemon; this will start to treat received messages
         cron::byClassAndFunction('Abeille', 'deamon')->run();
 
-        /* TODO: Need to wait for daemons to be properly started.
-           If not the first commands hereafter might be lost, or their returned value.
-           This might be the case for 0009 cmd which is key to 'enable' msg receive. */
-        sleep(2);
-
-        // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+        /* Waiting for background daemons to be up & running.
+           If not, the return of first commands sent to zigate might be lost.
+           This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
+        $expected = 0; // 1 bit per expected serial read daemon
+        for ($zgNb = 1; $zgNb <= $param['zigateNb']; $zgNb++) {
+            if (($param['AbeilleSerialPort'.$zgNb] == 'none') or ($param['AbeilleActiver'.$zgNb] != 'Y'))
                 continue; // Undefined or disabled
-
-            // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$i);
-
-            // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
-            // log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
-            /* Get network state to get Zigate IEEE asap and confirm no port change */
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
-
-            // Set the mode of the zigate, important from 3.1D.
-            $version = "";
-            $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
-            if ($ruche) {
-                $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
-                if ($cmdlogic) {
-                    $version = $cmdlogic->execCmd();
-                }
-            }
-            if ($version == '031D') {
-                log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
-                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "hybride");
-            } else {
-                log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
-                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "normal");
-            }
+            $expected |= constant("daemonSerialRead".$zgNb);
+            if ($param['AbeilleType'.$zgNb] == 'WIFI')
+                $expected |= constant("daemonSocat".$zgNb);
         }
+        $timeout = 10;
+        for ($t = 0; $t < $timeout; $t++) {
+            $runArr = AbeilleTools::getRunningDaemons2();
+            if (($runArr['running'] & $expected) == $expected)
+                break;
+            sleep(1);
+        }
+        if ($t == $timeout)
+            log::add('Abeille', 'debug', 'deamon_start(): ERROR, still some missing daemons after timeout');
 
+        // Tcharp38: Moved to main daemon (deamon())
+        // // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
+        // for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+        //         continue; // Undefined or disabled
+
+        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
+        //     Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$i);
+
+        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
+        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee '.$i.' ********');
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
+        //     /* Get network state to get Zigate IEEE asap and confirm no port change */
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
+
+        //     // Set the mode of the zigate, important from 3.1D.
+        //     $version = "";
+        //     $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
+        //     if ($ruche) {
+        //         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
+        //         if ($cmdlogic) {
+        //             $version = $cmdlogic->execCmd();
+        //         }
+        //     }
+        //     if ($version == '031D') {
+        //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
+        //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "hybride");
+        //     } else {
+        //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
+        //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "normal");
+        //     }
+        // }
+
+        // Tcharp38: Moved to main daemon (deamon())
         // Essaye de recuperer les etats des equipements
-        self::refreshCmd();
+        // self::refreshCmd();
 
         log::add('Abeille', 'debug', 'deamon_start(): Terminé');
         return true;
     }
 
-    /**
-     * Not used ?
-     *
-     * @param $Abeille
-     * @return string
-     */
-    public static function mapAbeillePort($Abeille)
-    {
-        $param = AbeilleTools::getParameters();
+    // /**
+    //  * Not used ?
+    //  *
+    //  * @param $Abeille
+    //  * @return string
+    //  */
+    // public static function mapAbeillePort($Abeille)
+    // {
+    //     $param = AbeilleTools::getParameters();
 
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            if ($Abeille == "Abeille".$i) return basename($param['AbeilleSerialPort'.$i]);
-        }
-    }
+    //     for ($i = 1; $i <= $param['zigateNb']; $i++) {
+    //         if ($Abeille == "Abeille".$i) return basename($param['AbeilleSerialPort'.$i]);
+    //     }
+    // }
 
-    /**
-     * Not used ?
-     *
-     * @param $port
-     * @return string
-     */
-    public static function mapPortAbeille($port)
-    {
-        $param = AbeilleTools::getParameters();
+    // /**
+    //  * Not used ?
+    //  *
+    //  * @param $port
+    //  * @return string
+    //  */
+    // public static function mapPortAbeille($port)
+    // {
+    //     $param = AbeilleTools::getParameters();
 
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
-            if ($port == $param['AbeilleSerialPort'.$i]) return "Abeille".$i;
-        }
-    }
+    //     for ($i = 1; $i <= $param['zigateNb']; $i++) {
+    //         if ($port == $param['AbeilleSerialPort'.$i]) return "Abeille".$i;
+    //     }
+    // }
 
     /* Stopping all daemons and removing queues */
     public static function deamon_stop()
@@ -1093,7 +1115,52 @@ while ($cron->running()) {
     /* This is Abeille's main daemon, directly controlled by Jeedom itself. */
     public static function deamon()
     {
-        log::add('Abeille', 'debug', 'Main daemon starting');
+        log::add('Abeille', 'debug', 'deamon(): Main daemon starting');
+
+        /* Main daemon starting.
+           This means that other daemons have started too. Abeille can communicate with them */
+
+        // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
+        // Tcharp38: Moved from deamon_start()
+        $param = AbeilleTools::getParameters();
+        for ($i = 1; $i <= $param['zigateNb']; $i++) {
+            if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+                continue; // Undefined or disabled
+
+            // log::add('Abeille', 'debug', 'deamon(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
+            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$i);
+
+            // log::add('Abeille', 'debug', 'deamon(): ***** Demarrage du réseau Zigbee '.$i.' ********');
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
+            // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
+            /* Get network state to get Zigate IEEE asap and confirm no port change */
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
+
+            // Set the mode of the zigate, important from 3.1D.
+            $version = "";
+            $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
+            if ($ruche) {
+                $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
+                if ($cmdlogic) {
+                    $version = $cmdlogic->execCmd();
+                }
+            }
+            if ($version == '031D') {
+                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '. $i.' in hybrid mode');
+                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "hybride");
+            } else {
+                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
+                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "normal");
+            }
+        }
+
+        // Essaye de recuperer les etats des equipements
+        // Tcharp38: Moved from deamon_start()
+        self::refreshCmd();
+
         try {
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
             $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);

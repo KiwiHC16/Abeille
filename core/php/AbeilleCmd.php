@@ -89,7 +89,7 @@
                 }
             }
 
-            $AbeilleCmdQueue->recupereTousLesMessagesVenantDesAutresThreads();
+            $AbeilleCmdQueue->collectAllOtherMessages();
 
             // Recuperes tous les messages en attente sur timer
             $AbeilleCmdQueue->execTempoCmdAbeille();
@@ -106,7 +106,6 @@
     }
     catch (Exception $e) {
         logMessage('debug', 'error: '. json_encode($e->getMessage()));
-        logMessage('info', '<<< Fin du démon \'AbeilleCmd\'');
     }
 
     unset($AbeilleCmdQueue);

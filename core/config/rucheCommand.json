@@ -788,7 +788,6 @@
     "isVisible": "0",
     "Type": "action",
     "subType": "other",
-    "value": "ZiGate-Time",
     "configuration": {
       "topic": "getTimeServer",
       "request": ""

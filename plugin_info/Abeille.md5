@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210502-MASTER_TCHARP38-1"
+# VERSION="210503-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -128,7 +128,7 @@ de4822b707daea269f9b15b7a39e97d5 *core/config/commands/Level.json
 00cf61eb10c698c0290270a81fc81970 *core/config/commands/LivoloSwitchTrick2.json
 8fd617753646d263eca13d12285d5900 *core/config/commands/LivoloSwitchTrick3.json
 e4149c09113bfc7ff3816b3f71058d5b *core/config/commands/LivoloSwitchTrick4.json
-84e3902720eda84d9193d435e725e8d9 *core/config/commands/Off.json
+27e40c18d7ed171e600b069cb70ca888 *core/config/commands/Off.json
 30668d888bd7f324b946ae174df5e586 *core/config/commands/Off1.json
 1a6c81909fc36d119b81c355aa5fb945 *core/config/commands/Off2.json
 9c8013507a0bdcd40346c5eff52e999e *core/config/commands/Off3.json
@@ -141,7 +141,7 @@ a54a04514c7aac131084f95e597ff7ca *core/config/commands/OffEp03.json
 d95ae4e5635e2de1ff629390f4686f79 *core/config/commands/OffEp06.json
 880a6701daade0a0191e527fe41b4143 *core/config/commands/OffEp07.json
 8e8a87246b9133f49698e9e523dae2e5 *core/config/commands/OffEp08.json
-14ef1ca8fdd4ba0e057e1b65f1d2f95a *core/config/commands/On.json
+55d800e6170906968b0f0b2c20830bbd *core/config/commands/On.json
 000efcd007cd29117db75aa104065ee3 *core/config/commands/On1.json
 5d9c3e15374f65da26ed0b62e89fbfde *core/config/commands/On2.json
 d82d993db079a9371dffe75abec4f662 *core/config/commands/On3.json
@@ -683,7 +683,7 @@ a553b73183249e349506f5bdb4cb9ecd *core/config/devices/switch.b2nacn02/switch.b2n
 4df9078001e1e0a6fedcb3306c9f6ec2 *core/config/devices/zigbeeOnOffLight/zigbeeOnOffLight.json
 ee2845e11e27fd4859a831201cb5b7fd *core/config/devices/zigbeeShade/zigbeeShade.json
 d7b581ce6eaf8efbe27f96950fc6a674 *core/config/devices/zigbeeWindowCoveringDevice/zigbeeWindowCoveringDevice.json
-f1e8871e35f9733416e39c5beb1c506c *core/config/rucheCommand.json
+1c3c03ad1183388d954b6e48b7db6b4c *core/config/rucheCommand.json
 0bd4f33b13f64e35f989673922d4b6df *core/config/setAffichage.php
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 1c2cf63aaab9691201ae37a6f90fac9d *core/config/zigateClusters.json
@@ -961,7 +961,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-ecffb3edcc3787bd7c630bb9cffdcdd0 *plugin_info/Abeille.version
+30af337c39970b04cc757576971bf518 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 b6b54358db467bb95ee0ba676e0f8fab *plugin_info/configuration.php

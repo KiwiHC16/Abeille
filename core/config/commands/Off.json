@@ -9,7 +9,6 @@
     "generic_type": "LIGHT_OFF",
     "invertBinary": "0",
     "template": "",
-    "value": "etat",
     "configuration": {
 	"uniqId": "5c07c76621f0d",
       "topic": "OnOff",

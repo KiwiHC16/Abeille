@@ -8,8 +8,8 @@
     /* Developers debug features & PHP errors */
     $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
-        $dbgDeveloperMode = TRUE;
+        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
+        $dbgDeveloperMode = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -37,11 +37,11 @@
        $eqPerZigate[zgNb][1] => id for next eq... */
     $eqPerZigate = array(); // All equipements id per zigate
     foreach ($eqLogics as $eqLogic) {
-        $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
+        $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgNb = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
         $eqId = $eqLogic->getId();
-        if (($eqAddr == "0000") || ($eqAddr == "Ruche")) {
+        if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgNb]))
                 array_unshift($eqPerZigate[$zgNb], $eqId);
             else

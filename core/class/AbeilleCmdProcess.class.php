@@ -961,7 +961,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 // $CommandAdditionelle['permitJoin'] = "permitJoin";
                 // $CommandAdditionelle['permitJoin'] = "Status";
                 // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/permitJoin", "Status" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
             } elseif ($Command['SetPermit'] == "InclusionStop") {
                 $cmd = "0049";
                 $lenth = "0004";
@@ -991,7 +991,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 // $CommandAdditionelle['permitJoin'] = "permitJoin";
                 // $CommandAdditionelle['permitJoin'] = "Status";
                 // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/Ruche/permitJoin", "Status" );
+                $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
             }
         }
 
@@ -1418,7 +1418,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
-        // CmdAbeille/Ruche/commissioningGroupAPS -> address=a048&groupId=AA00
+        // CmdAbeille/0000/commissioningGroupAPS -> address=a048&groupId=AA00
         // Commission group for Ikea Telecommande On/Off still interrupteur
         if ( isset($Command['commissioningGroupAPS']) )
         {
@@ -1482,7 +1482,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
         }
 
-        // CmdAbeille/Ruche/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
+        // CmdAbeille/0000/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
         // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
         if ( isset($Command['commissioningGroupAPSLegrand']) )
         {

@@ -631,7 +631,7 @@
             $this->msgToAbeilleFct($dest."/".$Addr, "enable", $IEEE);
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
-            $this->msgToAbeille($dest."/"."Ruche", "joinLeave", "IEEE", "Annonce->".$IEEE);
+            $this->msgToAbeille($dest."/0000", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
             $this->msgToAbeille($dest."/"."$Addr", "MACCapa", "MACCapa", $MACCapa);
 
@@ -651,7 +651,7 @@
             $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
 
             for ($i = 0; $i < $agressif; $i++) {
-                $this->msgToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+                $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
                 $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
             }
@@ -717,7 +717,7 @@
             // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
             parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
 
-            $this->msgToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
+            $this->msgToCmd( "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
         }
 
         function decode0208($dest, $payload, $ln, $qos, $dummy)
@@ -729,7 +729,7 @@
 
             parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
 
-            $this->msgToCmd( "Cmd".$dest."/Ruche/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
+            $this->msgToCmd( "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         }
 
         // Zigate Status
@@ -816,9 +816,11 @@
             $srcEndPoint            = substr($payload,10, 2);
             $destEndPoint           = substr($payload,12, 2);
             $sourceAddressMode      = substr($payload,14, 2);
-            $srcAddress             = substr($payload,16, 4); if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
+            $srcAddress             = substr($payload,16, 4);
+            // if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
-            $dstAddress             = substr($payload,22, 4); if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
+            $dstAddress             = substr($payload,22, 4);
+            // if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             // $payload              // Will decode later depending on the message
             $pl = substr($payload, 26); // Keeping payload only
 
@@ -1547,43 +1549,38 @@
             }
 
             // Envoie Short Address
-            $SrcAddr = "Ruche";
             $ClusterId = "Short";
             $AttributId = "Addr";
             $data = $ShortAddress;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; ZiGate Short Address: '.$ShortAddress); }
 
             // Envoie Extended Address
-            $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $data = $ExtendedAddress;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; IEEE Address: '.$ExtendedAddress); }
 
             // Envoie PAN ID
-            $SrcAddr = "Ruche";
             $ClusterId = "PAN";
             $AttributId = "ID";
             $data = $PAN_ID;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; PAN ID: '.$PAN_ID); }
 
             // Envoie Ext PAN ID
-            $SrcAddr = "Ruche";
             $ClusterId = "Ext_PAN";
             $AttributId = "ID";
             $data = $Ext_PAN_ID;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; Ext_PAN_ID: '.$Ext_PAN_ID); }
 
             // Envoie Channel
-            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Channel";
             $data = $Channel;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; Channel: '.$Channel); }
 
             // if ($this->debug['8009']) { parserLog('debug', $dest.', Type=8009; ; Level=0x'.substr($payload, 0, 2)); }
@@ -1598,19 +1595,17 @@
             */
 
             parserLog('debug', $dest.', Type=8010/Version, Appli='.hexdec(substr($payload, 0, 4)) . ', SDK='.substr($payload, 4, 4), "8010");
-            $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "Application";
             $data = substr($payload, 0, 4);
             // if ($this->debug['8010']) { parserLog("debug", 'Type=8010; '.$AttributId.": ".$data." qos:".$qos); }
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
 
-            $SrcAddr = "Ruche";
             $ClusterId = "SW";
             $AttributId = "SDK";
             $data = substr($payload, 4, 4);
             // if ($this->debug['8010']) { parserLog('debug', $dest.', Type=8010; '.$AttributId.': '.$data.' qos:'.$qos); }
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         /**
@@ -1693,10 +1688,9 @@
             else
                 parserLog('info', '  Zigate'.substr($dest, 7, 1).': mode inclusion inactif', "8014");
 
-            $SrcAddr = "Ruche";
             $ClusterId = "permitJoin";
             $AttributId = "Status";
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $Status);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $Status);
         }
 
         function decode8015($dest, $payload, $ln, $qos, $dummy)
@@ -1764,12 +1758,11 @@
             $Timestamp = substr($payload, 0, 8);
             parserLog('debug', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($Timestamp), "8017");
 
-            $SrcAddr = "Ruche";
             $ClusterId = "ZiGate";
             $AttributId = "Time";
             // Note: updating timestamp ref from 2000 to 1970
             $data = date(DATE_RFC2822, hexdec($Timestamp) + mktime(0, 0, 0, 1, 1, 2000));
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         /* Network joined/formed */
@@ -1791,35 +1784,31 @@
             // 128 – 244 = Failed (ZigBee event codes)
 
             // Envoi Status
-            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Status";
             if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
             if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
             if( substr($payload, 0, 2) == "04" ) { $data = "Network (already) formed"; }
             if( substr($payload, 0, 2)  > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
 
             // Envoie Short Address
-            $SrcAddr = "Ruche";
             $ClusterId = "Short";
             $AttributId = "Addr";
             $dataShort = substr($payload, 2, 4);
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataShort);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $dataShort);
 
             // Envoie IEEE Address
-            $SrcAddr = "Ruche";
             $ClusterId = "IEEE";
             $AttributId = "Addr";
             $dataIEEE = substr($payload, 6,16);
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataIEEE);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $dataIEEE);
 
             // Envoie channel
-            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Channel";
             $dataNetwork = hexdec( substr($payload,22, 2) );
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $dataNetwork);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $dataNetwork);
 
             parserLog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', Addr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
         }
@@ -1835,11 +1824,10 @@
                              . ', Status=0x'.substr($payload, 2, 2), "8030");
 
             // Envoie channel
-            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Bind";
             $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         /* 8035/PDM event code. Since FW 3.1b */
@@ -2066,10 +2054,10 @@
             }
 
             parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
-            $this->msgToCmd("Cmd".$dest."/Ruche/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("Cmd".$dest."/Ruche/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("TempoCmd".$dest."/Ruche/SimpleDescriptorRequest&time=".(time() + 4), "address=".$SrcAddr.'&endPoint='.           $EP );
+            $this->msgToCmd("Cmd".$dest."/0000/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("Cmd".$dest."/0000/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            $this->msgToCmd("TempoCmd".$dest."/0000/SimpleDescriptorRequest&time=".(time() + 4), "address=".$SrcAddr.'&endPoint='.           $EP );
 
             $this->actionQueue[] = array('when' => time() + 8, 'what' => 'configureNE', 'addr'=>$dest.'/'.$SrcAddr);
             $this->actionQueue[] = array('when' => time() + 11, 'what' => 'getNE', 'addr'=>$dest.'/'.$SrcAddr);
@@ -2111,16 +2099,14 @@
             }
              */
 
-            $SrcAddr = "Ruche";
             $ClusterId = "joinLeave";
             $AttributId = "IEEE";
             $data = "Leave->".$IEEE."->".$RejoinStatus;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
 
-            $SrcAddr = "Ruche";
             $fct = "disable";
             $extendedAddr = $IEEE;
-            $this->msgToAbeilleFct($dest."/".$SrcAddr, $fct, $extendedAddr);
+            $this->msgToAbeilleFct($dest."/0000", $fct, $extendedAddr);
         }
 
         /* 804A = Management Network Update Response */
@@ -2271,9 +2257,9 @@
                     } else {
                         parserLog('debug', '  Eq addr '.$N['Addr']." is unknown. Trying to interrogate.");
 
-                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=01");
-                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=03");
-                        $this->msgToCmd("Cmd".$dest."/Ruche/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=01");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=03");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
                     }
                 }
 
@@ -2334,7 +2320,7 @@
 
             // Envoie Group-Membership
             $SrcAddr = substr($payload, 12+$groupCount*4, 4);
-            if ($SrcAddr == "0000" ) { $SrcAddr = "Ruche"; }
+            // if ($SrcAddr == "0000" ) { $SrcAddr = "Ruche"; }
             $ClusterId = "Group";
             $AttributId = "Membership";
             if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }
@@ -3504,11 +3490,10 @@
                 monMsgFromZigate($msg); // Send message to monitor
 
             // Envoie channel
-            $SrcAddr = "Ruche";
             $ClusterId = "Network";
             $AttributId = "Report";
             $data = date("Y-m-d H:i:s")." Attribut: ".$attr." Status (00: Ok, <>0: Error): ".$status;
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         function decode8140($dest, $payload, $ln, $qos, $dummy)
@@ -3708,13 +3693,12 @@
             parserLog('debug', $dest.', Type=8806/Set TX power answer'
                              . ', Power='               .$payload
                              );
-            $SrcAddr    = "Ruche";
             $ClusterId  = "Zigate";
             $AttributId = "Power";
             $data       = substr($payload, 0, 2);
 
             // On transmettre l info sur la ruche
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         function decode8807($dest, $payload, $ln, $qos, $dummy)
@@ -3735,13 +3719,12 @@
                              . ', Power='               .$payload
                              );
 
-            $SrcAddr    = "Ruche";
             $ClusterId  = "Zigate";
             $AttributId = "Power";
             $data       = substr($payload, 0, 2);
 
             // On transmettre l info sur la ruche
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
         }
 
         // ***********************************************************************************************

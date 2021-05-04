@@ -189,8 +189,8 @@
                 continue; // Zigate disabled
             }
 
-            if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')) ) {
-                $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille');
+            if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille')) ) {
+                $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille');
                 foreach ( $ruche->getCmd() as $cmd ) {
                     // if ($cmd->getLogicalId()=='SW-Application')
                     //     echoAndLog($logFile,$space.'SW-Application: '.$cmd->execCmd()."\n", 1);

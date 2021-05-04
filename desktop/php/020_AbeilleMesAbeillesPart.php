@@ -9,8 +9,8 @@
             continue; // This Zigate is not enabled
 
         $NbOfZigatesON++;
-        if ( Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille') ) {
-            echo '<label style="margin: 10px 0px 0px 10px">Zigate'.$i .' - '. Abeille::byLogicalId( 'Abeille'.$i.'/Ruche', 'Abeille')->getHumanName().'</label>';
+        if ( Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille') ) {
+            echo '<label style="margin: 10px 0px 0px 10px">Zigate'.$i .' - '. Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')->getHumanName().'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
         echo '<span class="cursor" id="bt_include'.$i.'" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."><i class="fas fa-plus-circle" style="font-size:160%;color:green !important;"></i></span>';
@@ -52,8 +52,8 @@
         // /* Display beehive card then bee cards */
 
 		// foreach ($eqLogics as $eqLogic) {
-        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
-        //     if ($eqLogicId != "Abeille".$i."/Ruche")
+        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
+        //     if ($eqLogicId != "Abeille".$i."/0000")
         //         continue;
         //     displayBeeCard($eqLogic, $files, $i);
         //     $eq = array();
@@ -63,11 +63,11 @@
         // }
 
 		// foreach ($eqLogics as $eqLogic) {
-        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/Ruche'
+        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         //     list( $net, $addr ) = explode( "/", $eqLogicId);
         //     if ( $net != 'Abeille'. $i)
         //         continue;
-        //     if ($eqLogicId == "Abeille".$i."/Ruche")
+        //     if ($eqLogicId == "Abeille".$i."/0000")
         //         continue; // Skipping beehive
         //     displayBeeCard($eqLogic, $files, $i);
         //     $eq = array();

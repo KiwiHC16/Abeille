@@ -176,8 +176,8 @@
                     <label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>
                     <div class="col-lg-2">
                         <?php
-                        if (Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')) {
-                            $zgName = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille')->getName();
+                        if (Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')) {
+                            $zgName = Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')->getName();
                         } else {
                             $zgName = "";
                         }

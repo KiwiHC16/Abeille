@@ -54,7 +54,7 @@ for ($i = 1; $i <= 10; $i++) {
                                                                                                             xmlhttpMQTTSendIncludeResult = this.responseText;
                                                                                                           }
                                                                                                         };
-                                                xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_Ruche_SetPermit&payload=Inclusion", true);
+                                                xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=Inclusion", true);
                                                 xmlhttpMQTTSendInclude.send();
                                                 $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.}}', level: 'success'});
                                               }
@@ -75,7 +75,7 @@ for ($i = 1; $i <= 10; $i++) {
                                                                                                            xmlhttpMQTTSendIncludeResultStop = this.responseText;
                                                                                                          }
                                                                                                        };
-                                               xmlhttpMQTTSendIncludeStop.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_Ruche_SetPermit&payload=InclusionStop", true);
+                                               xmlhttpMQTTSendIncludeStop.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=InclusionStop", true);
                                                xmlhttpMQTTSendIncludeStop.send();
                                                $('#div_alert').showAlert({message: '{{Arret mode inclusion demandé. La zigate <?php echo $i;?> doit arreter de clignoter.}}', level: 'success'});
                                              }

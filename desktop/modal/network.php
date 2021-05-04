@@ -170,25 +170,35 @@
                         <br />
                         <br />
 
-                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par emetteur">{{Source}}</label>
+                        <!-- Tcharp38: Hidden since does not work and no time to spend on.
+                        <label class="control-label" data-toggle="tooltip" title="Filtre par routeur">{{Routeur}}</label>
                         <select class="filter" id="nodeFrom"> </select>
+                        <label class="control-label" data-toggle="tooltip" title="Filtre par noeuds voisins">{{Voisin}}</label>
+                        <select class="filter" id="nodeTo"> </select> -->
 
-                        <label class="control-label" data-toggle="tooltip" title="Filtre les noeuds par destinataire">{{Destinataire}}</label>
-                        <select class="filter" id="nodeTo"> </select>
+                        <br />
+                        <br />
 
                         <table class="table table-condensed tablesorter" id="idLinksTable">
                             <thead>
                                 <tr>
+                                    <th class="header" data-toggle="tooltip" colspan=3>{{Routeur}}</th>
+                                    <th class="header" data-toggle="tooltip" colspan=4>{{Voisinage}}</th>
+                                    <th class="header" data-toggle="tooltip" colspan=3>{{Relation}}</th>
+                                </tr>
+                                <tr>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{NE_Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Name}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Voisine_Name}}</th>
+
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
+
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Profondeur}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{LQI}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -384,10 +394,10 @@
                                 function afficheRouteTable( $routingTable ) {
                                     foreach ( $routingTable as $addr=>$route ) {
                                         list( $zigate, $addrShort ) = explode ( '/', $addr );
-                                        if ( $addrShort == '0000' ) $addrShort = 'Ruche';
+                                        // if ( $addrShort == '0000' ) $addrShort = 'Ruche';
                                         foreach ( $route as $destination=>$nextHop ) {
-                                            if ( $destination == '0000' ) $destination = 'Ruche';
-                                            if ( $nextHop == '0000' )     $nextHop = 'Ruche';
+                                            // if ( $destination == '0000' ) $destination = 'Ruche';
+                                            // if ( $nextHop == '0000' )     $nextHop = 'Ruche';
 
                                             $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, Abeille);
                                             $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);

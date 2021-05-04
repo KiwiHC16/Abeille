@@ -53,7 +53,8 @@ if [ $? -ne 0 ]; then
     echo "= ERROR: git add failed."
     exit 10
 fi
-git commit -m "Version ${VERSION_NEW}"
+VERSION=`cat plugin_info/Abeille.version | tail -1`
+git commit -m "Version ${VERSION}"
 if [ $? -ne 0 ]; then
     echo "= ERROR: git commit failed."
     exit 11

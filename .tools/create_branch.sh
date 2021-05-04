@@ -54,7 +54,7 @@ if [ $# -gt 0 ]; then
 fi
 
 # Check repo status
-# - Ensure that local branch is master (to beta) or beta (to stable)
+# - Ensure that local branch is 'master' (to beta) or 'beta' (to stable)
 # TODO: How to check that current branch is in line with master ?
 # - Stops if any uncommitted local modifs
 echo "Checking current branch & status"

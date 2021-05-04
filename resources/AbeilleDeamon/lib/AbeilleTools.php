@@ -714,7 +714,7 @@ class AbeilleTools
         // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
         if ( strlen($messageToSend) > 2 ) {
         Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
-            "Abeille$zigateNbr/Ruche/SystemMessage", $messageToSend);
+            "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
         }
     }
 

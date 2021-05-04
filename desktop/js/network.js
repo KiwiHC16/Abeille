@@ -304,9 +304,8 @@ function displayLinksGraph(zigateX) {
             // https://github.com/anvaka/VivaGraphJS
 
             // On defini le type par defaut de la zigate
-            // nodes['Ruche'].Type = ('undefined' == typeof(nodes['Ruche'].Type) ? 'Coordinator' : nodes['Ruche'].Type);
-            console.log('node ruche ('+zigateX+'): '+JSON.stringify(nodes['Abeille'+zigateX+'/Ruche']));
-            nodes['Abeille'+zigateX+'/Ruche'].Type = 'Coordinator';
+            console.log('node ruche ('+zigateX+'): '+JSON.stringify(nodes['Abeille'+zigateX+'/0000']));
+            nodes['Abeille'+zigateX+'/0000'].Type = 'Coordinator';
 
             var showObject = document.getElementById("idShowObject").checked; // Checked to display parent object
             for (node in nodes) {
@@ -523,18 +522,19 @@ function displayLinksTable(zigateX) {
                     nodeJId = 'not found in jeedom DB';
                 }
 
-                //console.log('nodeJName NE 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
-                tbody += '<td id="neId">';
-                tbody += '<span  class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJName + '">' + nodeJName + '</span> ';
+                /* RouterName/RouterObjet/RouterId */
+                tbody += '<td id="neObjet">';
+                tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
                 tbody += '</td>';
 
                 tbody += '<td id="neName">';
                 tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Objet + '</i></div>';
                 tbody += '</td>';
 
-                tbody += '<td id="neObjet">';
-                tbody += '<div style="opacity:0.5"><i>' + nodes[nodeFromJson].NE_Name + '</i></div>';
+                tbody += '<td id="neId">';
+                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodeJName + '">' + nodeJName + '</span> ';
                 tbody += '</td>';
+
 
                 //Process Voisine to jeedom Id
                 nodeJName = nodes[nodeFromJson].Voisine;
@@ -546,36 +546,31 @@ function displayLinksTable(zigateX) {
                 }
                 //console.log('nodeJName Voisine 2 (@ zigbee): ' + nodeJName + " , nodeJId: "+ nodeJId);
 
-                tbody += '<td id="vid">';
-                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodes[nodeFromJson].Voisine + '">' + nodes[nodeFromJson].Voisine + '</span>';
+                tbody += '<td id="vname">';
+                tbody += nodes[nodeFromJson].Voisine_Name;
                 tbody += '</td>';
-
                 tbody += '<td id="vObjet">';
                 tbody += nodes[nodeFromJson].Voisine_Objet;
                 tbody += '</td>';
-
-                tbody += '<td id="vname">';
-                tbody += nodes[nodeFromJson].Voisine_Name;
+                tbody += '<td id="vid">';
+                tbody += '<span class="label label-primary" style="font-size : 1em;" data-nodeid="' + nodes[nodeFromJson].Voisine + '">' + nodes[nodeFromJson].Voisine + '</span>';
+                tbody += '</td>';
+                tbody += '<td>';
+                tbody += '<span class="label label-success" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
                 tbody += '</td>';
 
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Relationship + '</span>';
                 tbody += '</td>';
-
                 tbody += '<td>';
                 tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].Depth + '</span>';
                 tbody += '</td>';
-
                 tbody += '<td id="lqi">';
                 // tbody += '<span class="label label-success" style="font-size : 1em;">' + nodes[nodeFromJson].LinkQualityDec + '  ';
                 tbody += (nodes[nodeFromJson].LinkQualityDec <=  50) ? '<span class="label label-danger"  style="font-size : 1em;" >' : '';
                 tbody += ((nodes[nodeFromJson].LinkQualityDec > 50)&&(nodes[nodeFromJson].LinkQualityDec <= 100)) ? '<span class="label label-warning" style="font-size : 1em;">'  : '';
                 tbody += (nodes[nodeFromJson].LinkQualityDec >  100) ? '<span class="label label-success" style="font-size : 1em;">'  : '';
                 tbody += nodes[nodeFromJson].LinkQualityDec +'</span></td>';
-
-                tbody += '<td>';
-                tbody += '<span class="label label-success" style="font-size : 1em;" >' + nodes[nodeFromJson].Type + '</span>';
-                tbody += '</td>';
                 tbody += '<td></tr>';
             }
 
@@ -585,14 +580,11 @@ function displayLinksTable(zigateX) {
                 nodeTo = $('#nodeTo').empty();
 
             nodeFrom.append('<option value="All">{{Tous}}</option>');
-            nodeFrom.append('<option value="None">{{Aucun}}</option>');
-
-            nodeTo.append('<option value="All">{{Tous}}</option>');
-            nodeTo.append('<option value="None">{{Aucun}}</option>');
-
             $.each(nodesFrom, function (idx, item) {
                 nodeFrom.append(new Option(item, idx));
             });
+
+            nodeTo.append('<option value="All">{{Tous}}</option>');
             $.each(nodesTo, function (idx, item) {
                 nodeTo.append(new Option(item, idx));
             });

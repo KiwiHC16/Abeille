@@ -145,7 +145,7 @@
         $eqToInterrogate[$eqIndex]['TableEntries'] = hexdec($tableEntries);
         $eqToInterrogate[$eqIndex]['TableIndex'] = hexdec($startIndex) + hexdec($tableListCount);
 
-        $NE = $eqToInterrogate[$eqIndex]["LogicId"]; // Ex: 'Abeille1/Ruche', 'Abeille1/A3B4'
+        $NE = $eqToInterrogate[$eqIndex]["LogicId"]; // Ex: 'Abeille1/A3B4'
 
         $parameters = array();
         $parameters['NE'] = $NE; // Logical ID
@@ -169,7 +169,7 @@
             logMessage("", "  N=".json_encode($N));
 
             // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
-            if ($N->Addr == "0000") $N->Addr = "Ruche";
+            // if ($N->Addr == "0000") $N->Addr = "Ruche";
 
             $parameters['Voisine'] = $netName."/".$N->Addr;
             if (isset($eqKnownFromAbeille[$parameters['Voisine']])) {
@@ -239,7 +239,7 @@
        Returns: 0=OK, -1=ERROR (fatal since queue issue) */
     function msgToCmd($dest, $addr, $index) {
         $msgAbeille = new MsgAbeille;
-        $msgAbeille->message['topic'] = "Cmd".$dest."/Ruche/Management_LQI_request";
+        $msgAbeille->message['topic'] = "Cmd".$dest."/0000/Management_LQI_request";
         $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
         logMessage("", "msgToCmd: ".json_encode($msgAbeille));
 
@@ -370,7 +370,7 @@
 
         $LQI = array(); // Result from interrogations
         $eqToInterrogate = array();
-        newEqToInterrogate("Abeille".$zgNb."/Ruche");
+        newEqToInterrogate("Abeille".$zgNb."/0000");
 
         $done = 0;
         $eqIndex = 0; // Index of eq to interrogate
@@ -380,8 +380,8 @@
             logMessage("", "Zigate ".$zgNb.": progression ".$done."/".$total);
 
             $currentNeAddress = $eqToInterrogate[$eqIndex]['LogicId'];
-            list( $netName, $addr ) = explode('/', $currentNeAddress);
-            if ( $addr == "Ruche" ) { $addr = "0000"; }
+            list($netName, $addr) = explode('/', $currentNeAddress);
+            // if ( $addr == "Ruche" ) { $addr = "0000"; } // WA
 
             $NE = $currentNeAddress;
 

@@ -149,13 +149,13 @@
 
         if ($test==110) {
             echo "Reset Ruche\n";
-            $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/reset';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/0000/reset';
             $msgAbeille->message['payload'] = 'reset';
         }
 
         if ($test==111) {
             echo "Used to Test PDM messages and dev the PDM feature\n";
-            $msgAbeille->message['topic'] = 'CmdAbeille1/Ruche/PDM';
+            $msgAbeille->message['topic'] = 'CmdAbeille1/0000/PDM';
             $msgAbeille->message['payload'] = 'E_SL_MSG_PDM_HOST_AVAILABLE';
         }
 
@@ -270,7 +270,7 @@
 
         if ($test==130) {
             echo "Remove Group Tele Innr EP 1, 3-8\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/Ruche/removeGroup';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/0000/removeGroup';
             $msgAbeille->message['payload'] = 'address='.$argv[2].'&DestinationEndPoint='.$argv[3].'&groupAddress='.$argv[4];
         }
 
@@ -282,13 +282,13 @@
 
         if ($test==132) {
             echo "Set Time to Zigate\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/Ruche/setTimeServer';
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/setTimeServer';
             $msgAbeille->message['payload'] = '';
         }
 
         if ($test==133) {
             echo "Get Time to Zigate\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/Ruche/getTimeServer';
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/getTimeServer';
             $msgAbeille->message['payload'] = '';
         }
 
@@ -312,7 +312,7 @@
             case 200:
                 echo "Send a Systeme Message to the Ruche to be used by a scenario by the user\n";
                 // public static function publishMosquitto($queueId, $priority, $topic, $payload)
-                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/Ruche/SystemMessage", "Le message");
+                Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "Abeille1/0000/SystemMessage", "Le message");
                 break;
             case 201:
                 echo "Send a Systeme Message to the Ruche1 and clean it after 5 sec\n";

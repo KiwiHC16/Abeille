@@ -83,7 +83,7 @@ class Abeille extends eqLogic
         $bee->save();
 
         // 2/ Remove zigbee reseau 1 zigbee
-        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$newDestBee."/Ruche/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
+        self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
 
         // 3/ inclusion normale sur le reseau 2 zigbee
         message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
@@ -122,7 +122,7 @@ class Abeille extends eqLogic
         }
         else {
             log::add('Abeille', 'debug', 'Je retire '.$ghost->getName().' de la zigate.');
-            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/Ruche/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
+            self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$destGhost."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
         }
 
         log::add('Abeille', 'debug', 'Transfer des informations de l equipment.' );
@@ -451,16 +451,16 @@ if (0) {
                 $i = $i + 1;
 
                 // Recupere IEEE de la Ruche/ZiGate
-                $ZiGateIEEE = self::getIEEE($dest.'/Ruche');
+                $ZiGateIEEE = self::getIEEE($dest.'/0000');
 
                 // Recupere IEEE de l Abeille
                 $addrIEEE = self::getIEEE($dest.'/'.$addr);
 
                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/Ruche/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
             }
         }
         if (($i * 33) > (3600)) {
@@ -693,8 +693,8 @@ if (0) {
             // if ($param['AbeilleType'.$i] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getVersion&time=".(time() + 20), "Version");
-            // beille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/Ruche/getNetworkStatus&time=".(time() + 24), "getNetworkStatus");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/0000/getVersion&time=".(time() + 20), "Version");
+            // beille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/0000/getNetworkStatus&time=".(time() + 24), "getNetworkStatus");
         }
 
         $eqLogics = self::byType('Abeille');
@@ -760,7 +760,7 @@ if (0) {
         $count = array();
         for ($i = 1; $i <= $param['zigateNb']; $i++) {
             if (self::checkInclusionStatus("Abeille".$i) == 1) {
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/permitJoin", "Status");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/permitJoin", "Status");
                 $count[] = $i;
             }
         }
@@ -964,14 +964,14 @@ if (0) {
         //         continue; // Undefined or disabled
 
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
-        //     Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$i);
+        //     Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
 
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee '.$i.' ********');
-        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
         //     /* Get network state to get Zigate IEEE asap and confirm no port change */
-        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
 
         //     // Set the mode of the zigate, important from 3.1D.
         //     $version = "";
@@ -985,11 +985,11 @@ if (0) {
         //     if ($version == '031D') {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "hybride");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
         //     } else {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "normal");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "normal");
         //     }
         // }
 
@@ -1128,18 +1128,18 @@ while ($cron->running()) {
                 continue; // Undefined or disabled
 
             // log::add('Abeille', 'debug', 'deamon(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/Ruche/CreateRuche", "Abeille".$i);
+            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
 
             // log::add('Abeille', 'debug', 'deamon(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/startNetwork", "StartNetwork");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
             // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setTimeServer", "");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
             /* Get network state to get Zigate IEEE asap and confirm no port change */
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/getNetworkStatus", "getNetworkStatus");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
 
             // Set the mode of the zigate, important from 3.1D.
             $version = "";
-            $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
+            $ruche = Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille');
             if ($ruche) {
                 $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
                 if ($cmdlogic) {
@@ -1149,11 +1149,11 @@ while ($cron->running()) {
             if ($version == '031D') {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '. $i.' in hybrid mode');
                 // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "hybride");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
                 // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/Ruche/setModeHybride", "normal");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "normal");
             }
         }
 
@@ -1345,7 +1345,7 @@ while ($cron->running()) {
     public static function checkInclusionStatus($dest)
     {
         // Return: Inclusion status or -1 if error
-        $ruche = Abeille::byLogicalId($dest.'/Ruche', 'Abeille');
+        $ruche = Abeille::byLogicalId($dest.'/0000', 'Abeille');
 
         if ($ruche) {
             // echo "Join status collection\n";
@@ -1430,7 +1430,7 @@ while ($cron->running()) {
             return;
         }
 
-        if ($addr == "Ruche") return;
+        if ($addr == "0000") return;
 
         log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
 
@@ -1473,7 +1473,7 @@ while ($cron->running()) {
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // demande de creation de ruche au cas ou elle n'est pas deja crée....
         // La ruche est aussi un objet Abeille
-        if ($message->topic == "CmdRuche/Ruche/CreateRuche") {
+        if ($message->topic == "CmdRuche/0000/CreateRuche") {
             // log::add('Abeille', 'debug', "Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
             self::createRuche($message);
             return;
@@ -1506,7 +1506,7 @@ while ($cron->running()) {
         }
 
         // Si le message est pour 0000 alors on change en Ruche
-        if ($addr == "0000") $addr = "Ruche";
+        // if ($addr == "0000") $addr = "Ruche";
 
         $nodeid = $Filter.'/'.$addr;
 
@@ -1841,7 +1841,7 @@ while ($cron->running()) {
             // -1 : Error Nothing found
             $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
             log::add('Abeille', 'debug', 'message(), !objet & IEEE: Trouvé='.$ShortFound);
-            if ((strlen($ShortFound) == 4) && ($addr != "Ruche")) {
+            if ((strlen($ShortFound) == 4) && ($addr != "0000")) {
 
                 $elogic = self::byLogicalId($dest."/".$ShortFound, 'Abeille');
                 if (!is_object($elogic)) {
@@ -2081,13 +2081,13 @@ while ($cron->running()) {
     public static function createRuche($message = null)
     {
         $dest = $message->payload;
-        $elogic = self::byLogicalId($dest."/Ruche", 'Abeille');
+        $elogic = self::byLogicalId($dest."/0000", 'Abeille');
         if (is_object($elogic)) {
             log::add('Abeille', 'debug', 'message: createRuche: objet: '.$elogic->getLogicalId().' existe deja');
             return;
         }
         // Creation de la ruche
-        log::add('Abeille', 'info', 'objet ruche : creation par model de '.$dest."/Ruche");
+        log::add('Abeille', 'info', 'objet ruche : creation par model de '.$dest."/0000");
 
         /*
             $cmdId = end($topicArray);
@@ -2103,14 +2103,14 @@ while ($cron->running()) {
         $elogic = new Abeille();
         //id
         $elogic->setName("Ruche-".$dest);
-        $elogic->setLogicalId($dest."/Ruche");
+        $elogic->setLogicalId($dest."/0000");
         if ($parameters_info['AbeilleParentId'] > 0) {
             $elogic->setObject_id($parameters_info['AbeilleParentId']);
         } else {
             $elogic->setObject_id(jeeObject::rootObject()->getId());
         }
         $elogic->setEqType_name('Abeille');
-        $elogic->setConfiguration('topic', $dest."/Ruche");
+        $elogic->setConfiguration('topic', $dest."/0000");
         $elogic->setConfiguration('type', 'topic');
         $elogic->setConfiguration('lastCommunicationTimeOut', '-1');
         $elogic->setIsVisible("1");
@@ -2192,8 +2192,10 @@ while ($cron->running()) {
             // if ($cmdValueDefaut["Type"] == "action") {  // not needed as mosquitto is not used anymore
             //    $cmdlogic->setConfiguration('retain', '0');
             // }
-            foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-                $cmdlogic->setConfiguration($confKey, $confValue);
+            if (isset($cmdValueDefaut["configuration"])) {
+                foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+                    $cmdlogic->setConfiguration($confKey, $confValue);
+                }
             }
             // template
             if (isset($cmdValueDefaut["template"])) $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);

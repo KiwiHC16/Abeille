@@ -23,9 +23,7 @@
     $eqId = $_GET['id'];
     $eqLogic = eqLogic::byId($eqId);
     $eqLogicId = $eqLogic->getLogicalid();
-    list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
-    if ($eqAddr == "Ruche")
-        $eqAddr = "0000";
+    list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $zgType = config::byKey('AbeilleType'.$zgNb, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
 
@@ -247,22 +245,22 @@
         switch(action) {
         case "setLED":
             if (param == "ON")
-                topic = 'CmdAbeille'+js_zgNb+'/Ruche/setOnZigateLed';
+                topic = 'CmdAbeille'+js_zgNb+'/0000/setOnZigateLed';
             else
-                topic = 'CmdAbeille'+js_zgNb+'/Ruche/setOffZigateLed';
+                topic = 'CmdAbeille'+js_zgNb+'/0000/setOffZigateLed';
             break;
         case "setCertif":
             if (param == "CE")
-                topic = 'CmdAbeille'+js_zgNb+'/Ruche/setCertificationCE';
+                topic = 'CmdAbeille'+js_zgNb+'/0000/setCertificationCE';
             else
-                topic = 'CmdAbeille'+js_zgNb+'/Ruche/setCertificationFCC';
+                topic = 'CmdAbeille'+js_zgNb+'/0000/setCertificationFCC';
             break;
         case "startNetwork": // Not required for end user but for developper.
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/startNetwork';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/startNetwork';
             payload = 'StartNetwork';
             break;
         case "setMode":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/setModeHybride';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/setModeHybride';
             if (param == "Normal")
                 payload = 'normal';
             else if (param == "Raw")
@@ -271,11 +269,11 @@
                 payload = 'hybride';
             break;
         case "setExtPANId": // Not critical. No need so far.
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/setExtendedPANID';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/setExtendedPANID';
             payload = "";
             break;
         case "setChannelMask":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/setChannelMask';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/setChannelMask';
             mask = document.getElementById("idChannelMask").value;
             console.log("mask="+mask);
             if (mask == "") {
@@ -301,15 +299,15 @@
             payload = mask;
             break;
         case "setTXPower":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/TxPower';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/TxPower';
             payload = "ff"; // TODO
             break;
         case "getTime":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/getTimeServer';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/getTimeServer';
             payload = "";
             break;
         case "setTime":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/setTimeServer';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/setTimeServer';
             payload = ""; // Using current time from host.
             break;
         case "erasePersistantDatas": // Erase PDM
@@ -319,12 +317,12 @@
             msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
             bootbox.confirm(msg, function (result) {
                 if (result)
-                    sendToZigate('CmdAbeille'+js_zgNb+'/Ruche/ErasePersistentData', 'ErasePersistentData');
+                    sendToZigate('CmdAbeille'+js_zgNb+'/0000/ErasePersistentData', 'ErasePersistentData');
                 return;
             });
             break;
         case "getInclusionStatus":
-            topic = 'CmdAbeille'+js_zgNb+'/Ruche/permitJoin';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/permitJoin';
             payload = "Status";
             break;
         default:

@@ -114,7 +114,7 @@
         }
 
         public function addTempoCmdAbeille($topic, $msg, $priority) {
-            // TempoCmdAbeille1/Ruche/getVersion&time=123 -> msg
+            // TempoCmdAbeille1/0000/getVersion&time=123 -> msg
 
             list($topic, $param) = explode('&', $topic);
             $topic = str_replace( 'Tempo', '', $topic);

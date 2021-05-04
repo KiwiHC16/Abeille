@@ -46,8 +46,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
         $this->deamonlog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['procmsg3']);
         $this->deamonlog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
 
-        // Jai les CmdAbeille/Ruche et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
-        if ($address != "Ruche") {
+        // Jai les CmdAbeille/0000 et les CmdAbeille/shortAdress que je dois gérer un peu differement les uns des autres.
+        if ($address != "0000") {
             $this->deamonlog("debug", '  Address != Ruche', $this->debug['procmsg3']);
 
             $convertOnOff = array(
@@ -1196,8 +1196,8 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     // $this->deamonlog('warning', '  AbeilleCommand unknown: '.$action );
                     break;
             } // switch
-        } // if $address != "Ruche"
-        else { // $address == "Ruche"
+        } // if $address != "0000"
+        else { // $address == "0000"
             $done = 0;
             // $this->deamonlog("debug", 'procmsg fct - Pour La Ruche - (Ln: '.__LINE__.')' );
             // Crée les variables dans la chaine et associe la valeur.
@@ -1256,7 +1256,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
 
                 case "getGroupMembership":
-                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                     $Command = array(
                                      "getGroupMembership"       => "1",
@@ -1269,7 +1269,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
 
                 case "addGroup":
-                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                     $Command = array(
                                      "addGroup"                 => "1",
@@ -1283,7 +1283,7 @@ class AbeilleCmdPrepare extends AbeilleCmdProcess {
                     break;
 
                 case "removeGroup":
-                    if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                    // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                     $Command = array(
                                      "removeGroup"              => "1",

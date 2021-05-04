@@ -42,8 +42,8 @@
             // logMessage('debug', 'request - addrIEEE: '.$request);
 
             if (strpos($request2, '#ZiGateIEEE#') > 0) {
-                // Logical Id ruche de la forme: Abeille1/Ruche
-                $rucheIEEE = Abeille::byLogicalId($dest.'/Ruche', 'Abeille')->getConfiguration("IEEE",'none');
+                // Logical Id ruche de la forme: Abeille1/0000
+                $rucheIEEE = Abeille::byLogicalId($dest.'/0000', 'Abeille')->getConfiguration("IEEE",'none');
                 // logMessage('debug', 'Adresse IEEE de la ruche '.$rucheIEEE);
                 if (strlen($rucheIEEE) != 16) {
                     // logMessage('debug', 'Adresse IEEE de la ruche '.$cmd->getEqLogic()->getHumanName().' inconnue');

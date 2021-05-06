@@ -2,7 +2,7 @@
   "ZB-CL01": {
     "nameJeedom": "Tuya smart light GU10",
     "manufacturer": "eWeLight",
-    "model": "?",
+    "model": "smart bulb",
     "timeout": "60",
     "Categorie": {
       "light": "1"

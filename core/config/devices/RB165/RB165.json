@@ -1,8 +1,8 @@
 {
-  "RB285C": {
-    "nameJeedom": "Innr RB285C RGBW bulb colour E27",
+  "RB165": {
+    "nameJeedom": "Innr RB165 dimmable white bulb E27",
     "manufacturer": "Innr",
-    "model": "RB285C",
+    "model": "RB165",
     "timeout": "60",
     "Categorie": {
       "light": "1"

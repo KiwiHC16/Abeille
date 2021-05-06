@@ -1,6 +1,8 @@
 {
   "ZB-CL01": {
-    "nameJeedom": "zigbee Extended color light",
+    "nameJeedom": "Tuya smart light GU10",
+    "manufacturer": "eWeLight",
+    "model": "?",
     "timeout": "60",
     "Categorie": {
       "light": "1"

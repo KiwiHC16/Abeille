@@ -1,5 +1,12 @@
 # Changelog Abeille
 
+- JSON: Correction setReportTemp (#1918)
+- Innr RB285C: correction modele corrompu
+- Innr RB165: modele préliminaire
+- Tuya GU10 ZB-CL01: ajout support
+- Hue motion sensor: mise-à-jour JSON
+- Interne: correction message 8120
+
 - Page compatibilité: revisitée + ajout du tri par colonne
 - Page santé: ajout de l'état des zigate au top
 - Sonoff SNZB-02: support corrigé + support 66666 (ModelIdentifier) (#1911)

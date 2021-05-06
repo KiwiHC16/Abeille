@@ -1,6 +1,8 @@
 {
   "SML002": {
-    "nameJeedom": "Philips Presence Outdoor",
+    "nameJeedom": "Philips Hue motion sensor",
+    "manufacturer": "Philips",
+    "model": "9290019758",
     "timeout": "60",
     "Categorie": {
       "security": "1"

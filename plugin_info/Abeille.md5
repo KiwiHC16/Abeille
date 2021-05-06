@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210506-MASTER_TCHARP38-2"
+# VERSION="210506-MASTER_TCHARP38-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -55,7 +55,7 @@ c54618b1c51e8cf591215e1770b89556 *core/ajax/AbeilleFiles.ajax.php
 9f36cefc9a69a01ba9ae133f1af543dd *core/class/AbeilleCmdQueue.class.php
 d2c495c5155b9d4d69906a6573a1d8f5 *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-75c9ccb097293fb5d741889af45d6906 *core/class/AbeilleParser.class.php
+11e72e70f93683416acb16ebc98755ec *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -552,7 +552,7 @@ dbbcf14382d3139a55bc2f7fcbe72e70 *core/config/devices/RWL021/RWL021.json
 14ba51c10f5b6dc2b7cf7c17569bd6ee *core/config/devices/SA-003-Zigbee/SA-003-Zigbee.json
 b9f337db3f9d25953050e64a45bba393 *core/config/devices/SM309/SM309.json
 491737b619213ac1587f78eb52919189 *core/config/devices/SML001/SML001.json
-99e499adc5d5d45cfbe322500e2c4ea6 *core/config/devices/SML002/SML002.json
+2c7d1679c56cee510ed808156868a23c *core/config/devices/SML002/SML002.json
 03ba1246f34b2c7179981237a28355f0 *core/config/devices/SP220/SP220.json
 9b9870872f8de43964c299d181806444 *core/config/devices/SPZB0001/SPZB0001.json
 8743c8e5504501dc55487c6ff8f6e7dd *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
@@ -752,7 +752,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-88e456bcc46c0ece248b0d45ad79fe57 *docs/fr_FR/changelog.md
+eebbbca57228735ab16a52422c799c42 *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -965,7 +965,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-7c89f7a3bc635e9df424c3548e729cc7 *plugin_info/Abeille.version
+ca3585e9b6f6c771b651becf04989449 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 03c7e9b2b39baaa73401e827f98abae6 *plugin_info/configuration.php

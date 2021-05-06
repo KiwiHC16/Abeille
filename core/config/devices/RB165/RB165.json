@@ -1,0 +1,23 @@
+{
+  "RB285C": {
+    "nameJeedom": "Innr RB165 dimmable white bulb E27",
+    "manufacturer": "Innr",
+    "model": "RB165",
+    "timeout": "60",
+    "Categorie": {
+      "light": "1"
+    },
+    "configuration": {
+      "uniqId": "5c07dsc766df25d94",
+      "icone": "node_defaultUnknown",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+      "include4": "etat",
+      "include5": "On",
+      "include6": "Off",
+      "include7": "Toggle",
+      "include8": "getEtat"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210506-MASTER_TCHARP38-1"
+# VERSION="210506-MASTER_TCHARP38-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -9,6 +9,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.hooks/install_hooks.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.hooks/post-merge
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.hooks/pre-commit
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.idea/Abeille.iml
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/check_json.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/create_branch.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/git_push.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/update_changelog.sh
@@ -620,6 +621,7 @@ c39907317187db1266ba00c21adc2300 *core/config/devices/Teleruptor/Teleruptor.json
 0210a716eb19b7edae19780f67542711 *core/config/devices/WS2812_light_controller/WS2812_light_controller.json
 596fed21f9bf203a9d8d7a976cfc51e8 *core/config/devices/WarningDevice-EF-3.0/WarningDevice-EF-3.0.json
 712e775a89a4edec88cf1944be83cc86 *core/config/devices/WarningDevice/WarningDevice.json
+f7c26a096861717d07ce4eef8738c638 *core/config/devices/ZB-CL01/ZB-CL01.json
 9ea63d0b29f809f4c2af31907f90ef45 *core/config/devices/ZB-RGBCW/ZB-RGBCW.json
 228af0407856daf5bb510a908d447aa4 *core/config/devices/ZLL-DimmableLigh/ZLL-DimmableLigh.json
 3845fad9796b2ced18e155581fab3818 *core/config/devices/ZLO-DimmableLight/ZLO-DimmableLight.json
@@ -750,7 +752,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-0c8daffbac29cce91b9b6065ae9d38fc *docs/fr_FR/changelog.md
+88e456bcc46c0ece248b0d45ad79fe57 *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -923,6 +925,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_XiaomiTemperatureCarre.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_XiaomiTemperatureRond.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_XiaomiVibration.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_Xiaomiwleak_aq1.png
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ZB-CL01.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ZLL-DimmableLigh.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ZLO-DimmableLight.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ZLO-ExtendedColor.png
@@ -962,7 +965,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-2a50db88ea4099934b66dcc249475984 *plugin_info/Abeille.version
+7c89f7a3bc635e9df424c3548e729cc7 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 03c7e9b2b39baaa73401e827f98abae6 *plugin_info/configuration.php

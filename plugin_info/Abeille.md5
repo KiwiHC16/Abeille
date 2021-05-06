@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210504-MASTER_TCHARP38-1"
+# VERSION="210506-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -54,7 +54,7 @@ c54618b1c51e8cf591215e1770b89556 *core/ajax/AbeilleFiles.ajax.php
 9f36cefc9a69a01ba9ae133f1af543dd *core/class/AbeilleCmdQueue.class.php
 d2c495c5155b9d4d69906a6573a1d8f5 *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-4f378bcde8edc408a381dd8df1ce62e9 *core/class/AbeilleParser.class.php
+75c9ccb097293fb5d741889af45d6906 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -398,7 +398,7 @@ ed8bfe6353382c76839f8f6884f46162 *core/config/commands/setReportOccupancy.json
 9f098f5789ce0376f835b01eeba129ab *core/config/commands/setReportRadiateurConsigneTemperature.json
 7e5bae010ce55b6b739524528818aa1c *core/config/commands/setReportRadiateurLocalTemperature.json
 032ed015b5524eabdf03c17484e10fd2 *core/config/commands/setReportSmokeHeiman.json
-380e4aa0a9b9e8bf1e8e0aeb432dc5ff *core/config/commands/setReportTemperature.json
+a47f7fa4f39369a98f9f921f8bc63333 *core/config/commands/setReportTemperature.json
 b4f039dac0cc90a669dd93d376e99b3e *core/config/commands/setRouge.json
 beb46a488d17abd7df174aadf7ccbbed *core/config/commands/setSmokeSensivityHigh.json
 f6525ed698c289abf1ab95124239ad17 *core/config/commands/setSmokeSensivityLow.json
@@ -539,8 +539,9 @@ a922686213a09defbd603983cc0be1f7 *core/config/devices/PRZ/PRZ.json
 173ba4df71e993baae7aa8f003a7cf10 *core/config/devices/PSE03-v1.1.0/PSE03-v1.1.0.json
 827b438560fa25b358134934715f990f *core/config/devices/Plug01/Plug01.json
 0677823501ddfd2315aeb05ba9072af0 *core/config/devices/PlugZ3/PlugZ3.json
+08fba8b98cc91d519ce4aa462c621131 *core/config/devices/RB165/RB165.json
 fbbac9743e7edf8a54ffd456bc2f5647 *core/config/devices/RB175W/RB175W.json
-d086d3d28fb2ed75c25c32a40eb1ccca *core/config/devices/RB285C/RB285C.json
+f0074b43d6205bd6442f2518f58d4606 *core/config/devices/RB285C/RB285C.json
 70987280d4e29335452a36f8525a28fb *core/config/devices/RC110/RC110.json
 8bac1ce8a05850c508d98797109ac158 *core/config/devices/RF263/RF263.json
 5eb51c17d526b65df3ef3c1b107361ab *core/config/devices/RF265/RF265.json
@@ -749,7 +750,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-ed4a622127391e41e32c05739ec851ee *docs/fr_FR/changelog.md
+0c8daffbac29cce91b9b6065ae9d38fc *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -961,7 +962,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-0e8bce3fc74f44124f5a9c3ce97ed286 *plugin_info/Abeille.version
+2a50db88ea4099934b66dcc249475984 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 03c7e9b2b39baaa73401e827f98abae6 *plugin_info/configuration.php

@@ -281,11 +281,11 @@
             $max = 3.135;
             $min = 2.8;
             if ( $voltage/1000 > $max ) {
-                parserLog('debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
+                parserLog('debug', '  Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
                 return 100;
             }
             if ( $voltage/1000 < $min ) {
-                parserLog('debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
+                parserLog('debug', '  Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
                 return 0;
             }
             return round(100-((($max-($voltage/1000))/($max-$min))*100));

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210506-MASTER_TCHARP38-3"
+# VERSION="210506-MASTER_TCHARP38-4"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -50,7 +50,7 @@ c54618b1c51e8cf591215e1770b89556 *core/ajax/AbeilleFiles.ajax.php
 81da95bff54ea060afdced03b303dc1a *core/ajax/abeille.ajax.php
 6653f6304b30462dff479281ae66d665 *core/class/Abeille.class.php
 26e0730c8448525e2538264c70927eb2 *core/class/AbeilleCmd.class.php
-50f6b2a6d10fdfa2ad71e4d97add7ede *core/class/AbeilleCmdPrepare.class.php
+2214782c663bb3d10793ff1fadec192f *core/class/AbeilleCmdPrepare.class.php
 6735949ff55d34ea881c2295fb8ca6a6 *core/class/AbeilleCmdProcess.class.php
 9f36cefc9a69a01ba9ae133f1af543dd *core/class/AbeilleCmdQueue.class.php
 d2c495c5155b9d4d69906a6573a1d8f5 *core/class/AbeilleDebug.class.php
@@ -540,7 +540,7 @@ a922686213a09defbd603983cc0be1f7 *core/config/devices/PRZ/PRZ.json
 173ba4df71e993baae7aa8f003a7cf10 *core/config/devices/PSE03-v1.1.0/PSE03-v1.1.0.json
 827b438560fa25b358134934715f990f *core/config/devices/Plug01/Plug01.json
 0677823501ddfd2315aeb05ba9072af0 *core/config/devices/PlugZ3/PlugZ3.json
-08fba8b98cc91d519ce4aa462c621131 *core/config/devices/RB165/RB165.json
+8e7a4e20794f3a78fa62b84015ba3712 *core/config/devices/RB165/RB165.json
 fbbac9743e7edf8a54ffd456bc2f5647 *core/config/devices/RB175W/RB175W.json
 f0074b43d6205bd6442f2518f58d4606 *core/config/devices/RB285C/RB285C.json
 70987280d4e29335452a36f8525a28fb *core/config/devices/RC110/RC110.json
@@ -965,7 +965,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-ca3585e9b6f6c771b651becf04989449 *plugin_info/Abeille.version
+cfe33af83b799fb4bb22b0680fc65bbc *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 03c7e9b2b39baaa73401e827f98abae6 *plugin_info/configuration.php

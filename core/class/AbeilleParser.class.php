@@ -3472,28 +3472,44 @@
             // <Src address : uint16_t>
             // <Endpoint: uint8_t>
             // <Cluster id: uint16_t>
-            // <Attribute Enum: uint16_t> (add in v3.0f)
+            // WARNING: Only if payload size > 7: <Attribute Enum: uint16_t> (add in v3.0f)
             // <Status: uint8_t>
-            $addr = substr($payload, 2, 4);
-            $attr = substr($payload,12, 4);
-            $status = substr($payload,16, 2);
+            $payloadLen = strlen($payload) / 2; // Size in bytes
 
-            $msg = '8120/Configure reporting response'
-                . ', SQN='     .substr($payload, 0, 2)
-                . ', Addr='    .$addr
-                . ', EP='      .substr($payload, 6, 2)
-                . ', ClustId=' .substr($payload, 8, 4)
-                . ', Attr='    .$attr
-                . ', Status='  .$status;
+            $sqn = substr($payload, 0, 2);
+            $addr = substr($payload, 2, 4);
+            $ep = substr($payload, 6, 2);
+            $clustId = substr($payload, 8, 4);
+            if ($payloadLen == 7) {
+                $status = substr($payload, 12, 2);
+            } else {
+                $attrId = substr($payload, 12, 4);
+                $status = substr($payload, 16, 2);
+            }
+
+            if ($payloadLen == 7) { // E_ZCL_CBET_REPORT_ATTRIBUTES_CONFIGURE_RESPONSE
+                $msg = '8120/Configure reporting response'
+                . ', SQN='.$sqn
+                . ', Addr='.$addr
+                . ', EP='.$ep
+                . ', ClustId='.$clustId
+                . ', Status='.$status;
+            } else {
+                $msg = '8120/Individual configure reporting response'
+                . ', SQN='.$sqn
+                . ', Addr='.$addr
+                . ', EP='.$ep
+                . ', ClustId='.$clustId
+                . ', AttrId='.$attrId
+                . ', Status='.$status;
+            }
             parserLog('debug', $dest.', Type='.$msg);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
                 monMsgFromZigate($msg); // Send message to monitor
 
-            // Envoie channel
-            $ClusterId = "Network";
-            $AttributId = "Report";
-            $data = date("Y-m-d H:i:s")." Attribut: ".$attr." Status (00: Ok, <>0: Error): ".$status;
-            $this->msgToAbeille($dest."/0000", $ClusterId, $AttributId, $data);
+            // Tcharp38: what for ? $attrId does not exist in all cases so what to report ?
+            // $data = date("Y-m-d H:i:s")." Attribut: ".$attrId." Status (00: Ok, <>0: Error): ".$status;
+            // $this->msgToAbeille($dest."/0000", "Network", "Report", $data);
         }
 
         function decode8140($dest, $payload, $ln, $qos, $dummy)

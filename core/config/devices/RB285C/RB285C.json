@@ -1,6 +1,6 @@
 {
   "RB285C": {
-    "nameJeedom": "Innr RB285C smart light",
+    "nameJeedom": "Innr RB285C RGBW bulb colour E27",
     "manufacturer": "Innr",
     "model": "RB285C",
     "timeout": "60",
@@ -17,7 +17,7 @@
       "include5": "On",
       "include6": "Off",
       "include7": "Toggle",
-      "include8": "getEtat",
+      "include8": "getEtat"
     }
   }
 }

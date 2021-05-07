@@ -1,16 +1,15 @@
 <?php
 
-// require_once __DIR__.'/../../../../../core/php/core.inc.php';
 require_once __DIR__.'/../../../core/php/AbeilleLog.php';
 
 define('corePhpDir', __DIR__.'/../../../core/php/');
+define('devicesDir', __DIR__.'/../../../core/config/devices/'); // Abeille's supported devices
+define('devicesLocalDir', __DIR__.'/../../../core/config/devices_local/'); // Unsupported/user devices
 
 class AbeilleTools
 {
     const cmdsDir = __DIR__.'/../../../core/config/commands/';
-    const devicesDir = __DIR__.'/../../../core/config/devices/';
     const configDir = __DIR__.'/../../../core/config/';
-    // const daemonDir = __DIR__.'/../';
     const logDir = __DIR__."/../../../../../log/";
 
     /**
@@ -82,11 +81,34 @@ class AbeilleTools
         }
     }
 
+    /* Returns path for device JSON config file for given 'device'.
+       If device is not found, returns false. */
+    public static function getDevicePath($device) {
+        /* Reminder:
+           config/devices => devices officially supported by Abeille
+           config/devices_local => user/custom devices not supported yet
+         */
+
+        /* Is that a supported device ? */
+        $deviceFilename = devicesDir.$device.'/'.$device.'.json';
+        if (file_exists($deviceFilename)) {
+            log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$deviceFilename);
+            return $deviceFilename;
+        }
+
+        /* Is that an unsupported or user device ? */
+        $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
+        if (file_exists($deviceFilename)) {
+            log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$deviceFilename);
+            return $deviceFilename;
+        }
+
+        log::add('Abeille', 'debug', 'getDevicePath('.$device.') => NOT found');
+        return false; // Not found
+    }
+
     /**
      * Needed for Template Generation
-     *
-     *
-     *
      */
     public static function getJSonConfigFilebyCmd($cmd)
     {
@@ -115,12 +137,11 @@ class AbeilleTools
     {
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
 
-        $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
-
-        if (!is_file($deviceFilename)) {
+        $deviceFilename = AbeilleTools::getDevicePath($device);
+        if ($deviceFilename === false) {
             log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
             $device = 'defaultUnknown';
-            $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
+            $deviceFilename = devicesDir.$device.'/'.$device.'.json';
         }
 
         $content = file_get_contents($deviceFilename);
@@ -198,9 +219,9 @@ class AbeilleTools
      */
     public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
     {
-        $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
+        $deviceFilename = AbeilleTools::getDevicePath($device);
         // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$deviceFilename);
-        if (!is_file($deviceFilename)) {
+        if ($deviceFilename === false) {
             // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename'.$deviceFilename);
             return;
         }
@@ -246,13 +267,12 @@ class AbeilleTools
         $fileIllisible = 0;
         $fileCount = 0;
 
-        $devicesDir = self::devicesDir;
-        if (file_exists($devicesDir) == false) {
+        if (file_exists(devicesDir) == false) {
             log::add('Abeille', 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
             return $return;
         }
 
-        $dh = opendir($devicesDir);
+        $dh = opendir(devicesDir);
         while (($dirEntry = readdir($dh)) !== false) {
             $dirCount++;
 
@@ -261,7 +281,7 @@ class AbeilleTools
                 continue;
             }
 
-            $fullPath = $devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$dirEntry.".json";
+            $fullPath = devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$dirEntry.".json";
             if (!file_exists($fullPath)) {
                 log::add($logger, 'warning', "Fichier introuvable: ".$fullPath);
                 $fileMissing++;

@@ -1,0 +1,17 @@
+***
+*** Plugin Abeille
+*** Répertoire "core/config/devices_local" pour modèles non supportés
+***
+
+Ce répertoire permet de stocker des modèles non encore supportés par Abeille comme les modèles en cours de création.
+
+Ce répertoire N'EST PAS néttoyé pendant la mise-à-jour du plugin.
+
+Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suivant
+- dans les répertoires officiels: 'devices' puis 'devices_legacy'
+- puis dans ce 'devices_local'
+- et enfin si toujours pas trouvé, le modèle 'unknownDefault.json' sera utilisé
+
+
+Ce répertoire doit suivre la structure
+    <modelIdentifier>/<modelIdentifier>.json

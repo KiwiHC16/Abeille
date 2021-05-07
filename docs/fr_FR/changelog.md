@@ -6,7 +6,8 @@
 - Tuya GU10 ZB-CL01: ajout support
 - Hue motion sensor: mise-à-jour JSON
 - Interne: correction message 8120
-- Page config: correction installation WiringPi ({1979)
+- Page config: correction installation WiringPi (#1979)
+- Introduction de "core/config/devices_local" pour les EQ non supportés ou en cours de dev
 
 - Page compatibilité: revisitée + ajout du tri par colonne
 - Page santé: ajout de l'état des zigate au top

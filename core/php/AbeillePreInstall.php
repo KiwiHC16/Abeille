@@ -117,7 +117,7 @@
         $logFile = __DIR__."/../../../../log/AbeilleConfig.log";
         $tmpDir = jeedom::getTmpFolder('Abeille');
         $tmpFile = $tmpDir."/integrityCheck.log";
-        logSetConf($logFile); // Init AbeilleLog lib.
+        logSetConf($logFile, true); // Init AbeilleLog lib.
         logMessage("info", "Test d'intégrité d'Abeille");
         /* Note: Using 2 logs to be able to catch md5sum error if something bad found */
         $cmd = "cd ".__DIR__."/../..; md5sum -c --quiet plugin_info/Abeille.md5 >".$tmpFile." 2>&1";
@@ -148,7 +148,7 @@
             return -1;
 
         $logFile = __DIR__."/../../../../log/AbeilleConfig.log";
-        logSetConf($logFile); // Init AbeilleLog lib.
+        logSetConf($logFile, true); // Init AbeilleLog lib.
         logMessage("info", "Nettoyage des fichiers obsolètes...");
 
         /* Creating list of valid files */
@@ -168,31 +168,40 @@
 
         /* Going thru all files to see if should be removed or not */
         define("pluginRoot", __DIR__."/../../");
-        function parseDir($dir, $refFiles) {
-            // logDebug("parseDir(".$dir.")");
+        function cleanDir($dir, $refFiles) {
+            // logDebug("cleanDir(".$dir.")");
             if ($dh = opendir(pluginRoot.$dir)) {
                 while (($entry = readdir($dh)) !== false) {
                     // logDebug("entry=".$entry);
+
                     if (($entry == ".") || ($entry == ".."))
                         continue;
                     if (substr($entry, 0, 1) == ".")
-                        continue; // Ignoring '.xxx' files
-                    if ($entry == "tmp")
+                        continue; // Ignoring '.xxx' hidden files
+
+                    if ($dir.$entry == "tmp")
                         continue; // Ignoring 'tmp' dir
+                    if ($dir.$entry == "core/config/devices_local")
+                        continue; // Ignoring local/user devices
 
                     if (is_dir(pluginRoot.$dir.$entry)) {
-                        parseDir($dir.$entry."/", $refFiles);
+                        cleanDir($dir.$entry."/", $refFiles);
                     } else {
-                        if (in_array($dir.$entry, $refFiles))
+                        if (in_array($dir.$entry, $refFiles)) {
+                            // logDebug($dir.$entry." found in refFiles");
                             continue;
-                        if (unlink(pluginRoot.$dir.$entry) == TRUE)
+                        }
+                        exec("sudo rm -f ".pluginRoot.$dir.$entry, $out, $status);
+                        if ($status == 0)
                             logMessage("info", "- '".$dir.$entry."' SUPPRIME");
+                        else
+                            logMessage("info", "- '".$dir.$entry."': ERREUR. Impossible de supprimer");
                     }
                 }
                 closedir($dh);
             }
         }
-        parseDir("", $refFiles); // Starting at plugin root
+        cleanDir("", $refFiles); // Starting at plugin root
         logMessage("info", "= Nettoyage terminé");
 
         return 0;

@@ -22,20 +22,36 @@ while read -r F
 do
     # Ignoring checksum file
     # - plugin_info/Abeille.md5
-    # Ignoring the following files for checksum to speedup
-    # - All 'xxx.png'
     # - 'resources/archives' content
+    # - 'core/config/devices_local' content except README
     # - All '.xxx' files
-    if [[ ${F} = *"Abeille.md5" ]]; then
+    # Ignoring the following files for checksum generation speedup
+    # - All 'xxx.png'
+    if [[ "${F}" = *"Abeille.md5" ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi
-    if [[ ${F} = *".png"* ]] || [[ ${F} = "resources/archives"* ]] || [[ ${F} = "."* ]]; then
+    if [[ "${F}" = *".png" ]] || [[ ${F} = "."* ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
+    fi
+    if [[ "${F}" = "tmp/"* ]] || [[ "${F}" = "resources/archives"* ]]; then
+        echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
+        continue
+    fi
+    # 'core/config/devices_local' fully excluded except the following files
+    if [[ "${F}" = "core/config/devices_local/"* ]]; then
+        if [[ "${F}" != *"LISEZMOI.txt" ]] && [[ "${F}" != *"README.txt" ]]; then
+            echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
+            continue
+        fi
     fi
 
     # echo "F=$F"
+    if [ ! -e "${F}" ]; then
+        echo "- ERROR: File does not exist: ${F}"
+        continue
+    fi
     md5sum "${F}" >> ${OUT}
 done
 

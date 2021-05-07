@@ -205,14 +205,14 @@
                         <a class="WiringPiStatus" title="Status du package">
                             <span class="label label-success" style="font-size:1em;">-?-</span>
                         </a>
-                        <a class="btn btn-warning" onclick="installWiringPi()" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        <a class="btn btn-warning" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
                     </div>
                     <?php echo '<div id="idSocat'.$i.'" class="col-lg-3">'; ?>
                         Socat :
                         <a class="socatStatus" title="Status d'installation du package">
                             <span class="label label-success" style="font-size:1em;">-?-</span>
                         </a>
-                        <a class="btn btn-warning" onclick="installSocat()" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        <a class="btn btn-warning" id="bt_installSocat" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
                     </div>
                 </div>
 

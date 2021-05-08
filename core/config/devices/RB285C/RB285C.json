@@ -9,7 +9,7 @@
     },
     "configuration": {
       "uniqId": "5c07dsc766df25d94",
-      "icone": "node_defaultUnknown",
+      "icone": "RB285C",
       "mainEP": "#EP#"
     },
     "Commandes": {
@@ -17,7 +17,19 @@
       "include5": "On",
       "include6": "Off",
       "include7": "Toggle",
-      "include8": "getEtat"
+      "include8": "getEtat",
+
+      "include20": "BindToZigateLevel",
+      "include21": "setReportLevel",
+      "include22": "levelLight",
+      "include23": "setLevel",
+      "include24": "getLevel",
+
+      "include300-1": "temperatureLight",
+      "include300-2": "setTemperatureLight",
+      "include300-3": "2200K",
+      "include300-4": "2700K",
+      "include300-5": "4000K"
     }
   }
 }

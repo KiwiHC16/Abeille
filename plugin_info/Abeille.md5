@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210507-MASTER_TCHARP38-3"
+# VERSION="210508-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -540,9 +540,9 @@ a922686213a09defbd603983cc0be1f7 *core/config/devices/PRZ/PRZ.json
 173ba4df71e993baae7aa8f003a7cf10 *core/config/devices/PSE03-v1.1.0/PSE03-v1.1.0.json
 827b438560fa25b358134934715f990f *core/config/devices/Plug01/Plug01.json
 0677823501ddfd2315aeb05ba9072af0 *core/config/devices/PlugZ3/PlugZ3.json
-8e7a4e20794f3a78fa62b84015ba3712 *core/config/devices/RB165/RB165.json
+abf54429c67e94034a3ebc6bae47f68d *core/config/devices/RB165/RB165.json
 fbbac9743e7edf8a54ffd456bc2f5647 *core/config/devices/RB175W/RB175W.json
-f0074b43d6205bd6442f2518f58d4606 *core/config/devices/RB285C/RB285C.json
+c8b7a61f0896fd1357db5f9f0c177d9a *core/config/devices/RB285C/RB285C.json
 70987280d4e29335452a36f8525a28fb *core/config/devices/RC110/RC110.json
 8bac1ce8a05850c508d98797109ac158 *core/config/devices/RF263/RF263.json
 5eb51c17d526b65df3ef3c1b107361ab *core/config/devices/RF265/RF265.json
@@ -610,6 +610,7 @@ c25150c58832113d87a16f5ffac014db *core/config/devices/TS011F/TS011F.json
 070846328b42b3d522e869e9757cf474 *core/config/devices/TS011F__TZ3000_vzopcetz/TS011F__TZ3000_vzopcetz.json
 6138e218244e60482ad22662edce8c0b *core/config/devices/TS0121/TS0121.json
 5fe89a489c91963401b50dd3422c2244 *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
+68cc82e0b8e679657253e5e923da173e *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
 2a0a4dd96a73c01b4934d47e060cff0a *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
 d533e918002f0a29da8416cbe0182d35 *core/config/devices/TS0201/TS0201.json
 effaaaf9148a399891f212230c75dbbf *core/config/devices/TS0203/TS0203.json
@@ -621,7 +622,7 @@ c39907317187db1266ba00c21adc2300 *core/config/devices/Teleruptor/Teleruptor.json
 0210a716eb19b7edae19780f67542711 *core/config/devices/WS2812_light_controller/WS2812_light_controller.json
 596fed21f9bf203a9d8d7a976cfc51e8 *core/config/devices/WarningDevice-EF-3.0/WarningDevice-EF-3.0.json
 712e775a89a4edec88cf1944be83cc86 *core/config/devices/WarningDevice/WarningDevice.json
-f7c26a096861717d07ce4eef8738c638 *core/config/devices/ZB-CL01/ZB-CL01.json
+1534005b1f6e9522d65f51f4104e00c0 *core/config/devices/ZB-CL01/ZB-CL01.json
 9ea63d0b29f809f4c2af31907f90ef45 *core/config/devices/ZB-RGBCW/ZB-RGBCW.json
 228af0407856daf5bb510a908d447aa4 *core/config/devices/ZLL-DimmableLigh/ZLL-DimmableLigh.json
 3845fad9796b2ced18e155581fab3818 *core/config/devices/ZLO-DimmableLight/ZLO-DimmableLight.json
@@ -754,7 +755,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-6e4f7acf829cbff004b4e19355060dfc *docs/fr_FR/changelog.md
+b65b3bbc0449c62f2e5f1243f2bc910c *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -848,6 +849,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_PlugZ3.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_PriseTuya.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ProfaluxLigthModule.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RB175W.png
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RB285C.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RC110.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RF263.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RF265.png
@@ -967,7 +969,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-553cc8970702fe5e6ba2404de92004db *plugin_info/Abeille.version
+04e5b073ffcddf9d74a7f019a7303d4f *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 828beab60c767b4a18b24a4817187f1f *plugin_info/configuration.php

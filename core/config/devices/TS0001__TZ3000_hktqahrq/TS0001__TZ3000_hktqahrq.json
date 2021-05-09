@@ -1,0 +1,29 @@
+{
+  "TS0001__TZ3000_hktqahrq": {
+    "nameJeedom": "Girier DIY Smart Switch",
+    "manufacturer": "Girier",
+    "model": "JR-ZDS01",
+    "timeout": "60",
+    "categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "uniqid": "84FD27FFFE6025E1",
+      "icone": "JR-ZDS01",
+      "mainep": "#ep#"
+    },
+    "commandes": {
+      "include1": "sw",
+      "include2": "societe",
+      "include3": "nom",
+      "include4": "etat",
+      "include5": "on",
+      "include6": "off",
+      "include7": "toggle",
+      "include8": "getetat",
+      "include9": "getmanufacturername",
+      "include10": "getmodelidentifier",
+      "include13 2": "group-membership"
+    }
+  }
+} 

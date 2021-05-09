@@ -1,6 +1,8 @@
 {
   "TS0121__TZ3000_8nkb7mof": {
-    "nameJeedom": "Prise Tuya",
+    "nameJeedom": "Girier ZigBee smart plug EU",
+    "manufacturer": "Girier",
+    "model": "JR-ZPM01",
     "timeout": "60",
     "Comment": "",
     "Categorie": {

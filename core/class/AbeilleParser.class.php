@@ -2767,8 +2767,8 @@
                         return;
                     }
                     if (($AttributId=="0005") || ($AttributId=="0010")) { // 0x0005 ModelIdentifier string
-                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise Manufactuerer_ModelId. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                        $needManufacturer = array('TS0043','TS0115','TS0121','TS011F');
+                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise ModelId_Manufacturer. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
+                        $needManufacturer = array('TS0001','TS0043','TS0115','TS0121','TS011F');
                         if (in_array($trimmedValue,$needManufacturer)) {
                             if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
                                 if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {

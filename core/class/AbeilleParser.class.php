@@ -2750,49 +2750,46 @@
                     // 0004: ManufacturerName
                     // 0005: ModelIdentifier
                     // 0010: Location => Used for Profalux
-                    $msg .= ', DataByteList='.pack('H*', $Attribut);
-                    $msg .= ', [Modelisation]';
+                    // $msg .= ', DataByteList='.pack('H*', $Attribut);
+                    // $msg .= ', [Modelisation]';
 
                     $trimmedValue = pack('H*', $Attribut);
                     $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                     $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
-                    if ($AttributId=="0004") { // 0x0004 ManufacturerName string
-                        if (strlen($trimmedValue )>2)
+                    if ($AttributId == "0004") { // 0x0004 ManufacturerName string
+                        if (strlen($trimmedValue) > 2)
                             $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
 
                         parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
 
                         // Tcharp38: ManufacturerName not pushed to Abeille ?!
                         return;
-                    }
-                    if (($AttributId=="0005") || ($AttributId=="0010")) { // 0x0005 ModelIdentifier string
+                    } else if ($AttributId == "0005") { // 0x0005 ModelIdentifier string
                         ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise ModelId_Manufacturer. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
                         $needManufacturer = array('TS0001','TS0043','TS0115','TS0121','TS011F');
-                        if (in_array($trimmedValue,$needManufacturer)) {
-                            if (isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                                if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
-                                    $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
-                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                                } else {
-                                    unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                                    return;
-                                }
+                        if (in_array($trimmedValue, $needManufacturer)) {
+                            if (!isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
+                                parserLog('debug', '  Manufacturer required & missing for '.$dest.'/'.$SrcAddr);
+                                return;
+                            }
+                            if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
+                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
+                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
                             } else {
+                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
                                 return;
                             }
                         }
 
-                        $data = $trimmedValue;
-
                         // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
                         $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
 
-                        // Tcharp38: To be revisited for ManufacturerNameTable[] which appears to be empty
-                        if ($AttributId == "0005")
-                            parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
-                        else // 0010
-                            parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        $data = $trimmedValue;
+                    } else if ($AttributId == "0010") { // Location
+                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        $data = $trimmedValue;
                     }
                 }
 

@@ -9,6 +9,7 @@
 - Page config: correction installation WiringPi (#1979)
 - Introduction de "core/config/devices_local" pour les EQ non supportés ou en cours de dev
 
+# 210510-STABLE-1
 - Page compatibilité: revisitée + ajout du tri par colonne
 - Page santé: ajout de l'état des zigate au top
 - Sonoff SNZB-02: support corrigé + support 66666 (ModelIdentifier) (#1911)

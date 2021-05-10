@@ -81,6 +81,54 @@ class AbeilleTools
         }
     }
 
+    /* Get list of supported devices, including "local" ones
+       Returns: $devicesList = List of array */
+    public static function getDevicesList() {
+        $devicesList = [];
+
+        $dir = devicesDir;
+        $type = 'Abeille'; // Device supported by Abeille
+        while (true) {
+            $dh = opendir($dir);
+            while (($dirEntry = readdir($dh)) !== false) {
+                /* Ignoring some entries */
+                if (in_array($dirEntry, array(".", "..", "README.txt", "LISEZMOI.txt")))
+                    continue;
+
+                $fullPath = devicesDir.'/'.$dirEntry.'/'.$dirEntry.".json";
+                if (!file_exists($fullPath)) {
+                    log::add('Abeille', 'debug', 'getDevicesList(): path access error '.$fullPath);
+                    continue;
+                }
+
+                /* If filename includes manufacturer, let's split */
+                $modelId = $dirEntry;
+                $manufacturer = '';
+                $content = file_get_contents($fullPath);
+                $devConf = json_decode($content, true);
+                if (isset($devConf['zbManufacturer'])) {
+                    $modelId = substr($dirEntry, 0, -(strlen($devConf['zbManufacturer']) + 1));
+                    $manufacturer = $devConf['zbManufacturer'];
+                    log::add('Abeille', 'debug', 'getDevicesList(): splitted modelId='.$modelId.', manuf='.$manufacturer);
+                }
+
+                $dev = array(
+                    'modelId' => $modelId,
+                    'manufacturer' => $manufacturer,
+                    'type' => $type
+                );
+                $devicesList[] = $dev;
+            }
+            closedir($dh);
+            if ($dir == devicesLocalDir)
+                break; // Scan terminated
+            $dir = devicesLocalDir;
+            $type = 'local';
+        }
+
+        return $devicesList;
+    }
+
     /* Returns path for device JSON config file for given 'device'.
        If device is not found, returns false. */
     public static function getDevicePath($device) {

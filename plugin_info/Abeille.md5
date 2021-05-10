@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210508-MASTER_TCHARP38-1"
+# VERSION="210510-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,14 +48,14 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 c54618b1c51e8cf591215e1770b89556 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 81da95bff54ea060afdced03b303dc1a *core/ajax/abeille.ajax.php
-6653f6304b30462dff479281ae66d665 *core/class/Abeille.class.php
+5407bb92c7ce0b79076dff8b45634413 *core/class/Abeille.class.php
 26e0730c8448525e2538264c70927eb2 *core/class/AbeilleCmd.class.php
 2214782c663bb3d10793ff1fadec192f *core/class/AbeilleCmdPrepare.class.php
 6735949ff55d34ea881c2295fb8ca6a6 *core/class/AbeilleCmdProcess.class.php
 9f36cefc9a69a01ba9ae133f1af543dd *core/class/AbeilleCmdQueue.class.php
 d2c495c5155b9d4d69906a6573a1d8f5 *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-11e72e70f93683416acb16ebc98755ec *core/class/AbeilleParser.class.php
+c325b0c5cdd87ba243beb17e95aea331 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -594,6 +594,7 @@ e22cd8d148b92b905fd60387501bac47 *core/config/devices/TRADFRItransformer10W/TRAD
 fdab451039a0a189a6cfac72c9378883 *core/config/devices/TRADFRItransformer30W/TRADFRItransformer30W.json
 afa84259cbdae73d990877645aa878f5 *core/config/devices/TRADFRIwirelessdimmer/TRADFRIwirelessdimmer.json
 4650d96f0c2a45bf7ece1e78cc05c0cb *core/config/devices/TS0001/TS0001.json
+adf495e546b274918818c353126f8f74 *core/config/devices/TS0001__TZ3000_hktqahrq/TS0001__TZ3000_hktqahrq.json
 9bc7678f558d6c0a735cb56ca0b69290 *core/config/devices/TS0002/TS0002.json
 c7593b9990c80069dbf9bec74f1a8970 *core/config/devices/TS0003/TS0003.json
 d01c37784bb07a89e5cd582c435bcc89 *core/config/devices/TS0011/TS0011.json
@@ -607,10 +608,10 @@ fa36c681c4e10328261a7ace4c6b0351 *core/config/devices/TS0042/TS0042.json
 1d8f0e2e3702d1da9682825902366352 *core/config/devices/TS0115/TS0115.json
 e7292c054c03a4fe96108fbe62ad477e *core/config/devices/TS0115__TYZB01_vkwryfdr/TS0115__TYZB01_vkwryfdr.json
 c25150c58832113d87a16f5ffac014db *core/config/devices/TS011F/TS011F.json
-070846328b42b3d522e869e9757cf474 *core/config/devices/TS011F__TZ3000_vzopcetz/TS011F__TZ3000_vzopcetz.json
+3c6f95b28a8c4f520aa43e25fcd444fb *core/config/devices/TS011F__TZ3000_vzopcetz/TS011F__TZ3000_vzopcetz.json
 6138e218244e60482ad22662edce8c0b *core/config/devices/TS0121/TS0121.json
 5fe89a489c91963401b50dd3422c2244 *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
-68cc82e0b8e679657253e5e923da173e *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
+4ff4d955df6fd51f71c94e331d9473ae *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
 2a0a4dd96a73c01b4934d47e060cff0a *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
 d533e918002f0a29da8416cbe0182d35 *core/config/devices/TS0201/TS0201.json
 effaaaf9148a399891f212230c75dbbf *core/config/devices/TS0203/TS0203.json
@@ -755,7 +756,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-b65b3bbc0449c62f2e5f1243f2bc910c *docs/fr_FR/changelog.md
+9d6670e4fc87453ba38c12b8cdb3f7ae *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -810,6 +811,8 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_IkeaTradfriBulbE27Opal1000lm.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_IkeaTradfriBulbE27WOpal1000lm2.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_IkeaTradfriBulbGU10W400lm.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_IkeaTradfriDimmer.png
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_JR-ZDS01.png
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_JR-ZPM01.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_Keyfob-ZB3.0.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_LCA001.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_LCE002.png
@@ -969,7 +972,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-04e5b073ffcddf9d74a7f019a7303d4f *plugin_info/Abeille.version
+410a1baee6c2f4e4b88ae413ea66f8d3 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 828beab60c767b4a18b24a4817187f1f *plugin_info/configuration.php
@@ -985,7 +988,7 @@ aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 33e1b981d7e0014abfc3b51d9c570649 *resources/AbeilleDeamon/Debug/verification.sh
 7d8568e884e3461d1bb14f9cb0cbd5f0 *resources/AbeilleDeamon/includes/fifo.php
 89325b2388ce01264d572553f00a2af8 *resources/AbeilleDeamon/includes/function.php
-f5196fe82ce4493a1fc1f3b7fe8e7ffb *resources/AbeilleDeamon/lib/AbeilleTools.php
+e830910e1826db2a4ca0ffd36eb1a37a *resources/AbeilleDeamon/lib/AbeilleTools.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/Abeille.class-enable-disable.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/BeforeNewEQPage/060_AbeilleZigatePart.php

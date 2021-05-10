@@ -38,7 +38,6 @@ include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
 
 class Abeille extends eqLogic
 {
-
     /**
      * migrateBetweenZigates()
      *
@@ -1146,13 +1145,11 @@ while ($cron->running()) {
                     $version = $cmdlogic->execCmd();
                 }
             }
-            if ($version == '031D') {
+            if (($version == '031D') || ($version == '031E')) {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '. $i.' in hybrid mode');
-                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
-                // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "normal");
             }
         }
@@ -1160,6 +1157,11 @@ while ($cron->running()) {
         // Essaye de recuperer les etats des equipements
         // Tcharp38: Moved from deamon_start()
         self::refreshCmd();
+
+        /* Building list of supported devices.
+           This will help deciding which JSON to take when modelIdentifier is a "common" one */
+        $devicesList = AbeilleTools::getDevicesList();
+        log::add('Abeille', 'debug', 'deamon(): devList='.json_encode($devicesList));
 
         try {
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
@@ -1227,7 +1229,7 @@ while ($cron->running()) {
         } catch (Exception $e) {
             log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());
         }
-        log::add('Abeille', 'debug', 'Main daemon stoppped');
+        log::add('Abeille', 'debug', 'deamon(): Main daemon stoppped');
     }
 
     // public static function checkParameters() {
@@ -1448,7 +1450,6 @@ while ($cron->running()) {
         self::publishMosquitto(queueKeyAbeilleToCmd, priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM");
 
         return;
-
     }
 
     public static function message($message)

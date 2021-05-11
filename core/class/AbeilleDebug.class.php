@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+    include_once __DIR__.'/../../core/class/AbeilleTools.class.php';
 
 class AbeilleDebug extends AbeilleTools {
         public $debug = array(

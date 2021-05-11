@@ -118,7 +118,7 @@
                     <option value="Abeille">{{Abeille}}</option>
                     <option value="Ruche">{{Ruche}}</option>
                     <?php
-                        require_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
+                        require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
                         $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
                         $selectBox = array();

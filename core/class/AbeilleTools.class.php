@@ -1,16 +1,16 @@
 <?php
 
-require_once __DIR__.'/../../../core/php/AbeilleLog.php';
+require_once __DIR__.'/../php/AbeilleLog.php';
 
-define('corePhpDir', __DIR__.'/../../../core/php/');
-define('devicesDir', __DIR__.'/../../../core/config/devices/'); // Abeille's supported devices
-define('devicesLocalDir', __DIR__.'/../../../core/config/devices_local/'); // Unsupported/user devices
+define('corePhpDir', __DIR__.'/../php/');
+define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
+define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
 
 class AbeilleTools
 {
-    const cmdsDir = __DIR__.'/../../../core/config/commands/';
-    const configDir = __DIR__.'/../../../core/config/';
-    const logDir = __DIR__."/../../../../../log/";
+    const cmdsDir = __DIR__.'/../config/commands/';
+    const configDir = __DIR__.'/../config/';
+    const logDir = __DIR__."/../../../../log/";
 
     /**
      * Get Plugin Log Level.

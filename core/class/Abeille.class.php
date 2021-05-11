@@ -1,40 +1,38 @@
 <?php
+    /* This file is part of Jeedom.
+    *
+    * Jeedom is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Jeedom is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+    */
 
-/* This file is part of Jeedom.
- *
- * Jeedom is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Jeedom is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
- */
+    include_once __DIR__.'/../config/Abeille.config.php';
 
-include_once __DIR__.'/../config/Abeille.config.php';
+    /* Developers debug features */
+    if (file_exists(dbgFile)) {
+        // include_once dbgFile;
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
 
-/* Developers debug features */
-// define('dbgFile',  __DIR__."/../../tmp/debug.json");
-if (file_exists(dbgFile)) {
-    // include_once dbgFile;
-    /* Dev mode: enabling PHP errors logging */
-    error_reporting(E_ALL);
-    ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
-    ini_set('log_errors', 'On');
-}
-
-include_once __DIR__.'/../../../../core/php/core.inc.php';
-include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php';
-include_once __DIR__.'/AbeilleMsg.php';
-include_once __DIR__.'/AbeilleCmd.class.php';
-include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
+    include_once __DIR__.'/../../../../core/php/core.inc.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
+    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
+    include_once __DIR__.'/AbeilleTools.class.php';
+    include_once __DIR__.'/AbeilleMsg.php';
+    include_once __DIR__.'/AbeilleCmd.class.php';
+    include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
 
 class Abeille extends eqLogic
 {

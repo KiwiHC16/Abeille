@@ -52,7 +52,7 @@
 
     try {
 
-        include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
+        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
 
         ajax::init();
 

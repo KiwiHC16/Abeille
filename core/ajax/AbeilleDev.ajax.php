@@ -53,7 +53,7 @@
 
     try {
         require_once __DIR__.'/../../../../core/php/core.inc.php';
-        include_once __DIR__.'/../../resources/AbeilleDeamon/lib/AbeilleTools.php'; // deamonlogFilter()
+        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
         include_once __DIR__.'/../php/AbeilleLog.php'; // logMessage(), logDebug()
 
         include_file('core', 'authentification', 'php');

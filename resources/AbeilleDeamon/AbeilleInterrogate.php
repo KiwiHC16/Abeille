@@ -19,7 +19,7 @@
     include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/includes/function.php';
     include_once __DIR__.'/includes/fifo.php';
-    include_once __DIR__.'/lib/AbeilleTools.php';
+    include_once __DIR__.'/../../core/class/AbeilleTools.class.php';
 
     /*
      [2020-03-17 16:13:31][DEBUG] : execute ->action<- function with options ->{"title":"aaaa","message":"","utid":"1584457453959"}<-

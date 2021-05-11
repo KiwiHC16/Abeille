@@ -16,7 +16,7 @@
      */
 
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
-    include_once(dirname(__FILE__).'/../../resources/AbeilleDeamon/lib/AbeilleTools.php');
+    include_once(dirname(__FILE__).'/../../core/class/AbeilleTools.class.php');
     include_once(dirname(__FILE__).'/../../desktop/php/200_AbeilleScript.php');
     /*
     if (!isConnect('admin')) {
@@ -59,18 +59,18 @@
         if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
         <div class="ui-block-a">
-		    
+
 			    <a id="bt_include<?php echo $i;?>" href="#" class="ui-btn ui-btn-raised clr-primary waves-effect waves-button changeIncludeState" data-mode="1" data-state="1" style="margin: 5px;">
 				    <i class="fa fa-link" style="font-size: 6em;"></i>{{Inclusion Z<?php echo $i;?>}}
 			    </a>
-		    
+
 			    <a id="bt_include_stop<?php echo $i;?>" href="#" class="ui-btn ui-btn-raised clr-primary waves-effect waves-button changeIncludeState" data-mode="1" data-state="1" style="margin: 5px;">
 				    <i class="fa fa-unlink" style="font-size: 6em;"></i>{{Stop Z<?php echo $i;?>}}
 			    </a>
-		    
+
         </div>
 
-<?php        
+<?php
         }
     }
 

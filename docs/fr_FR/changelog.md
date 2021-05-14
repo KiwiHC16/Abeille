@@ -1,13 +1,14 @@
 # Changelog Abeille
 
-- JSON: Correction setReportTemp (#1918)
-- Innr RB285C: correction modele corrompu
-- Innr RB165: modele préliminaire
-- Tuya GU10 ZB-CL01: ajout support
-- Hue motion sensor: mise-à-jour JSON
-- Interne: correction message 8120
-- Page config: correction installation WiringPi (#1979)
-- Introduction de "core/config/devices_local" pour les EQ non supportés ou en cours de dev
+- JSON: Correction setReportTemp (#1918).
+- Innr RB285C: correction modele corrompu.
+- Innr RB165: modele préliminaire.
+- Tuya GU10 ZB-CL01: ajout support.
+- Hue motion sensor: mise-à-jour JSON.
+- Interne: correction message 8120.
+- Page config: correction installation WiringPi (#1979).
+- Introduction de "core/config/devices_local" pour les EQ non supportés par Abeille mais locaux/en cours de dev.
+- Zemismart ZW-EC-01 curtain switch: ajout du modèle JSON
 
 # 210510-STABLE-1
 - Page compatibilité: revisitée + ajout du tri par colonne

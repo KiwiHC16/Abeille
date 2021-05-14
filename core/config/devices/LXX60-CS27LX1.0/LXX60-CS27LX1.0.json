@@ -1,0 +1,25 @@
+{
+  "LXX60-CS27LX1.0": {
+    "nameJeedom": "Zemismart ZW-EC-01 curtain switch",
+    "manufacturer": "Zemismart",
+    "model": "ZW-EC-01",
+    "timeout": "",
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "LXX60-CS27LX1.0",
+      "mainEP": "1"
+    },
+    "Commandes": {
+      "include0000-1": "societe",
+      "include0000-2": "nom",
+
+      "include0003-1": "Identify",
+
+      "include0006-1": "On",
+      "include0006-2": "Off",
+      "include0006-3": "etat"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210511-MASTER_TCHARP38-1"
+# VERSION="210514-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -529,6 +529,7 @@ c826bd1b16eaaa7dd9472745f66c584d *core/config/devices/LWA001/LWA001.json
 fda2648269e08bbe0221a227ec523678 *core/config/devices/LWB006/LWB006.json
 d54fb4ff469ad28345563565759c73c2 *core/config/devices/LWB010/LWB010.json
 22092a008b3b25fc0e366e12f2329909 *core/config/devices/LWO001/LWO001.json
+16b8912ed4f3f148aa6d4d9e94888c98 *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
 330437e2e498dec700e7a24914a51dd4 *core/config/devices/Lamp_01/Lamp_01.json
 0377eec992f195c139d7280c90aaf4d5 *core/config/devices/MR16TWOSRAM/MR16TWOSRAM.json
 b265ff1f79c6d665bfcbc3ba59a72028 *core/config/devices/MS01/MS01.json
@@ -757,7 +758,7 @@ c45bb946e092d8c39cb95c51c6bcd469 *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-9d6670e4fc87453ba38c12b8cdb3f7ae *docs/fr_FR/changelog.md
+b251aceec74c6ede6d4281dd3a767726 *docs/fr_FR/changelog.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -973,7 +974,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-215d24d0424750fef611f7ba17b33b70 *plugin_info/Abeille.version
+4fac7167f52dae74045218597ac9e44e *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 828beab60c767b4a18b24a4817187f1f *plugin_info/configuration.php

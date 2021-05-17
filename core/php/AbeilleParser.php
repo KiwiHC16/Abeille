@@ -11,7 +11,6 @@
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
     /* Developers debug features */
-    // $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         if (isset($dbgConfig["dbgParserLog"])) {
@@ -37,7 +36,7 @@
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-    include_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+    include_once __DIR__.'/../class/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleLog.php';              // Abeille log features
     include_once __DIR__.'/AbeilleZigateConst.php';      // Zigate constants
     include_once __DIR__.'/../class/AbeilleCmd.class.php';      // AbeilleCmdClass

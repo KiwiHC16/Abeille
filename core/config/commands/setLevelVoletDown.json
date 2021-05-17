@@ -1,0 +1,17 @@
+{
+  "setLevelVoletDown": {
+    "isVisible": 1,
+    "name": "Descendre",
+    "comment": "cluster 0008, move to level 0%",
+    "isHistorized": "0",
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setLevel",
+      "request": "Level=0&duration=0000EP=#EP#",
+      "visibilityCategory": "All"
+    }
+  }
+}

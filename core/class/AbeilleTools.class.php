@@ -5,10 +5,10 @@ require_once __DIR__.'/../php/AbeilleLog.php';
 define('corePhpDir', __DIR__.'/../php/');
 define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
 define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
+define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
 
 class AbeilleTools
 {
-    const cmdsDir = __DIR__.'/../config/commands/';
     const configDir = __DIR__.'/../config/';
     const logDir = __DIR__."/../../../../log/";
 
@@ -81,52 +81,89 @@ class AbeilleTools
         }
     }
 
-    /* Get list of supported devices, including "local" ones
-       Returns: $devicesList = List of array */
-    public static function getDevicesList() {
+    /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
+       Returns: Associative array; $devicesList[$identifier] = array(), or false if error */
+    public static function getDevicesList($from = "Abeille") {
         $devicesList = [];
 
-        $dir = devicesDir;
-        $type = 'Abeille'; // Device supported by Abeille
-        while (true) {
-            $dh = opendir($dir);
-            while (($dirEntry = readdir($dh)) !== false) {
-                /* Ignoring some entries */
-                if (in_array($dirEntry, array(".", "..", "README.txt", "LISEZMOI.txt")))
-                    continue;
-
-                $fullPath = devicesDir.'/'.$dirEntry.'/'.$dirEntry.".json";
-                if (!file_exists($fullPath)) {
-                    log::add('Abeille', 'debug', 'getDevicesList(): path access error '.$fullPath);
-                    continue;
-                }
-
-                /* If filename includes manufacturer, let's split */
-                $modelId = $dirEntry;
-                $manufacturer = '';
-                $content = file_get_contents($fullPath);
-                $devConf = json_decode($content, true);
-                if (isset($devConf['zbManufacturer'])) {
-                    $modelId = substr($dirEntry, 0, -(strlen($devConf['zbManufacturer']) + 1));
-                    $manufacturer = $devConf['zbManufacturer'];
-                    log::add('Abeille', 'debug', 'getDevicesList(): splitted modelId='.$modelId.', manuf='.$manufacturer);
-                }
-
-                $dev = array(
-                    'modelId' => $modelId,
-                    'manufacturer' => $manufacturer,
-                    'type' => $type
-                );
-                $devicesList[] = $dev;
-            }
-            closedir($dh);
-            if ($dir == devicesLocalDir)
-                break; // Scan terminated
-            $dir = devicesLocalDir;
-            $type = 'local';
+        if ($from == "Abeille")
+            $rootDir = devicesDir;
+        else if ($from == "local")
+            $rootDir = devicesLocalDir;
+        else {
+            log::add('Abeille', 'error', 'getDevicesList(): wrong type '.$from);
+            return false;
         }
 
+        $dh = opendir($rootDir);
+        if ($dh === false) {
+            log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.') error');
+            return false;
+        }
+        while (($dirEntry = readdir($dh)) !== false) {
+            /* Ignoring some entries */
+            if (in_array($dirEntry, array(".", "..", "README.txt", "LISEZMOI.txt")))
+                continue;
+
+            $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
+            if (!file_exists($fullPath)) {
+                log::add('Abeille', 'debug', 'getDevicesList(): path access error '.$fullPath);
+                continue;
+            }
+
+            /* If filename includes manufacturer, let's split */
+            $modelId = $dirEntry;
+            $manufacturer = '';
+            $content = file_get_contents($fullPath);
+            $devConf = json_decode($content, true);
+            if (isset($devConf['zbManufacturer'])) {
+                $modelId = substr($dirEntry, 0, -(strlen($devConf['zbManufacturer']) + 1));
+                $manufacturer = $devConf['zbManufacturer'];
+                log::add('Abeille', 'debug', 'getDevicesList(): splitted modelId='.$modelId.', manuf='.$manufacturer);
+            }
+
+            $dev = array(
+                'modelId' => $modelId,
+                'manufacturer' => $manufacturer,
+                'type' => $from
+            );
+            $devicesList[$dirEntry] = $dev;
+        }
+        closedir($dh);
+
         return $devicesList;
+    }
+
+    /* Get list of supported commands (found in core/config/commands).
+       Returns: Indexed array; $commandsList[] = $fileName, or false if error */
+    public static function getCommandsList() {
+        $commandsList = [];
+
+        $rootDir = cmdsDir;
+        $dh = opendir($rootDir);
+        if ($dh === false) {
+            log::add('Abeille', 'error', 'getCommandsList(): opendir('.$rootDir.') error');
+            return false;
+        }
+        while (($entry = readdir($dh)) !== false) {
+            /* Ignoring non json files */
+            if (in_array($entry, array(".", "..")))
+                continue;
+            if (pathinfo($entry, PATHINFO_EXTENSION) != "json")
+                continue;
+
+            $fullPath = $rootDir.$entry;
+            if (!file_exists($fullPath)) {
+                log::add('Abeille', 'debug', 'getCommandsList(): path access error '.$fullPath);
+                continue;
+            }
+
+            $commandsList[] = substr($entry, 0, -5); // Removing ".json"
+        }
+        closedir($dh);
+        sort($commandsList);
+
+        return $commandsList;
     }
 
     /* Returns path for device JSON config file for given 'device'.
@@ -155,12 +192,58 @@ class AbeilleTools
         return false; // Not found
     }
 
+    /*
+     * Read JSON config for given 'device'
+     * Returns: array() or false
+     */
+    public static function getJSonConfig($device, $from="Abeille")
+    {
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
+
+        if ($from == 'Abeille')
+            $deviceFilename = devicesDir.$device.'/'.$device.'.json';
+        else
+            $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
+
+        if (!is_file($deviceFilename)) {
+            log::add('Abeille', 'error', 'getJSonConfig('.$device.'): file not found '.$deviceFilename);
+            return false;
+            // log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
+            // $device = 'defaultUnknown';
+            // $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
+        }
+
+        $content = file_get_contents($deviceFilename);
+        $deviceTemplate = json_decode($content, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
+            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content='.$content);
+            return;
+        }
+
+        // Basic Commands
+        $deviceCmds = array();
+
+        // Recupere les templates Cmd instanciées
+        foreach ($deviceTemplate[$device]['Commandes'] as $cmd => $file) {
+            if (substr($cmd, 0, 7) == "include") {
+                $deviceCmds += self::getJSonConfigFilebyCmd($file);
+            }
+        }
+
+        // Ajoute les commandes au master
+        $deviceTemplate[$device]['Commandes'] = $deviceCmds;
+
+        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate end');
+        return $deviceTemplate;
+    }
+
     /**
      * Needed for Template Generation
      */
     public static function getJSonConfigFilebyCmd($cmd)
     {
-        $cmdFilename = self::cmdsDir.$cmd.'.json';
+        $cmdFilename = cmdsDir.$cmd.'.json';
 
         if (!is_file($cmdFilename)) {
             log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: '.$cmdFilename);

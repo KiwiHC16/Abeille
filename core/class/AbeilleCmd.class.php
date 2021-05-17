@@ -101,7 +101,6 @@
         public function execute($_options = null)
         {
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', '');
             logMessage('debug', '-- execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.

@@ -113,7 +113,7 @@
             global $argv;
 
             /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser.log", TRUE);
+            logSetConf("AbeilleParser.log", true);
 
             parserLog("debug", "AbeilleParser constructor", "AbeilleParserClass");
             $this->parameters_info = AbeilleTools::getParameters();

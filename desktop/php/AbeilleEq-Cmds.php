@@ -3,8 +3,9 @@
 
 <form class="form-horizontal">
     <fieldset>
-        <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) { ?>
+        <?php if (isset($dbgDeveloperMode)) { ?>
             <div class="form-actions">
+                <a class="btn btn-success btn-sm pull-right" id="bt_loadCmdFromJson"><i class="fa fa-plus-circle"></i>  {{Ajouter une commande JSON}}</a>
                 <a class="btn btn-success btn-sm pull-right" id="bt_addAbeilleAction"><i class="fa fa-plus-circle"></i>  {{Ajouter une commande action}}</a>
                 <a class="btn btn-success btn-sm pull-right" id="bt_addAbeilleInfo">  <i class="fa fa-plus-circle"></i>  {{Ajouter une commande info}}</a>
             </div>
@@ -16,11 +17,13 @@
     <thead>
         <tr>
             <th style="width:  80px;">{{#}}</th>
-            <th style="width: 150px;">{{Commande Jeedom}}</th>
+            <th style="width: 150px;">{{Cmde Jeedom}}</th>
             <th style="width: 120px;">{{Type}}</th>
-            <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) { ?>
-                <th style="width: 300px;">{{Commande Abeille}}</th>
-                <th style="width: 600px;">{{Paramètres commande Abeille}}</th>
+            <?php if (isset($dbgDeveloperMode)) { ?>
+                <!-- Tcharp38: logicalId & topic to be revisited. Currently logicalId seems to not be used. -->
+                <th style="width: 300px;">{{Cmde Abeille/logicalId}}</th>
+                <th style="width: 300px;">{{Cmde Abeille/topic}}</th>
+                <th style="width: 600px;">{{Paramètres cmde Abeille/request}}</th>
             <?php } ?>
             <th style="width: 150px;">{{Unité/Cron}}</th>
             <th style="width: 130px;">{{Options}}</th>

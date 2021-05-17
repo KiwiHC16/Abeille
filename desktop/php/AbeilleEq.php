@@ -2,12 +2,13 @@
      Displays main infos + specific params + commands. -->
 
 <?php
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+
     /* Developers debug features & PHP errors */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         // include $dbgFile;
-        $dbgDeveloperMode = TRUE;
+        $dbgDeveloperMode = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -30,9 +31,11 @@
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
-
-    require_once __DIR__.'/../../core/config/Abeille.config.php';
 ?>
+
+<!-- For all modals on 'Abeille' page. -->
+<div class="row row-overflow" id="abeilleModal">
+</div>
 
 <div class="col-xs-12 eqLogic" style="padding-top: 5px">
     <div class="input-group pull-right" style="display:inline-flex">
@@ -403,15 +406,22 @@
         tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
 
-        <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) { ?>
+        <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) { ?>
             tr += '<td>'; // Col 4 = Abeille command name
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId">';
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{logicalId}}">';
+            tr += '</td>';
+
+            // Tcharp38: logicalId seems not really used so displaying 'topic' too
+            tr += '<td>'; // Col 4.1 = Topic
+            if (init(_cmd.type) == 'action') {
+                tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{topic}}">';
+            }
             tr += '</td>';
 
             tr += '<td>'; // Col 5 = Abeille cmd params
             if ((init(_cmd.type) == 'info') || (init(_cmd.type) == '')) { // Info or new cmd
             } else if (init(_cmd.type) == 'action') {
-                tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{Payload}}">';
+                tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{payload}}">';
             }
             tr += '</td>';
         <?php } ?>
@@ -515,4 +525,19 @@
     }
 
 	$("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+
+    /* Allows to select of cmd Json file & load it as a new command */
+    $("#bt_loadCmdFromJson").on('click', function(event) {
+        console.log("loadCmdFromJson()");
+
+        $("#abeilleModal").dialog({
+            title: "{{Charge cmd JSON}}",
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            height: 300,
+            width: 400,
+        });
+        $('#abeilleModal').load('index.php?v=d&plugin=Abeille&modal=AbeilleSelectJsonCmd.modal').dialog('open');
+    });
 </script>

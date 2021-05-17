@@ -1,6 +1,8 @@
 {
   "volet": {
-    "nameJeedom": "Volet ProFalux",
+    "nameJeedom": "Profalux volet",
+    "manufacturer": "Profalux",
+    "model": "volets",
     "timeout": "60",
     "Categorie": {
       "automatism": "1"
@@ -13,31 +15,22 @@
       "paramType": "paramABC"
     },
     "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
       "include3": "SW",
       "include4": "ZCLVersion",
       "include5": "dateCode",
       "include6": "location",
-      "include7": "etatVolet",
-      "include8": "levelVolet",
-      "include9": "onVolet",
-      "include10": "offVolet",
-      "include11": "toggleVolet",
-      "include12": "setLevelVolet",
-      "include12 2": "moveToLiftAndTiltBSO",
-      "include13": "levelVoletStop",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
       "include23": "getSWBuild",
       "include24": "Identify",
       "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+
+      "include0008-1": "BindToZigateLevel",
+      "include0008-2": "setReportLevel",
+      "include0008-3": "Level",
+      "include0008-7": "setLevelVoletUp",
+      "include0008-8": "setLevelVoletDown",
+      "include0008-6": "levelVoletStop"
+      "include0008-5": "setLevelVolet",
+      "include0008-4": "getLevel",
     }
   }
 }

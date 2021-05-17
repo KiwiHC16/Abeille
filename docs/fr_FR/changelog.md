@@ -9,6 +9,8 @@
 - Page config: correction installation WiringPi (#1979).
 - Introduction de "core/config/devices_local" pour les EQ non supportés par Abeille mais locaux/en cours de dev.
 - Zemismart ZW-EC-01 curtain switch: ajout du modèle JSON
+- Profalux volet: Revue modele JSON. Utilisatio cluster 0008 au lieu de 0006 + report.
+- Page EQ/commandes: pour mode developpeur, possibilité charger JSON.
 
 # 210510-STABLE-1
 - Page compatibilité: revisitée + ajout du tri par colonne

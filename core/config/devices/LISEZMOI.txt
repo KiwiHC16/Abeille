@@ -1,0 +1,17 @@
+***
+*** Plugin Abeille
+*** Répertoire "core/config/devices" pour modèles supportés
+***
+
+Ce répertoire contient les modèles d'équipement supportés par Abeille.
+
+Attention !! Toute modification de ce répertoire sera écrasée lors des mises-à-jour du plugin.
+
+Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suivant
+- dans ce répertoire officiel 'devices'
+- puis dans le répertoire 'devices_local' pour les équipements locaux/custom
+- et enfin si toujours pas trouvé, le modèle 'defaultUnknown.json' sera utilisé
+
+
+Ce répertoire doit suivre la structure
+    <modelIdentifier>/<modelIdentifier>.json

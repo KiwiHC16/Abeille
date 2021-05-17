@@ -254,6 +254,7 @@
             "0501" => "Security & Safety: IAS ACE (IAS_ACE_CLUSTER)",
             "0502" => "Security & Safety: IAS WD",
             "0702" => "Smart Energy: Metering",
+            "0703" => "Smart Energy: Messaging",
             "0B05" => "Misc: Diagnostics",
             "0B04" => "Legrand private",
             "0B05" => "Diagnostics (DIAGNOSTICS_CLUSTER)",

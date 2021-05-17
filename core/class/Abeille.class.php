@@ -84,7 +84,6 @@ class Abeille extends eqLogic
 
         // 3/ inclusion normale sur le reseau 2 zigbee
         message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
-
     }
 
     /**
@@ -159,7 +158,6 @@ class Abeille extends eqLogic
         else {
             log::add('Abeille', 'debug', 'Pas de transfer du TimeOut car les equipements ne partagent pas le meme modele.' );
         }
-
 
         // Parcours toutes les commandes pour recuperer les historiques, remplacer dans jeedom les instances de #ghost-cmd# par #real-cmd#
         log::add('Abeille', 'debug', 'Transfer des commandes une a une.' );

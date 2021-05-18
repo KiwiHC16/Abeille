@@ -35,7 +35,6 @@
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleLog.php';              // Abeille log features
     include_once __DIR__.'/AbeilleZigateConst.php';      // Zigate constants

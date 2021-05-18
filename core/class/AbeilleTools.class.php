@@ -407,31 +407,42 @@ class AbeilleTools
         while (($dirEntry = readdir($dh)) !== false) {
             $dirCount++;
 
-            if ( in_array($dirEntry, array(".", "..", "listeCompatibilite.php", "Template") ) ) {
+            $fullPath = devicesDir.$dirEntry;
+            if (!is_dir($fullPath))
+                continue;
+            if (in_array($dirEntry, array(".", ".."))) {
                 $dirExcluded++;
                 continue;
             }
 
             $fullPath = devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$dirEntry.".json";
             if (!file_exists($fullPath)) {
-                log::add($logger, 'warning', "Fichier introuvable: ".$fullPath);
+                log::add('Abeille', 'warning', "Fichier introuvable: ".$fullPath);
                 $fileMissing++;
                 continue;
             }
 
             try {
-                $returnOneMore = array_keys(json_decode(file_get_contents($fullPath),1))[0];
+                $jsonContent = file_get_contents($fullPath);
             } catch (Exception $e) {
-                log::add($logger, 'error', 'Impossible de lire le contenu du fichier '.$fullPath);
+                log::add('Abeille', 'error', 'Impossible de lire le contenu du fichier '.$fullPath);
                 $fileIllisible++;
                 continue;
             }
+
+            $jdec = json_decode($jsonContent, true);
+            if ($jdec == null) {
+                log::add('Abeille', 'error', 'Fichier corrompu: '.$fullPath);
+                $fileIllisible++;
+                continue;
+            }
+            $returnOneMore = array_keys($jdec)[0];
 
             $return[] = $returnOneMore;
             $fileCount++;
         }
 
-        log::add($logger, 'debug', "Nb repertoire template parcourus: ".$dirCount." dont ". $dirExcluded." exclus soit ".($dirCount-$dirExcluded).". ".$fileCount." fichiers template ajoutés à la liste, ".$fileMissing++." introuvables et ".$fileIllisible." templates illisibles." );
+        log::add('Abeille', 'debug', "Nb repertoire template parcourus: ".$dirCount." dont ". $dirExcluded." exclus soit ".($dirCount-$dirExcluded).". ".$fileCount." fichiers template ajoutés à la liste, ".$fileMissing++." introuvables et ".$fileIllisible." templates illisibles." );
         return $return;
     }
 

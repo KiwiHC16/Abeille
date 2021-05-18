@@ -7,10 +7,7 @@
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
-
     include_once __DIR__.'/AbeilleLog.php';
-
     include_once __DIR__.'/../class/Abeille.class.php';
     include_once __DIR__.'/../class/AbeilleParser.class.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';

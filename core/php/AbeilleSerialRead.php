@@ -25,8 +25,8 @@
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/AbeilleLog.php';
+    include_once __DIR__.'/../class/AbeilleTools.class.php';
 
     logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);

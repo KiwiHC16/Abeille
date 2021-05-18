@@ -28,7 +28,6 @@
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
-    include_once __DIR__.'/../../resources/AbeilleDeamon/includes/fifo.php';
     include_once __DIR__.'/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleMsg.php';
     include_once __DIR__.'/AbeilleCmd.class.php';

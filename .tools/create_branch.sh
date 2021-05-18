@@ -3,9 +3,9 @@
 
 # How to
 #   Create 'beta' version from 'master'
-#   .tools/create_branch.sh beta
+#     .tools/create_branch.sh beta
 #   Create 'stable' version from 'beta'
-#   .tools/create_branch.sh stable
+#     .tools/create_branch.sh stable
 
 echo "***"
 echo "*** Abeille's beta/stable branch creation script"
@@ -55,7 +55,7 @@ fi
 
 # Check repo status
 # - Ensure that local branch is 'master' (to beta) or 'beta' (to stable)
-# TODO: How to check that current branch is in line with master ?
+# - Force a "git pull ff" to be sure local branch is aligned on remote one.
 # - Stops if any uncommitted local modifs
 echo "Checking current branch & status"
 CUR_BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -68,6 +68,11 @@ if [ $? -ne 0 ]; then
     echo "= ERROR: Uncommitted local modifications found"
     exit 11
 fi
+git pull -q --ff-only >/dev/null
+if [ $? -ne 0 ]; then
+    echo "= ERROR: You must do a git pull first to align your local branch with remote one."
+    exit 12
+fi
 
 # If TARG_BRANCH is undefined, let's gess
 if [ "${TARG_BRANCH}" == "" ]; then
@@ -77,15 +82,19 @@ if [ "${TARG_BRANCH}" == "" ]; then
         TARG_BRANCH='stable'
     else
         echo "= ERROR: Missing argument to guess target branch"
-        exit 11
+        exit 13
     fi
 fi
+
+#
+# Ok, everything seems ready to create a beta or stable branch
+#
 
 # Final check with user before starting if unusual config
 if [ "${CUR_BRANCH}" != "master" ] && [ "${CUR_BRANCH}" != "beta" ]; then
     echo
     echo "   *** !! WARNING !!"
-    echo "   *** This is an unexpecting config."
+    echo "   *** This is an unexpected config."
     echo "   *** You are going to create a '${TARG_BRANCH}' version from '${CUR_BRANCH}'."
     echo "   *** Are you sure you want to do that ?"
     read -p "   *** Enter y/n: " ANSWER
@@ -105,7 +114,66 @@ else
     echo
 fi
 
-# echo "Generating '${TARG_BRANCH}' branch from current '${CUR_BRANCH}'"
+#
+# On current branch let's do
+# - version update
+# - MD5 update
+# - changelog: add VERSION if required
+# - add+commit, then tag + push
+
+# Updating plugin version
+.tools/update_version.sh ${TARG_BRANCH}
+if [ $? -ne 0 ]; then
+    echo "= ERROR"
+    exit 20
+fi
+
+# Updating MD5 file
+.tools/update_md5.sh
+if [ $? -ne 0 ]; then
+    echo "= ERROR"
+    exit 21
+fi
+
+# Update changelog if required & target is 'stable'
+.tools/update_changelog.sh
+if [ $? -ne 0 ]; then
+    echo "= ERROR"
+    exit 22
+fi
+
+# Add+commit
+# Note about changelog: should be pushed to AbeilleDoc too & html generated.
+echo "Adding 'Abeille.version', 'Abeille.md5' & 'changelog.md'"
+git add plugin_info/Abeille.version plugin_info/Abeille.md5 docs/fr_FR/changelog.rst
+if [ $? -ne 0 ]; then
+    echo "= ERROR: git add failed"
+    exit 23
+fi
+
+VERSION=`cat plugin_info/Abeille.version | tail -1`
+echo "Committing"
+if [ "${TARG_BRANCH}" == "beta" ]; then
+    git commit -q -m "Beta ${VERSION}"
+else
+    git commit -q -m "Stable ${VERSION}"
+fi
+if [ $? -ne 0 ]; then
+    echo "= ERROR: Commit failed"
+    exit 24
+fi
+
+git_tag -a "${VERSION}" -m "Version ${VERSION}" >/dev/null
+if [ $? -ne 0 ]; then
+    echo "= ERROR: Tag failed"
+    exit 25
+fi
+git_push -q ${TARG_REPO} HEAD ${VERSION}
+if [ $? -ne 0 ]; then
+    echo "= ERROR: git push failed"
+    exit 26
+fi
+
 
 # Create local temporary branch & switch to it
 # Note: Local branch deleted if already exists
@@ -118,53 +186,11 @@ if [ $? -eq 0 ]; then
     git branch -D ${LOCAL_BRANCH} >/dev/null
     if [ $? -ne 0 ]; then
         echo "= ERROR"
-        exit 20
+        exit 30
     fi
 fi
 echo "Switching to ${LOCAL_BRANCH}"
 git checkout -q -b ${LOCAL_BRANCH}
-if [ $? -ne 0 ]; then
-    echo "= ERROR"
-    exit 21
-fi
-
-# Updating plugin version
-.tools/update_version.sh ${TARG_BRANCH}
-if [ $? -ne 0 ]; then
-    echo "= ERROR"
-    exit 22
-fi
-
-# Updating MD5 file
-.tools/update_md5.sh
-if [ $? -ne 0 ]; then
-    echo "= ERROR"
-    exit 23
-fi
-
-# Update changelog if required & target is 'stable'
-if [ "${TARG_BRANCH}" == "stable" ]; then
-    .tools/update_changelog.sh
-    if [ $? -ne 0 ]; then
-        echo "= ERROR"
-        exit 24
-    fi
-fi
-
-# Add+commit
-echo "Adding 'Abeille.version' & 'Abeille.md5'"
-git add plugin_info/Abeille.version plugin_info/Abeille.md5 docs/fr_FR/changelog.md
-if [ $? -ne 0 ]; then
-    echo "= ERROR"
-    exit 30
-fi
-VERSION=`cat plugin_info/Abeille.version | tail -1`
-echo "Committing"
-if [ "${TARG_BRANCH}" == "beta" ]; then
-    git commit -q -m "Beta ${VERSION}"
-else
-    git commit -q -m "Stable ${VERSION}"
-fi
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 31
@@ -176,7 +202,7 @@ if [ $? -eq 0 ]; then
     echo "Deleting ${TARG_REPO}/${TARG_BRANCH} branch"
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
-        echo "= ERROR"
+        echo "= ERROR: git push --delete failed"
         exit 32
     fi
 fi
@@ -185,14 +211,14 @@ fi
 echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
 git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
-    echo "= ERROR"
+    echo "= ERROR: git push failed"
     exit 33
 fi
 
 echo "Switching back to '${CUR_BRANCH}' branch"
 git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
-    echo "= ERROR"
+    echo "= ERROR: git checkout failed"
     exit 34
 else
     echo "= Ok"

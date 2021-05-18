@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210518-MASTER_TCHARP38-1"
+# VERSION="210518-MASTER_TCHARP38-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -731,6 +731,7 @@ f702906f38781759747c1bbcf6aa0715 *desktop/js/health.js
 f6fc2cf32a29787b940390b28b098cc9 *desktop/js/network.js
 5cf236e83dbc3228719169130396c801 *desktop/modal/AbeilleCompatibility.modal.php
 879bd403fba2c2ab23f1bc4cc745aeab *desktop/modal/AbeilleHealth.modal.php
+066eb590e69ec549df11007e773aaf63 *desktop/modal/AbeilleLoadJsonCmd.modal.php
 028ff8430ff7db196ae79f13f8c38a10 *desktop/modal/configPageModal.abeille.php
 865d017d1316e11b19d058c0d1ff6304 *desktop/modal/healthShort.php
 6751162df1530c93e749729ea65f4e7a *desktop/modal/inconnu.php
@@ -757,7 +758,7 @@ b40ac3b7de2746613bf2a1ca3405b2f7 *desktop/php/Abeille.php
 1e3c250e68d1d2e70b8a9107564cd628 *desktop/php/AbeilleEq-Cmds.php
 bdde0acbdf3b488f8768c0a5321f6153 *desktop/php/AbeilleEq-Main.php
 aa79f3a18c329713d8cc5dd03d647a0a *desktop/php/AbeilleEq-Params.php
-19f01db1aed624198826d12b85b48c7c *desktop/php/AbeilleEq.php
+43cb583bb56592273257543e58defbac *desktop/php/AbeilleEq.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
@@ -977,7 +978,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-3e2958058fba1c9ae53f52dd504128b2 *plugin_info/Abeille.version
+1e48275203dda23d7faf403ef8033fe0 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 828beab60c767b4a18b24a4817187f1f *plugin_info/configuration.php

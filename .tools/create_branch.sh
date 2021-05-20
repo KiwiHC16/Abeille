@@ -163,12 +163,12 @@ if [ $? -ne 0 ]; then
     exit 24
 fi
 
-git_tag -a "${VERSION}" -m "Version ${VERSION}" >/dev/null
+git tag -a "${VERSION}" -m "Version ${VERSION}" >/dev/null
 if [ $? -ne 0 ]; then
     echo "= ERROR: Tag failed"
     exit 25
 fi
-git_push -q ${TARG_REPO} HEAD ${VERSION}
+git push -q ${TARG_REPO} HEAD ${VERSION}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed"
     exit 26

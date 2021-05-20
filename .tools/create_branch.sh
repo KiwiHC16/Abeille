@@ -128,18 +128,18 @@ if [ $? -ne 0 ]; then
     exit 20
 fi
 
-# Updating MD5 file
-.tools/update_md5.sh
-if [ $? -ne 0 ]; then
-    echo "= ERROR"
-    exit 21
-fi
-
 # Update changelog if required & target is 'stable'
 .tools/update_changelog.sh
 if [ $? -ne 0 ]; then
     echo "= ERROR"
     exit 22
+fi
+
+# Updating MD5 file
+.tools/update_md5.sh
+if [ $? -ne 0 ]; then
+    echo "= ERROR"
+    exit 21
 fi
 
 # Add+commit

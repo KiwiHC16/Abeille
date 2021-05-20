@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
+
+  Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
 - JSON: Correction setReportTemp (#1918).
 - Innr RB285C: correction modele corrompu.
 - Innr RB165: modele préliminaire.

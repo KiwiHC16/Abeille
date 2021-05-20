@@ -1,6 +1,6 @@
 {
   "weather": {
-    "nameJeedom": "Xiaomi temp/humdity/pressure square sensor",
+    "nameJeedom": "Xiaomi temp/humidity/pressure square sensor",
     "manufacturer": "Xiaomi",
     "model": "WSDCGQ11LM",
     "timeout": "60",

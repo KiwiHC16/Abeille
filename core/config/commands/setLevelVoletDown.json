@@ -10,7 +10,7 @@
     "template": "",
     "configuration": {
       "topic": "setLevel",
-      "request": "Level=0&duration=0000EP=#EP#",
+      "request": "Level=0&duration=0000&EP=#EP#",
       "visibilityCategory": "All"
     }
   }

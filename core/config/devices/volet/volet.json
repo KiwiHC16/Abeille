@@ -25,12 +25,12 @@
 
       "include0008-1": "BindToZigateLevel",
       "include0008-2": "setReportLevel",
-      "include0008-3": "Level",
-      "include0008-7": "setLevelVoletUp",
       "include0008-8": "setLevelVoletDown",
-      "include0008-6": "levelVoletStop"
+      "include0008-7": "setLevelVoletUp",
+      "include0008-6": "levelVoletStop",
+      "include0008-3": "Level",
       "include0008-5": "setLevelVolet",
-      "include0008-4": "getLevel",
+      "include0008-4": "getLevel"
     }
   }
 }

@@ -220,6 +220,11 @@
 
         $queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
 
+        /* Init list of supported & user/custom devices */
+        $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
+        $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
+        parserLog('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
+
         while (true) {
 
             // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.

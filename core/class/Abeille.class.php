@@ -1141,7 +1141,7 @@ while ($cron->running()) {
                 }
             }
             if (($version == '031D') || ($version == '031E')) {
-                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '. $i.' in hybrid mode');
+                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in hybrid mode');
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
@@ -1490,21 +1490,19 @@ while ($cron->running()) {
         // $nodeId = [CmdAbeille:Abeille] / $addr
 
         list($Filter, $addr, $cmdId) = explode("/", $message->topic);
+        $net = $Filter; // Network (ex: 'Abeille1')
+        $dest = $Filter;
         // log::add('Abeille', 'debug', "message(): Filter=".$Filter.", addr=".$addr.", cmdId=".$cmdId);
         if (preg_match("(^CmdCreate)", $message->topic)) {
             $Filter = str_replace("CmdCreate", "", $Filter);
         }
-        $dest = $Filter;
 
         // log all messages except the one related to Time, which overload the log
         if (!in_array($cmdId, array("Time-Time", "Time-TimeStamp", "Link-Quality"))) {
             log::add('Abeille', 'debug', "message(topic='".$message->topic."', payload='".$message->payload."')");
         }
 
-        // Si le message est pour 0000 alors on change en Ruche
-        // if ($addr == "0000") $addr = "Ruche";
-
-        $nodeid = $Filter.'/'.$addr;
+        $nodeid = $net.'/'.$addr;
 
         $value = $message->payload;
 
@@ -1711,7 +1709,10 @@ while ($cron->running()) {
             if (isset($objetConfiguration['poll'])) {
                 $elogic->setConfiguration('poll', $objetConfiguration['poll']);
             }
-            $elogic->setIsVisible("1");
+           if (isset($objetDefSpecific["isVisible"]))
+               $elogic->setIsVisible($objetDefSpecific["isVisible"]);
+           else
+               $elogic->setIsVisible(1);
 
             // eqReal_id
             $elogic->setIsEnable("1");

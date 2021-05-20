@@ -10,10 +10,11 @@ ChangeLog
 - Page config: correction installation WiringPi (#1979).
 - Introduction de "core/config/devices_local" pour les EQ non supportés par Abeille mais locaux/en cours de dev.
 - Zemismart ZW-EC-01 curtain switch: ajout du modèle JSON
-- Nouvelle procédure d'inclusion.
-- Création du log 'AbeilleDiscover.log' si inclusion d'un équipement inconnu.
 - Profalux volet: Revue modele JSON. Utilisatio cluster 0008 au lieu de 0006 + report.
 - Page EQ/commandes: pour mode developpeur, possibilité charger JSON.
+- Ordre apparition des cmdes: Suit maintenant l'ordre d'utilisation dans JSON equipement.
+- Un équipement peut maintenant être invisible par defaut ('"isVisible":0' dans le JSON).
+- Profalux telecommande: S'annonce mais inutilisable côté Jeedom. Cachée à la création.
 
 210510-STABLE-1
 ---------------
@@ -36,7 +37,7 @@ ChangeLog
 11/12/2020
 ----------
 
-- Prise Xiaomi: fonctions de base dans le master (On/Off/Retour etat). En cours retour de W, Conso, V, A et T°. 
+- Prise Xiaomi: fonctions de base dans le master (On/Off/Retour etat). En cours retour de W, Conso, V, A et T°.
 - LQI collect revisited & enhanced #1526
 - Ajout du modale Template pour afficher des differences entre les Abeilles dans Jeedom et leur Modele.
 - Ajout d un chapitre Update dans la page de configuration pour verifier que certaines contraintes sont satisfaites avant de faire la mise a jour.

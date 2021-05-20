@@ -1,0 +1,18 @@
+{
+  "TS": {
+    "nameJeedom": "Profalux télécommande",
+    "manufacturer": "Profalux",
+    "model": "Télecommande",
+    "comment": "S'annonce mais a ignorer. On ne peut rien faire avec",
+    "isVisible": 0,
+    "Categorie": {
+      "automatism": "1"
+    },
+    "configuration": {
+      "icone": "ProfaluxTelecommande",
+      "mainEP": "#EP#"
+    },
+    "Commandes": {
+    }
+  }
+}

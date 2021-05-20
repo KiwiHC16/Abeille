@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210518-MASTER_TCHARP38-4"
+# VERSION="210520-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,7 +48,7 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 e7cd868c9ee87d0ec35bd6d866500449 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 e0ad72d40709a08692b97806277489d8 *core/ajax/abeille.ajax.php
-8a7b2784ceb256bc260082fd86e45bc4 *core/class/Abeille.class.php
+3ba974fb21e1a6095bf0150a338cc2d1 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 2214782c663bb3d10793ff1fadec192f *core/class/AbeilleCmdPrepare.class.php
 6735949ff55d34ea881c2295fb8ca6a6 *core/class/AbeilleCmdProcess.class.php
@@ -123,7 +123,7 @@ e9509334fc0e28f8fc01438571aa6271 *core/config/commands/LegrandContactorEtat.json
 ff4664e05829e3395ed77a749117ed8f *core/config/commands/LegrandContactorOff.json
 707352b19f3d2f4bd446b01e96acdd51 *core/config/commands/LegrandContactorOn.json
 64b75fe5031b58ed04b2ea119f6fd6cc *core/config/commands/Level Stop.json
-de4822b707daea269f9b15b7a39e97d5 *core/config/commands/Level.json
+5336359e89f1076738780a3a2f149f3b *core/config/commands/Level.json
 59d5c81ae530be730b3ae4e6e5a28b88 *core/config/commands/Lift.json
 742ddf89cf79db2b4bd26aa0b5197033 *core/config/commands/Link-Quality.json
 3e1ddb4d3eb9f0b48e98eb2335d7842a *core/config/commands/LivoloSwitchTrick1.json
@@ -379,7 +379,7 @@ b4ec9d3187db5bbda9de62c93fde87b4 *core/config/commands/setLevelGroupEP5.json
 b78ae11cff1d6a372bcd953c345ea5e3 *core/config/commands/setLevelGroupEP7.json
 7b1be00b1d4ded10cfb045df57e62a9c *core/config/commands/setLevelGroupEP8.json
 c7b86f628c1b2b14bf11d04637dd3dfb *core/config/commands/setLevelVolet.json
-f12f0b2a5964d2b327829393142afc75 *core/config/commands/setLevelVoletDown.json
+0e54f3a103d57799cccdc4f282b6ea53 *core/config/commands/setLevelVoletDown.json
 618c0d5161b8f18205f46c568595dd85 *core/config/commands/setLevelVoletUp.json
 f7dee0eb30683a9a4cbb971e5d571d9d *core/config/commands/setLivoloOff.json
 f29fdaa78080b42e642b73750ddb459b *core/config/commands/setLivoloOff2.json
@@ -598,6 +598,7 @@ c79143eeb9d28bb8a67e0189955b0758 *core/config/devices/TRADFRIonoffswitch/TRADFRI
 e22cd8d148b92b905fd60387501bac47 *core/config/devices/TRADFRItransformer10W/TRADFRItransformer10W.json
 fdab451039a0a189a6cfac72c9378883 *core/config/devices/TRADFRItransformer30W/TRADFRItransformer30W.json
 afa84259cbdae73d990877645aa878f5 *core/config/devices/TRADFRIwirelessdimmer/TRADFRIwirelessdimmer.json
+da4ba0fcb9b4593806831e979093df08 *core/config/devices/TS/TS.json
 4650d96f0c2a45bf7ece1e78cc05c0cb *core/config/devices/TS0001/TS0001.json
 adf495e546b274918818c353126f8f74 *core/config/devices/TS0001__TZ3000_hktqahrq/TS0001__TZ3000_hktqahrq.json
 9bc7678f558d6c0a735cb56ca0b69290 *core/config/devices/TS0002/TS0002.json
@@ -680,8 +681,8 @@ d0f4e56fe6306d9c0220c0a4f64764b1 *core/config/devices/sensor_switch/sensor_switc
 a553b73183249e349506f5bdb4cb9ecd *core/config/devices/switch.b2nacn02/switch.b2nacn02.json
 69ae81d717664d04c20611cb05a79508 *core/config/devices/switch.l0agl1/switch.l0agl1.json
 1db538db2869b893bf76932bb6015503 *core/config/devices/vibration.aq1/vibration.aq1.json
-b84462af7d5eec98e76924c7297a0571 *core/config/devices/volet/volet.json
-28d0d4ea11d29db66717457b911cb042 *core/config/devices/weather/weather.json
+98d5146aaaa653305085a56316469761 *core/config/devices/volet/volet.json
+f9bb74d95f30d709bc0b66cdee18dc3f *core/config/devices/weather/weather.json
 6ae9d5fd39f5d34dd531e55df8bd1daa *core/config/devices/zigbeeColorDimmableLight/zigbeeColorDimmableLight.json
 56ed4fa4e565e9dbccd84690ac085c43 *core/config/devices/zigbeeColortemperaturelight/zigbeeColortemperaturelight.json
 556f4fe8c9b02d9e75c1035e7e696b1c *core/config/devices/zigbeeDimmableLight/zigbeeDimmableLight.json
@@ -707,7 +708,7 @@ f69af6b5d62bccdcc119066a2a7ea85d *core/php/AbeilleDownload.php
 776817085c9b2c4779f63f600fc5ebe1 *core/php/AbeilleLQI.php
 8d8287c02f41bcbb0cf71438dfdab513 *core/php/AbeilleLog.php
 d58ec62d9764a4b53f3d46b9a0bf15ad *core/php/AbeilleMonitor.php
-891e917e90770e89600a8ac47882a60e *core/php/AbeilleParser.php
+51eac80403e742731f98768aaedb45cc *core/php/AbeilleParser.php
 b820ad5702f7e351342b646ea3a2cd7c *core/php/AbeillePreInstall.php
 ba29df16c73ecd3d32e1589fed625a20 *core/php/AbeilleSerialRead.php
 39ee5f61baa59a732ce560dedce1075b *core/php/AbeilleSocat.php
@@ -762,7 +763,7 @@ aa79f3a18c329713d8cc5dd03d647a0a *desktop/php/AbeilleEq-Params.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-7dc85c7f4f7171026252259d97cf6237 *docs/fr_FR/Changelog.rst
+987f297bb36cc7f39fc8db77dc16045b *docs/fr_FR/Changelog.rst
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -857,6 +858,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_PSE03-v1.1.0.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_PlugZ3.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_PriseTuya.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ProfaluxLigthModule.png
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_ProfaluxTelecommande.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RB175W.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RB285C.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_RC110.png
@@ -978,7 +980,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5e816cbe53c17c62a25c0fc934068ac1 *plugin_info/Abeille.version
+c350810b9985d0610b749436f2b50c80 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 828beab60c767b4a18b24a4817187f1f *plugin_info/configuration.php

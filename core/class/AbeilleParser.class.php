@@ -15,7 +15,8 @@
      *
      */
     class AbeilleParser  {
-        public $queueKeyParserToAbeille = null;
+        public $queueKeyParserToAbeille = null; // Obsolete
+        public $queueKeyParserToAbeille2 = null;
         public $queueKeyParserToCmd = null;
         public $parameters_info;
         public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
@@ -123,6 +124,7 @@
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
+            $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
@@ -213,6 +215,13 @@
             }
         }
 
+        function msgToAbeille2($msg) {
+            $errorcode = 0;
+            if (msg_send($this->queueKeyParserToAbeille2, 1, json_encode($msg), false, false, $errorcode) == false) {
+                parserLog("debug", "msgToAbeille2(): ERROR ".$errorcode);
+            }
+        }
+
         /*
         function msgToAbeilleLQI( $Addr, $Index, $data)
         {
@@ -260,6 +269,367 @@
 
             parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$error_code.")");
             return -1;
+        }
+
+        /* Check if eq is part of supported or user/custom devices names.
+           Returns: true is supported, else false */
+        function findJsonConfig(&$eq, $by='modelIdentifier') {
+            $ma = ($eq['manufacturer'] === false) ? 'false' : $eq['manufacturer'];
+            $mo = ($eq['modelIdentifier'] === false) ? 'false' : $eq['modelIdentifier'];
+            $lo = ($eq['location'] === false) ? 'false' : $eq['location'];
+            parserLog('debug', "  findJsonConfig(), manuf='".$ma."', model='".$mo."', loc='".$lo."'");
+
+            /* Looking for corresponding JSON if supported device.
+               - Look with '<modelId>_<manufacturer>' identifier
+               - If not found, look with '<modelId>' identifier
+               - And if still not found, use 'defaultUnknown'
+             */
+            $jsonName = '';
+            $jsonLocation = "Abeille"; // Default location
+            if ($by == 'modelIdentifier') {
+                /* Search by modelId and manufacturer */
+                if (($eq['manufacturer'] !== false) && ($eq['manufacturer'] != '')) {
+                    $identifier = $eq['modelIdentifier'].'_'.$eq['manufacturer'];
+                    if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
+                    } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        $jsonLocation = "local";
+                        parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' identifier");
+                    }
+                }
+                if ($jsonName == '') {
+                    $identifier = $eq['modelIdentifier'];
+                    if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
+                    } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        $jsonLocation = "local";
+                        parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' identifier");
+                    }
+                }
+            } else {
+                /* Search by location */
+                $identifier = $eq['location'];
+                if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                    $jsonName = $identifier;
+                    parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
+                } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                    $jsonName = $identifier;
+                    $jsonLocation = "local";
+                    parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' location identifier");
+                }
+            }
+
+            if ($jsonName == '') {
+                $eq['jsonId'] = "defaultUnknown";
+                parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
+                return false;
+            }
+
+            // Read JSON to get list of commands to execute
+            $eqConfig = AbeilleTools::getJsonConfig($jsonName, $jsonLocation);
+            $eq['jsonId'] = $jsonName;
+            $eq['config'] = $eqConfig[$jsonName];
+            return true;
+        }
+
+        /* Cached EQ infos reminder:
+            $GLOBALS['eqList'][<network>][<addr>] = array(
+                'ieee' => $ieee,
+                'capa' => '', // MAC capa from dev announce
+                'status' => 'identifying', // identifying, configuring, discovering, idle
+                'since' => time(),
+                'epList' => '', // List of end points
+                'epFirst' => '', // First end point (usually 01)
+                'manufacturer' => null (undef)/false (unsupported)/'xx'
+                'modelIdentifier' => null (undef)/false (unsupported)/'xx'
+                'location' => null (undef)/false (unsupported)/'xx'
+                'jsonId' => '', // JSON identifier
+            );
+            identifying: req EP list + manufacturer + modelId + location
+            configuring: execute cmds with 'execAtCreation' flag
+            discovering: for unknown EQ
+            idle: all actions ended
+        */
+
+        /* Called on device announce during inclusion phase.
+           This is the first step of identification. */
+        function deviceAnnounce($net, $addr, $ieee, $capa) {
+            if (!isset($GLOBALS['eqList']))
+                $GLOBALS['eqList'] = [];
+            if (!isset($GLOBALS['eqList'][$net]))
+                $GLOBALS['eqList'][$net] = [];
+
+            if (isset($GLOBALS['eqList'][$net][$addr])) {
+                $eq = &$GLOBALS['eqList'][$net][$addr];
+                if ($eq['ieee'] != $ieee) {
+                    parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
+                    return;
+                }
+                parserLog('debug', '  EQ already known: Status='.$eq['status'].', since='.$eq['since'].', time='.time());
+
+                /* Note: Assuming 4sec max per phase */
+                if (($eq['since'] + 4) > time()) {
+                    if ($eq['status'] == 'identifying')
+                        parserLog('debug', '  Device identification already ongoing');
+                    else if ($eq['status'] == 'discovering')
+                        parserLog('debug', '  Device discovering already ongoing');
+                    return;
+                }
+                /* Identification to restart */
+            } else {
+                /* Looking for eq by its ieee to update addr which may have changed */
+                foreach ($GLOBALS['eqList'][$net] as $oldaddr => $eq) {
+                    if ($eq['ieee'] != $ieee)
+                        continue;
+
+                    $GLOBALS['eqList'][$net][$addr] = $eq;
+                    unset($GLOBALS['eqList'][$net][$oldaddr]);
+                    parserLog('debug', '  EQ already known: Addr updated from '.$oldaddr.' to '.$addr);
+                    break;
+                }
+                if (!isset($GLOBALS['eqList'][$net][$addr])) {
+                    /* It's an unknown eq */
+                    parserLog('debug', '  EQ new to parser');
+                    $GLOBALS['eqList'][$net][$addr] = array(
+                        'ieee' => $ieee,
+                        'capa' => $capa,
+                        'status' => '', // identifying, discovering, configuring
+                        'since' => '',
+                        'epList' => '',
+                        'epFirst' => '',
+                        'manufacturer' => null, // null=undef, false=unsupported, else 'value'
+                        'modelIdentifier' => null, // null=undef, false=unsupported, else 'value'
+                        'location' => null, // null=undef, false=unsupported, else 'value'
+                        'jsonId' => '',
+                    );
+                    $eq = &$GLOBALS['eqList'][$net][$addr];
+                }
+            }
+
+            if ($eq['epList'] == '') {
+                parserLog('debug', '  Requesting active end points list');
+                $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+                $eq['status'] = 'identifying';
+                $eq['since'] = time();
+            } else {
+                /* 'epList' is already known => trigger next step */
+                $eq['status'] = 'identifying';
+                $eq['since'] = time();
+                $this->updateEq($net, $addr, 'epList', $eq['epList']);
+            }
+        }
+
+        /* 2nd step of identification phase.
+           Wait for enough info to identify device (manuf, modelId, location) */
+        function updateEq($net, $addr, $updType, $value) {
+            if (!isset($GLOBALS['eqList']))
+                return; // No dev announce before
+            if (!isset($GLOBALS['eqList'][$net]))
+                return; // No dev announce before
+            if (!isset($GLOBALS['eqList'][$net][$addr]))
+                return; // No dev announce before
+
+            $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+            $v = ($value === false) ? 'false' : $value;
+            parserLog('debug', "  updateEq('".$updType."', '".$v."'), status=".$eq['status']);
+
+            /* Updating entry */
+            $eq[$updType] = $value;
+            if ($updType == 'epList') {
+                $eqArr = explode('/', $value);
+                $eq['epFirst'] = $eqArr[0];
+            }
+
+            /* If not in 'identifying' phase, no more to do */
+            if ($eq['status'] != 'identifying')
+                return;
+
+            if ($updType == 'epList') {
+                if (!isset($eq['manufacturer'])) {
+                    parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                }
+                if (!isset($eq['modelIdentifier'])) {
+                    parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                }
+                if (!isset($eq['location'])) {
+                    parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/0000/getLocation", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                }
+            }
+
+            /* Enough infos to try to identify device ?
+               Identification process reminder
+                - if modelId is supported
+                    - search for JSON with 'modelId_manuf' then 'modelId'
+                    - if found => configure
+                    - if not found => discover
+                - else if location is supported
+                    - search for JSON with 'modelId_manuf' then 'modelId'
+                    - if found => configure
+                    - if not found => discover
+                - else => discover */
+            $nextstep = '';
+            if (!isset($eq['modelIdentifier']))
+                return; // Need value or false (unsupported)
+            if ($eq['modelIdentifier'] !== false) {
+                if (!isset($eq['manufacturer']))
+                    return; // Need value or false (unsupported)
+                /* Manufacturer & modelId attributes returned */
+                if ($this->findJsonConfig($eq, 'modelIdentifier'))
+                    $nextstep = 'configure';
+                else
+                    $nextstep = 'discover';
+            } else if (!isset($eq['location'])) {
+                return; // Need value or false (unsupported)
+            } else if ($eq['location'] !== false) {
+                /* ModelId UNsupported. Trying with 'location' */
+                if ($this->findJsonConfig($eq, 'location'))
+                    $nextstep = 'configure';
+                else
+                    $nextstep = 'discover';
+            } else {
+                $nextstep = 'discover';
+            }
+
+            if ($nextstep == 'configure')
+                $this->configureEQ($net, $addr);
+            else if ($nextstep == 'discover')
+                $this->discoverEQ($net, $addr);
+        } // End updateEQ()
+
+        /* Go thru EQ commands and execute all those marked 'execAtCreation' */
+        function configureEQ($net, $addr) {
+            parserLog('debug', "  configureEQ(".$net.", ".$addr.")");
+
+            $eq = &$GLOBALS['eqList'][$net][$addr];
+            $eq['status'] = 'configuring';
+            $cmds = $eq['config']['Commandes'];
+
+parserLog('debug', "  cmds=".json_encode($cmds));
+            foreach ($cmds as $cmd) {
+                $c = $cmd['configuration'];
+                if (!isset($c['execAtCreation']))
+                    continue;
+                parserLog('debug', "    exec cmd ".$cmd['name']);
+                $topic = $c['topic'];
+                // $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
+                $request = $c['request'];
+                // $request = AbeilleCmd::updateField($dest, $cmd, $request);
+                // TODO: #EP# defaulted to first EP but should be
+                //       defined in cmd use if different target EP
+                $request = str_replace('#EP#', $eq['epFirst'], $request);
+                $request = str_replace('#addrIEEE#', $eq['ieee'], $request);
+                $zgNb = substr($net, 7); // 'AbeilleX' => 'X'
+                $request = str_replace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgNb]['ieee'], $request);
+parserLog('debug', '      request='.$request);
+                $this->msgToCmd("Cmd".$net."/".$addr."/".$topic, $request);
+            }
+
+            /* Config ongoing. Informing Abeille for EQ creation/update */
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'eqAnnounce',
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $eq['ieee'],
+                'ep' => $eq['epFirst'],
+                'jsonId' => $eq['jsonId'],
+                'capa' => $eq['capa']
+            );
+            $this->msgToAbeille2($msg);
+
+            // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
+            $eq['status'] = 'idle';
+        }
+
+        /* Unknown EQ. Attempting to discover it. */
+        function discoverEQ($net, $addr) {
+            parserLog('debug', "  discoverEQ()");
+
+            $eq = &$GLOBALS['eqList'][$net][$addr];
+            $eq['status'] = 'discovering';
+
+            $this->discoverLog('***');
+            $this->discoverLog('*** New equipement discovery');
+            $this->discoverLog('***');
+            $this->discoverLog('Network: '.$net);
+            $this->discoverLog('IEEE: '.$eq['ieee']);
+            $m = ($eq['manufacturer'] === false) ? "-unsupported-" : "'".$eq['manufacturer']."'";
+            $this->discoverLog('Manufacturer: '.$m);
+            $m = ($eq['modelIdentifier'] === false) ? "-unsupported-" : "'".$eq['modelIdentifier']."'";
+            $this->discoverLog('ModelId: '.$m);
+            $l = ($eq['location'] === false) ? "-unsupported-" : "'".$eq['location']."'";
+            $this->discoverLog('Location: '.$l);
+            $this->discoverLog('MAC capa: '.$eq['capa']);
+
+            /* EQ is unsupported. Need to interrogate it to find main supported functions */
+            $epArr = explode('/', $eq['epList']);
+            foreach ($epArr as $ep) {
+                parserLog('debug', '  Requesting simple descriptor for EP '.$ep);
+                $this->msgToCmd("Cmd".$net."/0000/SimpleDescriptorRequest", "address=".$addr.'&endPoint='.$ep);
+            }
+
+            /* Discover ongoing. Informing Abeille for EQ creation/update */
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'eqAnnounce',
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $eq['ieee'],
+                'ep' => $eq['epFirst'],
+                'jsonId' => $eq['jsonId'],
+                'capa' => $eq['capa']
+            );
+            $this->msgToAbeille2($msg);
+        }
+
+        /* Returns true if net/addr EQ is in "discovering" state, else false */
+        function discoveringState($net, $addr) {
+            if (!isset($GLOBALS['eqList']))
+                return false;
+            if (!isset($GLOBALS['eqList'][$net]))
+                return false;
+            if (!isset($GLOBALS['eqList'][$net][$addr]))
+                return false;
+            $eq = $GLOBALS['eqList'][$net][$addr];
+            if ($eq['status'] != 'discovering')
+                return false;
+            return true;
+        }
+
+        /* Append msg to 'AbeilleDiscover.log' */
+        function discoverLog($msg) {
+            $logPath = jeedom::getTmpFolder("Abeille")."/AbeilleDiscover.log";
+            file_put_contents($logPath, $msg."\n", FILE_APPEND);
+        }
+
+        /* Clean modelIdentifier, removing some unwanted chars */
+        function cleanModelId($modelId) {
+            // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
+            if (strpos($modelId, "sensor_86sw2") > 2) { $modelId="lumi.sensor_86sw2"; }
+
+            if (!strncasecmp($modelId, "lumi.", 5))
+                $modelId = substr($modelId, 5); // Remove leading "lumi." case insensitive
+
+            //remove all space in names for easier filename handling
+            $modelId = str_replace(' ', '', $modelId);
+
+            // On enleve le / comme par exemple le nom des equipements Legrand
+            $modelId = str_replace('/', '', $modelId);
+
+            // On enleve le * Ampoules GU10 Philips #1778
+            $modelId = str_replace('*', '', $modelId);
+
+            // On enleve les 0x00 comme par exemple le nom des equipements Legrand
+            $modelId = str_replace("\0", '', $modelId);
+
+            return $modelId;
         }
 
         function procmsg($topic, $payload)
@@ -599,7 +969,6 @@
 
             $msgDecoded = '004d/Device announce'.', Addr='.$Addr.', ExtAddr='.$IEEE.', MACCapa='.$MACCapa;
             if ($Rejoin != "") $msgDecoded .= ', Rejoin='.$Rejoin;
-            $msgDecoded .= ', [Modelisation]';
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE)) {
                 monMsgFromZigate($msgDecoded); // Send message to monitor
@@ -609,52 +978,43 @@
 
             $this->whoTalked[] = $dest.'/'.$Addr;
 
-            // /* Tcharp38: Often 2 consecutives 'device announce' leading to duplicated requests to device
-            //    overloading the system for nothing. Ignoring 2nd dev announce if within next 2sec. */
-            // if (isset($GLOBALS['eqStatus'][$IEEE])) {
-            //     /* If prev announce is within last 2sec => ignoring this one */
-            //     $eqStatus = $GLOBALS['eqStatus'][$IEEE];
-            //     if (($eqStatus['time'] + 2) > time()) { // Already ongoing pairing
-            //         parserLog('debug', '  Pairing ongoing => Ignoring this device announce');
-            //         return;
-            //     }
-            // }
-            // $GLOBALS['eqStatus'][$IEEE] = array(
-            //     // 'status' => "devAnnounce", // Not required yet
-            //     'time' => time()
-            // );
-
-            // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja dans Abeille, sinon sera drop
-            $this->msgToAbeille($dest."/".$Addr, "IEEE", "Addr", $IEEE);
+            $zgNb = substr($dest, 7);
+            if (isset($GLOBALS['zigate'.$zgNb]['permitJoin']) && ($GLOBALS['zigate'.$zgNb]['permitJoin'] == "01")) {
+                $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa);
+            } else
+                parserLog('debug', '  Not in inclusion mode');
 
             // Tcharp38: Why ? $this->msgToAbeilleFct($dest."/"."Ruche", "enable", $IEEE); <- KiwiHC16: un equipement peut exister dans Abeille eet etre disabled donc on le reactive ici.
-            $this->msgToAbeilleFct($dest."/".$Addr, "enable", $IEEE);
+            // $this->msgToAbeilleFct($dest."/".$Addr, "enable", $IEEE);
+
+            // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja dans Abeille, sinon sera drop
+            // $this->msgToAbeille($dest."/".$Addr, "IEEE", "Addr", $IEEE);
 
             // Rafraichi le champ Ruche, JoinLeave (on garde un historique)
-            $this->msgToAbeille($dest."/0000", "joinLeave", "IEEE", "Annonce->".$IEEE);
+            // $this->msgToAbeille($dest."/0000", "joinLeave", "IEEE", "Annonce->".$IEEE);
 
-            $this->msgToAbeille($dest."/"."$Addr", "MACCapa", "MACCapa", $MACCapa);
+            // $this->msgToAbeille($dest."/"."$Addr", "MACCapa", "MACCapa", $MACCapa);
 
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
-            if ($Rejoin == "02") return;
+            // if ($Rejoin == "02") return;
 
-            if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
+            // if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
 
-            if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
+            // if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
 
-            // If this IEEE is already in Abeille we stop the process of creation in Abeille, but we send IEEE and Addr to update Addr if needed.
-            if (Abeille::getEqFromIEEE($IEEE)) {
-                $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-                return;
-            }
+            // // If this IEEE is already in Abeille we stop the process of creation in Abeille, but we send IEEE and Addr to update Addr if needed.
+            // if (Abeille::getEqFromIEEE($IEEE)) {
+            //     $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+            //     return;
+            // }
 
-            $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
+            // $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
 
-            for ($i = 0; $i < $agressif; $i++) {
-                $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
-                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
-            }
+            // for ($i = 0; $i < $agressif; $i++) {
+            //     $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
+            // }
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -1536,6 +1896,10 @@
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $ShortAddress, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
+            // Local storage for speed optimization
+            $zgNb = substr($dest, 7);
+            $GLOBALS['zigate'.$zgNb]['ieee'] = $ExtendedAddress;
+
             if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
                 config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
             }
@@ -1687,6 +2051,8 @@
                 parserLog('info', '  Zigate'.substr($dest, 7, 1).': en mode INCLUSION', "8014");
             else
                 parserLog('info', '  Zigate'.substr($dest, 7, 1).': mode inclusion inactif', "8014");
+            $zgNb = substr($dest, 7);
+            $GLOBALS['zigate'.$zgNb]['permitJoin'] = $Status;
 
             $ClusterId = "permitJoin";
             $AttributId = "Status";
@@ -1967,39 +2333,47 @@
                              . ', EP='          .$EPoint
                              . ', ProfId='     .$profile.'/'.zgGetProfile($profile)
                              . ', DevId='       .$deviceId.'/'.zgGetDevice($profile, $deviceId)
-                             . ', BitField='    .substr($payload,20, 2)
-                             . ', [Modelisation]';
+                             . ', BitField='    .substr($payload,20, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8043");
+
+            /* Send to monitor if required */
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($msgDecoded); // Send message to monitor
+                monMsgFromZigate($msgDecoded);
 
-            if ($Status=="00") {
-                // Envoie l info a Abeille
-                $ClusterId = "SimpleDesc";
-                $AttributId = "DeviceDescription";
-                $data = zgGetDevice($profile, $deviceId);
-                $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-
-                // Decode le message dans les logs
-                parserLog('debug','  [Modelisation] InClusterCount='.$InClusterCount, "8043");
-                for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                    parserLog('debug', '  [Modelisation] InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)), "8043");
-                }
-                parserLog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2), "8043");
-                for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                    parserLog('debug', '  [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)), "8043");
-                }
-
-                $data = 'zigbee'.zgGetDevice($profile, $deviceId);
-                if ( strlen( $data) > 1 ) {
-                    $this->msgToAbeille($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
-                }
+            $discovering = $this->discoveringState($dest, $SrcAddr);
+            if ($discovering) $this->discoverLog($msgDecoded);
+            if ($Status == "83") {
+                parserLog('debug', '  EP is NOT active', "8043");
+                if ($discovering) $this->discoverLog('- EP is NOT active');
+                return;
             }
-            elseif ($Status=="83") {
-                parserLog('debug', '  [Modelisation] Simple Descriptor Not Active', "8043");
+            if ($Status != "00") {
+                parserLog('debug', '  Unknown status '.$Status, "8043");
+                if ($discovering) $this->discoverLog('- Unknown status '.$Status);
+                return;
             }
-            else {
-                parserLog('debug', '  [Modelisation] Simple Descriptor status inconnu.', "8043");
+
+            // Envoie l info a Abeille: Tcharp38: What for ?
+            $data = zgGetDevice($profile, $deviceId);
+            $this->msgToAbeille($dest."/".$SrcAddr,"SimpleDesc", "DeviceDescription", $data);
+
+            // Decode le message dans les logs
+            parserLog('debug','  InClusterCount='.$InClusterCount, "8043");
+            if ($discovering) $this->discoverLog('- InClusterCount='.$InClusterCount);
+            for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
+                parserLog('debug', '  InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)), "8043");
+                if ($discovering) $this->discoverLog('- InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
+            }
+            parserLog('debug','  OutClusterCount='.substr($payload,24+$i, 2), "8043");
+            if ($discovering) $this->discoverLog('- OutClusterCount='.substr($payload,24+$i, 2));
+            for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
+                parserLog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)), "8043");
+                if ($discovering) $this->discoverLog('- OutCluster='.substr($payload, (24 + $i +2 +$j), 4).' - '.zgGetCluster(substr($payload, (24 + $i +2 +$j), 4)));
+            }
+
+            $data = 'zigbee'.zgGetDevice($profile, $deviceId);
+            if ( strlen( $data) > 1 ) {
+                $this->msgToAbeille($dest."/".$SrcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
             }
         }
 
@@ -2040,8 +2414,7 @@
                 . ', Status='.$status
                 . ', Addr='.$SrcAddr
                 . ', EPCount='.$EndPointCount
-                . ', EPList='.$endPointList
-                . ', [Modelisation]';
+                . ', EPList='.$endPointList;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
@@ -2053,14 +2426,17 @@
                 return;
             }
 
-            parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
-            $this->msgToCmd("Cmd".$dest."/0000/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("Cmd".$dest."/0000/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
-            $this->msgToCmd("TempoCmd".$dest."/0000/SimpleDescriptorRequest&time=".(time() + 4), "address=".$SrcAddr.'&endPoint='.           $EP );
+            /* Update equipement key infos */
+            $this->updateEq($dest, $SrcAddr, 'epList', $endPointList);
 
-            $this->actionQueue[] = array('when' => time() + 8, 'what' => 'configureNE', 'addr'=>$dest.'/'.$SrcAddr);
-            $this->actionQueue[] = array('when' => time() + 11, 'what' => 'getNE', 'addr'=>$dest.'/'.$SrcAddr);
+            // parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
+            // $this->msgToCmd("Cmd".$dest."/0000/getManufacturerName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            // $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            // $this->msgToCmd("Cmd".$dest."/0000/getLocation", "address=".$SrcAddr.'&destinationEndPoint='.$EP );
+            // $this->msgToCmd("TempoCmd".$dest."/0000/SimpleDescriptorRequest&time=".(time() + 4), "address=".$SrcAddr.'&endPoint='.           $EP );
+
+            // $this->actionQueue[] = array('when' => time() + 8, 'what' => 'configureNE', 'addr'=>$dest.'/'.$SrcAddr);
+            // $this->actionQueue[] = array('when' => time() + 11, 'what' => 'getNE', 'addr'=>$dest.'/'.$SrcAddr);
         }
 
         /**
@@ -2735,6 +3111,22 @@
 
             if ($AttributStatus == '86') {
                 parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
+                // TODO: Tcharp38: Might be useful for Abeille to know attribute is not supported.
+                if ($ClusterId == "0000") {
+                    switch ($AttributId) {
+                    case "0004":
+                        $this->updateEq($dest, $SrcAddr, 'manufacturer', false);
+                        break;
+                    case "0005":
+                        $this->updateEq($dest, $SrcAddr, 'modelIdentifier', false);
+                        break;
+                    case "0010":
+                        $this->updateEq($dest, $SrcAddr, 'location', false);
+                        break;
+                    default:
+                        break;
+                    }
+                }
                 return;
             }
             if ($AttributStatus != '00') {
@@ -2742,54 +3134,43 @@
                 return;
             }
 
-            // Tcharp38: Started organization by clustId then attribId. Easier to follow than dataType
+            /* Treating message in the following order
+               - by clustId
+               - then attribId.
+               If not treated there, then next steps will be
+               - direct conversion according to attrib type and return as it is
+               - renaining custom cases that should be moved in first place
+            */
+            $data = null; // Data to push to Abeille
             if ($ClusterId == "0000") { // Basic cluster
-                if (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010")) {
-                    // Assuming $dataType == "42"
-
                     // 0004: ManufacturerName
                     // 0005: ModelIdentifier
                     // 0010: Location => Used for Profalux
-                    // $msg .= ', DataByteList='.pack('H*', $Attribut);
-                    // $msg .= ', [Modelisation]';
+
+                if (($AttributId=="0004") || ($AttributId=="0005") || ($AttributId=="0010")) {
+                    // Assuming $dataType == "42"
 
                     $trimmedValue = pack('H*', $Attribut);
                     $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
                     $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
                     if ($AttributId == "0004") { // 0x0004 ManufacturerName string
-                        if (strlen($trimmedValue) > 2)
-                            $this->ManufacturerNameTable[$dest.'/'.$SrcAddr] = array ( 'time'=> time(), 'ManufacturerName'=>$trimmedValue );
+                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue);
+                        $data = $trimmedValue;
 
-                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', ".json_encode($this->ManufacturerNameTable).', [Modelisation]');
-
-                        // Tcharp38: ManufacturerName not pushed to Abeille ?!
-                        return;
+                        $this->updateEq($dest, $SrcAddr, 'manufacturer', $trimmedValue);
                     } else if ($AttributId == "0005") { // 0x0005 ModelIdentifier string
-                        ///@TODO: needManufacturer : C est un verrue qu'il faudrait retirer. Depuis le debut seul le nom est utilisé et maintenant on a des conflit de nom du fait de produits differents s annonceant sous le meme nom. Donc on utilise ModelId_Manufacturer. Mais il faudrait reprendre tous les modeles. D ou cette verrue.
-                        $needManufacturer = array('TS0001','TS0043','TS0115','TS0121','TS011F');
-                        if (in_array($trimmedValue, $needManufacturer)) {
-                            if (!isset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr])) {
-                                parserLog('debug', '  Manufacturer required & missing for '.$dest.'/'.$SrcAddr);
-                                return;
-                            }
-                            if ( $this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['time'] +10 > time() ) {
-                                $trimmedValue .= '_'.$this->ManufacturerNameTable[$dest.'/'.$SrcAddr]['ManufacturerName'];
-                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                            } else {
-                                unset($this->ManufacturerNameTable[$dest.'/'.$SrcAddr]);
-                                return;
-                            }
-                        }
+                        $trimmedValue = $this->cleanModelId($trimmedValue);
 
-                        // On essaye de recuperer l adresse IEEE d un equipement qui s annonce par son nom
-                        $this->msgToCmd('CmdAbeille1/'.$SrcAddr.'/IEEE_Address_request', 'shortAddress='.$SrcAddr);
-
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue);
                         $data = $trimmedValue;
+
+                        $this->updateEq($dest, $SrcAddr, 'modelIdentifier', $trimmedValue);
                     } else if ($AttributId == "0010") { // Location
-                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."', [Modelisation]");
+                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
+
+                        $this->updateEq($dest, $SrcAddr, 'location', $trimmedValue);
                     }
                 }
 
@@ -2890,6 +3271,13 @@
                 }
             } // End cluster 0006/onoff
 
+            else if ($ClusterId == "0008") { // Level control cluster
+                if ($AttributId == "0000") { // CurrentLevel
+                    $CurrentLevel = substr($Attribut, 0, 2);
+                    parserLog('debug', '  CurrentLevel='.$CurrentLevel);
+                }
+            } // End cluster 0006/onoff
+
             else if ($ClusterId == "000C") { // Analog input cluster
                 if ($AttributId == "0055") {
                     // assuming $dataType == "39"
@@ -2966,6 +3354,12 @@
                     parserLog('debug', '  Occupancy='.$Occupancy);
                 }
             } // End cluster 0406
+
+            /* If $data is set it means message already treated before */
+            if (isset($data)) {
+                $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
+                return;
+            }
 
             /* Tcharp38
                Code hereafter to be migrated above to be sorted by clustId/attribId but need to be sure of clustId first.
@@ -3425,8 +3819,6 @@
             }
 
             if (isset($data)) {
-                // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
-                if ( strpos($data, "sensor_86sw2")>2 ) { $data="lumi.sensor_86sw2"; }
                 $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
             }
         }
@@ -3778,49 +4170,49 @@
             }
         }
 
-        /**
-         * execAtCreationCmdForOneNE()
-         * - Execute all commands with 'execAtCreation' flag set
-         *
-         * @param logicalId of the device
-         * @return none
-         */
-        function execAtCreationCmdForOneNE($logicalId) {
-            parserLog('debug', 'execAtCreationCmdForOneNE('.$logicalId.')');
-            $eqLogic = Abeille::byLogicalId($logicalId,'Abeille');
-            if (!is_object($eqLogic)) {
-                logMessage('debug', "  Unkown EQ '".$logicalId."'");
-                return;
-            }
-            list($dest, $addr) = explode("/", $logicalId);
-            logMessage('debug', "  dest=".$dest.", addr=".$addr);
-            // echo $dest . ' - ' . $addr . "\n";
-            $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'execAtCreation', 'action');
-            foreach ( $cmds as $key => $cmd ) {
-                // $topic = $cmd->getLogicalId();
-                logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
-                $topic = $cmd->getConfiguration('topic');
-                $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
-                $request = $cmd->getConfiguration('request');
-                $request = AbeilleCmd::updateField($dest, $cmd, $request);
-                // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
-                logMessage('debug', "  topic=".$topic.", request=".$request);
-                $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
-            }
-        }
+        // /**
+        //  * execAtCreationCmdForOneNE()
+        //  * - Execute all commands with 'execAtCreation' flag set
+        //  *
+        //  * @param logicalId of the device
+        //  * @return none
+        //  */
+        // function execAtCreationCmdForOneNE($logicalId) {
+        //     parserLog('debug', 'execAtCreationCmdForOneNE('.$logicalId.')');
+        //     $eqLogic = Abeille::byLogicalId($logicalId,'Abeille');
+        //     if (!is_object($eqLogic)) {
+        //         logMessage('debug', "  Unkown EQ '".$logicalId."'");
+        //         return;
+        //     }
+        //     list($dest, $addr) = explode("/", $logicalId);
+        //     logMessage('debug', "  dest=".$dest.", addr=".$addr);
+        //     // echo $dest . ' - ' . $addr . "\n";
+        //     $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'execAtCreation', 'action');
+        //     foreach ( $cmds as $key => $cmd ) {
+        //         // $topic = $cmd->getLogicalId();
+        //         logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
+        //         $topic = $cmd->getConfiguration('topic');
+        //         $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
+        //         $request = $cmd->getConfiguration('request');
+        //         $request = AbeilleCmd::updateField($dest, $cmd, $request);
+        //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
+        //         logMessage('debug', "  topic=".$topic.", request=".$request);
+        //         $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
+        //     }
+        // }
 
-        /**
-         * configureNE
-         * This method send all command needed to the NE to configure it.
-         *
-         * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-         *
-         * @return          Doesn't return anything as all action are triggered by sending messages in queues
-         */
-        function configureNE($eqLogicId) {
-            // parserLog('debug', 'configureNE('.$eqLogicId.')');
-            self::execAtCreationCmdForOneNE($eqLogicId);
-        }
+        // /**
+        //  * configureNE
+        //  * This method send all command needed to the NE to configure it.
+        //  *
+        //  * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+        //  *
+        //  * @return          Doesn't return anything as all action are triggered by sending messages in queues
+        //  */
+        // function configureNE($eqLogicId) {
+        //     // parserLog('debug', 'configureNE('.$eqLogicId.')');
+        //     self::execAtCreationCmdForOneNE($eqLogicId);
+        // }
 
         /**
          * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:

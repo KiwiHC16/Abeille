@@ -692,8 +692,14 @@ class AbeilleCmdProcess extends AbeilleDebug {
                         }
                     }
                     else {
-                        $this->deamonlog('debug', "    NE desactive, je n envoie pas de commande.");
-                        return -1;
+                        /* Tcharp38: Preventing cmd to be sent if EQ is disabled is not good here.
+                           If EQ was disabled but now under pairing process (dev announce)
+                           this prevents interrogation of EQ and therefore reinclusion.
+                           This check should be done at source not here. At least don't filter
+                           requests from parser. */
+                        // $this->deamonlog('debug', "    NE desactive, je n envoie pas de commande.");
+                        // return -1;
+                        return $Command['priority'];
                     }
                 }
                 else {

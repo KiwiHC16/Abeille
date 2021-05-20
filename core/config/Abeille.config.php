@@ -37,7 +37,8 @@
     define('queueKeyLQIToAbeille',          521);
     define('queueKeyLQIToCmd',              523);
 
-    define('queueKeyParserToAbeille',       221);
+    define('queueKeyParserToAbeille',       221); // Obsolete path parser to Abeille.
+    define('queueKeyParserToAbeille2',      222); // New path parser to Abeille
     define('queueKeyParserToCmd',           223);
     define('queueKeyCmdToAbeille',          321);
     define('queueKeyCmdToCmd',              323);

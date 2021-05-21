@@ -2021,6 +2021,16 @@ parserLog('debug', '      request='.$request);
             }
         }
 
+        /* 8012/
+           Confirms that a data packet sent by the local node has been successfully passed down the stack to the MAC layer
+           and has made its first hop towards its destination (an acknowledgment has been received from the next hop node) */
+        function decode8012($dest, $payload, $ln, $qos, $dummy)
+        {
+            // See https://github.com/fairecasoimeme/ZiGate/issues/350
+            $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM';
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8012");
+        }
+
         /**
          * “Permit join” status
          *

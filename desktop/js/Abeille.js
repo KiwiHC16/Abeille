@@ -50,11 +50,10 @@ $('#bt_template').on('click', function () {
     $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=modelesPage&testToRun=104').dialog('open');
 });
 
-$('#bt_networkAbeilleList').on('click', function () {
-                               $('#md_modal').dialog({title: "{{Réseau Abeille}}"});
-                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=network').dialog('open');
-                               //window.open("plugins/Abeille/Network/AbeilleLQI_List.php");
-                               });
+$('#bt_network').on('click', function () {
+    $('#md_modal').dialog({title: "{{Réseau Abeille}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=AbeilleNetwork.modal').dialog('open');
+});
 
 $('#bt_networkAbeille').on('click', function () {
     // window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.php");

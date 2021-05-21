@@ -10,7 +10,7 @@
 
         $NbOfZigatesON++;
         if ( Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille') ) {
-            echo '<label style="margin: 10px 0px 0px 10px">Zigate'.$i .' - '. Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')->getHumanName().'</label>';
+            echo '<label style="margin: 10px 0px 0px 10px">Réseau Abeille'.$i.'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
         echo '<span class="cursor" id="bt_include'.$i.'" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."><i class="fas fa-plus-circle" style="font-size:160%;color:green !important;"></i></span>';

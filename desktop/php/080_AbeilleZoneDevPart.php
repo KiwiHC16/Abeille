@@ -14,32 +14,8 @@
 
 		<!-- Misc -->
 		<input type="submit" name="submitButton" value="Identify">
-		<table>
-			<tr>
-				<td>
-					Widget Properties
-				</td>
-			</tr><tr>
-				<td>
-					Dimension
-				</td><td>
-					<label control-label" data-toggle="tooltip" title="Largeur par defaut du widget que vous souhaitez.">Largeur</label>
-					<input type="text" name="Largeur">
-				</td><td>
-					<label control-label" data-toggle="tooltip" title="Hauteur par defaut du widget que vous souhaitez.">Largeur</label>
-					<input type="text" name="Hauteur">
-				</td><td>
-					<input type="submit" name="submitButton" value="Set Size">
-				</td>
-			</tr><tr>
-				</td>
-				<td>
-					<a class="btn btn-danger  eqLogicAction pull-right" data-action="removeAll"><i class="fas fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
-				</td>
-			</tr><tr>
-			</tr>
-		</table>
-
+		<br>
+		<a class="btn btn-danger eqLogicAction pull-left" data-action="removeAll"><i class="fas fa-minus-circle"></i>  {{Supprimer tous les objets}}</a>
 	</div> <!-- End of developer area -->
 	<br/><br/>
 </div>

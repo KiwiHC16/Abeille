@@ -54,14 +54,7 @@
     }
     $neighbors = substr($neighbors, 0, -2); // enleve la virgule et l espace en fin de chaine
 
-    // Nombre de process actifs
-    $processes = Abeille::deamon_info();
-    $color = "greeniconcolor";
-    $color = ($processes['nbProcess'] == $processes['nbProcessExpected']) ? "greeniconcolor" : "rediconcolor";
-    $nbDaemons = "<i class=\"fas fa-circle fa-lg " . $color . "\"></i> " . $processes['nbProcess'] . "/".$processes['nbProcessExpected'];
-
     sendVarToJS('nodesFromJeedom', $nodes);
-
 ?>
 
 <style>
@@ -261,43 +254,6 @@
                     <!-- <span id="graph-node-name" style="width: 100%;height: 100%"></span> -->
                 </div>
 
-                <!-- tab Résumé -->
-                <!-- <div id="summary_network" class="tab-pane" >
-                    <br />
-
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Informations}}</h4></div>
-                        <div class="panel-body">
-                            <p>{{Réseau démarré le}} <span class="zigBNetworkAttr label label-default" style="font-size : 1em;" data-l1key="startTime"><?php echo $startTime ?></span> <span class="zigBNetworkAttr label label-default" data-l1key="awakedDelay" style="font-size : 1em;"></span></p>
-                            <p>{{Le réseau contient}} <b><span class="zigBNetworkAttr" data-l1key="nodesCount"></span><?php echo $nodesCount ?> </b> {{noeuds dont }} <?php echo $nodesCount-$timerCount ?> {{noeuds zigbee (zigate(s) incluse(s)) et }} <?php echo $timerCount ?> {{timers}}</p>
-                            <p>{{Voisins :}}<span class="zigBNetworkAttr label-default" data-l1key="neighbors" style="font-size : 1em;"><?php echo $neighbors ?></span></p>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Etat}}</h4></div>
-                        <div class="panel-body">
-                            <p><span class="zigBNetworkAttr" data-l1key="state"></span> {{Etat actuel :}} <span class="zigBNetworkAttr label label-default" data-l1key="stateDescription" style="font-size : 1em;"><?php echo $status ?></span></p>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h4 class="panel-title">{{Système}}</h4></div>
-                        <div class="panel-body">
-
-                            <p>{{Chemin du contrôleur Zigbee :}}
-                                <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;">
-<?php                           for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
-                                    echo config::byKey('AbeilleSerialPort'.$i, 'Abeille', '{{Inconnu}}').", ";
-                                }
-?>
-                                </span>
-                            </p>
-                            <p>{{Nombre de démons lancés :}} <span class="zigBNetworkAttr label label-default" data-l1key="" style="font-size : 1em;"><?php echo $nbDaemons ?></span> </p>
-                        </div>
-                    </div>
-                </div>
- -->
                 <!-- tab Bruit -->
                 <div id="test1" class="tab-pane" >
                                 (Ce texte devra etre mis dans la doc)<br />

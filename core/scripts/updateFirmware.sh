@@ -53,6 +53,10 @@ else
         error=1
     fi
     if [ ! -x ${PROG} ]; then
+        # Attempting to correct execution right
+        sudo chmod +x ${PROG} >/dev/null
+    fi
+    if [ ! -x ${PROG} ]; then
         echo "= ERREUR: Le programmateur Jennic n'est pas exécutable !"
         echo "=         ${PROG}"
         error=1

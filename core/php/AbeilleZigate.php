@@ -485,6 +485,7 @@
     /* Get attribut discovery response.
        Send "Attribut Discovery Request" (cmd 0x0140) to zgPort and read 8140 answer.
        WARNING: Zigate exclusive access required !
+       WARNING: Requires FW >= 31d in HYBRID mode !
        Note: Returns ERR if no answer from EQ within 2s (timeout).
        Args: zgPort = Zigate port (ex: '/dev/ttyS1'), eqAddr = EQ short addr,
              eqEP = End Point number, clustId
@@ -525,29 +526,32 @@
 
         while ($status == 0) {
             $timeout = 2000; // 2s
-            $status = zgRead2($zgMsg, $timeout); // Expecting 8140
+            $status = zgRead2($zgMsg, $timeout);
             if ($status != 0)
                 break;
 
-            if (substr($zgMsg, 0, 4) != "8140")
+            if (substr($zgMsg, 0, 4) != "8002")
                 continue;
             $zgMsg = substr($zgMsg, 10); // Skipping type/len/crc
 
-            // 8140 message reminder:
-            // <complete: uint8_t>
-            // <attribute type: uint8_t>
-            // <attribute id: uint16_t>
-            // <Src Addr: uint16_t> (added only from 3.0f version)
-            // <Src EndPoint: uint8_t> (added only from 3.0f version)
-            // <Cluster id: uint16_t> (added only from 3.0f version)
-            $resp = array(
-                'Completed' => hexdec(substr($zgMsg, 0, 2)),
-                'AttrType' => substr($zgMsg, 2, 2),
-                'AttrId' => substr($zgMsg, 4, 4),
-                'Addr' => substr($zgMsg, 8, 4),
-                'EP' => hexdec(substr($zgMsg, 12, 2)),
-                'ClustId' => substr($zgMsg, 14, 4),
-            );
+            // // 8140 message reminder:
+            // // <complete: uint8_t>
+            // // <attribute type: uint8_t>
+            // // <attribute id: uint16_t>
+            // // <Src Addr: uint16_t> (added only from 3.0f version)
+            // // <Src EndPoint: uint8_t> (added only from 3.0f version)
+            // // <Cluster id: uint16_t> (added only from 3.0f version)
+            // $resp = array(
+            //     'Completed' => hexdec(substr($zgMsg, 0, 2)),
+            //     'AttrType' => substr($zgMsg, 2, 2),
+            //     'AttrId' => substr($zgMsg, 4, 4),
+            //     'Addr' => substr($zgMsg, 8, 4),
+            //     'EP' => hexdec(substr($zgMsg, 12, 2)),
+            //     'ClustId' => substr($zgMsg, 14, 4),
+            // );
+
+            /* Decoding message */
+            $resp = decode8002($zgMsg);
             break;
         }
 
@@ -556,10 +560,10 @@
     }
 
 
-    /* Decode 8002 message for "Read Attribute Response" case.
+    /* Decode 8002 message.
        Returns: array() */
-    function decode8002_ReadAttributeResponse($zgMsg) {
-logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
+    function decode8002($zgMsg) {
+        logMessage('debug', "decode8002(): zgMsg=".$zgMsg);
         /* 8002 message reminder (if hybrid mode) */
         // <status: uint8_t>
         // <Profile ID: uint16_t>
@@ -584,72 +588,208 @@ logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
             'DestAddrMode' => substr($zgMsg, 20, 2),
             'DestAddr' => substr($zgMsg, 22, 4), // Assuming "short" addr mode (2)
 
-            /* Read Attribute Response specific */
-            'FCF' => substr($zgMsg, 26, 2), // Frame Control Field
-            'SQN' => substr($zgMsg, 28, 2), // Sequence Number
-            'Cmd' => substr($zgMsg, 30, 2), // Command
+            'LQI' => substr($zgMsg, -2, 2)
+        );
+
+        /* Decoding ZCL header */
+        $resp['FCF'] = substr($zgMsg, 26, 2); // Frame Control Field
+        $manufSpecific = hexdec($resp['FCF']) & (1 << 2);
+        if ($manufSpecific) {
+            /* 16bits for manuf specific code */
+            $resp['SQN'] = substr($zgMsg, 32, 2); // Sequence Number
+            $resp['Cmd'] = substr($zgMsg, 34, 2); // Command
+            $zgMsg = substr($zgMsg, 34, -2);
+        } else {
+            $resp['SQN'] = substr($zgMsg, 28, 2); // Sequence Number
+            $resp['Cmd'] = substr($zgMsg, 30, 2); // Command
+            $zgMsg = substr($zgMsg, 32, -2);
+        }
+
+        /*
+        0x01 Read Attributes Response
+        0x04 Write Attributes Response
+        0x05 Write Attributes No Response
+        0x07 Configure Reporting Response
+        0x09 Read Reporting Configuration Response
+        0x0d Discover Attributes Response
+        */
+        logMessage('debug', "decode8002(): cmd=".$resp['Cmd']);
+
+        if ($resp['Cmd'] == "01") { // Read Attributes Response
+            $attributes = [];
             // 'Attributes' => []; // Attributes
             //      $attr['Id']
             //      $attr['Status']
             //      $attr['DataType']
             //      $attr['Data']
-            'LQI' => substr($zgMsg, -2, 2)
-        );
-        $zgMsg = substr($zgMsg, 32, -2);
-        $attributes = [];
-        $l = strlen($zgMsg);
-        $unknownType = FALSE;
-        for ($i = 0; $i < $l;) {
-            $attrId = substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2);
-            $attrStatus = substr($zgMsg, $i + 4, 2);
-            $i += 6;
+            $l = strlen($zgMsg);
+            $unknownType = FALSE;
+            for ($i = 0; $i < $l;) {
+                $attrId = substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2);
+                $attrStatus = substr($zgMsg, $i + 4, 2);
+                $i += 6;
 
-            /* Note: Status=0x86 means unsupported attribute */
-            if ($attrStatus != "00") {
+                /* Note: Status=0x86 means unsupported attribute */
+                if ($attrStatus != "00") {
+                    $attr = array(
+                        'Id' => $attrId,
+                        'Status' => $attrStatus
+                    );
+                    $attributes[] = $attr;
+                    continue;
+                }
+
                 $attr = array(
                     'Id' => $attrId,
-                    'Status' => $attrStatus
+                    'Status' => $attrStatus,
+                    'DataType' => substr($zgMsg, $i, 2),
+                );
+                $i += 2;
+                switch ($attr['DataType']) {
+                case "10": // Boolean
+                case "18": // 8bit bitmap
+                case "20": // 8bit unsigned int
+                case "30": // 8bit enum
+                    $attr['Data'] = substr($zgMsg, $i, 2);
+                    $i += 2;
+                    break;
+                case "21": // 16bit unsigned int
+                    $attr['Data'] = substr($zgMsg, $i, 2);
+                    $i += 4;
+                    break;
+                case "42": // String
+                    $len = hexdec(substr($zgMsg, $i, 2)) * 2;
+                    $attr['Data'] = pack('H*', substr($zgMsg, $i + 2, $len));
+                    $i += 2 + $len;
+                    break;
+                default:
+                    $unknownType = TRUE;
+                    logMessage("WARNING", "Unknown attribute type ".$attr['DataType'].". Rest of decode IGNORED !");
+                    break;
+                }
+                if ($unknownType)
+                    break;
+                $attributes[] = $attr;
+            }
+            $resp['Attributes'] = $attributes;
+        } else if ($resp['Cmd'] == "0D") { // Discover Attributes Response
+            logMessage('debug', "decode8002(): Discover Attributes Response");
+            $completed = substr($zgMsg, 2);
+            $zgMsg = substr($zgMsg, 2); // Skipping 'completed' status
+
+            $attributes = [];
+            // 'Attributes' => []; // Attributes
+            //      $attr['Id']
+            //      $attr['DataType']
+            $l = strlen($zgMsg);
+            for ($i = 0; $i < $l;) {
+                $attr = array(
+                    'Id' => substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2),
+                    'DataType' => substr($zgMsg, $i + 4, 2)
                 );
                 $attributes[] = $attr;
-                continue;
+                $i += 6;
             }
-
-            $attr = array(
-                'Id' => $attrId,
-                'Status' => $attrStatus,
-                'DataType' => substr($zgMsg, $i, 2),
-            );
-            $i += 2;
-            switch ($attr['DataType']) {
-            case "10": // Boolean
-            case "18": // 8bit bitmap
-            case "20": // 8bit unsigned int
-            case "30": // 8bit enum
-                $attr['Data'] = substr($zgMsg, $i, 2);
-                $i += 2;
-                break;
-            case "21": // 16bit unsigned int
-                $attr['Data'] = substr($zgMsg, $i, 2);
-                $i += 4;
-                break;
-            case "42": // String
-                $len = hexdec(substr($zgMsg, $i, 2)) * 2;
-                $attr['Data'] = pack('H*', substr($zgMsg, $i + 2, $len));
-                $i += 2 + $len;
-                break;
-            default:
-                $unknownType = TRUE;
-                logMessage("WARNING", "Unknown attribute type ".$attr['DataType']);
-                break;
-            }
-            if ($unknownType)
-                break;
-            $attributes[] = $attr;
+            $resp['Attributes'] = $attributes;
         }
-        $resp['Attributes'] = $attributes;
 
         return $resp;
     }
+
+    /* Decode 8002 message for "Read Attribute Response" case.
+       Returns: array() */
+    function decode8002_ReadAttributeResponse($zgMsg) {
+        logMessage('debug', "decode8002_ReadAttributeResponse zgMsg=".$zgMsg);
+                /* 8002 message reminder (if hybrid mode) */
+                // <status: uint8_t>
+                // <Profile ID: uint16_t>
+                // <cluster ID: uint16_t>
+                // <source endpoint: uint8_t>
+                // <destination endpoint: uint8_t>
+                // <source address mode: uint8_t>
+                // <source address: uint16_t or uint64_t>
+                // <destination address mode: uint8_t>
+                // <destination address: uint16_t or uint64_t>
+                // <payload : data each element is uint8_t>
+                $profId = substr($zgMsg, 2, 4);
+                $clustId = substr($zgMsg, 6, 4);
+                $resp = array(
+                    'Status' => substr($zgMsg, 0, 2),
+                    'ProfId' => $profId,
+                    'ClustId' => $clustId,
+                    'SrcEP' => substr($zgMsg, 10, 2),
+                    'DestEP' => substr($zgMsg, 12, 2),
+                    'AddrMode' => substr($zgMsg, 14, 2),
+                    'Addr' => substr($zgMsg, 16, 4), // Assuming "short" addr mode (2)
+                    'DestAddrMode' => substr($zgMsg, 20, 2),
+                    'DestAddr' => substr($zgMsg, 22, 4), // Assuming "short" addr mode (2)
+
+                    /* Read Attribute Response specific */
+                    'FCF' => substr($zgMsg, 26, 2), // Frame Control Field
+                    'SQN' => substr($zgMsg, 28, 2), // Sequence Number
+                    'Cmd' => substr($zgMsg, 30, 2), // Command
+                    // 'Attributes' => []; // Attributes
+                    //      $attr['Id']
+                    //      $attr['Status']
+                    //      $attr['DataType']
+                    //      $attr['Data']
+                    'LQI' => substr($zgMsg, -2, 2)
+                );
+                $zgMsg = substr($zgMsg, 32, -2);
+                $attributes = [];
+                $l = strlen($zgMsg);
+                $unknownType = FALSE;
+                for ($i = 0; $i < $l;) {
+                    $attrId = substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2);
+                    $attrStatus = substr($zgMsg, $i + 4, 2);
+                    $i += 6;
+
+                    /* Note: Status=0x86 means unsupported attribute */
+                    if ($attrStatus != "00") {
+                        $attr = array(
+                            'Id' => $attrId,
+                            'Status' => $attrStatus
+                        );
+                        $attributes[] = $attr;
+                        continue;
+                    }
+
+                    $attr = array(
+                        'Id' => $attrId,
+                        'Status' => $attrStatus,
+                        'DataType' => substr($zgMsg, $i, 2),
+                    );
+                    $i += 2;
+                    switch ($attr['DataType']) {
+                    case "10": // Boolean
+                    case "18": // 8bit bitmap
+                    case "20": // 8bit unsigned int
+                    case "30": // 8bit enum
+                        $attr['Data'] = substr($zgMsg, $i, 2);
+                        $i += 2;
+                        break;
+                    case "21": // 16bit unsigned int
+                        $attr['Data'] = substr($zgMsg, $i, 2);
+                        $i += 4;
+                        break;
+                    case "42": // String
+                        $len = hexdec(substr($zgMsg, $i, 2)) * 2;
+                        $attr['Data'] = pack('H*', substr($zgMsg, $i + 2, $len));
+                        $i += 2 + $len;
+                        break;
+                    default:
+                        $unknownType = TRUE;
+                        logMessage("WARNING", "Unknown attribute type ".$attr['DataType']);
+                        break;
+                    }
+                    if ($unknownType)
+                        break;
+                    $attributes[] = $attr;
+                }
+                $resp['Attributes'] = $attributes;
+
+                return $resp;
+            }
 
     /* Attempt to detect main supported attributs for given EP/Cluster.
        Note: This function goes thru AbeilleCmd & AbeilleParser.

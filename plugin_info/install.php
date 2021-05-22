@@ -322,8 +322,9 @@
             $cron->remove();
         }
         log::add('Abeille', 'info', 'Suppression extension');
-        $resource_path = realpath(dirname(__FILE__).'/../resources');
-        passthru('sudo /bin/bash '.$resource_path.'/remove.sh '.$resource_path.' > '.log::getPathToLog('Abeille_removal').' 2>&1 &');
+        // Tcharp38: remove.sh currently does nothing
+        // $path = realpath(__DIR__.'/../core/scripts');
+        // passthru('sudo /bin/bash '.$path.'/remove.sh '.$path.' >'.log::getPathToLog('AbeilleRemoval.log').' 2>&1 &');
         message::removeAll("Abeille");
         // message::add("Abeille","plugin désinstallé");
     }

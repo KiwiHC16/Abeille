@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Firmware: Suppression des FW 3.0f, 3.1a & 3.1b. 3.1d = FW suggéré
+- JennicModuleProgrammer: Mise-à-jour v0.7 + améliorations. Compilé avant utilisation
+
 210520-BETA-4
 ----------
 

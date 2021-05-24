@@ -135,7 +135,7 @@ try {
         $zgPort = init('zgport');
         $zgType = init('zgtype');
 
-        logSetConf('AbeilleConfig.log', TRUE);
+        logSetConf('AbeilleConfig.log', true);
         logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
 
         logMessage('debug', 'Arret des démons');
@@ -165,16 +165,22 @@ try {
         ajax::success();
     }
 
-    /* Update PiZigate FW but check parameters first, prior to shutdown daemon */
-    if (init('action') == 'updateFirmwarePiZiGate') {
-        $zgFwFile = init('fwfile');
+    /* Update FW but check parameters first, prior to shutdown daemon */
+    if (init('action') == 'updateFirmware') {
+        $zgType = init('zgtype'); // "PI" or "DIN"
         $zgPort = init('zgport');
+        $zgFwFile = init('fwfile');
 
-        logSetConf('AbeilleConfig.log', TRUE);
-        logMessage('debug', 'Démarrage updateFirmware(' . $zgFwFile . ', ' . $zgPort . ')');
+        logSetConf('AbeilleConfig.log', true);
+        logMessage('debug', 'Démarrage updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
+
+        if ($zgType == "PI")
+            $script = "updateFirmware.sh";
+        else
+            $script = "updateFirmwareDIN.sh";
 
         logMessage('debug', 'Vérification des paramètres');
-        $cmdToExec = "updateFirmware.sh check ".$zgPort;
+        $cmdToExec = $script." check ".$zgPort;
         $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
 
@@ -184,14 +190,17 @@ try {
             abeille::deamon_stop(); // Stopping daemon
 
             /* Updating FW and reset Zigate */
-            $cmdToExec = "updateFirmware.sh flash ".$zgPort." ".$zgFwFile;
+            $cmdToExec = $script." flash ".$zgPort." ".$zgFwFile;
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             /* Reading FW version */
-            if ($status == 0) {
-                $status = zgGetVersion($zgPort, $version);
-            }
+            // Tcharp38 note: removed this
+            // When restarting Zigate, several messages exchanges before being able to ask for version
+            // To be revisited
+            // if ($status == 0) {
+            //     $status = zgGetVersion($zgPort, $version);
+            // }
 
             logMessage('info', 'Redémarrage des démons');
             abeille::deamon_start(); // Restarting daemon
@@ -212,7 +221,7 @@ try {
         $branch = init('branch');
         $updateOnly = init('updateOnly'); // TODO: No longer required
 
-        logSetConf('AbeilleConfig.log', TRUE);
+        logSetConf('AbeilleConfig.log', true);
 
         $status = 0;
         $prefix = logGetPrefix(""); // Get log prefix
@@ -290,7 +299,7 @@ try {
                         $errors .= "L'équipement '".$eqName."' n'a pas d'adresse IEEE\n";
                     else {
                         $errors .= "L'équipement '".$eqName."' n'a pas l'adresse IEEE de son parent\n";
-                        $missingParentIEEE = TRUE;
+                        $missingParentIEEE = true;
                     }
                     continue;
                 }

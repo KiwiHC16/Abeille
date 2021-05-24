@@ -275,7 +275,7 @@
                                     $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                                 }
                                 $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                                if (preg_match("(3.1c)", $fwVers))
+                                if ($fwVers == "3.1d")
                                     echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                                 else
                                     echo '<option value='.$fwName.'>'.$fwVers.'</option>';
@@ -510,41 +510,32 @@
         // var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
         var idWifiAddr = document.querySelector('#idWifiAddr' + zgNb);
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
+
+        $("#idSocat"+zgNb).hide();
+        $("#idWiringPi"+zgNb).hide();
+        $("#idCommTest"+zgNb).hide();
+        $("#idUpdFw"+zgNb).hide();
+        idSelSP.removeAttribute('disabled');
+        idWifiAddr.setAttribute('disabled', true);
+
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
             $("#idSocat"+zgNb).show();
             checkSocatInstallation();
-            $("#idWiringPi"+zgNb).hide();
-            $("#idCommTest"+zgNb).hide();
-            $("#idUpdFw"+zgNb).hide();
 
             $("#idSelSP" + zgNb).val('/dev/zigate' + zgNb);
             idSelSP.setAttribute('disabled', true);
-            // idCheckSP.setAttribute('disabled', true);
-            // idFW.setAttribute('disabled', true);
-            // idUpdateFW.setAttribute('disabled', true);
             idWifiAddr.removeAttribute('disabled');
-            // idCheckWifi.removeAttribute('disabled');
-        } else {
+        } else { // USB, PI or DIN
             console.log('Type changed to "'+zgType+'"');
-            $("#idSocat"+zgNb).hide();
             $("#idCommTest"+zgNb).show();
 
-            idWifiAddr.setAttribute('disabled', true);
-            // idCheckWifi.setAttribute('disabled', true);
-            idSelSP.removeAttribute('disabled');
-            // idCheckSP.removeAttribute('disabled');
-            if (zgType == "PI") { // FW update is supported for PI only
+            if (zgType == "PI") {
                 $("#idWiringPi"+zgNb).show();
                 checkWiringPi(); // Force WiringPi check
-                // idFW.removeAttribute('disabled');
-                // idUpdateFW.removeAttribute('disabled');
                 $("#idUpdFw"+zgNb).show();
-            } else {
-                // idFW.setAttribute('disabled', true);
-                // idUpdateFW.setAttribute('disabled', true);
-                $("#idWiringPi"+zgNb).hide();
-                $("#idUpdFw"+zgNb).hide();
+            } else if (zgType == "DIN") {
+                $("#idUpdFw"+zgNb).show();
             }
         }
     }
@@ -795,16 +786,16 @@
         //     return;
         // }
         var zgType = $("#idSelZgType" + zgNb).val();
-        if (zgType != "PI") {
-            console.log("=> Not PI type. UNEXPECTED !");
+        if ((zgType != "PI") && (zgType != "DIN")) {
+            console.log("=> Neither PI nor DIN type. UNEXPECTED !");
             return;
         }
         var zgPort = $("#idSelSP" + zgNb).val();
         var zgFW = $("#idFW" + zgNb).val();
-        bootbox.confirm('{{Vous êtes sur le point de (re)programmer la PiZigate<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br><br>Voulez vous continuer ?}}', function (result) {
+        bootbox.confirm('{{Vous êtes sur le point de mettre à jour la Zigate<br> - type    : '+zgType+'<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br><br>Voulez vous continuer ?}}', function (result) {
             if (result) {
-                $('#md_modal2').dialog({title: "{{Programmation de la PiZigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=updateFW&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
+                $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
             }
         });
     }

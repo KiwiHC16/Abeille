@@ -353,7 +353,7 @@
         console.log("resetPiZigate()");
 
         $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=configPageModal.abeille&cmd=resetPiZigate').dialog('open');
+        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
     }
 
 	/*

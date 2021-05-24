@@ -17,25 +17,32 @@ Lancement des operations.
 <script>
     var cmd = "<?php echo $_GET['cmd']; ?>";
     var action = "";
+    if (cmd == "updateFW") {
+        action = 'updateFirmware';
+    } else if (cmd == "resetPiZigate") {
+        action = 'resetPiZigate';
+    }
     <?php
+        if (isset($_GET['zgtype']))
+            echo 'var zgtype = '.$_GET['zgtype'].';';
+        else
+            echo 'var zgtype = "";';
         if (isset($_GET['zgport']))
             echo 'var zgport = '.$_GET['zgport'].';';
         else
             echo 'var zgport = "";';
+        if (isset($_GET['fwfile']))
+            echo 'var fwfile = '.$_GET['fwfile'].';';
+        else
+            echo 'var fwfile = "";';
     ?>
-    var fwfile = "";
-    if (cmd == "updateFW") {
-        action = 'updateFirmwarePiZiGate';
-        fwfile = <?php if (isset($_GET['fwfile'])) echo $_GET['fwfile']; else echo "none"; ?>;
-    } else if (cmd == "resetPiZigate") {
-        action = 'resetPiZigate';
-    }
 
     $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
             data: {
                 action: action,
+                zgtype: zgtype,
                 zgport: zgport,
                 fwfile: fwfile,
             },

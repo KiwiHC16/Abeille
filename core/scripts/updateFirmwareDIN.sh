@@ -78,6 +78,8 @@ if [ $error != 0 ]; then
 fi
 echo "= Ok"
 
+status=0
+
 # Si check seulement on quitte ici
 if [ ${ACTION} == "check" ]; then
     exit 0
@@ -88,10 +90,10 @@ else
     echo "Lancement de la programmation du firmware"
     echo "- Port tty: ${ZGPORT}"
     echo "- Firmware: ${FW}"
+    sudo python3 ${DIN_SCRIPT} -s ${ZGPORT} -b 250000 -f ${FW_DIR}/${FW} 2>&1
 fi
 
-sudo python3 ${DIN_SCRIPT} -s ${ZGPORT} -b 250000 -f ${FW_DIR}/${FW} 2>&1
-if [ $status  -eq 0 ]; then
+if [ $? -eq 0 ]; then
     echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
 else
     echo "= ATTENTION !!! "

@@ -110,7 +110,7 @@
     </div>
 
     <?php
-        // If eq is a zigate (short addr=0000 or Ruche), display special parameters
+        // If eq is a zigate (short addr=0000), display special parameters
         if ($eqAddr == "0000") {
     ?>
             <hr>
@@ -145,9 +145,18 @@
                 <label class="col-sm-3 control-label">Firmware</label>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdValueByName($eqId, 'SDK');
-                        echo '<span>'.$res.'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "SDK").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idFWVersion">'.getCmdValueByName($eqId, 'SDK').'</span>';
                     ?>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "SDK")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[SDK]");
+                                // console.log(_options);
+                                var element = document.getElementById('idFWVersion');
+                                element.textContent = _options.display_value;
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
 
@@ -155,9 +164,17 @@
                 <label class="col-sm-3 control-label">PAN ID</label>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdValueByName($eqId, 'PAN ID');
-                        echo '<span>'.$res.'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idPanId">'.getCmdValueByName($eqId, 'PAN ID').'</span>';
                     ?>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "PAN ID")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[PAN ID]");
+                                var element = document.getElementById('idPanId');
+                                element.textContent = _options.display_value;
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
 
@@ -168,9 +185,17 @@
                 </div>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdValueByName($eqId, 'Ext PAN ID');
-                        echo '<span>'.$res.'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Ext PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idExtPanId">'.getCmdValueByName($eqId, 'Ext PAN ID').'</span>';
                     ?>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Ext PAN ID")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[Ext PAN ID]");
+                                var element = document.getElementById('idExtPanId');
+                                element.textContent = _options.display_value;
+                            }
+                        </script>
+                    </div>
                     <!-- TODO <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
                     <button type="button" onclick="sendZigate('setExtPANId', '')">Modifier</button> -->
                 </div>
@@ -185,11 +210,19 @@
                 </div>
                 <div class="col-sm-5">
                     <?php
-                        $res = getCmdValueByName($eqId, 'Network Channel');
-                        echo '<span title="{{Canal actuel}}">'.$res.'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Network Channel").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idChannel" title="{{Canal actuel}}">'.getCmdValueByName($eqId, 'Network Channel').'</span>';
                     ?>
-                    <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
-                    <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a>
+                        <script>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Network Channel")."'] = function(_options){"; ?>
+                                console.log("jeedom.cmd.update[Network Channel]");
+                                var element = document.getElementById('idChannel');
+                                element.textContent = _options.display_value;
+                            }
+                        </script>
+                        <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
+                        <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a>
+                    </div>
                 </div>
             </div>
 

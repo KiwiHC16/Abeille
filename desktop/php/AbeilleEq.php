@@ -328,6 +328,10 @@
             topic = 'CmdAbeille'+js_zgNb+'/0000/permitJoin';
             payload = "Status";
             break;
+        case "getVersion":
+            topic = 'CmdAbeille'+js_zgNb+'/0000/getVersion';
+            payload = "Version";
+            break;
         default:
             console.log("ERROR: Unsupported action '"+action+"'");
             return; // Nothing to do
@@ -340,6 +344,7 @@
     /* Force update of some dynamic fields */
     sendZigate('getTime', ''); // Will update last comm too
     sendZigate('getInclusionStatus', ''); // Will update last comm too
+    sendZigate('getVersion', ''); // Will update last comm too
 
     /* Display equipment icone (AbeilleEq-Main) */
     $("#sel_icon").change(function () {

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210524-MASTER_TCHARP38-3"
+# VERSION="210524-MASTER_TCHARP38-4"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,14 +48,14 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 e7cd868c9ee87d0ec35bd6d866500449 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 3c5b6c914c59e91eaff51d0f2c2482d0 *core/ajax/abeille.ajax.php
-f62d150ffd40f47db2b4b85081573ab7 *core/class/Abeille.class.php
+a1aef7e9a0fd02e46e969fd03903ef0c *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 2214782c663bb3d10793ff1fadec192f *core/class/AbeilleCmdPrepare.class.php
 f9b4b7731f9412b5e7e8989eec288e36 *core/class/AbeilleCmdProcess.class.php
 9f36cefc9a69a01ba9ae133f1af543dd *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-6e4cbc9d7ebcdd73a88d2e8362b997d4 *core/class/AbeilleParser.class.php
+5e8892f247a1d54dbd0ced1e0b89db7f *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -387,7 +387,7 @@ ce5a7d6b88b07d22b2c399d4e702c471 *core/config/commands/setLivoloOn.json
 53c804c8741a20f6823bb7fa67e85e5c *core/config/commands/setLivoloOn2.json
 27b490c2450f03e7673ef8067bbadded *core/config/commands/setRGB.json
 c3d4bbd169554be6b8646b2e02c7ab0d *core/config/commands/setReportBatterie.json
-e2038d59a8a97a2f77fbef02d4d31f0e *core/config/commands/setReportBatterieVolt.json
+f2f2eadfce6f6089fa6751fd4971b187 *core/config/commands/setReportBatterieVolt.json
 5c887b8ad8b7c1e19fba17121f6978df *core/config/commands/setReportCurrent_Position_Lift_Percentage.json
 077c87d1aee3492aec9b21669ebe8bbe *core/config/commands/setReportEtat.json
 265bc077b3ef629bc366530e61fa9892 *core/config/commands/setReportHumidity.json
@@ -661,7 +661,7 @@ d1fd9ed507ba0e3ef6c8f5a3748ad031 *core/config/devices/remote.b1acn01/remote.b1ac
 25227a272171dcc5ceed7644cb160c9d *core/config/devices/remote.b286acn02/remote.b286acn02.json
 0acf8978abf62921493a90552196a018 *core/config/devices/remotecontrol/remotecontrol.json
 21ff2db19d8cebaa4e2aab0b4c356aff *core/config/devices/router/router.json
-c46ea3c1cadfd2385f679bc1566a09bf *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
+30f44444bc57f0bf82a554cdfc02f6c5 *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
 02ec31b7edc08521ef46ae19f039350b *core/config/devices/sensor_86sw1/sensor_86sw1.json
 d11feb6bc149f5059f193dd89fc04adc *core/config/devices/sensor_86sw2/sensor_86sw2.json
 e19e7cecd5983f43bf79332f620647d0 *core/config/devices/sensor_cube.aqgl01/sensor_cube.aqgl01.json
@@ -727,7 +727,7 @@ b76a3ce2ed465d107311329f7ab3091d *core/scripts/checkTTY.sh
 2a2b9ab6c51dc8748c915093490a6949 *core/scripts/remove.sh
 b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 c3a0bc907a28aa00ee1701cbbabdc7af *core/scripts/switchBranch.sh
-97892f4f7b0097daf70a024a0d6c54e9 *core/scripts/updateFirmware.sh
+e64421de79c60f5b69daf6a5b302be8a *core/scripts/updateFirmware.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
 310e48df3f280849efb1217b0aead6bd *desktop/js/Abeille.js
 4cc6e826a31a3c1d6afa8f742dfca837 *desktop/js/AbeilleDev.js
@@ -766,7 +766,7 @@ bdde0acbdf3b488f8768c0a5321f6153 *desktop/php/AbeilleEq-Main.php
 a6806fcba700b1bdb7400230c70aaba8 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-2487e11cf0b2ae920988cf36a341e595 *docs/fr_FR/Changelog.rst
+f0659247f7bac55f31e12c215ef66d73 *docs/fr_FR/Changelog.rst
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/Abeille_icon.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/inclusion.png
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_.png
@@ -983,7 +983,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-da4cc716d36481f9ec7eb00af23c68e4 *plugin_info/Abeille.version
+1b112db2ba1ffc63f61327da17ff22f5 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
@@ -1031,7 +1031,7 @@ d4346dd5a19d5f11a8c40dc3ee27dc6e *resources/prog_jennic-0.7/source/JN51xx_BootLo
 846f8135db859f85bb2396b24149e578 *resources/prog_jennic-0.7/source/JN51xx_BootLoader.h
 c886e65239e481cedb4f97fe4ddcc54f *resources/prog_jennic-0.7/source/common.h
 80c009ec1440e80f61f1e510315bad01 *resources/prog_jennic-0.7/source/dbg.h
-8b234a27d1c06c4c22717c2a1a2ba2bf *resources/prog_jennic-0.7/source/main.c
+acf290c710f11aafd5c355af3a230bce *resources/prog_jennic-0.7/source/main.c
 ca03d69e0031eda1c9e619373fd23c5c *resources/prog_jennic-0.7/source/uart.c
 8a8ae26d16916b55cf64b203ae86a9ab *resources/prog_jennic-0.7/source/uart.h
 b936972732ae854e55b7c70e43bd0c52 *resources/prog_jennic/JennicModuleProgrammerRPI3

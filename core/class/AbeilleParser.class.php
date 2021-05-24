@@ -1177,10 +1177,8 @@ parserLog('debug', '      request='.$request);
             $destEndPoint           = substr($payload,12, 2);
             $sourceAddressMode      = substr($payload,14, 2);
             $srcAddress             = substr($payload,16, 4);
-            // if ( $srcAddress == "0000" ) $srcAddress = "Ruche";
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4);
-            // if ( $dstAddress == "0000" ) $dstAddress = "Ruche";
             // $payload              // Will decode later depending on the message
             $pl = substr($payload, 26); // Keeping payload only
 
@@ -1596,12 +1594,14 @@ parserLog('debug', '      request='.$request);
                 }
             }
 
-            // Cluster 0x0402 Temperature
-            if ( ($profile == "0104") && ($cluster == "0402") ) {
-                // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug",  "  Message duplication => dropped");
-                return;
-            }
+            // Tcharp38: profId=104 & clustId=402 does not mean it is temp report. It could be
+            // plenty of other "response" (ex: discover attribut response)
+            // // Cluster 0x0402 Temperature
+            // if ( ($profile == "0104") && ($cluster == "0402") ) {
+            //     // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
+            //     parserLog("debug",  "  Message duplication => dropped");
+            //     return;
+            // }
 
             // Remontée puissance prise TS0121 Issue: #1288
             if ( ($profile == "0104") && ($cluster == "0702") ) {
@@ -1820,6 +1820,57 @@ parserLog('debug', '      request='.$request);
                         }
                     }
                 }
+            }
+
+            /* Decoding ZCL header */
+            $FCF = substr($payload, 26, 2); // Frame Control Field
+            $manufSpecific = hexdec($FCF) & (1 << 2);
+            if ($manufSpecific) {
+                /* 16bits for manuf specific code */
+                $SQN = substr($payload, 32, 2); // Sequence Number
+                $Cmd = substr($payload, 34, 2); // Command
+                $msg = substr($payload, 34);
+            } else {
+                $SQN = substr($payload, 28, 2); // Sequence Number
+                $Cmd = substr($payload, 30, 2); // Command
+                $msg = substr($payload, 32);
+            }
+            /* 'Cmd' reminder
+                0x01 Read Attributes Response
+                0x04 Write Attributes Response
+                0x05 Write Attributes No Response
+                0x07 Configure Reporting Response
+                0x09 Read Reporting Configuration Response
+                0x0d Discover Attributes Response
+            */
+            if ($Cmd == "0D") { // Discover Attributes Response
+                parserLog('debug', "  Discover Attributes Response");
+                $completed = substr($msg, 2);
+                $msg = substr($msg, 2); // Skipping 'completed' status
+
+                parserLog('debug', "  msg=".$msg);
+                $attributes = [];
+                // 'Attributes' => []; // Attributes
+                //      $attr['Id']
+                //      $attr['DataType']
+                $l = strlen($msg);
+                for ($i = 0; $i < $l;) {
+                    $attr = array(
+                        'Id' => substr($msg, $i + 2, 2).substr($msg, $i, 2),
+                        'DataType' => substr($msg, $i + 4, 2)
+                    );
+                    $attributes[] = $attr;
+                    $i += 6;
+                }
+                $m = '';
+                foreach ($attributes as $attr) {
+                    if ($m != '')
+                        $m .= '/';
+                    $m .= $attr['Id'];
+                }
+                parserLog('debug', '  Clust '.$cluster.': '.$m);
+                $this->discoverLog('- Clust '.$cluster.': '.$m);
+                return;
             }
 
             parserLog("debug", "  Ignored, payload=".$pl, "8002");
@@ -2371,8 +2422,13 @@ parserLog('debug', '      request='.$request);
             parserLog('debug','  InClusterCount='.$InClusterCount, "8043");
             if ($discovering) $this->discoverLog('- InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                parserLog('debug', '  InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)), "8043");
-                if ($discovering) $this->discoverLog('- InCluster='.substr($payload, (24 + $i), 4).' - '.zgGetCluster(substr($payload, (24 + $i), 4)));
+                $clustId = substr($payload, (24 + $i), 4);
+                parserLog('debug', '  InCluster='.$clustId.' - '.zgGetCluster($clustId), "8043");
+                if ($discovering) {
+                    $this->discoverLog('- InCluster='.$clustId.' - '.zgGetCluster($clustId));
+                    // parserLog('debug', '  Requesting supported attributs list for EP '.$ep.', clust '.$clustId);
+                    $this->msgToCmd("Cmd".$dest."/0000/DiscoverAttributesCommand", "address=".$SrcAddr.'&EP='.$EPoint.'&clusterId='.$clustId.'&startAttributeId=0000&maxAttributeId=FF');
+                }
             }
             parserLog('debug','  OutClusterCount='.substr($payload,24+$i, 2), "8043");
             if ($discovering) $this->discoverLog('- OutClusterCount='.substr($payload,24+$i, 2));

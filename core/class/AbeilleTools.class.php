@@ -726,16 +726,16 @@ class AbeilleTools
 // log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM '.$pid);
             }
             /* Waiting until timeout that all daemons be ended */
-            define ("timeout", 2000); // 2sec
+            define ("stopTimeout", 2000); // 2sec
             $running = array(); // Clear previous result.
-            for ($t = 0; ($nbOfDaemons != 0) && ($t < timeout); $t+=500) {
+            for ($t = 0; ($nbOfDaemons != 0) && ($t < stopTimeout); $t+=500) {
                 usleep(500000); // Sleep 500ms
                 exec($cmd, $running);
                 $nbOfDaemons = sizeof($running);
 // log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
             }
             if ($nbOfDaemons != 0) {
-                log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' démons toujours actifs apres '.timeout.' ms');
+                log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' démons toujours actifs apres '.stopTimeout.' ms');
                 log::add('Abeille', 'debug', 'stopDaemons(): '.json_encode($running));
                 for ($i = 0; $i < $nbOfDaemons; $i++) {
                     $arr = explode(" ", $running[$i]);

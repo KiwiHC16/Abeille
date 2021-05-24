@@ -158,12 +158,12 @@ int main(int argc, char *argv[])
                     iInitialSpeed = strtoul(optarg, &pcEnd, 0);
                     if (errno)
                     {
-                        printf("Initial baud rate '%s' cannot be converted to 32 bit integer (%s)\n", optarg, strerror(errno));
+                        printf("= ERROR: Initial baud rate '%s' cannot be converted to 32 bit integer (%s)\n", optarg, strerror(errno));
                         print_usage_exit(argv);
                     }
                     if (*pcEnd != '\0')
                     {
-                        printf("Initial baud rate '%s' contains invalid characters\n", optarg);
+                        printf("= ERROR: Initial baud rate '%s' contains invalid characters\n", optarg);
                         print_usage_exit(argv);
                     }
                     break;
@@ -175,12 +175,12 @@ int main(int argc, char *argv[])
                     iProgramSpeed = strtoul(optarg, &pcEnd, 0);
                     if (errno)
                     {
-                        printf("Program baud rate '%s' cannot be converted to 32 bit integer (%s)\n", optarg, strerror(errno));
+                        printf("= ERROR: Program baud rate '%s' cannot be converted to 32 bit integer (%s)\n", optarg, strerror(errno));
                         print_usage_exit(argv);
                     }
                     if (*pcEnd != '\0')
                     {
-                        printf("Program baud rate '%s' contains invalid characters\n", optarg);
+                        printf("= ERROR: Program baud rate '%s' contains invalid characters\n", optarg);
                         print_usage_exit(argv);
                     }
                     break;
@@ -209,6 +209,8 @@ int main(int argc, char *argv[])
         print_usage_exit(argv);
     }
 
+    fflush(stdout);
+
     if (UART_eInitialise((char *)cpSerialDevice, iInitialSpeed, &iUartFd, &sUartOptions) != E_STATUS_OK)
     {
         fprintf(stderr, "= ERROR opening serial port\n");
@@ -230,8 +232,8 @@ int main(int argc, char *argv[])
     /* Read module details at initial baud rate */
     if (BL_eGetChipDetails(iUartFd, &sChipDetails) != E_STATUS_OK)
     {
-        fprintf(stderr, "= ERROR reading module information - check cabling and power\n");
-        fprintf(stderr, "  Check Zigate GPIO control too (flash mode set + reset pulse required) !\n");
+        fprintf(stderr, "= ERROR: Failed to read chip ID.\n");
+        fprintf(stderr, "=        Check Zigate GPIO control (flash mode set + reset pulse required) !\n");
         return -1;
     }
 
@@ -281,13 +283,13 @@ int main(int argc, char *argv[])
         /* Talking at initial speed - change bootloader to programming speed */
         if (BL_eSetBaudrate(iUartFd, iProgramSpeed) != E_STATUS_OK)
         {
-            printf("= ERROR setting baudrate\n");
+            printf("= ERROR setting bootloader baudrate\n");
             return -1;
         }
         /* change local port to programming speed */
         if (UART_eSetBaudRate(iUartFd, &sUartOptions, iProgramSpeed) != E_STATUS_OK)
         {
-            printf("= ERROR setting baudrate\n");
+            printf("= ERROR setting UART baudrate\n");
             return -1;
         }
     }
@@ -322,7 +324,7 @@ int main(int argc, char *argv[])
 		printf("Erase EEPROM \n");
 	}
 
-    printf("Success\n");
+    printf("= Success\n");
     return 0;
 }
 

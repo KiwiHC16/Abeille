@@ -2,16 +2,14 @@
   "setReportBatterieVolt": {
     "isVisible": 0,
     "name": "setReportBatterieVolt",
-    "order": 14,
-    "isHistorized": "0",
+    "isHistorized": 0,
     "Type": "action",
     "subType": "other",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c07c76624ea43",
       "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0001&AttributeId=0020&AttributeType=20&MaxInterval=3500",
+      "request": "targetEndpoint=#EP#&ClusterId=0001&AttributeId=0020&AttributeType=20&MinInterval=1800&MaxInterval=3600",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "12",
       "visibilityCategory": "Network"

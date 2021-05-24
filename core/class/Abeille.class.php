@@ -2203,24 +2203,41 @@ while ($cron->running()) {
             $elogic->save();
 
             /* Creating/updating commands.
-               If update, deleting all previous. Might be needed if EQ was previously 'defaultUnknown' or if any cmd 'JSON' has been updated */
+               If known device update, deleting all that are not listed in JSON.
+               Might be needed if device was previously 'defaultUnknown'. */
             $cmds = Cmd::byEqLogicId($elogic->getId());
             foreach ($cmds as $cmdLogic) {
-                $cmdLogic->remove();
+                $found = false;
+                $cmdName = $cmdLogic->getName();
+                foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
+                    if ($cmdName == $cmdValueDefaut["name"]) {
+                        $found = true;
+                        break; // Listed in JSON
+                    }
+                }
+                if ($found == false) {
+                    log::add('Abeille', 'debug', $eqName.": Removing cmd '".$cmdName."'");
+                    $cmdLogic->remove(); // No longer required
+                }
             }
 
             $order = 0;
             foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
-                log::add('Abeille', 'debug', $eqName.": Adding cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
-                // 'Creation de la commande: '.$nodeid.'/'.$cmd.' suivant model de l objet pour l objet: '.$name
+                /* New or existing cmd ? */
+                $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), $cmdValueDefaut["name"]);
+                if (!is_object($cmdlogic)) {
+                    log::add('Abeille', 'debug', $eqName.": Adding cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
+                    $cmdlogic = new AbeilleCmd();
+                } else {
+                    log::add('Abeille', 'debug', $eqName.": Updating cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
+                }
 
-                $cmdlogic = new AbeilleCmd();
                 // id
                 $cmdlogic->setEqLogic_id($elogic->getId());
                 $cmdlogic->setEqType('Abeille');
                 $cmdlogic->setLogicalId($cmd);
-                // Tcharp38: Cmds now created in order of declarations in EQ JSON.
-                // Does not make sense to be defined in cmd itself since can be reused by different EQ.
+                // Tcharp38: Cmds now created in order of declarations in device JSON.
+                // Does not make sense to be defined in cmd itself since can be reused by different device.
                 // if (isset($cmdValueDefaut["order"]))
                 //     $cmdlogic->setOrder($cmdValueDefaut["order"]);
                 $cmdlogic->setOrder($order++);

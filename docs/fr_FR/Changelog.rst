@@ -1,7 +1,9 @@
 ChangeLog
 =========
 
+- Reinclusion: L'equipement et ses commandes sont mis à jour. Seules les commandes obsolètes sont détruites.
 
+  Ca permet de ne plus casser le chemin des scénaris et autres utilisateurs des commandes.
 - Firmware: Suppression des FW 3.0f, 3.1a & 3.1b. 3.1d = FW suggéré.
 - JennicModuleProgrammer: Mise-à-jour v0.7 + améliorations. Compilé avant utilisation.
 - Zigate DIN: Ajout support mise-à-jour.

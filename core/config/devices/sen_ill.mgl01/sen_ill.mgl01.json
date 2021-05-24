@@ -4,6 +4,7 @@
     "manufacturer": "Xiaomi",
     "model": "GZCGQ01LM",
     "timeout": "60",
+    "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
     "Categorie": {
       "light": "1"
     },
@@ -17,12 +18,13 @@
       "include1": "SW",
       "include2": "nom",
       "include4": "luminositeXiaomi",
-      "include5": "Battery-Volt-3",
       "include7": "Xiaomi-ff01",
       "include7 2": "BindToZigateIlluminance",
       "include7 2 2": "setReportIlluminanceXiaomi",
-      "include22": "BindToPowerConfig",
-      "include23": "setReportBatterie"
+
+      "include0001-1": "BindToPowerConfig",
+      "include0001-2": "setReportBatterieVolt",
+      "include0001-3": "Battery-Volt-3"
     }
   }
 }

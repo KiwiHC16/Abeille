@@ -123,7 +123,7 @@ if [ ${ACTION} == "eraseeeprom" ]; then
 else
     sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/${FW} -s ${ZGPORT} 2>&1
     if [ $? != 0 ]; then
-        echo "= ERREUR: Programmation impossible"
+        # echo "= ERREUR: Programmation impossible"
         status=2
     else
         echo "- Ok. Programmation faite"
@@ -143,7 +143,6 @@ if [ $status  -eq 0 ]; then
     echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
 else
     echo "= ATTENTION !!! "
-    echo "= Quelque chose s'est mal passé."
-    echo "= Veuillez vérifier le log ci-dessus."
+    echo "= Quelque chose s'est mal passé. Veuillez vérifier le log ci-dessus."
 fi
 exit $status

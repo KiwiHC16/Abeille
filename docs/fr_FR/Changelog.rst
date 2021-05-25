@@ -6,8 +6,11 @@ ChangeLog
   Ca permet de ne plus casser le chemin des scénaris et autres utilisateurs des commandes.
 - Firmware: Suppression des FW 3.0f, 3.1a & 3.1b. 3.1d = FW suggéré.
 - JennicModuleProgrammer: Mise-à-jour v0.7 + améliorations. Compilé avant utilisation.
-- Zigate DIN: Ajout support mise-à-jour.
+- Zigate DIN: Ajout support pour mise-à-jour FW.
 - Page equipement: section "avancé", mise à jour des champs en temps réel (#1839).
+- Gestion des groupes: correction regression (#2011).
+- Telecommande virtuelle: correction regression (#2011).
+- Interne: Revue decode 8062 (Group membership).
 
 210520-BETA-4
 ----------

@@ -945,29 +945,6 @@
                                     "DestinationEndPoint" => "0B",
                                     );
                 break;
-            case "addGroup":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
-                }
-                if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-                $Command = array(
-                                    "addGroup"                 => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupAddress"             => $parameters['groupAddress'],
-                                    );
-                break;
-            case "getGroupMembership":
-                $Command = array(
-                                    "getGroupMembership" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    );
-                break;
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1168,9 +1145,9 @@
                                     "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
                                     );
                 break;
+
             case "getGroupMembership":
-                // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
-                if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint'])) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "getGroupMembership"       => "1",
                                     "priority"                 => $priority,
@@ -1179,8 +1156,16 @@
                                     "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
                                     );
                 break;
+            // case "getGroupMembership":
+            //     $Command = array(
+            //                         "getGroupMembership" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         );
+            //     break;
+
             case "addGroup":
-                // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                 if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "addGroup"                 => "1",
@@ -1191,6 +1176,22 @@
                                     "groupAddress"             => $parameters['groupAddress'],
                                     );
                 break;
+            // case "addGroup":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = proper_parse_str( $msg );
+            //     }
+            //     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+            //     $Command = array(
+            //                         "addGroup"                 => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+            //                         "groupAddress"             => $parameters['groupAddress'],
+            //                         );
+            //     break;
+
             case "removeGroup":
                 // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
                 if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
@@ -1203,6 +1204,7 @@
                                     "groupAddress"             => $parameters['groupAddress'],
                                     );
                 break;
+
             case "viewScene":
                 if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(

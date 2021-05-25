@@ -334,7 +334,9 @@
             fclose($f);
         }
 
-        function afficheStatQueue() {
+        /* Display queues & zigate status.
+           Called every 30sec. */
+        function displayStatus() {
             $texteLog = "";
             if (isset($this->tempoMessageQueue)) {
                 $texteLog .= "tempoMessageQueue=".count( $this->tempoMessageQueue );
@@ -344,7 +346,15 @@
                     $texteLog .= ", cmdQueue[".$i."]=".count( $this->cmdQueue[$i] );
                 }
             }
-            $this->deamonlog("debug", "Queues status: ".$texteLog);
+            $this->deamonlog("debug", "Queues status : ".$texteLog);
+
+            $txt = '';
+            for ($i = 1; $i <= $this->zigateNb; $i++) {
+                if ($txt != "")
+                    $txt .= ", ";
+                $txt .= "zg".$i."=".$this->zigateAvailable[$i];
+            }
+            $this->deamonlog("debug", "Zigates status: ".$txt);
         }
 
         function processCmdQueueToZigate() {

@@ -9,13 +9,15 @@
     },
     "configuration": {
       "icone": "LXX60-CS27LX1.0",
-      "mainEP": "1"
+      "mainEP": "01"
     },
     "Commandes": {
       "include0000-1": "societe",
       "include0000-2": "nom",
 
       "include0003-1": "Identify",
+
+      "include0004-1": "Group-Membership",
 
       "include0006-1": "On",
       "include0006-2": "Off",

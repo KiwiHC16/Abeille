@@ -611,6 +611,13 @@ parserLog('debug', '      request='.$request);
 
         /* Clean modelIdentifier, removing some unwanted chars */
         function cleanModelId($modelId) {
+            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
+            if ($modelId == "lumi.sens") $modelId = "lumi.sensor_ht";
+
+            if ($modelId == "TRADFRI Signal Repeater") $modelId = "TRADFRI signal repeater";
+
+            if ($modelId == "lumi.sensor_swit") $modelId = "lumi.sensor_switch.aq3";
+
             // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
             if (strpos($modelId, "sensor_86sw2") > 2) { $modelId="lumi.sensor_86sw2"; }
 
@@ -2743,40 +2750,44 @@ parserLog('debug', '      request='.$request);
             // <Sequence number: uint8_t>                               -> 2
             // <endpoint: uint8_t>                                      -> 2
             // <Cluster id: uint16_t>                                   -> 4
-            // <Src Addr: uint16_t> (added only from 3.0d version)      -> 4
+            // <Src Addr: uint16_t> (added only from 3.0d version)      -> 4 ????
             // <capacity: uint8_t>                                      -> 2
             // <Group count: uint8_t>                                   -> 2
             // <List of Group id: list each data item uint16_t>         -> 4x
             // <Src Addr: uint16_t> (added only from 3.0f version) new due to a change impacting many command but here already available above.
 
-            $groupCount = hexdec( substr($payload,10, 2) );
-            $groupsId="";
-            for ($i=0;$i<$groupCount;$i++)
-            {
-                parserLog('debug', $dest.', Type=8062: group '.$i.'(addr:'.(12+$i*4).'): '  .substr($payload,12+$i*4, 4));
-                $groupsId .= '-' . substr($payload,12+$i*4, 4);
+            $sqn = substr($payload, 0, 2);
+            $ep = substr($payload, 2, 2);
+            $clustId = substr($payload, 4, 4);
+            $capa = substr($payload, 8, 2);
+            $groupCount = substr($payload,10, 2);
+            $SrcAddr = substr($payload, 12 + ($groupCount * 4), 4);
+
+            $decoded = '8062/Group membership'
+                . ', SQN='.$sqn
+                . ', EP='.$ep
+                . ', ClustId='.$clustId
+                . ', Capacity='.$capa
+                . ', GroupCount='.$groupCount
+                . ', Addr='.$SrcAddr;
+            parserLog('debug', $dest.', Type='.$decoded);
+
+            $groups = "";
+            for ($i = 0; $i < hexdec($groupCount); $i++) {
+                if ($i != 0)
+                    $groups .= '/';
+                $groups .= substr($payload, 12 + ($i * 4), 4);
             }
-            parserLog('debug', $dest.', Type=8062;Groups: ->'.$groupsId."<-");
+            if ($groups == "")
+                $groups = "none";
+            parserLog('debug', "  Groups: ".$groups);
 
-            // parserLog('debug', ';Level=0x'.substr($payload, strlen($payload)-2, 2));
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4)) {
+                monMsgFromZigate($decoded); // Send message to monitor
+                monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
+            }
 
-            // Envoie Group-Membership
-            $SrcAddr = substr($payload, 12+$groupCount*4, 4);
-            // if ($SrcAddr == "0000" ) { $SrcAddr = "Ruche"; }
-            $ClusterId = "Group";
-            $AttributId = "Membership";
-            if ( $groupsId == "" ) { $data = "none"; } else { $data = $groupsId; }
-
-            $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
-
-            parserLog('debug', $dest.', Type=8062/Group Membership'
-                             . ', SQN='          .substr($payload, 0, 2)
-                             . ', EndPoint='     .substr($payload, 2, 2)
-                             . ', ClusterId='    .substr($payload, 4, 4)
-                             . ', Capacity='     .substr($payload, 8, 2)
-                             . ', Group count='  .substr($payload,10, 2)
-                             . ', Groups='       .$data
-                             . ', Source='       .$SrcAddr );
+            $this->msgToAbeille($dest."/".$SrcAddr, "Group", "Membership", $groups);
         }
 
         function decode8063($dest, $payload, $ln, $qos, $dummy)
@@ -3221,14 +3232,14 @@ parserLog('debug', '      request='.$request);
                     $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
                     if ($AttributId == "0004") { // 0x0004 ManufacturerName string
-                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue);
+                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
                         $this->updateEq($dest, $SrcAddr, 'manufacturer', $trimmedValue);
                     } else if ($AttributId == "0005") { // 0x0005 ModelIdentifier string
                         $trimmedValue = $this->cleanModelId($trimmedValue);
 
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue);
+                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
                         $this->updateEq($dest, $SrcAddr, 'modelIdentifier', $trimmedValue);

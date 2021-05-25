@@ -3,13 +3,12 @@
     "isVisible": 0,
     "name": "Groups",
     "order": 21,
-    "isHistorized": "0",
+    "isHistorized": 0,
     "Type": "info",
     "subType": "string",
     "invertBinary": "0",
     "template": "badge",
     "configuration": {
-      "uniqId": "5c07c76621b88",
       "visibilityCategory": "Network"
     }
   }

@@ -95,7 +95,7 @@
 
             /* Display queues status every 30sec */
             if ((time() - $last) > 30 ) {
-                $AbeilleCmdQueue->afficheStatQueue();
+                $AbeilleCmdQueue->displayStatus();
                 $last = time();
             }
 

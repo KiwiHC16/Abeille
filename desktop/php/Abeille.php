@@ -81,14 +81,14 @@
         <!-- Icones de toutes les abeilles  -->
         <?php include '020_AbeilleMesAbeillesPart.php'; ?>
 
+        <!-- Groups management  -->
+        <?php include '030_AbeilleGroupPart.php'; ?>
+
         <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
             <!-- Gestion des groupes et des scenes  -->
             <?php include '025_AbeilleNEPart.php'; ?>
-
-            <!-- Gestion des groupes et des scenes  -->
-            <?php include '030_AbeilleGroupPart.php'; ?>
 
             <!-- Gestion des groupes et des scenes  -->
             <?php include '040_AbeilleScenePart.php'; ?>

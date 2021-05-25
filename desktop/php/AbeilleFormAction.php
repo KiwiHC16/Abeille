@@ -47,26 +47,24 @@
     }
 
     function getInfosFromNe( $item, $value, $client ) {
-      $deviceId = substr( $item, strpos($item,"-")+1 );
-      log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
-      $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-      list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-      log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
-      $EP = $device->getConfiguration('mainEP');
-      log::add('Abeille', 'debug', "EP: ".$EP);
+        $deviceId = substr( $item, strpos($item,"-")+1 );
+        log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
+        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+        log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
+        $EP = $device->getConfiguration('mainEP');
+        log::add('Abeille', 'debug', "EP: ".$EP);
 
-      // Get Name
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/SimpleDescriptorRequest',  'address='.$address.'&endPoint='.$EP            );
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/IEEE_Address_request',     'address='.$address                             );
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
-      sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership',       'address='.$address.'&DestinationEndPoint='.$EP );
-      // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
-      // sendMessageFromFormToCmd('CmdAbeille/0000/ReadAttributeRequest', 'address='.$address.'&DestinationEndPoint='.$EP'.'&ClusterId='.$clusterId'.'&attributId='.$attributId'.'&Proprio='.$proprio', 0);
-
+        // Get Name
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/SimpleDescriptorRequest',  'address='.$address.'&endPoint='.$EP            );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/IEEE_Address_request',     'address='.$address                             );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership',       'address='.$address.'&DestinationEndPoint='.$EP );
+        // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
+        // sendMessageFromFormToCmd('CmdAbeille/0000/ReadAttributeRequest', 'address='.$address.'&DestinationEndPoint='.$EP'.'&ClusterId='.$clusterId'.'&attributId='.$attributId'.'&Proprio='.$proprio', 0);
     }
-
 
     try {
 
@@ -78,7 +76,7 @@
 
             // Group
             case 'Add Group':
-                foreach ( $_POST as $item=>$Value ) {
+                    foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
                         echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
@@ -130,8 +128,8 @@
                     }
                 }
                 break;
-            case 'Get Group':
 
+            case 'Get Group':
                 foreach ( $_POST as $item=>$Value ) {
                     if ( strpos( $item, "eqSelected") === 0 ) {
                         echo "Id: ->".substr( $item, strpos($item,"-")+1 )."<-<br>\n";
@@ -144,7 +142,6 @@
                         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
                     }
                 }
-
                 break;
 
             // Scene

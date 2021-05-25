@@ -1,9 +1,14 @@
-<br/>
+
+<legend><i class="fa fa-cogs"></i> {{Groupes}}
+	<?php
+	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
+	?>
+</legend>
+<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
+
+<!-- <br/>
 <label style="margin-right : 20px">{{Groupes}}</label>
-<?php
-echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
-?>
-<br/>
+<br/> -->
 
 <div id="the whole thing" style="height:100%; width:100%; overflow: hidden;">
 	<div id="leftMargin" style="float: left; width:2%;">.
@@ -85,3 +90,5 @@ echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Gro
 	</div>
 </div>
 <br/>
+
+</div>

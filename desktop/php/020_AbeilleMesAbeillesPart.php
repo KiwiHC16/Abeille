@@ -47,36 +47,6 @@
             // $eqIdList[] = $eq;
         }
         echo '<script>var js_eqZigate'.$i.' = \''.json_encode($eqPerZigate[$i]).'\';</script>';
-
-        // $eqPerZigate = array(); // All equipements linked to current zigate
-        // /* Display beehive card then bee cards */
-
-		// foreach ($eqLogics as $eqLogic) {
-        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
-        //     if ($eqLogicId != "Abeille".$i."/0000")
-        //         continue;
-        //     displayBeeCard($eqLogic, $files, $i);
-        //     $eq = array();
-        //     $eq['id'] = $eqLogic->getId();
-        //     $eq['logicalId'] = $eqLogicId;
-        //     $eqPerZigate[] = $eq;
-        // }
-
-		// foreach ($eqLogics as $eqLogic) {
-        //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
-        //     list( $net, $addr ) = explode( "/", $eqLogicId);
-        //     if ( $net != 'Abeille'. $i)
-        //         continue;
-        //     if ($eqLogicId == "Abeille".$i."/0000")
-        //         continue; // Skipping beehive
-        //     displayBeeCard($eqLogic, $files, $i);
-        //     $eq = array();
-        //     $eq['id'] = $eqLogic->getId();
-        //     $eq['logicalId'] = $eqLogicId;
-        //     $eqPerZigate[] = $eq;
-        // }
-        // echo '<script>var js_eqZigate'.$i.' = \''.json_encode($eqPerZigate).'\';</script>';
-        // $eqAll['zigate'.$i] = $eqPerZigate;
         echo ' </div>';
     }
 

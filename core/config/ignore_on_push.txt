@@ -1,0 +1,7 @@
+# List of elements to ignore on 'beta' & 'stable' creation
+# WARNING: This file must be in line with MD5 generation
+# TODO: update_md5.sh should use this file
+resources/archives
+.hooks
+.tools
+.idea

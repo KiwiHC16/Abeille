@@ -20,18 +20,16 @@ echo "# VERSION=\"${VERSION}\"" >>${OUT}
 git ls-files |
 while read -r F
 do
-    # Ignoring checksum file
+    # Ignoring checksum for the following files
     # - plugin_info/Abeille.md5
     # - 'resources/archives' content
-    # - 'core/config/devices_local' content except README
+    # - 'core/config/devices_local' content except README/LISZEMOI
     # - All '.xxx' files
-    # Ignoring the following files for checksum generation speedup
-    # - All 'xxx.png'
     if [[ "${F}" = *"Abeille.md5" ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi
-    if [[ "${F}" = *".png" ]] || [[ ${F} = "."* ]]; then
+    if [[ ${F} = "."* ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi

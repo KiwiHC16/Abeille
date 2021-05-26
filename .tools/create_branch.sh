@@ -196,6 +196,33 @@ if [ $? -ne 0 ]; then
     exit 31
 fi
 
+# Before creating new branch removing items no required
+# to Jeedom.
+echo "Cleaning ${LOCAL_BRANCH}"
+IGNORE="core/config/ignore_on_push.txt"
+COMMIT_REQUIRED=0
+cat ${IGNORE} |
+while IFS= read -r L
+do
+    if [[ ${L} == "#"* ]]; then
+        continue # Comment
+    fi
+    if [ !-e ${L} ]; then
+        echo "= ERROR: ${L} NOT FOUND"
+        continue
+    fi
+
+    git rm -rf ${L} >/dev/null
+    COMMIT_REQUIRED=1
+done
+if [ ${COMMIT_REQUIRED} -eq 1 ]; then
+    git commit -q -m "${VERSION} cleanup"
+    if [ $? -ne 0 ]; then
+        echo "= ERROR: Commit failed"
+        exit 32
+    fi
+fi
+
 # Delete target branch & push new one
 REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
 if [ $? -eq 0 ]; then
@@ -203,7 +230,7 @@ if [ $? -eq 0 ]; then
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
         echo "= ERROR: git push --delete failed"
-        exit 32
+        exit 33
     fi
 fi
 
@@ -212,7 +239,7 @@ echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
 git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed"
-    exit 33
+    exit 34
 fi
 
 echo "Switching back to '${CUR_BRANCH}' branch"

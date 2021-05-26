@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210526-BETA-1
+----------
+
 - Reinclusion: L'equipement et ses commandes sont mis à jour. Seules les commandes obsolètes sont détruites.
 
   Ca permet de ne plus casser le chemin des scénaris et autres utilisateurs des commandes.

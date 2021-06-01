@@ -48,7 +48,7 @@ fi
 
 # Add + commit + push
 echo "Updating GIT & pushing"
-git add plugin_info/Abeille.version plugin_info/Abeille.md5
+git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5
 if [ $? -ne 0 ]; then
     echo "= ERROR: git add failed."
     exit 10

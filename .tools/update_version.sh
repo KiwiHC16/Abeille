@@ -29,7 +29,27 @@ fi
 MINOR_NEW=`expr ${MINOR_CURRENT} + 1`
 VERSION_NEW="${VERSION_PREFIX}${MINOR_NEW}"
 echo "- New version = ${VERSION_NEW}"
-echo "# Auto-generated Abeille's version" >plugin_info/Abeille.version
-echo "${VERSION_NEW}" >>plugin_info/Abeille.version
+
+# Updating plugin_info/Abeille.version
+FILE=plugin_info/Abeille.version
+echo "# Auto-generated Abeille's version" >${FILE}
+echo "${VERSION_NEW}" >>${FILE}
+echo "- ${FILE} updated"
+
+# Updating plugin_info/info.json for Changelog
+FILE=plugin_info/info.json
+FILE_TMP=plugin_info/info.json.tmp
+rm -f ${FILE_TMP} >/dev/null
+cat ${FILE} |
+while IFS= read -r L
+do
+    if [[ "${L}" == *"changelog"* ]]; then
+        echo "  \"changelog\": \"https://kiwihc16.github.io/AbeilleDoc/Changelog.html#${VERSION_NEW}\"," >> ${FILE_TMP}
+    else
+        echo "${L}" >> ${FILE_TMP}
+    fi
+done
+mv ${FILE_TMP} ${FILE}
+echo "- ${FILE} updated"
 
 exit 0

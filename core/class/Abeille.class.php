@@ -1524,66 +1524,68 @@ while ($cron->running()) {
             if ($value == "TRADFRI Signal Repeater") $value = "TRADFRI signal repeater";
         }
 
-        /* Treat "enable" (device announce) or "disable" (leave indication) cmds. */
-        if (($cmdId == "enable") || ($cmdId == "disable")) {
-            log::add('Abeille', 'debug', 'message(): '.$cmdId.': net='.$Filter.', IEEE='.$value);
+        // Tcharp38: No longer required here. Treated by msgFromParser()
+        //           'enable is part of 'eqAnnounce' while 'disable' is part of 'leaveIndication' msg.
+        // /* Treat "enable" (device announce) or "disable" (leave indication) cmds. */
+        // if (($cmdId == "enable") || ($cmdId == "disable")) {
+        //     log::add('Abeille', 'debug', 'message(): '.$cmdId.': net='.$Filter.', IEEE='.$value);
 
-            /* Look for corresponding equipment (identified via its IEEE addr) */
-            $allBees = self::byType('Abeille');
-            $missingIEEE = array(); // List of eq with missing IEEE
-            foreach ($allBees as $key=>$bee) {
-                $beeLogicId = $bee->getLogicalId(); // Ex: 'Abeille1/xxxx'
-                list($net, $oldAddr) = explode( "/", $beeLogicId);
-                if ($net != $Filter) // TODO: $Filter = 'AbeilleX' ??
-                    continue; // Not on expected network
+        //     /* Look for corresponding equipment (identified via its IEEE addr) */
+        //     $allBees = self::byType('Abeille');
+        //     $missingIEEE = array(); // List of eq with missing IEEE
+        //     foreach ($allBees as $key=>$bee) {
+        //         $beeLogicId = $bee->getLogicalId(); // Ex: 'Abeille1/xxxx'
+        //         list($net, $oldAddr) = explode( "/", $beeLogicId);
+        //         if ($net != $Filter) // TODO: $Filter = 'AbeilleX' ??
+        //             continue; // Not on expected network
 
-                $ieee = $bee->getConfiguration('IEEE', 'none');
-                if ($ieee == 'none') {
-                    $missingIEEE[] = $bee;
-                    continue; // No registered IEEE
-                }
-                if ($ieee != $value)
-                    continue; // Not the right equipment
+        //         $ieee = $bee->getConfiguration('IEEE', 'none');
+        //         if ($ieee == 'none') {
+        //             $missingIEEE[] = $bee;
+        //             continue; // No registered IEEE
+        //         }
+        //         if ($ieee != $value)
+        //             continue; // Not the right equipment
 
-                $matchingBee = $bee;
-                break; // No need to go thru other equipments
-            }
+        //         $matchingBee = $bee;
+        //         break; // No need to go thru other equipments
+        //     }
 
-            /* If eq not found, might be due to missing IEEE. Let's check */
-            if (!isset($matchingBee) && (sizeof($missingIEEE) != 0)) {
-                log::add('Abeille', 'debug', 'message(): '.$cmdId.': Vérification des adresses IEEE manquantes');
-                foreach ($missingIEEE as $bee) {
-                    $cmd = $bee->getCmd('info', 'IEEE-Addr');
-                    if ($cmd->execCmd() != $value)
-                        continue; // Still not the correct eq
+        //     /* If eq not found, might be due to missing IEEE. Let's check */
+        //     if (!isset($matchingBee) && (sizeof($missingIEEE) != 0)) {
+        //         log::add('Abeille', 'debug', 'message(): '.$cmdId.': Vérification des adresses IEEE manquantes');
+        //         foreach ($missingIEEE as $bee) {
+        //             $cmd = $bee->getCmd('info', 'IEEE-Addr');
+        //             if ($cmd->execCmd() != $value)
+        //                 continue; // Still not the correct eq
 
-                    $matchingBee = $bee;
-                    break; // No need to go thru other equipments
-                }
-            }
+        //             $matchingBee = $bee;
+        //             break; // No need to go thru other equipments
+        //         }
+        //     }
 
-            if (isset($matchingBee)) {
-                if ($cmdId == "enable") {
-                    $bee->setIsEnable(1);
-                    /* Updating logical ID since short address changed with device announce */
-                    $oldLogicId = $bee->getLogicalId();
-                    $nodeid = $Filter.'/'.$addr;
-                    $bee->setLogicalId($nodeid);
-                    log::add('Abeille', 'debug', 'message(): disable: Mise-à-jour '.$oldLogicId.' => '.$nodeid);
-                    // message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
-                } else {
-                    $bee->setIsEnable(0);
-                    /* Display message only if NOT in include mode */
-                    if (self::checkInclusionStatus($dest) != 1)
-                        message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');
-                }
-                $bee->save();
-                $bee->refresh();
-            } else
-                log::add('Abeille', 'debug', 'message(): '.$cmdId.': Eq '.$Filter.'-'.$value.' pas trouvé dans Jeedom.');
+        //     if (isset($matchingBee)) {
+        //         if ($cmdId == "enable") {
+        //             $bee->setIsEnable(1);
+        //             /* Updating logical ID since short address changed with device announce */
+        //             $oldLogicId = $bee->getLogicalId();
+        //             $nodeid = $Filter.'/'.$addr;
+        //             $bee->setLogicalId($nodeid);
+        //             log::add('Abeille', 'debug', 'message(): disable: Mise-à-jour '.$oldLogicId.' => '.$nodeid);
+        //             // message::add("Abeille", "'".$bee->getHumanName()."' a rejoint le réseau.", '');
+        //         } else {
+        //             $bee->setIsEnable(0);
+        //             /* Display message only if NOT in include mode */
+        //             if (self::checkInclusionStatus($dest) != 1)
+        //                 message::add("Abeille", "'".$bee->getHumanName()."' a quitté le réseau => désactivé.", '');
+        //         }
+        //         $bee->save();
+        //         $bee->refresh();
+        //     } else
+        //         log::add('Abeille', 'debug', 'message(): '.$cmdId.': Eq '.$Filter.'-'.$value.' pas trouvé dans Jeedom.');
 
-            return;
-        }
+        //     return;
+        // }
 
         /* Request to create virtual remote control */
         if ($cmdId == "createRemote") {
@@ -1953,30 +1955,31 @@ while ($cron->running()) {
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet exist et on recoie une MACCapa
-        // e.g. Un NE renvoie son annonce
-        if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
+        // Tcharp38: No longer required. MACCap is collected during device announce and passed thru "eqAnnounce" msg (treated by msgFromParser())
+        // // Si l objet exist et on recoie une MACCapa
+        // // e.g. Un NE renvoie son annonce
+        // if (is_object($elogic) && ($cmdId == "MACCapa-MACCapa")) {
 
-            log::add('Abeille', 'debug', 'MACCapa-MACCapa: '.$value.' saving into eqlogic');
+        //     log::add('Abeille', 'debug', 'MACCapa-MACCapa: '.$value.' saving into eqlogic');
 
-            $mc = hexdec($value);
-            $rxOnWhenIdle = ($mc >> 3) & 0b1;
-            $powerSource = ($mc >> 2) & 0b1;
+        //     $mc = hexdec($value);
+        //     $rxOnWhenIdle = ($mc >> 3) & 0b1;
+        //     $powerSource = ($mc >> 2) & 0b1;
 
-            $elogic->setConfiguration('MACCapa', $value);
-            if ($powerSource) // 1=mains-powererd
-                $elogic->setConfiguration('AC_Power', 1);
-            else
-                $elogic->setConfiguration('AC_Power', 0);
-            if ($rxOnWhenIdle) // 1=Receiver enabled when idle
-                $elogic->setConfiguration('RxOnWhenIdle', 1);
-            else
-                $elogic->setConfiguration('RxOnWhenIdle', 0);
-            $elogic->save();
-            $elogic->refresh();
+        //     $elogic->setConfiguration('MACCapa', $value);
+        //     if ($powerSource) // 1=mains-powererd
+        //         $elogic->setConfiguration('AC_Power', 1);
+        //     else
+        //         $elogic->setConfiguration('AC_Power', 0);
+        //     if ($rxOnWhenIdle) // 1=Receiver enabled when idle
+        //         $elogic->setConfiguration('RxOnWhenIdle', 1);
+        //     else
+        //         $elogic->setConfiguration('RxOnWhenIdle', 0);
+        //     $elogic->save();
+        //     $elogic->refresh();
 
-            return;
-        }
+        //     return;
+        // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour
@@ -2011,7 +2014,7 @@ while ($cron->running()) {
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
             if ($cmdId == "Time-TimeStamp") {
-                log::add('Abeille', 'debug', 'Update ONLINE Status');
+                log::add('Abeille', 'debug', "Updating ONLINE status for '".$dest."/".$addr."'");
                 $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online');
                 $elogic->checkAndUpdateCmd($cmdlogicOnline, 1);
             }
@@ -2056,13 +2059,13 @@ while ($cron->running()) {
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
     public static function msgFromParser($msg) {
         $net = $msg['net'];
-        $addr = $msg['addr'];
-        $logicalId = $net.'/'.$addr;
 
         /* Parser has received a "device announce" and has identified (or not) the device.
            Note: Currently EP & IEEE are passed with cmdId ('eqAnnounce-<EP>-<ieee>').
            "value" constains JSON file name to use. */
         if ($msg['type'] == "eqAnnounce") {
+            $addr = $msg['addr'];
+            $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
             log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$addr.", type='".$jsonName."'");
 
@@ -2080,8 +2083,10 @@ while ($cron->running()) {
                     continue; // Not on expected network
 
                 $ieee2 = $eqLogic->getConfiguration('IEEE', '');
-                if ($ieee2 == '')
+                if ($ieee2 == '') {
+                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in ".$eqLogic->getName()." config.");
                     continue; // No registered IEEE
+                }
                 if ($ieee2 != $ieee)
                     continue; // Not the right equipment
 
@@ -2093,25 +2098,119 @@ while ($cron->running()) {
 
             Abeille::createDevice($net, $addr, $ep, $ieee, $jsonName);
 
-            $elogic = self::byLogicalId($logicalId, 'Abeille');
+            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
             /* MAC capa */
             $mc = hexdec($msg['capa']);
             $rxOnWhenIdle = ($mc >> 3) & 0b1;
             $powerSource = ($mc >> 2) & 0b1;
-                $elogic->setConfiguration('MACCapa', $msg['capa']);
+            $eqLogic->setConfiguration('MACCapa', $msg['capa']);
             if ($powerSource) // 1=mains-powererd
-                $elogic->setConfiguration('AC_Power', 1);
+                $eqLogic->setConfiguration('AC_Power', 1);
             else
-                $elogic->setConfiguration('AC_Power', 0);
+                $eqLogic->setConfiguration('AC_Power', 0);
             if ($rxOnWhenIdle) // 1=Receiver enabled when idle
-                $elogic->setConfiguration('RxOnWhenIdle', 1);
+                $eqLogic->setConfiguration('RxOnWhenIdle', 1);
             else
-                $elogic->setConfiguration('RxOnWhenIdle', 0);
-            $elogic->save();
+                $eqLogic->setConfiguration('RxOnWhenIdle', 0);
+            $eqLogic->save();
+
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), "Short-Addr");
+            if (!is_object($cmdlogic))
+                $elogic->checkAndUpdateCmd($cmdlogic, $addr);
+            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), "IEEE-Addr");
+            if (!is_object($cmdlogic))
+                $elogic->checkAndUpdateCmd($cmdlogic, $ieee);
 
             return;
         } // End 'eqAnnounce'
+
+        /* Parser has received a "leave indication" */
+        if ($msg['type'] == "leaveIndication") {
+            /* Msg reminder
+                $msg = array(
+                    'src' => 'parser',
+                    'type' => 'leaveIndication',
+                    'net' => $dest,
+                    'ieee' => $IEEE,
+                    'time' => time()
+                );
+            */
+
+            $ieee = $msg['ieee'];
+            log::add('Abeille', 'debug', "msgFromParser(): Leave indication for IEEE ".$ieee);
+
+            /* Look for corresponding equipment (identified via its IEEE addr) */
+            $all = self::byType('Abeille');
+            $eqLogic = null;
+            foreach ($all as $key => $eqLogic2) {
+                $eqLogicId = $eqLogic2->getLogicalId(); // Ex: 'Abeille1/xxxx'
+                list($net2, $addr2) = explode( "/", $eqLogicId);
+                if ($net2 != $net)
+                    continue; // Not on expected network
+
+                $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
+                if ($ieee2 == '') {
+                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in ".$eqLogic2->getName()." config.");
+                    $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
+                    if (is_object($cmd)) {
+                        $ieee2 = $cmd->execCmd();
+                        if ($ieee2 != $ieee)
+                            continue; // Still no registered IEEE
+                        $eqLogic2->setConfiguration('IEEE', $ieee2);
+                        $eqLogic2->save();
+                        log::add('Abeille', 'debug', "msgFromParser(): Missing IEEE addr corrected");
+                    }
+                }
+                if ($ieee2 != $ieee)
+                    continue; // Not the right equipment
+
+                $eqLogic = $eqLogic2;
+                break; // No need to go thru other equipments
+            }
+
+            if (isset($eqLogic)) {
+                $eqLogic->setIsEnable(0);
+                /* Display message only if NOT in include mode */
+                if (self::checkInclusionStatus($net) != 1)
+                    message::add("Abeille", "'".$eqLogic->getHumanName()."' a quitté le réseau => désactivé.", '');
+                $eqLogic->save();
+                $eqLogic->refresh();
+
+                Abeille::updateTimestamp($eqLogic, $msg['time']);
+            } else
+                log::add('Abeille', 'debug', 'msgFromParser(): WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
+
+            return;
+        } // End 'leaveIndication'
+
+        /* Attribut report */
+        if ($msg['type'] == "attributReport") {
+            /* Reminder
+                $msg = array(
+                    'src' => 'parser',
+                    'type' => 'attributReport',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'ep' => 'xx', // End point hex string
+                    'name' => 'xxx', // Attribut name (clustId-attribId)
+                    'value' => false, // False = unsupported
+                    'time' => time(),
+                    'lqi' => $lqi
+                ); */
+
+            log::add('Abeille', 'debug', "msgFromParser(): Attribut '".$msg['name']."' report from ".$msg['addr']);
+            $eqLogic = self::byLogicalId($net.'/'.$msg['addr'], 'Abeille');
+            if (!is_object($eqLogic))
+                return; // Unknown device
+
+            // Tcharp38 TODO: To be completed
+
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+            return;
+        } // End 'attributReport'
 
         log::add('Abeille', 'debug', "msgFromParser(): WARNING: Unsupported msg");
         log::add('Abeille', 'debug', "msgFromParser(): ".json_encode($msg));
@@ -2156,7 +2255,7 @@ while ($cron->running()) {
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
             log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".json_encode($msgAbeille->message)."' vers queue ".$queueId);
-    }
+    } // End publishMosquitto()
 
     public static function createRuche($message = null)
     {
@@ -2300,7 +2399,7 @@ while ($cron->running()) {
             $cmdlogic->save();
             // $elogic->checkAndUpdateCmd($cmdId, $cmdValueDefaut["value"]);
         }
-    }
+    } // End createRuche()
 
     /* Create or update Jeedom device based on its JSON config.
        This is also used to create Abeille's specific device like "remotecontrol". */
@@ -2415,9 +2514,8 @@ while ($cron->running()) {
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
-        /* Creating/updating commands.
-           If known device update, deleting all that are not listed in JSON.
-           Might be needed if device was previously 'defaultUnknown'. */
+        /* Creating or updating commands.
+           Commands not listed in JSON are deleted. Might be needed if device was previously 'defaultUnknown'. */
         $cmds = Cmd::byEqLogicId($elogic->getId());
         foreach ($cmds as $cmdLogic) {
             $found = false;
@@ -2515,12 +2613,40 @@ while ($cron->running()) {
                 }
             $cmdlogic->setIsVisible($isVisible);
             $cmdlogic->save();
-
-            if ($cmdlogic->getName() == "Short-Addr")
-                $elogic->checkAndUpdateCmd($cmdlogic, $addr);
-            else if ($cmdlogic->getName() == "IEEE-Addr")
-                $elogic->checkAndUpdateCmd($cmdlogic, $ieee);
         }
+    } // End createDevice()
+
+    /* Update all infos related to last communication time of given device.
+       This is based on timestamp of last communication received from device itself. */
+    public static function updateTimestamp($eqLogic, $timestamp) {
+        log::add('Abeille', 'debug', "Updating 'time' & 'online' cmds for ".$eqLogic->getName());
+        $eqId = $eqLogic->getId();
+        $eqName = $eqLogic->getName();
+
+        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
+        $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+
+        /* Tcharp38 note:
+           The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
+           use these 3 specific & redondant commands. To be discussed. */
+
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+        if (!is_object($cmdlogic))
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'Time-TimeStamp'");
+        else
+            $eqLogic->checkAndUpdateCmd($cmdlogic, $timestamp);
+
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+        if (!is_object($cmdlogic))
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'Time-Time'");
+        else
+            $eqLogic->checkAndUpdateCmd($cmdlogic, date("Y-m-d H:i:s", $timestamp));
+
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+        if (!is_object($cmdlogic))
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'online'");
+        else
+            $eqLogic->checkAndUpdateCmd($cmdlogic, 1);
     }
 }
 

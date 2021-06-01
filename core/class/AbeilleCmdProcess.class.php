@@ -2897,7 +2897,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $dstEP          = $Command['EP'];
             $clusterId      = $Command['clusterId'];
             $attributeId    = $Command['startAttributeId'];
-            $direction      = "00"; //	0 – from server to client	1 – from client to server
+            if (!isset($Command['direction']))
+                $Command['direction'] = '00';
+            $direction      = $Command['direction']; //	'00' – from server to client, '01' – from client to server
             $manuSpec       = "00"; //  1 – Yes	 0 – No
             $manuId         = "0000";
             $maxAttributeId = $Command['maxAttributeId'];

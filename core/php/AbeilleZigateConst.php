@@ -335,4 +335,53 @@
 
         return $desc;
     }
+
+    /* Returns Zigbee ZCL status from code. */
+    function zgGetZCLStatus($status)
+    {
+        $status = strtoupper($status);
+
+        /* List of known devices per profile */
+        $statusesTable = array (
+            "00" => "Success",
+            "01" => "Operation failed",
+            "7E" => "Not authorized",
+            "7F" => "Reserved field non zero",
+            "80" => "Malformed command",
+            "81" => "Unsupported cluster command",
+            "82" => "Unsupported general command",
+            "83" => "Unsupported manuf cluster command",
+            "84" => "Unsupported manuf general command",
+            "85" => "Invalid field",
+            "86" => "Unsupported attribute",
+            "87" => "Out of range error, or set to a reserved value",
+            "88" => "Write to read only attribute",
+            "89" => "Insufficient space",
+            "8a" => "Duplicate entry",
+            "8b" => "Not found",
+            "8c" => "Unreportable attribute",
+            "8d" => "Invalid data type",
+            "8e" => "Invalid selector",
+            "8f" => "Write only attribute",
+            "90" => "Inconsisten startup state",
+            "91" => "Defined out of band",
+            "92" => "Inconsistent supplied value",
+            "93" => "Action denied",
+            "94" => "Timeout",
+            "95" => "Process abort",
+            "96" => "Invalid OTA image",
+            "97" => "Waiting for data",
+            "98" => "No OTA image available",
+            "99" => "More OTA image required",
+            "9a" => "Command being processed",
+            "c0" => "Hardware failure",
+            "c1" => "Software failure",
+            "c2" => "Calibration error",
+            "c3" => "Unsupported cluster"
+        );
+
+        if (array_key_exists($status, $statusesTable))
+            return $statusesTable[$status];
+        return "Status ".$status." unkown";
+    }
 ?>

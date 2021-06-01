@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210601-BETA-1
+----------
+
 - ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
 
   Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"

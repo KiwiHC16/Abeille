@@ -207,8 +207,8 @@
         $AbeilleParser = new AbeilleParser("AbeilleParser");
 
         $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
-        $LQI = array();
-        $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
+        // $LQI = array(); // Tcharp38: no longer used
+        // $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json"); // Tcharp38: no longer required
 
         $queueKeySerialToParser = msg_get_queue(queueKeySerialToParser);
         $max_msg_size = 2048;
@@ -250,7 +250,7 @@
                         logMessage('debug', $data->net.", can't reroute => Terminating rerouting");
                         $rerouteNet = ""; // Error => closing rerouting
                     }
-                    $AbeilleParser->protocolDatas($data->net, $data->msg, $clusterTab, $LQI);
+                    $AbeilleParser->protocolDatas($data->net, $data->msg);
                 }
             }
 

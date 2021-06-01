@@ -19,9 +19,11 @@
 
       "include0004-1": "Group-Membership",
 
-      "include0006-1": "On",
-      "include0006-2": "Off",
-      "include0006-3": "etat"
+      "include0006-3": "etat",
+
+      "include0102-1": "WindowsCoveringUp",
+      "include0102-2": "WindowsCoveringDown",
+      "include0102-3": "WindowsCoveringStop"
     }
   }
 }

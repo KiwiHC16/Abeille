@@ -511,7 +511,7 @@
         //      0 – No
         // <manufacturer id: uint16_t>
         // <Max number of identifiers: uint8_t>
-        $zgMsg = zgComposeMsg("0140", "02", $eqAddr, "01", sprintf("%02X", $eqEP), $clustId, "000000000000FF");
+        $zgMsg = zgComposeMsg("0140", "02", $eqAddr, "01", sprintf("%02X", $eqEP), $clustId."0000"."00"."00"."0000"."FF");
         $status = zgWrite2($zgMsg);
         $timeout = 2000; // 2s
         while ($status == 0) {

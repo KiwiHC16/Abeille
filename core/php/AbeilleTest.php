@@ -377,10 +377,9 @@
             break;
             case 330:
                 echo "Decodage trame prise Xiaomi a l adressse: 4AAE\n";
-                $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json");
                 $trame = "8002005495000104FCC00101024AAE0200001C5F11E40AF700413D64100103281A9839FE542C429539F187773E963900200F459739A8223C43052101009A20100821160107270000000000000000092100040B20009B100199";
                 $abeilleParser = new AbeilleParser;
-                $abeilleParser->protocolDatas("Abeille1", $trame, 0, $clusterTab, $LQI);
+                $abeilleParser->protocolDatas("Abeille1", $trame);
             break;
             case 331:
                 echo "Test daemon monitoring\n";

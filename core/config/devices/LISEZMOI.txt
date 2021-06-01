@@ -15,3 +15,59 @@ Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suiv
 
 Ce répertoire doit suivre la structure
     <modelIdentifier>/<modelIdentifier>.json
+
+Format de fichier
+=================
+
+Exemple:
+
+  {
+    "BASICZBR3": {
+      "nameJeedom": "Sonoff BASICZBR3 smart switch",
+      "manufacturer": "Sonoff",
+      "model": "BASICZBR3",
+      "timeout": "60",
+      "Categorie": {
+        "automatism": "1"
+      },
+      "configuration": {
+        "icone": "BASICZBR3",
+        "mainEP": "#EP#"
+      },
+      "Commandes": {
+        "include1": "SW",
+        "include2": "societe",
+        "include3": "nom",
+        "include4": "etat",
+        "include5": "On",
+        "include6": "Off",
+        "include7": "Toggle",
+        "include8": "getEtat",
+        "include9": "getManufacturerName",
+        "include10": "getModelIdentifier",
+        "include13 2": "Group-Membership"
+      }
+    }
+  }
+
+* nameJeedom: OBLIGATOIRE, description du type d'équipement
+* manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
+* model: OBLIGATOIRE, ref/nom du modèle
+* timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
+* Categorie: OBLIGATOIRE, le ou les catégories auxquelles l'équipement appartient.
+  - light
+  - heating
+  - security
+  - energy
+  - automatism
+  - multimedia
+  - default
+* configuration: OBLIGATOIRE
+  A COMPLETER
+  - battery_type: Description type de batterie (ex: 1x CR2430 3V)
+  - icone: Nom de l'icone associé.
+* Commandes: OBLIGATOIRE, liste des commandes implémentées
+  Chaque include correspond à une commande de base existante dans 'config/commands'
+  - "include1":"cmd1",
+  - ...
+  - "includeX":"cmdX",

@@ -1096,9 +1096,10 @@
                                     "DiscoverAttributesCommand"     => "1",
                                     "priority"                      => $priority,
                                     "dest"                          => $dest,
-                                    "address"                       => $address,
+                                    "address"                       => $parameters['address'],
                                     "EP"                            => $parameters['EP'],
                                     "clusterId"                     => $parameters['clusterId'],
+                                    "direction"                     => $parameters['direction'],
                                     "startAttributeId"              => $parameters['startAttributeId'],
                                     "maxAttributeId"                => $parameters['maxAttributeId'],
                 );

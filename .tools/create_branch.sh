@@ -207,7 +207,7 @@ do
     if [[ ${L} == "#"* ]]; then
         continue # Comment
     fi
-    if [ ! -e '${L}' ]; then
+    if [ ! -e "${L}" ]; then
         echo "= WARNING: ${L} NOT FOUND"
         continue
     fi

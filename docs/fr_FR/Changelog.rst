@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-210601-BETA-1
-----------
-
 - ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
 
   Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
@@ -14,6 +11,9 @@ ChangeLog
 210526-BETA-1
 ----------
 
+- ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
+
+  Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
 - Reinclusion: L'equipement et ses commandes sont mis à jour. Seules les commandes obsolètes sont détruites.
 
   Ca permet de ne plus casser le chemin des scénaris et autres utilisateurs des commandes.

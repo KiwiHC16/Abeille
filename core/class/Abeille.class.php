@@ -2059,32 +2059,32 @@ while ($cron->running()) {
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
     public static function msgFromParser($msg) {
         $net = $msg['net'];
+        if (isset($msg['addr']))
+            $addr = $msg['addr'];
+        if (isset($msg['ep']))
+            $ep = $msg['ep'];
 
         /* Parser has received a "device announce" and has identified (or not) the device.
            Note: Currently EP & IEEE are passed with cmdId ('eqAnnounce-<EP>-<ieee>').
            "value" constains JSON file name to use. */
         if ($msg['type'] == "eqAnnounce") {
-            $addr = $msg['addr'];
             $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
             log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$addr.", type='".$jsonName."'");
 
-            $ep = $msg['ep'];
             $ieee = $msg['ieee'];
 
             /* On 'dev announce' addr may have changed. Looking for EQ based on its IEEE address */
             $all = self::byType('Abeille');
-            $oldaddr = '';
-            $elogic = null;
             foreach ($all as $key => $eqLogic) {
                 $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/xxxx'
-                list($net2, $oldAddr) = explode( "/", $eqLogicId);
+                list($net2, $addr2) = explode( "/", $eqLogicId);
                 if ($net2 != $net)
                     continue; // Not on expected network
 
                 $ieee2 = $eqLogic->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in ".$eqLogic->getName()." config.");
+                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId."' config.");
                     continue; // No registered IEEE
                 }
                 if ($ieee2 != $ieee)
@@ -2092,7 +2092,7 @@ while ($cron->running()) {
 
                 $eqLogic->setLogicalId($logicalId); // Updating logical ID
                 $eqLogic->save();
-                log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$oldAddr.". Update done.");
+                log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$addr2.". Update done.");
                 break; // No need to go thru other equipments
             }
 
@@ -2117,12 +2117,12 @@ while ($cron->running()) {
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
-            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), "Short-Addr");
+            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), "Short-Addr");
             if (!is_object($cmdlogic))
-                $elogic->checkAndUpdateCmd($cmdlogic, $addr);
-            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), "IEEE-Addr");
+                $eqLogic->checkAndUpdateCmd($cmdlogic, $addr);
+            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), "IEEE-Addr");
             if (!is_object($cmdlogic))
-                $elogic->checkAndUpdateCmd($cmdlogic, $ieee);
+                $eqLogic->checkAndUpdateCmd($cmdlogic, $ieee);
 
             return;
         } // End 'eqAnnounce'
@@ -2146,14 +2146,14 @@ while ($cron->running()) {
             $all = self::byType('Abeille');
             $eqLogic = null;
             foreach ($all as $key => $eqLogic2) {
-                $eqLogicId = $eqLogic2->getLogicalId(); // Ex: 'Abeille1/xxxx'
-                list($net2, $addr2) = explode( "/", $eqLogicId);
+                $eqLogicId2 = $eqLogic2->getLogicalId(); // Ex: 'Abeille1/xxxx'
+                list($net2, $addr2) = explode( "/", $eqLogicId2);
                 if ($net2 != $net)
                     continue; // Not on expected network
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in ".$eqLogic2->getName()." config.");
+                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId2."' config.");
                     $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
                     if (is_object($cmd)) {
                         $ieee2 = $cmd->execCmd();
@@ -2201,8 +2201,8 @@ while ($cron->running()) {
                     'lqi' => $lqi
                 ); */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attribut '".$msg['name']."' report from ".$msg['addr']);
-            $eqLogic = self::byLogicalId($net.'/'.$msg['addr'], 'Abeille');
+            log::add('Abeille', 'debug', "msgFromParser(): Attribut '".$msg['name']."' report from '".$net."/".$addr."/".$ep."'");
+            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic))
                 return; // Unknown device
 
@@ -2619,7 +2619,7 @@ while ($cron->running()) {
     /* Update all infos related to last communication time of given device.
        This is based on timestamp of last communication received from device itself. */
     public static function updateTimestamp($eqLogic, $timestamp) {
-        log::add('Abeille', 'debug', "Updating 'time' & 'online' cmds for ".$eqLogic->getName());
+        log::add('Abeille', 'debug', "Updating last comm. time for '".$eqLogic->getLogicalId()."'");
         $eqId = $eqLogic->getId();
         $eqName = $eqLogic->getName();
 
@@ -2636,13 +2636,13 @@ while ($cron->running()) {
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, $timestamp);
 
-        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+            $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
         if (!is_object($cmdlogic))
             log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'Time-Time'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, date("Y-m-d H:i:s", $timestamp));
 
-        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+            $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (!is_object($cmdlogic))
             log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'online'");
         else

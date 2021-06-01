@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
+
+  Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
+- Interne: Parser: revue params decodeX() + cleanup
+- Zemismart ZW-EC-01 curtain switch: mise-ç-jour modèle
+- Interne: Correction timeout
+
 210526-BETA-1
 ----------
 
@@ -18,9 +25,6 @@ ChangeLog
 210520-BETA-4
 ----------
 
-- ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
-
-  Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
 - JSON: Correction setReportTemp (#1918).
 - Innr RB285C: correction modele corrompu.
 - Innr RB165: modele préliminaire.
@@ -33,7 +37,7 @@ ChangeLog
 - Nouvelle procédure d'inclusion.
 - Support des EQ avec identifiants 'communs'.
 - Création du log 'AbeilleDiscover.log' si inclusion d'un équipement inconnu.
-- Profalux volet: Revue modele JSON. Utilisatio cluster 0008 au lieu de 0006 + report.
+- Profalux volet: Revue modele JSON. Utilisation cluster 0008 au lieu de 0006 + report.
 - Page EQ/commandes: pour mode developpeur, possibilité charger JSON.
 - Ordre apparition des cmdes: Suit maintenant l'ordre d'utilisation dans JSON equipement.
 - Un équipement peut maintenant être invisible par defaut ('"isVisible":0' dans le JSON).

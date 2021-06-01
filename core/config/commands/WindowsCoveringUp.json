@@ -3,14 +3,13 @@
     "isVisible": 1,
     "name": "Up",
     "order": 7,
-    "isHistorized": "0",
+    "isHistorized": 0,
     "Type": "action",
     "subType": "other",
     "generic_type": "",
     "invertBinary": "0",
     "template": "",
     "configuration": {
-      "uniqId": "5c0qs7c7qs6622080",
       "topic": "WindowsCovering",
       "request": "clusterCommand=00",
       "visibilityCategory": "All"

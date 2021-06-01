@@ -144,8 +144,8 @@ fi
 
 # Add+commit
 # Note about changelog: should be pushed to AbeilleDoc too & html generated.
-echo "Adding 'Abeille.version', 'Abeille.md5' & 'Changelog.rst'"
-git add plugin_info/Abeille.version plugin_info/Abeille.md5 docs/fr_FR/Changelog.rst
+echo "Adding 'Abeille.version', 'info.json', 'Abeille.md5' & 'Changelog.rst'"
+git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5 docs/fr_FR/Changelog.rst
 if [ $? -ne 0 ]; then
     echo "= ERROR: git add failed"
     exit 23
@@ -196,8 +196,8 @@ if [ $? -ne 0 ]; then
     exit 31
 fi
 
-# Before creating new branch removing items no required
-# to Jeedom.
+# Before creating new 'beta' branch removing items not required
+#   for Jeedom. Not required for 'beta' to 'stable'.
 echo "Cleaning ${LOCAL_BRANCH}"
 IGNORE="core/config/ignore_on_push.txt"
 COMMIT_REQUIRED=0
@@ -207,8 +207,8 @@ do
     if [[ ${L} == "#"* ]]; then
         continue # Comment
     fi
-    if [ !-e ${L} ]; then
-        echo "= ERROR: ${L} NOT FOUND"
+    if [ ! -e '${L}' ]; then
+        echo "= WARNING: ${L} NOT FOUND"
         continue
     fi
 
@@ -216,6 +216,7 @@ do
     COMMIT_REQUIRED=1
 done
 if [ ${COMMIT_REQUIRED} -eq 1 ]; then
+    git add -u >/dev/null
     git commit -q -m "${VERSION} cleanup"
     if [ $? -ne 0 ]; then
         echo "= ERROR: Commit failed"

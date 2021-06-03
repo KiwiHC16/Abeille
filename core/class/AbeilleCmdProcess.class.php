@@ -525,8 +525,18 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $manufacturerSpecific = "01";
             $manufacturerId = $Proprio;
         }
-        $numberOfAttributes = "01";
-        $attributesList = $attributeId;
+
+        /* Supporting multi-attributes (ex: '0505,0508,050B')/
+           Tcharp38 note: This way is not recommended as Zigate team is unable to tell the max number
+              of attributs for the request to be "functional". Seems ok up to 4. */
+        $list = explode(',', $attributeId);
+        $attributesList = "";
+        $nbAttr = 0;
+        foreach ($list as $attrId) {
+            $attributesList .=  $attrId;
+            $nbAttr++;
+        }
+        $numberOfAttributes = sprintf("%02X", $nbAttr);
 
         $data = $addressMode.$address.$sourceEndpoint.$destinationEndPoint.$ClusterId.$Direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$attributesList;
 

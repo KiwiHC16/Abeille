@@ -1856,7 +1856,7 @@ parserLog('debug', '      request='.$request);
                 parserLog('debug', "  Write Attributes Response");
             } else if ($Cmd == "07") { // Configure Reporting Response
                 parserLog('debug', "  Configure Reporting Response");
-            }  else if ($Cmd == "0A") { // Report attributes
+            } else if ($Cmd == "0A") { // Report attributes
                 parserLog('debug', "  Report attributes");
                 // Currently treated by decode8100_8102()
             } else if ($Cmd == "0D") { // Discover Attributes Response
@@ -2011,21 +2011,29 @@ parserLog('debug', '      request='.$request);
             $this->msgToAbeille($dest."/0000", "Network", "Channel", $data);
         }
 
-        /* Version */
+        /* Zigate FW version */
         function decode8010($dest, $payload, $lqi)
         {
             /*
             <Major version number: uint16_t>
             <Installer version number: uint16_t>
             */
+            $major = substr($payload, 0, 4);
+            $minor = substr($payload, 4, 4);
 
-            parserLog('debug', $dest.', Type=8010/Version, Appli='.hexdec(substr($payload, 0, 4)) . ', SDK='.substr($payload, 4, 4), "8010");
+            parserLog('debug', $dest.', Type=8010/Version, Appli='.$major.', SDK='.$minor, "8010");
 
-            $data = substr($payload, 0, 4);
-            $this->msgToAbeille($dest."/0000", "SW", "Application", $data);
-
-            $data = substr($payload, 4, 4);
-            $this->msgToAbeille($dest."/0000", "SW", "SDK", $data);
+            // $this->msgToAbeille($dest."/0000", "SW", "Application", $major);
+            // $this->msgToAbeille($dest."/0000", "SW", "SDK", $minor);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'zigateVersion',
+                'net' => $dest,
+                'major' => $major,
+                'minor' => $minor,
+                'time' => time()
+            );
+            $this->msgToAbeille2($msg);
         }
 
         /**
@@ -3308,6 +3316,29 @@ parserLog('debug', '      request='.$request);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0405', '01-0000', $humidity, $lqi);
                     return;
                 }
+
+                // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
+                elseif (($AttributId == "FF01") && (($AttributSize == "0031") || ($AttributSize == "002B"))) {
+                    $logMessage = "";
+                    $logMessage .= "  Xiaomi proprietary (Wall Plug)";
+
+                    $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
+
+                    $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
+                    $puissanceValue = $puissance[1];
+
+                    $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
+                    $consoValue = $conso[1];
+
+                    $logMessage .= '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue;
+                    parserLog('debug', $logMessage);
+
+                    // $this->msgToAbeille($SrcAddr,$ClusterId,$AttributId,'$this->decoded as OnOff-Puissance-Conso', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, '0006',  '-01-0000',        $onOff,             $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',   '--puissance--',   $puissanceValue,    $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',   '--conso--',       $consoValue,        $lqi);
+                    return;
+                }
             } // End cluster 0000
 
             else if ($ClusterId == "0001") { // Power configuration cluster
@@ -3648,29 +3679,6 @@ parserLog('debug', '      request='.$request);
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
-                }
-
-                // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
-                elseif (($AttributId == "FF01") && (($AttributSize == "0031") || ($AttributSize == "002B") )) {
-                    $logMessage = "";
-                    // parserLog('debug', $dest.', Type=8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Wall Plug)');
-                    $logMessage .= "  Champ proprietaire Xiaomi (Wall Plug)";
-
-                    $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
-
-                    $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
-                    $puissanceValue = $puissance[1];
-
-                    $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
-                    $consoValue = $conso[1];
-
-                    // $this->msgToAbeille($SrcAddr,$ClusterId,$AttributId,'$this->decoded as OnOff-Puissance-Conso', $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, '0006',  '-01-0000',        $onOff,             $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',   '--puissance--',   $puissanceValue,    $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',   '--conso--',       $consoValue,        $lqi);
-
-                    $logMessage .= '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue;
-                    parserLog('debug', $logMessage);
                 }
 
                 // Xiaomi Double Relay (ref ?)

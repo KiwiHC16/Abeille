@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Philips E27 single filament bulb: Ajout modele LWA004
+- Interne: Correction ReadAttributRequest multi attributs
+- Interne: Correction 'zgGetZCLStatus()'
+
 210601-BETA-2
 ----------
 

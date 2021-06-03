@@ -2186,7 +2186,7 @@ while ($cron->running()) {
             return;
         } // End 'leaveIndication'
 
-        /* Attribut report */
+        /* Attribut report (8100 & 8102 responses) */
         if ($msg['type'] == "attributReport") {
             /* Reminder
                 $msg = array(
@@ -2211,6 +2211,31 @@ while ($cron->running()) {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
             return;
         } // End 'attributReport'
+
+        /* Zigate version (8010 response) */
+        if ($msg['type'] == "zigateVersion") {
+            /* Reminder
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'zigateVersion',
+                'net' => $dest,
+                'major' => $major,
+                'minor' => $minor,
+                'time' => time()
+            ); */
+
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
+            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-Application');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['major']);
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            return;
+        }
 
         log::add('Abeille', 'debug', "msgFromParser(): WARNING: Unsupported msg");
         log::add('Abeille', 'debug', "msgFromParser(): ".json_encode($msg));
@@ -2619,9 +2644,10 @@ while ($cron->running()) {
     /* Update all infos related to last communication time of given device.
        This is based on timestamp of last communication received from device itself. */
     public static function updateTimestamp($eqLogic, $timestamp) {
-        log::add('Abeille', 'debug', "Updating last comm. time for '".$eqLogic->getLogicalId()."'");
+        $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
-        $eqName = $eqLogic->getName();
+
+        log::add('Abeille', 'debug', "Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
@@ -2632,19 +2658,19 @@ while ($cron->running()) {
 
         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'Time-TimeStamp'");
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, $timestamp);
 
-            $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'Time-Time'");
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, date("Y-m-d H:i:s", $timestamp));
 
-            $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+        $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqName.", missing cmd 'online'");
+            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, 1);
     }

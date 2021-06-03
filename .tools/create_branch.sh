@@ -201,7 +201,6 @@ fi
 echo "Cleaning ${LOCAL_BRANCH}"
 IGNORE="core/config/ignore_on_push.txt"
 COMMIT_REQUIRED=0
-cat ${IGNORE} |
 while IFS= read -r L
 do
     if [[ ${L} == "#"* ]]; then
@@ -214,7 +213,7 @@ do
 
     git rm -rf ${L} >/dev/null
     COMMIT_REQUIRED=1
-done
+done <<< `cat ${IGNORE}`
 if [ ${COMMIT_REQUIRED} -eq 1 ]; then
     git add -u >/dev/null
     git commit -q -m "${VERSION} cleanup"

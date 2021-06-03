@@ -256,8 +256,8 @@
             "0702" => "Smart Energy: Metering",
             "0703" => "Smart Energy: Messaging",
             "0B05" => "Misc: Diagnostics",
-            "0B04" => "Legrand private",
-            "0B05" => "Diagnostics (DIAGNOSTICS_CLUSTER)",
+            "0B04" => "Electrical Measurement",
+            "0B05" => "Diagnostics",
             "1000" => "ZLL: Commissioning",
             "FC01" => "Legrand private",
             "FC41" => "Legrand private",
@@ -339,14 +339,14 @@
     /* Returns Zigbee ZCL status from code. */
     function zgGetZCLStatus($status)
     {
-        $status = strtoupper($status);
+        $status = strtolower($status);
 
         /* List of known devices per profile */
         $statusesTable = array (
             "00" => "Success",
             "01" => "Operation failed",
-            "7E" => "Not authorized",
-            "7F" => "Reserved field non zero",
+            "7e" => "Not authorized",
+            "7f" => "Reserved field non zero",
             "80" => "Malformed command",
             "81" => "Unsupported cluster command",
             "82" => "Unsupported general command",
@@ -363,7 +363,7 @@
             "8d" => "Invalid data type",
             "8e" => "Invalid selector",
             "8f" => "Write only attribute",
-            "90" => "Inconsisten startup state",
+            "90" => "Inconsistent startup state",
             "91" => "Defined out of band",
             "92" => "Inconsistent supplied value",
             "93" => "Action denied",
@@ -382,6 +382,6 @@
 
         if (array_key_exists($status, $statusesTable))
             return $statusesTable[$status];
-        return "Status ".$status." unkown";
+        return "Unknown status ".$status;
     }
 ?>

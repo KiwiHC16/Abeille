@@ -14,7 +14,9 @@ Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suiv
 
 
 Ce répertoire doit suivre la structure
-    <modelIdentifier>/<modelIdentifier>.json
+    <identificateur>/<identificateur>.json
+
+Attention !! Voir 'identificateur' plus bas dans le format du fichier.
 
 Format de fichier
 =================
@@ -50,9 +52,14 @@ Exemple:
     }
   }
 
+* Clef d'entrée/identificateur: OBLIGATOIRE, (ex: BASICZBR3)
+  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous differentes marques.
+  Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
+  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
 * nameJeedom: OBLIGATOIRE, description du type d'équipement
 * manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
 * model: OBLIGATOIRE, ref/nom du modèle
+* zbManufacturer: identifiant zigbee du fabricant
 * timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
 * Categorie: OBLIGATOIRE, le ou les catégories auxquelles l'équipement appartient.
   - light

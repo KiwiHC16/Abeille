@@ -1,0 +1,14 @@
+{
+  "0702-#EP#-0000": {
+    "isVisible": 1,
+    "name": "Total power",
+    "isHistorized": 0,
+    "Type": "info",
+    "subType": "numeric",
+    "invertBinary": "0",
+    "template": "badge",
+    "unite": "KWh",
+    "configuration": {
+    }
+  }
+}

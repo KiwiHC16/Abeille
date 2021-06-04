@@ -1,0 +1,16 @@
+{
+  "0B04-#EP#-0505": {
+    "comment": "RMS Voltage. No need to display country voltage by default",
+    "isVisible": 0,
+    "Type": "info",
+    "invertBinary": "0",
+    "isHistorized": 0,
+    "name": "Voltage",
+    "unite": "V",
+    "subType": "numeric",
+    "generic_type": "",
+    "template": "badge",
+    "configuration": {
+    }
+  }
+}

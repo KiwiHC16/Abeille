@@ -1,0 +1,13 @@
+{
+  "zbGet-0702-UnitOfMeasure": {
+    "isVisible": 0,
+    "name": "get-0702-UnitOfMeasure",
+    "isHistorized": 0,
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "ReadAttributeRequest",
+      "request": "EP=#EP#&clusterId=0702&attributeId=0300"
+    }
+  }
+}

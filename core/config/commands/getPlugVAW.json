@@ -12,7 +12,7 @@
     "configuration": {
       "uniqId": "20210126_1320",
       "topic": "ReadAttributeRequest",
-      "request": "EP=#EP#&clusterId=0B04&attributeId=0505,508,050B",
+      "request": "EP=#EP#&clusterId=0B04&attributeId=0505,0508,050B",
       "execAtCreation": "Yes",
       "execAtCreationDelay": "10",
       "Polling": "cron",

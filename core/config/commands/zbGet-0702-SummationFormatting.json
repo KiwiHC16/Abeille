@@ -1,0 +1,13 @@
+{
+  "zbGet-0702-SummationFormatting": {
+    "isVisible": 0,
+    "name": "get-0702-SummationFormatting",
+    "isHistorized": 0,
+    "Type": "action",
+    "subType": "other",
+    "configuration": {
+      "topic": "ReadAttributeRequest",
+      "request": "EP=#EP#&clusterId=0702&attributeId=0303"
+    }
+  }
+}

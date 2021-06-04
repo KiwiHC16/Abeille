@@ -2195,18 +2195,25 @@ while ($cron->running()) {
                     'net' => $net,
                     'addr' => $addr,
                     'ep' => 'xx', // End point hex string
-                    'name' => 'xxx', // Attribut name (clustId-attribId)
+                    'name' => 'xxx', // Attribut name = cmd logical ID
                     'value' => false, // False = unsupported
                     'time' => time(),
                     'lqi' => $lqi
                 ); */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attribut '".$msg['name']."' report from '".$net."/".$addr."/".$ep."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Attribut report from '".$net."/".$addr."/".$ep."': attr='".$msg['name']."', val='".$msg['value']."'");
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic))
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  Unknown device");
                 return; // Unknown device
+            }
 
-            // Tcharp38 TODO: To be completed
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
+            if (!is_object($cmdLogic)) {
+                log::add('Abeille', 'debug', "  Unknown command");
+                return; // Unknown command
+            }
+            $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
             return;
@@ -2568,7 +2575,6 @@ while ($cron->running()) {
                 log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", updating cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
             }
 
-            // id
             $cmdlogic->setEqLogic_id($elogic->getId());
             $cmdlogic->setEqType('Abeille');
             $cmdlogic->setLogicalId($cmd);
@@ -2578,7 +2584,6 @@ while ($cron->running()) {
             //     $cmdlogic->setOrder($cmdValueDefaut["order"]);
             $cmdlogic->setOrder($order++);
             $cmdlogic->setName($cmdValueDefaut["name"]);
-            // value
 
             if ($cmdValueDefaut["Type"] == "info") {
                 // $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd);
@@ -2596,47 +2601,73 @@ while ($cron->running()) {
                 }
             }
 
-            // La boucle est pour info et pour action
+            /* Updating 'configuration' field of eqLogic from JSON.
+               In case of update, some fields may no longer be required ($unusedConfKey).
+               They are removed if not updated from JSON. */
+            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement'];
             foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                 // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                 // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
-                $cmdlogic->setConfiguration($confKey, $confValue);
 
                 // Ne pas effacer, en cours de dev.
                 // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
                 // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
+
+                $cmdlogic->setConfiguration($confKey, $confValue);
+                foreach ($unusedConfKey as $uk => $uv) {
+                    if ($uv != $confKey)
+                        continue;
+                    unset($unusedConfKey[$uk]);
+                }
             }
+
+            /* Removing any obsolete configiguration field */
+            foreach ($unusedConfKey as $confKey) {
+                // Tcharp38: Is it the proper way to know if entry exists ?
+                if ($cmdlogic->getConfiguration($confKey) == null)
+                    continue;
+                log::add('Abeille', 'debug', '  Removing obsolete configuration entry: '.$confKey);
+                $cmdlogic->setConfiguration($confKey, null); // Removing config entry
+            }
+
             // On conserve l info du template pour la visibility
-            $cmdlogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
+            // Tcharp38: What for ? Not found where it is used
+            if (isset($cmdValueDefaut["isVisible"]))
+                $cmdlogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
             // template
             if (isset($cmdValueDefaut["template"])) {
                 $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
                 $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
             }
-            $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
             $cmdlogic->setType($cmdValueDefaut["Type"]);
             $cmdlogic->setSubType($cmdValueDefaut["subType"]);
             if (array_key_exists("generic_type", $cmdValueDefaut))
                 $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
-            // unite
-            if (isset($cmdValueDefaut["unite"])) {
+
+                if (isset($cmdValueDefaut["unite"])) {
                 $cmdlogic->setUnite($cmdValueDefaut["unite"]);
             }
 
             if (isset($cmdValueDefaut["invertBinary"])) {
                 $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
             }
-            // La boucle est pour info et pour action
-            // isVisible
-            $isVisible = $cmdValueDefaut["isVisible"];
+
+            if (isset($cmdValueDefaut["isHistorized"]))
+                $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+            else
+                $cmdlogic->setIsHistorized(0);
+
+            if (isset($cmdValueDefaut["isVisible"]))
+                $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+            else
+                $cmdlogic->setIsVisible(0);
 
             if (array_key_exists("display", $cmdValueDefaut))
                 foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
                     // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                     $cmdlogic->setDisplay($confKey, $confValue);
                 }
-            $cmdlogic->setIsVisible($isVisible);
             $cmdlogic->save();
         }
     } // End createDevice()
@@ -2647,7 +2678,7 @@ while ($cron->running()) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
 
-        log::add('Abeille', 'debug', "Updating last comm. time for '".$eqLogicId."'");
+        log::add('Abeille', 'debug', "updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));

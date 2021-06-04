@@ -1,0 +1,20 @@
+{
+  "0B04-#EP#-050B": {
+    "isVisible": 1,
+    "Type": "info",
+    "invertBinary": "0",
+    "isHistorized": 0,
+    "name": "Power",
+    "unite": "W",
+    "subType": "numeric",
+    "generic_type": "POWER",
+    "template": "badge",
+    "configuration": {
+      "repeatEventManagement": "always",
+      "historizeRound": "0",
+      "maxValue": "4000",
+      "minValue": "0",
+      "visibilityCategory": "All"
+    }
+  }
+}

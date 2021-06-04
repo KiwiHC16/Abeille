@@ -4,6 +4,10 @@ ChangeLog
 - Philips E27 single filament bulb: Ajout modele LWA004
 - Interne: Correction ReadAttributRequest multi attributs
 - Interne: Correction 'zgGetZCLStatus()'
+- Frient SPLZB-132 Smart Plug Mini: Ajout support préliminaire.
+- Interne: Correction eqLogic/configuration. Suppression des champs obsolètes lors de la mise-à-jour de l'équipement.
+- Tuya 4 buttons light switch (ESW-0ZAA-EU): support préliminaire (#1991).
+- Tuya smart socket: Ajout support modele générique 'TS0121__TZ3000_rdtixbnu'.
 
 210601-BETA-2
 ----------
@@ -12,7 +16,7 @@ ChangeLog
 
   Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
 - Interne: Parser: revue params decodeX() + cleanup
-- Zemismart ZW-EC-01 curtain switch: mise-ç-jour modèle
+- Zemismart ZW-EC-01 curtain switch: mise-à-jour modèle
 - Interne: Correction timeout
 
 210526-BETA-1

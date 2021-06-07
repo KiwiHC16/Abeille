@@ -1,22 +1,13 @@
 ChangeLog
 =========
 
-210601-BETA-2
-----------
-
+- ATTENTION: Regression sur les telecommandes virtuelles. Une seule possible avec cette version.
 - ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
 
   Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
 - Interne: Parser: revue params decodeX() + cleanup
-- Zemismart ZW-EC-01 curtain switch: mise-ç-jour modèle
-- Interne: Correction timeout
-
-210526-BETA-1
-----------
-
-- ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
-
-  Structure DB eqLogic modifiée: "Ruche" remplacé par "0000"
+- Zemismart ZW-EC-01 curtain switch: mise-à-jour modèle.
+- Interne: Correction timeout.
 - Reinclusion: L'equipement et ses commandes sont mis à jour. Seules les commandes obsolètes sont détruites.
 
   Ca permet de ne plus casser le chemin des scénaris et autres utilisateurs des commandes.
@@ -27,10 +18,6 @@ ChangeLog
 - Gestion des groupes: correction regression (#2011).
 - Telecommande virtuelle: correction regression (#2011).
 - Interne: Revue decode 8062 (Group membership).
-
-210520-BETA-4
-----------
-
 - JSON: Correction setReportTemp (#1918).
 - Innr RB285C: correction modele corrompu.
 - Innr RB165: modele préliminaire.

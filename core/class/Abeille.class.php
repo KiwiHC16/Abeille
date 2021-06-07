@@ -1591,7 +1591,26 @@ while ($cron->running()) {
         if ($cmdId == "createRemote") {
             log::add('Abeille', 'debug', 'message(): createRemote');
 
-            Abeille::createDevice($dest, '', '', '', 'remotecontrol');
+            /* Let's compute RC number */
+            $eqLogics = Abeille::byType('Abeille');
+            $max = 1;
+            foreach ($eqLogics as $key => $eqLogic) {
+                list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
+                if ($net2 != $net)
+                    continue; // Wrong network
+                $jsonName2 = $eqLogic->getConfiguration('modeleJson');
+                if ($jsonName2 != "remotecontrol")
+                    continue; // Not a remote
+                if ($addr2 == '')
+                    continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
+                $addr2 = substr($addr2, 2); // Removing 'rc'
+                if (hexdec($addr2) >= $max)
+                    $max = hexdec($addr2) + 1;
+            }
+
+            /* Remote control short addr = 'rcXX' */
+            $rcAddr = sprintf("rc%02X", $max);
+            Abeille::createDevice($dest, $rcAddr, '', '', 'remotecontrol');
 
             return;
         }
@@ -2601,7 +2620,7 @@ while ($cron->running()) {
                 }
             }
 
-            /* Updating 'configuration' field of eqLogic from JSON.
+            /* Updating 'configuration' fields of eqLogic from JSON.
                In case of update, some fields may no longer be required ($unusedConfKey).
                They are removed if not updated from JSON. */
             $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement'];
@@ -2621,7 +2640,7 @@ while ($cron->running()) {
                 }
             }
 
-            /* Removing any obsolete configiguration field */
+            /* Removing any obsolete configuration field */
             foreach ($unusedConfKey as $confKey) {
                 // Tcharp38: Is it the proper way to know if entry exists ?
                 if ($cmdlogic->getConfiguration($confKey) == null)

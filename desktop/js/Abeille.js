@@ -79,175 +79,209 @@ $('#bt_networkAbeilleNew').on('click', function () {
                               $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=NetworkGraph').dialog('open');
                               });
 
-$('#bt_createRemote1').on('click', function () {
-    console.log("bt_createRemote1");
+/* Add a virtual remote control to given zigate number */
+function createRemote(zgNb) {
+    console.log("createRemote("+zgNb+")");
     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
     xmlhttpMQTTSendTimer.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-        xmlhttpMQTTSendTimerResult = this.responseText;
+            xmlhttpMQTTSendTimerResult = this.responseText;
         }
     };
 
     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille"+zgNb+"_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
     xmlhttpMQTTSendTimer.send();
     // location.reload(true);
     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+}
 
-$('#bt_createRemote2').on('click', function () {
-    console.log("bt_createRemote2");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote1').on('click', function () {
+//     console.log("bt_createRemote1");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//         xmlhttpMQTTSendTimerResult = this.responseText;
+//         }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille2_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille2_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote3').on('click', function () {
-    console.log("bt_createRemote3");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote1').on('click', function () {
+//     console.log("bt_createRemote1");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//         xmlhttpMQTTSendTimerResult = this.responseText;
+//         }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille3_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille3_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote4').on('click', function () {
-    console.log("bt_createRemote4");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote2').on('click', function () {
+//     console.log("bt_createRemote2");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille4_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille4_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille2_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille2_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote5').on('click', function () {
-    console.log("bt_createRemote5");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote3').on('click', function () {
+//     console.log("bt_createRemote3");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille5_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille5_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille3_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille3_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote6').on('click', function () {
-    console.log("bt_createRemote6");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote4').on('click', function () {
+//     console.log("bt_createRemote4");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille6_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille6_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille4_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille4_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote7').on('click', function () {
-    console.log("bt_createRemote7");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote5').on('click', function () {
+//     console.log("bt_createRemote5");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille7_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille7_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille5_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille5_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote8').on('click', function () {
-    console.log("bt_createRemote8");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote6').on('click', function () {
+//     console.log("bt_createRemote6");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille8_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille8_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille6_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille6_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote9').on('click', function () {
-    console.log("bt_createRemote9");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote7').on('click', function () {
+//     console.log("bt_createRemote7");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille9_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille9_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille7_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille7_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
-$('#bt_createRemote10').on('click', function () {
-    console.log("bt_createRemote");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    xmlhttpMQTTSendTimerResult = this.responseText;
-    }
-    };
+// $('#bt_createRemote8').on('click', function () {
+//     console.log("bt_createRemote8");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille10_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille10_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
-    // location.reload(true);
-    $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
-    }
-);
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille8_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille8_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
+
+// $('#bt_createRemote9').on('click', function () {
+//     console.log("bt_createRemote9");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
+
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille9_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille9_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
+
+// $('#bt_createRemote10').on('click', function () {
+//     console.log("bt_createRemote");
+//     var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+//     xmlhttpMQTTSendTimer.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//     xmlhttpMQTTSendTimerResult = this.responseText;
+//     }
+//     };
+
+//     // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille10_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille10_zigate_createRemote", false); // False pour bloquer sur la recuperation du fichier
+//     xmlhttpMQTTSendTimer.send();
+//     // location.reload(true);
+//     $('#div_alert').showAlert({message: '{{Une nouvelle Telecommande est en création.}}', level: 'success'});
+//     }
+// );
 
 /* Check which equipements are selected for given zigate number (zgNb).
    Returns: object {zgNb:<zigateNb>, nb:<nbOfSelectedEq>, ids:[<arrayOfEqIds>]} */

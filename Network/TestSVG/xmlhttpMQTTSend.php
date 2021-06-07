@@ -1,6 +1,7 @@
 <?php
 
-    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php'; // Queues
+    require_once __DIR__.'/../../../../core/php/core.inc.php';
 
     // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
     // 1: Abeille
@@ -11,19 +12,19 @@
     // 6: xmlhttpMQTTSend -> xml
 
     // 221: means AbeilleParser to(2) Abeille
-    define('queueKeyAbeilleToAbeille',  121);
-    define('queueKeyAbeilleToCmd',      123);
-    define('queueKeyAbeilleToTimer',    124);
-    define('queueKeyParserToAbeille',   221);
-    define('queueKeyParserToCmd',       223);
-    define('queueKeyParserToLQI',       225);
-    define('queueKeyCmdToAbeille',      321);
-    define('queueKeyCmdToCmd',          323);
-    define('queueKeyTimerToAbeille',    421);
-    define('queueKeyLQIToAbeille',      521);
-    define('queueKeyLQIToCmd',          523);
-    define('queueKeyXmlToAbeille',      621);
-    define('queueKeyXmlToCmd',          623);
+    // define('queueKeyAbeilleToAbeille',  121);
+    // define('queueKeyAbeilleToCmd',      123);
+    // define('queueKeyAbeilleToTimer',    124);
+    // define('queueKeyParserToAbeille',   221);
+    // define('queueKeyParserToCmd',       223);
+    // define('queueKeyParserToLQI',       225);
+    // define('queueKeyCmdToAbeille',      321);
+    // define('queueKeyCmdToCmd',          323);
+    // define('queueKeyTimerToAbeille',    421);
+    // define('queueKeyLQIToAbeille',      521);
+    // define('queueKeyLQIToCmd',          523);
+    // define('queueKeyXmlToAbeille',      621);
+    // define('queueKeyXmlToCmd',          623);
 
     Class MsgAbeille {
         public $message = array(
@@ -56,7 +57,6 @@
 */
 
     $msgAbeille = new MsgAbeille;
-
     $msgAbeille->message = array(
                                  'topic' => str_replace('_','/',$_GET['topic']),
                                  'payload' => $_GET['payload'],
@@ -88,5 +88,4 @@
     }
 
     echo "Ending - ";
-
-    ?>
+?>

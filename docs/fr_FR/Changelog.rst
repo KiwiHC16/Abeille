@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210607-STABLE-1
+----------
+
 - ATTENTION: Regression sur les telecommandes virtuelles. Une seule possible avec cette version.
 - ATTENTION: Faire un backup pour pouvoir revenir à la precedente "stable".
 

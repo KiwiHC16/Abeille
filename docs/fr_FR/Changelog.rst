@@ -9,6 +9,7 @@ ChangeLog
 - Tuya 4 buttons light switch (ESW-0ZAA-EU): support préliminaire (#1991).
 - Tuya smart socket: Ajout support modele générique 'TS0121__TZ3000_rdtixbnu'.
 - Telecommande virtuelle: Correction regression. Plusieurs télécommandes par zigate à nouveau possible (#2025).
+- Lancement de dépendances: correction erreur (#2026).
 
 210607-STABLE-1
 ----------

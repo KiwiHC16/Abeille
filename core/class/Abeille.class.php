@@ -1093,12 +1093,14 @@ while ($cron->running()) {
         return $return;
     }
 
+    /* Called from Jeedom */
     public static function dependancy_install()
     {
         log::add('Abeille', 'debug', 'Installation des dépendances: IN');
-        message::add("Abeille", "L installation des dependances est en cours", "N oubliez pas de lire la documentation: https://github.com/KiwiHC16/Abeille/tree/master/Documentation");
+        message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
         log::remove(__CLASS__.'_update');
-        $result = ['script' => __DIR__.'/../../resources/install_#stype#.sh '.jeedom::getTmpFolder('Abeille').'/dependance',
+        $result = [
+            'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependance',
             'log' => log::getPathToLog(__CLASS__.'_update')
         ];
         log::add('Abeille', 'debug', 'Installation des dépendances: OUT: '.implode($result, ' X '));

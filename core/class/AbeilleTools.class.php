@@ -535,20 +535,20 @@ class AbeilleTools
             if (strstr($line, "AbeilleCmd") != false) {
                 $shortName = "Cmd";
                 $running |= daemonCmd;
-            } else if (strstr($line, "AbeilleParser") != false) {
+            } else if (strstr($line, "AbeilleParser") !== false) {
                 $shortName = "Parser";
                 $running |= daemonParser;
-            } else if (strstr($line, "AbeilleMonitor") != false) {
+            } else if (strstr($line, "AbeilleMonitor") !== false) {
                 $shortName = "Monitor";
                 $running |= daemonMonitor;
-            } else if (strstr($line, "AbeilleSerialRead") != false) {
+            } else if (strstr($line, "AbeilleSerialRead") !== false) {
                 $net = $lineArr[3]; // Ex 'Abeille1'
                 $zgNb = substr($net, 7);
                 $shortName = "SerialRead".$zgNb;
                 $running |= constant("daemonSerialRead".$zgNb);
-            } else if (strstr($line, "AbeilleSocat") != false) {
-                $net = $lineArr[3]; // Ex 'Abeille1'
-                $zgNb = substr($net, 7);
+            } else if (strstr($line, "AbeilleSocat") !== false) {
+                $net = $lineArr[3]; // Ex '/dev/zigateX'
+                $zgNb = substr($net, 11);
                 $shortName = "Socat".$zgNb;
                 $running |= constant("daemonSocat".$zgNb);
             } else

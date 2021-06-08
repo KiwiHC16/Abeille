@@ -1,6 +1,6 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
-    require_once __DIR__.'/../../core/class/Abeille.class.php';
+    require_once __DIR__.'/../class/Abeille.class.php';
 
     $zigateIds = array( '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' );
 

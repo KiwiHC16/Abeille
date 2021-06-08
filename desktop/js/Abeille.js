@@ -351,7 +351,7 @@ function removeBeesJeedom(zgNb) {
 }
 
 /* Called when 'exclude' button is pressed
-   Removes & exclude the selected equipements (Only those which are NOT battery powered). */
+   Request device to leave the network (if battery powered, must be wake up). */
 function removeBees(zgNb) {
     console.log("removeBees(zgNb="+zgNb+")");
 
@@ -367,9 +367,10 @@ function removeBees(zgNb) {
     var eqIdList = sel["ids"];
     console.log("eqIdList="+eqIdList);
 
-    var msg = "{{Vous êtes sur le point de demander l\'exclusion des équipements selectionnés.";
+    var msg = "{{Vous êtes sur le point de demander aux équipements selectionnés de quitter le réseau.";
     msg += "<br>- Si alimenté par secteur, cela devrait être immédiat.";
-    msg += "<br>- Si alimenté par pile, l'équipement ne sortira du réseau qu'a son réveil (que vous pouvez aussi provoquer).";
+    msg += "<br>- Si alimenté par pile, vous devez reveiller l'équipement immédiatement apres la requète mais cela n'est pas toujours possible.";
+    msg += "<br><br>D'autre part la plupart des équipements signalent qu'ils quittent le réseau (message \"xxx a quitté le réseau\") mais pas tous.";
     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false)

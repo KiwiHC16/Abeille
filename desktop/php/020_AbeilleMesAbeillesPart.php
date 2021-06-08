@@ -30,7 +30,7 @@
             echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
 
             /* Exclude feature */
-            echo '<a onclick="removeBees('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Supprime les équipement(s) sélectionné(s) si fonctionnent SUR SECTEUR.">{{Exclure}}</a>';
+            echo '<a onclick="removeBees('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Demande aux équipement(s) sélectionné(s) de sortir du réseau.">{{Exclure}}</a>';
 
             /* Monitoring feature */
             echo '<a onclick="monitorIt('.$i.', \''.$port.'\')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Surveillance des messages vers/de l\'équipement sélectionné. Sortie dans \'AbeilleMonitor\'.">{{Surveiller}}</a>';

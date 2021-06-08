@@ -2817,7 +2817,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
-        if ( isset($Command['LeaveRequest']) && isset($Command['IEEE']) )
+        if (isset($Command['LeaveRequest']) && isset($Command['IEEE']) )
         {
             $cmd = "004C";
 
@@ -2831,19 +2831,26 @@ class AbeilleCmdProcess extends AbeilleDebug {
             //      0 = Leave, removing children
             //      1 = Leave, do not remove children
 
-            $IEEE           = $Command['IEEE'];
-            if (isset($Command['Rejoin'])) $Rejoin = $Command['Rejoin']; else $Rejoin = "00";
-            if (isset($Command['RemoveChildren']))  $RemoveChildren = $Command['RemoveChildren']; else $RemoveChildren = "01";
+            $IEEE = $Command['IEEE'];
+            if (isset($Command['Rejoin']))
+                $Rejoin = $Command['Rejoin'];
+            else
+                $Rejoin = "00";
+            if (isset($Command['RemoveChildren']))
+                $RemoveChildren = $Command['RemoveChildren'];
+            else
+                $RemoveChildren = "01";
 
             $data = $IEEE.$Rejoin.$RemoveChildren;
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
-            $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
         }
 
-        // if ( isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
+        // if (isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']) )
         // https://github.com/KiwiHC16/Abeille/issues/332
-        if ( isset($Command['Remove']) && isset($Command['ParentAddressIEEE']) && isset($Command['ChildAddressIEEE']) )
+        if (isset($Command['Remove']) && isset($Command['ParentAddressIEEE']) && isset($Command['ChildAddressIEEE']) )
         {
             // <target short address: uint64_t>
             // <extended address: uint64_t>
@@ -2873,13 +2880,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
         }
 
-        if ( isset($Command['commandLegrand']) )
+        if (isset($Command['commandLegrand']) )
         {
             $this->commandLegrand($dest,$Command);
         }
 
         // DiscoverAttributesCommand
-        if ( isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']) )
+        if (isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']) )
         {
             $this->deamonlog('debug','    DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId'], $this->debug['processCmd2']);
             $cmd = "0140";
@@ -2920,7 +2927,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
         }
 
-        if ( isset($Command['commandLegrand']) )
+        if (isset($Command['commandLegrand']) )
         {
             $this->commandLegrand($dest,$Command);
         }

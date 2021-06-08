@@ -2519,9 +2519,6 @@ while ($cron->running()) {
         if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
             $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
         }
-        if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
-            $elogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
-        }
         if (isset($objetConfiguration['GroupeEP1'])) { // Tcharp38: What for ?
             $elogic->setConfiguration('GroupeEP1', $objetConfiguration['GroupeEP1']);
         }
@@ -2670,10 +2667,6 @@ while ($cron->running()) {
                 $cmdlogic->setUnite($cmdValueDefaut["unite"]);
             }
 
-            if (isset($cmdValueDefaut["invertBinary"])) {
-                $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
-            }
-
             if (isset($cmdValueDefaut["isHistorized"]))
                 $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
             else
@@ -2684,9 +2677,12 @@ while ($cron->running()) {
             else
                 $cmdlogic->setIsVisible(0);
 
+            // TODO: Update all JSON to move "invertBinary" into "display" section
+            if (isset($cmdValueDefaut["invertBinary"])) {
+                $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
+            }
             if (array_key_exists("display", $cmdValueDefaut))
                 foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-                    // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                     $cmdlogic->setDisplay($confKey, $confValue);
                 }
             $cmdlogic->save();

@@ -292,8 +292,10 @@ try {
                 $zgId = substr($eqNet, 7); // Extracting zigate id from network name (AbeilleX)
                 $eqIEEE = $eqLogic->getConfiguration('IEEE', '');
                 $parentIEEE = $eqLogic->getConfiguration('parentIEEE', '');
-                if (($eqIEEE == "") || ($parentIEEE == "")) {
-                    /* Can't do it. Missing info */
+                // Tcharp38: parentIEEE not required with 004C command
+                // if (($eqIEEE == "") || ($parentIEEE == "")) {
+                if (($eqIEEE == "")) {
+                        /* Can't do it. Missing info */
                     $status = -1;
                     if ($eqIEEE == "")
                         $errors .= "L'équipement '".$eqName."' n'a pas d'adresse IEEE\n";
@@ -307,8 +309,10 @@ try {
                 /* Sending msg to 'AbeilleCmd' */
                 $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
                 $msgAbeille = new MsgAbeille;
-                $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/Remove';
-                $msgAbeille->message['payload'] = "ParentAddressIEEE=".$parentIEEE."&ChildAddressIEEE=".$eqIEEE;
+                // $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/Remove';
+                // $msgAbeille->message['payload'] = "ParentAddressIEEE=".$parentIEEE."&ChildAddressIEEE=".$eqIEEE;
+                $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/LeaveRequest';
+                $msgAbeille->message['payload'] = "IEEE=".$eqIEEE;
                 if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false) == FALSE) {
                     $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msgAbeille);
                     $status = -1;

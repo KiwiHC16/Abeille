@@ -10,6 +10,7 @@ ChangeLog
 - Tuya smart socket: Ajout support modele générique 'TS0121__TZ3000_rdtixbnu'.
 - Telecommande virtuelle: Correction regression. Plusieurs télécommandes par zigate à nouveau possible (#2025).
 - Lancement de dépendances: correction erreur (#2026).
+- Exclusion d'un équipement du réseau: En mode dev uniquement. Nouvelle version.
 
 210607-STABLE-1
 ----------

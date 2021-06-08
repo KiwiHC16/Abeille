@@ -8,8 +8,9 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    include_once __DIR__.'/../config/Abeille.config.php';
+    // $dbgFile = __DIR__."/../../tmp/debug.json";
+    if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -18,9 +19,9 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/AbeilleLog.php';
+    include_once __DIR__.'/../class/AbeilleTools.class.php';
 
     logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSocat');

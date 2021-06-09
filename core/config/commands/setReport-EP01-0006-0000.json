@@ -1,0 +1,18 @@
+{
+  "setReportEtatEP1": {
+    "isVisible": 0,
+    "name": "setReportEtat-EP1",
+    "isHistorized": 0,
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setReport",
+      "request": "targetEndpoint=01&ClusterId=0006&AttributeId=0000&AttributeType=10",
+      "visibilityCategory": "Network",
+      "execAtCreation": "Yes",
+      "execAtCreationDelay": "11"
+    }
+  }
+}

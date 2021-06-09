@@ -25,7 +25,7 @@
       "include0006-5": "BindToZigateEtat",
       "include0006-6": "setReportEtat",
 
-      "include0702-1": "zb-0702-CurrentSummationDelivered-KWh",
+      "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div10",
       "include0702-2": "zb-0702-UnitOfMeasure",
       "include0702-3": "zbGet-0702-UnitOfMeasure",
       "include0702-4": "zb-0702-SummationFormatting",

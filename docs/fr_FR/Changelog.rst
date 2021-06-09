@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Orvibo CM10ZW multi functional relay: support préliminaire.
+
 210609-BETA-1
 ----------
 

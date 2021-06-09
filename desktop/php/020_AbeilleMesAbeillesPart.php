@@ -17,7 +17,7 @@
         echo "&nbsp&nbsp&nbsp";
         echo '<span class="cursor" id="bt_include_stop'.$i.'" title="Inclusion: clic sur le moins pour arreter le mode inclusion."><i class="fas fa-minus-circle" style="font-size:160%;color:red !important;"></i></span>';
         echo "&nbsp&nbsp&nbsp";
-        echo '<span class="cursor" id="bt_createRemote'.$i.'" title="Clic pour créer une télécommande virtuelle."><i class="fas fa-gamepad" style="font-size:160%;color:orange !important;"></i></span>';
+        echo '<span class="cursor" onclick="createRemote('.$i.')" title="Clic pour créer une télécommande virtuelle."><i class="fas fa-gamepad" style="font-size:160%;color:orange !important;"></i></span>';
 
         /* Remove equipments from Jeedom only */
         echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';

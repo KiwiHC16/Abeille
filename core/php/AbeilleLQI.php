@@ -169,7 +169,6 @@
             logMessage("", "  N=".json_encode($N));
 
             // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
-            // if ($N->Addr == "0000") $N->Addr = "Ruche";
 
             $parameters['Voisine'] = $netName."/".$N->Addr;
             if (isset($eqKnownFromAbeille[$parameters['Voisine']])) {
@@ -198,13 +197,6 @@
                 newEqToInterrogate($parameters['Voisine']);
             } else if ($AttrType== 2) {
                 $parameters['Type'] = "End Device";
-                // For remove from zigbee feature (#1770)
-                $kid = Abeille::byLogicalId($netName.'/'.$N->Addr, 'Abeille');
-                if ($kid) { // Saving parent IEEE address
-                    $kid->setConfiguration('parentIEEE', $parentIEEE);
-                    $kid->save();
-                } else
-                    logMessage("", "  WARNING: Eq '".$netName."/".$N->Addr."' inconnu de Jeedom");
             } else { // $AttrType== 3
                 $parameters['Type'] = "Unknown";
             }
@@ -214,6 +206,16 @@
                 $parameters['Relationship'] = "Parent";
             } else if ($AttrRel == 1) {
                 $parameters['Relationship'] = "Child";
+
+                // Required by remove from zigbee feature (#1770)
+                // Tcharp38: It appears that in several cases we don't have any parent IEEE
+                //   might not be required if remove is using 004C cmd instead of 0026
+                $kid = Abeille::byLogicalId($netName.'/'.$N->Addr, 'Abeille');
+                if ($kid) { // Saving parent IEEE address
+                    $kid->setConfiguration('parentIEEE', $parentIEEE);
+                    $kid->save();
+                } else
+                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->Addr."'");
             } else if ($AttrRel == 2) {
                 $parameters['Relationship'] = "Sibling";
             } else { // if ($AttrRel == 3)
@@ -285,8 +287,8 @@
      /*--------------------------------------------------------------------------------------------------*/
     // To test in shell mode: php AbeilleLQI.php <zgNb>
 
-    logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log");
-    logMessage("", ">>> Démarrage d'AbeilleLQI.");
+    logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleLQI.log", true);
+    logMessage("", ">>> AbeilleLQI starting");
 
     /* Note: depending on the way 'AbeilleLQI' is launched, arguments are not
        collected in the same way.
@@ -377,11 +379,10 @@
         $collectStatus = 0;
         while (TRUE) {
             $total = count($eqToInterrogate);
-            logMessage("", "Zigate ".$zgNb.": progression ".$done."/".$total);
+            logMessage("", "Zigate ".$zgNb." progress: ".$done."/".$total);
 
             $currentNeAddress = $eqToInterrogate[$eqIndex]['LogicId'];
             list($netName, $addr) = explode('/', $currentNeAddress);
-            // if ( $addr == "Ruche" ) { $addr = "0000"; } // WA
 
             $NE = $currentNeAddress;
 
@@ -390,7 +391,7 @@
                 $name = "Inconnu-" . $currentNeAddress;
             }
 
-            logMessage("", "Interrogation de '".$name."' (".$addr.")");
+            logMessage("", "Interrogating '".$name."' (".$addr.")");
             $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
             if ($nbwritten < 1) {
                 echo "ERROR: Can't write lock file";
@@ -439,5 +440,5 @@
         file_put_contents($lockFile, "done/".time()."/".$status);
     }
 
-    logMessage("", "<<< AbeilleLQI terminé.");
+    logMessage("", "<<< AbeilleLQI exiting.");
 ?>

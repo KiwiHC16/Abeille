@@ -53,7 +53,7 @@ Démons:
         if ($config['AbeilleActiver'.$zgNb] != "Y")
             continue; // Zigate disabled
 
-        $eqLogic = Abeille::byLogicalId('Abeille'.$zgNb.'/Ruche', 'Abeille');
+        $eqLogic = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
         if (!is_object($eqLogic))
             continue; // Abnormal
         if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {

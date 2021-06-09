@@ -9,6 +9,7 @@
     "template": "badge",
     "unite": "KWh",
     "configuration": {
+        "calculValueOffset": "#value#/10"
     }
   }
 }

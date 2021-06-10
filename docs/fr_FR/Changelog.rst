@@ -3,6 +3,8 @@ ChangeLog
 
 - Orvibo CM10ZW multi functional relay: support préliminaire.
 - Page santé: Correction mauvais affichage du status des zigates.
+- Page equipement/avancé: Possibilité de recharger dernier JSON (et mettre à jour les commandes) sans refaire d'inclusion.
+- Interne: Suppression AbeilleDev.js (mergé dans Abeille.js).
 
 210609-BETA-1
 ----------

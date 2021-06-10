@@ -1617,6 +1617,24 @@ while ($cron->running()) {
             return;
         }
 
+        /* Request to update device from JSON. Useful to avoid reinclusion */
+        if ($cmdId == "updateFromJson") {
+            log::add('Abeille', 'debug', 'message(): updateFromJson, '.$net.'/'.$addr);
+
+            $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', '  ERROR: Unknown device');
+                return;
+            }
+
+            $jsonName = $eqLogic->getConfiguration('modeleJson');
+            $ep = $eqLogic->getConfiguration('mainEP');
+            $ieee = $eqLogic->getConfiguration('IEEE');
+            Abeille::createDevice($dest, $addr, $ep, $ieee, $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
+
+            return;
+        }
+
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
         $elogic = self::byLogicalId($nodeid, 'Abeille');
@@ -2085,10 +2103,21 @@ while ($cron->running()) {
         if (isset($msg['ep']))
             $ep = $msg['ep'];
 
-        /* Parser has received a "device announce" and has identified (or not) the device.
-           Note: Currently EP & IEEE are passed with cmdId ('eqAnnounce-<EP>-<ieee>').
-           "value" constains JSON file name to use. */
+        /* Parser has received a "device announce" and has identified (or not) the device. */
         if ($msg['type'] == "eqAnnounce") {
+            /* Msg reminder
+                $msg = array(
+                    'src' => 'parser',
+                    'type' => 'eqAnnounce',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'ieee' => $eq['ieee'],
+                    'ep' => $eq['epFirst'],
+                    'jsonId' => $eq['jsonId'],
+                    'capa' => $eq['capa'],
+                    'time' => time()
+                ); */
+
             $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
             log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$addr.", type='".$jsonName."'");
@@ -2456,7 +2485,7 @@ while ($cron->running()) {
 
     /* Create or update Jeedom device based on its JSON config.
        This is also used to create Abeille's specific device like "remotecontrol". */
-    public static function createDevice($net, $addr, $ep, $ieee, $jsonName) {
+    public static function createDevice($net, $addr, $ep, $ieee, $jsonName, $userMsg = '') {
 
         $logicalId = $net.'/'.$addr;
         $abeilleConfig = AbeilleTools::getParameters();
@@ -2484,8 +2513,10 @@ while ($cron->running()) {
             $eqCurJsonId = $elogic->getConfiguration('modeleJson'); // Current JSON ID
             if (($eqCurJsonId == 'defaultUnknown') && ($jsonName != 'defaultUnknown'))
                 message::add("Abeille", "L'équipement '".$eqName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
-            else
+            else if ($userMsg == '')
                 message::add("Abeille", "L'équipement '".$eqName."' s'est réannoncé. Mise-à-jour en cours.", '');
+            else
+                message::add("Abeille", $userMsg, '');
         }
 
         /* Whatever creation or update, common steps follows */

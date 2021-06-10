@@ -67,7 +67,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Id}}</label>
+        <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
         <div class="col-sm-5">
             <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
             <?php echo '<span>'.$eqId.'</span>'; ?>
@@ -90,12 +90,12 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
+    <!-- <div class="form-group">
+        <label class="col-sm-3 control-label">{{Fichier JSON}}</label>
         <div class="col-sm-5">
             <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
         </div>
-    </div>
+    </div> -->
 
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Documentation}}</label>
@@ -108,6 +108,31 @@
             ?>
         </div>
     </div>
+
+    <?php if (isset($dbgDeveloperMode)) { ?>
+        <hr>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Fichier JSON</label>
+            <div class="col-sm-5">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
+                <?php
+                    echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
+                ?>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if (isset($dbgDeveloperMode)) { ?>
+        <hr>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Assistant EQ</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="window.location.href = \'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Lancer</a>';
+                ?>
+            </div>
+        </div>
+    <?php } ?>
 
     <?php
         // If eq is a zigate (short addr=0000), display special parameters

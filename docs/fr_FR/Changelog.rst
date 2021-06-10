@@ -5,6 +5,7 @@ ChangeLog
 - Page santé: Correction mauvais affichage du status des zigates.
 - Page equipement/avancé: Possibilité de recharger dernier JSON (et mettre à jour les commandes) sans refaire d'inclusion.
 - Interne: Suppression AbeilleDev.js (mergé dans Abeille.js).
+- Page équipement: Correction rapport d'aspect image (icone).
 
 210609-BETA-1
 ----------

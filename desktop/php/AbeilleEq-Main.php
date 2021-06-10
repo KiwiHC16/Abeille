@@ -78,7 +78,47 @@
         </div>
 
         <hr>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Icone}}</label>
+            <div class="col-sm-3">
+                <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
+                    <option value="Abeille">{{Abeille}}</option>
+                    <option value="Ruche">{{Ruche}}</option>
+                    <?php
+                        require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+                        $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
+                        $selectBox = array();
+                        foreach ($items as $item) {
+                            $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
+                            $name = $AbeilleObjetDefinition[$item]['nameJeedom'];
+                            $icone = $AbeilleObjetDefinition[$item]['configuration']['icone'];
+                            $selectBox[ucwords($name)] = $icone;
+                        }
+                        ksort($selectBox);
+                        foreach ($selectBox as $key => $value) {
+                            echo "<option value=\"".$value."\">{{".$key."}}</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
+        <style>
+           .widthSet {
+                max-width: 160px;
+                width:auto;
+            }
+        </style>
+        <div class="form-group">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-3" style="text-align: center">
+                <!-- <img name="icon_visu" src="" width="160" height="200"/> -->
+                <img name="icon_visu" class="widthSet">
+            </div>
+        </div>
+
+        <hr>
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>
         </div>
@@ -107,40 +147,6 @@
                 <input class="eqLogicAttr form-control" data-l1key="configuration"
                 data-l2key="positionZ"
                 placeholder="{{Position en hauteur (0 en bas - 1000 en haut)}}"/>
-            </div>
-        </div>
-
-        <hr>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{Icone}}</label>
-            <div class="col-sm-3">
-                <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
-                    <option value="Abeille">{{Abeille}}</option>
-                    <option value="Ruche">{{Ruche}}</option>
-                    <?php
-                        require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
-                        $items = AbeilleTools::getDeviceNameFromJson('Abeille');
-
-                        $selectBox = array();
-                        foreach ($items as $item) {
-                            $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
-                            $name = $AbeilleObjetDefinition[$item]['nameJeedom'];
-                            $icone = $AbeilleObjetDefinition[$item]['configuration']['icone'];
-                            $selectBox[ucwords($name)] = $icone;
-                        }
-                        ksort($selectBox);
-                        foreach ($selectBox as $key => $value) {
-                            echo "<option value=\"".$value."\">{{".$key."}}</option>";
-                        }
-                    ?>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-3">
-            </div>
-            <div class="col-sm-3" style="text-align: center">
-                <img name="icon_visu" src="" width="160" height="200"/>
             </div>
         </div>
 

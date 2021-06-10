@@ -361,6 +361,18 @@
         $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
     }
 
+    /* Update device from JSON (reload JSON) */
+    function updateFromJSON(eqNet, eqAddr) {
+        console.log("updateFromJSON("+eqNet+","+eqAddr+")");
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?topic=CmdCreate"+eqNet+"_"+eqAddr+"_updateFromJson", false);
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+        };
+    }
+
 	/*
 	 * Commands tab
 	 */
@@ -545,4 +557,5 @@
         });
         $('#abeilleModal').load('index.php?v=d&plugin=Abeille&modal=AbeilleLoadJsonCmd.modal').dialog('open');
     });
+
 </script>

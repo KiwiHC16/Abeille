@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210610-STABLE-1, 210609-BETA-1
+210610-STABLE-2, 210610-STABLE-1, 210609-BETA-1
 ----------
 
 - Philips E27 single filament bulb: Ajout modele LWA004

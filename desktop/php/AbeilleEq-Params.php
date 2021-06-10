@@ -257,17 +257,15 @@
                 </div>
                 <div class="col-sm-5">
                     <?php
-                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Permit Join Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-                        echo '<span id="idInclusionMode">'.getCmdValueByName($eqId, 'Permit Join Status').'</span>';
+                    echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Inclusion Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+                        echo '<span id="idInclusionMode">'.getCmdValueByName($eqId, 'Inclusion Status').'</span>';
                         ?>
                         <script>
-                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Permit Join Status")."'] = function(_options){"; ?>
+                            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "Inclusion Status")."'] = function(_options){"; ?>
                                 console.log("jeedom.cmd.update[Inclusion Status]");
-                                // console.log(_options);
                                 var element = document.getElementById('idInclusionMode');
                                 element.textContent = _options.display_value;
                             }
-                            // jeedom.cmd.update['233']({display_value:'#state#'});
                         </script>
                     </div>
                 </div>

@@ -1,5 +1,4 @@
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
-<?php include_file('desktop', 'AbeilleDev', 'js', 'Abeille'); ?>
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>

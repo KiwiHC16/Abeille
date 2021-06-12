@@ -2,6 +2,7 @@
   "TRADFRIonoffswitch": {
     "nameJeedom": "TRADFRI on/off switch",
     "manufacturer": "IKEA",
+    "zbManufacturer": "IKEAofSweden",
     "model": "E1743",
     "timeout": "60",
     "Comment": "Ref. FR 704.085.95",

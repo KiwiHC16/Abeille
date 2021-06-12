@@ -9,6 +9,7 @@ ChangeLog
 - Interne: Parser: Support msg 9999/extended error.
 - Interne: Parser: Qq améliorations découverte nouvel équipement.
 - Interne: SerialRead: Boucle et attend si port disparait au lieu de quitter (#2040).
+- Page gestion: Correction regression groupes.
 
 210609-BETA-1
 ----------

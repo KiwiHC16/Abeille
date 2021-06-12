@@ -7,9 +7,9 @@
      * - Convert TCP connection to 'tty' like port for later use by 'AbeilleSerialRead'
      */
 
-    /* Developers debug features */
     include_once __DIR__.'/../config/Abeille.config.php';
-    // $dbgFile = __DIR__."/../../tmp/debug.json";
+
+    /* Developpers mode ? */
     if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
@@ -23,7 +23,7 @@
     include_once __DIR__.'/AbeilleLog.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php';
 
-    logSetConf(); // Log to STDOUT until log name fully known (need Zigate number)
+    logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSocat');
     if ($argc < 1) { // Currently expecting <ZigatePort> <LogLevel> <ip:port>
         logMessage('error', 'Port série manquant pour lancement AbeilleSocat => Arret du démon.');
@@ -56,14 +56,6 @@
         exit(3);
     }
 
-    $nohup 	= "/usr/bin/nohup";
-    $sudo   = "/usr/bin/sudo";
-    $socat 	= "/usr/bin/socat";
-    // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-    // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
-    $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
-    logMessage('info','Attention certain systemes acceptent l option rawer pour socat et pas d autres. Modifiez la commande en fonction de votre systeme en mettant rawer ou raw dans le fichier AbeilleSocat.php ligne 40');
-
     $nohup  = "/usr/bin/nohup";
     $sudo   = "/usr/bin/sudo";
     $socat  = "/usr/bin/socat";
@@ -74,8 +66,6 @@
     /* TODO: How to check 'raw' option support ? */
     logMessage('info', 'Attention ! Certain systèmes acceptent soit l\'option \'raw\' soit \'rawer\' pour socat. Modifiez la ligne "$parameter=" du fichier AbeilleSocat.php pour mettre la bonne option.');
 
-    logMessage('info','Starting reading port '.$serial.' with log level '.$requestedlevel);
-
     // Boucle sur le lancement de socat et des que socat est lancé bloque la boucle pendant l'execution.
     // while (1) {
 
@@ -84,7 +74,7 @@
         // $cmd = $cmd . ' >/var/www/html/log/AbeilleSOCATTOOL';
         // $cmd = $cmd . ' 2>&1';
 
-        logMessage('Info','Creation de la connection wifi.');
+        logMessage('debug', 'Creating connection from '.$ip.' to '.$serial);
     //
         // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
         // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
@@ -103,10 +93,10 @@
         $cmd = $sudo." ".$socat." ".$parameters;
         // $cmd = $cmd . ' 2>&1 &';
         // $cmd = $cmd . ' >>/var/www/html/log/AbeilleSOCATTOOL';
-        $cmd = $cmd . ' 2>&1';
-        logMessage('Info', 'Command: '.$cmd);
+        $cmd = $cmd.' 2>&1';
+        logMessage('debug', 'cmd='.$cmd);
 
-        exec( $cmd );
+        exec($cmd);
         //logMessage('Info','Arret de Socat on relance dans 1 minute.');
        // sleep(60);
     //}

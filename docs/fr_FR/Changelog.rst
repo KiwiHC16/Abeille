@@ -8,6 +8,7 @@ ChangeLog
 - Page équipement: Correction rapport d'aspect image (icone).
 - Interne: Parser: Support msg 9999/extended error.
 - Interne: Parser: Qq améliorations découverte nouvel équipement.
+- Interne: SerialRead: Boucle et attend si port disparait au lieu de quitter (#2040).
 
 210609-BETA-1
 ----------

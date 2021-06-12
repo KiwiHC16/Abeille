@@ -1940,6 +1940,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
         }
 
+        /* Expected format:
+           net/0000 ActiveEndpointRequest address=<addr>*/
         if (isset($Command['ActiveEndPoint']) )
         {
             $cmd = "0045";

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210612-MASTER_TCHARP38-1"
+# VERSION="210612-MASTER_TCHARP38-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -731,8 +731,8 @@ b5654819251d87b2e660ef32d7e7343f *core/php/AbeilleLQI.php
 d58ec62d9764a4b53f3d46b9a0bf15ad *core/php/AbeilleMonitor.php
 59c194424478e95a83699e4f9885a77c *core/php/AbeilleParser.php
 b820ad5702f7e351342b646ea3a2cd7c *core/php/AbeillePreInstall.php
-ba29df16c73ecd3d32e1589fed625a20 *core/php/AbeilleSerialRead.php
-6db3a3e11a7ad1e633168a7014609e87 *core/php/AbeilleSocat.php
+1d216fed4b89430e93b40cb66b62b9af *core/php/AbeilleSerialRead.php
+b17364e80e1e8898bc597bc2dbc7d041 *core/php/AbeilleSocat.php
 7a6bd086b837dfd38dfa312efd364046 *core/php/AbeilleSupportKeyInfos.php
 381d2679a339929a91a9038fb8ff8d7a *core/php/AbeilleTest.php
 bb8c6e0c56ca801d80c9eacfd1c035ee *core/php/AbeilleZigate.php
@@ -787,7 +787,7 @@ dfd4aa7695cdf247cae1721ac8482f92 *desktop/php/Abeille.php
 6b2a1a150652a5de2870d446dd81b9df *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-9db23c744c967ddcc4f19ba8b8c5f13c *docs/fr_FR/Changelog.rst
+b06304532f5a76db8fd0357e04a93153 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1005,11 +1005,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5e6025993c0363b381e5e89f253c490a *plugin_info/Abeille.version
+f27d01294ae19cbff1cef209b58cd079 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
-320ca64da19a7afb0a1de6919c61f8a0 *plugin_info/info.json
+087c8003917cdee9c0953d19fbfe5fc7 *plugin_info/info.json
 39a5a448fee5ac1925ea22ea8395bc2e *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 d323b5c18f2b6806a0a79277985f17f6 *resources/AbeilleDeamon/AbeilleInterrogate.php

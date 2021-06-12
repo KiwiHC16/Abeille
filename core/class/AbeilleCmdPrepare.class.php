@@ -473,6 +473,7 @@
                                     "value"            => $parameters['value'],
                                     );
                 break;
+
             case "ReadAttributeRequest":
                 $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
@@ -490,6 +491,21 @@
                                     "Proprio"                  => $parameters['Proprio'],
                                     );
                 break;
+            // case "ReadAttributeRequest":
+            //     $Command = array(
+            //                         "ReadAttributeRequest" => "1",
+            //                         "priority"     => $priority,
+            //                         "dest"         => $dest,
+            //                         "address"      => $parameters['address'],
+            //                         "clusterId"    => $parameters['clusterId'],
+            //                         "attributeId"  => $parameters['attributId'],
+            //                         "Proprio"      => $parameters['Proprio'],
+            //                         "EP"           => $parameters['EP'],
+            //                         );
+
+            //     $this->deamonlog('debug', '  Msg Received: '.$msg.' from Ruche');
+            //     break;
+
             case "ReadAttributeRequestHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -1103,20 +1119,6 @@
                                     "startAttributeId"              => $parameters['startAttributeId'],
                                     "maxAttributeId"                => $parameters['maxAttributeId'],
                 );
-                break;
-            case "ReadAttributeRequest":
-                $Command = array(
-                                    "ReadAttributeRequest" => "1",
-                                    "priority"     => $priority,
-                                    "dest"         => $dest,
-                                    "address"      => $parameters['address'],
-                                    "clusterId"    => $parameters['clusterId'],
-                                    "attributeId"  => $parameters['attributId'],
-                                    "Proprio"      => $parameters['Proprio'],
-                                    "EP"           => $parameters['EP'],
-                                    );
-
-                $this->deamonlog('debug', '  Msg Received: '.$msg.' from Ruche');
                 break;
             case "bindShort":
                 $Command = array(

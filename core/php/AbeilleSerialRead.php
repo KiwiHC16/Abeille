@@ -14,7 +14,7 @@
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developpers debug features */
+    /* Developpers mode ? */
     if (file_exists(dbgFile)) {
         // include_once dbgFile;
         /* Dev mode: enabling PHP errors logging */
@@ -141,7 +141,12 @@
            Key for connection with Socat */
         if (!file_exists($serial)) {
             logMessage('error', 'Le port '.$serial.' a disparu !');
-            break;
+            while (1) {
+                usleep(500000); // Sleep 500ms
+                if (file_exists($serial))
+                    break;
+            }
+            logMessage('debug', $serial.' port is back');
         }
 
         $byte = fread($f, 01);

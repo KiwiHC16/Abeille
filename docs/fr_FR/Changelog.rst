@@ -6,6 +6,8 @@ ChangeLog
 - Page equipement/avancé: Possibilité de recharger dernier JSON (et mettre à jour les commandes) sans refaire d'inclusion.
 - Interne: Suppression AbeilleDev.js (mergé dans Abeille.js).
 - Page équipement: Correction rapport d'aspect image (icone).
+- Interne: Parser: Support msg 9999/extended error.
+- Interne: Parser: Qq améliorations découverte nouvel équipement.
 
 210609-BETA-1
 ----------

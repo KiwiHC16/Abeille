@@ -1,0 +1,38 @@
+***
+*** New equipement discovery
+***
+Network: Abeille1
+IEEE: 5C0272FFFEA0E396
+EP list: 01
+Manufacturer: 'IKEAofSweden'
+ModelId: 'TRADFRIonoffswitch'
+Location: ''
+MAC capa: 80
+8043/Simple descriptor response, SQN=43, Status=00, Addr=02D8, Length=24, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0820/Device 0820 inconnu, BitField=01
+- InClusterCount=07
+- InCluster=0000 - General: Basic
+- InCluster=0001 - General: Power Config
+- InCluster=0003 - General: Identify
+- InCluster=0009 - General: Alarms
+- InCluster=0020 - General: Poll Control
+- InCluster=1000 - ZLL: Commissioning
+- InCluster=FC7C - Cluster FC7C inconnu
+- OutClusterCount=07
+- OutCluster=0003 - General: Identify
+- OutCluster=0004 - General: Groups
+- OutCluster=0006 - General: On/Off
+- OutCluster=0008 - General: Level Control
+- OutCluster=0019 - General: OTA
+- OutCluster=0102 - Closures: Window Covering
+- OutCluster=1000 - ZLL: Commissioning
+- Clust 0000: 0000/0001/0002/0003/0004/0005/0006/0007/0008/0009/000A/000B/4000/FFFD
+- Clust 0001: 0020/0021/FFFD
+- Clust 0003: 0000/FFFD
+- Clust 0009: FFFD
+- Clust 0009: FFFD
+- Clust 0020: 0000/0001/0002/0003/FFFD
+- Clust 0020: 0000/0001/0002/0003/FFFD
+- Clust 1000: FFFD
+- Clust 1000: FFFD
+- Clust FC7C: 
+- Clust FC7C: 

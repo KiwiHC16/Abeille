@@ -7,20 +7,14 @@
     $resourcePath = realpath(__DIR__.'/../../resources');
     $WifiLink = "/dev/zigate";
 
-    // Il faut plusieures queues entre les process, on ne peut pas avoir un pot pourri pour tous comme avec Mosquitto.
-    // 1: Abeille
-    // 2: AbeilleParser -> Parser
-    // 3: AbeilleCmd -> Cmd
-    // 4:
-    // 5: AbeilleLQI -> LQI
-    // 6: xmlhttpMQTTSend -> xml
-    // 7: queueKeyFormToCmd -> Form
-    // 8: serie -> Serie
-    // 9: Semaphore entre Parser et MQTTSend
+    /* Inter-daemons queues */
 
-    // 221: means AbeilleParser to(2) Abeille
+    /* Top level */
     define('queueKeyAbeilleToAbeille',      121);
     define('queueKeyAbeilleToCmd',          123);
+    define('queueKeyParserToAbeille',       221); // Obsolete path parser to Abeille.
+    define('queueKeyParserToAbeille2',      222); // New path parser to Abeille
+    define('queueKeyCmdToAbeille',          321); // Tcharp38: ??
 
     /* Monitoring queues */
     define('queueKeyCmdToMon',              130); // Messages to zigate (cmd to monitor)
@@ -37,15 +31,15 @@
     define('queueKeyLQIToAbeille',          521);
     define('queueKeyLQIToCmd',              523);
 
-    define('queueKeyParserToAbeille',       221); // Obsolete path parser to Abeille.
-    define('queueKeyParserToAbeille2',      222); // New path parser to Abeille
-    define('queueKeyParserToCmd',           223);
-    define('queueKeyCmdToAbeille',          321);
-    define('queueKeyCmdToCmd',              323);
-
+    /* Client page to server or server to client */
     define('queueKeyXmlToAbeille',          621);
     define('queueKeyXmlToCmd',              623);
     define('queueKeyFormToCmd',             723);
+    define('queueKeyParserToCli',           724);
+
+    /* Misc */
+    define('queueKeyParserToCmd',           223);
+    define('queueKeyCmdToCmd',              323);
     define('queueKeySerialToParser',        822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
 

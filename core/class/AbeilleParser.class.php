@@ -567,6 +567,7 @@ parserLog('debug', '      request='.$request);
             $this->discoverLog('***');
             $this->discoverLog('Network: '.$net);
             $this->discoverLog('IEEE: '.$eq['ieee']);
+            $this->discoverLog('EP list: '.$eq['epList']);
             $m = ($eq['manufacturer'] === false) ? "-unsupported-" : "'".$eq['manufacturer']."'";
             $this->discoverLog('Manufacturer: '.$m);
             $m = ($eq['modelIdentifier'] === false) ? "-unsupported-" : "'".$eq['modelIdentifier']."'";
@@ -1373,12 +1374,14 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                 return;
             }
 
-            // Cluster 0x0001 Power
-            if (($profile == "0104") && ($cluster == "0001")) {
-                // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
-                return;
-            }
+            // Tcharp38: profId=104 & clustId=0001 does not mean it is power report. It could be
+            //   plenty of other "response" (ex: discover attribut response)
+            // // Cluster 0x0001 Power
+            // if (($profile == "0104") && ($cluster == "0001")) {
+            //     // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
+            //     parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
+            //     return;
+            // }
 
             // Cluster 0x0004 Groups
             if (($profile == "0104") && ($cluster == "0004")) {
@@ -4237,6 +4240,18 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                         );
 
             $this->msgToAbeille($dest."/0000", "Zigate", "Power", $power);
+        }
+
+        /* Extended error */
+        function decode9999($dest, $payload, $lqi)
+        {
+            /* FW >= 3.1e
+               Extended Status: uint8_t */
+            $ExtStatus = substr($payload, 0, 2);
+
+            $decoded = '9999/Extended error'
+                .', ExtStatus='.$ExtStatus;
+            parserLog('debug', $dest.', Type='.$decoded);
         }
 
         // ***********************************************************************************************

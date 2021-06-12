@@ -12,11 +12,17 @@
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 
     // Default target queue = 'queueKeyXmlToAbeille'
-    if (isset($_GET['queue']))
-        $queue = msg_get_queue($_GET['queue']);
+    if (isset($_GET['queueId']))
+        $queueId = $_GET['queueId'];
     else
-        $queue = msg_get_queue(queueKeyXmlToAbeille);
+        $queueId = queueKeyXmlToAbeille;
+    $queue = msg_get_queue($queueId);
     // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
+
+    $topic =  $_GET['topic'];
+    $topic = str_replace('_', '/', $topic);
+    $payload = $_GET['payload'];
+    $payload = str_replace('_', '&', $payload);
 
     Class MsgAbeille {
         public $message = array(
@@ -27,8 +33,8 @@
 
     $msgAbeille = new MsgAbeille;
     $msgAbeille->message = array(
-                                 'topic' => str_replace('_','/',$_GET['topic']),
-                                 'payload' => $_GET['payload'],
+                                 'topic' => $topic,
+                                 'payload' => $payload,
                                  );
 
     if (msg_send($queue, 1, $msgAbeille, true, false)) {

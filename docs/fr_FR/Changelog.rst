@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210612-BETA-1
+----------
+
 - Orvibo CM10ZW multi functional relay: support préliminaire.
 - Page santé: Correction mauvais affichage du status des zigates.
 - Page equipement/avancé: Possibilité de recharger dernier JSON (et mettre à jour les commandes) sans refaire d'inclusion.

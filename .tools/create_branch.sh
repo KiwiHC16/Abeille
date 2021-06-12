@@ -196,30 +196,37 @@ if [ $? -ne 0 ]; then
     exit 31
 fi
 
-# Before creating new 'beta' branch removing items not required
-#   for Jeedom. Not required for 'beta' to 'stable'.
-echo "Cleaning ${LOCAL_BRANCH}"
-IGNORE="core/config/ignore_on_push.txt"
-COMMIT_REQUIRED=0
-while IFS= read -r L
-do
-    if [[ ${L} == "#"* ]]; then
-        continue # Comment
-    fi
-    if [ ! -e "${L}" ]; then
-        echo "= WARNING: ${L} NOT FOUND"
-        continue
-    fi
+# Before creating new 'stable' branch removing items not required
+#   for Jeedom. Not required for 'master' to 'beta'.
+if [ "${TARG_BRANCH}" == "stable" ]; then
+    echo "Cleaning ${LOCAL_BRANCH}"
+    IGNORE="core/config/ignore_on_push.txt"
+    COMMIT_REQUIRED=0
+    while IFS= read -r L
+    do
+        if [[ ${L} == "#"* ]]; then
+            continue # Comment
+        fi
+        if [ ! -e "${L}" ]; then
+            echo "= WARNING: ${L} NOT FOUND"
+            continue
+        fi
 
-    git rm -rf ${L} >/dev/null
-    COMMIT_REQUIRED=1
-done <<< `cat ${IGNORE}`
-if [ ${COMMIT_REQUIRED} -eq 1 ]; then
-    git add -u >/dev/null
-    git commit -q -m "${VERSION} cleanup"
-    if [ $? -ne 0 ]; then
-        echo "= ERROR: Commit failed"
-        exit 32
+        git rm -rf ${L} 2>/dev/null
+        if [ $? -ne 0 ]; then
+            # The file probably no longer exists
+            continue
+        fi
+
+        COMMIT_REQUIRED=1
+    done <<< `cat ${IGNORE}`
+    if [ ${COMMIT_REQUIRED} -eq 1 ]; then
+        git add -u >/dev/null
+        git commit -q -m "${VERSION} cleanup"
+        if [ $? -ne 0 ]; then
+            echo "= ERROR: Commit failed"
+            exit 32
+        fi
     fi
 fi
 

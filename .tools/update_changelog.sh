@@ -52,7 +52,7 @@ do
                 break
             fi
             # Adding current version
-            echo "${VERSION}, ${L}" >> ${TMP}
+            echo "${VERSION}" >> ${TMP}
         fi
         STEP=2 # Copy all remaining lines
     else # STEP==2

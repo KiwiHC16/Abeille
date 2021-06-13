@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- SPLZB-132: Correction icone.
+- Correction remontée cluster 0B04 (mauvais EP).
+
 210612-BETA-1
 ----------
 
@@ -14,7 +17,7 @@ ChangeLog
 - Interne: SerialRead: Boucle et attend si port disparait au lieu de quitter (#2040).
 - Page gestion: Correction regression groupes.
 
-210609-BETA-1
+210610-STABLE-3
 ----------
 
 - Philips E27 single filament bulb: Ajout modele LWA004

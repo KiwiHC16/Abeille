@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-- SPLZB-132: Correction icone.
+- SPLZB-132: Correction icone + ajout somme conso.
 - Correction remontée cluster 0B04 (mauvais EP).
 
 210612-BETA-1

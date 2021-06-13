@@ -22,6 +22,8 @@
       "include0006-5": "BindToZigateEtat",
       "include0006-6": "setReportEtat",
 
+      "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div1000",
+
       "include0B04-2": "zb-0B04-RMSVoltage",
       "include0B04-3": "zb-0B04-RMSCurrent",
       "include0B04-4": "zb-0B04-ActivePower",

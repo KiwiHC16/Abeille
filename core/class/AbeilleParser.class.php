@@ -1798,14 +1798,13 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                         //     $attributs = substr($attributs,12);
                         // }
 
-                        /* Forwarding unsupported atttribute to Abeille */
                         $msg = array(
                             'src' => 'parser',
                             'type' => 'attributReport',
                             'net' => $dest,
                             'addr' => $srcAddress,
-                            'ep' => $destEndPoint,
-                            'name' => $cluster.'-'.$destEndPoint.'-'.$attribute,
+                            'ep' => $srcEndPoint,
+                            'name' => $cluster.'-'.$srcEndPoint.'-'.$attribute,
                             'value' => false, // False = unsupported
                             'time' => time(),
                             'lqi' => $lqi
@@ -1819,8 +1818,7 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                                .', attrib='.$attribute
                                .', dataType='.$dataType
                                .', value='.$hexValue.' => '.$realValue,
-                                "8002"
-                                );
+                                "8002");
 
                             // $this->msgToAbeille($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, $realValue);
                             $msg['value'] = $realValue;

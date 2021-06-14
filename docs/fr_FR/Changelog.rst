@@ -3,6 +3,7 @@ ChangeLog
 
 - SPLZB-132: Correction icone + ajout somme conso.
 - Correction remontée cluster 0B04 (mauvais EP).
+- Orvibo CM10ZW multi functional relay: mise-à-jour icone.
 
 210612-BETA-1
 ----------

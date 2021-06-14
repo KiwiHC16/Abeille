@@ -1,0 +1,28 @@
+Manufacturer: 'ORVIBO'
+ModelId: '82c167c95ed746cdbd21d6817f72c593'
+Location: ''
+MAC capa: 8E
+8043/Simple descriptor response, SQN=7B, Status=00, Addr=C43F, Length=12, EP=03, ProfId=0104/ZigBee Home Automation (ZHA), DevId=000B/Door Lock Controller, BitField=00
+InClusterCount=04
+InCluster=0000 - General: Basic
+InCluster=0005 - General: Scenes
+InCluster=0004 - General: Groups
+InCluster=0006 - General: On/Off
+OutClusterCount=01
+OutCluster=0000 - General: Basic
+8043/Simple descriptor response, SQN=7C, Status=00, Addr=C43F, Length=12, EP=02, ProfId=0104/ZigBee Home Automation (ZHA), DevId=000B/Door Lock Controller, BitField=00
+InClusterCount=04
+InCluster=0000 - General: Basic
+InCluster=0005 - General: Scenes
+InCluster=0004 - General: Groups
+InCluster=0006 - General: On/Off
+OutClusterCount=01
+OutCluster=0000 - General: Basic
+8043/Simple descriptor response, SQN=7D, Status=00, Addr=C43F, Length=12, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=000B/Door Lock Controller, BitField=00
+InClusterCount=04
+InCluster=0000 - General: Basic
+InCluster=0005 - General: Scenes
+InCluster=0004 - General: Groups
+InCluster=0006 - General: On/Off
+OutClusterCount=01
+OutCluster=0000 - General: Basic

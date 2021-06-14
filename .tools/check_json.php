@@ -45,6 +45,19 @@
             return;
         }
         // echo "dev=".json_encode($dev)."\n";
+
+        if (!isset($dev[$devName]['configuration'])) {
+            newDevError($devName, "WARNING", "No configuration defined");
+        } else {
+            $config = $dev[$devName]['configuration'];
+            if (isset($config['icone'])) {
+                $icon = "images/node_".$config['icone'].".png";
+                if (!file_exists($icon)) {
+                    newDevError($devName, "ERROR", "Missing icon '".$icon."'");
+                }
+            }
+        }
+
         if (!isset($dev[$devName]['Commandes'])) {
             newDevError($devName, "WARNING", "No commands defined");
             return;

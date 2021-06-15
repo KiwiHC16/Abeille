@@ -31,12 +31,18 @@
     }
 
     $serial = $argv[1];
-    $requestedlevel=$argv[2];
-    $requestedlevel=''?'none':$argv[2];
-    $ip=''?'192.168.4.1':$argv[3];
+    $requestedlevel = $argv[2];
+    $requestedlevel = '' ? 'none' : $argv[2];
+    $ip = '' ? '192.168.4.1' : $argv[3];
+    $ipArr = explode(':', $ip);
+    if (count($ipArr) > 1) {
+        $ip = $ipArr[0];
+        $port = $ipArr[1];
+    } else // No port => defaulting to 9999 for Wifi zigate
+        $port = "9999";
 
-     /* Checking parameters */
-     if (!preg_match("(^/dev/zigate)", $serial)) {
+    /* Checking parameters */
+    if (!preg_match("(^/dev/zigate)", $serial)) {
         logMessage('info', 'ERREUR inattendue: Le port '.$serial.' ne correspond pas à une Zigate WIFI. Je n\'aurais pas du être lancé.');
         exit(2);
     }
@@ -62,8 +68,9 @@
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
-    $parameters = "-d -d pty,raw,echo=0,link=".$serial." tcp:".$ip;
-    /* TODO: How to check 'raw' option support ? */
+    $parameters = "-d -d pty,raw,echo=0,link=".$serial." tcp:".$ip.":".$port;
+    /* TODO: How to check 'raw' option support ?
+       Note: raw is obsolete. rawer should be the default. To be tested. */
     logMessage('info', 'Attention ! Certain systèmes acceptent soit l\'option \'raw\' soit \'rawer\' pour socat. Modifiez la ligne "$parameter=" du fichier AbeilleSocat.php pour mettre la bonne option.');
 
     // Boucle sur le lancement de socat et des que socat est lancé bloque la boucle pendant l'execution.
@@ -74,7 +81,7 @@
         // $cmd = $cmd . ' >/var/www/html/log/AbeilleSOCATTOOL';
         // $cmd = $cmd . ' 2>&1';
 
-        logMessage('debug', 'Creating connection from '.$ip.' to '.$serial);
+        logMessage('debug', 'Creating connection from '.$ip.':'.$port.' to '.$serial);
     //
         // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
         // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
@@ -93,10 +100,12 @@
         $cmd = $sudo." ".$socat." ".$parameters;
         // $cmd = $cmd . ' 2>&1 &';
         // $cmd = $cmd . ' >>/var/www/html/log/AbeilleSOCATTOOL';
-        $cmd = $cmd.' 2>&1';
+        // $cmd = $cmd.' 2>&1';
         logMessage('debug', 'cmd='.$cmd);
 
-        exec($cmd);
+        exec($cmd, $output, $result_code);
+        if ($result_code != 0)
+            logMessage('debug', 'Socat ERROR '.$result_code);
         //logMessage('Info','Arret de Socat on relance dans 1 minute.');
        // sleep(60);
     //}

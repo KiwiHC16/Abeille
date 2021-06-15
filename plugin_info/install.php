@@ -268,6 +268,18 @@
             config::remove('mqttUser', 'Abeille');
             config::remove('onlyTimer', 'Abeille');
 
+            // Remove obsolete log files
+            $obsolete = ['../../log/AbeilleCmd', '../../log/AbeilleMQTTCmd', '../../log/AbeilleMQTTCmdTimer', '../../log/AbeilleSocat', '../../log/AbeilleSerialRead' ];
+            for ($z = 1; $z <= 10; $z++) {
+                $obsolete[] = '../../log/AbeilleSocat'.$z;
+                $obsolete[] = '../../log/AbeilleSerialRead'.$z;
+            }
+            foreach ($obsolete as $file) {
+                $path = __DIR__."/../".$file;
+                if (!file_exists($path))
+                    continue;
+                unlink($path);
+            }
         //    config::save('DbVersion', '20201122', 'Abeille');
         }
     }

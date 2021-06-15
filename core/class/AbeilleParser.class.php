@@ -277,6 +277,21 @@
             return -1;
         }
 
+        /* Send msg to client if queue exists.
+           Purpose is to push infos to client side page when they arrive (ex: device discovery).
+         */
+        function msgToClient($msg) {
+            $queueKeyParserToCli = msg_get_queue(queueKeyParserToCli);
+            if ($queueKeyParserToCli === false)
+                return; // No queue
+
+            $errorcode = 0;
+            if (msg_send($queueKeyParserToCli, 1, json_encode($msg), false, false, $errorcode) == false) {
+                parserLog("debug", "msgToClient(): ERROR ".$errorcode);
+            } else
+                parserLog("debug", "msgToClient(): Sent ".json_encode($msg));
+        }
+
         /* Check if eq is part of supported or user/custom devices names.
            Returns: true is supported, else false */
         function findJsonConfig(&$eq, $by='modelIdentifier') {
@@ -356,6 +371,7 @@
                 'jsonId' => '', // JSON identifier
             );
             identifying: req EP list + manufacturer + modelId + location
+                         Note: Special case for Xiaomi which may not support "Active EP request".
             configuring: execute cmds with 'execAtCreation' flag
             discovering: for unknown EQ
             idle: all actions ended
@@ -417,8 +433,22 @@
             }
 
             if ($eq['epList'] == '') {
-                parserLog('debug', '  Requesting active end points list');
-                $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+                /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request" */
+                $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
+                if ($xiaomi) {
+                    parserLog('debug', '  Xiaomi specific identification.');
+                    if (!isset($eq['manufacturer'])) {
+                        parserLog('debug', '  Requesting manufacturer from EP 01');
+                        $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint=01');
+                    }
+                    if (!isset($eq['modelIdentifier'])) {
+                        parserLog('debug', '  Requesting modelIdentifier from EP 01');
+                        $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint=01');
+                    }
+                } else {
+                    parserLog('debug', '  Requesting active end points list');
+                    $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+                }
                 $eq['status'] = 'identifying';
                 $eq['since'] = time();
             } else {
@@ -1076,6 +1106,8 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             $msgDecoded = '004d/Device announce'.', Addr='.$Addr.', ExtAddr='.$IEEE.', MACCapa='.$MACCapa;
             if ($Rejoin != "") $msgDecoded .= ', Rejoin='.$Rejoin;
             parserLog('debug', $dest.', Type='.$msgDecoded);
+
+            /* Monitor if required */
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $IEEE)) {
                 monMsgFromZigate($msgDecoded); // Send message to monitor
                 monAddrHasChanged($Addr, $IEEE); // Short address has changed
@@ -1087,8 +1119,10 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             $zgNb = substr($dest, 7);
             if (isset($GLOBALS['zigate'.$zgNb]['permitJoin']) && ($GLOBALS['zigate'.$zgNb]['permitJoin'] == "01")) {
                 $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa);
-            } else
+            } else {
                 parserLog('debug', '  Not in inclusion mode => device announce ignored');
+                return;
+            }
 
             // Tcharp38: Why ? $this->msgToAbeilleFct($dest."/"."Ruche", "enable", $IEEE); <- KiwiHC16: un equipement peut exister dans Abeille eet etre disabled donc on le reactive ici.
             // $this->msgToAbeilleFct($dest."/".$Addr, "enable", $IEEE);
@@ -1104,7 +1138,8 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             // if ($Rejoin == "02") return;
 
-            // if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
+            if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'Non', 1) == "Oui")
+                return;
 
             // if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
 
@@ -1114,13 +1149,12 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             //     return;
             // }
 
-            // $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
-
-            // for ($i = 0; $i < $agressif; $i++) {
-            //     $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
-            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
-            // }
+            $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
+            for ($i = 0; $i < $agressif; $i++) {
+                $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
+            }
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -1872,18 +1906,13 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                         // '29' => array( 'Int16', 2 ), // Signed 16-bit int
                         $value = substr($payload,40, 2).substr($payload,38, 2);
 
-                        parserLog('debug', '  Remontée puissance Legrand/Blitzwolf(?) '
-                           .', frameCtrlField='.$frameCtrlField
-                           .', SQN='.$SQN
-                           .', cmd='.$cmd
-                           .', attribute='.$attribute
+                        parserLog('debug', '  ActivePower'
+                           .', attrib='.$attribute
                            .', dataType='.$dataType
                            .', value='.$value.' - '.hexdec($value),
-                            "8002"
-                            );
+                            "8002");
 
                         $this->msgToAbeille($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, hexdec($value));
-
                         return;
                     }
                 }
@@ -2623,12 +2652,24 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                .', EPCount='.$EndPointCount
                .', EPList='.$endPointList;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
-                monMsgFromZigate($msgDecoded); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
-            if ($status!="00") {
+            /* Monitor is required */
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+                monMsgFromZigate($msgDecoded); // Send message to monitor
+
+            /* Send to client */
+            $toCli = array(
+                'src' => 'parser',
+                'type' => 'activeEndpoints',
+                'net' => $dest,
+                'addr' => $SrcAddr,
+                'epList' => $endPointList
+            );
+            $this->msgToClient($toCli);
+
+            if ($status != "00") {
                 parserLog('debug', '  Status != 0 => ignoring');
                 return;
             }
@@ -3454,6 +3495,33 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     return; // Nothing more to publish
                 }
 
+                // Xiaomi capteur Presence V2
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
+                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
+                // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
+                // 03 28 15                                   /32
+                // 04 21 a801                                 /38
+                // 05 21 3300                                 /46
+                // 06 24 0000000000                           /54
+                // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
+                // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
+                // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0021")) {
+                    // Assuming $dataType == "42"
+                    parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
+
+                    $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
+                    $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
+
+                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
+                    return;
+                }
+
                 // Xiaomi temp/humidity/pressure square sensor
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
                     // Assuming $dataType == "42"
@@ -3765,36 +3833,36 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
                 }
 
-                // Xiaomi capteur Presence V2
-                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
-                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
-                // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
-                // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
-                // 03 28 15                                   /32
-                // 04 21 a801                                 /38
-                // 05 21 3300                                 /46
-                // 06 24 0000000000                           /54
-                // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
-                // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
-                // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
+                // // Xiaomi capteur Presence V2
+                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribut Report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
+                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
+                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
+                // // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
+                // // 03 28 15                                   /32
+                // // 04 21 a801                                 /38
+                // // 05 21 3300                                 /46
+                // // 06 24 0000000000                           /54
+                // // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
+                // // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
+                // // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
 
-                elseif (($AttributId == 'FF01') && ($AttributSize == "0021")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Capteur Presence V2)');
+                // elseif (($AttributId == 'FF01') && ($AttributSize == "0021")) {
+                //     parserLog('debug', '  Champ proprietaire Xiaomi (Capteur Presence V2)');
 
-                    $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
-                    $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
-                    parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
+                //     $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
+                //     $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
+                //     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
 
-                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
+                //     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
+                //     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                //     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                //     $this->msgToAbeille($dest."/".$SrcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
 
-                    // $this->msgToAbeille( $SrcAddr, '0402', '0000', $temperature,      $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0405', '0000', $humidity,         $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0403', '0010', $pression / 10,    $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0403', '0000', $pression / 100,   $lqi);
-                }
+                //     // $this->msgToAbeille( $SrcAddr, '0402', '0000', $temperature,      $lqi);
+                //     // $this->msgToAbeille( $SrcAddr, '0405', '0000', $humidity,         $lqi);
+                //     // $this->msgToAbeille( $SrcAddr, '0403', '0010', $pression / 10,    $lqi);
+                //     // $this->msgToAbeille( $SrcAddr, '0403', '0000', $pression / 100,   $lqi);
+                // }
 
                 // Xiaomi capteur Inondation
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0022")) {

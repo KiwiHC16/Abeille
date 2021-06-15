@@ -4,6 +4,10 @@ ChangeLog
 - SPLZB-132: Correction icone + ajout somme conso.
 - Correction remontée cluster 0B04 (mauvais EP).
 - Orvibo CM10ZW multi functional relay: mise-à-jour icone.
+- Nettoyage de vieux fichiers log au démarrage.
+- Socat: Amélioration pour avoir les messages d'erreur.
+- Interne: Restauration option avancées de récupération des équipements inconnus.
+- Xiaomi v1: Correction regression inclusion. Trick ajouté pour Xiaomi.
 
 210612-BETA-1
 ----------

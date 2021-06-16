@@ -433,14 +433,14 @@
             }
 
             if ($eq['epList'] == '') {
-                /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request" */
+                /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request".
+                   Old sensor even not answer to manufacturer request. */
                 $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
                 if ($xiaomi) {
                     parserLog('debug', '  Xiaomi specific identification.');
-                    if (!isset($eq['manufacturer'])) {
-                        parserLog('debug', '  Requesting manufacturer from EP 01');
-                        $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint=01');
-                    }
+                    $eq['manufacturer'] = 'LUMI';
+                    $eq['epList'] = "01";
+                    $eq['epFirst'] = "01";
                     if (!isset($eq['modelIdentifier'])) {
                         parserLog('debug', '  Requesting modelIdentifier from EP 01');
                         $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint=01');
@@ -1138,8 +1138,11 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             // Si 02 = Rejoin alors on doit le connaitre on ne va pas faire de recherche
             // if ($Rejoin == "02") return;
 
-            if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'Non', 1) == "Oui")
-                return;
+            // Tcharp38: How to handle the following ?
+            //           This currently may lead to cmd bottleneck with bad 8000 status.
+
+            // if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'Non', 1) == "Oui")
+            //     return;
 
             // if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
 
@@ -1149,12 +1152,12 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             //     return;
             // }
 
-            $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
-            for ($i = 0; $i < $agressif; $i++) {
-                $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
-                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-                $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
-            }
+            // $agressif = config::byKey( 'agressifTraitementAnnonce', 'Abeille', '4', 1 );
+            // for ($i = 0; $i < $agressif; $i++) {
+            //     $this->msgToCmd("TempoCmd".$dest."/0000/ActiveEndPoint&time=".(time()+($i*2)), "address=".$Addr );
+            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+            //     $this->actionQueue[] = array( 'when'=>time()+($i*2)+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"MACCapa", 'parm2'=>"MACCapa", 'parm3'=>$MACCapa );
+            // }
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -2838,8 +2841,6 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             $StartIndex = substr($payload, 8, 2);
             $SrcAddr = substr($payload, 10 + ($NTableListCount * 42), 4); // 21 bytes per neighbour entry
 
-            $this->whoTalked[] = $dest.'/'.$SrcAddr;
-
             $decoded = '804E/Management LQI response'
                 .', SQN='               .$SQN
                 .', Status='            .$Status
@@ -2848,8 +2849,12 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                 .', StartIndex='        .$StartIndex
                 .', SrcAddr='           .$SrcAddr;
             parserLog('debug', $dest.', Type='.$decoded);
+
+            /* Monitor if required */
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
                 monMsgFromZigate($decoded); // Send message to monitor
+
+            $this->whoTalked[] = $dest.'/'.$SrcAddr;
 
             if ($Status != "00") {
                 parserLog('debug', "  Status != 00 => abandon du decode");

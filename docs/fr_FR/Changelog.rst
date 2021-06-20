@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210616-BETA-1
+210620-STABLE-1
 ----------
 
 - SPLZB-132: Correction icone + ajout somme conso.

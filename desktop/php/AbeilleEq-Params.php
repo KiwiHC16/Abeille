@@ -109,18 +109,16 @@
         </div>
     </div>
 
-    <?php if (isset($dbgDeveloperMode)) { ?>
-        <hr>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Fichier JSON</label>
-            <div class="col-sm-5">
-                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
-                <?php
-                    echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
-                ?>
-            </div>
+    <hr>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Fichier JSON</label>
+        <div class="col-sm-5">
+            <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
+            <?php
+                echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
+            ?>
         </div>
-    <?php } ?>
+    </div>
 
     <?php if (isset($dbgDeveloperMode)) { ?>
         <hr>
@@ -357,24 +355,7 @@
         <?php
             } // End zigate case
 
-            /* If battery powered eq. 'battery_type' is defined in original JSON file */
-            if ($eqLogic->getConfiguration('battery_type', '') != "") {
-                echo '<hr>';
-
-                echo '<div class="form-group">';
-                echo '<div class="col-sm-3"></div>';
-                echo '<h3 class="col-sm-5" style="text-align:left">{{Equipement sur piles}}</h3>';
-                echo '</div>';
-
-                echo '<div class="form-group" >';
-                echo '<label class="col-sm-3 control-label" >{{Type de piles}}</label>';
-                echo '<div class="col-sm-5">';
-                echo '<input id="CeciEstImportant" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type" placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-            /* If eq is a remote control. 'paramType' is defined in original JSON file */
+            /* If device is a remote control. 'paramType' is defined in device JSON file */
             if ($eqLogic->getConfiguration('paramType', '') == "telecommande") {
                 echo '<hr>';
 

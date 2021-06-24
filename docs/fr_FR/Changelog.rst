@@ -1,7 +1,18 @@
 ChangeLog
 =========
 
-210616-BETA-1
+- Modifications syntaxe JSON équipement (avec support rétroactif temporaire):
+  - 'commands' au lieu de 'Commandes'.
+  - 'category' au lieu de 'Categorie'
+  - 'icon' au lieu de 'icone'
+  - 'batteryType' au lieu de 'battery_type'
+- Support JSON equipement: correction pour support multiple categories.
+- Page EQ/avancé: recharger JSON accessible à tous.
+- Page EQ: type de batterie déplacé vers principale.
+- Interne: plusieurs améliorations de robustesse.
+- Interne: Parser: Support des messages longs.
+
+210620-STABLE-1
 ----------
 
 - SPLZB-132: Correction icone + ajout somme conso.
@@ -11,10 +22,6 @@ ChangeLog
 - Socat: Amélioration pour avoir les messages d'erreur.
 - Interne: Restauration option avancées de récupération des équipements inconnus.
 - Xiaomi v1: Correction regression inclusion. Trick ajouté pour Xiaomi.
-
-210612-BETA-1
-----------
-
 - Orvibo CM10ZW multi functional relay: support préliminaire.
 - Page santé: Correction mauvais affichage du status des zigates.
 - Page equipement/avancé: Possibilité de recharger dernier JSON (et mettre à jour les commandes) sans refaire d'inclusion.

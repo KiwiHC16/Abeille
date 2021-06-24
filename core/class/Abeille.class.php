@@ -1048,15 +1048,17 @@ while ($cron->running()) {
         AbeilleTools::stopDaemons();
 
         /* Removing all queues */
-        $all = array(
-            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd,
+        // Tcharp38: Any way to include allQueues from config ?
+        // include_once __DIR__.'/../config/Abeille.config.php';
+        $allQueues = array(
+            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
             queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
             queueKeyParserToLQI, queueKeyLQIToAbeille, queueKeyLQIToCmd,
-            queueKeyParserToAbeille, queueKeyParserToCmd, queueKeyCmdToAbeille, queueKeyCmdToCmd,
-            queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore
+            queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeyParserToCli,
+            queueKeyParserToCmd, queueKeyCmdToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore, queueKeyCtrlToParser
         );
-        foreach ($all as $queueId) {
+        foreach ($allQueues as $queueId) {
             $queue = msg_get_queue($queueId);
             if ($queue != false)
                 msg_remove_queue($queue);
@@ -2185,12 +2187,13 @@ while ($cron->running()) {
                     'type' => 'leaveIndication',
                     'net' => $dest,
                     'ieee' => $IEEE,
+                    'rejoin' => $RejoinStatus,
                     'time' => time()
                 );
             */
 
             $ieee = $msg['ieee'];
-            log::add('Abeille', 'debug', "msgFromParser(): Leave indication for IEEE ".$ieee);
+            log::add('Abeille', 'debug', "msgFromParser(): Leave indication for IEEE ".$ieee.", rejoin=".$msg['rejoin']);
 
             /* Look for corresponding equipment (identified via its IEEE addr) */
             $all = self::byType('Abeille');
@@ -2237,11 +2240,11 @@ while ($cron->running()) {
         } // End 'leaveIndication'
 
         /* Attribut report (8100 & 8102 responses) */
-        if ($msg['type'] == "attributReport") {
+        if ($msg['type'] == "attributeReport") {
             /* Reminder
                 $msg = array(
                     'src' => 'parser',
-                    'type' => 'attributReport',
+                    'type' => 'attributeReport',
                     'net' => $net,
                     'addr' => $addr,
                     'ep' => 'xx', // End point hex string
@@ -2267,7 +2270,7 @@ while ($cron->running()) {
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
             return;
-        } // End 'attributReport'
+        } // End 'attributeReport'
 
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {
@@ -2283,12 +2286,84 @@ while ($cron->running()) {
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
             $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
+                return;
+            }
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-Application');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['major']);
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            return;
+        }
+
+        /* Network state (8009 response) */
+        if ($msg['type'] == "networkState") {
+            /* Reminder
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'networkState',
+                'net' => $dest,
+                'addr' => $ShortAddress,
+                'ieee' => $ExtendedAddress,
+                'panId' => $PAN_ID,
+                'extPanId' => $Ext_PAN_ID,
+                'chan' => $Channel,
+                'time' => time()
+            ); */
+
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
+                return;
+            }
+            $ieee = $eqLogic->getConfiguration('IEEE', 'none');
+            if ($ieee != $msg['ieee']) {
+                log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
+                return;
+            }
+            $eqId = $eqLogic->getId();
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'PAN-ID');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['panId']);
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Ext_PAN-ID');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['extPanId']);
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Network-Channel');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['chan']);
+
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            return;
+        }
+
+        /* Permit join status (8014 response) */
+        if ($msg['type'] == "permitJoin") {
+            /* Reminder
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'permitJoin',
+                'net' => $dest,
+                'status' => $Status,
+                'time' => time()
+            ); */
+
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.", permit join, status=".$msg['status']);
+            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
+                return;
+            }
+            $eqId = $eqLogic->getId();
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'permitJoin-Status');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['status']);
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
@@ -2510,11 +2585,12 @@ while ($cron->running()) {
             $elogic->setObject_id($abeilleConfig['AbeilleParentId']);
         } else {
             $eqName = $elogic->getName();
+            $eqPath = $elogic->getHumanName(); // Jeedom hierarchical name
             $eqCurJsonId = $elogic->getConfiguration('modeleJson'); // Current JSON ID
             if (($eqCurJsonId == 'defaultUnknown') && ($jsonName != 'defaultUnknown'))
-                message::add("Abeille", "L'équipement '".$eqName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
+                message::add("Abeille", "'".$eqPath."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
             else if ($userMsg == '')
-                message::add("Abeille", "L'équipement '".$eqName."' s'est réannoncé. Mise-à-jour en cours.", '');
+                message::add("Abeille", "'".$eqPath."' s'est réannoncé. Mise-à-jour en cours.", '');
             else
                 message::add("Abeille", $userMsg, '');
         }
@@ -2536,15 +2612,25 @@ while ($cron->running()) {
         $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json
         if (isset($objetConfiguration['uniqId']))
             $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
-        $elogic->setConfiguration('icone', $objetConfiguration["icone"]);
+
+        if (isset($objetConfiguration["icon"]))
+            $icon = $objetConfiguration["icon"];
+        else if (isset($objetConfiguration["icone"])) // Old naming support
+            $icon = $objetConfiguration["icone"];
+        else
+            $icon = '';
+        $elogic->setConfiguration('icone', $icon);
+
         $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
         $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
         $elogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
         $elogic->setConfiguration('IEEE', $ieee);
 
-        if (isset($objetConfiguration['battery_type'])) {
+        if (isset($objetConfiguration['batteryType']))
+            $elogic->setConfiguration('battery_type', $objetConfiguration['batteryType']);
+        else if (isset($objetConfiguration['battery_type'])) // Old name support
             $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
-        }
+
         if (isset($objetConfiguration['paramType']))
             $elogic->setConfiguration('paramType', $objetConfiguration['paramType']);
         if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
@@ -2591,17 +2677,29 @@ while ($cron->running()) {
         $elogic->setIsEnable("1");
         if (isset($objetDefSpecific["timeout"]))
             $elogic->setTimeout($objetDefSpecific["timeout"]);
-        $elogic->setCategory(array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+        if (isset($objetDefSpecific["category"]))
+            $categories = $objetDefSpecific["category"];
+        else if (isset($objetDefSpecific["Categorie"])) // Old name support
+            $categories = $objetDefSpecific["Categorie"];
+        // $elogic->setCategory(array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+        foreach ($categories as $key => $value) {
+            $elogic->setCategory($key, $value);
+        }
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
-        /* Creating or updating commands.
-           Commands not listed in JSON are deleted. Might be needed if device was previously 'defaultUnknown'. */
+        if (isset($objetDefSpecific['commands']))
+            $jsonCmds = $objetDefSpecific['commands'];
+        else if (isset($objetDefSpecific['Commandes'])) // Old name support
+            $jsonCmds = $objetDefSpecific['Commandes'];
+
+        /* Removing obsolete commands, not listed in JSON.
+           Might be needed for ex if device was previously 'defaultUnknown'. */
         $cmds = Cmd::byEqLogicId($elogic->getId());
         foreach ($cmds as $cmdLogic) {
             $found = false;
             $cmdName = $cmdLogic->getName();
-            foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
+            foreach ($jsonCmds as $cmd => $cmdValueDefaut) {
                 if ($cmdName == $cmdValueDefaut["name"]) {
                     $found = true;
                     break; // Listed in JSON
@@ -2613,8 +2711,9 @@ while ($cron->running()) {
             }
         }
 
+        /* Creating or updating commands. */
         $order = 0;
-        foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
+        foreach ($jsonCmds as $cmd => $cmdValueDefaut) {
             /* New or existing cmd ? */
             $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), $cmdValueDefaut["name"]);
             if (!is_object($cmdlogic)) {

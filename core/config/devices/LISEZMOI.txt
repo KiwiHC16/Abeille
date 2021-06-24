@@ -21,7 +21,7 @@ Attention !! Voir 'identificateur' plus bas dans le format du fichier.
 Format de fichier
 =================
 
-Exemple:
+Exemple: BASICZBR3.json
 
   {
     "BASICZBR3": {
@@ -29,14 +29,14 @@ Exemple:
       "manufacturer": "Sonoff",
       "model": "BASICZBR3",
       "timeout": "60",
-      "Categorie": {
+      "category": {
         "automatism": "1"
       },
       "configuration": {
         "icone": "BASICZBR3",
         "mainEP": "#EP#"
       },
-      "Commandes": {
+      "commands": {
         "include1": "SW",
         "include2": "societe",
         "include3": "nom",
@@ -52,16 +52,22 @@ Exemple:
     }
   }
 
-* Clef d'entrée/identificateur: OBLIGATOIRE, (ex: BASICZBR3)
+* Clef d'entrée/identificateur: OBLIGATOIRE, = num du fichier sans extension (ex: BASICZBR3)
   ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous differentes marques.
   Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
   Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
+
 * nameJeedom: OBLIGATOIRE, description du type d'équipement
+
 * manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
+
 * model: OBLIGATOIRE, ref/nom du modèle
+
 * zbManufacturer: identifiant zigbee du fabricant
+
 * timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
-* Categorie: OBLIGATOIRE, le ou les catégories auxquelles l'équipement appartient.
+
+* category: OBLIGATOIRE, le ou les catégories auxquelles l'équipement appartient.
   - light
   - heating
   - security
@@ -69,12 +75,17 @@ Exemple:
   - automatism
   - multimedia
   - default
+  
 * configuration: OBLIGATOIRE
   A COMPLETER
-  - battery_type: Description type de batterie (ex: 1x CR2430 3V)
-  - icone: Nom de l'icone associé.
-* Commandes: OBLIGATOIRE, liste des commandes implémentées
-  Chaque include correspond à une commande de base existante dans 'config/commands'
+  - batteryType: Description type de batterie
+    Ex: "1x CR2430 3V"
+  - icon: Nom de l'icone associé.
+  - paramType: ?
+    "telecommande", "telecommande7groups"
+
+* commands: OBLIGATOIRE, liste des commandes implémentées
+  Chaque include correspond à une commande de base existante dans 'core/config/commands'
   - "include1":"cmd1",
   - ...
   - "includeX":"cmdX",

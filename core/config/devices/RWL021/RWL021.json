@@ -1,12 +1,13 @@
 {
   "RWL021": {
-    "nameJeedom": "Hue Telecommande RWL021",
+    "nameJeedom": "Hue Dimmer Switch RWL021",
+    "manufacturer": "Philips",
+    "model": "RWL021",
     "timeout": "60",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07c76620b0e",
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
       "icone": "RWL021",

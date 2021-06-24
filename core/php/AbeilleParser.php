@@ -214,11 +214,13 @@
         $max_msg_size = 2048;
         $msg_type = NULL;
 
-        $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
-        $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
-        $rerouteNet = "";
+        // $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
+        // $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
+        // $rerouteNet = "";
 
         $queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
+
+        $fromCtrlQueue = msg_get_queue(queueKeyCtrlToParser);
 
         /* Init list of supported & user/custom devices */
         $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
@@ -242,27 +244,38 @@
                     // $AbeilleParser->mqqtPublishCmdFct("SerialReadStatus", "ready");
                 } else {
                     /* Checking if incoming message rerouting required */
-                    if ($rerouteNet == $data->net) {
-                        if (msg_send($toAssistQueue, 1, $data->msg, true, false, $error_code) == true) {
-                            logMessage('debug', $data->net.", rerouted: ".$data->msg);
-                            continue;
-                        }
-                        logMessage('debug', $data->net.", can't reroute => Terminating rerouting");
-                        $rerouteNet = ""; // Error => closing rerouting
-                    }
+                    // if ($rerouteNet == $data->net) {
+                    //     if (msg_send($toAssistQueue, 1, $data->msg, true, false, $error_code) == true) {
+                    //         logMessage('debug', $data->net.", rerouted: ".$data->msg);
+                    //         continue;
+                    //     }
+                    //     logMessage('debug', $data->net.", can't reroute => Terminating rerouting");
+                    //     $rerouteNet = ""; // Error => closing rerouting
+                    // }
                     $AbeilleParser->protocolDatas($data->net, $data->msg);
                 }
             }
 
-            /* Checking if message from EQ assistant */
-            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
-// logMessage('debug', "Received=".json_encode($msg));
-                if ($msg['type'] == 'reroute') {
-                    $rerouteNet = $msg['network'];
-                    logMessage('debug', $rerouteNet.", messages must be rerouted");
-                } else if ($msg['type'] == 'reroutestop') {
-                    logMessage('debug', $rerouteNet.", stopping msg rerouting.");
-                    $rerouteNet = "";
+//             /* Checking if message from EQ assistant */
+//             if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
+// // logMessage('debug', "Received=".json_encode($msg));
+//                 if ($msg['type'] == 'reroute') {
+//                     $rerouteNet = $msg['network'];
+//                     logMessage('debug', $rerouteNet.", messages must be rerouted");
+//                 } else if ($msg['type'] == 'reroutestop') {
+//                     logMessage('debug', $rerouteNet.", stopping msg rerouting.");
+//                     $rerouteNet = "";
+//                 }
+//             }
+
+            /* Checking if control message for Parser */
+            if (msg_receive($fromCtrlQueue, 0, $msg_type, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT) == true) {
+                logMessage('debug', "fromCtrlQueue=".$jsonMsg);
+                $msg = json_decode($jsonMsg, true);
+                if ($msg['type'] == 'sendToCli') {
+                    $GLOBALS['sendToCli']['net'] = $msg['net'];
+                    $GLOBALS['sendToCli']['addr'] = $msg['addr'];
+                    $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                 }
             }
 
